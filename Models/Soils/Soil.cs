@@ -152,7 +152,7 @@
         }
 
         /// <summary>Find our children.</summary>
-        private void FindChildren()
+        public void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
 
@@ -490,9 +490,30 @@
             }
         }
 
+        /// <summary>Plant unavailable water.</summary>
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Unavailablemm
+        {
+            get
+            {
+                return MathUtilities.Multiply(LL15, Thickness);
+            }
+        }
 
+        /// <summary>Drainable water (SAT-DUL).</summary>
+        [Description("Drainable\r\nPAWC SAT-DUL")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Drainablemm
+        {
+            get
+            {
+                return MathUtilities.Multiply(MathUtilities.Subtract(SAT, DUL), Thickness);
+            }
+        }
 
-        /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAWC
         {
@@ -505,38 +526,7 @@
             }
         }
 
-        /// <summary>Gets unavailable water at standard thickness. Units:mm</summary>
-        [Description("Unavailable LL15")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Unavailablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(LL15, Thickness);
-            }
-        }
-
-        /// <summary>Gets available water at standard thickness (SW-LL15). Units:mm</summary>
-        [Description("Available SW-LL15")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWmmInitial
-        {
-            get
-            {
-                return MathUtilities.Multiply(CalcPAWC(Thickness,
-                                                      LL15,
-                                                      InitialWaterVolumetric,
-                                                      null),
-                                             Thickness);
-            }
-        }
-
-        /// <summary>
-        /// Gets the maximum plant available water CAPACITY at standard thickness (DUL-LL15). Units: mm
-        /// </summary>
-        [Description("Max. available\r\nPAWC DUL-LL15")]
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         public double[] PAWCmm
@@ -547,19 +537,7 @@
             }
         }
 
-        /// <summary>Gets the drainable water at standard thickness (SAT-DUL). Units: mm</summary>
-        [Description("Drainable\r\nPAWC SAT-DUL")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Drainablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(MathUtilities.Subtract(SAT, DUL), Thickness);
-            }
-        }
-
-        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        /// <summary>Plant available water (SW-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAW
         {
@@ -572,49 +550,13 @@
             }
         }
 
-        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        /// <summary>Plant available water (SW-LL15).</summary>
         [Units("mm")]
         public double[] PAWmm
         {
             get
             {
                 return MathUtilities.Multiply(PAW, Thickness);
-            }
-        }
-
-        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWInitial
-        {
-            get
-            {
-                return CalcPAWC(Thickness,
-                                LL15,
-                                InitialWaterVolumetric,
-                                null);
-            }
-        }
-
-        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWCAtWaterThickness
-        {
-            get
-            {
-                return CalcPAWC(waterNode.Thickness,
-                                waterNode.LL15,
-                                waterNode.DUL,
-                                null);
-            }
-        }
-
-        /// <summary>Return the plant available water CAPACITY at water node thickenss. Units: mm</summary>
-        [Units("mm")]
-        public double[] PAWCmmAtWaterThickness
-        {
-            get
-            {
-                return MathUtilities.Multiply(PAWCAtWaterThickness, waterNode.Thickness);
             }
         }
 

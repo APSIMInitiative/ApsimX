@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
-    public class DataStorePresenter : IPresenter
+    public class DataStorePresenter : GridPresenter, IPresenter
     {
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
@@ -45,9 +45,6 @@ namespace UserInterface.Presenters
         private EditView rowFilterEditBox;
 
         /// <summary>Row filter edit box.</summary>
-        private GridView grid;
-
-        /// <summary>Row filter edit box.</summary>
         private EditView maxNumRecordsEditBox;
 
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
@@ -63,7 +60,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The data store model to work with.</param>
         /// <param name="view">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
+        public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
             view = v as ViewBase;
@@ -78,6 +75,8 @@ namespace UserInterface.Presenters
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
             grid = view.GetControl<GridView>("grid");
             maxNumRecordsEditBox = view.GetControl<EditView>("maxNumRecordsEditBox");
+
+            base.Attach(model, grid, explorerPresenter);
 
             tableDropDown.IsEditable = false;
             grid.ReadOnly = true;
@@ -104,8 +103,9 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Detach the model from the view.</summary>
-        public void Detach()
+        public override void Detach()
         {
+            base.Detach();
             maxNumRecordsEditBox.EndEdit();
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;

@@ -19,7 +19,7 @@
             var sim = new Simulation()
             {
                 Name = "BaseSimulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockWeather()
                     {
@@ -47,7 +47,7 @@
             var sim = new Simulation()
             {
                 Name = "BaseSimulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockWeather()
                     {
@@ -85,12 +85,12 @@
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
-                    new Folder()
+                    new Replacements()
                     {
                         Name = "Replacements",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -104,7 +104,7 @@
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -139,12 +139,12 @@
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Folder()
                     {
                         Name = "Replacements",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -158,7 +158,7 @@
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -189,11 +189,11 @@
             var sim = new Simulation()
             {
                 Name = "Simulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Soil
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Physical()
                             {
@@ -204,7 +204,7 @@
                                 DUL = new double[] { 0.365, 0.461, 0.43 },
                                 SAT = new double[] { 0.400, 0.481, 0.45 },
 
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new SoilCrop
                                     {

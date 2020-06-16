@@ -11,7 +11,7 @@ namespace Utility
     /// Class for displaying results from a "Find All References" operation.
     /// Displays results a Gtk.TreeView in a popup window.
     /// </summary>
-    public class FindAllReferencesDialog
+    public sealed class FindAllReferencesDialog : IDisposable
     {
         /// <summary>
         /// Window in which the data will be displayed.
@@ -229,6 +229,12 @@ namespace Utility
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        public void Dispose()
+        {
+            data?.Dispose();
+            tree?.Dispose();
         }
     }
 }

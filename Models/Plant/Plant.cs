@@ -55,7 +55,10 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public Biomass AboveGround { get; set; }
 
-       /// <summary> Clock </summary>
+        /// <summary>Above ground weight</summary>
+        public Biomass AboveGroundHarvestable { get { return AboveGround; } }
+
+        /// <summary> Clock </summary>
         [Link]
         public Clock Clock = null;
 
@@ -64,7 +67,6 @@
         #region Class properties and fields
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
-        [Description("Used by several organs to determine the type of crop.")]
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
@@ -269,11 +271,13 @@
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be winter pruned.</summary>
         public event EventHandler Pruning;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be leaf plucking.</summary>
+        public event EventHandler LeafPlucking;
+        /// <summary>Occurs when a plant is about to be cutted.</summary>
         public event EventHandler Cutting;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be grazed.</summary>
         public event EventHandler Grazing;
         /// <summary>Occurs when a plant is about to flower</summary>
         public event EventHandler Flowering;
@@ -352,7 +356,7 @@
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
         {
             SowingDate = Clock.Today;
 
@@ -364,7 +368,36 @@
             SowingData.MaxCover = maxCover;
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
-            SowingData.SkipRow = rowConfig;
+            SowingData.SkipType = rowConfig;
+
+            if (rowConfig == 0)
+            {
+                // No skip row
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 0.0;
+            }
+            if (rowConfig == 1)
+            {
+                // Alternate rows (plant 1 – skip 1)
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 2)
+            {
+                // Planting two rows and skipping one row (plant 2 – skip 1)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 3)
+            {
+                // Alternate pairs of rows (plant 2 – skip 2)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 2.0;
+            }
+
+            // Adjusting number of plant per meter in each row
+            SowingData.SkipDensityScale = 1.0 + SowingData.SkipRow / SowingData.SkipPlant;
+
             IsAlive = true;
 
             this.Population = population;
@@ -402,6 +435,9 @@
             
             if (biomassRemoveType == "Prune" && Pruning != null)
                 Pruning.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "LeafPluck" && LeafPlucking != null)
+                LeafPlucking.Invoke(this, new EventArgs());
 
             if (biomassRemoveType == "Cut" && Cutting != null)
                 Cutting.Invoke(this, new EventArgs());
@@ -501,30 +537,33 @@
             var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
-                // These calculations convert organ live weight from g/m2 to kg/ha
-                var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                            + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
-                var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                if (defoliatedDM > 0)
+                if (organ.IsAboveGround)
                 {
-                    RemoveBiomass(organ.Name, "Graze",
-                                  new OrganBiomassRemovalType()
-                                  {
-                                      FractionLiveToRemove = fractionLiveToRemove,
-                                      FractionDeadToRemove = fractionDeadToRemove
-                                  });
-
-                    defoliatedBiomass += new Biomass()
+                    // These calculations convert organ live weight from g/m2 to kg/ha
+                    var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
+                    var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
+                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
+                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
+                    var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
+                    var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
+                    if (defoliatedDM > 0)
                     {
-                        StructuralWt = defoliatedDM,
-                        StructuralN = defoliatedN,
-                        DMDOfStructural = defoliatedDigestibility
-                    };
+                        RemoveBiomass(organ.Name, "Graze",
+                                      new OrganBiomassRemovalType()
+                                      {
+                                          FractionLiveToRemove = fractionLiveToRemove,
+                                          FractionDeadToRemove = fractionDeadToRemove
+                                      });
+
+                        defoliatedBiomass += new Biomass()
+                        {
+                            StructuralWt = defoliatedDM,
+                            StructuralN = defoliatedN,
+                            DMDOfStructural = defoliatedDigestibility
+                        };
+                    }
                 }
             }
             return defoliatedBiomass;
@@ -585,12 +624,48 @@
         }
 
         /// <summary>
+        /// Force emergence on the date called if emergence has not occured already
+        /// </summary>
+        public void SetEmergenceDate(string emergencedate)
+        {
+            foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
+                {
+                    ep.EmergenceDate=emergencedate;
+                }
+            SetGerminationDate(SowingDate.ToString("d-MMM"));
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occured already
+        /// </summary>
+        public void SetGerminationDate(string germinationdate)
+        {
+            {
+                foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+                {
+                    gp.GerminationDate = germinationdate;
+                }
+            }
+        }
+
+        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>
         public void ReducePopulation(double newPlantPopulation)
         {
-            throw new NotImplementedException();
+            double InitialPopn = plantPopulation;
+            if (IsAlive && newPlantPopulation <= 0.01)
+                EndCrop();  // the plant is dying due to population decline
+            else
+            {
+                plantPopulation = newPlantPopulation;
+                if (Structure != null)
+                {
+                    Structure.DeltaPlantPopulation = InitialPopn - newPlantPopulation;
+                    Structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
+                }
+            }
         }
     }
 }

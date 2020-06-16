@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -32,11 +33,19 @@
         /// </summary>
         public List<IRunnable> SimsRunning { get; private set; } = new List<IRunnable>();
 
+        /// <summary>
+        /// Lock object controlling access to SimsRunning list
+        /// </summary>
+        protected readonly object runningLock = new object();
+
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
 
         /// <summary>A token for cancelling running of jobs</summary>
         protected CancellationTokenSource cancelToken;
+
+        /// <summary>The number of jobs which have finished running.</summary>
+        public int NumJobsCompleted { get; protected set; }
 
         /// <summary>Constructor.</summary>
         /// <param name="numProcessors">Number of processors to use.</param>
@@ -150,7 +159,10 @@
             try
             {
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Add(job);
+                    lock (runningLock)
+                    {
+                        SimsRunning.Add(job);
+                    }
 
                 var startTime = DateTime.Now;
 
@@ -169,7 +181,11 @@
                 InvokeJobCompleted(job, jobManager, startTime, error);
 
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Remove(job);
+                    lock (runningLock)
+                    {
+                        NumJobsCompleted++;
+                        SimsRunning.Remove(job);
+                    }
             }
             finally
             {

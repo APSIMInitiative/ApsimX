@@ -151,6 +151,34 @@ namespace Models
             return DayLength;
         }
 
+
+        /// <summary>
+        /// Gets the duration of the day in hours.
+        /// </summary>
+        [Description("The hour of the day for sunrise")]
+        public double SunRise { get; set; }
+
+        /// <summary>
+        /// Calculate daylength using a given twilight angle
+        /// </summary>
+        public double CalculateSunRise()
+        {
+            return SunRise;
+        }
+
+        /// <summary>
+        /// Gets the duration of the day in hours.
+        /// </summary>
+        [Description("Day Length (h)")]
+        public double SunSet { get; set; }
+
+        /// <summary>
+        /// Calculate daylength using a given twilight angle
+        /// </summary>
+        public double CalculateSunSet()
+        {
+            return SunSet;
+        }
         /// <summary>
         /// Constructor
         /// </summary>

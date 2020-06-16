@@ -1,14 +1,18 @@
 ﻿namespace APSIMRunner
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.IO.Pipes;
+    using System.Linq;
     using System.Net.Sockets;
     using System.Threading;
+    using System.Timers;
     using static Models.Core.Run.JobRunnerMultiProcess;
 
     class Program
@@ -26,59 +30,20 @@
                 string pipeWriteHandle = args[0];
                 string pipeReadHandle = args[1];
 
+                // Let in for debugging purposes.
+                //while (pipeReadHandle != null) 
+                //    Thread.Sleep(500);
+
                 // Add hook for manager assembly resolve method.
-                AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+                AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
                 // Create 2 anonymous pipes (read and write) for duplex communications
                 // (each pipe is one-way)
                 using (var pipeRead = new AnonymousPipeClientStream(PipeDirection.In, pipeReadHandle))
                 using (var pipeWrite = new AnonymousPipeClientStream(PipeDirection.Out, pipeWriteHandle))
                 {
-                    //while (args.Length > 0)
-                    //    Thread.Sleep(200);
-
-                    while (PipeUtilities.GetObjectFromPipe(pipeRead) is Simulation sim)
-                    {
-                        Exception error = null;
-                        var storage = new StorageViaSockets(sim.FileName);
-                        try
-                        {
-                            if (sim != null)
-                            {
-                                // Remove existing DataStore
-                                sim.Children.RemoveAll(model => model is Models.Storage.DataStore);
-
-                                // Add in a socket datastore to satisfy links.
-                                sim.Children.Add(storage);
-
-                                if (sim.Services != null)
-                                {
-                                    sim.Services.RemoveAll(s => s is Models.Storage.IDataStore);
-                                    sim.Services.Add(storage);
-                                }
-
-                                // Run the simulation.
-                                sim.Run(new CancellationTokenSource());
-                            }
-                            else
-                                throw new Exception("Unknown job type");
-                        }
-                        catch (Exception err)
-                        {
-                            error = err;
-                        }
-
-                        // Signal end of job.
-                        PipeUtilities.SendObjectToPipe(pipeWrite, new JobOutput
-                        {
-                            ErrorMessage = error,
-                            ReportData = storage.reportDataThatNeedsToBeWritten,
-                            DataTables = storage.dataTablesThatNeedToBeWritten
-                        });
-
-                        pipeWrite.WaitForPipeDrain();
-
-                    }
+                    Client client = new Client(pipeRead, pipeWrite);
+                    client.Run();
                 }
             }
             catch (Exception err)
@@ -88,7 +53,7 @@
             }
             finally
             {
-                AppDomain.CurrentDomain.AssemblyResolve -= Manager.ResolveManagerAssembliesEventHandler;
+                AppDomain.CurrentDomain.AssemblyResolve -= ScriptCompiler.ResolveManagerAssemblies;
             }
             return 0;
         }

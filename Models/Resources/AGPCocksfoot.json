@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 89,
+  "Version": 102,
   "Name": "Simulations",
   "Children": [
     {
@@ -31,11 +31,6 @@
       "GrowthRespirationCoefficient": 0.25,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
-      "NThresholdsForRoots": [
-        0.02,
-        0.006,
-        0.025
-      ],
       "DegreesDayForGermination": 125,
       "TargetShootRootRatio": 4.0,
       "MaxRootAllocation": 0.25,
@@ -52,7 +47,6 @@
       "FractionLeafExponent": 3.0,
       "FractionToStolon": 0.0,
       "SpecificLeafArea": 20.0,
-      "SpecificRootLength": 75.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 1000.0,
       "MaxStemEffectOnLAI": 1.0,
@@ -79,11 +73,6 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 9000.0,
       "PlantHeightExponent": 2.6,
-      "RootDepthMinimum": 50.0,
-      "RootDepthMaximum": 1000.0,
-      "RootElongationRate": 25.0,
-      "RootDistributionDepthParam": 250.0,
-      "RootDistributionExponent": 3.2,
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
@@ -116,8 +105,6 @@
       "NFixingCostFactor": 0.0,
       "GenericGLF": 1.0,
       "SoilFertilityGLF": 1.0,
-      "rootDistributionDepthParam": 90.0,
-      "rootDistributionExponent": 3.2,
       "referenceRLD": 5.0,
       "ReferenceKSuptake": 15.0,
       "NuptakeSWFactor": 0.25,
@@ -266,6 +253,41 @@
               "FractionNLuxuryRemobilisable": 0,
               "DigestibilityCellWall": 0.2,
               "Name": "DeadTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+          "NConcOptimum": 0.02,
+          "NConcMinimum": 0.006,
+          "NConcMaximum": 0.025,
+          "RootDistributionDepthParam": 90.0,
+          "RootDistributionExponent": 3.2,
+          "RootBottomDistributionFactor": 1.05,
+          "SpecificRootLength": 75.0,
+          "RootDepthMinimum": 50.0,
+          "RootDepthMaximum": 1000.0,
+          "RootElongationRate": 25.0,
+          "Name": "Root",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.RootTissue, Models",
+              "Name": "Live",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.RootTissue, Models",
+              "Name": "Dead",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

@@ -140,14 +140,9 @@
                 {
                     property.ShouldSerialize = instance =>
                     {
-                        if (instance is IOptionallySerialiseChildren)
-                        {
-                            // If resource model is under replacements,
-                            // always serialize children.
-                            if (Apsim.Ancestor<Replacements>(instance as IModel) != null)
-                                return true;
-                            return (instance as IOptionallySerialiseChildren).DoSerialiseChildren;
-                        }
+                        if (instance is IOptionallySerialiseChildren opt)
+                            return opt.DoSerialiseChildren;
+
                         return true;
                     };
                 }

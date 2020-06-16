@@ -105,7 +105,7 @@
                             IsProperty = true,
                             IsEvent = false,
                             IsWriteable = !var.IsReadOnly,
-                            TypeName = var.DataType.Name,
+                            TypeName = GetTypeName(var.DataType),
                             Descr = GetDescription(property),
                             Units = var.Units
                         };
@@ -338,7 +338,7 @@
 
             // Iterate over the 'child' models/properties.
             // childName is the next child we're looking for. e.g. in "[Wheat].Leaf", the first childName will be "Leaf".
-            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
+            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, ".", '[', ']');
             for (int i = 0; i < namePathBits.Length; i++)
             {
                 if (node == null)
@@ -431,6 +431,18 @@
              return node;
         }
 
+        private static string GetTypeName(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string name = type.Name;
+                if (name.Contains("`"))
+                    name = name.Substring(0, name.IndexOf('`'));
+                return $"{name}<{string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t)))}>";
+            }
+            return type.Name;
+        }
+
         /// <summary>
         /// Gets the contents of a property's summary tag, or, if the summary tag doesn't exist,
         /// a <see cref="DescriptionAttribute"/>.
@@ -476,7 +488,7 @@
             else if (member is EventInfo)
                 memberPrefix = "E";
 
-            string xPath = string.Format("//member[starts-with(@name, '{0}:{1}.{2}')]/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
+            string xPath = string.Format("//member[@name='{0}:{1}.{2}']/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
             XmlNode summaryNode = doc.SelectSingleNode(xPath);
             if (summaryNode == null || summaryNode.ChildNodes.Count < 1)
                 return string.Empty;

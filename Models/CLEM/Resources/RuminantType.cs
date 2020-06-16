@@ -67,8 +67,7 @@ namespace Models.CLEM.Resources
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
-                PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
-
+                PriceList = Apsim.Clone(Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault()) as AnimalPricing;
                 priceGroups = Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().ToList();
             }
 

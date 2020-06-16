@@ -166,8 +166,9 @@
                     checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
                     {
                         ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
-                        ShowOnGraphs = !Convert.IsDBNull(row["OnGraphs"]) &&
-                                        Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null &&
+                                       !Convert.IsDBNull(row["OnGraphs"]) &&
+                                       Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
                     });
                 }
             }

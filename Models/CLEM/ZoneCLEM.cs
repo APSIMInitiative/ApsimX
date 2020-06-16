@@ -49,7 +49,7 @@ namespace Models.CLEM
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
 
@@ -219,7 +219,7 @@ namespace Models.CLEM
         /// <param name="model"></param>
         /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model, string modelPath)
+        private bool Validate(IModel model, string modelPath)
         {
             string starter = "[";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
@@ -261,6 +261,11 @@ namespace Models.CLEM
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(model.Name.EndsWith(" "))
+            {
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
+            }
+
             if (validationResults.Count > 0)
             {
                 valid = false;
@@ -272,9 +277,13 @@ namespace Models.CLEM
                     var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
                     if (property != null)
                     {
-                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                        var description = (DescriptionAttribute)attribute;
-                        text = description.ToString();
+                        text = "";
+                        if (property.GetCustomAttributes(typeof(DescriptionAttribute), true).Count() > 0)
+                        {
+                            var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                            var description = (DescriptionAttribute)attribute;
+                            text = description.ToString();
+                        }
                     }
                     string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")

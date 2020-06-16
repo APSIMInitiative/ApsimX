@@ -98,7 +98,7 @@ namespace Models.CLEM.Reporting
                             bool pricingIncluded = false;
                             if (model.GetType() == typeof(RuminantHerd))
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
@@ -115,7 +115,7 @@ namespace Models.CLEM.Reporting
                             }
                             else
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
@@ -132,14 +132,15 @@ namespace Models.CLEM.Reporting
                                 }
 
                                 // add pricing
-                                //if (pricingIncluded)
-                                //{
-                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
-                                //}
+                                if (pricingIncluded)
+                                {
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                }
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
 
                         }

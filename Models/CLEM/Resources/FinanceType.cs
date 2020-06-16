@@ -97,11 +97,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Overridded property to show that this resource type is capable of being traded with a market
-        /// </summary>
-        private new bool equivalentMarketStoreDetermined { get; set; }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -145,12 +140,23 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            if (resourceAmount.GetType().ToString()!="System.Double")
+            double multiplier = 0;
+            double addAmount = 0;
+
+            switch (resourceAmount.GetType().Name)
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                case "Double":
+                    addAmount = (double)resourceAmount;
+                    break;
+                case "ResourceRequest":
+                    addAmount = (resourceAmount as ResourceRequest).Required;
+                    multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                    break;
+                default:
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            double addAmount = (double)resourceAmount;
-            if (addAmount>0)
+
+            if (addAmount > 0)
             {
                 addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
@@ -165,6 +171,19 @@ namespace Models.CLEM.Resources
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
+
+                // if this request aims to trade with a market see if we need to set up details for the first time
+                if (multiplier > 0)
+                {
+                    FindEquivalentMarketStore();
+                    if (EquivalentMarketStore != null)
+                    {
+                        (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                        (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
+                        (resourceAmount as ResourceRequest).Reason = "Farm sales";
+                        (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
+                    }
+                }
             }
         }
 
@@ -201,9 +220,9 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
-                (equivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm purchases");
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm purchases");
             }
 
 

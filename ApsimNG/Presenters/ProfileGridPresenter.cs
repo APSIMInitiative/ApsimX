@@ -688,7 +688,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that has changed</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == model)
+            if (changedModel == model || (changedModel is SoilCrop && model.Children.Contains(changedModel)))
                 PopulateGrid(model);
         }
     }

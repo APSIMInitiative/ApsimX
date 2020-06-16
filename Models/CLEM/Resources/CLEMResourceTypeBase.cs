@@ -21,17 +21,35 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel
     {
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
+        [XmlIgnore]
+        public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
+
+        /// <summary>
+        /// Has a market store been found
+        /// </summary>
+        [XmlIgnore]
+        public bool MarketStoreExists 
+        { 
+            get 
+            { 
+                if(!EquivalentMarketStoreDetermined)
+                {
+                    FindEquivalentMarketStore();
+                }
+                return !(EquivalentMarketStore is null); 
+            } 
+        }
 
         /// <summary>
         /// Detemrines if an equivalent resource has been found in the market
         /// </summary>
-        protected bool equivalentMarketStoreDetermined { get; set; }
+        protected bool EquivalentMarketStoreDetermined { get; set; }
 
         /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
@@ -41,53 +59,51 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Apsim.Children(this, typeof(Transmutation)).Count() > 0;
+                return Apsim.Children(this, typeof(Transmutation)).Where(a => a.Enabled).Count() > 0;
             }
         }
 
         /// <summary>
-        /// Does pricing exist for this tyep
+        /// Does pricing exist for this type
         /// </summary>
-        public bool PricingExists 
+        public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
-            get
-            {
-                // find pricing that is ok;
-                return Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
-            }
+            // find pricing that is ok;
+            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
         /// Resource price
         /// </summary>
-        public ResourcePricing Price
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
-            get
+            // find pricing that is ok;
+            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+
+            // does simulation have finance
+            ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+            bool financesPresent = (resources.FinanceResource() != null);
+
+            if (price == null)
             {
-                // find pricing that is ok;
-                ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
-
-                var q = Apsim.Children(this, typeof(ResourcePricing));
-                var r = q.Where(a => (a as ResourcePricing).TimingOK);
-
-                if (price == null)
-                {
+                if (financesPresent)
+                { 
                     string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                    if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
+                    if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
                     warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
-                    if (!Warnings.Exists(warn))
+                    if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
                         Warnings.Add(warn);
                     }
-                    return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
                 }
-                return price;
+                return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }
+            return price;
         }
 
         /// <summary>
@@ -99,10 +115,23 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if(converterName=="$")
+            if(converterName.StartsWith("$"))
             {
                 // calculate price as special case using pricing structure if present.
-                ResourcePricing price = Price;
+                ResourcePricing price;
+                switch (converterName)
+                {
+                    case "$+":
+                        price = Price(PurchaseOrSalePricingStyleType.Purchase);
+                        break;
+                    case "$-":
+                        price = Price(PurchaseOrSalePricingStyleType.Sale);
+                        break;
+                    default:
+                        price = Price(PurchaseOrSalePricingStyleType.Both);
+                        break;
+                }
+
                 if(price.PricePerPacket > 0)
                 {
                     double packets = amount / price.PacketSize;
@@ -176,10 +205,10 @@ namespace Models.CLEM.Resources
             {
                 case "FinanceType":
                 case "HumanFoodStoreType":
-                case "WaterType":
-                case "AnimalFoodType":
-                case "EquipmentType":
-                case "GreenhousGasesType":
+                //case "WaterType":
+                //case "AnimalFoodType":
+                //case "EquipmentType":
+                //case "GreenhousGasesType":
                 case "ProductStoreType":
                     break;
                 default:
@@ -187,29 +216,23 @@ namespace Models.CLEM.Resources
             }
 
             // if not already checked
-            if(!equivalentMarketStoreDetermined)
+            if(!EquivalentMarketStoreDetermined)
             {
-                // havent already found a market store
-                if(equivalentMarketStore is null)
+                // haven't already found a market store
+                if(EquivalentMarketStore is null)
                 {
+                    ResourcesHolder holder = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
                     // is there a market
-                    Market market = FindMarket();
-                    if(market != null)
+                    if (holder != null && holder.FindMarket != null)
                     {
-                        // get the resources
-                        ResourcesHolder holder = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
-                        if(holder != null)
+                        IResourceWithTransactionType store = holder.FindMarket.Resources.LinkToMarketResourceType(this);
+                        if (store != null)
                         {
-                            object store = null;
-                            holder.ResourceTypeExists(this, out store);
-                            if (store != null)
-                            {
-                                equivalentMarketStore = store as CLEMResourceTypeBase;
-                            }
+                            EquivalentMarketStore = store as CLEMResourceTypeBase;
                         }
-
                     }
                 }
+                EquivalentMarketStoreDetermined = true;
             }
         }
 
@@ -241,11 +264,6 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        public object Clone { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

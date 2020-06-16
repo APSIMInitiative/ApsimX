@@ -107,6 +107,7 @@
                             break;
                         }
                     case EditorTypeEnum.MultiFiles:
+                    case EditorTypeEnum.DirectoryChooser:
                     case EditorTypeEnum.Button:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);

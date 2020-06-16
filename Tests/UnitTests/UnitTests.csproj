@@ -146,6 +146,7 @@
     <Compile Include="APSIMShared\MockJob.cs" />
     <Compile Include="CommandLineArgsTests.cs" />
     <Compile Include="Core\ApsimFile\EditFileTests.cs" />
+    <Compile Include="Core\CommandLineOptionsTests.cs" />
     <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
     <Compile Include="Core\Run\RunnerTests.cs" />
     <Compile Include="Core\Run\SimulationTests.cs" />
@@ -163,10 +164,12 @@
     <Compile Include="MockModelThatThrows.cs" />
     <Compile Include="Soils\MockSoilTemperature.cs" />
     <Compile Include="Soils\SoilStandardiserTests.cs" />
+    <Compile Include="Stock\MockForage.cs" />
+    <Compile Include="Stock\StockTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
-    <Compile Include="ManagerTests.cs" />
+    <Compile Include="Manager\ManagerTests.cs" />
     <Compile Include="Sensitivity\MorrisTests.cs" />
     <Compile Include="APSIMShared\RegressionTests.cs" />
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
@@ -175,6 +178,7 @@
     <Compile Include="SummaryTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="APSIMShared\DBMergerTests.cs" />
+    <Compile Include="UtilityTests\PathUtilitiesTests.cs" />
     <Compile Include="Weather\WeatherSamplerTests.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
@@ -234,6 +238,8 @@
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
     <EmbeddedResource Include="BasicFile.apsimx" />
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
+    <EmbeddedResource Include="bork.apsimx" />
+    <EmbeddedResource Include="Factorial\MultiPaddockFactorOverride.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
@@ -270,6 +276,7 @@
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
     <EmbeddedResource Include="Report\ReportOnEvents.apsimx" />
     <EmbeddedResource Include="Resources\WheatModel.apsimx" />
+    <EmbeddedResource Include="Stock\AddAnimalCohort.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
@@ -381,6 +388,9 @@
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Manager\ManagerOverrides.apsimx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

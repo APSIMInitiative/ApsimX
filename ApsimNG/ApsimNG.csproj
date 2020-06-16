@@ -115,7 +115,6 @@
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
-    <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\dark.gtkrc" />
@@ -187,6 +186,7 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Views\CloudDownloadView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
@@ -228,9 +228,6 @@
     <Compile Include="Interfaces\ITernaryGraphView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
     <Compile Include="Presenters\CLEM\CustomQueryPresenter.cs" />
@@ -259,9 +256,6 @@
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Utility\WeatherDownloadDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
@@ -298,7 +292,6 @@
     <Compile Include="Interfaces\IInitialWaterView.cs" />
     <Compile Include="Interfaces\IModelDetailsWrapperView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
-    <Compile Include="Interfaces\IStockView.cs" />
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Interfaces\ITestView.cs" />
@@ -337,7 +330,6 @@
     <Compile Include="Presenters\PropertyPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
-    <Compile Include="Presenters\StockPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Presenters\DirectedGraphPresenter.cs" />
@@ -391,13 +383,13 @@
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
-    <Compile Include="Views\StockView.cs" />
     <Compile Include="Views\SummaryView.cs" />
     <Compile Include="Views\SupplementView.cs" />
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\ViewBase.cs" />
+    <Compile Include="Views\WindowView.cs" />
     <Compile Include="Views\XYPairsView.cs" />
     <Compile Include="Utility\MacUtilities.cs" />
   </ItemGroup>
@@ -477,6 +469,20 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Stics.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimulationStats.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Draft.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Grapevine.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HourlySinPpAdjusted.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenotypeCross.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipTracker.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CalcCAMPVrnRates.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinalLeafNumberSet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VernalisationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CAMP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
@@ -564,7 +570,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePastureHerd.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLitePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Equipment.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\EquipmentType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\WaterStore.png" />
@@ -589,7 +595,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageProduct.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityTask.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FilePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Finance.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityCalculateInterest.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityPayExpense.png" />
@@ -777,7 +783,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
     <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
-    <EmbeddedResource Include="Resources\TreeViewImages\AGPBrownTop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPBrowntop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPCocksfoot.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPKikuyu.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPPaspalum.png" />
@@ -789,6 +795,9 @@
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Genotype.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Animals.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
