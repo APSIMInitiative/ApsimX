@@ -239,6 +239,7 @@
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
     <EmbeddedResource Include="bork.apsimx" />
     <EmbeddedResource Include="Factorial\MultiPaddockFactorOverride.apsimx" />
+    <EmbeddedResource Include="Core\Run\MultipleReplacements.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />

@@ -86,34 +86,41 @@
             {
                 foreach (string command in this.Command)
                 {
-                    string propertyName = command;
-                    string propertyValue = StringUtilities.SplitOffAfterDelimiter(ref propertyName, "=");
-
-                    propertyName = propertyName.TrimEnd();
-                    propertyValue = propertyValue.TrimEnd();
-
-                    if (propertyName != string.Empty && propertyValue != string.Empty)
+                    try
                     {
-                        IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
-                        if (property == null)
-                            throw new Exception(string.Format("Invalid command in cultivar {0}: {1}", Name, propertyName));
-                        if (property.GetType() != null)
+                        string propertyName = command;
+                        string propertyValue = StringUtilities.SplitOffAfterDelimiter(ref propertyName, "=");
+
+                        propertyName = propertyName.TrimEnd();
+                        propertyValue = propertyValue.TrimEnd();
+
+                        if (propertyName != string.Empty && propertyValue != string.Empty)
                         {
-                            object oldValue = property.Value;
-                            if (oldValue is string || oldValue.GetType().IsArray || !oldValue.GetType().IsClass)
+                            IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
+                            if (property == null)
+                                throw new Exception(string.Format("Invalid command in cultivar {0}: {1}", Name, propertyName));
+                            if (property.GetType() != null)
                             {
-                                this.oldPropertyValues.Add(oldValue);
-                                property.Value = propertyValue;
-                                this.properties.Add(property);
+                                object oldValue = property.Value;
+                                if (oldValue is string || oldValue.GetType().IsArray || !oldValue.GetType().IsClass)
+                                {
+                                    this.oldPropertyValues.Add(oldValue);
+                                    property.Value = propertyValue;
+                                    this.properties.Add(property);
+                                }
+                                else
+                                    throw new ApsimXException(this, "Invalid type for setting cultivar parameter: " + propertyName +
+                                                                    ". Must be a built-in type e.g. double");
                             }
                             else
-                                throw new ApsimXException(this, "Invalid type for setting cultivar parameter: " + propertyName +
-                                                                ". Must be a built-in type e.g. double");
+                            {
+                                throw new ApsimXException(this, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
+                            }
                         }
-                        else
-                        {
-                            throw new ApsimXException(this, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
-                        }
+                    }
+                    catch (Exception err)
+                    {
+                        throw new Exception($"Error in cultivar {Name}: Unable to apply command '{command}'", err);
                     }
                 }
             }
