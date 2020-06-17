@@ -107,6 +107,17 @@
         /// </remarks>
         public string Status { get; private set; }
 
+        /// <summary>
+        /// List all simulation names beneath a given model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="simulationNamesToRun"></param>
+        /// <returns></returns>
+        public List<string> FindAllSimulationNames(IModel model, IEnumerable<string> simulationNamesToRun)
+        {
+            return FindListOfSimulationsToRun(model, simulationNamesToRun).Select(j => j.Name).ToList();
+        }
+
         /// <summary>Find and return a list of duplicate simulation names.</summary>
         private List<string> FindDuplicateSimulationNames()
         {
