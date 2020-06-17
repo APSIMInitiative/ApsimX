@@ -42,6 +42,12 @@
         /// select multiple files.
         /// </summary>
         MultiFiles,
+
+        /// <summary>
+        /// A button editor - allows for a file selection dialog
+        /// which can select directories.
+        /// </summary>
+        DirectoryChooser,
     }
 
     /// <summary>

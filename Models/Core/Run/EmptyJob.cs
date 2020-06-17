@@ -21,6 +21,6 @@ namespace Models.Core.Run
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
-        public double Progress { get { return 0; } }
+        public double Progress { get { return 1; } }
     }
 }
