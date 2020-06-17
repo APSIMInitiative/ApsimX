@@ -256,6 +256,12 @@
             }
         }
 
+        /// <summary>Is today the end of the month?</summary>
+        public bool IsEndOfMonth { get; private set; }
+
+        /// <summary>Is today the end of the year?</summary>
+        public bool IsEndOfYear { get; private set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -293,6 +299,9 @@
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
+                IsEndOfMonth = Today.AddDays(1).Day == 1;
+                IsEndOfYear = Today.Day == 31 && Today.Month == 12;
+
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 
@@ -377,10 +386,10 @@
                 if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
                     EndOfWeek.Invoke(this, args);
 
-                if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
+                if (IsEndOfYear && EndOfYear != null)
                     EndOfYear.Invoke(this, args);
 
-                if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
+                if (IsEndOfMonth && EndOfMonth != null) // is tomorrow the start of a new month?
                 {
                     // CLEM events performed before APSIM EndOfMonth
                     if (CLEMStartOfTimeStep != null)
