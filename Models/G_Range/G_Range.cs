@@ -1029,6 +1029,7 @@ namespace Models
         private double fixNit;                                 // Temporary storage, total fixed nitrogen
         private double runoffN;                                // Temporary storage, runoff nitrogen
 
+        [XmlIgnore]
         private double[,] eUp = new double[nFacets, nWoodyParts];     // Temporary storage, eup().  Woody parts dimensions for that, but includes ABOVE and BELOW in 1 and 2 for herbaceous material
 
         private double volatizedN;                                    // Accumulator for monthy volatilization of N
@@ -1242,13 +1243,18 @@ namespace Models
         /// </summary>
         [Units("kg/ha")]
         [XmlIgnore]
-
         public double aboveGroundTreeNPP { get; private set; }
+
         /// <summary>
         /// Indicate what we are. Dummied for use with CLEM for DARPA project
         /// </summary>
-
         public string CropType { get; private set; } = "NativePasture";
+
+        /// <summary>Echos the parameter value for fall_rate_of_standing_dead
+        /// Requested by Cecile to assist in evaluating usage with CLEM</summary>
+        public double[] fallRateOfStandingDead { get { return parms.fallRateOfStandingDead; } }
+
+
 
 #if !G_RANGE_BUG
         private double proportionCellBurned; // Here to correct inconsistent burining in original
