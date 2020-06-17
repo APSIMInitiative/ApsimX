@@ -257,9 +257,11 @@
         }
 
         /// <summary>Is today the end of the month?</summary>
+        [XmlIgnore]
         public bool IsEndOfMonth { get; private set; }
 
         /// <summary>Is today the end of the year?</summary>
+        [XmlIgnore]
         public bool IsEndOfYear { get; private set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
