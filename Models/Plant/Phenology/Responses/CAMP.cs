@@ -343,6 +343,15 @@ namespace Models.PMF.Phen
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, 90, 90, 1);
         }
 
+        /// <summary>
+        /// Called externally to recalculate phenology parameters
+        /// </summary>
+        /// <param name="overRideFLNParams"></param>
+        public void ResetVernParams(FinalLeafNumberSet overRideFLNParams)
+        {
+            Params = calcCAMPVrnRates.CalcCultivarParams(overRideFLNParams, 90, 90, 1);
+        }
+
         /// <summary>Resets the phase.</summary>
         public void Reset()
         {
