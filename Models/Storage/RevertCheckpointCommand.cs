@@ -15,6 +15,8 @@
         private DataStoreWriter writer;
         private int checkpointIDToRevertTo;
 
+        public string Name { get { return "Revert Checkpoint"; } }
+
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>

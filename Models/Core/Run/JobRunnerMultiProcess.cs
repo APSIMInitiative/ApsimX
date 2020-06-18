@@ -318,6 +318,7 @@
         /// </remarks>
         private class DummyJob : IRunnable
         {
+            public string Name { get { return "Dummy Job"; } }
             public IRunnable ActualJob { get; set; }
             public double Progress { get; set; }
 
