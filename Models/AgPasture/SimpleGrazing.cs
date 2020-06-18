@@ -198,6 +198,11 @@
         [Display(EnabledCallback = "IsTramplingTurnedOn")]
         public double PastureConsumedAtMaximumRateOfLitterRemoval { get; set; } = 1200;
 
+        /// <summary></summary>
+        [Separator("Grazing species weighting")]
+        [Description("Optional proportion weighting to graze the species. Must add up to the number of species.")]
+        public double[] SpeciesCutProportions { get; set; }
+
         ////////////// Callbacks to enable/disable GUI parameters //////////////
 
         /// <summary></summary>
@@ -351,6 +356,12 @@
 
             if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
+
+            if (SpeciesCutProportions == null)
+                SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, forages.Count);
+
+            if (SpeciesCutProportions.Sum() != forages.Count)
+                throw new Exception("The species cut weightings must add up to the number of species.");
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
                 simpleGrazingFrequency = 0;
@@ -591,15 +602,21 @@
             {
                 // Remove a proportion of required DM from each species
                 double totalHarvestableWt = 0.0;
-                foreach (var forage in forages)
-                    totalHarvestableWt += forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
+                double totalWeightedHarvestableWt = 0.0;
+                for (int i = 0; i < forages.Count; i++)
+                {
+                    var harvestableWt = forages[i].Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
+                    totalHarvestableWt += harvestableWt;
+                    totalWeightedHarvestableWt += SpeciesCutProportions[i] * harvestableWt;
+                }
 
                 var grazedForages = new List<Biomass>();
-                foreach (var forage in forages)
+                for (int i = 0; i < forages.Count; i++)
                 {
-                    var harvestableWt = forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
-                    var amountToRemove = removeAmount * harvestableWt / totalHarvestableWt;
-                    var grazed = forage.RemoveBiomass(amountToRemove);
+                    var harvestableWt = forages[i].Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
+                    var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
+                    var amountToRemove = removeAmount * proportion;
+                    var grazed = forages[i].RemoveBiomass(amountToRemove);
                     var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazed.DMDOfStructural;
 
                     GrazedDM += grazed.Wt;
@@ -608,6 +625,10 @@
 
                     grazedForages.Add(grazed);
                 }
+
+                // Check the amount grazed is the same as requested amount to graze.
+                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount))
+                    throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
 
                 double returnedToSoilWt = 0;
                 double returnedToSoilN = 0;
