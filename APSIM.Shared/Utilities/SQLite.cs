@@ -495,12 +495,7 @@ namespace APSIM.Shared.Utilities
         public void Dispose()
         {
             if (connection != null)
-            {
-                if (IsOpen && connection.State != ConnectionState.Closed && connection.State != ConnectionState.Broken)
-                    connection.Close();
-
                 connection.Dispose();
-            }
         }
     }
 }
