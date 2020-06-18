@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
                         {
                             if (simulationId == 0 && data.Rows.Count > 0)
                             {
-                                simulationId = (int)data.Rows[0][i];
+                                simulationId = Convert.ToInt32(data.Rows[0][i]);
                             }
 
                             data.Columns.RemoveAt(i);

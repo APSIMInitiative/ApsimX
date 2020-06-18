@@ -7,6 +7,8 @@ namespace APSIM.Shared.Utilities
     using System.Linq;
     using System.Text;
     using System.Globalization;
+    using System.Data.SQLite;
+    using System.Data.SQLite.Linq;
 
     /// <summary>
     /// A custom marshaler that allows us to pass strings to the native SQLite DLL as
@@ -180,182 +182,8 @@ namespace APSIM.Shared.Utilities
         /// <summary>The sqlit e_ ope n_ wal</summary>
         private const int SQLITE_OPEN_WAL = 0x00080000; /* VFS only */
 
-        #region Externals
-        //When using sqlite3 without .dll the platforms are intelligent enough to add the OS specific details.
-        //On Linux-Mono the lib .so artifacts appear to be accounted for.
-        /// <summary>Sqlite3_opens the specified filename.</summary>
-        /// <param name="filename">The filename.</param>
-        /// <param name="db">The database.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_open", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_open(string filename, out IntPtr db);
+        private SQLiteConnection connection;
 
-        /// <summary>Sqlite3_open_v2s the specified filename.</summary>
-        /// <param name="filename">The filename.</param>
-        /// <param name="db">The database.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="zVfs">The z VFS.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_open_v2", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_open_v2([MarshalAs(UnmanagedType.CustomMarshaler,
-         MarshalTypeRef=typeof(UTF8Marshaler))]string filename, out IntPtr db, int flags, string zVfs);
-
-        /// <summary>Sqlite3_closes the specified database.</summary>
-        /// <param name="db">The database.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_close", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_close(IntPtr db);
-
-        /// <summary>Sqlite3_prepare_v2s the specified database.</summary>
-        /// <param name="db">The database.</param>
-        /// <param name="zSql">The z SQL.</param>
-        /// <param name="nByte">The n byte.</param>
-        /// <param name="ppStmpt">The pp STMPT.</param>
-        /// <param name="pzTail">The pz tail.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_prepare_v2", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_prepare_v2(IntPtr db, string zSql,
-            int nByte, out IntPtr ppStmpt, IntPtr pzTail);
-
-        /// <summary>Sqlite3_steps the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_step", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_step(IntPtr stmHandle);
-
-        /// <summary>Sqlite3_finalizes the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_finalize", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_finalize(IntPtr stmHandle);
-
-        /// <summary>Sqlite3_errmsgs the specified database.</summary>
-        /// <param name="db">The database.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_errmsg", CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr sqlite3_errmsg(IntPtr db);
-
-        /// <summary>Sqlite3_column_counts the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_count", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_column_count(IntPtr stmHandle);
-
-        /// <summary>Sqlite3_column_names the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <param name="iCol">The i col.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_name", CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr sqlite3_column_name(IntPtr stmHandle, int iCol);
-
-        /// <summary>Sqlite3_column_types the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <param name="iCol">The i col.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_type", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_column_type(IntPtr stmHandle, int iCol);
-
-        /// <summary>Sqlite3_column_ints the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <param name="iCol">The i col.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_int", CallingConvention = CallingConvention.Cdecl)]
-        static extern int sqlite3_column_int(IntPtr stmHandle, int iCol);
-
-        /// <summary>Sqlite3_column_texts the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <param name="iCol">The i col.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_text", CallingConvention = CallingConvention.Cdecl)]
-        static extern IntPtr sqlite3_column_text(IntPtr stmHandle, int iCol);
-
-        /// <summary>Sqlite3_column_doubles the specified STM handle.</summary>
-        /// <param name="stmHandle">The STM handle.</param>
-        /// <param name="iCol">The i col.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", EntryPoint = "sqlite3_column_double", CallingConvention = CallingConvention.Cdecl)]
-        static extern double sqlite3_column_double(IntPtr stmHandle, int iCol);
-
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr sqlite3_column_blob(IntPtr stmHandle, int columnNumber);
-
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sqlite3_column_bytes(IntPtr stmHandle, int columnNumber);
-
-        /// <summary>Sqlite3_bind_doubles the specified query.</summary>
-        /// <param name="Query">The query.</param>
-        /// <param name="ParameterNumber">The parameter number.</param>
-        /// <param name="Value">The value.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern string sqlite3_bind_double(IntPtr Query, int ParameterNumber, double Value);
-
-        /// <summary>Sqlite3_bind_ints the specified query.</summary>
-        /// <param name="Query">The query.</param>
-        /// <param name="ParameterNumber">The parameter number.</param>
-        /// <param name="Value">The value.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern string sqlite3_bind_int(IntPtr Query, int ParameterNumber, int Value);
-
-        /// <summary>Sqlite3_bind_nulls the specified query.</summary>
-        /// <param name="Query">The query.</param>
-        /// <param name="ParameterNumber">The parameter number.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern string sqlite3_bind_null(IntPtr Query, int ParameterNumber);
-
-        /// <summary>Sqlite3_bind_texts the specified query.</summary>
-        /// <param name="Query">The query.</param>
-        /// <param name="ParameterNumber">The parameter number.</param>
-        /// <param name="Value">The value.</param>
-        /// <param name="n">The n.</param>
-        /// <param name="CallBack">The call back.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr sqlite3_bind_text(IntPtr Query, int ParameterNumber, string Value, int n, IntPtr CallBack);
-
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sqlite3_bind_blob(IntPtr Query, int iIndex, byte[] iParam, int iBytes, IntPtr iOperation);
-
-        /// <summary>Sqlite3_resets the specified query.</summary>
-        /// <param name="Query">The query.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sqlite3_reset(IntPtr Query);
-
-        /// <summary>Sqlite3_threadsafes this instance.</summary>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sqlite3_threadsafe();
-
-        /// <summary>Sqlite3_busy_timeouts the specified database.</summary>
-        /// <param name="db">The database.</param>
-        /// <param name="ms">The ms.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sqlite3_busy_timeout(IntPtr db, int ms);
-
-        /// <summary>Sqlite3_db_mutexes the specified database.</summary>
-        /// <param name="db">The database.</param>
-        /// <returns></returns>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr sqlite3_db_mutex(IntPtr db);
-
-        /// <summary>Sqlite3_mutex_enters the specified sqlite3_mutex.</summary>
-        /// <param name="sqlite3_mutex">The sqlite3_mutex.</param>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sqlite3_mutex_enter(IntPtr sqlite3_mutex);
-
-        /// <summary>Sqlite3_mutex_leaves the specified sqlite3_mutex.</summary>
-        /// <param name="sqlite3_mutex">The sqlite3_mutex.</param>
-        [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sqlite3_mutex_leave(IntPtr sqlite3_mutex);
-        #endregion
-
-        /// <summary>The _DB</summary>
-        [NonSerialized]
-        private IntPtr _db; //pointer to SQLite database
         /// <summary>The _open</summary>
         [NonSerialized]
         private bool _open; //whether or not the database is open
@@ -394,13 +222,13 @@ namespace APSIM.Shared.Utilities
         /// <summary>Begin a transaction.</summary>
         public void BeginTransaction()
         {
-            ExecuteNonQuery("BEGIN");
+            ExecuteNonQuery("BEGIN TRANSACTION");
         }
 
         /// <summary>End a transaction.</summary>
         public void EndTransaction()
         {
-            ExecuteNonQuery("END");
+            ExecuteNonQuery("END TRANSACTION");
         }
 
         /// <summary>Opens or creates SQLite database with the specified path</summary>
@@ -409,30 +237,19 @@ namespace APSIM.Shared.Utilities
         /// <exception cref="SQLiteException"></exception>
         public void OpenDatabase(string path, bool readOnly)
         {
-            int id;
-            if (readOnly)
-                id = sqlite3_open_v2(path, out _db, SQLITE_OPEN_READONLY | SQLITE_OPEN_FULLMUTEX, null);
-            else
-                id = sqlite3_open_v2(path, out _db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE, null);
-
-            if (id != SQLITE_OK)
-            {
-                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
-                throw new SQLiteException(errorMessage);
-            }
-
+            connection = new SQLiteConnection($"Data Source={path}");
+            connection.Open();
             _open = true;
             dbPath = path;
             IsReadOnly = readOnly;
             IsInMemory = path.ToLower().Contains(":memory:");
-            sqlite3_busy_timeout(_db, 40000);
         }
 
         /// <summary>Closes the SQLite database</summary>
         public void CloseDatabase()
         {
             if (_open)
-                sqlite3_close(_db);
+                connection.Close();
 
             _open = false;
         }
@@ -444,86 +261,8 @@ namespace APSIM.Shared.Utilities
             if (!_open)
                 throw new SQLiteException("SQLite database is not open.");
 
-            //prepare the statement
-            IntPtr stmHandle = Prepare(query);
-
-            int code = sqlite3_step(stmHandle);
-            if (code != SQLITE_DONE)
-            {
-                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
-                throw new SQLiteException(errorMessage);
-            }
-
-            Finalize(stmHandle);
-        }
-
-        private class Column
-        {
-            public string name;
-            public Type dataType;
-            public List<object> values = new List<object>();
-
-            public void addIntValue(int value)
-            {
-                if (dataType == null)
-                    dataType = typeof(int);
-                values.Add(value);
-            }
-
-            public void addDoubleValue(double value)
-            {
-                if (dataType == null || dataType == typeof(int))
-                    dataType = typeof(double);
-                values.Add(value);
-            }
-            public void addByteArrayValue(byte[] value)
-            {
-                if (dataType == null || dataType == typeof(byte[]))
-                    dataType = typeof(byte[]);
-                values.Add(value);
-            }
-            public void addTextValue(string value)
-            {
-                DateTime date;
-                if (DateTime.TryParseExact(value, "yyyy-MM-dd hh:mm:ss", null, System.Globalization.DateTimeStyles.None, out date))
-                {
-                    if (dataType == null)
-                        dataType = typeof(DateTime);
-                    values.Add(date);
-                }
-                else
-                {
-                    dataType = typeof(string);
-                    values.Add(value);
-                }
-            }
-            public void addNull()
-            {
-                values.Add(null);
-            }
-
-            internal object GetValue(int rowIndex)
-            {
-                if (rowIndex >= values.Count)
-                    throw new Exception("Not enough values found when creating DataTable from SQLITE query.");
-                if (values[rowIndex] == null)
-                    return DBNull.Value;
-                else if (dataType == typeof(int))
-                    return Convert.ToInt32(values[rowIndex], CultureInfo.InvariantCulture);
-                else if (dataType == typeof(double))
-                    return Convert.ToDouble(values[rowIndex], System.Globalization.CultureInfo.InvariantCulture);
-                else if (dataType == typeof(DateTime))
-                    return Convert.ToDateTime(values[rowIndex], CultureInfo.InvariantCulture);
-                else if (dataType == typeof(byte[]))
-                    return values[rowIndex];
-                else
-                {
-                    if (values[rowIndex].GetType() == typeof(DateTime))
-                        return Convert.ToDateTime(values[rowIndex], CultureInfo.InvariantCulture).ToString("yyyy-MM-dd hh:mm:ss");
-                    return values[rowIndex].ToString();
-                }
-
-            }
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -537,75 +276,15 @@ namespace APSIM.Shared.Utilities
             if (!_open)
                 throw new SQLiteException("SQLite database is not open.");
 
-            //prepare the statement
-            IntPtr stmHandle = Prepare(query);
-
-            //get the number of returned columns
-            int columnCount = sqlite3_column_count(stmHandle);
-
-            // Create a datatable that may have column of type object. This occurs
-            // when the first row of a table has null values.
-            List<Column> columns = new List<Column>();
-            while (sqlite3_step(stmHandle) == SQLITE_ROW)
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
             {
-                for (int i = 0; i < columnCount; i++)
+                using (SQLiteDataReader reader = command.ExecuteReader())
                 {
-                    if (i >= columns.Count)
-                    {
-                        // add a new column
-                        string columnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
-                        columns.Add(new Column() { name = columnName });
-                    }
-
-                    int sqliteType = sqlite3_column_type(stmHandle, i);
-
-                    if (sqliteType == SQLITE_INTEGER)
-                        columns[i].addIntValue(sqlite3_column_int(stmHandle, i));
-                    else if (sqliteType == SQLITE_FLOAT)
-                        columns[i].addDoubleValue(sqlite3_column_double(stmHandle, i));
-                    else if (sqliteType == SQLITE_TEXT)
-                    {
-                        IntPtr iptr = sqlite3_column_text(stmHandle, i);
-                        columns[i].addTextValue(Marshal.PtrToStringAnsi(iptr));
-                    }
-                    else if (sqliteType == SQLITE_BLOB)
-                    {
-                        int length = sqlite3_column_bytes(stmHandle, i);
-                        byte[] bytes = new byte[length];
-                        Marshal.Copy(sqlite3_column_blob(stmHandle, i), bytes, 0, length);
-                        columns[i].addByteArrayValue(bytes);
-
-                    }
-                    else
-                        columns[i].addNull();
+                    DataTable result = new DataTable();
+                    result.Load(reader);
+                    return result;
                 }
             }
-
-            Finalize(stmHandle);
-
-            // At this point we have a list of columns, each with values for each row.
-            // Need to convert this to a DataTable.
-
-            DataTable table = new DataTable();
-            if (columns.Count > 0)
-            {
-                foreach (Column column in columns)
-                {
-                    if (column.dataType == null)
-                        table.Columns.Add(column.name, typeof(object));
-                    else
-                        table.Columns.Add(column.name, column.dataType);
-                }
-
-                for (int row = 0; row != columns[0].values.Count; row++)
-                {
-                    DataRow newRow = table.NewRow();
-                    for (int col = 0; col != columns.Count; col++)
-                        newRow[col] = columns[col].GetValue(row);
-                    table.Rows.Add(newRow);
-                }
-            }
-            return table;
         }
 
         /// <summary>
@@ -619,104 +298,8 @@ namespace APSIM.Shared.Utilities
             if (!_open)
                 throw new SQLiteException("SQLite database is not open.");
 
-            //prepare the statement
-            IntPtr stmHandle = Prepare(query);
-
-            //get the number of returned columns
-            int columnCount = sqlite3_column_count(stmHandle);
-
-            int ReturnValue = -1;
-            if (sqlite3_step(stmHandle) == SQLITE_ROW && ColumnNumber < columnCount)
-                ReturnValue = sqlite3_column_int(stmHandle, ColumnNumber);
-
-            Finalize(stmHandle);
-            return ReturnValue;
-        }
-
-        /// <summary>Prepares a SQL statement for execution</summary>
-        /// <param name="query">SQL query</param>
-        /// <returns>Pointer to SQLite prepared statement</returns>
-        public IntPtr Prepare(string query)
-        {
-            IntPtr stmHandle;
-
-            if (sqlite3_prepare_v2(_db, query, query.Length,
-                  out stmHandle, IntPtr.Zero) != SQLITE_OK)
-                throw new SQLiteException(Marshal.PtrToStringAnsi(sqlite3_errmsg(_db)));
-
-            return stmHandle;
-        }
-
-        /// <summary>Finalizes a SQLite statement</summary>
-        /// <param name="stmHandle">Pointer to SQLite prepared statement</param>
-        public void Finalize(IntPtr stmHandle)
-        {
-            int code = sqlite3_finalize(stmHandle);
-            if (code != SQLITE_OK)
-            {
-                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
-                throw new SQLiteException(errorMessage);
-            }
-        }
-
-        /// <summary>Bind all parameters values to the specified query and execute the query.</summary>
-        /// <param name="query">The query.</param>
-        /// <param name="values">The values.</param>
-        public void BindParametersAndRunQuery(IntPtr query, IEnumerable<object> values)
-        {
-            int i = 0;
-            foreach (var value in values)
-            {
-                if (Convert.IsDBNull(value) || value == null)
-                {
-                    sqlite3_bind_null(query, i + 1);
-                }
-                // Enums have an underlying type of Int32, but we want to store
-                // their string representation, not their integer value
-                else if (value.GetType().IsEnum)
-                {
-                    sqlite3_bind_text(query, i + 1, value.ToString(), -1, new IntPtr(-1));
-                }
-                else if (value.GetType() == typeof(DateTime))
-                {
-                    DateTime d = (DateTime)value;
-                    sqlite3_bind_text(query, i + 1, d.ToString("yyyy-MM-dd hh:mm:ss"), -1, new IntPtr(-1));
-                }
-                else if (value.GetType() == typeof(int))
-                {
-                    int integer = (int)value;
-                    sqlite3_bind_int(query, i + 1, integer);
-                }
-                else if (value.GetType() == typeof(float))
-                {
-                    float f = (float)value;
-                    sqlite3_bind_double(query, i + 1, f);
-                }
-                else if (value.GetType() == typeof(double))
-                {
-                    double d = (double)value;
-                    sqlite3_bind_double(query, i + 1, d);
-                }
-                else if (value.GetType() == typeof(byte[]))
-                {
-                    byte[] bytes = value as byte[];
-                    IntPtr SQLITE_TRANSIENT = new IntPtr(-1);
-                    sqlite3_bind_blob(query, i + 1, bytes, bytes.Length, SQLITE_TRANSIENT);
-                }
-                else if (value.GetType() == typeof(bool))
-                    sqlite3_bind_text(query, i + 1, value.ToString(), -1, new IntPtr(-1));
-                else
-                    sqlite3_bind_text(query, i + 1, value as string, -1, new IntPtr(-1));
-
-                i++;
-            }
-
-            if (sqlite3_step(query) != SQLITE_DONE)
-            {
-                string errorMessage = Marshal.PtrToStringAnsi(sqlite3_errmsg(_db));
-                throw new SQLiteException(errorMessage);
-            }
-            sqlite3_reset(query);
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                return Convert.ToInt32(command.ExecuteScalar());
         }
 
         /// <summary>Return a list of column names.</summary>
@@ -724,23 +307,18 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public List<string> GetColumnNames(string tableName)
         {
-            string sql = "select * from [" + tableName + "] LIMIT 0";
-
-            //prepare the statement
-            IntPtr stmHandle = Prepare(sql);
-
-            //get the number of returned columns
-            int columnCount = sqlite3_column_count(stmHandle);
-
             List<string> columnNames = new List<string>();
-            for (int i = 0; i < columnCount; i++)
-            {
-                string columnName = Marshal.PtrToStringAnsi(sqlite3_column_name(stmHandle, i));
-                columnNames.Add(columnName);
-            }
 
-            Finalize(stmHandle);
-            return columnNames;
+            string sql = $"PRAGMA table_info({tableName})";
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    DataTable result = new DataTable();
+                    result.Load(reader);
+                    return result.AsEnumerable().Select(r => r["name"].ToString()).ToList();
+                }
+            }
         }
 
         /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
@@ -757,29 +335,12 @@ namespace APSIM.Shared.Utilities
             return columns;
         }
 
-        /// <summary>Lock the mutex</summary>
-        public void MutexEnter()
-        {
-            sqlite3_mutex_enter(sqlite3_db_mutex(_db));
-        }
-
-        /// <summary>Unlock the mutex</summary>
-        public void MutexLeave()
-        {
-            sqlite3_mutex_leave(sqlite3_db_mutex(_db));
-        }
-
         /// <summary>Return a list of column names for the specified table</summary>
         /// <param name="tableName">The table name to get columns from.</param>
         public List<string> GetTableColumns(string tableName)
         {
-            List<string> columns = new List<string>();
-            DataTable columnData = ExecuteQuery("pragma table_info('" + tableName + "')");
-
-            foreach (DataRow row in columnData.Rows)
-                columns.Add(row["name"].ToString());
-
-            return columns;
+            // why???
+            return GetColumnNames(tableName);
         }
 
         /// <summary>Return a list of table names</summary>
@@ -936,15 +497,6 @@ namespace APSIM.Shared.Utilities
             return sql.ToString();
         }
 
-        /// <summary>Create a prepared insert query</summary>
-        /// <param name="tableName">The table name</param>
-        /// <param name="columnNames">Column names</param>
-        private IntPtr CreateInsertQuery(string tableName, List<string> columnNames)
-        {
-            string sql = CreateInsertSQL(tableName, columnNames);
-            return Prepare(sql.ToString());
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -954,54 +506,20 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public int InsertRows(string tableName, List<string> columnNames, List<object[]> values)
         {
-            IntPtr preparedInsertQuery = CreateInsertQuery(tableName, columnNames);
+            string sql = CreateInsertSQL(tableName, columnNames);
 
-            try
+            // Create an insert query
+            foreach (object[] row in values)
             {
-                // Create an insert query
-                for (int rowIndex = 0; rowIndex < values.Count; rowIndex++)
-                    BindParametersAndRunQuery(preparedInsertQuery, values[rowIndex]);
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    foreach (object value in row)
+                        command.Parameters.AddWithValue(null, value);
+                    command.ExecuteNonQuery();
+                }
             }
-            finally
-            {
-                if (preparedInsertQuery != IntPtr.Zero)
-                    Finalize(preparedInsertQuery);
-            }
+
             return 0;
-        }
-
-        /// <summary>
-        /// Prepares a bindable query for the insertion of all columns of a datatable into the database
-        /// </summary>
-        /// <param name="table">A DataTable to be inserted</param>
-        /// <returns>A "handle" for the resulting query</returns>
-        public object PrepareBindableInsertQuery(DataTable table)
-        {
-            IntPtr queryHandle = IntPtr.Zero;
-            // Get a list of column names.
-            var columnNames = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
-            var sql = CreateInsertSQL(table.TableName, columnNames);
-            queryHandle = Prepare(sql);
-            return queryHandle;
-        }
-
-        /// <summary>
-        /// Executes a previously prepared bindable query, inserting a new set of parameters
-        /// </summary>
-        /// <param name="bindableQuery">The prepared query to be executed</param>
-        /// <param name="values">The values to be inserted by using the query</param>
-        public void RunBindableQuery(object bindableQuery, IEnumerable<object> values)
-        {
-            BindParametersAndRunQuery((IntPtr)bindableQuery, values);
-        }
-
-        /// <summary>
-        /// Finalises and destroys a prepared bindable query
-        /// </summary>
-        /// <param name="bindableQuery">The query to be finalised</param>
-        public void FinalizeBindableQuery(object bindableQuery)
-        {
-            Finalize((IntPtr)bindableQuery);
         }
 
         /// <summary>Convert .NET type into an SQLite type</summary>
