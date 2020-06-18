@@ -10,103 +10,6 @@ namespace APSIM.Shared.Utilities
     using System.Data.SQLite;
     using System.Data.SQLite.Linq;
 
-    /// <summary>
-    /// A custom marshaler that allows us to pass strings to the native SQLite DLL as
-    /// the UTF-8 it expects. The default marshaling to a "string" mangles Unicode text
-    /// on Windows.
-    /// This code copied from https://www.codeproject.com/Articles/138614/Advanced-Topics-in-PInvoke-String-Marshaling
-    /// </summary>
-    public class UTF8Marshaler : ICustomMarshaler
-    {
-        static UTF8Marshaler static_instance;
-
-        /// <summary>
-        /// Marshals a managed string object into an allocated buffer holding UTF-8 bytes
-        /// </summary>
-        /// <param name="managedObj">The string object to be marshaled</param>
-        /// <returns></returns>
-        public IntPtr MarshalManagedToNative(object managedObj)
-        {
-            if (managedObj == null)
-                return IntPtr.Zero;
-            if (!(managedObj is string))
-                throw new MarshalDirectiveException(
-                       "UTF8Marshaler must be used on a string.");
-
-            // not null terminated
-            byte[] strbuf = Encoding.UTF8.GetBytes((string)managedObj);
-            IntPtr buffer = Marshal.AllocHGlobal(strbuf.Length + 1);
-            Marshal.Copy(strbuf, 0, buffer, strbuf.Length);
-
-            // write the terminating null
-            Marshal.WriteByte(buffer + strbuf.Length, 0);
-            return buffer;
-        }
-
-        /// <summary>
-        /// Marshals a native UTF-8 string into a managed string
-        /// </summary>
-        /// <param name="pNativeData">A char pointer to a native C-style UTF-8 string</param>
-        /// <returns>A string object holding the managed string</returns>
-        public unsafe object MarshalNativeToManaged(IntPtr pNativeData)
-        {
-            byte* walk = (byte*)pNativeData;
-
-            // find the end of the string
-            while (*walk != 0)
-            {
-                walk++;
-            }
-            int length = (int)(walk - (byte*)pNativeData);
-
-            // should not be null terminated
-            byte[] strbuf = new byte[length];
-            // skip the trailing null
-            Marshal.Copy((IntPtr)pNativeData, strbuf, 0, length);
-            string data = Encoding.UTF8.GetString(strbuf);
-            return data;
-        }
-
-        /// <summary>
-        /// Cleans up the buffer used to hold the native UTF-8 string
-        /// </summary>
-        /// <param name="pNativeData">A pointer to the buffer to be freed</param>
-        public void CleanUpNativeData(IntPtr pNativeData)
-        {
-            Marshal.FreeHGlobal(pNativeData);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="managedObj"></param>
-        public void CleanUpManagedData(object managedObj)
-        {
-        }
-
-        /// <summary>
-        /// Returns the size of the unmanaged data to be marshaled
-        /// </summary>
-        /// <returns></returns>
-        public int GetNativeDataSize()
-        {
-            return -1;
-        }
-
-        /// <summary>
-        /// Creates a singleton instance of the marshaler
-        /// </summary>
-        /// <param name="cookie"></param>
-        /// <returns>The marshaler</returns>
-        public static ICustomMarshaler GetInstance(string cookie)
-        {
-            if (static_instance == null)
-            {
-                return static_instance = new UTF8Marshaler();
-            }
-            return static_instance;
-        }
-    }    
-
     /// <summary>A class representing an exception thrown by this library.</summary>
     [Serializable]
     public class SQLiteException : Exception
@@ -122,92 +25,18 @@ namespace APSIM.Shared.Utilities
 
     /// <summary>A class for accessing an SQLite database.</summary>
     [Serializable]
-    public class SQLite : IDatabaseConnection
+    public class SQLite : IDatabaseConnection, IDisposable
     {
-        /// <summary>The sqlit e_ ok</summary>
-        private const int SQLITE_OK = 0;
-        /// <summary>The sqlit e_ row</summary>
-        private const int SQLITE_ROW = 100;
-        /// <summary>The sqlit e_ done</summary>
-        private const int SQLITE_DONE = 101;
-        /// <summary>The sqlit e_ integer</summary>
-        private const int SQLITE_INTEGER = 1;
-        /// <summary>The sqlit e_ float</summary>
-        private const int SQLITE_FLOAT = 2;
-        /// <summary>The sqlit e_ text</summary>
-        private const int SQLITE_TEXT = 3;
-        /// <summary>The sqlit e_ BLOB</summary>
-        private const int SQLITE_BLOB = 4;
-        /// <summary>The sqlit e_ null</summary>
-        private const int SQLITE_NULL = 5;
-
-        /// <summary>The sqlit e_ ope n_ readonly</summary>
-        private const int SQLITE_OPEN_READONLY = 0x00000001;  /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ readwrite</summary>
-        private const int SQLITE_OPEN_READWRITE = 0x00000002; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ create</summary>
-        private const int SQLITE_OPEN_CREATE = 0x00000004; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ deleteonclose</summary>
-        private const int SQLITE_OPEN_DELETEONCLOSE = 0x00000008; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ exclusive</summary>
-        private const int SQLITE_OPEN_EXCLUSIVE = 0x00000010; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ autoproxy</summary>
-        private const int SQLITE_OPEN_AUTOPROXY = 0x00000020; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ URI</summary>
-        private const int SQLITE_OPEN_URI = 0x00000040; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ memory</summary>
-        private const int SQLITE_OPEN_MEMORY = 0x00000080; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ mai n_ database</summary>
-        private const int SQLITE_OPEN_MAIN_DB = 0x00000100; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ tem p_ database</summary>
-        private const int SQLITE_OPEN_TEMP_DB = 0x00000200; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ transien t_ database</summary>
-        private const int SQLITE_OPEN_TRANSIENT_DB = 0x00000400; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ mai n_ journal</summary>
-        private const int SQLITE_OPEN_MAIN_JOURNAL = 0x00000800; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ tem p_ journal</summary>
-        private const int SQLITE_OPEN_TEMP_JOURNAL = 0x00001000; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ subjournal</summary>
-        private const int SQLITE_OPEN_SUBJOURNAL = 0x00002000; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ maste r_ journal</summary>
-        private const int SQLITE_OPEN_MASTER_JOURNAL = 0x00004000; /* VFS only */
-        /// <summary>The sqlit e_ ope n_ nomutex</summary>
-        private const int SQLITE_OPEN_NOMUTEX = 0x00008000; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ fullmutex</summary>
-        private const int SQLITE_OPEN_FULLMUTEX = 0x00010000; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ sharedcache</summary>
-        private const int SQLITE_OPEN_SHAREDCACHE = 0x00020000; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ privatecache</summary>
-        private const int SQLITE_OPEN_PRIVATECACHE = 0x00040000; /* Ok for sqlite3_open_v2() */
-        /// <summary>The sqlit e_ ope n_ wal</summary>
-        private const int SQLITE_OPEN_WAL = 0x00080000; /* VFS only */
-
+        /// <summary>Connection to the SQLite database.</summary>
         private SQLiteConnection connection;
 
-        /// <summary>The _open</summary>
+        /// <summary>Keeps track of whether the database is open.</summary>
         [NonSerialized]
-        private bool _open; //whether or not the database is open
+        private bool _open;
+
         /// <summary>path to the database</summary>
         [NonSerialized]
         private string dbPath; 
-
-        // Windows LoadLibrary entry point
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr LoadLibrary(string dllToLoad);
-
-        // Windows FreeLibrary entry point
-        //[DllImport("kernel32.dll")]
-        //private static extern bool FreeLibrary(IntPtr hModule);       
-
-        // Static constructor to allow us to pre-load the correct dll (32 vs. 64 bit) on Windows
-        static SQLite()
-        {
-            if (ProcessUtilities.CurrentOS.IsWindows && ProcessUtilities.CurrentOS.Is64BitProcess)
-            {
-                //string DllPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "x64", "sqlite3.dll");
-                //IntPtr lib = LoadLibrary(DllPath);
-            }
-        }
 
         /// <summary>Property to return true if the database is open.</summary>
         /// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
@@ -217,7 +46,7 @@ namespace APSIM.Shared.Utilities
         public bool IsReadOnly { get; private set; }
 
         /// <summary>Return true if the database is in-memory</summary>
-        public bool IsInMemory { get; private set; } = false;
+        public bool IsInMemory { get; private set; }
 
         /// <summary>Begin a transaction.</summary>
         public void BeginTransaction()
@@ -271,7 +100,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="query">SQL query to execute</param>
         /// <returns>DataTable of results</returns>
-        public System.Data.DataTable ExecuteQuery(string query)
+        public DataTable ExecuteQuery(string query)
         {
             if (!_open)
                 throw new SQLiteException("SQLite database is not open.");
@@ -658,6 +487,20 @@ namespace APSIM.Shared.Utilities
         public string AsSQLString(DateTime value)
         {
             return value.ToString("yyyy-MM-dd hh:mm:ss"); 
+        }
+
+        /// <summary>
+        /// Dispose of the SQLite connection.
+        /// </summary>
+        public void Dispose()
+        {
+            if (connection != null)
+            {
+                if (IsOpen && connection.State != ConnectionState.Closed && connection.State != ConnectionState.Broken)
+                    connection.Close();
+
+                connection.Dispose();
+            }
         }
     }
 }
