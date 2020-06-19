@@ -209,6 +209,22 @@
         }
 
         /// <summary>
+        /// Determine the type of an object and return its parent of the specified type.
+        /// </summary>
+        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
+        /// <param name="type">The type of parent to find.</param>
+        /// <returns>The matching parent</returns>
+        private object GetParent(object obj, Type type)
+        {
+            // fixme - 1. shouldn't be reimplementing model.FindAncestor<T>()
+            //         2. obj should be of type IModel
+            if (obj is IModel model)
+                return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
+            else
+                throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Determine the type of an object and return its name.
         /// </summary>
         /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
