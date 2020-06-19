@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            ZoneCLEM clemParent = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+            ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
             ResourcesHolder resHolder;
             Finance finance = null;
             if (clemParent != null)

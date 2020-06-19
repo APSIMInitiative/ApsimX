@@ -606,7 +606,7 @@
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    Simulation clemParent = model.FindAncestor<Simulation>();
                     // get crop file names
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteCrop)).Select(a => a.Name).ToList());
@@ -620,7 +620,7 @@
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    Simulation clemParent = model.FindAncestor<Simulation>();
                     // get Pasture file names
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FilePasture)).Select(a => a.Name).ToList());
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLitePasture)).Select(a => a.Name).ToList());
@@ -703,7 +703,7 @@
         /// <returns>A list of cultivars.</returns>
         private string[] GetCultivarNames(IPlant crop)
         {
-            Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+            Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
             Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
 
             if (replacements == null)
@@ -774,7 +774,7 @@
         {
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
+                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
                 Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
                 if (replacements != null)
                 {
@@ -894,7 +894,7 @@
         private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
         {
             List<string> result = new List<string>();
-            IModel zoneCLEM = Apsim.Parent(this.model, typeof(Zone));
+            IModel zoneCLEM = model.FindAncestor<Zone>();
             ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
             if (resourceNameResourceGroups != null)
             {

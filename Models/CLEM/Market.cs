@@ -109,7 +109,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            holderCount = Apsim.Children(FindAncestor<Zone>(), typeof(Market)).Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };

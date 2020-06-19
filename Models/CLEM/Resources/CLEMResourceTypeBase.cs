@@ -81,7 +81,7 @@ namespace Models.CLEM.Resources
             ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
 
             // does simulation have finance
-            ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+            ResourcesHolder resources = FindAncestor<ResourcesHolder>();
             bool financesPresent = (resources.FinanceResource() != null);
 
             if (price == null)
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
                 // haven't already found a market store
                 if(EquivalentMarketStore is null)
                 {
-                    ResourcesHolder holder = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+                    ResourcesHolder holder = FindAncestor<ResourcesHolder>();
                     // is there a market
                     if (holder != null && holder.FindMarket != null)
                     {

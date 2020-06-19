@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
             {
                 if(parentZone is null)
                 {
-                    parentZone = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                    parentZone = FindAncestor<ZoneCLEM>();
                 }
                 if(parentZone is null)
                 {
@@ -783,7 +783,7 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
-                if (item.Resource != null && Apsim.Parent(item.Resource as Model, typeof(Market)).GetType() == typeof(Market))
+                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>().GetType() == typeof(Market))
                 {
                     ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
                     if(marketActivities != null)

@@ -167,7 +167,7 @@ namespace Models.CLEM
                 string error = "@i:Invalid parameters in model";
 
                 // find IStorageReader of simulation
-                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
                 if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
@@ -318,7 +318,7 @@ namespace Models.CLEM
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             // get clock
-            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            IModel parentSim = FindAncestor<Simulation>();
 
             // find random number generator
             RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;

@@ -125,7 +125,7 @@
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
                     if (matches.Count == 0 && obj is IModel)
                     {
-                        Simulation parentSimulation = Apsim.Parent(obj as IModel, typeof(Simulation)) as Simulation;
+                        Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
                         if (fieldType.IsAssignableFrom(typeof(ILocator)) && parentSimulation != null)
                             matches.Add(new Locator(obj as IModel));
                         else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
@@ -204,20 +204,6 @@
         {
             if (obj is IModel)
                 return (obj as IModel).Name;
-            else
-                throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Determine the type of an object and return its parent of the specified type.
-        /// </summary>
-        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
-        /// <param name="type">The type of parent to find.</param>
-        /// <returns>The matching parent</returns>
-        private object GetParent(object obj, Type type)
-        {
-            if (obj is IModel)
-                return Apsim.Parent(obj as IModel, type);
             else
                 throw new NotImplementedException();
         }

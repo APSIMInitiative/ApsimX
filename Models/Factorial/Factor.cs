@@ -154,7 +154,7 @@
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+            Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
                 var baseSimulation = Apsim.Child(experiment, typeof(Simulation));

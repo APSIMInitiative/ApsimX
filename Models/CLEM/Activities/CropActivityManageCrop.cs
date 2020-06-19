@@ -289,7 +289,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
-            IModel clemParent = Apsim.Parent(this, typeof(ZoneCLEM));
+            IModel clemParent = FindAncestor<ZoneCLEM>();
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 if (clemParent != null && clemParent.Enabled)

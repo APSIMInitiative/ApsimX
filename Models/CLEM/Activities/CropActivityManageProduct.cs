@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
 
             // Retrieve harvest data from the forage file for the entire run. 
             // only get entries where a harvest happened (Amtkg > 0)

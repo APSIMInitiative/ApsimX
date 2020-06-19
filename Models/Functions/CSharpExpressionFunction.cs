@@ -49,7 +49,7 @@ namespace Models.Functions
         {
             if (scriptCompiler == null)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     throw new Exception("Cannot find a script compiler in manager.");
                 scriptCompiler = simulations.ScriptCompiler;

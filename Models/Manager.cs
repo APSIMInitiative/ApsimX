@@ -57,7 +57,7 @@
         {
             if (scriptCompiler == null)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
                 scriptCompiler = simulations.ScriptCompiler;

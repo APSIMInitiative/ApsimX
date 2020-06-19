@@ -570,7 +570,7 @@ namespace UserInterface.Presenters
         {
             if (crop.CultivarNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+                Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
                 Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
                 if (replacements != null)
                 {
@@ -616,7 +616,7 @@ namespace UserInterface.Presenters
         {
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
+                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
                 Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
                 if (replacements != null)
                 {
@@ -734,7 +734,9 @@ namespace UserInterface.Presenters
         private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
         {
             List<string> result = new List<string>();
-            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
+            ZoneCLEM zoneCLEM = model as ZoneCLEM;
+            if (zoneCLEM == null)
+                zoneCLEM = model.FindAncestor<ZoneCLEM>();
             ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
 
             foreach (Type resGroupType in resourceNameResourceGroups)

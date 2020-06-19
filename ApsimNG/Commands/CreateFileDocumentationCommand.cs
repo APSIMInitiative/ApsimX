@@ -99,8 +99,8 @@
         /// <param name="modelToDocument">The model to document.</param>
         private void DocumentModel(List<AutoDocumentation.ITag> tags, IModel modelToDocument)
         {
-            var childParent = Apsim.Parent(modelToDocument, typeof(Simulation));
-            if (childParent == null || childParent is Simulations)
+            var childParent = modelToDocument.FindAncestor<Simulation>();
+            if (childParent == null)
                 AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel: 1, indent: 0);
             else
             {

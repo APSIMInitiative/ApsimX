@@ -169,7 +169,9 @@ namespace ApsimNG.Cloud
                 Directory.CreateDirectory(job.ModelPath);
 
             // Copy weather files to models directory to be compressed.
-            Simulations sims = Apsim.Parent(job.Model, typeof(Simulations)) as Simulations;
+            Simulations sims = job.Model as Simulations;
+            if (sims == null)
+                sims = job.Model.FindAncestor<Simulations>();
             foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
             {
                 if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(sims.FileName))

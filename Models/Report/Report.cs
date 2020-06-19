@@ -158,7 +158,7 @@ namespace Models
         protected string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            IModel zone = Apsim.Parent(this, typeof(Zone));
+            IModel zone = FindAncestor<Zone>();
             variableNames.Add($"[{zone.Name}].Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {

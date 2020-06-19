@@ -354,7 +354,7 @@
                 }
 
                 // 2. Get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                Zone parentZone = FindAncestor<Zone>();
                 double waterDemand = myWaterDemand * parentZone.Area;
 
                 // 3. Estimate fraction of water used up
@@ -395,7 +395,7 @@
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
                 // Get the zone this plant is in
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                Zone parentZone = FindAncestor<Zone>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     PastureBelowGroundOrgan myRoot = root.Find(root => root.myZoneName == zone.Zone.Name);

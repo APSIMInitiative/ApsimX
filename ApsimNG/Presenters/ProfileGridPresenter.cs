@@ -135,7 +135,7 @@ namespace UserInterface.Presenters
                     // bets are off. Otherwise, we find an ancestor which is a simulation
                     // generator (experiment, simulation, morris, etc.) and search for
                     // a physical node somewhere under the simulation generator.
-                    IModel parent = Apsim.Parent(model, typeof(ISimulationDescriptionGenerator));
+                    IModel parent = model.FindAncestor<ISimulationDescriptionGenerator>() as IModel;
                     if (parent != null)
                         water = Apsim.ChildrenRecursively(parent, typeof(Physical)).FirstOrDefault() as Physical;
                 }

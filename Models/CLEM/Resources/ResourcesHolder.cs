@@ -334,7 +334,7 @@ namespace Models.CLEM.Resources
             if (resGroup is null)
             {
                 // add warning the market is not currently trading in this resource
-                string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
+                string zoneName = FindAncestor<Zone>().Name;
                 Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
                 return null;
             }
@@ -353,7 +353,7 @@ namespace Models.CLEM.Resources
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
-                    string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
+                    string zoneName = FindAncestor<Zone>().Name;
                     Warnings.Add($"The resource [r={resourceType.Name}] does not exist in the market and the resource of type [r={resourceType.GetType().ToString()}] cannot be cloned\nAdd resource and associated components to the market.");
                     return null;
                 }
@@ -466,7 +466,7 @@ namespace Models.CLEM.Resources
             // if this isn't a marketplace try find a shared market
             if(this.Parent.GetType() != typeof(Market))
             {
-                IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSim = FindAncestor<Simulation>();
                 FindMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
             }
             InitialiseResourceGroupList();

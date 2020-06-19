@@ -105,8 +105,8 @@ namespace UserInterface.Presenters
             }
 
             // find IStorageReader of simulation
-            IModel simulation = Apsim.Parent(model, typeof(Simulation));
-            IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
+            IModel simulation = model.FindAncestor<Simulation>();
+            IModel simulations = simulation.FindAncestor<Simulations>();
             IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
             if (ds == null)
             {

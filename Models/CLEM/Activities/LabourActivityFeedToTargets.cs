@@ -721,7 +721,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             // find a market place if present
-            Simulation sim = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            Simulation sim = FindAncestor<Simulation>();
             if (sim != null)
             {
                 Market marketPlace = Apsim.Child(sim, typeof(Market)) as Market;

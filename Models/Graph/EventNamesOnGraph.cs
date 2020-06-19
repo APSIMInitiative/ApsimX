@@ -48,7 +48,7 @@ namespace Models
             if (storage == null)
                 return null;
 
-            Series series = Apsim.Parent(this, typeof(Series)) as Series;
+            Series series = FindAncestor<Series>();
             if (series == null)
                 return null;
 
@@ -61,7 +61,7 @@ namespace Models
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+            return FindAncestor<Series>()?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
         }
 
 

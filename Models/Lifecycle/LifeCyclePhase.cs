@@ -220,7 +220,7 @@
                                 throw new Exception(this.FullPath + " is predicting values for migration but has not MigrantDestinationPhase specified");
                             if (cohortMigrants > 0)
                             {
-                                IModel zone = Apsim.Parent(this.Parent, typeof(Zone));
+                                IModel zone = FindAncestor<Zone>();
                                 LifeCycle mDestinationCycle = Apsim.Find(zone, mdest.NameOfLifeCycleForMigrants) as LifeCycle;
                                 if (mDestinationCycle == null)
                                     throw new Exception(this.FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
@@ -244,7 +244,7 @@
                 {
                     if (pdest.ProgenyToDestination>0)
                     {
-                        IModel zone = Apsim.Parent(this.Parent, typeof(Zone));
+                        IModel zone = FindAncestor<Zone>();
                         LifeCycle pDestinationCylce = Apsim.Find(zone, pdest.NameOfLifeCycleForProgeny) as LifeCycle;
                         if (pDestinationCylce == null)
                             throw new Exception(this.FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);

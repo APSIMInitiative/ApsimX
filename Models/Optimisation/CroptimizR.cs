@@ -267,7 +267,7 @@ namespace Models.Optimisation
         /// </summary>
         private string GenerateApsimXFile()
         {
-            Simulations rootNode = (Apsim.Parent(this, typeof(Simulations)) as Simulations);
+            Simulations rootNode = FindAncestor<Simulations>();
             string apsimxFileName = GetTempFileName($"apsimx_file_{id}", ".apsimx");
 
             Simulations sims = new Simulations();

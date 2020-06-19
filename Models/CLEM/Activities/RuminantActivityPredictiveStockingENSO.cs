@@ -145,7 +145,7 @@ namespace Models.CLEM.Activities
             ForecastSequence = new Dictionary<DateTime, double>();
             // load ENSO file into memory
 
-            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
             {
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySIOFile, simulation.FileName);

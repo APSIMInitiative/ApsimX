@@ -188,7 +188,7 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = Apsim.Parent(this, typeof(Folder));
+            var folderNode = FindAncestor<Folder>();
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
@@ -233,7 +233,7 @@ namespace Models.Core
 
             if (Services == null || Services.Count < 1)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations != null)
                     Services = simulations.GetServices();
                 else

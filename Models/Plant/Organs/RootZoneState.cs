@@ -155,7 +155,7 @@ namespace Models.PMF.Organs
             this.remobilisationCost = remobCost;
 
             Clear();
-            Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
+            Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
             NO3 = Apsim.Find(zone, "NO3") as ISolute;

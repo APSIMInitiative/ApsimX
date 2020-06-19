@@ -51,7 +51,7 @@
             intellisense = new IntellisensePresenter(seriesView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
+            Graph parentGraph = series.FindAncestor<Graph>();
             if (parentGraph != null)
             {
                 try

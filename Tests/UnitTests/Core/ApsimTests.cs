@@ -92,10 +92,10 @@
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             
-            Assert.NotNull(Apsim.Parent(this.simulation, typeof(Simulations)));
-            Assert.AreEqual(Apsim.Parent(graph, typeof(Simulations)).Name, "Simulations");
-            Assert.AreEqual(Apsim.Parent(graph, typeof(Simulation)).Name, "Test");
-            Assert.AreEqual(Apsim.Parent(graph, typeof(Zone)).Name, "Field2");
+            Assert.NotNull(simulation.FindAncestor<Simulations>());
+            Assert.AreEqual(graph.FindAncestor<Simulations>().Name, "Simulations");
+            Assert.AreEqual(graph.FindAncestor<Simulation>().Name, "Test");
+            Assert.AreEqual(graph.FindAncestor<Zone>().Name, "Field2");
         }
 
         /// <summary>

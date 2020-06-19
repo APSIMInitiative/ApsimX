@@ -391,9 +391,10 @@ namespace Models.CLEM
         {
             get
             {
-                if (Apsim.Parent(this, typeof(Simulation)) is Simulation simulation && this.FileName != null)
+                Simulation sim = FindAncestor<Simulation>();
+                if (sim?.FileName != null)
                 {
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);
                 }
                 else
                 {

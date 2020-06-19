@@ -105,7 +105,7 @@
         /// <param name="model"></param>
         public static void ClearCaches(IModel model)
         {
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            Simulation simulation = model.FindAncestor<Simulation>();
             if (simulation != null && simulation.Scope != null)
             {
                 simulation.ClearCaches();
@@ -114,7 +114,7 @@
             {
                 // If the model didn't have a Simulation object as an ancestor, then it's likely to 
                 // have a Simulations object as one. If so, the Simulations links may need to be updated.
-                var simulations = Apsim.Parent(model, typeof(Simulations)) as Simulations;
+                Simulations simulations = model.FindAncestor<Simulations>();
                 if (simulations != null)
                 {
                     simulations.ClearLinks();

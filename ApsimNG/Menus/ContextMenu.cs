@@ -782,7 +782,7 @@
                     return;
                 
                 // Don't allow users to change read-only status of released models.
-                if (Apsim.Parent(model, typeof(ModelCollectionFromResource)) is ModelCollectionFromResource)
+                if (model is ModelCollectionFromResource || model.FindAncestor<ModelCollectionFromResource>() != null)
                     return;
 
                 bool readOnly = !model.ReadOnly;
