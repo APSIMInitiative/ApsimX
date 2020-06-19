@@ -108,9 +108,6 @@
     /// * If young exist, their reproductive status must be the same
     /// * Implants (hormone implants)
     /// * Mean age (if the animals are less than one year old )
-    /// 
-    /// 
-    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.HTMLView")]
@@ -187,7 +184,6 @@
 
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
-            this.RandSeed = 0;
         }
 
         #region Initialisation properties ====================================================
@@ -3598,6 +3594,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
             var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();

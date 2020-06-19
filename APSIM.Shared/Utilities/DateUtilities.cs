@@ -384,5 +384,23 @@
         {
             return d == validateDateString(dateStr, d.Year);
         }
+
+        /// <summary>
+        /// Is a specified date at the end of a month?
+        /// </summary>
+        /// <param name="date">The date.</param>
+        public static bool IsEndOfMonth(DateTime date)
+        {
+            return date.AddDays(1).Day == 1;
+        }
+
+        /// <summary>
+        /// Is a specified date at the end of a year?
+        /// </summary>
+        /// <param name="date">The date.</param>
+        public static bool IsEndOfYear(DateTime date)
+        {
+            return date.Day == 31 && date.Month == 12;
+        }
     }
 }

@@ -7,7 +7,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM STOCK Model\r\n \r\n",
+      "Text": "# The APSIM STOCK Model\r\n \r\nNeville Herrmann (CSIRO)\n\nAndrew Moore (CSIRO)\n\nEric Zurcher (CSIRO)\n\nDean Holzworth (AgResearch/CSIRO)\n\nMark Lieffering (AgResearch)\n\nVal Snow (AgResearch)\n\n#Acknowledgements\n\nCSIRO, AgResearch and the APSIM Initiative (https://www.apsim.info/) for funding the implemetation of the Stock model into APSIMX",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -32,7 +32,7 @@
           ],
           "Name": "Observed",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -45,7 +45,7 @@
           "FieldName3UsedForMatch": null,
           "Name": "PredictedObserved",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
@@ -60,13 +60,22 @@
       "Name": "Validation",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "#Validation\n\nThis vignette describes the origins and development of the Stock Model validation dataset. A high-level overview of the Stock Model itself can be found by clicking the Stock node.\n\nThe observed data set used for this validation simulation is based on publicly available data from New Zealand’s Lincoln University Dairy Farm [LUDF](http://www.siddc.org.nz/lu-dairy-farm/). The LUDF is a commercial demonstration dairy farm established in 2001 and operated by the South Island Dairying Development Centre (SIDDC) on behalf of Lincoln University to showcase sustainable and profitable dairy farming.\n\nThe LUDF is located at 1504 Shands Road, Lincoln (New Zealand; 43°38'S 172°26'E). The property is 186 ha of which 160 ha is the milking platform. The different soil types on the farm represent most of the common soil types in the surrounding Canterbury region. The farm operates in the top 2% of NZ dairy farms on profitability.  The farm’s targets and goals have varied over the years but in the 2019/20 season the target stocking rate was 3.5 cows/ha (peak milked), milk production of 1750 kg MS/ha (equivalent to 500kg MS/cow i.e. >100% liveweight in milk production), application of 160kg N/ha plus 300kg DM/cow imported supplement. Most cows are wintered off farm.\n\nAverage annual rainfall of 666 mm per annum is supplemented by an average irrigation input of 450 mm; average evapotranspiration for Lincoln is 870 mm/year. The milking platform was sown at conversion from a sheep operation (March 2001) in a mix of ryegrasses with white clovers, and a small amount of Timothy.\nThe breed of cows at the LUDF are “KiwiCross” which was established as a separate breed in 2005 and is now New Zealand's most popular breed. In the 2019/20 season peak number of cows milked was 555 with the average days in milk of 282 days. The stocking rate of 3.5 cows/ha is equivalent to 1,665 kg liveweight/ha. In terms of feeding, in 2019/20 the cows ate 4.4 t DM/cow as pasture and 0.2 t DM/cow as supplement. Off-farm grazing was 0.7 t DM/cow giving a total feed intake of 5.4 t DM/cow.\n\nWeekly farm data from the LUDF is available at [http://www.siddc.org.nz/lu-dairy-farm/weekly-data/](http://www.siddc.org.nz/lu-dairy-farm/weekly-data/) as PDF reports. The data for the years 2004 to 2017 was transcribed and collated to an Excel worksheet (“LUDFValidateData.xlsx”). There are two columns for pasture intake – that based on measured pasture disappearance i.e. the difference in pre- and post-grazing DM (column “CowPastureIntake”) as well as that which takes into account the likely wastage of pasture during grazing (“CowPastureIntakeWaste”). Estimating this wastage event is difficult. In an investigation conducted at the LUDF, [Pal2012] found that by direct measurement about 8% of the dry matter cows removed from the plants was not ingested (i.e. dropped to the ground). A similar wastage value (6%) was used in a DairyNZ feeding fact sheet for farmers (https://www.dairynz.co.nz/feed/nutrition/lactating-cows; accessed June 2020). Using 30 farmlet-years of data across ten farmlet trials, DairyNZ back-calculated stock intake from measurements of pasture energy density, changes in stock liveweight and milk production. That intake estimate was compared with pasture disappearance and they estimated that about 6% of the measured disappearance was not consumed (C. Glassey, DairyNZ, personal communication 2020). Considering that the 6-8% wastage values are under ideal grazing conditions (which do not occur all the time), the “CowPastureIntakeWaste” column was calculated as 90% of “CowPastureIntake”.\n\nNote that for these validation simulations, one stock parameter was changed from the original values in [FREER1997] to reflect modern dairy cow genetics. This, which can be accessed via the GUI in the \"Friesian\" node in the Stock model, was \"Potential intake (Intake C c-i-[2]) which was increased from 0.025 to 0.04. Also note that \"Dairy intake peak (c-idy-0)\"  was set to 1.\r\n    \n\nAcknowledgements\n\nSouth Island Dairying Development Centre (SIDDC) and Lincoln University for making the dairy farm’s production data available. Scott Rains, Samuel Dennis, Anna Taylor, Rogerio Cichota and Ronaldo Vibart for collating the LUDF data when working at AgResearch. Ron Pellow (SIDDC) for comments on the collated data set. David Pacheco and Ronaldo Vibart (AgResearch) for further discussions about the data.\n",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
           "Name": "LUDF",
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This vignette describes the origins and development of the Stock Model validation dataset. A high-level overview of the Stock Model itself can be found in the memo under the Stock node.\n\nThe observed data set used for this validation simulation is based on publicly available data from New Zealand’s Lincoln University Dairy Farm [LUDF](http://www.siddc.org.nz/lu-dairy-farm/). The LUDF is a commercial demonstration dairy farm established in 2001 and operated by the South Island Dairying Development Centre (SIDDC) on behalf of Lincoln University to showcase sustainable and profitable dairy farming.\n\nThe LUDF is located at 1504 Shands Road, Lincoln (New Zealand; 43°38'S 172°26'E). The property is 186 ha of which 160 ha is the milking platform. The different soil types on the farm represent most of the common soil types in the surrounding Canterbury region. The farm operates in the top 2% of NZ dairy farms on profitability.  The farm’s targets and goals have varied over the years but in the 2019/20 season the target stocking rate was 3.5 cows/ha (peak milked), milk production of 1750 kg MS/ha (equivalent to 500kg MS/cow i.e. >100% liveweight in milk production), application of 160kg N/ha plus 300kg DM/cow imported supplement. Most cows are wintered off farm.\n\nAverage annual rainfall of 666 mm per annum is supplemented by an average irrigation input of 450 mm; average evapotranspiration for Lincoln is 870 mm/year. The milking platform was sown at conversion from a sheep operation (March 2001) in a mix of ryegrasses with white clovers, and a small amount of Timothy.\nThe breed of cows at the LUDF are “KiwiCross” which was established as a separate breed in 2005 and is now New Zealand's most popular breed. In the 2019/20 season peak number of cows milked was 555 with the average days in milk of 282 days. The stocking rate of 3.5 cows/ha is equivalent to 1,665 kg liveweight/ha. In terms of feeding, in 2019/20 the cows ate 4.4 t DM/cow as pasture and 0.2 t DM/cow as supplement. Off-farm grazing was 0.7 t DM/cow giving a total feed intake of 5.4 t DM/cow.\n\nWeekly farm data from the LUDF is available at [http://www.siddc.org.nz/lu-dairy-farm/weekly-data/](http://www.siddc.org.nz/lu-dairy-farm/weekly-data/) as PDF reports. The data for the years 2004 to 2017 was transcribed and collated to an Excel worksheet (“LUDFValidateData.xlsx”). There are two columns for pasture intake – that based on measured pasture disappearance i.e. the difference in pre- and post-grazing DM (column “CowPastureIntake”) as well as that which takes into account the likely wastage of pasture during grazing (“CowPastureIntakeWaste”). Estimating this wastage event is difficult. In an investigation conducted at the LUDF, [Pal2012] found that by direct measurement about 8% of the dry matter cows removed from the plants were not ingested (i.e. dropped to the ground). A similar wastage value was used in a DairyNZ feeding fact sheet for farmers: “The feed requirement figures are 'eaten' feed demand plus 6% to allow for feed wastage observed under good feeding conditions of pasture in farmlet trials.” [https://www.dairynz.co.nz/feed/nutrition/lactating-cows/](https://www.dairynz.co.nz/feed/nutrition/lactating-cows); accessed June 2020. The DairyNZ value of 6% was obtained by farmlet measurements of pre- and post-grazing pasture mass and back calculations of live-weight and milk production (Chris Glassey, DairyNZ, June 2020, pers. comm.). Considering that the 6-8% wastage values are under ideal grazing conditions (which do not occur all the time), the “CowPastureIntakeWaste” column was calculated as 90% of “CowPastureIntake”.\n\nAcknowledgements\n\nSouth Island Dairying Development Centre (SIDDC) and Lincoln University for making the dairy farm’s production data available. Scott Rains, Samuel Dennis, Anna Taylor, Rogerio Cichota and Ronaldo Vibart for collating the LADF data when working at AgResearch. Ron Pellow (SIDDC) for comments on the collated data set. David Pacheco and Ronaldo Vibart (AgResearch) for further discussions about the data.\n",
+              "Text": "\n#Feedlot simulation\n\nThe Feedlot simulation is a simple illustration of the Stock model by using animals entering a feedlot, being fed and milked and leaving the feedlot. In addition to the Stock model itself and the Supplement specification GUI, at its core is the ChangeLactatingCowNumber GUI, the Stock operations and the Supplement operations. Both the operation files are based on stock and pasture/supplement data from the LUDF dataset (see the Validation memo for details). In the Stock operations, data on actual LUDF weekly changes in cow number have been collated from 1/08/2004 to 30/06/2017. Positive numbers denote lactating cows have been bought and moved to the feedlot while negative numbers are when cows are dried off and removed from the feedlot. It was assumed that cows were bought at weekly intervals. For the Supplement operations, six types of supplements labelled \"silage_11me\", \"pasture_11.5me\", \"pasture_12me\", \"pasture_12.5me\", \"pasture_13me\", and \"pasture_13.5me\" are bought. An excess amount of each supplement is bought (enough to last longer than the simulation) and their characteristics must be specified in the Supplement node. The LUDF dataseet is based on weekly reports - the daily pasture and supplements supplied (and their characteristics such as ME content) listed in the Supplement operations was extrapolated from the weekly data to the intervening days. ",
               "Name": "Feedlot memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -61788,7 +61797,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "Validation Plots",
+              "Name": "Feedlot Validation Plots",
               "Children": [
                 {
                   "$type": "Models.Graph, Models",
@@ -61882,7 +61891,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -62145,6 +62154,35 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "ValidationData",
+                      "XFieldName": "Date",
+                      "YFieldName": "CowPastureIntake2",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ObservedWastage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
                       "ColourArgb": -2793984,
                       "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
@@ -62191,7 +62229,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "",
+              "Text": "#SLURP simulation\n\nIdeally, to test the Stock model’s estimates of production we would have a simulation of the animals rotationally grazing paddocks in which an appropriate pasture was growing. That would be a good reflection of reality but would also add errors in the modelling of plant growth and rotation rules that might obscure the testing of the Stock model. \n\nSLURP is a “crop” model that has been built using the Plant Modelling Framework to provide a very simple representation of crops and pastures with user-prescribed growth rather than an internal calculation of growth. The model does not predict crop growth, development or yields - these are supplied by the user. By continually setting the SLURP biomass and pasture quality at the start of the day to the pre-grazing values measured at LUDF, we can use SLURP to test the performance of Stock without adding in other sources of error.\n\nIn this simulation, the pre-grazing pasture characteristics of SLURP are set in the SlurpPreGrazingSet component under the Paddock node. Here the relevant Excel file and worksheet are specified; within which PreGrazingCover, GrazedArea, PastureMEConc, PastureDigestibility, and SupplementOffered are specified. In addition to the Stock model itself, at its core the simulation has the ChangeLactatingCowNumber component, Stock Operations and SLURP. Stock Operations continually resets the number of dairy cows with the values taken from the LUDF dataset (see the Validation memo for details). In the Stock Operations, data on actual LUDF weekly changes in cow number have been collated from 1-Aug-2004 to 30-Jun-2017. Positive numbers denote lactating cows have been bought and moved to the feedlot while negative numbers are when cows are dried off and removed from the paddock. It was assumed that cows were bought at weekly intervals. For SLURP, the LUDF dataset is based on weekly reports - the pasture and supplement supplied in the SLURP Excel spreadsheet was extrapolated to the intervening days.\n\n",
               "Name": "SLURP memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -62283,7 +62321,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        public enum Genotypes\r\n        {\r\n            Friesian,\r\n            Jersey,\r\n            EternalKiwiCross\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: Number of young (foetuses or calves):\")]\r\n        public int NumYoung { get; set; }\r\n\r\n        //[EventSubscribe(\"BuyLactating\")]\r\n        //public void OnBuyLactating(object sender, EventArgs e)\r\n\r\n        public void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n        {\r\n\r\n            if (NumCowsToChange > 0)\r\n\r\n            {\r\n                int preg = Pregnant;\r\n            \tint lact = Lactating;\r\n            \tint numyoung = NumYoung;\r\n\r\n            \tif (stock.AnimalGroups.Count == 2)\r\n            \t{\r\n            \t\tpreg = stock.AnimalGroups[1].Pregnancy;\r\n            \t\tlact = stock.AnimalGroups[1].Lactation;\r\n            \t\tnumyoung = stock.AnimalGroups[1].NoFoetuses;\r\n            \t}\r\n\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n                purchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n                purchase.Sex = Sex;\r\n                purchase.Age = Age;       // age in months\r\n                purchase.Weight = Weight;  // liveweight in kg\r\n                purchase.UseTag = 1;\r\n                purchase.MatedTo = purchase.Genotype;\r\n                purchase.Pregnant = preg;   // days pregnant\r\n                purchase.Lactating = lact;  // days lactating\r\n                purchase.NumYoung = numyoung;\t// cows can be bought lactating with no young\r\n\r\n                stock.Buy(purchase);\r\n\r\n                stock.Move(NewLocation);\r\n\r\n            }\r\n\r\n            if (NumCowsToChange <0)\r\n            \tstock.Sell(NumCowsToChange);\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock stock;\r\n\t\t[Link] Supplement supplement;\r\n\t\t[Link] ISummary summary;\r\n\t\t[Link] Simulation farm;\r\n\r\n\t\tpublic enum Genotypes\r\n\t\t{\r\n\t\t\tFriesian,\r\n\t\t\tJersey,\r\n\t\t\tEternalKiwiCross\r\n\t\t}\r\n\r\n\t\t[Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n\t\t[Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n\t\tpublic Genotypes Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n\t\tpublic ReproductiveType Sex { get; set; }\r\n\r\n\t\t[Description(\"Stock: age (months):\")] \r\n\t\tpublic double Age { get; set; }\r\n\r\n\t\t[Description(\"Stock: weight (kg liveweight /head):\")] \r\n\t\tpublic double Weight { get; set; }\r\n\r\n\t\t[Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n\t\tpublic int Pregnant { get; set; }\r\n\r\n\t\t[Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n\t\tpublic int Lactating { get; set; }\r\n\r\n\t\t[Description(\"Stock: Number of young (foetuses or calves):\")]\r\n\t\tpublic int NumYoung { get; set; }\r\n\r\n\t\tpublic void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n\t\t{\r\n\t\t\tif (NumCowsToChange > 0)\r\n\t\t\t{\r\n\t\t\t\tint preg = Pregnant;\r\n\t\t\t\tint lact = Lactating;\r\n\t\t\t\tint numyoung = NumYoung;\r\n\r\n\t\t\t\tif (stock.AnimalGroups.Count == 2)\r\n\t\t\t\t{\r\n\t\t\t\t\tpreg = stock.AnimalGroups[1].Pregnancy;\r\n\t\t\t\t\tlact = stock.AnimalGroups[1].Lactation;\r\n\t\t\t\t\tnumyoung = stock.AnimalGroups[1].NoFoetuses;\r\n\t\t\t\t}\r\n\r\n\t\t\t\tStockBuy purchase = new StockBuy();\r\n\t\t\t\tpurchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n\t\t\t\tpurchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n\t\t\t\tpurchase.Sex = Sex;\r\n\t\t\t\tpurchase.Age = Age;       // age in months\r\n\t\t\t\tpurchase.Weight = Weight;  // liveweight in kg\r\n\t\t\t\tpurchase.UseTag = 1;\r\n\t\t\t\tpurchase.MatedTo = purchase.Genotype;\r\n\t\t\t\tpurchase.Pregnant = preg;   // days pregnant\r\n\t\t\t\tpurchase.Lactating = lact;  // days lactating\r\n\t\t\t\tpurchase.NumYoung = numyoung;\t// cows can be bought lactating with no young\r\n\r\n\t\t\t\tstock.Buy(purchase);\r\n\r\n\t\t\t\tstock.Move(NewLocation);\r\n\r\n\t\t\t}\r\n\r\n\t\t\tif (NumCowsToChange < 0)\r\n\t\t\t\tstock.Sell(-NumCowsToChange);\r\n\t\t}\r\n    \r\n\t}\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Genotype",
@@ -65376,7 +65414,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "Validation Plots",
+              "Name": "SLURP Validation Plots",
               "Children": [
                 {
                   "$type": "Models.Graph, Models",
@@ -65793,73 +65831,6 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "ConditionScore",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "ValidationReport",
-                      "XFieldName": "Date",
-                      "YFieldName": "ConditionScore1to5",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
                   "Name": "IntakeTotal",
                   "Children": [
                     {
@@ -65871,7 +65842,7 @@
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 4,
                       "MarkerSize": 1,
                       "Line": 4,
                       "LineThickness": 0,
@@ -65967,7 +65938,7 @@
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 4,
                       "MarkerSize": 1,
                       "Line": 4,
                       "LineThickness": 0,
@@ -65982,6 +65953,35 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "ValidationDataCopy",
+                      "XFieldName": "Date",
+                      "YFieldName": "CowPastureIntake2",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ObservedWastage",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -66063,7 +66063,7 @@
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 4,
                       "MarkerSize": 1,
                       "Line": 4,
                       "LineThickness": 0,
@@ -66139,7 +66139,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This sensibility test explores dual-purpose wheat in a high rainfall livestock system in south-eastern Australia.\n\nIt is based on:\n\n_Sprague SJ, Kirkegaard JA, Dove H, Graham JM, McDonald SE, Kelman WM (2015) **Integrating dual-purpose wheat and canola into high-rainfall livestock systems in south-eastern Australia. 1. Crop forage and grain yield.** Crop and Pasture Science 66(4), 365-376._\n\n_Sheep grazing wheat and fed in feedlot_\n\nIn this example simulation sheep are bought and sold on specified date.\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when crop biomass >= 2.4 t/ha.\nSheep are moved from the wheat crop and back to feedlot when crop biomass reaches 0.5 t/ha or crop zadok = 31.\n\n\n_Activities in this manager:_\n\n1. Buy animals at start of year & put in feedlot\n2. Move animals from feedlot to crop when ready to graze\n3. Move animals from crop to feedlot \n4. Shear all animals on specified date\n5. Sell all animals at end of year\n\n_NOTES_\n\n1. When the animals are in the feedlot and an animal dies during the day, the supplement has already been fed into the feedlot\n   based on the number of animals in the feedlot at the start of the day. This means the remaining animals have access to slightly\n   more supplement and causes a spike in supp intake graph.\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\n   This causes irregular amounts of supplement to be fed.\n\n",
+          "Text": "This sensibility test explores dual-purpose wheat in a high rainfall livestock system in south-eastern Australia.\n\nIt is based on [Sprague2015]\n\n_Sheep grazing wheat and fed in feedlot_\n\nIn this example simulation sheep are bought and sold on specified date.\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when crop biomass >= 2.4 t/ha.\nSheep are moved from the wheat crop and back to feedlot when crop biomass reaches 0.5 t/ha or crop zadok = 31.\n\n\n_Activities in this manager:_\n\n1. Buy animals at start of year & put in feedlot\n2. Move animals from feedlot to crop when ready to graze\n3. Move animals from crop to feedlot \n4. Shear all animals on specified date\n5. Sell all animals at end of year\n\n_NOTES_\n\n1. When the animals are in the feedlot and an animal dies during the day, the supplement has already been fed into the feedlot\n   based on the number of animals in the feedlot at the start of the day. This means the remaining animals have access to slightly\n   more supplement and causes a spike in supp intake graph.\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\n   This causes irregular amounts of supplement to be fed.\n\n",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
