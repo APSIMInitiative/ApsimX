@@ -29,28 +29,6 @@
         }
 
         /// <summary>
-        /// Return a parent node of the specified type 'typeFilter'. Will throw if not found.
-        /// </summary>
-        /// <param name="model">The model to get the parent for</param>
-        /// <param name="typeFilter">The name of the parent model to return</param>
-        /// <returns>The parent of the specified type.</returns>
-        public static IModel Parent(IModel model, Type typeFilter)
-        {
-            IModel obj = model;
-            while (obj.Parent != null && !typeFilter.IsAssignableFrom(obj.GetType()))
-            {
-                obj = obj.Parent as IModel;
-            }
-
-            if (obj == null)
-            {
-                throw new ApsimXException(model, "Cannot find a parent of type: " + typeFilter.Name);
-            }
-
-            return obj;
-        }
-
-        /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
         /// <param name="model">The reference model</param>
