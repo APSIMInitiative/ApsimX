@@ -53,11 +53,33 @@
             Flexible
         }
 
+        /// <summary>class for encapsulating a urine return.</summary>
+        public class UrineReturnType : EventArgs
+        {
+            /// <summary>Amount of urine to return (kg)</summary>
+            public double Amount { get; set;  }
+
+            /// <summary>Depth (mm) of soil to return urine into.</summary>
+            public double Depth { get; set;  }
+
+            /// <summary>Grazed dry matter.</summary>
+            public double GrazedDM { get; set; }
+        }
+
         /// <summary>Invoked when a grazing occurs.</summary>
         public event EventHandler Grazed;
 
-        /// <summary>Occurs when [biomass removed].</summary>
+        /// <summary>Invoked when biomass is removed.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
+
+        /// <summary>Invoked when urine is to be returned to soil.</summary>
+        /// <remarks>
+        /// This event provides a mechanism for another model to perform a
+        /// urine return to the soil. If no other model subscribes to this 
+        /// event then SimpleGrazing will do the urine return. This mechanism
+        /// allows a urine patch model to work.
+        /// </remarks>
+        public event EventHandler<UrineReturnType> DoUrineReturn;
 
         ////////////// GUI parameters shown to user //////////////
 
@@ -295,6 +317,12 @@
         [Units("0-1")]
         public double[] ProportionOfTotalDM { get; private set; }
 
+        /// <summary>Did grazing happen today?</summary>
+        [JsonIgnore]
+        [Units("0-1")]
+        public bool GrazedToday{ get; private set; }
+
+
         ////////////// Methods //////////////
 
         /// <summary>This method is invoked at the beginning of the simulation.</summary>
@@ -373,21 +401,21 @@
             PreGrazeHarvestableDM *= 10;
 
             // Determine if we can graze today.
-            var grazeNow = false;
+            GrazedToday = false;
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
-                grazeNow = SimpleRotation();
+                GrazedToday = SimpleRotation();
             else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
-                grazeNow = TargetMass();
+                GrazedToday = TargetMass();
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
-                grazeNow = FlexibleTiming();
+                GrazedToday = FlexibleTiming();
 
             if (NoGrazingStartString != null &&
                 NoGrazingEndString != null &&
                 DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
-                grazeNow = false;
+                GrazedToday = false;
 
             // Perform grazing if necessary.
-            if (grazeNow)
+            if (GrazedToday)
                 GrazeToResidual(residualBiomass);
         }
 
@@ -462,13 +490,27 @@
         /// <summary>Add urine to the soil.</summary>
         private void AddUrineToSoil()
         {
-            // find the layer that the fertilizer is to be added to.
-            int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
+            if (DoUrineReturn == null)
+            {
+                // We will do the urine return.
+                // find the layer that the fertilizer is to be added to.
+                int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
 
-            var ureaValues = Urea.kgha;
-            ureaValues[layer] += AmountUrineNReturned;
-            Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
-            
+                var ureaValues = Urea.kgha;
+                ureaValues[layer] += AmountUrineNReturned;
+                Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+            }
+            else
+            {
+                // Another model (e.g. urine patch) will do the urine return.
+                DoUrineReturn.Invoke(this,
+                    new UrineReturnType()
+                    {
+                        Amount = AmountUrineNReturned,
+                        Depth = DepthUrineIsAdded,
+                        GrazedDM = GrazedDM
+                    });
+            }
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
