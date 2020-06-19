@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 namespace Models.CLEM
 {
     /// <summary>
-    /// GRASP reader interface
+    /// Pasture datacube reader interface
     /// </summary>
-    public interface IFileGRASP
+    public interface IFilePasture
     {
         /// <summary>
-        /// Queries the the GRASP SQLite database using the specified parameters.
-        /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
+        /// Queries the the SQLite pasture database using the specified parameters.
         /// </summary>
         /// <param name="region"></param>
         /// <param name="soil"></param>

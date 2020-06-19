@@ -82,7 +82,8 @@
             // a child of a resource model, the resource model's OnCreated event
             // will make it reread the resource string and replace this child with
             // the 'official' child from the resource.
-            foreach (var model in Apsim.ChildrenRecursively(newModel.Parent))
+            newModel.OnCreated();
+            foreach (var model in Apsim.ChildrenRecursively(newModel))
                 model.OnCreated();
         }
     }

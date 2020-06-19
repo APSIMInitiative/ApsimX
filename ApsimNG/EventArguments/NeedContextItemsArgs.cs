@@ -488,7 +488,7 @@
             else if (member is EventInfo)
                 memberPrefix = "E";
 
-            string xPath = string.Format("//member[starts-with(@name, '{0}:{1}.{2}')]/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
+            string xPath = string.Format("//member[@name='{0}:{1}.{2}']/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
             XmlNode summaryNode = doc.SelectSingleNode(xPath);
             if (summaryNode == null || summaryNode.ChildNodes.Count < 1)
                 return string.Empty;

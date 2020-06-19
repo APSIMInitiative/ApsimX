@@ -559,6 +559,8 @@
                 {
                     cell.EditorType = EditorTypeEnum.MultiFiles;
                 }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.DirectoryName)
+                    cell.EditorType = EditorTypeEnum.DirectoryChooser;
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
@@ -582,11 +584,11 @@
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMResourceName))
+					(properties[i].Display.Type == DisplayType.CLEMResource))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceNameResourceGroups));
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceGroups));
 
                     // add any extras elements provided to the list.
                     if (this.properties[i].Display.CLEMExtraEntries != null)
@@ -600,7 +602,7 @@
                     }
                 }
                 else if (properties[i].Display != null && 
-					(properties[i].Display.Type == DisplayType.CLEMCropFileName))
+					(properties[i].Display.Type == DisplayType.CLEMCropFileReader))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
@@ -614,14 +616,14 @@
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMGraspFileName))
+					(properties[i].Display.Type == DisplayType.CLEMPastureFileReader))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
-                    // get GRASP file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    // get Pasture file names
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FilePasture)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLitePasture)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -1158,6 +1160,11 @@
                 Prompt = "Select file path",
                 InitialDirectory = e.OldValue
             };
+            if (properties[e.RowIndex].Display.Type == DisplayType.DirectoryName)
+            {
+                fileChooser.Action = FileDialog.FileActionType.SelectFolder;
+                fileChooser.Prompt = "Select a folder";
+            }
 
             IGridCell cell = grid.GetCell(e.ColIndex, e.RowIndex);
             string fileName = properties[e.RowIndex].Display.Type == DisplayType.FileNames ? string.Join(", ", fileChooser.GetFiles()) : fileChooser.GetFile();

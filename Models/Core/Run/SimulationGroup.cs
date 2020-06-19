@@ -107,6 +107,17 @@
         /// </remarks>
         public string Status { get; private set; }
 
+        /// <summary>
+        /// List all simulation names beneath a given model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="simulationNamesToRun"></param>
+        /// <returns></returns>
+        public List<string> FindAllSimulationNames(IModel model, IEnumerable<string> simulationNamesToRun)
+        {
+            return FindListOfSimulationsToRun(model, simulationNamesToRun).Select(j => j.Name).ToList();
+        }
+
         /// <summary>Find and return a list of duplicate simulation names.</summary>
         private List<string> FindDuplicateSimulationNames()
         {
@@ -210,7 +221,8 @@
 
                     // Find simulations to run.
                     if (runSimulations)
-                        FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
+                        foreach (IRunnable job in FindListOfSimulationsToRun(relativeTo, simulationNamesToRun))
+                            Add(job);
 
                     
                     if (numJobsToRun == 0)
@@ -233,27 +245,28 @@
         /// <summary>Determine the list of jobs to run</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
-        private void FindListOfSimulationsToRun(IModel relativeTo, IEnumerable<string> simulationNamesToRun)
+        private IEnumerable<IRunnable> FindListOfSimulationsToRun(IModel relativeTo, IEnumerable<string> simulationNamesToRun)
         {
             if (relativeTo is Simulation)
             {
                 if (SimulationNameIsMatched(relativeTo.Name))
-                    Add(new SimulationDescription(relativeTo as Simulation));
+                    yield return new SimulationDescription(relativeTo as Simulation);
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (SimulationNameIsMatched(description.Name))
-                        Add(description);
+                        yield return description;
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)
-                    FindListOfSimulationsToRun(child, simulationNamesToRun);
+                    foreach (IRunnable job in FindListOfSimulationsToRun(child, simulationNamesToRun))
+                        yield return job;
             }
             else if (relativeTo is IRunnable runnable)
-                Add(runnable);
+                yield return runnable;
         }
 
         /// <summary>Return true if simulation name is a match.</summary>

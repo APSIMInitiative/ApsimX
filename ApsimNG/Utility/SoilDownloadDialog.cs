@@ -24,7 +24,7 @@
     /// This needs a bit more polishing to do a better job of guiding the user, and of informing them when
     /// things to wrong.
     /// </summary>
-    class SoilDownloadDialog
+    public sealed class SoilDownloadDialog : IDisposable
     {
 
         // Gtk Widgets
@@ -1108,6 +1108,11 @@
             {
                 WaitCursor = false;
             }
+        }
+
+        public void Dispose()
+        {
+            soilsView?.Dispose();
         }
 
         private bool waiting = false;

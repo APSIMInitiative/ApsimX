@@ -75,14 +75,16 @@ namespace Models.Optimisation
         /// <summary>
         /// Name of the predicted data table.
         /// </summary>
-        [Description("Name of the predicted data table")]
+        [Description("Predicted table")]
+        [Tooltip("Name of the predicted table in the datastore")]
         [Display(Type = DisplayType.TableName)]
         public string PredictedTableName { get; set; }
 
         /// <summary>
         /// Name of the observed data table.
         /// </summary>
-        [Description("Name of the observed data table")]
+        [Description("Observed table")]
+        [Tooltip("Name of the observed table in the datastore")]
         [Display(Type = DisplayType.TableName)]
         public string ObservedTableName { get; set; }
 
@@ -100,6 +102,13 @@ namespace Models.Optimisation
         [Tooltip("Path to which output files (graphs, reports, ...) will be saved. If empty, output files will not be saved.")]
         [Display(Type = DisplayType.DirectoryName)]
         public string OutputPath { get; set; }
+
+        /// <summary>
+        /// Random seed to be used. Set to null for random results.
+        /// </summary>
+        [Description("Random seed (optional)")]
+        [Tooltip("Optional random seed. Iff set, results will be the same for each execution. Leave empty for randomised results.")]
+        public int? RandomSeed { get; set; }
 
         /// <summary>
         /// Optimization algorithm to be used. Changing this will change <see cref="OptimizationMethod"/>.
@@ -238,6 +247,10 @@ namespace Models.Optimisation
             contents.AppendLine($"param_info <- {GetParamInfo()}");
             contents.AppendLine();
             contents.AppendLine(OptimizationMethod.GenerateOptimizationOptions("optim_options"));
+            if (!string.IsNullOrEmpty(OutputPath))
+                contents.AppendLine($"optim_options$path_results <- '{OutputPath.Replace(@"\", @"\\")}'");
+            if (RandomSeed != null)
+                contents.AppendLine($"optim_options$ranseed <- {RandomSeed}");
             contents.AppendLine();
             contents.AppendLine($"crit_function <- {OptimizationMethod.CritFunction}");
             contents.AppendLine($"optim_method <- '{OptimizationMethod.ROptimizerName}'");

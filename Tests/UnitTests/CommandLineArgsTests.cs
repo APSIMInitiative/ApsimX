@@ -3,6 +3,7 @@ using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Soils;
+using Models.Storage;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -140,6 +141,94 @@ namespace UnitTests
             // First 2 soil thicknesses have been changed to 500 and 2500 respectively.
             Assert.AreEqual(soil.Thickness[0], 500, 1e-8);
             Assert.AreEqual(soil.Thickness[1], 2500, 1e-8);
+        }
+
+        /// <summary>
+        /// Test the /SimulationNameRegexPattern option (and the /Verbose option as well,
+        /// technically. This isn't really ideal but it makes things simpler...).
+        /// </summary>
+        [Test]
+        public void TestSimNameRegex()
+        {
+            string models = typeof(IModel).Assembly.Location;
+            IModel sim1 = Utilities.GetRunnableSim().Children[1];
+            sim1.Name = "sim1";
+
+            IModel sim2 = Utilities.GetRunnableSim().Children[1];
+            sim2.Name = "sim2";
+
+            IModel sim3 = Utilities.GetRunnableSim().Children[1];
+            sim3.Name = "simulation3";
+
+            IModel sim4 = Utilities.GetRunnableSim().Children[1];
+            sim4.Name = "Base";
+
+            Simulations sims = Simulations.Create(new[] { sim1, sim2, sim3, sim4, new DataStore() });
+            Apsim.ParentAllChildren(sims);
+
+            string apsimxFileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            sims.Write(apsimxFileName);
+
+            string args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
+            proc.WaitForExit();
+
+            Assert.Null(proc.StdErr);
+            Assert.True(proc.StdOut.Contains("sim1"));
+            Assert.True(proc.StdOut.Contains("sim2"));
+            Assert.False(proc.StdOut.Contains("simulation3"));
+            Assert.False(proc.StdOut.Contains("Base"));
+
+            args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim1";
+            proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
+            proc.WaitForExit();
+
+            Assert.Null(proc.StdErr);
+            Assert.True(proc.StdOut.Contains("sim1"));
+            Assert.False(proc.StdOut.Contains("sim2"));
+            Assert.False(proc.StdOut.Contains("simulation3"));
+            Assert.False(proc.StdOut.Contains("Base"));
+
+            args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:(simulation3)|(Base)";
+            proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
+            proc.WaitForExit();
+
+            Assert.Null(proc.StdErr);
+            Assert.False(proc.StdOut.Contains("sim1"));
+            Assert.False(proc.StdOut.Contains("sim2"));
+            Assert.True(proc.StdOut.Contains("simulation3"));
+            Assert.True(proc.StdOut.Contains("Base"));
+        }
+
+        [Test]
+        public void TestListSimulationNames()
+        {
+            Simulations simpleExperiment = Utilities.GetSimpleExperiment();
+            string output = Utilities.RunModels(simpleExperiment, $"/ListSimulations");
+            string expected = @"ExperimentX1Y1
+ExperimentX2Y1
+ExperimentX1Y2
+ExperimentX2Y2
+";
+            Assert.AreEqual(expected, output);
+
+            output = Utilities.RunModels(simpleExperiment, $"/ListSimulations /SimulationNameRegexPattern:.*Y1");
+            expected = @"ExperimentX1Y1
+ExperimentX2Y1
+";
+            Assert.AreEqual(expected, output);
+
+            // Disable the x factor. The disabled factor should not generate any simulations,
+            // so the output should only contain the 2 simulations which modify y.
+            simpleExperiment.Children[1].Children[0].Children[0].Children[0].Enabled = false;
+            output = Utilities.RunModels(simpleExperiment, $"/ListSimulations");
+            expected = @"ExperimentY1
+ExperimentY2
+";
+            Assert.AreEqual(expected, output);
         }
     }
 }

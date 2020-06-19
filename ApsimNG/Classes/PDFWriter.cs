@@ -241,6 +241,43 @@
                 }
             }
             while (tagsRemoved);
+
+            // Adjust heading levels so we don't have heading levels that have gaps e.g. go from 1 to 3
+            int previousHeadingLevel = 0;
+            for (int i = 0; i < tags.Count - 1; i++)
+            {
+                var thisTag = tags[i] as AutoDocumentation.Heading;
+                if (thisTag != null)
+                { 
+                    var gapInHeadingLevel = thisTag.headingLevel - previousHeadingLevel;
+                    if (gapInHeadingLevel > 1)
+                        RemoveGapInHeadingLevel(tags, i, gapInHeadingLevel - 1);
+                    previousHeadingLevel = thisTag.headingLevel;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove the gap in heading levels for a 'branch' of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="thisTag"></param>
+        /// <param name="nextTag"></param>
+        private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
+        {
+            int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
+            while (tagIndex + 1 < tags.Count)
+            {
+                var tag = tags[tagIndex] as AutoDocumentation.Heading;
+                if (tag != null)
+                {
+                    if (tag.headingLevel >= referenceHeadingLevel)
+                        tag.headingLevel -= deltaHeadingLevel;   // apply delta heading level
+                    else
+                        break;   // branch has ended so exit.
+                }
+                tagIndex++;
+            }
         }
 
         /// <summary>Creates a table of contents.</summary>

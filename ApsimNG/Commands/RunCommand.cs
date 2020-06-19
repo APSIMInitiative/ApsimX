@@ -11,7 +11,7 @@
     using System.Timers;
     using Utility;
 
-    public class RunCommand : ICommand
+    public sealed class RunCommand : ICommand, IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -163,6 +163,12 @@
             }
             //else if (jobRunner != null)
             //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));
+        }
+
+        public void Dispose()
+        {
+            if (timer != null)
+                timer.Dispose();
         }
     }
 }

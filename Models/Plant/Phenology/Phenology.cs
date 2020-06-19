@@ -32,6 +32,9 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         private Structure structure = null;
 
+        [Link(IsOptional = true)]
+        private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -131,6 +134,9 @@ namespace Models.PMF.Phen
                     return phases[currentPhaseIndex];
             }
         }
+        
+        /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
+        public double Zadok {  get { return zadok.Stage; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------

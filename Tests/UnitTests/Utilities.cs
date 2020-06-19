@@ -5,6 +5,7 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.GrazPlan;
     using Models.Storage;
     using System;
@@ -204,6 +205,21 @@ namespace UnitTests
             sims.ParentAllDescendants();
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        public static Simulations GetSimpleExperiment()
+        {
+            Simulations result = ReadFromResource<Simulations>("UnitTests.Resources.SimpleExperiment.apsimx", out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            return result;
+        }
+
+        public static T ReadFromResource<T>(string resourceName, out List<Exception> creationExceptions) where T : IModel
+        {
+            string json = ReflectionUtilities.GetResourceAsString(resourceName);
+            return FileFormat.ReadFromString<T>(json, out creationExceptions);
         }
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿namespace UnitTests.Core.Run
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Soils;
     using NUnit.Framework;
@@ -268,5 +270,27 @@
             Assert.AreEqual(sample.SWUnits, Sample.SWUnitsEnum.Volumetric);
         }
 
+        /// <summary>
+        /// This test attempts to run a simulation with multiple models under the replacements
+        /// node. One replacement overrides wheat's cultivar folder, giving the axe cultivar
+        /// an invalid parameter, which should cause the simulation to bomb.
+        /// </summary>
+        [Test]
+        public void TestMultipleModelReplacements()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            Runner runner = new Runner(sims);
+            errors = runner.Run();
+
+            // The above should throw. The simulations contains a replacements node which
+            // replaces wheat's cultivars folder, giving axe an invalid parameter. We sow
+            // axe in this sim, so we should get an error when the plant is sown.
+            Assert.NotNull(errors);
+            Assert.AreEqual(1, errors.Count);
+        }
     }
 }
