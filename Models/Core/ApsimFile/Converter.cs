@@ -2297,6 +2297,10 @@
                 // Apsim.ParentAllChildren(model) -> model.ParentAllDescendants()
                 FixParentAllChildren(manager);
 
+                // This one will fail if using a runtime type.
+                // Apsim.Parent(model, type) -> model.FindAncestor<Type>()
+                FixParent(manager);
+
                 manager.Save();
             }
 
@@ -2376,6 +2380,27 @@
                         replace = replace.Replace("$1", "($1)");
 
                     return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+            void FixParent(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Parent\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Parent()");
+
+                    string modelName = args[0].Value;
+                    if (modelName.Contains(" "))
+                        modelName = $"({modelName})";
+
+                    string type = args[1].Value.Replace("typeof(", "").TrimEnd(')').Trim();
+
+                    return $"{modelName}.FindAncestor<{type}>()";
                 });
             }
         }
