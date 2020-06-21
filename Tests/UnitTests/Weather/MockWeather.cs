@@ -57,5 +57,9 @@
             throw new NotImplementedException();
 
         }
+
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
     }
 }
