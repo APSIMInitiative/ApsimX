@@ -159,6 +159,8 @@ namespace Models
         {
             List<string> variableNames = new List<string>();
             IModel zone = FindAncestor<Zone>();
+            if (zone == null)
+                zone = FindAncestor<Simulation>();
             variableNames.Add($"[{zone.Name}].Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
