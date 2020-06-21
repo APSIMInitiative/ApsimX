@@ -60,13 +60,17 @@
         /// <summary> Gets the time the sun went down. </summary>
         double CalculateSunSet();
 
-        /// <summary> Daily met data variables read in from file </summary>
-        DailyMetDataFromFile GetMetData(DateTime date);
+        /// <summary> MetData for tomorrow </summary>
+        DailyMetDataFromFile TomorrowsMetData { get; }
+
+        /// <summary> MetData for tomorrow </summary>
+        DailyMetDataFromFile YesterdaysMetData { get; }
     }
 
     /// <summary>
     /// Structure containing daily met data variables
     /// </summary>
+    [Serializable]
     public class DailyMetDataFromFile: Model
     {
         /// <summary>Gets or sets the maximum temperature (oc)</summary>

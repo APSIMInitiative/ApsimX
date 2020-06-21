@@ -97,6 +97,13 @@
         /// <summary>Is 'Random Sampler' enabled?</summary>
         public bool IsRandomSamplerEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSampler; } }
 
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>The start date of the weather file.</summary>
         public DateTime StartDate { get; set; }
@@ -308,14 +315,5 @@
                 throw new Exception($"Non consecutive dates found in file {FileName}");
             return rowIndex;
         }
-
-        /// <summary>In interface but this class does not implement </summary>
-        /// <param name="date">blank date</param>
-        public DailyMetDataFromFile GetMetData(DateTime date)
-        {
-            throw new Exception("Canot call met data from file with " + this.Name + "IWeather type");
-
-        }
-
     }
 }

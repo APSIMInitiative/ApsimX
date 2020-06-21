@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -373,6 +374,14 @@
             }
         }
 
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+
         /// <summary>First date of summer.</summary>
         [XmlIgnore] 
         public string FirstDateOfSummer { get; set; } = "1-dec";
@@ -560,18 +569,32 @@
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            DailyMetDataFromFile TodaysData = GetMetData(this.clock.Today);
+            DailyMetDataFromFile TodaysMetData = new DailyMetDataFromFile();
 
-            this.Radn = TodaysData.Radn;
-            this.MaxT = TodaysData.MaxT;
-            this.MinT = TodaysData.MinT;
-            this.Rain = TodaysData.Rain;
-            this.PanEvap = TodaysData.PanEvap;
-            this.RainfallHours = TodaysData.RainfallHours;
-            this.VP = TodaysData.VP;
-            this.Wind = TodaysData.Wind;
-            this.DiffuseFraction = TodaysData.DiffuseFraction;
-            this.DayLength = TodaysData.DayLength;
+            if (First)
+            {
+                TodaysMetData = GetMetData(this.clock.Today); //Read first date to get todays data
+                YesterdaysMetData = TodaysMetData; //Use todays Data to represent yesterday on the first day
+                TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); // Read another line ahead to get tomorrows data
+            }
+            else
+            { // Move everything forward a day
+                YesterdaysMetData = TodaysMetData;
+                TodaysMetData = TomorrowsMetData;
+                try { TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); }
+                catch { } // Keep tomorrows met data as todays if last day of file
+            }
+
+            this.Radn = TodaysMetData.Radn;
+            this.MaxT = TodaysMetData.MaxT;
+            this.MinT = TodaysMetData.MinT;
+            this.Rain = TodaysMetData.Rain;
+            this.PanEvap = TodaysMetData.PanEvap;
+            this.RainfallHours = TodaysMetData.RainfallHours;
+            this.VP = TodaysMetData.VP;
+            this.Wind = TodaysMetData.Wind;
+            this.DiffuseFraction = TodaysMetData.DiffuseFraction;
+            this.DayLength = TodaysMetData.DayLength;
             
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
@@ -601,7 +624,7 @@
 
         /// <summary>Method to read one days met data in from file</summary>
         /// <param name="date">the date to read met data</param>
-        public DailyMetDataFromFile GetMetData(DateTime date)
+        private DailyMetDataFromFile GetMetData(DateTime date)
         {
             if (this.doSeek)
             {

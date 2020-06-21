@@ -3,6 +3,7 @@ namespace Models
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Xml.Serialization;
@@ -197,27 +198,21 @@ namespace Models
         {
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+            YesterdaysMetData = new DailyMetDataFromFile();
+            YesterdaysMetData.Radn = Radn;
+            YesterdaysMetData.Rain = Rain;
+            YesterdaysMetData.MaxT = MaxT;
+            YesterdaysMetData.MinT = MinT;
+            YesterdaysMetData.VP = VP;
+            TomorrowsMetData = YesterdaysMetData;
         }
 
-        /// <summary>In interface but this class does not implement </summary>
-        /// <param name="date">blank date</param>
-        public DailyMetDataFromFile GetMetData(DateTime date)
-        {
-            DailyMetDataFromFile CEData = new DailyMetDataFromFile();
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
 
-            CEData.MaxT = this.MaxT;
-            CEData.MinT = this.MinT;
-            CEData.PanEvap = this.PanEvap;
-            CEData.Rain = this.Rain;
-            CEData.Radn = this.Radn;
-            CEData.VP = this.VP;
-            CEData.Wind = this.Wind;
-            CEData.RainfallHours = 0;
-            CEData.AirPressure = this.AirPressure;
-            CEData.DiffuseFraction = 0;
-            CEData.DayLength = this.DayLength;
-
-            return CEData;
-        }
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
     }
 }
