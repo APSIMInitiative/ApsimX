@@ -194,7 +194,19 @@ namespace Models
                                     current,
                                     null,
                                     null);
-                    Table.Rows[rowIndex]["Current"] = current;
+                    if (Table.Rows.Count > rowIndex)
+                        Table.Rows[rowIndex]["Current"] = current;
+                    else
+                    {
+                        // The row for this particular variable/stat doesn't exist in the accepted table.
+                        Table.Rows.Add(PO.Name,
+                            stats[i].Name,
+                            statNames[j],
+                            null,
+                            current,
+                            null,
+                            null);
+                    }
                     rowIndex++;
                 }
 
@@ -323,6 +335,8 @@ namespace Models
 
                 // add data to doc table.
                 tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentChildren(this, tags, headingLevel, indent);
             }
         }
 

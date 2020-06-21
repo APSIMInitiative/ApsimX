@@ -14,7 +14,7 @@ using ApsimNG.EventArguments;
 
 namespace UserInterface.Presenters
 {
-    public class GraphPanelPresenter : IPresenter
+    public sealed class GraphPanelPresenter : IPresenter, IDisposable
     {
         /// <summary>
         /// The view.
@@ -331,6 +331,12 @@ namespace UserInterface.Presenters
                 args.Data.FormatTitle(null);
             args.Data.FontSize = panel.FontSize;
             args.Data.MarkerSize = panel.MarkerSize;
+        }
+
+        public void Dispose()
+        {
+            if (processingThread != null)
+                processingThread.Dispose();
         }
 
         private class WorkerStatus

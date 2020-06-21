@@ -184,6 +184,7 @@
     <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
+    <Compile Include="Core\ApsimFile\EditFile.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
     <Compile Include="Core\ApsimFile\XmlConverters.cs" />
@@ -219,7 +220,7 @@
     <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
-    <Compile Include="CLEM\FileSQLiteGRASP.cs" />
+    <Compile Include="CLEM\FileSQLitePasture.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
     <Compile Include="CLEM\IFileGRASP.cs" />
@@ -256,12 +257,14 @@
     <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
+    <Compile Include="Core\Run\IReportsStatus.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
     <Compile Include="Core\Run\SimulationGroup.cs" />
     <Compile Include="Core\Run\ModelReplacement.cs" />
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
+    <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
@@ -317,7 +320,11 @@
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
+    <Compile Include="Plant\Phenology\Responses\CalcCAMPVrnRates.cs" />
+    <Compile Include="Plant\Phenology\Responses\CAMP.cs" />
+    <Compile Include="Plant\Phenology\Responses\IVrn1Expression.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
@@ -325,7 +332,14 @@
     <Compile Include="Plant\Structure\Culm.cs" />
     <Compile Include="Plant\Structure\CulmParams.cs" />
     <Compile Include="Plant\Structure\LeafCulms.cs" />
+    <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
+    <Compile Include="Optimisation\Criteria.cs" />
+    <Compile Include="Optimisation\CroptimizR.cs" />
+    <Compile Include="Optimisation\DreamZs.cs" />
+    <Compile Include="Optimisation\IOptimizationMethod.cs" />
+    <Compile Include="Optimisation\Likelihood.cs" />
+    <Compile Include="Optimisation\Simplex.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -333,11 +347,16 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="StockManagement\Draft.cs" />
+    <Compile Include="Stock\AgeInfo.cs" />
     <Compile Include="Stock\Animals.cs" />
     <Compile Include="Stock\AnimalOutput.cs" />
     <Compile Include="Stock\AgeList.cs" />
     <Compile Include="Stock\AnimalStateInfo.cs" />
+    <Compile Include="Stock\CohortsInfo.cs" />
     <Compile Include="Stock\ExcretionInfo.cs" />
+    <Compile Include="Stock\PaddockInfo.cs" />
+    <Compile Include="Stock\PurchaseInfo.cs" />
     <Compile Include="Stock\StateDifference.cs" />
     <Compile Include="Stock\Diet.cs" />
     <Compile Include="Stock\GenotypeWrapper.cs" />
@@ -547,7 +566,7 @@
     <Compile Include="Stock\stdstrng.cs" />
     <Compile Include="Stock\stock.cs" />
     <Compile Include="Stock\stock_ent.cs" />
-    <Compile Include="Stock\stock_intf.cs" />
+    <Compile Include="Stock\StockList.cs" />
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />
@@ -713,7 +732,7 @@
     <Compile Include="CLEM\FileCrop.cs" />
     <Compile Include="CLEM\Groupings\RuminantFilterGroup.cs" />
     <Compile Include="CLEM\Groupings\LabourFilterGroup.cs" />
-    <Compile Include="CLEM\FileGRASP.cs" />
+    <Compile Include="CLEM\FilePasture.cs" />
     <Compile Include="CLEM\IActivityTimer.cs" />
     <Compile Include="CLEM\Reporting\EcolIndicatorsEventArgs.cs" />
     <Compile Include="CLEM\Reporting\ReportRuminantHerd.cs" />
@@ -866,6 +885,8 @@
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Angus %282nd cross%29.json" />
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %281st cross%29.json" />
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %282nd cross%29.json" />
+    <EmbeddedResource Include="Resources\RScripts\OptimizR.r" />
+    <EmbeddedResource Include="Resources\RScripts\InstallPackageGithub.R" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

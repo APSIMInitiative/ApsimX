@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading;
+    using System.Linq;
 
     /// <summary>
     /// Manages a collection of jobs.
@@ -18,12 +19,19 @@
         public event EventHandler Completed;
 
         /// <summary>
+        /// Returns total number of jobs. This includes jobs which
+        /// have not yet run, and jobs which have already run.
+        /// </summary>
+        public int NumJobs { get; protected set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="job"></param>
         public void Add(IRunnable job)
         {
             jobs.Enqueue(job);
+            NumJobs++;
             Interlocked.Increment(ref numJobsToRun);
         }
 

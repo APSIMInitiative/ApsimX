@@ -241,6 +241,43 @@
                 }
             }
             while (tagsRemoved);
+
+            // Adjust heading levels so we don't have heading levels that have gaps e.g. go from 1 to 3
+            int previousHeadingLevel = 0;
+            for (int i = 0; i < tags.Count - 1; i++)
+            {
+                var thisTag = tags[i] as AutoDocumentation.Heading;
+                if (thisTag != null)
+                { 
+                    var gapInHeadingLevel = thisTag.headingLevel - previousHeadingLevel;
+                    if (gapInHeadingLevel > 1)
+                        RemoveGapInHeadingLevel(tags, i, gapInHeadingLevel - 1);
+                    previousHeadingLevel = thisTag.headingLevel;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove the gap in heading levels for a 'branch' of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="thisTag"></param>
+        /// <param name="nextTag"></param>
+        private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
+        {
+            int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
+            while (tagIndex + 1 < tags.Count)
+            {
+                var tag = tags[tagIndex] as AutoDocumentation.Heading;
+                if (tag != null)
+                {
+                    if (tag.headingLevel >= referenceHeadingLevel)
+                        tag.headingLevel -= deltaHeadingLevel;   // apply delta heading level
+                    else
+                        break;   // branch has ended so exit.
+                }
+                tagIndex++;
+            }
         }
 
         /// <summary>Creates a table of contents.</summary>
@@ -372,7 +409,11 @@
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
+                        ViewBase owner = ViewBase.MasterView as ViewBase;
+                        if (viewName.ToString() == "UserInterface.Views.MapView")
+                            owner = null;
+
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -380,21 +421,28 @@
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin = null;
-                            if (view is MapView)
-                            {
-                                popupWin = (view as MapView)?.GetPopupWin();
-                                popupWin?.SetSizeRequest(515, 500);
-                            }
-                            if (popupWin == null)
-                            {
-                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                                popupWin.SetSizeRequest(800, 800);
-                                popupWin.Add(view.MainWidget);
-                            }
+                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                            popupWin.SetSizeRequest(800, 800);
+                            popupWin.Add(view.MainWidget);
+
+                            if (view is IMapView map)
+                                map.HideZoomControls();
+
                             popupWin.ShowAll();
+
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
+
+                            // From MapView:
+                            // With WebKit, it appears we need to give it time to actually update the display
+                            // Really only a problem with the temporary windows used for generating documentation
+                            if (view is MapView)
+                            {
+                                var watch = new System.Diagnostics.Stopwatch();
+                                watch.Start();
+                                while (watch.ElapsedMilliseconds < 1000)
+                                    Gtk.Application.RunIteration();
+                            }
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);

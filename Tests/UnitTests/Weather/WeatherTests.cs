@@ -28,7 +28,7 @@ namespace UnitTests.Weather
             Simulation baseSim = new Simulation()
             {
                 Name = "Base",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Models.Weather()
                     {

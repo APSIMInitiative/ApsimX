@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 100,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -344,15 +344,15 @@
       "IntakeLactC": [
         0.0,
         0.416,
-        0.416,
-        0.9
+        0.9,
+        0.0
       ],
       "FleeceRatio": 0.0,
       "MaxFleeceDiam": 0.0,
       "BreedSRW": 370.0,
       "Animal": 1,
-      "FDairyIntakePeak": 0.0,
-      "MaxYoung": 0,
+      "FDairyIntakePeak": 0.416,
+      "MaxYoung": 2,
       "PotFleeceWt": 0.0,
       "PeakMilk": 18.5,
       "ConceiveSigs": [

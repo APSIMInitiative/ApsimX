@@ -51,13 +51,14 @@ You will end up with this:
 
 ### Arrays
 
-Array or list properties should be specified as comma-separated values. It is also possible to modify an element at a particular index of an array or list, but the indices start at 1.
+Array or list properties should be specified as comma-separated values. It is also possible to modify an element at a particular index or indices of an array or list, but the indices start at 1. If modifying multiple elements, a second index can be provided after a colon, as in the example below.
 
 For example this:
 
 ```
 .Simulations.Simulation.Field.Soil.Physical.BD = 1,2,3,4,5,6,7
 .Simulations.Simulation.Field.Soil.Physical.AirDry[1] = 8
+.Simulations.Simulation.Field.Soil.Physical.LL15[3:5] = 9
 ```
 
 Results in:

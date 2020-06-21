@@ -101,10 +101,6 @@
         [Description("Initial tag value for the animal group")]
         public int Tag { get; set; }
 
-        /// <summary>Priority accorded the animals in the Draft event.</summary>
-        [Description("Priority accorded the animals in the Draft event")]
-        public int Priority { get; set; }
-
         // ------------------ Properties for young animals ------------------
 
         /// <summary>Number of suckling young.</summary>
@@ -169,7 +165,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            stock.AnimalList.Add(this);
+            stock.StockModel.Add(this);
         }
     }
 }

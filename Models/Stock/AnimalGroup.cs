@@ -37,6 +37,10 @@ namespace Models.GrazPlan
         [NonSerialized]
         private Clock clock;
 
+        /// <summary>The parent stock list</summary>
+        [NonSerialized]
+        private StockList stockList = null;
+
         /// <summary>
         /// Paramters of the animal mated to
         /// </summary>
@@ -161,7 +165,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         private double lactationRatio;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -207,6 +211,11 @@ namespace Models.GrazPlan
         /// </summary>
         private AnimalOutput timeStepState;
 
+        /// <summary>
+        /// ptr to the hosts random number factory
+        /// </summary>
+        private MyRandom randFactory;
+
         // ------------------ Constructors ------------------
 
         /// <summary>
@@ -221,20 +230,27 @@ namespace Models.GrazPlan
         /// <param name="RandomFactory"></param>
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
+        /// <param name="stockListModel">The stock list model.</param>
         /// <param name="bTakeParams"></param>
         public AnimalGroup(Genotype Params,
-                                 GrazType.ReproType Repro,
-                                 int Number,
-                                 int AgeD,
-                                 double LiveWt,
-                                 double GFW,                   // NB this is a *fleece* weight             
-                                 MyRandom RandomFactory,
-                                 Clock clockModel,
-                                 IWeather weatherModel,
-                                 bool bTakeParams = false)
+                           GrazType.ReproType Repro,
+                           int Number,
+                           int AgeD,
+                           double LiveWt,
+                           double GFW,                   // NB this is a *fleece* weight             
+                           MyRandom RandomFactory,
+                           Clock clockModel,
+                           IWeather weatherModel,
+                           StockList stockListModel,
+                           bool bTakeParams = false)
         {
             clock = clockModel;
             weather = weatherModel;
+            stockList = stockListModel;
+
+            for (int i = 0; i < 2; i++)
+                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
+
             Construct(Params, Repro, Number, AgeD, LiveWt, GFW, RandomFactory, bTakeParams);
         }
 
@@ -255,25 +271,28 @@ namespace Models.GrazPlan
             double YoungWoolWt;
             Genotype youngParams;
 
-            RandFactory = Parents.RandFactory;
+            randFactory = Parents.randFactory;
             youngParams = Parents.ConstructOffspringParams();
             Number = Parents.NoOffspring * Parents.FemaleNo;
             iAgeDays = Parents.daysLactating;
             YoungWoolWt = 0.5 * (StockUtilities.DefaultFleece(Parents.Genotype, iAgeDays, GrazType.ReproType.Male, iAgeDays)
                                   + StockUtilities.DefaultFleece(Parents.Genotype, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
 
-            Construct(youngParams, GrazType.ReproType.Male, Number, iAgeDays, LiveWt, YoungWoolWt, RandFactory, true);
+            Construct(youngParams, GrazType.ReproType.Male, Number, iAgeDays, LiveWt, YoungWoolWt, randFactory, true);
 
             MaleNo = Number / 2;
             FemaleNo = Number - MaleNo;
 
             ages = null;
-            ages = new AgeList(RandFactory);
+            ages = new AgeList(randFactory);
             ages.Input(iAgeDays, MaleNo, FemaleNo);
 
             lactStatus = GrazType.LactType.Suckling;
             numberOffspring = Parents.NoOffspring;
             mothers = Parents;
+
+            for (int i = 0; i < 2; i++)
+                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
 
             ComputeSRW();                                                              // Must do this after assigning a value to Mothers  
             CalculateWeights();
@@ -444,11 +463,6 @@ namespace Models.GrazPlan
         public int Deaths { get; set; }
 
         /// <summary>
-        /// ptr to the hosts random number factory
-        /// </summary>
-        public MyRandom RandFactory;
-
-        /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
         public AnimalGroup Young { get; set; }
@@ -500,6 +514,51 @@ namespace Models.GrazPlan
         {
             get { return this.GetExcretion(); }
         }
+
+        /// <summary>
+        /// Gets or sets the paddock occupied
+        /// </summary>
+        public PaddockInfo PaddOccupied { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tag number
+        /// </summary>
+        public int Tag { get; set; }
+
+        /// <summary>
+        /// 0=mothers, 1=suckling young
+        /// </summary>
+        public AnimalStateInfo[] InitState = new AnimalStateInfo[2];
+
+        /// <summary>
+        /// RDF factor
+        /// </summary>
+        public double[] RDPFactor = new double[2];      // [0..1] 
+
+        /// <summary>
+        /// Index is to forage-within-paddock
+        /// </summary>
+        public GrazType.GrazingInputs[] InitForageInputs;
+
+        /// <summary>
+        /// Forage inputs
+        /// </summary>
+        public GrazType.GrazingInputs[] StepForageInputs;
+
+        /// <summary>
+        /// Paddock grazing inputs
+        /// </summary>
+        public GrazType.GrazingInputs PaddockInputs;
+
+        /// <summary>
+        /// Pasture intake
+        /// </summary>
+        public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
+
+        /// <summary>
+        /// Supplement intake
+        /// </summary>
+        public double[] SuppIntakeRate = new double[2];
 
         // Management events .............................................
 
@@ -603,16 +662,23 @@ namespace Models.GrazPlan
         /// <summary>
         /// Shear the animals and return the cfw per head
         /// </summary>
-        /// <param name="CFW_Head"></param>
-        public void Shear(ref double CFW_Head)
+        /// <param name="shearAdults">Shear adults?</param>
+        /// <param name="shearYoung">Shear lambs?</param>
+        /// <returns>CFW per head</returns>
+        public double Shear(bool shearAdults, bool shearYoung)
         {
-            double greasyFleece;
-
-            greasyFleece = this.FleeceCutWeight;
-            this.woolWt = this.woolWt - greasyFleece;
-            this.totalWeight = this.totalWeight - greasyFleece;
-            this.CalculateCoatDepth();
-            CFW_Head = this.Genotype.WoolC[3] * greasyFleece;
+            double CFWHead = 0;
+            if (shearAdults)
+            {
+                double greasyFleece = this.FleeceCutWeight;
+                woolWt = this.woolWt - greasyFleece;
+                totalWeight = this.totalWeight - greasyFleece;
+                CalculateCoatDepth();
+                CFWHead = Genotype.WoolC[3] * greasyFleece;
+            }
+            if (shearYoung && Young != null)
+                CFWHead += Young.Shear(true, false);
+            return CFWHead;
         }
 
         /// <summary>
@@ -635,6 +701,18 @@ namespace Models.GrazPlan
                 ComputeSRW();
                 CalculateWeights();
             }
+        }
+
+        /// <summary>
+        /// Move the animal group to a new paddock.
+        /// </summary>
+        /// <param name="paddockName"></param>
+        public void MoveToPaddock(string paddockName)
+        {
+            var paddock = stockList.Paddocks.Find(p => p.Name == paddockName);
+            if (paddock == null)
+                throw new Exception($"Cannot find paddock {paddock}");
+            PaddOccupied = paddock;
         }
 
         // Information properties ........................................
@@ -835,17 +913,24 @@ namespace Models.GrazPlan
             AnimalGroup theCopy = ReflectionUtilities.Clone(this) as AnimalGroup;
             theCopy.weather = weather;
             theCopy.clock = clock;
+            theCopy.stockList = stockList;
+            if (PaddOccupied != null)
+            {
+                theCopy.PaddOccupied.zone = PaddOccupied.zone;
+                theCopy.PaddOccupied.AddFaecesObj = PaddOccupied.AddFaecesObj;
+                theCopy.PaddOccupied.AddUrineObj = PaddOccupied.AddUrineObj;
+            }
             if (theCopy.Young != null)
             {
                 theCopy.Young.clock = clock;
                 theCopy.Young.weather = weather;
             }
-            theCopy.RandFactory = this.RandFactory;
+            theCopy.randFactory = this.randFactory;
             if (this.ages != null)
-                theCopy.ages.RandFactory = this.RandFactory;
+                theCopy.ages.RandFactory = this.randFactory;
             if (this.Young != null)
             {
-                theCopy.Young.RandFactory = this.RandFactory;
+                theCopy.Young.randFactory = this.randFactory;
                 theCopy.Young.mothers = theCopy;
             }
             return theCopy;
@@ -993,10 +1078,10 @@ namespace Models.GrazPlan
         /// <summary>
         /// Split young
         /// </summary>
-        /// <param name="newGroups">New animal groups</param>
-        public void SplitYoung(ref List<AnimalGroup> newGroups)
+        public List<AnimalGroup> SplitYoung()
         {
             int numToSplit;
+            var newGroups = new List<AnimalGroup>();
 
             if (this.Young != null)
             {
@@ -1015,6 +1100,7 @@ namespace Models.GrazPlan
                     this.SplitNumbers(ref newGroups, numToSplit, 0, 2 * numToSplit);
                 }
             }
+            return newGroups;
         }
 
         /// <summary>
@@ -2098,7 +2184,7 @@ namespace Models.GrazPlan
             initialNumber = NoAnimals;
             for (n = 1; n <= Genotype.MaxYoung; n++)
             {
-                numPreg = Math.Min(NoAnimals, RandFactory.RndPropn(initialNumber, conceptionRate[n]));
+                numPreg = Math.Min(NoAnimals, randFactory.RndPropn(initialNumber, conceptionRate[n]));
                 pregGroup = Split(numPreg, false, fertileDiff, NODIFF);
                 if (pregGroup != null)
                 {
@@ -2195,11 +2281,11 @@ namespace Models.GrazPlan
             Diffs.BaseWeight = -Genotype.MortWtDiff * BaseWeight;
 
             deathRate = DeathRateFunc();
-            femaleLosses = RandFactory.RndPropn(FemaleNo, deathRate);
-            maleLosses = RandFactory.RndPropn(MaleNo, deathRate);
+            femaleLosses = randFactory.RndPropn(FemaleNo, deathRate);
+            maleLosses = randFactory.RndPropn(MaleNo, deathRate);
             NoLosses = maleLosses + femaleLosses;
             if ((Animal == GrazType.AnimalType.Sheep) && (Young != null) && (Young.AgeDays == 1))
-                YoungLosses = RandFactory.RndPropn(Young.NoAnimals, ExposureFunc());
+                YoungLosses = randFactory.RndPropn(Young.NoAnimals, ExposureFunc());
             else
                 YoungLosses = 0;
             Deaths = NoLosses;
@@ -2293,7 +2379,7 @@ namespace Models.GrazPlan
                     DystokiaRate = StdMath.SIG((FoetalWeight / Genotype.StdBirthWt(1)) *     // number of mothers into a new animal      
                                            Math.Max(RelativeSize, 1.0),                         // group                                    
                                          Genotype.DystokiaSigs);
-                    numLosses = RandFactory.RndPropn(FemaleNo, DystokiaRate);
+                    numLosses = randFactory.RndPropn(FemaleNo, DystokiaRate);
                     if (numLosses > 0)
                     {
                         DystGroup = Split(numLosses, false, NODIFF, NODIFF);
@@ -2307,7 +2393,7 @@ namespace Models.GrazPlan
                 {                                                                  // due to pregnancy toxaemia              
                     ToxaemiaRate = StdMath.SIG((midLatePregWeight - BaseWeight) / normalWeight,
                                          Genotype.ToxaemiaSigs);
-                    numLosses = RandFactory.RndPropn(FemaleNo, ToxaemiaRate);
+                    numLosses = randFactory.RndPropn(FemaleNo, ToxaemiaRate);
                     Deaths += numLosses;
                     if (numLosses > 0)
                         Split(numLosses, false, NODIFF, NODIFF);
@@ -2985,7 +3071,7 @@ namespace Models.GrazPlan
         {
             double fWoolAgeFactor;
 
-            RandFactory = randomFactory;
+            randFactory = randomFactory;
 
             if (takeParams)
                 Genotype = parameters;
@@ -3007,7 +3093,7 @@ namespace Models.GrazPlan
             IntakeModifier = 1.0;
 
             AgeDays = age;                                                          // Age of the animals                       
-            ages = new AgeList(RandFactory);
+            ages = new AgeList(randFactory);
             ages.Input(age, MaleNo, FemaleNo);
 
             RationFed = new SupplementRation();
@@ -3090,9 +3176,9 @@ namespace Models.GrazPlan
             //// WITH Young DO
             if ((this.Young.MaleNo > 0) && (this.Young.FemaleNo > 0))
             {
-                DiffRatio = (this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], nym, nyf)
-                              - this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], this.Young.MaleNo - nym, this.Young.FemaleNo - nyf))
-                            / this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], this.Young.MaleNo, this.Young.FemaleNo);
+                DiffRatio = (this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], nym, nyf)
+                              - this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], this.Young.MaleNo - nym, this.Young.FemaleNo - nyf))
+                            / this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], this.Young.MaleNo, this.Young.FemaleNo);
                 YngDiffs.StdRefWt = this.standardReferenceWeight * DiffRatio;
                 YngDiffs.BaseWeight = this.BaseWeight * DiffRatio;
                 YngDiffs.FleeceWt = this.woolWt * DiffRatio;

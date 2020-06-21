@@ -22,7 +22,7 @@
 
             var baseSim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock() { },
                     new WeatherSampler()

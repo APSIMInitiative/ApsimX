@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Models.Soils;
 using Models.Functions;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.Phen
@@ -28,14 +29,21 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
+        [Link]
+        private Clock clock = null;
+
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
-
+        
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
+
         // 3. Public properties
         //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler SeedImbibed;
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -49,6 +57,12 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double FractionComplete { get { return 0.999; } }
 
+        /// <summary>
+        /// Date for germination to occur.  null by default so model is used
+        /// </summary>
+        [XmlIgnore]
+        public string GerminationDate { get; set; }
+
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -58,16 +72,29 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
+            if (GerminationDate != null)
             {
+                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
+            }
+
+            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
+            {
+                // Invoke an AboutToSow event.
+                if (SeedImbibed != null)
+                    SeedImbibed.Invoke(this, new EventArgs());
                 proceedToNextPhase = true;
                 propOfDayToUse = 1;
             }
+
             return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { }
+        public virtual void ResetPhase() { GerminationDate = null; }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
