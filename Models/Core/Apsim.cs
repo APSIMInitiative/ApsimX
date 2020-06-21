@@ -83,7 +83,7 @@
         /// <param name="model"></param>
         public static void ClearCaches(IModel model)
         {
-            Simulation simulation = model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
             if (simulation != null && simulation.Scope != null)
             {
                 simulation.ClearCaches();
