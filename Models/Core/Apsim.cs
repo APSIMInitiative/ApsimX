@@ -18,35 +18,6 @@
     public static class Apsim
     {
         /// <summary>
-        /// Locates and returns a model with the specified name that is in scope.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="namePath">The name of the model to return</param>
-        /// <returns>The found model or null if not found</returns>
-        public static IModel Find(IModel model, string namePath)
-        {
-            return model?.FindInScope(namePath);
-        }
-
-        /// <summary>
-        /// Locates and returns a model with the specified type that is in scope.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="type">The type of the model to return</param>
-        /// <returns>The found model or null if not found</returns>
-        public static IModel Find(IModel model, Type type)
-        {
-            if (model == null)
-                return null;
-
-            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindInScope" && m.IsGenericMethod);
-            if (find == null)
-                throw new Exception($"Unable to find find method");
-            return find.MakeGenericMethod(type).Invoke(model, null) as IModel;
-        }
-
-        /// <summary>
         /// Locates and returns all models in scope.
         /// </summary>
         /// <param name="model">The reference model</param>
