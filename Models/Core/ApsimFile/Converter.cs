@@ -2304,6 +2304,13 @@
                 // Apsim.Set(model, path, value) -> model.FindByPath(path).Value = value
                 FixSet(manager);
 
+                // Apsim.Find(model, x) -> model.FindInScope(x)
+                // Apsim.Find(model, typeof(Y)) -> model.FindInScope<Y>()
+                // This one will fail if the second argument is a runtime type which doesn't
+                // use the typeof() syntax. E.g. if it's a variable of type Type.
+                // Will probably fail in other cases too. It's really not ideal.
+                FixFind(manager);
+
                 manager.Save();
             }
 
@@ -2428,6 +2435,34 @@
                     return $"{model}.FindByPath({path}).Value = {value}";
                 });
             }
+
+
+            void FixFind(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Find\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Find()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string pathOrType = args[1].Value.Trim();
+                    if (pathOrType.Contains("typeof("))
+                    {
+                        string type = pathOrType.Replace("typeof(", "").TrimEnd(')');
+                        return $"{model}.FindInScope<{type}>()";
+                    }
+                    else
+                        return $"{model}.FindInScope({pathOrType})";
+                });
+            }
+
         }
 
         /// <summary>
