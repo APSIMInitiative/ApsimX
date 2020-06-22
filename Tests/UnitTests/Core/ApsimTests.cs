@@ -168,7 +168,7 @@
 
             double[] thicknessBefore = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
             Assert.AreEqual(6, thicknessBefore.Length); // If APITest.xml is modified, this test will fail and must be updated.
-            Apsim.Set(simulation, "[Physical].Thickness[1]", "20");
+            simulation.FindByPath("[Physical].Thickness[1]").Value = "20";
             double[] thicknessAfter = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
 
             Assert.AreEqual(thicknessBefore.Length, thicknessAfter.Length);

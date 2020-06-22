@@ -103,7 +103,7 @@ namespace Models
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
-                        Apsim.Set(this, variableName, value);
+                        this.FindByPath(variableName).Value = value;
                     }
                     else if (st.Trim() != string.Empty)
                     {
