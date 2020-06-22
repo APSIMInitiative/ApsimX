@@ -682,7 +682,7 @@
                 readMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
 
             if (this.vapourPressureIndex == -1)
-                readMetData.VP = Math.Max(0, MetUtilities.svp(this.MinT));
+                readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
             else
                 readMetData.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
 
