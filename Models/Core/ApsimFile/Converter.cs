@@ -2286,6 +2286,16 @@
                         c["Name"] = "Response";
                     }
                 }
+                foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+                {
+                    if (!cultivar["Command"].HasValues)
+                        continue;
+
+                    foreach (JValue command in cultivar["Command"].Children())
+                    {
+                        command.Value = command.Value.ToString().Replace(".TemperatureResponse", ".Response");
+                    }
+                }
             }
         }
 
