@@ -15,7 +15,7 @@ namespace Models.Functions
     [Description("Interoplates Daily Min and Max temperatures out to sub daily values using the Interpolation Method, applyes a temperature response function and returns a daily agrigate")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
+    public class HourlyInterpolation : Model, IFunction, ICustomDocumentation
     {
 
         /// <summary>The met data</summary>
@@ -28,7 +28,7 @@ namespace Models.Functions
 
         /// <summary>The temperature response function applied to each sub daily temperature and averaged to give daily mean</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IIndexedFunction TemperatureResponse = null;
+        private IIndexedFunction Response = null;
 
         /// <summary>Method used to agreagate sub daily values</summary>
         [Description("Method used to agregate sub daily temperature function")]
@@ -75,7 +75,7 @@ namespace Models.Functions
             SubDailyResponse = new List<double>();
             foreach (double sdt in SubDailyTemperatures)
             {
-                SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
+                SubDailyResponse.Add(Response.ValueIndexed(sdt));
             }
 
         }
