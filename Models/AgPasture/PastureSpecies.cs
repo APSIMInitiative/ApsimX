@@ -2726,7 +2726,7 @@
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
                 // find the zone and get its soil
-                Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
+                Zone zone = this.FindInScope(rootZone.ZoneName) as Zone;
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
 

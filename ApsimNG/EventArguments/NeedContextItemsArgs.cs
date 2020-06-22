@@ -251,7 +251,7 @@
             if (o == null && relativeTo.Parent is Replacements)
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
+                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
                     o = simulation.FindByPath(objectName)?.Value as IModel;
@@ -312,7 +312,7 @@
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
                     textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = Apsim.Find(relativeTo, textBeforeFirstDot);
+                node = relativeTo.FindInScope(textBeforeFirstDot);
             }
             else
             {
@@ -320,7 +320,7 @@
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = Apsim.Find(relativeTo, modelName);
+                node = relativeTo.FindInScope(modelName);
 
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should

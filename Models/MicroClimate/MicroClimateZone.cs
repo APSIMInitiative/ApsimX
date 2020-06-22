@@ -179,8 +179,8 @@
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
             canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
             modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
-            soilWater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
-            surfaceOM = Apsim.Find(Zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
+            soilWater = Zone.FindInScope<ISoilWater>();
+            surfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
         }
 
         /// <summary>The zone model.</summary>

@@ -396,7 +396,7 @@
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.LifeCycleName)
                     {
-                        Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                        Zone zone = model.FindInScope<Zone>();
                         if (zone != null)
                         {
                             cell.DropDownStrings = GetLifeCycleNames(zone);
@@ -529,7 +529,7 @@
                          properties[i].Display.Type == DisplayType.LifeCycleName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
                         cell.DropDownStrings = GetLifeCycleNames(zone);
@@ -841,7 +841,7 @@
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(model, typeof(IPlant)) as IPlant;
+            return model.FindInScope<IPlant>();
         }
 
         /// <summary>
@@ -865,7 +865,7 @@
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(model, typeof(LifeCycle)) as LifeCycle;
+            return model.FindInScope<LifeCycle>();
         }
 
         private string[] GetResidueNames()
@@ -1037,13 +1037,13 @@
         protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, cell.NewValue);
+                return (property.Object as IModel).FindInScope(cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
             {
                 object result = (property.Object as IModel).FindByPath(cell.NewValue)?.Value;
                 if (result == null)
-                    result = Apsim.Find(property.Object as IModel, cell.NewValue);
+                    result = (property.Object as IModel).FindInScope(cell.NewValue);
 
                 return result;
             }

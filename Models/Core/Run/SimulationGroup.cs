@@ -321,7 +321,7 @@
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = Apsim.Find(relativeTo, typeof(Simulations)) as Simulations;
+                Simulations sims = relativeTo.FindInScope<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)

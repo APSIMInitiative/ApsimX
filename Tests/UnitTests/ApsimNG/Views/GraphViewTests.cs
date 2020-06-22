@@ -92,7 +92,7 @@ namespace UnitTests.ApsimNG.Views
             Simulations sims = CreateTemplate();
             sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
 
-            DataStore storage = Apsim.Find(sims, typeof(DataStore)) as DataStore;
+            DataStore storage = sims.FindInScope<DataStore>();
             storage.FileName = Path.ChangeExtension(sims.FileName, ".db");
 
             // Run the file to populate the datastore.
@@ -107,7 +107,7 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.WaitForGtkEvents();
 
             // Create a graphs folder under the zone.
-            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            IModel paddock = sims.FindInScope<Zone>();
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
 

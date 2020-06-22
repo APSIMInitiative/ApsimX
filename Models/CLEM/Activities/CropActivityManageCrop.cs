@@ -294,7 +294,7 @@ namespace Models.CLEM.Activities
             {
                 if (clemParent != null && clemParent.Enabled)
                 {
-                    parentLand = Apsim.Find(clemParent, LandItemNameToUse.Split('.')[0]) as Land;
+                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
                 }
             }
 

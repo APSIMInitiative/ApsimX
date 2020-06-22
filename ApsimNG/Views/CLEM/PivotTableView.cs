@@ -508,7 +508,7 @@ namespace ApsimNG.Views.CLEM
         public void SetLedgers(PivotTable table)
         {
             // Find a CLEMFolder 
-            CLEMFolder folder = Apsim.Find(table, typeof(CLEMFolder)) as CLEMFolder;
+            CLEMFolder folder = table.FindInScope<CLEMFolder>();
 
             // Look for ledgers inside the CLEMFolder
             foreach (var child in folder.Children)

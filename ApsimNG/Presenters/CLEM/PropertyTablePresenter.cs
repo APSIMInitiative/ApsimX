@@ -345,7 +345,7 @@ namespace UserInterface.Presenters
                 }
                 else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
                 {
-                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
                         cell.DropDownStrings = this.GetLifeCycleNames(zone);
@@ -459,7 +459,7 @@ namespace UserInterface.Presenters
                 else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                    Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
                         cell.DropDownStrings = this.GetLifeCycleNames(zone);
@@ -680,7 +680,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+            return this.model.FindInScope<IPlant>();
         }
 
         /// <summary>
@@ -704,7 +704,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(LifeCycle)) as LifeCycle;
+            return this.model.FindInScope<LifeCycle>();
         }
 
         private string[] GetResidueNames()
@@ -794,7 +794,7 @@ namespace UserInterface.Presenters
         private object GetNewCellValue(IVariable property, string newValue)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, newValue);
+                return (property.Object as IModel).FindInScope(newValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
                 return (property.Object as IModel).FindByPath(newValue)?.Value;

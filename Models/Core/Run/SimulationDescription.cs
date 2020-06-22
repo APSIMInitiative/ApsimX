@@ -177,7 +177,7 @@
             }
             else
             {
-                IModel storage = Apsim.Find(topLevelModel, typeof(IDataStore));
+                IModel storage = topLevelModel.FindInScope<DataStore>();
                 services.Add(storage);
             }
 

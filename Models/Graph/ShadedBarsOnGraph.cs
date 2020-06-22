@@ -44,7 +44,7 @@
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = this.FindInScope<IDataStore>();
             if (storage == null)
                 return null;
 

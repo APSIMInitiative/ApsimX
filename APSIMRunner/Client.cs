@@ -87,7 +87,7 @@ namespace APSIMRunner
                     }
                     else if (runnable is IModel model)
                     {
-                        IDataStore oldStorage = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                        IDataStore oldStorage = model.FindInScope<IDataStore>();
                         if (oldStorage != null)
                             storage = new StorageViaSockets(oldStorage.FileName);
 

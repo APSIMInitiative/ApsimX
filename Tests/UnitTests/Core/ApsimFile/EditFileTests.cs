@@ -41,8 +41,8 @@ namespace UnitTests.Core.ApsimFile
         {
             Simulations basicFile = Utilities.GetRunnableSim();
 
-            IModel simulation = Apsim.Find(basicFile, typeof(Simulation));
-            IModel paddock = Apsim.Find(basicFile, typeof(Zone));
+            IModel simulation = basicFile.FindInScope<Simulation>();
+            IModel paddock = basicFile.FindInScope<Zone>();
 
             // Add a weather component.
             Models.Weather weather = new Models.Weather();
@@ -105,7 +105,7 @@ namespace Models
 
             // Create a new .apsimx file containing two weather nodes.
             Simulations test = Utilities.GetRunnableSim();
-            IModel sim = Apsim.Find(test, typeof(Simulation));
+            IModel sim = test.FindInScope<Simulation>();
 
             Models.Weather w1 = new Models.Weather();
             w1.FileName = "w1.met";
@@ -175,7 +175,7 @@ namespace Models
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            var report = Apsim.Find(file, typeof(Models.Report)) as Models.Report;
+            var report = file.FindInScope<Models.Report>();
             string[] variableNames = new[] { "x", "y", "z" };
             Assert.AreEqual(variableNames, report.VariableNames);
 

@@ -239,9 +239,9 @@ namespace Models.Core
                 else
                 {
                     Services = new List<object>();
-                    IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                    IDataStore storage = this.FindInScope<IDataStore>();
                     if (storage != null)
-                        Services.Add(Apsim.Find(this, typeof(IDataStore)));
+                        Services.Add(this.FindInScope<IDataStore>());
                     Services.Add(new ScriptCompiler());
                 }
             }

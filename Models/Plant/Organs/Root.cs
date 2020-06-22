@@ -925,10 +925,10 @@
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
                 if (zone != null)
                 {
-                    Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
+                    Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     if (soil.Crop(parentPlant.Name) == null)
@@ -1098,7 +1098,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
+            Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)

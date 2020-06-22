@@ -390,7 +390,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if breeders placed in yards.
             if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
+                var ah = this.FindInScope<ActivitiesHolder>();
                 if(Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Breeders purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
@@ -408,7 +408,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if sires placed in yards.
             if (grazeStoreBreeders == "" && this.SiresKept > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
+                var ah = this.FindInScope<ActivitiesHolder>();
                 if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Sires purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));

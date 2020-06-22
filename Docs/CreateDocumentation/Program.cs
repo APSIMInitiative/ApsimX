@@ -211,7 +211,7 @@
 
                         // Specific model description documentation.
                         var modelNameToDocument = documentObject["ModelNameToDocument"].ToString();
-                        var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
+                        var model = simulations.FindInScope(modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
                         var outputFileName = documentObject["OutputFileName"]?.ToString();

@@ -57,7 +57,7 @@
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
@@ -87,7 +87,7 @@
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 

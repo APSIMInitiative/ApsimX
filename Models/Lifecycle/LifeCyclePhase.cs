@@ -221,7 +221,7 @@
                             if (cohortMigrants > 0)
                             {
                                 IModel zone = FindAncestor<Zone>();
-                                LifeCycle mDestinationCycle = Apsim.Find(zone, mdest.NameOfLifeCycleForMigrants) as LifeCycle;
+                                LifeCycle mDestinationCycle = zone.FindInScope(mdest.NameOfLifeCycleForMigrants) as LifeCycle;
                                 if (mDestinationCycle == null)
                                     throw new Exception(this.FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
                                 LifeCyclePhase mDestinationPhase = Apsim.Child(mDestinationCycle, mdest.NameOfPhaseForMigrants) as LifeCyclePhase;
@@ -245,7 +245,7 @@
                     if (pdest.ProgenyToDestination>0)
                     {
                         IModel zone = FindAncestor<Zone>();
-                        LifeCycle pDestinationCylce = Apsim.Find(zone, pdest.NameOfLifeCycleForProgeny) as LifeCycle;
+                        LifeCycle pDestinationCylce = zone.FindInScope(pdest.NameOfLifeCycleForProgeny) as LifeCycle;
                         if (pDestinationCylce == null)
                             throw new Exception(this.FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
                         LifeCyclePhase pDestinationPhase = Apsim.Child(pDestinationCylce, pdest.NameOfPhaseForProgeny) as LifeCyclePhase;

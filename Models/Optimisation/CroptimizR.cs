@@ -274,11 +274,11 @@ namespace Models.Optimisation
             sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
             sims.Children.RemoveAll(c => c is IDataStore);
 
-            IModel replacements = Apsim.Find(this, typeof(Replacements));
+            IModel replacements = this.FindInScope<Replacements>();
             if (replacements != null && !sims.Children.Any(c => c is Replacements))
                 sims.Children.Add(Apsim.Clone(replacements));
 
-            IModel storage = Apsim.Find(this, typeof(IDataStore));
+            DataStore storage = this.FindInScope<DataStore>();
             IModel newDataStore = new DataStore();
             if (storage != null)
                 newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
@@ -311,7 +311,7 @@ namespace Models.Optimisation
         /// <param name="message">Message to be written.</param>
         private void WriteMessage(string message)
         {
-            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = this.FindInScope<IDataStore>();
             if (storage == null)
                 throw new ApsimXException(this, "No datastore is available!");
 

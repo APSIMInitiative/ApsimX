@@ -93,7 +93,7 @@
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
 
             // Get a list of series definitions.
             try
@@ -117,7 +117,7 @@
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
 

@@ -603,7 +603,7 @@ namespace Models.CLEM.Activities
             Land parentLand = null;
             if (LandTypeNameToUse != null && LandTypeNameToUse != "")
             {
-                parentLand = Apsim.Find(this, LandTypeNameToUse.Split('.')[0]) as Land;
+                parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
             }
 
             if (UseAreaAvailable)

@@ -97,7 +97,7 @@
             forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
-            soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
+            soil = zones[0].FindInScope<Soil>();
 
             forestryViewer.SoilMidpoints = soil.DepthMidPoints;
             

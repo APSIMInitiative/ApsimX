@@ -90,7 +90,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            InfestingOrganisum = Apsim.Find(this.Parent, InfestingOrganisumName) as LifeCycle;
+            InfestingOrganisum = this.Parent.FindInScope(InfestingOrganisumName) as LifeCycle;
             if (InfestingOrganisum == null)
                 throw new Exception(this.FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
             InfestingPhase = Apsim.Child(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;

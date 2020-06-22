@@ -395,7 +395,7 @@ namespace Models.Agroforestry
             //pre-fetch static information
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
             treeZone = ZoneList[0] as Zone;
-            treeZoneWater = Apsim.Find(treeZone, typeof(ISoilWater)) as ISoilWater;
+            treeZoneWater = treeZone.FindInScope<ISoilWater>();
 
             TreeWaterUptake = new double[ZoneList.Count];
 
@@ -432,7 +432,7 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                                 break;
                             }
 
@@ -506,7 +506,7 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                                 break;
                             }
 
@@ -593,7 +593,7 @@ namespace Models.Agroforestry
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                         ThisSoil.SoilWater.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
@@ -617,7 +617,7 @@ namespace Models.Agroforestry
                 {
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        var NO3Solute = Apsim.Find(SearchZ, "NO3") as ISolute;
+                        var NO3Solute = SearchZ.FindInScope("NO3") as ISolute;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
                             NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];

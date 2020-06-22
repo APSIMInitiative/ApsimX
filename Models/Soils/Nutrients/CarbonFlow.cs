@@ -62,7 +62,7 @@ namespace Models.Soils.Nutrients
         {
             foreach (string destinationName in destinationNames)
             {
-                NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
+                NutrientPool destination = this.FindInScope(destinationName) as NutrientPool;
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + destinationName);
                 destinations.Add(destination);

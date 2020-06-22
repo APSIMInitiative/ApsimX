@@ -180,7 +180,7 @@
                                 if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = Apsim.Find(this, parameter.Value);
+                                    value = this.FindInScope(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(script, value, null);

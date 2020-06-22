@@ -22,12 +22,12 @@ namespace UnitTests
 
             string reportName = "Report";
 
-            Models.Report report = Apsim.Find(file, typeof(Models.Report)) as Models.Report;
+            Models.Report report = file.FindInScope<Models.Report>();
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as n", "2 * [Clock].Today.DayOfYear as 2n" };
             report.EventNames = new string[] { "[Clock].DoReport" };
             report.Name = reportName;
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            Clock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2019, 1, 1);
             clock.EndDate = new DateTime(2019, 1, 10);
 
@@ -79,9 +79,9 @@ namespace UnitTests
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
-            Simulation sim1 = Apsim.Find(sims, typeof(Simulation)) as Simulation;
-            Simulation sim2 = Apsim.Find(sims, "Sim2") as Simulation;
+            Clock clock = sims.FindInScope<Clock>();
+            Simulation sim1 = sims.FindInScope<Simulation>();
+            Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
             Soil soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
 
             // Check property values - they should be unchanged at this point.
@@ -102,7 +102,7 @@ namespace UnitTests
                 throw errors[0];
 
             // Get references to the changed models.
-            clock = Apsim.Find(sims, typeof(Clock)) as Clock;
+            clock = sims.FindInScope<Clock>();
             Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock")?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.

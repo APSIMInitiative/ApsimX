@@ -305,7 +305,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
+            return (panel.FindInScope<IDataStore>()).Reader;
         }
 
         /// <summary>

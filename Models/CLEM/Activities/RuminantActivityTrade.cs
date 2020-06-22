@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
+                var ah = this.FindInScope<ActivitiesHolder>();
                 if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));

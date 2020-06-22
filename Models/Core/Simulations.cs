@@ -134,7 +134,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            DataStore storage = this.FindInScope<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -149,7 +149,7 @@ namespace Models.Core
         /// <returns>A new simulations object that represents the file on disk</returns>
         public Simulations RevertCheckpoint(string checkpointName)
         {
-            IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IDataStore storage = this.FindInScope<DataStore>();
             if (storage != null)
             {
                 storage.Writer.RevertCheckpoint(checkpointName);
@@ -208,7 +208,7 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            var storage = this.FindInScope<IDataStore>();
             if (storage != null)
                 services.Add(storage);
             services.Add(ScriptCompiler);
@@ -255,11 +255,11 @@ namespace Models.Core
         /// <param name="headingLevel">The starting heading level.</param>
         public void DocumentModel(string modelNameToDocument, List<AutoDocumentation.ITag> tags, int headingLevel)
         {
-            Simulation simulation = Apsim.Find(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = this.FindInScope<Simulation>();
             if (simulation != null)
             {
                 // Find the model of the right name.
-                IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
+                IModel modelToDocument = simulation.FindInScope(modelNameToDocument);
 
                 // If not found then find a model of the specified type.
                 if (modelToDocument == null)

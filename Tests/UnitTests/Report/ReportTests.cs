@@ -406,7 +406,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = Apsim.Find(file, typeof(Simulation));
+            IModel sim = file.FindInScope<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -416,7 +416,7 @@
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            var storage = file.FindInScope<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
@@ -443,7 +443,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = Apsim.Find(file, typeof(Report)) as Report;
+            Report report = file.FindInScope<Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -453,7 +453,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            Clock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -463,7 +463,7 @@
                 throw errors[0];
 
             List<string> fieldNames = new List<string>() { "doy" };
-            IDataStore storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = file.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
@@ -595,7 +595,7 @@
         {
             Simulations sims = Utilities.GetRunnableSim();
 
-            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            IModel paddock = sims.FindInScope<Zone>();
             Manager script = new Manager();
             script.Name = "Manager";
             script.Code = @"using System;
@@ -622,7 +622,7 @@ namespace Models
             script.Parent = paddock;
             script.OnCreated();
 
-            Report report = Apsim.Find(sims, typeof(Report)) as Report;
+            Report report = sims.FindInScope<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
@@ -633,7 +633,7 @@ namespace Models
                 throw new Exception("Errors while running sims", errors[0]);
 
             List<string> fieldNames = new List<string>() { "x" };
-            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = sims.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
 
