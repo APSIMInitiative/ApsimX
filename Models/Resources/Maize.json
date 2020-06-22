@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 102,
+  "Version": 103,
   "Name": "Simulations",
   "Children": [
     {
@@ -140,7 +140,7 @@
               "Name": "ThermalTime",
               "Children": [
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "BaseThermalTime",
                   "Children": [
                     {
@@ -159,7 +159,7 @@
                         26.0,
                         0.0
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
