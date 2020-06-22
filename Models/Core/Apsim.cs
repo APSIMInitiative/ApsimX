@@ -18,17 +18,6 @@
     public static class Apsim
     {
         /// <summary>
-        /// Sets the value of a variable. Will throw if variable doesn't exist.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="namePath">The name of the object to set</param>
-        /// <param name="value">The value to set the property to</param>
-        public static void Set(IModel model, string namePath, object value)
-        {
-            model.FindByPath(namePath).Value = value;
-        }
-
-        /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
         /// <param name="model">The reference model</param>
