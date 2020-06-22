@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 102; } }
+        public static int LatestVersion { get { return 103; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2267,6 +2267,26 @@
         {
             foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
                 croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
+        }
+
+        /// <summary>
+        /// Rename TemperatureResponse to Response on Interpolate functions.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion103(JObject root, string fileName)
+        {
+            foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
+            {
+                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                foreach (JObject c in atf["Children"])
+                {
+                    if (c["Name"].ToString() == "TemperatureResponse")
+                    {
+                        c["Name"] = "Response";
+                    }
+                }
+            }
         }
 
         /// <summary>
