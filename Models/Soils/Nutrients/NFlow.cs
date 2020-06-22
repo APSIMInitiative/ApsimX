@@ -58,7 +58,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Invoked when the simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             sourceSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == Parent.Name) as ISolute;

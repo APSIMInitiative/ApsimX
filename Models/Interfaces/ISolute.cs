@@ -21,7 +21,7 @@
         string Name { get;  }
 
         /// <summary>Solute amount (kg/ha)</summary>
-        double[] kgha { get; set; }
+        double[] kgha { get; }
 
         /// <summary>Solute amount (ppm)</summary>
         double[] ppm { get; }

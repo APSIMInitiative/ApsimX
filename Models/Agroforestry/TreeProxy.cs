@@ -621,7 +621,7 @@ namespace Models.Agroforestry
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
                             NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
-                        NO3Solute.kgha = NewNO3;
+                        NO3Solute.SetKgHa(SoluteSetterType.Plant, NewNO3);
                     }
                 }
             }

@@ -13,16 +13,11 @@
         SoilNitrogen parent = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
         public double[] kgha
         {
             get
             {
                 return parent.CalculateNH4();
-            }
-            set
-            {
-                SetKgHa(SoluteSetterType.Plant, value);
             }
         }
 
