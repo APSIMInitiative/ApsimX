@@ -2416,7 +2416,7 @@
                     var args = Regex.Matches(match.Groups[1].Value, argsRegex);
 
                     if (args.Count != 3)
-                        throw new Exception($"Incorrect number of arguments passed to Apsim.Parent()");
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Set()");
 
                     string model = args[0].Value.Trim();
                     if (model.Contains(" "))
