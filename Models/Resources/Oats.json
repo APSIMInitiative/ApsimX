@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 102,
+  "Version": 103,
   "Name": "Simulations",
   "Children": [
     {
@@ -200,7 +200,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -215,7 +215,7 @@
                     30.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -267,7 +267,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -322,7 +322,7 @@
                         0.0,
                         -0.5
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,

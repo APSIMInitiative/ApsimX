@@ -9,13 +9,15 @@ using Models.PMF;
 namespace Models.Functions
 {
     /// <summary>
-    /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
+    /// Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps
+    /// and returns either the sum or average depending on the AgrevationMethod selected
     /// </summary>
+    
     [Serializable]
-    [Description("Interoplates Daily Min and Max temperatures out to sub daily values using the Interpolation Method, applyes a temperature response function and returns a daily agrigate")]
+    [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
+    public class HourlyInterpolation : Model, IFunction, ICustomDocumentation
     {
 
         /// <summary>The met data</summary>
@@ -28,7 +30,7 @@ namespace Models.Functions
 
         /// <summary>The temperature response function applied to each sub daily temperature and averaged to give daily mean</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IIndexedFunction TemperatureResponse = null;
+        private IIndexedFunction Response = null;
 
         /// <summary>Method used to agreagate sub daily values</summary>
         [Description("Method used to agregate sub daily temperature function")]
@@ -75,7 +77,7 @@ namespace Models.Functions
             SubDailyResponse = new List<double>();
             foreach (double sdt in SubDailyTemperatures)
             {
-                SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
+                SubDailyResponse.Add(Response.ValueIndexed(sdt));
             }
 
         }
@@ -107,7 +109,7 @@ namespace Models.Functions
         "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
         "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
         "are then averaged to obtain the daily value.")]
-    [ValidParent(ParentType = typeof(IFunction))]
+    [ValidParent(ParentType = typeof(HourlyInterpolation))]
     public class ThreeHourSin : Model, IInterpolationMethod
     {
         /// <summary>The met data</summary>
@@ -171,7 +173,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]
-    [ValidParent(ParentType = typeof(IFunction))]
+    [ValidParent(ParentType = typeof(HourlyInterpolation))]
     public class HourlySinPpAdjusted : Model, IInterpolationMethod
     {
 
