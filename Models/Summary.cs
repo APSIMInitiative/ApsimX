@@ -216,7 +216,7 @@
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in Apsim.FindAll(simulation))
+            foreach (Model model in simulation.FindAllInScope())
             {
                 string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 

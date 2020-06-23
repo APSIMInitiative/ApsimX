@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -128,9 +129,8 @@
             IModel dataStore = Apsim.Child(explorerPresenter.ApsimXFile, "DataStore");
             if (dataStore != null)
             {
-                List<IModel> tests = Apsim.FindAll(dataStore, typeof(Tests));
-                tests.RemoveAll(m => !m.IncludeInDocumentation);
-                if (tests.Count > 0)
+                IEnumerable<Tests> tests = dataStore.FindAllInScope<Tests>().Where(m => m.IncludeInDocumentation);
+                if (tests.Count() > 0)
                     tags.Add(new AutoDocumentation.Heading("Statistics", 2));
 
                 foreach (Tests test in tests)

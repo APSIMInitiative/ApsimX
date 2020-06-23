@@ -90,7 +90,7 @@ namespace Models.Functions
             // and namespace lines e.g.
             //    using Models.Clock;
             //    using Models;
-            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && 
+            var models = Parent.FindAllInScope().ToList().Where(model => !model.IsHidden && 
                                                               model.GetType() != typeof(Graph) &&
                                                               model.GetType() != typeof(Series) &&
                                                               model.GetType().Name != "StorageViaSockets");

@@ -61,8 +61,8 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            sourceSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == Parent.Name) as ISolute;
-            destinationSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == destinationName) as ISolute;
+            sourceSolute = FindInScope<ISolute>(Parent.Name);
+            destinationSolute = FindInScope<ISolute>(destinationName);
         }
 
         /// <summary>

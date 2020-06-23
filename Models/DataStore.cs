@@ -652,7 +652,7 @@ namespace Models
             // Open the .db for writing.
             Open(forWriting: true);
 
-            foreach (IPostSimulationTool tool in Apsim.FindAll(this, typeof(IPostSimulationTool)))
+            foreach (IPostSimulationTool tool in this.FindAllInScope<IPostSimulationTool>())
                 tool.Run(this);
         }
 

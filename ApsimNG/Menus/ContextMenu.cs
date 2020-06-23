@@ -947,7 +947,7 @@
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
 
-                    foreach (VariableReference reference in Apsim.FindAll(model, typeof(VariableReference)))
+                    foreach (VariableReference reference in model.FindAllInScope<VariableReference>())
                     {
                         try
                         {

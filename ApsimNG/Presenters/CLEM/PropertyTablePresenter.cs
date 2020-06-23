@@ -535,7 +535,7 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
+                        foreach (Model crop in this.model.FindAllInScope<IPlant>())
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -544,7 +544,7 @@ namespace UserInterface.Presenters
                     }
                     else if (this.properties[propListIndex][i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
+                        List<string> plantNames = this.model.FindAllInScope<IPlant>().OfType<IModel>().Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }

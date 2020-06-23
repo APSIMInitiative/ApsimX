@@ -384,7 +384,7 @@
                     {
                         IPlant crop;
                         if (properties[i].Display.PlantName != null)
-                            crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                            crop = model.FindInScope<IPlant>(properties[i].Display.PlantName);
                         else
                             crop = GetCrop(properties);
                         if (crop != null)
@@ -408,7 +408,7 @@
                     {
                         LifeCycle lifeCycle;
                         if (properties[i].Display.LifeCycleName != null)
-                            lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                            lifeCycle = model.FindAllInScope<LifeCycle>().FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
                         else
                             lifeCycle = GetLifeCycle(properties);
                         if (lifeCycle != null)
@@ -516,7 +516,7 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     IPlant crop;
                     if (properties[i].Display.PlantName != null)
-                        crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                        crop = model.FindInScope<IPlant>(properties[i].Display.PlantName);
                     else
                         crop = GetCrop(properties);
                     if (crop != null)
@@ -542,7 +542,7 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     LifeCycle lifeCycle;
                     if (properties[i].Display.LifeCycleName != null)
-                        lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                        lifeCycle = model.FindAllInScope<LifeCycle>().FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
                     else
                         lifeCycle = GetLifeCycle(properties);
                     if (lifeCycle != null)
@@ -661,7 +661,7 @@
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(model, typeof(IPlant)))
+                        foreach (Model crop in model.FindAllInScope<IPlant>())
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -670,9 +670,8 @@
                     }
                     else if (properties[i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(model, typeof(IPlant)).Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = plantNames.ToArray();
+                        cell.DropDownStrings = model.FindAllInScope<IPlant>().OfType<IModel>().Select(m => m.Name).ToArray();
                     }
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
@@ -752,7 +751,7 @@
         /// <returns>A list of life cycles.</returns>
         private string[] GetLifeCycleNames(Zone zone)
         {
-            List<IModel> LifeCycles = Apsim.FindAll(zone, typeof(LifeCycle));
+            List<LifeCycle> LifeCycles = zone.FindAllInScope<LifeCycle>().ToList();
             if (LifeCycles.Count > 0)
             {
                 string[] Namelist = new string[LifeCycles.Count];
@@ -941,9 +940,9 @@
         {
             List<IModel> models;
             if (t == null)
-                models = Apsim.FindAll(model);
+                models = model.FindAllInScope().ToList();
             else
-                models = Apsim.FindAll(model, t);
+                models = model.FindAllInScope().Where(m => t.IsAssignableFrom(m.GetType())).ToList();
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)

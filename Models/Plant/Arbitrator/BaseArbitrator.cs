@@ -323,7 +323,7 @@ namespace Models.PMF
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
            List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
+            foreach (Model Can in Plant.FindAllInScope<IHasWaterDemand>())
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             foreach (IOrgan organ in Plant.Organs)
