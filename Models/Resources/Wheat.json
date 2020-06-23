@@ -7350,7 +7350,7 @@
                     "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.Y = 0,1.204,0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.035",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000"
                   ],
                   "Name": "Wakanui",

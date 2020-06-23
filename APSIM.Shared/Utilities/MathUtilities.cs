@@ -1050,20 +1050,6 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Calculate the time of solar noon for a given latitued
-        /// </summary>
-        /// <param name="DayOfYear"></param>
-        /// <param name="Latitude"></param>
-        /// <returns></returns>
-        static public double SolarNoon(double DayOfYear, double Latitude)
-        {
-            double Gamma = ((2 * Math.PI) / 365) * DayOfYear - 1 + ((12 / 24));
-            double eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(Gamma) - 0.032077 * Math.Sin(Gamma) 
-                          - 0.014615 * Math.Cos(2 * Gamma)- 0.040849 * Math.Sin(2 * Gamma));
-            return 720 - 4 * Latitude-eqtime;
-        }
-
-        /// <summary>
         /// Transfer of sign - from FORTRAN.
         ///The result is of the same type and kind as a. Its value is the abs(a) of a,
         ///if b is greater than or equal positive zero; and -abs(a), if b is less than
