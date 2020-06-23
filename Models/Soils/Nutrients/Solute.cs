@@ -26,7 +26,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Solute amount (kg/ha)</summary>
         [XmlIgnore]
-        public double[] kgha { get; private set; }
+        public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return soil.kgha2ppm(kgha); } }

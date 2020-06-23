@@ -24,7 +24,17 @@ namespace Models.Soils.NutrientPatching
         private NutrientPatchManager patchManager;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        public double[] kgha { get { return patchManager.GetSoluteKgha(Name); } }
+        public double[] kgha 
+        { 
+            get 
+            { 
+                return patchManager.GetSoluteKgha(Name); 
+            } 
+            set
+            {
+                patchManager.SetSoluteKgha(SoluteSetterType.Other, Name, value);
+            }
+        }
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return soil.kgha2ppm(kgha); } }
