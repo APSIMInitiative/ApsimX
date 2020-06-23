@@ -5,6 +5,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
+using Newtonsoft.Json;
 
 namespace Models.Functions
 {
@@ -45,10 +46,13 @@ namespace Models.Functions
             Sum
         }
 
+
         /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
+        [JsonIgnore]
         public List<double> SubDailyTemperatures = null;
 
         /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
+        [JsonIgnore]
         public List<double> SubDailyResponse = null;
 
         /// <summary>Daily average temperature calculated from sub daily temperature interpolations</summary>
@@ -206,12 +210,11 @@ namespace Models.Functions
             double d = MetData.CalculateDayLength(-6);
             double Tmin = MetData.MinT;
             double Tmax = MetData.MaxT;
-            double TmaxB = MetData.MaxT;
-            double TminA = MetData.MinT;
+            double TmaxB = MetData.YesterdaysMetData.MaxT;
+            double TminA = MetData.TomorrowsMetData.MinT;
             double Hsrise = MetData.CalculateSunRise();
             double Hsset =  MetData.CalculateSunSet();
             
-
             List<double> sdts = new List<double>();
             
             for (int Th = 0; Th <= 23; Th++)
