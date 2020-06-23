@@ -2377,15 +2377,26 @@
 
             void FixSiblings(ManagerConverter manager)
             {
+                bool replaced = false;
                 string pattern = @"Apsim\.Siblings\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
                 manager.ReplaceRegex(pattern, match =>
                 {
-                    string replace = @"$1.FindAllSiblings().ToList()";
+                    replaced = true;
+
+                    string replace = @"$1.FindAllSiblings().ToList<IModel>()";
                     if (match.Groups[1].Value.Contains(" "))
                         replace = replace.Replace("$1", "($1)");
 
                     return Regex.Replace(match.Value, pattern, replace);
                 });
+
+                if (replaced)
+                {
+                    List<string> usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("System.Linq"))
+                        usings.Add("System.Linq");
+                    manager.SetUsingStatements(usings);
+                }
             }
 
             void FixParentAllChildren(ManagerConverter manager)
@@ -2472,9 +2483,13 @@
 
             void FixFindAll(ManagerConverter manager)
             {
+                bool replaced = false;
+
                 string pattern = @"Apsim\.FindAll\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
                 manager.ReplaceRegex(pattern, match =>
                 {
+                    replaced = true;
+
                     string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
                     var args = Regex.Matches(match.Groups[1].Value, argsRegex);
 
@@ -2493,11 +2508,19 @@
                             model = $"({model})";
 
                         string type = args[1].Value.Trim().Replace("typeof(", "").TrimEnd(')');
-                        return $"{model}.FindAllInScope<{type}>()";
+                        return $"{model}.FindAllInScope<{type}>().ToList<IModel>()";
                     }
                     else
                         throw new Exception($"Incorrect number of arguments passed to Apsim.FindAll()");
                 });
+
+                if (replaced)
+                {
+                    List<string> usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("System.Linq"))
+                        usings.Add("System.Linq");
+                    manager.SetUsingStatements(usings);
+                }
             }
 
             void FixChild(ManagerConverter manager)
