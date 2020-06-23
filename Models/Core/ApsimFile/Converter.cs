@@ -2311,6 +2311,10 @@
                 // Will probably fail in other cases too. It's really not ideal.
                 FixFind(manager);
 
+                // Apsim.FindAll(model) -> model.FindAllInScope().ToList()
+                // Apsim.FindAll(model, typeof(X)) -> model.FindAllInScope<X>().ToList()
+                FixFindAll(manager);
+
                 manager.Save();
             }
 
@@ -2436,7 +2440,6 @@
                 });
             }
 
-
             void FixFind(ManagerConverter manager)
             {
                 string pattern = @"Apsim\.Find\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
@@ -2463,6 +2466,35 @@
                 });
             }
 
+            void FixFindAll(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.FindAll\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllInScope().ToList()";
+                    }
+                    else if (args.Count == 2)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        string type = args[1].Value.Trim().Replace("typeof(", "").TrimEnd(')');
+                        return $"{model}.FindAllInScope<{type}>()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.FindAll()");
+                });
+            }
         }
 
         /// <summary>
