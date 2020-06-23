@@ -378,6 +378,10 @@
         [JsonIgnore]
         public DailyMetDataFromFile YesterdaysMetData { get; set; }
 
+        /// <summary>Met Data for Today</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TodaysMetData { get; set; }
+
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
@@ -569,8 +573,6 @@
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            DailyMetDataFromFile TodaysMetData = new DailyMetDataFromFile();
-
             if (First)
             {
                 TodaysMetData = GetMetData(this.clock.Today); //Read first date to get todays data
