@@ -37,10 +37,11 @@
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);
             var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
 
-            foreach (var subscriber in subscribers)
-                foreach (Publisher publisher in publishers.Where(pub => pub.Name == subscriber.Key))
-                    foreach (var subscriberMethod in subscriber.Value)
-                        publisher.ConnectSubscriber(subscriberMethod);
+            foreach (Publisher publisher in publishers)
+                if (subscribers.ContainsKey(publisher.Name))
+                    foreach (var subscriber in subscribers[publisher.Name])
+                        if (scope.InScopeOf(subscriber.Model, publisher.Model))
+                            publisher.ConnectSubscriber(subscriber);
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>

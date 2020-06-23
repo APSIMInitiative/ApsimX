@@ -341,6 +341,7 @@
     <Compile Include="Optimisation\Likelihood.cs" />
     <Compile Include="Optimisation\Simplex.cs" />
     <Compile Include="Soils\NutrientPatching\INutrientPatchManager.cs" />
+    <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />
     <Compile Include="Soils\NutrientPatching\SolutePatch.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />

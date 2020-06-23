@@ -6691,8 +6691,8 @@ namespace Models.Soils
         {
             foreach (var pool in Pool)
             {
-                pool.FOM.C += pool.FOM.C;
-                pool.FOM.N += pool.FOM.N;
+                pool.FOM.C *= value;
+                pool.FOM.N *= value;
             }
         }
     }
