@@ -2315,6 +2315,10 @@
                 // Apsim.FindAll(model, typeof(X)) -> model.FindAllInScope<X>().ToList()
                 FixFindAll(manager);
 
+                // Apsim.Child(model, "Wheat") -> model.FindChild("Wheat")
+                // Apsim.Child(model, typeof(IOrgan)) -> model.FindChild<IOrgan>()
+                FixChild(manager);
+
                 manager.Save();
             }
 
@@ -2494,6 +2498,35 @@
                     else
                         throw new Exception($"Incorrect number of arguments passed to Apsim.FindAll()");
                 });
+            }
+
+            void FixChild(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Child\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Find()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string pathOrType = args[1].Value.Trim();
+                    if (pathOrType.Contains("typeof("))
+                    {
+                        string type = pathOrType.Replace("typeof(", "").TrimEnd(')');
+                        return $"{model}.FindChild<{type}>()";
+                    }
+                    else
+                        return $"{model}.FindChild({pathOrType})";
+                });
+
+                pattern = @"(FindChild<([^>]+)>\(\)) as \2";
+                manager.ReplaceRegex(pattern, "$1");
             }
         }
 
