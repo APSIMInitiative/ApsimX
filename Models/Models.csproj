@@ -322,9 +322,9 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
-    <Compile Include="Plant\Phenology\Responses\CalcCAMPVrnRates.cs" />
-    <Compile Include="Plant\Phenology\Responses\CAMP.cs" />
-    <Compile Include="Plant\Phenology\Responses\IVrn1Expression.cs" />
+    <Compile Include="Plant\Phenology\CAMP\CalcCAMPVrnRates.cs" />
+    <Compile Include="Plant\Phenology\CAMP\CAMP.cs" />
+    <Compile Include="Plant\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />

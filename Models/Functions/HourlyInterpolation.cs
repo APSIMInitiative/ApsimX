@@ -192,6 +192,7 @@ namespace Models.Functions
         /// <summary>
         /// Temperature at the most recent sunset
         /// </summary>
+        [JsonIgnore]
         public double Tsset { get; set; }
 
         /// <summary> Set the sub daily temperature range factor values at sowing</summary>
