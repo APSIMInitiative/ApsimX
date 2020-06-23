@@ -67,12 +67,16 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public double ValueIndexed(double dX)
         {
-            double dHS = camp.dHS / 24;  //divide by 24 to make hourly
-            double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k * dX);
-            if (dX < DeVernalisationTemp)
-                return UdVrn1 * dHS;
-            else
-                return -10 * dHS;
+            if (camp.Params != null)
+            {
+                double dHS = camp.dHS / 24;  //divide by 24 to make hourly
+                double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k * dX);
+                if (dX < DeVernalisationTemp)
+                    return UdVrn1 * dHS;
+                else
+                    return -10 * dHS;
+            }
+            else return 0.0;
         }
     }
 
