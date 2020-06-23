@@ -18,24 +18,6 @@
     public static class Apsim
     {
         /// <summary>
-        /// Locates and returns all models in scope.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <returns>The found models or an empty array if not found.</returns>
-        public static List<IModel> FindAll(IModel model)
-        {
-            if (model == null)
-                return new List<IModel>();
-
-            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllInScope" && !m.IsGenericMethod && m.GetParameters().Length == 0);
-            if (find == null)
-                throw new Exception($"Unable to find find method");
-
-            return (find.Invoke(model, null) as IEnumerable<IModel>).ToList();
-        }
-
-        /// <summary>
         /// Clears the cached scoping values for the simulation 
         /// We need to do this when models have been added or deleted,
         /// as the cache will then be incorrect
@@ -58,24 +40,6 @@
                     simulations.ClearLinks();
                 }
             }
-        }
-
-        /// <summary>
-        /// Locates and returns all models in scope of the specified type.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="typeFilter">The type of the models to return</param>
-        /// <returns>The found models or an empty array if not found.</returns>
-        public static List<IModel> FindAll(IModel model, Type typeFilter)
-        {
-            if (model == null)
-                return null;
-
-            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllInScope" && m.IsGenericMethod);
-            if (find == null)
-                throw new Exception($"Unable to find find method");
-            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
         }
 
         /// <summary>
