@@ -145,7 +145,7 @@
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = Locator.Get(relativeToModel, modelTypes[0]) as Model;
+                            foundModel = relativeToModel.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
                     if (foundModel == null)
                         return null;

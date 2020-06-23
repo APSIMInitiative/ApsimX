@@ -55,34 +55,12 @@
                 return variable.Value;
         }
 
-        /// <summary>
-        /// This is a non-generic overload of <see cref="IModel.FindAllInScope{T}()"/>.
-        /// </summary>
-        /// <param name="relativeTo">Model to use as a starting/reference point for the search.</param>
-        /// <param name="type">Type of model to return.</param>
-        /// <remarks>
-        /// This is used for link resolution and locator code, because [Type] is
-        /// apparently a valid path (e.g. [Plant]). In both of these cases, we
-        /// need to be able to search with a runtime type.
-        /// 
-        /// I've put this here, rather than in class Model, to discourage its
-        /// use in user code. Please use the generic method if at all possible.
-        /// </remarks>
-        public static IModel Get(IModel relativeTo, Type type)
-        {
-            return relativeTo.GetType()
-                             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                             .FirstOrDefault(m => m.Name == nameof(relativeTo.FindInScope) && m.IsGenericMethod && m.GetParameters().Length == 0)
-                             .MakeGenericMethod(type)
-                             .Invoke(relativeTo, new object[0]) as IModel;
-        }
-
         /// <summary>Gets a model in scope of the specified type</summary>
         /// <param name="typeToMatch">The type of the model to return</param>
         /// <returns>The found model or null if not found</returns>
         public IModel Get(Type typeToMatch)
         {
-            return Get(relativeToModel, typeToMatch);
+            return relativeToModel.FindAllInScope().FirstOrDefault(m => typeToMatch.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
@@ -158,7 +136,7 @@
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = Get(relativeTo, modelTypes[0]) as Model;
+                            foundModel = relativeTo.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
                     if (foundModel == null)
                         throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
