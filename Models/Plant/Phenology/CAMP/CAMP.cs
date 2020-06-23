@@ -37,8 +37,8 @@ namespace Models.PMF.Phen
     /// BaseDVrn1 in seperate calculation otherwise te same as Brown etal 2013
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.XYPairsView")]
-    [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class ColdUpRegVrn1 : Model, IFunction, IIndexedFunction
     {
