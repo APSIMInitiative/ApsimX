@@ -53,7 +53,7 @@
         public ZoneWaterAndN(Zone zone)
         {
             Zone = zone;
-            soilInZone = Apsim.Child(zone, typeof(Soil)) as Soil;
+            soilInZone = zone.FindChild<Soil>();
             Initialise();
         }
 

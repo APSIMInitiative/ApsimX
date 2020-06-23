@@ -571,10 +571,10 @@ namespace UserInterface.Presenters
             if (crop.CultivarNames.Length == 0)
             {
                 Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+                    IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
                     if (replacementCrop != null)
                     {
                         return replacementCrop.CultivarNames;
@@ -617,10 +617,10 @@ namespace UserInterface.Presenters
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
                 Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
                     if (replacementLifeCycle != null)
                     {
                         return replacementLifeCycle.LifeCyclePhaseNames;
@@ -737,11 +737,11 @@ namespace UserInterface.Presenters
             ZoneCLEM zoneCLEM = model as ZoneCLEM;
             if (zoneCLEM == null)
                 zoneCLEM = model.FindAncestor<ZoneCLEM>();
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
 
             foreach (Type resGroupType in resourceNameResourceGroups)
             {
-                IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                IModel resGroup = resHolder.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
                 if (resGroup != null)  //see if this group type is included in this particular simulation.
                 {
                     foreach (IModel item in resGroup.Children)

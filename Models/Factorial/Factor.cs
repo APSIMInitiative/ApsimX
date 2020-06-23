@@ -157,7 +157,7 @@
             Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
+                var baseSimulation = experiment.FindChild<Simulation>();
                 IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);

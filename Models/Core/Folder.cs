@@ -63,7 +63,7 @@
 
                         foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
                         {
-                            IModel Factors = Apsim.Child(child, typeof(Factors));
+                            IModel Factors = child.FindChild<Factors>();
                             string Design = "";
                             foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
                             {

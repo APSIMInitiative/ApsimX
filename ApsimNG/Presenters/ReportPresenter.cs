@@ -83,7 +83,7 @@
             Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
+                dataStore = simulations.FindChild<IDataStore>();
             }
             
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");

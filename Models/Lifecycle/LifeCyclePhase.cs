@@ -224,7 +224,7 @@
                                 LifeCycle mDestinationCycle = zone.FindInScope(mdest.NameOfLifeCycleForMigrants) as LifeCycle;
                                 if (mDestinationCycle == null)
                                     throw new Exception(this.FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
-                                LifeCyclePhase mDestinationPhase = Apsim.Child(mDestinationCycle, mdest.NameOfPhaseForMigrants) as LifeCyclePhase;
+                                LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild(mdest.NameOfPhaseForMigrants) as LifeCyclePhase;
                                 if (mDestinationPhase == null)
                                     throw new Exception(this.FullPath + " could not find a destination LifeCyclePhase for migrants called " + mdest.NameOfPhaseForMigrants);
                                 mDestinationPhase.NewCohort(cohortMigrants, c.ChronologicalAge, c.PhysiologicalAge);
@@ -248,7 +248,7 @@
                         LifeCycle pDestinationCylce = zone.FindInScope(pdest.NameOfLifeCycleForProgeny) as LifeCycle;
                         if (pDestinationCylce == null)
                             throw new Exception(this.FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
-                        LifeCyclePhase pDestinationPhase = Apsim.Child(pDestinationCylce, pdest.NameOfPhaseForProgeny) as LifeCyclePhase;
+                        LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild(pdest.NameOfPhaseForProgeny) as LifeCyclePhase;
                         if (pDestinationPhase == null)
                             throw new Exception(this.FullPath + " could not find a destination LifeCyclePhase for progeny called " + pdest.NameOfPhaseForProgeny);
                         pDestinationPhase.NewCohort(pdest.ProgenyToDestination, 0, 0);

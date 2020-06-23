@@ -1,4 +1,4 @@
-
+﻿
 namespace UserInterface.Presenters
 {
     using APSIM.Shared.Utilities;
@@ -34,7 +34,7 @@ namespace UserInterface.Presenters
             Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
+                dataStore = simulations.FindChild<IDataStore>();
             }
 
             dataStorePresenter = new DataStorePresenter();

@@ -229,7 +229,7 @@
                        Add(new EmptyJob());
 
                     // Find a storage model.
-                    storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
+                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)

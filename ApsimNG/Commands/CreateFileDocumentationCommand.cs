@@ -126,7 +126,7 @@
         /// <param name="tags">Document tags to add to.</param>
         private void AddStatistics(List<AutoDocumentation.ITag> tags)
         {
-            IModel dataStore = Apsim.Child(explorerPresenter.ApsimXFile, "DataStore");
+            IModel dataStore = explorerPresenter.ApsimXFile.FindChild("DataStore");
             if (dataStore != null)
             {
                 IEnumerable<Tests> tests = dataStore.FindAllInScope<Tests>().Where(m => m.IncludeInDocumentation);

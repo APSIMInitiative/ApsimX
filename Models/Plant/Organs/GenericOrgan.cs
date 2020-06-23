@@ -585,23 +585,23 @@
                 // document DM demands
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
-                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                IModel DMDemand = this.FindChild("dmDemands");
                 AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
 
                 // document N demands
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
-                IModel NDemand = Apsim.Child(this, "nDemands");
+                IModel NDemand = this.FindChild("nDemands");
                 AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
 
                 // document N concentration thresholds
-                IModel MinN = Apsim.Child(this, "MinimumNConc");
+                IModel MinN = this.FindChild("MinimumNConc");
                 AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
-                IModel CritN = Apsim.Child(this, "CriticalNConc");
+                IModel CritN = this.FindChild("CriticalNConc");
                 AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
-                IModel MaxN = Apsim.Child(this, "MaximumNConc");
+                IModel MaxN = this.FindChild("MaximumNConc");
                 AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
-                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+                IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
                 if (NDemSwitch is Constant)
                 {
                     if ((NDemSwitch as Constant).Value() == 1.0)
@@ -621,7 +621,7 @@
 
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+                IModel DMReallocFac = this.FindChild("DMReallocationFactor");
                 if (DMReallocFac is Constant)
                 {
                     if ((DMReallocFac as Constant).Value() == 0)
@@ -634,7 +634,7 @@
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+                IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
                 if (DMRetransFac is Constant)
                 {
                     if ((DMRetransFac as Constant).Value() == 0)
@@ -650,7 +650,7 @@
 
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+                IModel NReallocFac = this.FindChild("NReallocationFactor");
                 if (NReallocFac is Constant)
                 {
                     if ((NReallocFac as Constant).Value() == 0)
@@ -663,7 +663,7 @@
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+                IModel NRetransFac = this.FindChild("NRetranslocationFactor");
                 if (NRetransFac is Constant)
                 {
                     if ((NRetransFac as Constant).Value() == 0)
@@ -679,7 +679,7 @@
 
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel SenRate = Apsim.Child(this, "SenescenceRate");
+                IModel SenRate = this.FindChild("SenescenceRate");
                 if (SenRate is Constant)
                 {
                     if ((SenRate as Constant).Value() == 0)
@@ -693,7 +693,7 @@
                     AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
                 }
 
-                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                IModel DetRate = this.FindChild("DetachmentRateFunction");
                 if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)

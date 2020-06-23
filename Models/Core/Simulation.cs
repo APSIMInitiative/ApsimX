@@ -114,7 +114,7 @@ namespace Models.Core
         {
             get
             {
-                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                Clock c = this.FindChild<Clock>();
                 if (c == null)
                     return 0;
                 else

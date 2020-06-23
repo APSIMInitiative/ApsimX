@@ -32,7 +32,7 @@ namespace UnitTests.ApsimNG.Presenters
 
             Simulations sims = explorerPresenter.ApsimXFile;
             Soil soil = sims.FindInScope<Soil>();
-            Sample sample = Apsim.Child(soil, typeof(Sample)) as Sample;
+            Sample sample = soil.FindChild<Sample>();
 
             explorerPresenter.SelectNode(sample);
             GtkUtilities.WaitForGtkEvents();

@@ -84,7 +84,7 @@ namespace Models.CLEM.Groupings
 
 
             ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
             HumanFoodStoreType food =  resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
             if (food != null)
             {

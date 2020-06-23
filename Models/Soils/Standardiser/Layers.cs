@@ -15,9 +15,9 @@
         /// <returns>A standardised soil.</returns>
         public static void Standardise(Soil soil)
         {
-            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
-            var analysisNode = Apsim.Child(soil, typeof(Chemical)) as Chemical;
-            var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
+            var waterNode = soil.FindChild<Physical>();
+            var analysisNode = soil.FindChild<Chemical>();
+            var layerStructure = soil.FindChild<LayerStructure>();
 
             // Determine the target layer structure.
             var targetThickness = soil.Thickness;
@@ -296,7 +296,7 @@
             if (fromValues == null || fromThickness == null)
                 return null;
 
-            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
+            var waterNode = soil.FindChild<Physical>();
 
             // convert from values to a mass basis with a dummy bottom layer.
             List<double> values = new List<double>();

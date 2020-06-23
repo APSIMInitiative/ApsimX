@@ -191,9 +191,9 @@
         [Test]
         public void ChildTest()
         {
-            IModel clock = Apsim.Child(simulation, typeof(Clock));
+            IModel clock = simulation.FindChild<Clock>();
             Assert.NotNull(clock);
-            clock = Apsim.Child(simulation, "Clock");
+            clock = simulation.FindChild("Clock");
             Assert.NotNull(clock);
         }        
 
@@ -203,7 +203,7 @@
         [Test]
         public void SiblingsTest()
         {
-            IModel clock = Apsim.Child(simulation, typeof(Clock));
+            IModel clock = simulation.FindChild<Clock>();
             List<IModel> allSiblings = clock.FindAllSiblings().ToList();
             Assert.AreEqual(allSiblings.Count, 5);
         }

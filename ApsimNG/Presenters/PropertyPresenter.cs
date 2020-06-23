@@ -703,12 +703,12 @@
         private string[] GetCultivarNames(IPlant crop)
         {
             Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-            Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+            Replacements replacements = simulations.FindChild<Replacements>();
 
             if (replacements == null)
                 return crop.CultivarNames;
 
-            IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
             if (replacementCrop != null)
                 return replacementCrop.CultivarNames;
 
@@ -716,7 +716,7 @@
             List<string> cultivarNames = crop.CultivarNames.ToList();
             foreach (IModel cultivarFolder in Apsim.Children(crop as IModel, typeof(CultivarFolder)))
             {
-                IModel replacementFolder = Apsim.Child(replacements, cultivarFolder.Name);
+                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
                 if (replacementFolder != null)
                 {
                     // If we find a matching cultivar folder under replacements, remove
@@ -774,10 +774,10 @@
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
                 Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
                     if (replacementLifeCycle != null)
                     {
                         return replacementLifeCycle.LifeCyclePhaseNames;
@@ -894,13 +894,13 @@
         {
             List<string> result = new List<string>();
             IModel zoneCLEM = model.FindAncestor<Zone>();
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
             if (resourceNameResourceGroups != null)
             {
                 // resource groups specified (use them)
                 foreach (Type resGroupType in resourceNameResourceGroups)
                 {
-                    IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                    IModel resGroup = resHolder.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
                     if (resGroup != null)  //see if this group type is included in this particular simulation.
                     {
                         foreach (IModel item in resGroup.Children.Where(a => a.Enabled))

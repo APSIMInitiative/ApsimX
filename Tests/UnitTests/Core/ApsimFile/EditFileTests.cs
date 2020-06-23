@@ -179,7 +179,7 @@ namespace Models
             string[] variableNames = new[] { "x", "y", "z" };
             Assert.AreEqual(variableNames, report.VariableNames);
 
-            IModel sim = Apsim.Child(file, typeof(Simulation));
+            IModel sim = file.FindChild<Simulation>();
 
             // Use an index-based lookup to locate child models.
             // When we replace an entire model, we want to ensure

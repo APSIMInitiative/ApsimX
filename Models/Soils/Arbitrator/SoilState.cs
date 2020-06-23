@@ -20,7 +20,7 @@
             Zones = new List<ZoneWaterAndN>();
             foreach (Zone Z in allZones)
             {
-                Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
+                Soil soil = Z.FindChild<Soil>();
                 if (soil != null)
                     Zones.Add(new ZoneWaterAndN(Z, soil));
             }

@@ -90,7 +90,7 @@
                 var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
-                    Model modelFromResource = GetResourceModel();
+                    IModel modelFromResource = GetResourceModel();
                     modelFromResource.Enabled = Enabled;
                     
                     Children.RemoveAll(c => modelFromResource.Children.Contains(c, new ModelComparer()));
@@ -155,7 +155,7 @@
             }
         }
 
-        private Model GetResourceModel()
+        private IModel GetResourceModel()
         {
             if (string.IsNullOrEmpty(FullResourceName))
                 return null;
@@ -164,14 +164,14 @@
             if (string.IsNullOrEmpty(contents))
                 return null;
 
-            Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out List<Exception> errors);
+            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
             if (this.GetType() != modelFromResource.GetType())
             {
                 // Top-level model may be a simulations node. Search for a child of the correct type.
-                Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
+                IModel child = modelFromResource.FindAllChildren().FirstOrDefault(c => GetType().IsAssignableFrom(c.GetType()));
                 if (child != null)
                     modelFromResource = child;
             }
@@ -183,7 +183,7 @@
         /// Copy all properties from the specified resource.
         /// </summary>
         /// <param name="from">Model to copy from</param>
-        private void CopyPropertiesFrom(Model from)
+        private void CopyPropertiesFrom(IModel from)
         {
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
@@ -224,7 +224,7 @@
         /// <summary>Sets the not visible.</summary>
         /// <param name="ModelFromResource">The model from resource.</param>
         /// <param name="invisible">If true, make model invisible. Else make model visible.</param>
-        private static void SetNotVisible(Model ModelFromResource, bool invisible)
+        private static void SetNotVisible(IModel ModelFromResource, bool invisible)
         {
             foreach (Model child in ModelFromResource.Children)
             {

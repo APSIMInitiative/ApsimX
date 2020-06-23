@@ -81,7 +81,7 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+            tree = this.FindChild<TreeProxy>();
             ZoneList = Apsim.Children(this, typeof(Zone));
         }
 
@@ -152,7 +152,7 @@ namespace Models.Agroforestry
                 // write description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+                tree = this.FindChild<TreeProxy>();
                 AutoDocumentation.DocumentModel(tree, tags, headingLevel, indent);
             }
         }

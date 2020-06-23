@@ -120,10 +120,10 @@
         /// <param name="soil">The soil.</param>
         private static void RemoveInitialWater(Soil soil)
         {
-            var initialWater = Apsim.Child(soil, typeof(InitialWater)) as InitialWater;
+            var initialWater = soil.FindChild<InitialWater>();
             if (initialWater != null)
             {
-                var sample = Apsim.Child(soil, typeof(Sample)) as Sample;
+                var sample = soil.FindChild<Sample>();
                 if (sample == null)
                 {
                     sample = new Sample();

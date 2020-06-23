@@ -93,7 +93,7 @@
             InfestingOrganisum = this.Parent.FindInScope(InfestingOrganisumName) as LifeCycle;
             if (InfestingOrganisum == null)
                 throw new Exception(this.FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
-            InfestingPhase = Apsim.Child(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;
+            InfestingPhase = InfestingOrganisum.FindChild(InfestingPhaseName) as LifeCyclePhase;
         }
 
         /// <summary>Call infest() events at specified time steps</summary>

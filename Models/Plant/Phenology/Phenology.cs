@@ -338,7 +338,7 @@ namespace Models.PMF.Phen
         /// <param name="overRideFLNParams"></param>
         public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
         {
-            CAMP camp = Apsim.Child(this,"CAMP") as CAMP;
+            CAMP camp = this.FindChild("CAMP") as CAMP;
             camp.ResetVernParams(overRideFLNParams);
         }
 

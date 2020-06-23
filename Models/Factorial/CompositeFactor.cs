@@ -141,7 +141,7 @@
             {
                 // Find the model that we are to replace.
                 var experiment = FindAncestor<Experiment>();
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
+                var baseSimulation = experiment.FindChild<Simulation>();
                 var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
 
                 if (modelToReplace == null)

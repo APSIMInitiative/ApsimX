@@ -369,7 +369,7 @@ namespace Models.CLEM.Activities
                 // if market is present point to market to find the resource
                 if (Market != null)
                 {
-                    resourcesHolder = Apsim.Child(Market, typeof(ResourcesHolder)) as ResourcesHolder;
+                    resourcesHolder = Market.FindChild<ResourcesHolder>();
                 }
 
                 // don't worry about money anymore. The over request will be handled by the transmutation.
@@ -724,7 +724,7 @@ namespace Models.CLEM.Activities
             Simulation sim = FindAncestor<Simulation>();
             if (sim != null)
             {
-                Market marketPlace = Apsim.Child(sim, typeof(Market)) as Market;
+                Market marketPlace = sim.FindChild<Market>();
                 if (marketPlace != null)
                 {
                     html += "<div class=\"activityentry\">";

@@ -596,7 +596,7 @@ namespace Models.PMF.Organs
                 //// List the parameters, properties, and processes from this organ that need to be documented:
 
                 // document DM demands
-                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                IModel DMDemand = this.FindChild("dmDemands");
                 if (DMDemand != null)
                 {
                     tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
@@ -605,7 +605,7 @@ namespace Models.PMF.Organs
                 }
 
                 // document N demands
-                IModel NDemand = Apsim.Child(this, "nDemands");
+                IModel NDemand = this.FindChild("nDemands");
                 if (NDemand != null)
                 {
                     tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
@@ -614,19 +614,19 @@ namespace Models.PMF.Organs
                 }
 
                 // document N concentration thresholds
-                IModel minN = Apsim.Child(this, "MinimumNConc");
+                IModel minN = this.FindChild("MinimumNConc");
                 if (minN != null)
                     AutoDocumentation.DocumentModel(minN, tags, headingLevel + 2, indent);
 
-                IModel critN = Apsim.Child(this, "CriticalNConc");
+                IModel critN = this.FindChild("CriticalNConc");
                 if (critN != null)
                     AutoDocumentation.DocumentModel(critN, tags, headingLevel + 2, indent);
 
-                IModel maxN = Apsim.Child(this, "MaximumNConc");
+                IModel maxN = this.FindChild("MaximumNConc");
                 if (maxN != null)
                     AutoDocumentation.DocumentModel(maxN, tags, headingLevel + 2, indent);
 
-                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+                IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
                 if (NDemSwitch != null)
                 {
                     if (NDemSwitch.GetType() == typeof(Constant))
@@ -649,7 +649,7 @@ namespace Models.PMF.Organs
 
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+                IModel DMReallocFac = this.FindChild("DMReallocationFactor");
                 if (DMReallocFac != null)
                 {
                     if (DMReallocFac.GetType() == typeof(Constant))
@@ -666,7 +666,7 @@ namespace Models.PMF.Organs
                     }
                 }
 
-                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+                IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
                 if (DMRetransFac != null)
                 {
                     if (DMRetransFac.GetType() == typeof(Constant))
@@ -684,7 +684,7 @@ namespace Models.PMF.Organs
                 }
 
                 // document N supplies
-                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+                IModel NReallocFac = this.FindChild("NReallocationFactor");
                 if (NReallocFac != null)
                 {
                     tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
@@ -703,7 +703,7 @@ namespace Models.PMF.Organs
                     }
                 }
 
-                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+                IModel NRetransFac = this.FindChild("NRetranslocationFactor");
                 if (NRetransFac != null)
                 {
                     if (NRetransFac.GetType() == typeof(Constant))
@@ -721,12 +721,12 @@ namespace Models.PMF.Organs
                 }
 
                 // document N fixation
-                IModel fixationRate = Apsim.Child(this, "FixationRate");
+                IModel fixationRate = this.FindChild("FixationRate");
                 if (fixationRate != null)
                     AutoDocumentation.DocumentModel(fixationRate, tags, headingLevel + 1, indent);
 
                 // document senescence and detachment
-                IModel senRate = Apsim.Child(this, "SenescenceRate");
+                IModel senRate = this.FindChild("SenescenceRate");
                 if (senRate != null)
                 {
                     tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
@@ -744,7 +744,7 @@ namespace Models.PMF.Organs
                     }
                 }
 
-                IModel detRate = Apsim.Child(this, "DetachmentRateFunction");
+                IModel detRate = this.FindChild("DetachmentRateFunction");
                 if (detRate != null)
                 {
                     if (detRate.GetType() == typeof(Constant))
