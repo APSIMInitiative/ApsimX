@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 102,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -13,7 +13,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "Continuous Wheat.out",
+          "FileNames": [
+            "Continuous Wheat.out"
+          ],
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -27,6 +29,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Continuous Wheat",
       "Children": [
         {
@@ -574,7 +577,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 6.0,
                   "SummerCona": 3.5,
@@ -587,10 +590,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -603,19 +605,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180",
-                    "180-210",
-                    "210-240",
-                    "240-270",
-                    "270-300"
                   ],
                   "SWCON": [
                     0.3,
@@ -631,9 +620,8 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -975,14 +963,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 1000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -991,10 +977,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "wheat",
               "IncludeInDocumentation": true,
@@ -1008,7 +990,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -1054,7 +1036,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n\r\n        [Description(\"Type of Fertiliser\")]\r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n\r\n        [Description(\"Type of Fertiliser\")]\r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "Amount",
@@ -1076,7 +1058,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [],
                   "Name": "Harvest",
                   "IncludeInDocumentation": true,
@@ -1089,16 +1071,17 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Soil].SoilTemperature.ave_soil_temp as ave_soil_temp",
-                "[Soil].SoilTemperature.ave_soil_temp_surface as ave_soil_temp_surface",
+                "[Soil].SoilTemperature.AverageSoilTemp as ave_soil_temp",
+                "[Soil].SoilTemperature.AverageSoilSurfaceTemp as ave_soil_temp_surface",
                 "sum([Soil].SoilWater.ESW) as esw"
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
+              "GroupByVariableName": null,
               "Name": "outputfile",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1146,11 +1129,11 @@
       "Name": "ave_soil_temp",
       "Children": [
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1161,7 +1144,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1179,7 +1162,7 @@
           "Name": "st1",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1191,7 +1174,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(1)",
@@ -1209,7 +1191,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1221,7 +1203,6 @@
               "MarkerSize": 0,
               "Line": 2,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(1)",
@@ -1244,11 +1225,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1259,7 +1240,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1277,7 +1258,7 @@
           "Name": "st2",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1289,7 +1270,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(2)",
@@ -1307,7 +1287,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1319,7 +1299,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(2)",
@@ -1342,11 +1321,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1357,7 +1336,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1375,7 +1354,7 @@
           "Name": "st3",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1387,7 +1366,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(3)",
@@ -1405,7 +1383,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1417,7 +1395,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(3)",
@@ -1440,11 +1417,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1455,7 +1432,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1473,7 +1450,7 @@
           "Name": "st4",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1485,7 +1462,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(4)",
@@ -1503,7 +1479,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1515,7 +1491,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(4)",
@@ -1538,11 +1513,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1553,7 +1528,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1571,7 +1546,7 @@
           "Name": "st5",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1583,7 +1558,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(5)",
@@ -1601,7 +1575,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1613,7 +1587,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(5)",
@@ -1636,11 +1609,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1651,7 +1624,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1669,7 +1642,7 @@
           "Name": "st6",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1681,7 +1654,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(6)",
@@ -1699,7 +1671,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1711,7 +1683,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(6)",
@@ -1734,11 +1705,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1749,7 +1720,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1767,7 +1738,7 @@
           "Name": "st7",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1779,7 +1750,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(7)",
@@ -1797,7 +1767,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1809,7 +1779,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(7)",
@@ -1832,11 +1801,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1847,7 +1816,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1865,7 +1834,7 @@
           "Name": "st8",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1877,7 +1846,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(8)",
@@ -1895,7 +1863,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1907,7 +1875,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(8)",
@@ -1930,11 +1897,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -1945,7 +1912,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -1963,7 +1930,7 @@
           "Name": "st9",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1975,7 +1942,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(9)",
@@ -1993,7 +1959,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2005,7 +1971,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(9)",
@@ -2028,11 +1993,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -2043,7 +2008,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -2061,7 +2026,7 @@
           "Name": "st10",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2073,7 +2038,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(10)",
@@ -2091,7 +2055,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2103,7 +2067,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(10)",
@@ -2126,11 +2089,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -2141,7 +2104,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -2159,7 +2122,7 @@
           "Name": "st11",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2171,7 +2134,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "outputfile",
               "XFieldName": "Clock.Today",
               "YFieldName": "ave_soil_temp(11)",
@@ -2189,7 +2151,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2201,7 +2163,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Input",
               "XFieldName": "Date",
               "YFieldName": "ave_soil_temp(11)",
@@ -2229,11 +2190,11 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Graph.Graph, Models",
+      "$type": "Models.Graph, Models",
       "Caption": null,
       "Axis": [
         {
-          "$type": "Models.Graph.Axis, Models",
+          "$type": "Models.Axis, Models",
           "Type": 3,
           "Title": null,
           "Inverted": false,
@@ -2244,7 +2205,7 @@
           "CrossesAtZero": false
         },
         {
-          "$type": "Models.Graph.Axis, Models",
+          "$type": "Models.Axis, Models",
           "Type": 0,
           "Title": null,
           "Inverted": false,
@@ -2262,7 +2223,7 @@
       "Name": "esw",
       "Children": [
         {
-          "$type": "Models.Graph.Series, Models",
+          "$type": "Models.Series, Models",
           "Type": 1,
           "XAxis": 3,
           "YAxis": 0,
@@ -2274,7 +2235,6 @@
           "MarkerSize": 0,
           "Line": 0,
           "LineThickness": 0,
-          "Checkpoint": "Current",
           "TableName": "outputfile",
           "XFieldName": "Clock.Today",
           "YFieldName": "esw",
@@ -2292,7 +2252,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Series, Models",
+          "$type": "Models.Series, Models",
           "Type": 1,
           "XAxis": 3,
           "YAxis": 0,
@@ -2304,7 +2264,6 @@
           "MarkerSize": 0,
           "Line": 2,
           "LineThickness": 0,
-          "Checkpoint": "Current",
           "TableName": "Input",
           "XFieldName": "Date",
           "YFieldName": "esw",
