@@ -2556,12 +2556,7 @@
                 });
 
                 if (replaced)
-                {
-                    List<string> usings = manager.GetUsingStatements().ToList();
-                    if (!usings.Contains("System.Linq"))
-                        usings.Add("System.Linq");
-                    manager.SetUsingStatements(usings);
-                }
+                    AddLinqIfNotExist(manager);
             }
 
             void FixChild(ManagerConverter manager)
@@ -2633,18 +2628,13 @@
                 });
 
                 if (replaced)
-                {
-                    List<string> usings = manager.GetUsingStatements().ToList();
-                    if (!usings.Contains("System.Linq"))
-                        usings.Add("System.Linq");
-                    manager.SetUsingStatements(usings);
-                }
+                    AddLinqIfNotExist(manager);
             }
 
             void FixChildrenRecursively(ManagerConverter manager)
             {
                 string pattern = @"Apsim\.ChildrenRecursively\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
-                manager.ReplaceRegex(pattern, match =>
+                bool replaced = manager.ReplaceRegex(pattern, match =>
                 {
                     string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
                     var args = Regex.Matches(match.Groups[1].Value, argsRegex);
@@ -2660,8 +2650,6 @@
                     }
                     else if (args.Count == 2)
                     {
-                        // Need to also ensure that we're using System.Linq;
-
                         string model = args[0].Value.Trim();
                         if (model.Contains(" "))
                             model = $"({model})";
@@ -2682,6 +2670,17 @@
                     else
                         throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursively()");
                 });
+
+                if (replaced)
+                    AddLinqIfNotExist(manager);
+            }
+
+            void AddLinqIfNotExist(ManagerConverter manager)
+            {
+                List<string> usings = manager.GetUsingStatements().ToList();
+                if (!usings.Contains("System.Linq"))
+                    usings.Add("System.Linq");
+                manager.SetUsingStatements(usings);
             }
 
             void FixChildrenRecursivelyVisible(ManagerConverter manager)
@@ -2705,12 +2704,7 @@
                 });
 
                 if (replaced)
-                {
-                    List<string> usings = manager.GetUsingStatements().ToList();
-                    if (!usings.Contains("System.Linq"))
-                        usings.Add("System.Linq");
-                    manager.SetUsingStatements(usings);
-                }
+                    AddLinqIfNotExist(manager);
             }
         }
 
