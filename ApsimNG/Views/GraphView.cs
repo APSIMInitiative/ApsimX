@@ -454,7 +454,7 @@
                     errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, error, xAxisType, yAxisType);
                     errorSeries.XAxisKey = xAxisType.ToString();
                     errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = series.MarkerFill;
+                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
