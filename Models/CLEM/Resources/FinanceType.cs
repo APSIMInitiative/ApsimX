@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
                     {
                         (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                         (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
-                        (resourceAmount as ResourceRequest).Reason = "Farm sales";
+                        (resourceAmount as ResourceRequest).Reason = "Farm transaction";
                         (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
                     }
                 }
