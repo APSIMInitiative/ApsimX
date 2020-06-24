@@ -63,7 +63,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -1198,5 +1198,7 @@
 
             Clear();
         }
+
+
     }
 }

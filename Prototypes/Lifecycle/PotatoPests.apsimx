@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 440,
-  "Version": 100,
+  "Version": 103,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -700,9 +700,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -720,7 +718,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -788,9 +786,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -808,7 +804,7 @@
                                 0.0,
                                 1.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -884,9 +880,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -904,7 +898,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1009,9 +1003,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -1029,7 +1021,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1134,9 +1126,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -1154,7 +1144,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1259,9 +1249,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -1279,7 +1267,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1384,9 +1372,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -1404,7 +1390,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1509,9 +1495,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -1529,7 +1513,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2635,9 +2619,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -2655,7 +2637,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2760,9 +2742,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -2780,7 +2760,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2885,9 +2865,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -2905,7 +2883,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3010,9 +2988,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3030,7 +3006,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3135,9 +3111,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3155,7 +3129,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3260,9 +3234,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3280,7 +3252,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3385,9 +3357,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3405,7 +3375,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3632,9 +3602,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3652,7 +3620,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3757,9 +3725,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3777,7 +3743,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3882,9 +3848,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -3902,7 +3866,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4007,9 +3971,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -4027,7 +3989,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4132,9 +4094,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -4152,7 +4112,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4257,9 +4217,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -4277,7 +4235,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4382,9 +4340,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -4402,7 +4358,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5454,9 +5410,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -5474,7 +5428,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5579,9 +5533,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -5599,7 +5551,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5704,9 +5656,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -5724,7 +5674,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5829,9 +5779,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -5849,7 +5797,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5954,9 +5902,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -5974,7 +5920,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6079,9 +6025,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6099,7 +6043,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6204,9 +6148,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6224,7 +6166,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6495,9 +6437,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6515,7 +6455,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6620,9 +6560,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6640,7 +6578,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6745,9 +6683,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6765,7 +6701,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6870,9 +6806,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -6890,7 +6824,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6995,9 +6929,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -7015,7 +6947,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -7120,9 +7052,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -7140,7 +7070,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -7245,9 +7175,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -7265,7 +7193,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8439,9 +8367,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -8459,7 +8385,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8564,9 +8490,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -8584,7 +8508,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8689,9 +8613,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -8709,7 +8631,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8814,9 +8736,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -8834,7 +8754,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8939,9 +8859,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -8959,7 +8877,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -9064,9 +8982,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -9084,7 +9000,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -9189,9 +9105,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -9209,7 +9123,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -9424,9 +9338,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.AirTemperatureFunction, Models",
-                              "SubDailyTemperatures": null,
-                              "SubDailyResponse": null,
+                              "$type": "Models.Functions.HourlyInterpolation, Models",
                               "agregationMethod": 0,
                               "Name": "FeedsPerDay",
                               "Children": [
@@ -9444,7 +9356,7 @@
                                     5.0,
                                     0.0
                                   ],
-                                  "Name": "TemperatureResponse",
+                                  "Name": "Response",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -10838,9 +10750,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -10858,7 +10768,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -10963,9 +10873,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -10983,7 +10891,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11088,9 +10996,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -11108,7 +11014,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11213,9 +11119,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -11233,7 +11137,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11338,9 +11242,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -11358,7 +11260,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11463,9 +11365,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -11483,7 +11383,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11588,9 +11488,7 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -11608,7 +11506,7 @@
                                 1.0,
                                 0.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -11791,6 +11689,7 @@
                         "Gsmax350": 0.03,
                         "R50": 200.0,
                         "LAI": 0.0,
+                        "Depth": 0.0,
                         "Width": 0.0,
                         "FRGR": 0.0,
                         "PotentialEP": 0.0,
@@ -14066,7 +13965,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "RainSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14102,7 +14001,7 @@
                                     1.0,
                                     0.05
                                   ],
-                                  "Name": "RainSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14147,7 +14046,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "IrrigationSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14183,7 +14082,7 @@
                                     1.0,
                                     0.05
                                   ],
-                                  "Name": "RainSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14230,7 +14129,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "IrrigationSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14268,7 +14167,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "RainSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14301,7 +14200,7 @@
                     {
                       "$type": "Models.LifeCycle.MigrantDestinationPhase, Models",
                       "NameOfLifeCycleForMigrants": "Alternaria_solani_OnLivePlant",
-                      "NameOfPhaseForMigrants": null,
+                      "NameOfPhaseForMigrants": "ConidiaOnFreshFoliage",
                       "Name": "MigrantDestinationPhase",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -14352,9 +14251,7 @@
                           "Name": "DevelopmentRate",
                           "Children": [
                             {
-                              "$type": "Models.Functions.AirTemperatureFunction, Models",
-                              "SubDailyTemperatures": null,
-                              "SubDailyResponse": null,
+                              "$type": "Models.Functions.HourlyInterpolation, Models",
                               "agregationMethod": 0,
                               "Name": "TemperatureResponse",
                               "Children": [
@@ -14374,7 +14271,7 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "Name": "TemperatureResponse",
+                                  "Name": "Response",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14421,7 +14318,7 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "Name": "VPD_response",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14485,9 +14382,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
-                          "SubDailyTemperatures": null,
-                          "SubDailyResponse": null,
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "TemperatureResponse",
                           "Children": [
@@ -14505,7 +14400,7 @@
                                 0.01,
                                 1.0
                               ],
-                              "Name": "TemperatureResponse",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14552,7 +14447,7 @@
                                 0.0,
                                 0.0
                               ],
-                              "Name": "VPD_response",
+                              "Name": "XYPairs",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14623,9 +14518,7 @@
                           "Name": "DevelopmentRate",
                           "Children": [
                             {
-                              "$type": "Models.Functions.AirTemperatureFunction, Models",
-                              "SubDailyTemperatures": null,
-                              "SubDailyResponse": null,
+                              "$type": "Models.Functions.HourlyInterpolation, Models",
                               "agregationMethod": 0,
                               "Name": "TemperatureResponse",
                               "Children": [
@@ -14645,7 +14538,7 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "Name": "TemperatureResponse",
+                                  "Name": "Response",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14692,7 +14585,7 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "Name": "VPD_response",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14730,7 +14623,7 @@
                                     0.2,
                                     0.2
                                   ],
-                                  "Name": "Stress_response",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14789,6 +14682,16 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "individuals /d",
+                      "Name": "Mortality",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Migration",
                       "Children": [
@@ -14829,7 +14732,7 @@
                                 1.0,
                                 1.0
                               ],
-                              "Name": "MaturityResponse",
+                              "Name": "XYPairs",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14901,7 +14804,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "RainSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14937,7 +14840,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "IrrigationSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14975,7 +14878,7 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "Name": "IrrigationSplashDispersion",
+                                  "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -15027,7 +14930,7 @@
                                 1.0,
                                 1.0
                               ],
-                              "Name": "MaturityResponse",
+                              "Name": "XYPairs",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -15092,6 +14995,7 @@
                         "Gsmax350": 0.03,
                         "R50": 200.0,
                         "LAI": 0.0,
+                        "Depth": 0.0,
                         "Width": 0.0,
                         "FRGR": 0.0,
                         "PotentialEP": 0.0,
