@@ -70,38 +70,6 @@
         /// </summary>
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursively(IModel model)
-        {
-            return model.FindAllDescendants().ToList();
-        }
-
-        /// <summary>
-        /// Return a list of all child models recursively. Only models of 
-        /// the specified 'typeFilter' will be returned. Never returns
-        /// null. Can return an empty list.
-        /// </summary>
-        /// <param name="model">The parent model</param>
-        /// <param name="typeFilter">The type of children to return</param>
-        /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursively(IModel model, Type typeFilter)
-        {
-            if (model == null)
-                return new List<IModel>();
-
-            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllDescendants" && m.IsGenericMethod && m.GetParameters().Length == 0);
-            if (find == null)
-                throw new Exception($"Unable to find find method");
-
-            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
-        }
-        
-        /// <summary>
-        /// Return a list of all child models recursively. Never returns
-        /// null. Can return an empty list.
-        /// </summary>
-        /// <param name="model">The parent model</param>
-        /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursivelyVisible(IModel model)
         {
             return model.FindAllDescendants().Where(m => !m.IsHidden).ToList();
