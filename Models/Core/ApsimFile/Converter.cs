@@ -2275,7 +2275,7 @@
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private void UpgradeToVersion103(JObject root, string fileName)
+        private static void UpgradeToVersion103(JObject root, string fileName)
         {
             foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
             {
