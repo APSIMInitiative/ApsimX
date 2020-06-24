@@ -56,7 +56,7 @@
 
                 // In a multi-paddock context, we want to attempt to
                 // replace the model in all paddocks.
-                foreach (IModel paddock in simulation.FindAllDescendants<Zone>())
+                foreach (IModel paddock in simulation.FindAllDescendants<Zone>().ToList())
                 {
                     match = paddock.FindByPath(path)?.Value as IModel;
                     if (match != null)
