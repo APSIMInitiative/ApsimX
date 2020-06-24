@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 102,
+  "Version": 103,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -42,13 +42,13 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -4.89,-4.88, 11.03,16.9,16.91",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].EndoDormancy.Progression.Response.X = -4.89,-4.88, 11.03,16.9,16.91",
+                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
                 "[Phenology].Budding.Target.FixedValue = 806.78",
-                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,2.03,12.03,22.03",
-                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 2.11",
-                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 30.72",
-                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 38.71",
+                "[Phenology].Budding.Progression.Response.X = 0,2.03,12.03,22.03",
+                "[Phenology].ThermalTime.Response.MinTemp = 2.11",
+                "[Phenology].ThermalTime.Response.OptTemp = 30.72",
+                "[Phenology].ThermalTime.Response.MaxTemp = 38.71",
                 "[Phenology].Flowering.Target.FixedValue = 14.23"
               ],
               "Name": "Chardonnay",
@@ -61,13 +61,13 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = 1.07,1.08, 11.03,12.07,12.08",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].EndoDormancy.Progression.Response.X = 1.07,1.08, 11.03,12.07,12.08",
+                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
                 "[Phenology].Budding.Target.FixedValue = 548.4",
-                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,1.21,11.21,21.21",
-                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 9.97",
-                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 22.84",
-                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 35.02",
+                "[Phenology].Budding.Progression.Response.X = 0,1.21,11.21,21.21",
+                "[Phenology].ThermalTime.Response.MinTemp = 9.97",
+                "[Phenology].ThermalTime.Response.OptTemp = 22.84",
+                "[Phenology].ThermalTime.Response.MaxTemp = 35.02",
                 "[Phenology].Flowering.Target.FixedValue = 28.6"
               ],
               "Name": "Merlot",
@@ -80,13 +80,13 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 50.79",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -3.65,-3.64, 11.03,14.74,14.75",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].EndoDormancy.Progression.Response.X = -3.65,-3.64, 11.03,14.74,14.75",
+                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
                 "[Phenology].Budding.Target.FixedValue = 609.5",
-                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,4.8,14.8,24.8",
-                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 1.57",
-                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 29.6",
-                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 39.3",
+                "[Phenology].Budding.Progression.Response.X = 0,4.8,14.8,24.8",
+                "[Phenology].ThermalTime.Response.MinTemp = 1.57",
+                "[Phenology].ThermalTime.Response.OptTemp = 29.6",
+                "[Phenology].ThermalTime.Response.MaxTemp = 39.3",
                 "[Phenology].Flowering.Target.FixedValue = 19.36"
               ],
               "Name": "PinotNoir",
@@ -99,13 +99,13 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -4.89,-4.88, 11.03,16.9,16.91",
-                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].EndoDormancy.Progression.Response.X = -4.89,-4.88, 11.03,16.9,16.91",
+                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
                 "[Phenology].Budding.Target.FixedValue = 806.78",
-                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,2.03,12.03,22.03",
-                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 2.11",
-                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 30.72",
-                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 38.71",
+                "[Phenology].Budding.Progression.Response.X = 0,2.03,12.03,22.03",
+                "[Phenology].ThermalTime.Response.MinTemp = 2.11",
+                "[Phenology].ThermalTime.Response.OptTemp = 30.72",
+                "[Phenology].ThermalTime.Response.MaxTemp = 38.71",
                 "[Phenology].Flowering.Target.FixedValue = 14.23"
               ],
               "Name": "PinotGris",
@@ -128,9 +128,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
-                  "SubDailyTemperatures": null,
-                  "SubDailyResponse": null,
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "Children": [
@@ -141,7 +139,7 @@
                       "MaxTemp": 39.86,
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -196,9 +194,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
-                      "SubDailyTemperatures": null,
-                      "SubDailyResponse": null,
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "Progression",
                       "Children": [
@@ -218,7 +214,7 @@
                             1.0,
                             0.0
                           ],
-                          "Name": "TemperatureResponse",
+                          "Name": "Response",
                           "Children": [
                             {
                               "$type": "Models.Graph, Models",
@@ -328,9 +324,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
-                      "SubDailyTemperatures": null,
-                      "SubDailyResponse": null,
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "Progression",
                       "Children": [
@@ -348,7 +342,7 @@
                             10.0,
                             20.0
                           ],
-                          "Name": "TemperatureResponse",
+                          "Name": "Response",
                           "Children": [
                             {
                               "$type": "Models.Graph, Models",

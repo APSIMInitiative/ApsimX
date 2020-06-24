@@ -593,7 +593,7 @@
     <Compile Include="Functions\AccumulateFunction.cs" />
     <Compile Include="Functions\AddFunction.cs" />
     <Compile Include="Functions\AgeCalculatorFunction.cs" />
-    <Compile Include="Functions\AirTemperatureFunction.cs" />
+    <Compile Include="Functions\HourlyInterpolation.cs" />
     <Compile Include="Functions\BellCurveFunction.cs" />
     <Compile Include="Functions\Constant.cs" />
     <Compile Include="Functions\DemandFunctions\AllometricDemandFunction.cs" />
