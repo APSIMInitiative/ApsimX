@@ -2513,7 +2513,9 @@
                             model = $"({model})";
 
                         string type = args[1].Value.Trim().Replace("typeof(", "").TrimEnd(')');
-                        return $"{model}.FindAllInScope<{type}>().ToList<IModel>()";
+
+                        // See comment in the FixChildren() method. This really isn't ideal.
+                        return $"{model}.FindAllInScope<{type}>().OfType<IModel>().ToList()";
                     }
                     else
                         throw new Exception($"Incorrect number of arguments passed to Apsim.FindAll()");
@@ -2582,12 +2584,20 @@
                     if (simplify.Groups.Count == 2)
                     {
                         type = simplify.Groups[1].Value;
-                        return $"{model}.FindAllChildren<{type}>().ToList<IModel>()";
+
+                        // Unfortunately we need some sort of cast here, in case the type
+                        // being searched for is an interface such as IPlant which doesn't
+                        // implement IModel, even though realistically the only results
+                        // which FindAllChildren() will return are guaranteed to be IModels.
+                        // In an ideal world, the user wouldn't access any members of IModel,
+                        // and we could just happily return an IEnumerable<IPlant> or
+                        // List<IPlant>, but that's obviously not a guarantee we can make.
+                        return $"{model}.FindAllChildren<{type}>().OfType<IModel>().ToList()";
                     }
                     else
                     {
                         // Need to ensure that we're using System.Linq;
-                        return $"{model}.FindAllChildren().Where(c => {type}.IsAssignableFrom(c.GetType())).ToList<IModel>()";
+                        return $"{model}.FindAllChildren().Where(c => {type}.IsAssignableFrom(c.GetType())).ToList()";
                     }
                 });
 
