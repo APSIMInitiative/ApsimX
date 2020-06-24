@@ -2359,6 +2359,9 @@
                 // Apsim.ChildrenRecursively(model, GetType()) -> model.FindAllDescendants().Where(d => GetType().IsAssignableFrom(d.GetType())).ToList()
                 FixChildrenRecursively(manager);
 
+                // Apsim.ChildrenRecursivelyVisible(model) -> model.FindAllDescendants().Where(m => !m.IsHidden).ToList()
+                FixChildrenRecursivelyVisible(manager);
+
                 manager.Save();
             }
 
@@ -2523,13 +2526,9 @@
 
             void FixFindAll(ManagerConverter manager)
             {
-                bool replaced = false;
-
                 string pattern = @"Apsim\.FindAll\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
-                manager.ReplaceRegex(pattern, match =>
+                bool replaced = manager.ReplaceRegex(pattern, match =>
                 {
-                    replaced = true;
-
                     string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
                     var args = Regex.Matches(match.Groups[1].Value, argsRegex);
 
@@ -2596,13 +2595,10 @@
 
             void FixChildren(ManagerConverter manager)
             {
-                bool replaced = false;
 
                 string pattern = @"Apsim\.Children\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
-                manager.ReplaceRegex(pattern, match =>
+                bool replaced = manager.ReplaceRegex(pattern, match =>
                 {
-                    replaced = true;
-
                     string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
                     var args = Regex.Matches(match.Groups[1].Value, argsRegex);
 
@@ -2686,6 +2682,35 @@
                     else
                         throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursively()");
                 });
+            }
+
+            void FixChildrenRecursivelyVisible(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.ChildrenRecursivelyVisible\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                bool replaced = manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllDescendants().Where(m => !m.IsHidden).ToList()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursivelyVisible()");
+                });
+
+                if (replaced)
+                {
+                    List<string> usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("System.Linq"))
+                        usings.Add("System.Linq");
+                    manager.SetUsingStatements(usings);
+                }
             }
         }
 
