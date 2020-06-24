@@ -64,17 +64,6 @@
             }
         }
 
-        /// <summary>
-        /// Return a list of all child models recursively. Never returns
-        /// null. Can return an empty list.
-        /// </summary>
-        /// <param name="model">The parent model</param>
-        /// <returns>A list of all children</returns>
-        public static List<IModel> ChildrenRecursivelyVisible(IModel model)
-        {
-            return model.FindAllDescendants().Where(m => !m.IsHidden).ToList();
-        }
-
         /// <summary>Return true if the child can be added to the parent.</summary>
         /// <param name="parent">The parent model.</param>
         /// <param name="childType">The child type.</param>
