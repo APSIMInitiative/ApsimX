@@ -24,7 +24,7 @@
         /// <param name="soil">The soil.</param>
         private static void MergeSamplesIntoOne(Soil soil)
         {
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             for (int i = 1; i < samples.Length; i++)
             {
                 if (MathUtilities.ValuesInArray(samples[i].SW))

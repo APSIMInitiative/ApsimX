@@ -78,7 +78,7 @@
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
             {
-                foreach (CompositeFactor compositeFactor in Apsim.Children(Factors, typeof(CompositeFactor)))
+                foreach (CompositeFactor compositeFactor in Factors.FindAllChildren<CompositeFactor>())
                 {
                     if (compositeFactor.Enabled)
                         allValues.Add(new List<CompositeFactor>() { compositeFactor });
@@ -89,7 +89,7 @@
                         foreach (var compositeFactor in factor.GetCompositeFactors())
                             allValues.Add(new List<CompositeFactor>() { compositeFactor });
                 }
-                foreach (Permutation factor in Apsim.Children(Factors, typeof(Permutation)))
+                foreach (Permutation factor in Factors.FindAllChildren<Permutation>())
                 {
                     if (factor.Enabled)
                         allValues.AddRange(factor.GetPermutations());

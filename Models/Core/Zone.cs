@@ -36,7 +36,7 @@
 
         /// <summary>Return a list of plant models.</summary>
         [XmlIgnore]
-        public List<IPlant> Plants { get { return Apsim.Children(this, typeof(IPlant)).Cast<IPlant>().ToList(); } }
+        public List<IPlant> Plants { get { return this.FindAllChildren<IPlant>().Cast<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
         public int Index {  get { return Parent.Children.IndexOf(this); } }

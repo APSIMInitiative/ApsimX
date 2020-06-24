@@ -161,8 +161,8 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
-            GrassBasalArea = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
+            LandConditionIndex = this.FindAllChildren<RelationshipTracker>().Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
+            GrassBasalArea = this.FindAllChildren<RelationshipTracker>().Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
             FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (UseAreaAvailable)

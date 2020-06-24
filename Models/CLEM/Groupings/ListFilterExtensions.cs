@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
         public static List<LabourType> Filter(this IEnumerable<LabourType> individuals, Model filterGroup)
         {
             var rules = new List<Rule>();
-            foreach (LabourFilter filter in Apsim.Children(filterGroup, typeof(LabourFilter)))
+            foreach (LabourFilter filter in filterGroup.FindAllChildren<LabourFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list
@@ -43,7 +43,7 @@ namespace Models.CLEM.Groupings
             bool femaleProperties = false;
             bool maleProperties = false;
             var rules = new List<Rule>();
-            foreach (RuminantFilter filter in Apsim.Children(filterGroup, typeof(RuminantFilter)))
+            foreach (RuminantFilter filter in filterGroup.FindAllChildren<RuminantFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list
@@ -119,7 +119,7 @@ namespace Models.CLEM.Groupings
         public static List<OtherAnimalsTypeCohort> Filter(this IEnumerable<OtherAnimalsTypeCohort> individuals, Model filterGroup)
         {
             var rules = new List<Rule>();
-            foreach (OtherAnimalsFilter filter in Apsim.Children(filterGroup, typeof(OtherAnimalsFilter)))
+            foreach (OtherAnimalsFilter filter in filterGroup.FindAllChildren<OtherAnimalsFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list

@@ -301,7 +301,7 @@
                     return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    foreach (Sample Sample in this.FindAllChildren<Sample>())
                     {
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {

@@ -321,7 +321,7 @@ namespace Models.CLEM
             IModel parentSim = FindAncestor<Simulation>();
 
             // find random number generator
-            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
             if(rnd != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -342,7 +342,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+            Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
             if (clk != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -373,7 +373,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

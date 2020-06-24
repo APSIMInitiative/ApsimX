@@ -50,10 +50,10 @@
 
                 if (ShowPageOfGraphs)
                 {
-                    foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
+                    foreach (Memo memo in this.FindAllChildren<Memo>())
                         memo.Document(tags, headingLevel, indent);
 
-                    if (Apsim.Children(this, typeof(Experiment)).Count > 0)
+                    if (FindAllChildren<Experiment>().Count() > 0)
                     {
                         // Write Phase Table
                         tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
@@ -61,11 +61,11 @@
                         tableData.Columns.Add("Experiment Name", typeof(string));
                         tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
 
-                        foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
+                        foreach (IModel child in this.FindAllChildren<Experiment>())
                         {
                             IModel Factors = child.FindChild<Factors>();
                             string Design = "";
-                            foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                            foreach (IModel factor in Factors.FindAllChildren<Factor>())
                             {
                                 if (Design != "")
                                     Design += " x ";
@@ -85,7 +85,7 @@
                     }
                     int pageNumber = 1;
                     int i = 0;
-                    List<IModel> children = Apsim.Children(this, typeof(Graph));
+                    List<Graph> children = FindAllChildren<Graph>().ToList();
                     while (i < children.Count)
                     {
                         GraphPage page = new GraphPage();

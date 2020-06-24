@@ -328,7 +328,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ProcessList = new List<ILifeStageProcess>();
-            foreach (ILifeStageProcess proc in Apsim.Children(this, typeof(ILifeStageProcess)))
+            foreach (ILifeStageProcess proc in this.FindAllChildren<ILifeStageProcess>())
             {
                 ProcessList.Add(proc);
             }

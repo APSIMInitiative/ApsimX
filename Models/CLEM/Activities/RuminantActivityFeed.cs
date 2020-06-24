@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(RuminantFeedGroup)).Count + Apsim.Children(this, typeof(RuminantFeedGroupMonthly)).Count == 0)
+            if (FindAllChildren<RuminantFeedGroup>().Count() + this.FindAllChildren<RuminantFeedGroupMonthly>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant feed group" };
                 results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present", memberNames));

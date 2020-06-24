@@ -258,11 +258,11 @@ namespace Models.CLEM.Activities
                 {
                     int numberAdded = 0;
                     RuminantType breedParams = rumHerd.FirstOrDefault().BreedParams;
-                    RuminantInitialCohorts cohorts = Apsim.Children(rumHerd.FirstOrDefault().BreedParams, typeof(RuminantInitialCohorts)).FirstOrDefault() as RuminantInitialCohorts;
+                    RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault() as RuminantInitialCohorts;
 
                     if (cohorts != null)
                     {
-                        List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
+                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         if (initialBreeders < this.MinimumBreedersKept)
                         {
@@ -950,7 +950,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(RuminantDestockGroup)).Count() > 0)
+            if (this.FindAllChildren<RuminantDestockGroup>().Count() > 0)
             {
                 html += "\n</div>";
             }
@@ -964,7 +964,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(RuminantDestockGroup)).Count() > 0)
+            if (this.FindAllChildren<RuminantDestockGroup>().Count() > 0)
             {
                 html += "\n<div class=\"activitygroupsborder\">";
                 html += "<div class=\"labournote\">The following breeders will be sold prior to heifers</div>";

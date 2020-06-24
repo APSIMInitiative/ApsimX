@@ -59,7 +59,7 @@ namespace Models.Functions
                                                          "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, 0, indent+1);
             }
         }

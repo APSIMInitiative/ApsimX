@@ -163,7 +163,7 @@
         {
             try
             {
-                foreach (var s in Apsim.Children(series.Parent, typeof(Series)))
+                foreach (var s in series.Parent.FindAllChildren<Series>())
                 {
                     ChangeProperty command = new ChangeProperty(s, name, value);
                     explorerPresenter.CommandHistory.Add(command);

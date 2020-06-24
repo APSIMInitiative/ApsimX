@@ -155,7 +155,7 @@ namespace UserInterface.Presenters
             }
 
             // Get properties of all child models of type SoilCrop.
-            foreach (SoilCrop crop in Apsim.Children(model, typeof(SoilCrop)))
+            foreach (SoilCrop crop in model.FindAllChildren<SoilCrop>())
                 properties.AddRange(FindAllProperties(crop));
 
             return properties;
@@ -252,7 +252,7 @@ namespace UserInterface.Presenters
                     continue;
 
                 SoilCrop crop = property.Object as SoilCrop;
-                int index = Apsim.Children(crop.Parent, typeof(SoilCrop)).IndexOf(crop);
+                int index = crop.Parent.FindAllChildren<SoilCrop>().ToList().IndexOf(crop);
                 Color foreground = ColourUtilities.ChooseColour(index);
                 if (property.IsReadOnly)
                     foreground = Color.Red;

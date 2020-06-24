@@ -399,7 +399,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
-            if(Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)
+            if(this.FindAllChildren<RuminantDestockGroup>().Count() == 0)
             {
                 html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }

@@ -43,7 +43,7 @@ namespace Models.Core
         {
             get
             {
-                return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
+                return this.FindAllChildren<Zone>().Sum(z => (z as Zone).Area);
             }
         }
 

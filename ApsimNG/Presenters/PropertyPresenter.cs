@@ -714,7 +714,7 @@
 
             // Check for cultivar folders under replacements.
             List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (IModel cultivarFolder in Apsim.Children(crop as IModel, typeof(CultivarFolder)))
+            foreach (IModel cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
             {
                 IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
                 if (replacementFolder != null)
@@ -916,7 +916,7 @@
             else
             {
                 // no resource groups specified so use all avaliable resources
-                foreach (IModel resGroup in Apsim.Children(resHolder, typeof(IModel)))
+                foreach (IModel resGroup in resHolder.FindAllChildren<IModel>())
                 {
                     foreach (IModel item in resGroup.Children)
                     {

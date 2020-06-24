@@ -112,7 +112,7 @@ namespace UserInterface.Presenters
                 status.IsWorking = true;
 
             ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)

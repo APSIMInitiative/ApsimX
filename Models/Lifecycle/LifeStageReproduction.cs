@@ -110,7 +110,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             FunctionList = new List<IFunction>();
-            foreach (IFunction func in Apsim.Children(this, typeof(IFunction)))
+            foreach (IFunction func in this.FindAllChildren<IFunction>())
             {
                 FunctionList.Add(func);
                 // store the specific functions for use later in ProcessCohort()

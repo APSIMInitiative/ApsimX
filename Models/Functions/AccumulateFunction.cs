@@ -32,7 +32,7 @@ namespace Models.Functions
        
         private double AccumulatedValue = 0;
 
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>();
 
             if (phenology.Between(startStageIndex, endStageIndex))
             {
@@ -172,7 +172,7 @@ namespace Models.Functions
                                                             + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

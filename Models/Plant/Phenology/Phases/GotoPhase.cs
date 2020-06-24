@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Paragraph("This is a special phase, at " + Start + " the phenology is reset to the " + PhaseNameToGoto + " phase.  ", indent));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
         }

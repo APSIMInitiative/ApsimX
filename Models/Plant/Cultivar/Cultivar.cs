@@ -44,7 +44,7 @@
             get
             {
                 List<string> names = new List<string>();
-                Apsim.Children(this, typeof(Alias)).ForEach(a => names.Add(a.Name));
+                names.AddRange(FindAllChildren<Alias>().Select(a => a.Name));
                 return names.ToArray();
             }
         }

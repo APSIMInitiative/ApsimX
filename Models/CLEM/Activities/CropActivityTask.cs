@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
             if (Clock.Today.Year*100+Clock.Today.Month == start)
             {
                 // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = Apsim.Children(this, typeof(ActivityTimerCropHarvest)).FirstOrDefault() as ActivityTimerCropHarvest;
+                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault() as ActivityTimerCropHarvest;
                 if (chtimer != null)
                 {
                     if (chtimer.ActivityPast)
@@ -211,7 +211,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(Apsim.Children(this, typeof(CropActivityFee)).Count() + Apsim.Children(this, typeof(LabourRequirement)).Count() == 0)
+            if(this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
             {
                 html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
             }

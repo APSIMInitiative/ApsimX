@@ -2029,7 +2029,7 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
-            foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
+            foreach (LeafCohort initialLeaf in this.FindAllChildren<LeafCohort>())
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }

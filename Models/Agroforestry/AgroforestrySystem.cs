@@ -37,7 +37,7 @@ namespace Models.Agroforestry
         /// A list containing forestry information for each zone.
         /// </summary>
         [XmlIgnore]
-        public List<IModel> ZoneList;
+        public IEnumerable<IModel> ZoneList;
 
         /// <summary>
         /// Fraction of rainfall intercepted by canopy
@@ -60,7 +60,7 @@ namespace Models.Agroforestry
             get
             {
                 double A = 0;
-                foreach (Zone Z in Apsim.Children(this, typeof(Zone)))
+                foreach (Zone Z in this.FindAllChildren<Zone>())
                     A += Z.Area;
                 return A;
             }
@@ -81,8 +81,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            tree = this.FindChild<TreeProxy>();
-            ZoneList = Apsim.Children(this, typeof(Zone));
+            tree = FindChild<TreeProxy>();
+            ZoneList = FindAllChildren<Zone>();
         }
 
         /// <summary>

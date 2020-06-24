@@ -642,7 +642,7 @@ namespace Models.PMF
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }

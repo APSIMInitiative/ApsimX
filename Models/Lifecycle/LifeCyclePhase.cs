@@ -171,10 +171,10 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ProgenyDestinations = new List<ProgenyDestinationPhase>();
-            foreach (ProgenyDestinationPhase pdest in Apsim.Children(this, typeof(ProgenyDestinationPhase)))
+            foreach (ProgenyDestinationPhase pdest in this.FindAllChildren<ProgenyDestinationPhase>())
                 ProgenyDestinations.Add(pdest);
             MigrantDestinations = new List<MigrantDestinationPhase>();
-            foreach (MigrantDestinationPhase mdest in Apsim.Children(this, typeof(MigrantDestinationPhase)))
+            foreach (MigrantDestinationPhase mdest in this.FindAllChildren<MigrantDestinationPhase>())
                 MigrantDestinations.Add(mdest);
         }
 

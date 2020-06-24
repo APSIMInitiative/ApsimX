@@ -5,6 +5,7 @@
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -148,11 +149,11 @@
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
-                var possibleMatches = Apsim.Children(this, modelToReplace.GetType());
-                if (possibleMatches.Count > 1)
-                    value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
+                IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
+                if (possibleMatches.Count() > 1)
+                    value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
                 else
-                    value = possibleMatches[0];
+                    value = possibleMatches.First();
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);

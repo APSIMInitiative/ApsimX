@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            numberToStock = Apsim.Children(this, typeof(Relationship)).FirstOrDefault() as Relationship;
+            numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if(numberToStock != null)
             {
                 if (grazeStore != "")
@@ -327,7 +327,7 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            Relationship numberRelationship = Apsim.Children(this, typeof(Relationship)).FirstOrDefault() as Relationship;
+            Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if (numberRelationship != null)
             {
                 html += "\n<div class=\"activityentry\">";

@@ -25,7 +25,7 @@
             var water = soil.FindChild<Physical>();
             if (water != null)
             {
-                var crops = Apsim.Children(water, typeof(SoilCrop)).Cast<SoilCrop>().ToArray();
+                var crops = water.FindAllChildren<SoilCrop>().Cast<SoilCrop>().ToArray();
 
                 foreach (var crop in crops)
                 {
@@ -45,7 +45,7 @@
                 }
             }
 
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
                 CheckSampleForMissingValues(sample, soil);
 
@@ -421,7 +421,7 @@
                 if (predictedCropNames != null)
                 {
                     var water = soil.FindChild<Physical>();
-                    var crops = Apsim.Children(water, typeof(SoilCrop));
+                    var crops = water.FindAllChildren<SoilCrop>().ToList();
 
                     foreach (string cropName in predictedCropNames)
                     {

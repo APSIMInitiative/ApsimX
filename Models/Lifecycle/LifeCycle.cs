@@ -5,6 +5,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -47,13 +48,7 @@
         {
             get
             {
-                List<IModel> phases = Apsim.Children(this, typeof(LifeCyclePhase));
-                List<string> names = new List<string>();
-                names.Add("");
-                foreach (IModel p in phases)
-                    names.Add(p.Name);
-
-                return names.ToArray();
+                return FindAllChildren<LifeCyclePhase>().Select(p => p.Name).ToArray();
             }
         }
 
@@ -79,7 +74,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             LifeCyclePhases = new List<LifeCyclePhase>();
-            foreach (LifeCyclePhase stage in Apsim.Children(this, typeof(LifeCyclePhase)))
+            foreach (LifeCyclePhase stage in this.FindAllChildren<LifeCyclePhase>())
             {
                 LifeCyclePhases.Add(stage);
             }

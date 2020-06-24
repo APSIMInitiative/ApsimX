@@ -194,7 +194,7 @@ namespace UserInterface.Presenters
                 IModel firstChild = model.Children.FirstOrDefault();
                 if (firstChild != null)
                 {
-                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    List<IModel> sameTypeChildren = model.FindAllChildren().Where(c => firstChild.GetType().IsAssignableFrom(c.GetType())).ToList();
                     return sameTypeChildren;
                 }
             }
@@ -594,19 +594,7 @@ namespace UserInterface.Presenters
         /// <returns>A list of life cycles.</returns>
         private string[] GetLifeCycleNames(Zone zone)
         {
-            List<IModel> LifeCycles = Apsim.Children(zone, typeof(LifeCycle));
-            if (LifeCycles.Count > 0)
-            {
-                string[] Namelist = new string[LifeCycles.Count];
-                int i = 0;
-                foreach (IModel LC in LifeCycles)
-                {
-                    Namelist[i] = LC.Name;
-                    i++;
-                }
-                return Namelist;
-            }
-            return new string[0];
+            return zone.FindAllChildren<LifeCycle>().Select(lc => lc.Name).ToArray();
         }
 
         /// <summary>Get a list of Phase Names for life Cycle</summary>

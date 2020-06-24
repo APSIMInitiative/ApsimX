@@ -83,7 +83,7 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";
             }

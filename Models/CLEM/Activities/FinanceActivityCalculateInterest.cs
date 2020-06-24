@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
             if (financesExist)
             {
                 // make interest payments on bank accounts
-                foreach (FinanceType accnt in Apsim.Children(Resources.FinanceResource(), typeof(FinanceType)))
+                foreach (FinanceType accnt in Resources.FinanceResource().FindAllChildren<FinanceType>())
                 {
                     if (accnt.Balance > 0)
                     {
@@ -191,7 +191,7 @@ namespace Models.CLEM.Activities
             Finance finance = null;
             if (clemParent != null)
             {
-                resHolder = Apsim.Children(clemParent, typeof(ResourcesHolder)).FirstOrDefault() as ResourcesHolder;
+                resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
                 finance = resHolder.FinanceResource();
             }
 
@@ -202,7 +202,7 @@ namespace Models.CLEM.Activities
             else
             {
                 html += "\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>";
-                foreach (FinanceType accnt in Apsim.Children(finance, typeof(FinanceType)))
+                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                 {
                     if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                     {

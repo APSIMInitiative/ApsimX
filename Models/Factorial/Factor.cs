@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = Apsim.Children(this, typeof(CompositeFactor)).Where(f => f.Enabled).Cast<CompositeFactor>();
+            var childCompositeFactors = this.FindAllChildren<CompositeFactor>().Where(f => f.Enabled).Cast<CompositeFactor>();
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -68,7 +68,7 @@
         /// <returns></returns>
         public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
         {
-            var childCompositeFactors = Apsim.Children(compositeFactor, typeof(CompositeFactor)).Cast<CompositeFactor>();
+            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>().Cast<CompositeFactor>();
             if (childCompositeFactors.Count() > 0)
             {
                 var newFactorValues = new List<CompositeFactor>();

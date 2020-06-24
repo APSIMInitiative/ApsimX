@@ -82,7 +82,7 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // get description and units.

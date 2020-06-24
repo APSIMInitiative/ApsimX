@@ -557,7 +557,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                lr = Apsim.Children(callingModel, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
             }
 
             int currentIndex = 0;
@@ -785,7 +785,7 @@ namespace Models.CLEM.Activities
 
                 if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>().GetType() == typeof(Market))
                 {
-                    ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+                    ActivitiesHolder marketActivities = Resources.FindMarket.FindAllChildren<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
                     if(marketActivities != null)
                     {
                         marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);

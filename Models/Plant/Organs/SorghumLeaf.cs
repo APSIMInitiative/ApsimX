@@ -1521,7 +1521,7 @@ namespace Models.PMF.Organs
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write the memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 //// List the parameters, properties, and processes from this organ that need to be documented:

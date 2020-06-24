@@ -202,7 +202,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            activities = Apsim.Children(this, typeof(IModel));
+            activities = FindAllChildren<IModel>().ToList(); // = Children;
             BindEvents(activities);
         }
 

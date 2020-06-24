@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
         private ActivityCutAndCarryLimiter LocateCutAndCarryLimiter(IModel model)
         {
             // search children
-            ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
+            ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
                 if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
@@ -598,14 +598,14 @@ namespace Models.CLEM.Activities
             // if first child of mixed 
             if(this.Parent.GetType() == typeof(CropActivityManageProduct))
             {
-                if (Apsim.Children(this.Parent, typeof(CropActivityManageProduct)).FirstOrDefault().Name == this.Name)
+                if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
                 {
                     // close off the parent item so it displays
                     html += "\n</div>";
                 }
             }
 
-            bool mixed = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() >= 1;
+            bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
             if (mixed)
             {
                 html += "\n<div class=\"cropmixedlabel\">Mixed crop</div>";

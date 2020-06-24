@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
             }
 
             // get trucking settings
-            trucking = Apsim.Children(this, typeof(TruckingSettings)).FirstOrDefault() as TruckingSettings;
+            trucking = this.FindAllChildren<TruckingSettings>().FirstOrDefault() as TruckingSettings;
 
             // check if pricing is present
             if (bankAccount != null)
@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
                     bankAccount.Remove(expenseRequest);
                 }
 
-                foreach (RuminantActivityFee item in Apsim.Children(this, typeof(RuminantActivityFee)))
+                foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
                 {
                     switch (item.PaymentStyle)
                     {

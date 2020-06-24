@@ -173,7 +173,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

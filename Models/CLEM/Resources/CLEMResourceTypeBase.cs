@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Apsim.Children(this, typeof(Transmutation)).Where(a => a.Enabled).Count() > 0;
+                return this.FindAllChildren<Transmutation>().Where(a => a.Enabled).Count() > 0;
             }
         }
 
@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
+            return this.FindAllChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Models.CLEM.Resources
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            ResourcePricing price = this.FindAllChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
 
             // does simulation have finance
             ResourcesHolder resources = FindAncestor<ResourcesHolder>();
@@ -89,7 +89,7 @@ namespace Models.CLEM.Resources
                 if (financesPresent)
                 { 
                     string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                    if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
+                    if (Clock != null & FindAllChildren<ResourcePricing>().Count() > 0)
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
@@ -145,7 +145,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
+                ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
                     double result = amount;
@@ -184,7 +184,7 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public double ConversionFactor(string converterName)
         {
-            ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+            ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
             if (converter is null)
             {
                 return 0;

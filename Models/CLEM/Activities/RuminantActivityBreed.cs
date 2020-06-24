@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
 
             // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourRequirement)).Cast<LabourRequirement>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            labour = this.FindAllChildren<LabourRequirement>().Cast<LabourRequirement>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
             if (labour.Count() == 0)
             {
                 labour = new List<LabourRequirement>();
@@ -446,7 +446,7 @@ namespace Models.CLEM.Activities
             }
 
             // get all fees for breeding
-            foreach (RuminantActivityFee item in Apsim.Children(this, typeof(RuminantActivityFee)))
+            foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
             {
                 if (ResourceRequestList == null)
                 {

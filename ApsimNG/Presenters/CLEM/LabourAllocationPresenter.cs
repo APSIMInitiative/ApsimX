@@ -1,4 +1,4 @@
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
@@ -116,7 +116,7 @@ namespace UserInterface.Presenters
                 EndHTML(htmlString);
             }
 
-            numberLabourTypes = Apsim.Children(labour, typeof(LabourType)).Count();
+            numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
             if (numberLabourTypes == 0)
             {
                 htmlString += "No Labour types supplied in Labour resource";
@@ -124,7 +124,7 @@ namespace UserInterface.Presenters
             }
 
             // create labour list
-            foreach (LabourType lt in Apsim.Children(labour, typeof(LabourType)))
+            foreach (LabourType lt in labour.FindAllChildren<LabourType>())
             {
                 labourList.Add(new LabourType()
                 {
@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
             string tableHtml = "";
             tableHtml += "<table class=\"main\">";
             tableHtml += "<tr><th>Activity</th>";
-            foreach (LabourType lt in Apsim.Children(labour, typeof(LabourType)))
+            foreach (LabourType lt in labour.FindAllChildren<LabourType>())
             {
                 tableHtml += "<th>"+lt.Name+"</th>";
             }
@@ -212,7 +212,7 @@ namespace UserInterface.Presenters
             // can row be included?
             if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
-                Model labourRequirement = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
                 tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
@@ -223,17 +223,17 @@ namespace UserInterface.Presenters
                     {
                         tblstr += "<td>";
                         // for each filter group
-                        foreach (Model item in Apsim.Children(labourRequirement, typeof(LabourFilterGroup)))
+                        foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                         {
                             tblstr += "<div>";
                             int level = 0;
                             // while nested 
                             Model nested = labourRequirement as Model;
 
-                            while (Apsim.Children(nested, typeof(LabourFilterGroup)).Count() > 0)
+                            while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
                             {
                                 level++;
-                                nested = Apsim.Children(nested, typeof(LabourFilterGroup)).FirstOrDefault() as Model;
+                                nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
                                 List<LabourType> ltlist = new List<LabourType>() { lt };
                                 if (ltlist.Filter(nested).Count() >= 1)
                                 {

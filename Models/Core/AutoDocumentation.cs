@@ -281,7 +281,7 @@
                     // Find children
                     string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
                     Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in Apsim.Children(model, childType))
+                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                     {
                         DocumentModel(child, tags, targetHeadingLevel + 1, indent);
                         childrenDocumented.Add(child);
@@ -300,7 +300,7 @@
             if (documentAllChildren)
             {
                 // write children.
-                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
+                foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
                         DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);

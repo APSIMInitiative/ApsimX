@@ -181,8 +181,8 @@
         [Test]
         public void ChildrenTest()
         {
-            List<IModel> allChildren = Apsim.Children(this.simulation, typeof(Zone));
-            Assert.AreEqual(allChildren.Count, 2);
+            IEnumerable<Zone> allChildren = simulation.FindAllChildren<Zone>();
+            Assert.AreEqual(allChildren.Count(), 2);
         }
         
         /// <summary>

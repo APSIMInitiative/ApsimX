@@ -459,7 +459,7 @@ namespace Models.CLEM
 
             // get the pricing 
             var w = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
-            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            bool multiPrice = (w as IModel).FindAllChildren<ResourcePricing>().Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price != null)
             {

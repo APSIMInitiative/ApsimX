@@ -1,4 +1,4 @@
-using Models;
+﻿using Models;
 using Models.Core;
 using Models.Storage;
 using System;
@@ -107,7 +107,7 @@ namespace UserInterface.Presenters
             // find IStorageReader of simulation
             IModel simulation = model.FindAncestor<Simulation>();
             IModel simulations = simulation.FindAncestor<Simulations>();
-            IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
+            IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
             if (ds == null)
             {
                 return htmlString;

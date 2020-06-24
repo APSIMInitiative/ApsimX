@@ -167,7 +167,7 @@ namespace Models.PMF
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));

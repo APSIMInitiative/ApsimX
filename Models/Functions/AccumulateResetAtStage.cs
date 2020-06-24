@@ -21,7 +21,7 @@ namespace Models.Functions
                    
         private double AccumulatedValue = 0;
 
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>();
 
                 double DailyIncrement = 0.0;
                 foreach (IFunction function in ChildFunctions)
@@ -98,7 +98,7 @@ namespace Models.Functions
                     " and set to zero each time the "+ ResetStageName + " is passed.", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

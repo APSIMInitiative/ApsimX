@@ -151,7 +151,7 @@ namespace Models.Agroforestry
         /// A list containing forestry information for each zone.
         /// </summary>
         [XmlIgnore]
-        public List<IModel> ZoneList;
+        public IEnumerable<Zone> ZoneList;
 
         /// <summary>
         /// Return an array of shade values.
@@ -204,7 +204,7 @@ namespace Models.Agroforestry
             {
                 if (zone is RectangularZone)
                 {
-                    if (zone == ZoneList[0])
+                    if (zone == ZoneList.FirstOrDefault())
                         D += 0; // the tree is at distance 0
                     else
                         D += (zone as RectangularZone).Width; 
@@ -389,15 +389,15 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Apsim.Children(this.Parent, typeof(Zone));
+            ZoneList = Parent.FindAllChildren<Zone>();
             SetupTreeProperties();
 
             //pre-fetch static information
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
-            treeZone = ZoneList[0] as Zone;
+            treeZone = ZoneList.FirstOrDefault();
             treeZoneWater = treeZone.FindInScope<ISoilWater>();
 
-            TreeWaterUptake = new double[ZoneList.Count];
+            TreeWaterUptake = new double[ZoneList.Count()];
 
         }
 
@@ -486,7 +486,7 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
-            Zone treeZone = ZoneList[0] as Zone;
+            Zone treeZone = ZoneList.FirstOrDefault() as Zone;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)

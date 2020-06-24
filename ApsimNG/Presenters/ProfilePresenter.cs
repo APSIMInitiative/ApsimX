@@ -105,7 +105,7 @@
             {
                 // The graph's series contain many variables such as [Soil].LL. We now replace
                 // these relative paths with absolute paths.
-                foreach (Series series in Apsim.Children(graph, typeof(Series)))
+                foreach (Series series in graph.FindAllChildren<Series>())
                 {
                     series.XFieldName = series.XFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
                     series.X2FieldName = series.X2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);

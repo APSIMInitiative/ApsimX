@@ -56,7 +56,7 @@ namespace Models.PMF.Functions
 
 
             // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            foreach (IModel child in this.FindAllChildren<IModel>())
             {
                 child.Document(tags, headingLevel + 1, indent + 1);
             }

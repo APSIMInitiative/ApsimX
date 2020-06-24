@@ -24,7 +24,7 @@
             if (layerStructure != null)
                 targetThickness = layerStructure.Thickness;
 
-            foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
+            foreach (Sample sample in soil.FindAllChildren<Sample>())
                 SetSampleThickness(sample, targetThickness, soil);
 
             if (soil.SoilWater is WaterModel.WaterBalance)
