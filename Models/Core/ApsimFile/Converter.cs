@@ -2324,6 +2324,11 @@
                 // This will add "using System.Linq;" if necessary.
                 FixChildren(manager);
 
+                // Apsim.ChildrenRecursively(model) -> model.FindAllDescendants().ToList()
+                // Apsim.ChildrenRecursively(model, typeof(IOrgan)) -> model.FindAllDescendants<IOrgan>().OfType<IModel>().ToList()
+                // Apsim.ChildrenRecursively(model, GetType()) -> model.FindAllDescendants().Where(d => GetType().IsAssignableFrom(d.GetType())).ToList()
+                FixChildrenRecursively(manager);
+
                 manager.Save();
             }
 
@@ -2608,6 +2613,49 @@
                         usings.Add("System.Linq");
                     manager.SetUsingStatements(usings);
                 }
+            }
+
+            void FixChildrenRecursively(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.ChildrenRecursively\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllDescendants().ToList()";
+                    }
+                    else if (args.Count == 2)
+                    {
+                        // Need to also ensure that we're using System.Linq;
+
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        string type = args[1].Value.Trim();
+
+                        Match simplify = Regex.Match(type, @"typeof\(([^\)]+)\)");
+                        if (simplify.Groups.Count == 2)
+                        {
+                            // Code uses a simple typeof(X) to reference the type. This can be converted to the generic usage.
+                            type = simplify.Groups[1].Value;
+                            return $"{model}.FindAllDescendants<{type}>().OfType<IModel>().ToList()";
+                        }
+                        else
+                            // This is a bit uglier and we need to use a qnd linq query to fix it up.
+                            return $"{model}.FindAllDescendants().Where(d => {type}.IsAssignableFrom(d.GetType())).ToList()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursively()");
+                });
             }
         }
 
