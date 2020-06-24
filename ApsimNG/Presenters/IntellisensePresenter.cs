@@ -184,7 +184,7 @@
         {
             var events = new List<NeedContextItemsArgs.ContextItem>();
 
-            List<IModel> allModels = Apsim.ChildrenRecursively(model.FindAncestor<Simulations>());
+            IEnumerable<IModel> allModels = model.FindAncestor<Simulations>().FindAllDescendants();
             foreach (var publisher in Events.Publisher.FindAll(allModels))
             {
                 string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);

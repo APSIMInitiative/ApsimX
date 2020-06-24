@@ -28,7 +28,7 @@
             // Get a complete list of all models in simulation (including the simulation itself).
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            allModels.AddRange(relativeTo.FindAllDescendants());
 
             var publishers = Publisher.FindAll(allModels);
             var subscribers = Subscriber.GetAll(allModels);
@@ -45,7 +45,7 @@
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            allModels.AddRange(relativeTo.FindAllDescendants());
             List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -297,7 +297,7 @@
             /// <summary>Find all event publishers in the specified models.</summary>
             /// <param name="models">The models to scan for event publishers</param>
             /// <returns>The list of event publishers</returns>
-            public static List<Publisher> FindAll(List<IModel> models)
+            public static List<Publisher> FindAll(IEnumerable<IModel> models)
             {
                 List<Publisher> publishers = new List<Publisher>();
                 foreach (IModel modelNode in models)

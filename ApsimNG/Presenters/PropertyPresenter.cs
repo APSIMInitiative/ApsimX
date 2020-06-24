@@ -608,8 +608,8 @@
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
                     // get crop file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteCrop)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -622,8 +622,8 @@
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
                     // get Pasture file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FilePasture)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLitePasture)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FilePasture>().Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLitePasture>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -723,7 +723,7 @@
                     // all cultivar names added by this folder in the official plant
                     // model, and add the cultivar names added by the matching cultivar
                     // folder under replacements.
-                    foreach (IModel cultivar in Apsim.ChildrenRecursively(cultivarFolder, typeof(Cultivar)))
+                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
                     {
                         cultivarNames.Remove(cultivar.Name);
 
@@ -735,10 +735,10 @@
                         cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
                     }
 
-                    foreach (Alias alias in Apsim.ChildrenRecursively(cultivarFolder, typeof(Alias)))
+                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
                         cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
 
-                    foreach (IModel cultivar in Apsim.ChildrenRecursively(replacementFolder, typeof(Cultivar)))
+                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
                         cultivarNames.Add(cultivar.Name);
                 }
             }

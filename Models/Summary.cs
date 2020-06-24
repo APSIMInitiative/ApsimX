@@ -83,7 +83,7 @@
 
             //Do checks on the soil to make sure there are no problems with the initial parameterisation.
 
-            List<IModel> soils = Apsim.ChildrenRecursively(simulation, typeof(Soil));
+            IEnumerable<Soil> soils = simulation.FindAllDescendants<Soil>();
             foreach (Soil soil in soils)
                 SoilChecker.Check(soil);
 

@@ -11,10 +11,10 @@
     [Serializable]
     public class SoilState
     {
-        private List<Zone> allZones;
+        private IEnumerable<Zone> allZones;
 
         /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
-        public SoilState(List<Zone> allZones)
+        public SoilState(IEnumerable<Zone> allZones)
         {
             this.allZones = allZones;
             Zones = new List<ZoneWaterAndN>();

@@ -37,7 +37,7 @@
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
             modelsInScope.Add(scopedParent);
-            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent));
+            modelsInScope.AddRange(scopedParent.FindAllDescendants());
             while (scopedParent.Parent != null)
             {
                 scopedParent = scopedParent.Parent;
@@ -52,7 +52,7 @@
                         // This ensures that a soil's water node will be in scope of
                         // a manager inside a folder inside a zone.
                         if (!IsScopedModel(child))
-                            modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
+                            modelsInScope.AddRange(child.FindAllDescendants());
                     }
                 }
             }

@@ -39,7 +39,7 @@
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
-                allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
+                allModels.AddRange(rootNode.FindAllDescendants());
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
@@ -84,7 +84,7 @@
         public void Unresolve(IModel model, bool allLinks)
         {
             List<IModel> allModels = new List<IModel>() { model };
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            allModels.AddRange(model.FindAllDescendants());
             foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s

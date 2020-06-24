@@ -326,7 +326,7 @@
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
                 if (node == null && relativeTo.FindAncestor<Replacements>() != null)
-                    node = Apsim.ChildrenRecursively(relativeTo.FindAncestor<Simulations>()).FirstOrDefault(child => child.Name == modelName);
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
             }
 
             // If the object name string does not contain any children/properties 

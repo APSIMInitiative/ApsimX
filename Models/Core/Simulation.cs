@@ -194,7 +194,7 @@ namespace Models.Core
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+            foreach (var zone in this.FindAllDescendants<Zone>())
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -228,7 +228,8 @@ namespace Models.Core
                 this.ParentAllDescendants();
 
                 // Call OnCreated in all models.
-                Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
+                foreach (IModel model in FindAllDescendants())
+                    model.OnCreated();
             }
 
             if (Services == null || Services.Count < 1)

@@ -157,7 +157,8 @@
             };
 
             zone.ParentAllDescendants();
-            Apsim.ChildrenRecursively(zone).ForEach(m => m.OnCreated());
+            foreach (IModel model in zone.FindAllDescendants())
+                model.OnCreated();
             var links = new Links();
             links.Resolve(zone, true);
             var events = new Events(zone);

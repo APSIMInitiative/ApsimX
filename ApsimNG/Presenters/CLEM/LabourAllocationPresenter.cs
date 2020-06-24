@@ -109,7 +109,7 @@ namespace UserInterface.Presenters
             }
 
             // Get Labour resources
-            labour = Apsim.ChildrenRecursively(clem, typeof(Labour)).FirstOrDefault() as Labour;
+            labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
             if(labour == null)
             {
                 htmlString += "No Labour supplied in resources";
@@ -148,7 +148,7 @@ namespace UserInterface.Presenters
 
             // walk through all activities
             // check if LabourRequirement can be added
-            ActivitiesHolder activities = Apsim.ChildrenRecursively(clem, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+            ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
             if (activities == null)
             {
                 htmlString += "Could not find an Activities Holder";

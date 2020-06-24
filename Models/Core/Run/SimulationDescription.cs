@@ -130,7 +130,8 @@
                     // recompile their scripts. This is to work around an issue
                     // where scripts will change during deserialization. See issue
                     // #4463 and the TestMultipleChildren test inside ReportTests.
-                    Apsim.ChildrenRecursively(newSimulation, typeof(Manager)).ForEach(m => m.OnCreated());
+                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
+                        script.OnCreated();
                 }
                 else
                     newSimulation = baseSimulation;
@@ -149,7 +150,7 @@
                 newSimulation.Services = GetServices();
 
                 // Standardise the soil.
-                var soils = Apsim.ChildrenRecursively(newSimulation, typeof(Soils.Soil));
+                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
                 foreach (Soils.Soil soil in soils)
                     SoilStandardiser.Standardise(soil);
 

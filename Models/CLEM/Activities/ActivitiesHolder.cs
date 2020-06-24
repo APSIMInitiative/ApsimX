@@ -80,7 +80,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // ensure all folders are not APSIM folders
-            if(Apsim.ChildrenRecursively(this, typeof(Folder)).Count>0)
+            if(FindAllDescendants<Folder>().Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
                 results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
@@ -255,7 +255,7 @@ namespace Models.CLEM.Activities
             }
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in Apsim.ChildrenRecursively(this, typeof(IActivityTimer)))
+            foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())
             {
                 if (timer.ActivityDue)
                 {

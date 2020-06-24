@@ -719,7 +719,7 @@
                 IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
-                    foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    foreach (IModel child in model.FindAllDescendants())
                         child.IsHidden = !child.IsHidden;
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
@@ -753,7 +753,7 @@
                     List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                     changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
 
-                    foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    foreach (IModel child in model.FindAllDescendants())
                         changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
 
                     ChangeProperty command = new ChangeProperty(changes);
@@ -790,7 +790,7 @@
                 
                 // Toggle read-only on the model and all descendants.
                 changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
-                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                foreach (IModel child in model.FindAllDescendants())
                     changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
 
                 // Apply changes.
@@ -881,7 +881,7 @@
                 IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
 
-                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                foreach (IModel child in model.FindAllDescendants())
                     child.IncludeInDocumentation = model.IncludeInDocumentation;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                 explorerPresenter.Refresh();
@@ -919,7 +919,7 @@
             {
                 Folder folder = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as Folder;
                 folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
-                foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
+                foreach (Folder child in folder.FindAllDescendants<Folder>())
                     child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             }

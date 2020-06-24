@@ -36,7 +36,7 @@
 
             // In a multi-paddock context, we want to attempt to
             // change the property value in all paddocks.
-            foreach (Zone paddock in Apsim.ChildrenRecursively(simulation, typeof(Zone)))
+            foreach (Zone paddock in simulation.FindAllDescendants<Zone>())
             {
                 IVariable variable = paddock.FindByPath(path);
                 if (variable != null)

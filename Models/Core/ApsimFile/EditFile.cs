@@ -154,7 +154,7 @@ namespace Models.Core.ApsimFile
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
             {
-                replacement = Apsim.ChildrenRecursively(extFile, toBeReplaced.GetType()).FirstOrDefault();
+                replacement = extFile.FindAllDescendants().Where(d => toBeReplaced.GetType().IsAssignableFrom(d.GetType())).FirstOrDefault();
                 if (replacement == null)
                     throw new Exception($"Unable to find replacement model of type {toBeReplaced.GetType().Name} in file {replacementFile}");
             }

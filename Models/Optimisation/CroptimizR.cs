@@ -292,7 +292,7 @@ namespace Models.Optimisation
             if (string.IsNullOrEmpty(originalFile))
                 originalFile = (storage as IDataStore)?.FileName;
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in Apsim.ChildrenRecursively(sims, typeof(IReferenceExternalFiles)).Cast<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in sims.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
                     string absoluteFileName = PathUtilities.GetAbsolutePath(file, originalFile);
@@ -357,7 +357,7 @@ namespace Models.Optimisation
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in Apsim.ChildrenRecursively(this, typeof(ISimulationDescriptionGenerator)))
+            foreach (ISimulationDescriptionGenerator generator in this.FindAllDescendants<ISimulationDescriptionGenerator>())
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 

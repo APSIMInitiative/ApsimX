@@ -98,8 +98,8 @@ namespace Models.PMF
         public double NDiffusionSupply { get; private set; }
 
         #endregion
-        private List<IModel> uptakeModels = null;
-        private List<IModel> zones = null;
+        private IEnumerable<IUptake> uptakeModels = null;
+        private IEnumerable<Zone> zones = null;
         private double stage;
         private IPhase previousPhase;
         private double accumTT;
@@ -133,8 +133,8 @@ namespace Models.PMF
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             stage = phenology.Stage;
-            uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
-            zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
+            uptakeModels = Parent.FindAllDescendants<IUptake>();
+            zones = Parent.FindAllDescendants<Zone>();
             previousPhase = phenology.CurrentPhase;
             DMPlantMax = 9999;
         }

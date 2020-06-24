@@ -172,7 +172,7 @@ namespace ApsimNG.Cloud
             Simulations sims = job.Model as Simulations;
             if (sims == null)
                 sims = job.Model.FindAncestor<Simulations>();
-            foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
+            foreach (Weather child in job.Model.FindAllDescendants<Weather>())
             {
                 if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(sims.FileName))
                     throw new Exception("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);

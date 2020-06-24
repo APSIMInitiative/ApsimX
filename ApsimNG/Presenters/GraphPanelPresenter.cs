@@ -314,7 +314,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
+            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
                 Refresh();
         }
 

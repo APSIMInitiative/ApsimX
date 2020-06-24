@@ -68,7 +68,8 @@
             // Set the filename
             if (newModel is Simulations)
                 (newModel as Simulations).FileName = fileName;
-            Apsim.ChildrenRecursively(newModel, typeof(Simulation)).ForEach(m => (m as Simulation).FileName = fileName);
+            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                sim.FileName = fileName;
             return newModel;
         }
 
@@ -98,7 +99,7 @@
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in Apsim.ChildrenRecursively(newModel))
+            foreach (var model in newModel.FindAllDescendants())
             {
                 try
                 {

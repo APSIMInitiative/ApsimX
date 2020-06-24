@@ -188,7 +188,7 @@ namespace Models.Agroforestry
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
-        private List<IModel> forestryZones;
+        private IEnumerable<Zone> forestryZones;
         private Zone treeZone;
         private ISoilWater treeZoneWater;
 
@@ -393,7 +393,7 @@ namespace Models.Agroforestry
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
+            forestryZones = Parent.FindAllDescendants<Zone>();
             treeZone = ZoneList.FirstOrDefault();
             treeZoneWater = treeZone.FindInScope<ISoilWater>();
 

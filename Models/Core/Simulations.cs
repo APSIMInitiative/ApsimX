@@ -94,7 +94,8 @@ namespace Models.Core
             newSimulations.ParentAllDescendants();
 
             // Call OnCreated in all models.
-            Apsim.ChildrenRecursively(newSimulations).ForEach(m => m.OnCreated());
+            foreach (IModel model in newSimulations.FindAllDescendants())
+                model.OnCreated();
 
             return newSimulations;
         }
@@ -180,7 +181,7 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in Apsim.ChildrenRecursively(this))
+            foreach (Model child in this.FindAllDescendants())
             {
                 if (child is Simulation)
                     (child as Simulation).FileName = FileName;
@@ -231,7 +232,7 @@ namespace Models.Core
         {
             // Clears the locator caches for our Simulations.
             // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in Apsim.ChildrenRecursively(this))
+            foreach (Model simulation in this.FindAllDescendants())
                 if (simulation is Simulation)
                     (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
@@ -242,7 +243,7 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles()
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in Apsim.ChildrenRecursively(this, typeof(IReferenceExternalFiles)))
+            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>())
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
             

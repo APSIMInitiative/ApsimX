@@ -177,8 +177,8 @@
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
-            modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
+            canopyModels = Zone.FindAllDescendants<ICanopy>().Cast<ICanopy>();
+            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().Cast<IHaveCanopy>();
             soilWater = Zone.FindInScope<ISoilWater>();
             surfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
         }

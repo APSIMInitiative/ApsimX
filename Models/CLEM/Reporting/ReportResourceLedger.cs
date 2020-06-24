@@ -98,7 +98,7 @@ namespace Models.CLEM.Reporting
                             bool pricingIncluded = false;
                             if (model.GetType() == typeof(RuminantHerd))
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Where(a => a.Enabled).Count() > 0;
+                                pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
@@ -115,12 +115,12 @@ namespace Models.CLEM.Reporting
                             }
                             else
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Where(a => a.Enabled).Count() > 0;
+                                pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
                                 // get all converters for this type of resource
-                                var converterList = Apsim.ChildrenRecursively(model, typeof(ResourceUnitsConverter)).Select(a => a.Name).Distinct();
+                                var converterList = model.FindAllDescendants<ResourceUnitsConverter>().Select(a => a.Name).Distinct();
                                 if (converterList!=null)
                                 {
                                     foreach (var item in converterList)

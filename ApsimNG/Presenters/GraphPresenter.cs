@@ -429,7 +429,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || Apsim.ChildrenRecursively(graph).Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model))
                 DrawGraph();
         }
 

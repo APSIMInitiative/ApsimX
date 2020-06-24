@@ -140,7 +140,7 @@
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in Apsim.ChildrenRecursively(this, typeof(Cultivar)))
+                foreach (Model model in this.FindAllDescendants<Cultivar>())
                     cultivars.Add(model as Cultivar);
                 return cultivars;
             }
@@ -628,7 +628,7 @@
         /// </summary>
         public void SetEmergenceDate(string emergencedate)
         {
-            foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
+            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
                 {
                     ep.EmergenceDate=emergencedate;
                 }
@@ -641,7 +641,7 @@
         public void SetGerminationDate(string germinationdate)
         {
             {
-                foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+                foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
                 {
                     gp.GerminationDate = germinationdate;
                 }

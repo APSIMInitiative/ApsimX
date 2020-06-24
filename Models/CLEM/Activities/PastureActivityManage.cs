@@ -163,7 +163,7 @@ namespace Models.CLEM.Activities
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
             LandConditionIndex = this.FindAllChildren<RelationshipTracker>().Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
             GrassBasalArea = this.FindAllChildren<RelationshipTracker>().Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
-            FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            FilePasture = ZoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (UseAreaAvailable)
             {

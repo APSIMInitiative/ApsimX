@@ -39,7 +39,7 @@
                     simulation.Children.Remove(dataStore);
 
                 // Do replacements.
-                foreach (IModel match in Apsim.ChildrenRecursively(simulation))
+                foreach (IModel match in simulation.FindAllDescendants())
                     if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                         ReplaceModel(match);
 
@@ -56,7 +56,7 @@
 
                 // In a multi-paddock context, we want to attempt to
                 // replace the model in all paddocks.
-                foreach (IModel paddock in Apsim.ChildrenRecursively(simulation, typeof(Zone)))
+                foreach (IModel paddock in simulation.FindAllDescendants<Zone>())
                 {
                     match = paddock.FindByPath(path)?.Value as IModel;
                     if (match != null)
@@ -83,7 +83,7 @@
             // will make it reread the resource string and replace this child with
             // the 'official' child from the resource.
             newModel.OnCreated();
-            foreach (var model in Apsim.ChildrenRecursively(newModel))
+            foreach (var model in newModel.FindAllDescendants())
                 model.OnCreated();
         }
     }

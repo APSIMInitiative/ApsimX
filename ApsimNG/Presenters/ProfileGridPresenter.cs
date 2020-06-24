@@ -137,7 +137,7 @@ namespace UserInterface.Presenters
                     // a physical node somewhere under the simulation generator.
                     IModel parent = model.FindAncestor<ISimulationDescriptionGenerator>() as IModel;
                     if (parent != null)
-                        water = Apsim.ChildrenRecursively(parent, typeof(Physical)).FirstOrDefault() as Physical;
+                        water = parent.FindAllDescendants<Physical>().FirstOrDefault() as Physical;
                 }
                 if (water != null)
                 {

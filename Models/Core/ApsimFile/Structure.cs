@@ -35,7 +35,8 @@
 
             // Call OnCreated
             modelToAdd.OnCreated();
-            Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
+            foreach (IModel model in modelToAdd.FindAllDescendants())
+                model.OnCreated();
 
             // If the model is being added at runtime then need to resolve links and events.
             Simulation parentSimulation = parent.FindAncestor<Simulation>();
@@ -95,7 +96,8 @@
             EnsureNameIsUnique(modelToAdd);
 
             // Call OnCreated
-            Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
+            foreach (IModel model in modelToAdd.FindAllDescendants())
+                model.OnCreated();
 
             return modelToAdd;
         }
