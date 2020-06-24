@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 93,
+  "Version": 104,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -330,7 +330,8 @@
                   "Name": "DltTT",
                   "Children": [
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "agregationMethod": 0,
                       "Name": "ThermalTime",
                       "Children": [
                         {
@@ -349,7 +350,16 @@
                             26.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "Response",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4421,14 +4431,11 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5897,6 +5904,45 @@
                   "VariableName": "[Root].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.01,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -8484,16 +8530,6 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "InitialNConcFunction",
                   "Children": [],
@@ -9621,6 +9657,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9639,34 +9714,6 @@
               "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWtFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
-                      "Units": "g/plant",
-                      "Name": "InitialPlantWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.01,
@@ -11185,6 +11232,63 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "g/plant",
+                          "Name": "InitialPlantWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14644,6 +14748,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "Angelo98Base",
                   "Children": [
                     {
@@ -21893,6 +21998,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "Angelo99Base",
                   "Children": [
                     {
@@ -22662,6 +22768,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "Angelo00Base",
                   "Children": [
                     {
@@ -23408,6 +23515,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "UQGattonBase",
                   "Children": [
                     {
@@ -24271,6 +24379,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "DRKBase",
                   "Children": [
                     {
@@ -25293,6 +25402,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "K841Base",
                   "Children": [
                     {
@@ -25947,7 +26057,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "// According to REMS, the simulation Maize_K841_K841QK6D\r\n// actually applies 40mm of irrigation on 1983-11-26, as\r\n// opposed to the 15mm applied in every other treatment\r\n// on this date. This script implements this discrepancy.\r\n\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] private Clock clock;\r\n\r\n\t\t[Link] private Plant crop;\r\n\t\t[Link] private Irrigation irrigation;\r\n\t\t[Link] private Operations operations;\r\n\r\n\t\tprivate DateTime irrigDate = new DateTime(1983, 11, 26);\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// The operations node will apply 15mm like every other sim.\r\n\t\t\t// Add in an extra 25mm to make up the difference.\r\n\t\t\tif (IsDrySim() && crop.SowingData.Cultivar == \"QK_694\" && IsToday(irrigDate))\r\n\t\t\t\tirrigation.Apply(25);\r\n\t\t}\r\n\r\n\t\tprivate bool IsDrySim()\r\n\t\t{\r\n\t\t\treturn operations.Operation.Count > 10; // eww\r\n\t\t}\r\n\r\n\t\tprivate bool IsToday(DateTime date)\r\n\t\t{\r\n\t\t\treturn clock.Today.Year == date.Year && clock.Today.DayOfYear == date.DayOfYear;\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Code": "// According to REMS, the simulation Maize_K841_K841QK6D\r\n// actually applies 40mm of irrigation on 1983-11-26, as\r\n// opposed to the 15mm applied in every other treatment\r\n// on this date. This script implements this discrepancy.\r\n\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock clock;\r\n\r\n        [Link] private Plant crop;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Operations operations;\r\n\r\n        private DateTime irrigDate = new DateTime(1983, 11, 26);\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            // The operations node will apply 15mm like every other sim.\r\n            // Add in an extra 25mm to make up the difference.\r\n            if (IsDrySim() && crop.SowingData.Cultivar == \"QK_694\" && IsToday(irrigDate))\r\n                irrigation.Apply(25);\r\n        }\r\n\r\n        private bool IsDrySim()\r\n        {\r\n            return operations.Operation.Count > 10; // eww\r\n        }\r\n\r\n        private bool IsToday(DateTime date)\r\n        {\r\n            return clock.Today.Year == date.Year && clock.Today.DayOfYear == date.DayOfYear;\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "StupidIrrigationHack",
                               "IncludeInDocumentation": true,
@@ -26297,6 +26407,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "K842Base",
                   "Children": [
                     {
@@ -40730,6 +40841,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "BMWBase",
                   "Children": [
                     {
@@ -50755,6 +50867,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "BMW2Base",
                   "Children": [
                     {
@@ -51429,6 +51542,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "JMW2KatumaniBase",
                   "Children": [
                     {
@@ -53344,6 +53458,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "JMW2KibokoBase",
                   "Children": [
                     {
@@ -54096,6 +54211,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Maize_Gatton_89_m1g5n2",
               "Children": [
                 {
@@ -55021,6 +55137,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Maize_Gatton_90_Early_m1g6n2",
               "Children": [
                 {
@@ -55982,6 +56099,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Maize_Gatton_90_Late_m1g7n2",
               "Children": [
                 {
@@ -56973,6 +57091,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Maize_Gatton_91_m1g8n2",
               "Children": [
                 {
@@ -58046,6 +58165,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "GainsBase",
                   "Children": [
                     {
@@ -60886,6 +61006,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "QuincyBase",
                   "Children": [
                     {
@@ -61838,6 +61959,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "GjunctBase",
                   "Children": [
                     {
@@ -62631,6 +62753,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Champ83",
               "Children": [
                 {
@@ -63367,7 +63490,7 @@
       "Children": [
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System.Linq;\r\nusing System.Collections.Generic;\r\nusing Models.Storage;\r\nusing Models;\r\nusing Models.Factorial;\r\nusing Models.Core.Run;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    /// <summary>\r\n    /// This script must implement the IGraphPanelScript interface.\r\n    /// </summary>\r\n    [Serializable]\r\n    public class Script : Model, IGraphPanelScript\r\n    {\r\n        /// <summary>\r\n        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.\r\n        /// </summary>\r\n        /// <param name=\"storage\">Provides access to the datastore.</param>\r\n        /// <param name=\"panel\">Provides access to the graph panel and the simulations tree.</param>\r\n        public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)\r\n        {\r\n            // Get a list of all descendants of the panel's parent which are runnable\r\n            // (simulations, experiments, etc).\r\n            List<ISimulationDescriptionGenerator> runnables = Apsim.ChildrenRecursively(panel.Parent, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();\r\n\r\n            // Remove all simulations which are children of an experiment.\r\n            runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);\r\n\r\n            // Return the names of all simulations generated by these runnables.\r\n            return runnables.SelectMany(r => r.GenerateSimulationDescriptions().Select(d => d.Name)).ToArray();\r\n        }\r\n\r\n        /// <summary>\r\n        /// Called on each graph before it is drawn in a tab.\r\n        /// </summary>\r\n        /// <param name=\"graph\">The graph.</param>\r\n        /// <param name=\"simulationName\">Simulation name for this tab.</param>\r\n        public void TransformGraph(Models.Graph graph, string simulationName)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Core.Run;\r\nusing Models.Factorial;\r\nusing Models;\r\nusing Models.Storage;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    /// <summary>\r\n    /// This script must implement the IGraphPanelScript interface.\r\n    /// </summary>\r\n    [Serializable]\r\n    public class Script : Model, IGraphPanelScript\r\n    {\r\n        /// <summary>\r\n        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.\r\n        /// </summary>\r\n        /// <param name=\"storage\">Provides access to the datastore.</param>\r\n        /// <param name=\"panel\">Provides access to the graph panel and the simulations tree.</param>\r\n        public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)\r\n        {\r\n            // Get a list of all descendants of the panel's parent which are runnable\r\n            // (simulations, experiments, etc).\r\n            List<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().OfType<IModel>().ToList().Cast<ISimulationDescriptionGenerator>().ToList();\r\n\r\n            // Remove all simulations which are children of an experiment.\r\n            runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);\r\n\r\n            // Return the names of all simulations generated by these runnables.\r\n            return runnables.SelectMany(r => r.GenerateSimulationDescriptions().Select(d => d.Name)).ToArray();\r\n        }\r\n\r\n        /// <summary>\r\n        /// Called on each graph before it is drawn in a tab.\r\n        /// </summary>\r\n        /// <param name=\"graph\">The graph.</param>\r\n        /// <param name=\"simulationName\">Simulation name for this tab.</param>\r\n        public void TransformGraph(Models.Graph graph, string simulationName)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "Config",
           "IncludeInDocumentation": true,

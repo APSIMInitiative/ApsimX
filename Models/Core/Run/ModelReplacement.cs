@@ -2,6 +2,7 @@
 {
     using Models.Storage;
     using System;
+    using System.Linq;
 
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
@@ -34,14 +35,13 @@
             {
                 // Temporarily remove DataStore because we don't want to do any
                 // replacements under DataStore.
-                var dataStore = simulation.Children.Find(model => model is DataStore);
+                DataStore dataStore = simulation.FindChild<DataStore>();
                 if (dataStore != null)
                     simulation.Children.Remove(dataStore);
 
                 // Do replacements.
-                foreach (IModel match in simulation.FindAllDescendants())
-                    if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
-                        ReplaceModel(match);
+                foreach (IModel match in simulation.FindAllDescendants(replacement.Name).ToList())
+                    ReplaceModel(match);
 
                 // Reinstate DataStore.
                 if (dataStore != null)
