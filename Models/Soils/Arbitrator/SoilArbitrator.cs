@@ -65,8 +65,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Parent.FindAllDescendants<IUptake>();
-            zones = Parent.FindAllDescendants<Zone>();
+            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            zones = Parent.FindAllDescendants<Zone>().ToList();
             InitialSoilState = new SoilState(zones);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");

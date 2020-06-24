@@ -177,8 +177,8 @@
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = Zone.FindAllDescendants<ICanopy>().Cast<ICanopy>();
-            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().Cast<IHaveCanopy>();
+            canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
+            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
             soilWater = Zone.FindInScope<ISoilWater>();
             surfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
         }
