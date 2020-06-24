@@ -268,7 +268,7 @@ namespace Models.Core
 
                 // If the simulation has the same name as the model we want to document, dig a bit deeper
                 if (modelToDocument == simulation)
-                    modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
+                    modelToDocument = simulation.FindAllDescendants().Where(m => !m.IsHidden).ToList().FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
 
                 // If still not found throw an error.
                 if (modelToDocument != null)

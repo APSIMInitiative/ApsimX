@@ -356,7 +356,7 @@
             this.HideRightHandPanel();
 
             // Get a complete list of all models in this file.
-            List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
+            List<IModel> allModels = this.ApsimXFile.FindAllDescendants().Where(m => !m.IsHidden).ToList();
             allModels.Insert(0, ApsimXFile);
 
             /* If the current node path is '.Simulations' (the root node) then
