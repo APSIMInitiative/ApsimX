@@ -114,11 +114,18 @@ namespace Models.CLEM.Resources
 
                 for (int i = 1; i <= number; i++)
                 {
-                    double u1 = RandomNumberGenerator.Generator.NextDouble();
-                    double u2 = RandomNumberGenerator.Generator.NextDouble();
-                    double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                 Math.Sin(2.0 * Math.PI * u2);
-                    double weight = Weight + WeightSD * randStdNormal;
+                    double weight = 0;
+                    if(Weight > 0)
+                    {
+                        // avoid accidental small weight if SD provided but weight is 0
+                        // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
+                        double u1 = RandomNumberGenerator.Generator.NextDouble();
+                        double u2 = RandomNumberGenerator.Generator.NextDouble();
+                        double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                     Math.Sin(2.0 * Math.PI * u2);
+                        weight = Weight + WeightSD * randStdNormal;
+                    }
+
                     object ruminantBase;
                     if (this.Gender == Sex.Male)
                     {

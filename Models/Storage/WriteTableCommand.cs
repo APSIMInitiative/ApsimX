@@ -20,6 +20,8 @@
         /// <summary>The details of tables in the database.</summary>
         private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
 
+        public string Name { get { return "Write table"; } }
+
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>

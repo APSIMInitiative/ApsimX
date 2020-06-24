@@ -97,6 +97,13 @@
         /// <summary>Is 'Random Sampler' enabled?</summary>
         public bool IsRandomSamplerEnabled { get { return TypeOfSampling == RandomiserTypeEnum.RandomSampler; } }
 
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>The start date of the weather file.</summary>
         public DateTime StartDate { get; set; }
@@ -178,14 +185,14 @@
         /// <returns>Sun rise time</returns>
         public double CalculateSunRise()
         {
-            return MathUtilities.SolarNoon(this.clock.Today.DayOfYear, this.Latitude) - CalculateDayLength(-6) / 2;
+            return 12 - CalculateDayLength(-6) / 2;
         }
 
         /// <summary> calculate the time of sun set</summary>
         /// <returns>Sun set time</returns>
         public double CalculateSunSet()
         {
-            return MathUtilities.SolarNoon(this.clock.Today.DayOfYear, this.Latitude) + CalculateDayLength(-6) / 2;
+            return 12 + CalculateDayLength(-6) / 2;
         }
 
         /// <summary>Called at the beginning of a simulation.</summary>
@@ -308,6 +315,5 @@
                 throw new Exception($"Non consecutive dates found in file {FileName}");
             return rowIndex;
         }
-
     }
 }

@@ -332,6 +332,17 @@ namespace Models.PMF.Phen
         }
 
 
+        /// <summary>
+        /// Resets the Vrn expression parameters for the CAMP model
+        /// </summary>
+        /// <param name="overRideFLNParams"></param>
+        public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
+        {
+            CAMP camp = Apsim.Child(this,"CAMP") as CAMP;
+            camp.ResetVernParams(overRideFLNParams);
+        }
+
+
         // 7. Private methods
         // -----------------------------------------------------------------------------------------------------------
         //
