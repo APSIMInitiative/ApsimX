@@ -2319,6 +2319,11 @@
                 // Apsim.Child(model, typeof(IOrgan)) -> model.FindChild<IOrgan>()
                 FixChild(manager);
 
+                // Apsim.Children(model, typeof(IFunction)) -> model.FindAllChildren<IFunction>().ToList<IModel>()
+                // Apsim.Children(model, obj.GetType()) -> model.FindAllChildren().Where(c => obj.GetType().IsAssignableFrom(c.GetType())).ToList<IModel>()
+                // This will add "using System.Linq;" if necessary.
+                FixChildren(manager);
+
                 manager.Save();
             }
 
@@ -2550,6 +2555,49 @@
 
                 pattern = @"(FindChild<([^>]+)>\(\)) as \2";
                 manager.ReplaceRegex(pattern, "$1");
+            }
+
+            void FixChildren(ManagerConverter manager)
+            {
+                bool replaced = false;
+
+                string pattern = @"Apsim\.Children\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    replaced = true;
+
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Children()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string type = args[1].Value.Trim();
+
+                    Match simplify = Regex.Match(type, @"typeof\(([^\)]+)\)");
+                    if (simplify.Groups.Count == 2)
+                    {
+                        type = simplify.Groups[1].Value;
+                        return $"{model}.FindAllChildren<{type}>().ToList<IModel>()";
+                    }
+                    else
+                    {
+                        // Need to ensure that we're using System.Linq;
+                        return $"{model}.FindAllChildren().Where(c => {type}.IsAssignableFrom(c.GetType())).ToList<IModel>()";
+                    }
+                });
+
+                if (replaced)
+                {
+                    List<string> usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("System.Linq"))
+                        usings.Add("System.Linq");
+                    manager.SetUsingStatements(usings);
+                }
             }
         }
 
