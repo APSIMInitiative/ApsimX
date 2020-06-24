@@ -50,10 +50,10 @@
 
                 if (ShowPageOfGraphs)
                 {
-                    foreach (Memo memo in this.FindAllChildren<Memo>())
+                    foreach (Memo memo in FindAllChildren<Memo>())
                         memo.Document(tags, headingLevel, indent);
 
-                    if (FindAllChildren<Experiment>().Count() > 0)
+                    if (FindAllChildren<Experiment>().Any())
                     {
                         // Write Phase Table
                         tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
@@ -61,11 +61,11 @@
                         tableData.Columns.Add("Experiment Name", typeof(string));
                         tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
 
-                        foreach (IModel child in this.FindAllChildren<Experiment>())
+                        foreach (IModel child in FindAllChildren<Experiment>())
                         {
                             IModel Factors = child.FindChild<Factors>();
                             string Design = "";
-                            foreach (IModel factor in Factors.FindAllChildren<Factor>())
+                            foreach (Factor factor in Factors.FindAllChildren<Factor>())
                             {
                                 if (Design != "")
                                     Design += " x ";

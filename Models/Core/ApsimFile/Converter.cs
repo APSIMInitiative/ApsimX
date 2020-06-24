@@ -20,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 103; } }
+        public static int LatestVersion { get { return 104; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2271,11 +2271,41 @@
         }
 
         /// <summary>
+        /// Rename TemperatureResponse to Response on Interpolate functions.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private void UpgradeToVersion103(JObject root, string fileName)
+        {
+            foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
+            {
+                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                foreach (JObject c in atf["Children"])
+                {
+                    if (c["Name"].ToString() == "TemperatureResponse")
+                    {
+                        c["Name"] = "Response";
+                    }
+                }
+                foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+                {
+                    if (!cultivar["Command"].HasValues)
+                        continue;
+
+                    foreach (JValue command in cultivar["Command"].Children())
+                    {
+                        command.Value = command.Value.ToString().Replace(".TemperatureResponse", ".Response");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Modify manager scripts to use the new generic model locator API.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion103(JObject root, string fileName)
+        private static void UpgradeToVersion104(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {

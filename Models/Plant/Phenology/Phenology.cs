@@ -342,7 +342,6 @@ namespace Models.PMF.Phen
             camp.ResetVernParams(overRideFLNParams);
         }
 
-
         // 7. Private methods
         // -----------------------------------------------------------------------------------------------------------
         //

@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -373,6 +374,18 @@
             }
         }
 
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data for Today</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TodaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+
         /// <summary>First date of summer.</summary>
         [XmlIgnore] 
         public string FirstDateOfSummer { get; set; } = "1-dec";
@@ -560,85 +573,31 @@
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (this.doSeek)
+            if (First)
             {
-                if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
-
-                this.doSeek = false;
-                this.reader.SeekToDate(this.clock.Today);
-            }
-
-            object[] values;
-
-            try
-            {
-                values = this.reader.GetNextLineOfData();
-            }
-            catch (IndexOutOfRangeException err)
-            {
-                throw new Exception($"Unable to retrieve weather data on {clock.Today.ToString("yyy-MM-dd")} in file {FileName}", err);
-            }
-
-            if (this.clock.Today != this.reader.GetDateFromValues(values))
-                throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
-
-            if (this.radiationIndex != -1)
-                this.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
-            else
-                this.Radn = this.reader.ConstantAsDouble("radn");
-
-            if (this.maximumTemperatureIndex != -1)
-                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
-            else
-                this.MaxT = this.reader.ConstantAsDouble("maxt");
-
-            if (this.minimumTemperatureIndex != -1)
-                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
-            else
-                this.MinT = this.reader.ConstantAsDouble("mint");
-
-            if (this.rainIndex != -1)
-                this.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
-            else
-                this.Rain = this.reader.ConstantAsDouble("rain");
-				
-            if (this.evaporationIndex == -1)
-                this.PanEvap = double.NaN;
-            else
-                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
-
-            if (this.rainfallHoursIndex == -1)
-                this.RainfallHours = double.NaN;
-            else
-                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
-
-            if (this.vapourPressureIndex == -1)
-                this.VP = Math.Max(0, MetUtilities.svp(this.MinT));
-            else
-                this.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
-
-            if (this.windIndex == -1)
-                this.Wind = 3.0;
-            else
-                this.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
-
-            if (this.DiffuseFractionIndex == -1)
-                this.DiffuseFraction = -1;
-            else
-                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
-
-            if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
-            {
-                if (this.reader.Constant("daylength") != null)
-                    this.DayLength = this.reader.ConstantAsDouble("daylength");
-                else
-                   this.DayLength = -1;
+                TodaysMetData = GetMetData(this.clock.Today); //Read first date to get todays data
+                YesterdaysMetData = TodaysMetData; //Use todays Data to represent yesterday on the first day
+                TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); // Read another line ahead to get tomorrows data
             }
             else
-                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
+            { // Move everything forward a day
+                YesterdaysMetData = TodaysMetData;
+                TodaysMetData = TomorrowsMetData;
+                try { TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); }
+                catch { } // Keep tomorrows met data as todays if last day of file
+            }
 
-
+            this.Radn = TodaysMetData.Radn;
+            this.MaxT = TodaysMetData.MaxT;
+            this.MinT = TodaysMetData.MinT;
+            this.Rain = TodaysMetData.Rain;
+            this.PanEvap = TodaysMetData.PanEvap;
+            this.RainfallHours = TodaysMetData.RainfallHours;
+            this.VP = TodaysMetData.VP;
+            this.Wind = TodaysMetData.Wind;
+            this.DiffuseFraction = TodaysMetData.DiffuseFraction;
+            this.DayLength = TodaysMetData.DayLength;
+            
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
@@ -663,6 +622,93 @@
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+        }
+
+        /// <summary>Method to read one days met data in from file</summary>
+        /// <param name="date">the date to read met data</param>
+        private DailyMetDataFromFile GetMetData(DateTime date)
+        {
+            if (this.doSeek)
+            {
+                if (!this.OpenDataFile())
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
+
+                this.doSeek = false;
+                this.reader.SeekToDate(date);
+            }
+
+            object[] values;
+
+            DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
+
+            try
+            {
+                values = this.reader.GetNextLineOfData();
+            }
+            catch (IndexOutOfRangeException err)
+            {
+                throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {FileName}", err);
+            }
+
+            if (date != this.reader.GetDateFromValues(values))
+                throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
+
+            if (this.radiationIndex != -1)
+                readMetData.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
+            else
+                readMetData.Radn = this.reader.ConstantAsDouble("radn");
+
+            if (this.maximumTemperatureIndex != -1)
+                readMetData.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
+            else
+                readMetData.MaxT = this.reader.ConstantAsDouble("maxt");
+
+            if (this.minimumTemperatureIndex != -1)
+                readMetData.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
+            else
+                readMetData.MinT = this.reader.ConstantAsDouble("mint");
+
+            if (this.rainIndex != -1)
+                readMetData.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
+            else
+                readMetData.Rain = this.reader.ConstantAsDouble("rain");
+
+            if (this.evaporationIndex == -1)
+                readMetData.PanEvap = double.NaN;
+            else
+                readMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
+
+            if (this.rainfallHoursIndex == -1)
+                readMetData.RainfallHours = double.NaN;
+            else
+                readMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
+
+            if (this.vapourPressureIndex == -1)
+                readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
+            else
+                readMetData.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
+
+            if (this.windIndex == -1)
+                readMetData.Wind = 3.0;
+            else
+                readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
+
+            if (this.DiffuseFractionIndex == -1)
+                readMetData.DiffuseFraction = -1;
+            else
+                readMetData.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+
+            if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
+            {
+                if (this.reader.Constant("daylength") != null)
+                    readMetData.DayLength = this.reader.ConstantAsDouble("daylength");
+                else
+                    readMetData.DayLength = -1;
+            }
+            else
+                readMetData.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
+
+            return readMetData;
         }
 
         /// <summary>
