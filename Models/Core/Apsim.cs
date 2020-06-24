@@ -65,25 +65,6 @@
         }
 
         /// <summary>
-        /// Return children that match the specified 'typeFilter'. Never returns 
-        /// null. Can return empty List.
-        /// </summary>
-        /// <param name="model">The parent model</param>
-        /// <param name="typeFilter">The type of children to return</param>
-        /// <returns>A list of all children</returns>
-        public static List<IModel> Children(IModel model, Type typeFilter)
-        {
-            if (model == null)
-                return null;
-
-            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllChildren" && m.IsGenericMethod && m.GetParameters().Count() == 0);
-            if (find == null)
-                throw new Exception($"Unable to find find method");
-            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
-        }
-        
-        /// <summary>
         /// Return a list of all child models recursively. Never returns
         /// null. Can return an empty list.
         /// </summary>
