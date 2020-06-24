@@ -49,7 +49,7 @@ namespace Models.Functions
 
         /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
         [JsonIgnore]
-        public List<double> SubDailyTemperatures = null;
+        public List<double> SubDailyInput = null;
 
         /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
         [JsonIgnore]
@@ -77,9 +77,9 @@ namespace Models.Functions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDailyInitialisation(object sender, EventArgs e)
         {
-            SubDailyTemperatures = InterpolationMethod.SubDailyTemperatures();
+            SubDailyInput = InterpolationMethod.SubDailyTemperatures();
             SubDailyResponse = new List<double>();
-            foreach (double sdt in SubDailyTemperatures)
+            foreach (double sdt in SubDailyInput)
             {
                 SubDailyResponse.Add(Response.ValueIndexed(sdt));
             }
