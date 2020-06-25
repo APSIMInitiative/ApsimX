@@ -81,6 +81,9 @@ namespace Models.PostSimulationTools
             // get the common columns between these lists of columns
             List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
 
+            // This should be all columns which exist in one table but not both.
+            IEnumerable<string> uncommonCols = predictedDataNames.Except(observedDataNames).Union(observedDataNames.Except(predictedDataNames));
+
             IStorageReader reader = dataStore.Reader;
             string match1ObsShort = reader.BriefColumnName(ObservedTableName, FieldNameUsedForMatch);
             string match2ObsShort = reader.BriefColumnName(ObservedTableName, FieldName2UsedForMatch);
@@ -103,6 +106,23 @@ namespace Models.PostSimulationTools
                     query.Append($"O.[{obsColShort}]");
                 else
                     query.Append($"O.[{obsColShort}] AS [Observed.{obsColShort}], P.[{predColShort}] AS [Predicted.{predColShort}]");
+            }
+
+            // Add columns which exist in one table but not both.
+            foreach (string uncommonCol in uncommonCols)
+            {
+                // Basically this hack is here to allow error data to be added to the p/o graphs.
+                // This is kind of terrible, but I really don't want to duplicate every
+                // column from both predicted and observed tables if we don't have to.
+                // This does raise the question of whether we should be creating a "PredictedObserved"
+                // table at all, since we're actually duplicating data in the DB by doing so.
+                if (uncommonCol.EndsWith("Error"))
+                {
+                    if (predictedDataNames.Contains(uncommonCol))
+                        query.Append($", P.[{uncommonCol}] as [Predicted.{uncommonCol}]");
+                    else if (observedDataNames.Contains(uncommonCol))
+                        query.Append($", O.[{uncommonCol}] as [Observed.{uncommonCol}]");
+                }
             }
 
             query.AppendLine();
