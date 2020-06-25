@@ -8,6 +8,11 @@
         /// </summary>
         double Progress { get; }
 
+        /// <summary>
+        /// Name of the job.
+        /// </summary>
+        string Name { get; }
+
         /// <summary>Called to start the job. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         void Run(System.Threading.CancellationTokenSource cancelToken);

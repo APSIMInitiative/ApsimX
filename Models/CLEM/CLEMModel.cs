@@ -56,6 +56,13 @@ namespace Models.CLEM
         public string UniqueID { get { return id.ToString(); } }
 
         /// <summary>
+        /// Parent CLEM Zone
+        /// Stored here so rapidly retrieved
+        /// </summary>
+        [XmlIgnore]
+        public String CLEMParentName { get; set; }
+
+        /// <summary>
         /// Method to set defaults from   
         /// </summary>
         public void SetDefaults()

@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
         double MethVrn1 { get;}
 
         /// <summary>The target for phase completion</summary>
-        double Vrn1Target { get; }
+        double VrnSatThreshold { get; }
 
         /// <summary>The target for phase completion</summary>
         bool IsVernalised { get; }
