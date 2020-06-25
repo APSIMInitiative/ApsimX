@@ -78,7 +78,6 @@
         /// <summary>Method to send infestation event to LifeCycle</summary>
         public void Infest()
         {
-            //Cohort Immigrants = new Cohort(InfestingPhase);
             SourceInfo InfestationInfo = new SourceInfo();
             InfestationInfo.LifeCycle = InfestingOrganisumName;
             InfestationInfo.LifeCyclePhase = InfestingPhaseName;

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 312,
   "Version": 103,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -13096,73 +13096,6 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Graph, Models",
-      "Caption": null,
-      "Axis": [
-        {
-          "$type": "Models.Axis, Models",
-          "Type": 3,
-          "Title": null,
-          "Inverted": false,
-          "Minimum": "NaN",
-          "Maximum": "NaN",
-          "Interval": "NaN",
-          "DateTimeAxis": true,
-          "CrossesAtZero": false
-        },
-        {
-          "$type": "Models.Axis, Models",
-          "Type": 0,
-          "Title": null,
-          "Inverted": false,
-          "Minimum": "NaN",
-          "Maximum": "NaN",
-          "Interval": "NaN",
-          "DateTimeAxis": false,
-          "CrossesAtZero": false
-        }
-      ],
-      "LegendPosition": 0,
-      "LegendOrientation": 0,
-      "DisabledSeries": [],
-      "LegendOutsideGraph": false,
-      "Name": "Total Population",
-      "Children": [
-        {
-          "$type": "Models.Series, Models",
-          "Type": 1,
-          "XAxis": 3,
-          "YAxis": 0,
-          "ColourArgb": -16777216,
-          "FactorToVaryColours": "SimulationName",
-          "FactorToVaryMarkers": null,
-          "FactorToVaryLines": null,
-          "Marker": 11,
-          "MarkerSize": 0,
-          "Line": 0,
-          "LineThickness": 0,
-          "TableName": "Report",
-          "XFieldName": "Clock.Today",
-          "YFieldName": "Potato.Leaf.Live.Wt",
-          "X2FieldName": "",
-          "Y2FieldName": "",
-          "ShowInLegend": true,
-          "IncludeSeriesNameInLegend": false,
-          "Cumulative": false,
-          "CumulativeX": false,
-          "Filter": null,
-          "Name": "Adult1",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Simulation, Models",
       "IsRunning": false,
       "Name": "AlternariaTest",
@@ -13992,7 +13925,7 @@
                         },
                         {
                           "$type": "Models.Functions.MinimumFunction, Models",
-                          "Name": "MinimumFunction",
+                          "Name": "DispersalFunction",
                           "Children": [
                             {
                               "$type": "Models.Functions.AddFunction, Models",
@@ -14212,15 +14145,13 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             0.0,
-                                            3.0,
-                                            8.0,
-                                            10.0
+                                            0.5,
+                                            1.0
                                           ],
                                           "Y": [
-                                            0.0,
-                                            0.0,
                                             1.0,
-                                            1.0
+                                            1.0,
+                                            0.05
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -14324,7 +14255,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.05,
+                          "FixedValue": 0.02,
                           "Units": "individuals /d",
                           "Name": "MortalityRate",
                           "Children": [],
@@ -14595,15 +14526,15 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                10.0,
-                                40.0,
+                                4.0,
+                                7.0,
                                 45.0
                               ],
                               "Y": [
+                                1.0,
+                                1.0,
                                 0.01,
-                                0.01,
-                                0.01,
-                                1.0
+                                0.01
                               ],
                               "Name": "Response",
                               "Children": [],
@@ -15201,6 +15132,15 @@
                           "ReadOnly": false
                         },
                         {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Potato].Leaf.FractionDied",
+                          "Name": "FractionLeafSenescence",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "LeafDeathFactor",
                           "Children": [
@@ -15217,7 +15157,7 @@
                               "Name": "XYPairs",
                               "Children": [],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -15230,7 +15170,7 @@
                                   "Name": "DeadLeaves",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -15239,17 +15179,17 @@
                                   "Name": "TotalLeaves",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
@@ -16538,6 +16478,17 @@
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -16657,6 +16608,35 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Mycelium on foliage",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Potato.Leaf.Live.Wt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Leaf mass",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
