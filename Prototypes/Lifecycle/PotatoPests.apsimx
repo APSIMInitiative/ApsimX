@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 440,
+  "ExplorerWidth": 281,
   "Version": 103,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -13265,13 +13265,10 @@
               "VariableNames": [
                 "[Clock].Today",
                 "[Clock].Today.DayOfYear",
-                "[TomatoPotatoPsyllid].Egg.TotalPopulation",
-                "[TomatoPotatoPsyllid].1stInstar.TotalPopulation",
-                "[TomatoPotatoPsyllid].2ndInstar.TotalPopulation",
-                "[TomatoPotatoPsyllid].3rdInstar.TotalPopulation",
-                "[TomatoPotatoPsyllid].4thInstar.TotalPopulation",
-                "[TomatoPotatoPsyllid].5thInstar.TotalPopulation",
-                "[TomatoPotatoPsyllid].Adult.TotalPopulation",
+                "[Alternaria_solani_InSoil].ConidiaOnDecayingFoliage.TotalPopulation",
+                "[Alternaria_solani_InSoil].MyceliumOnDecayingFoliage.TotalPopulation",
+                "[Alternaria_solani_OnLivePlant].ConidiaOnFreshFoliage.TotalPopulation",
+                "[Alternaria_solani_OnLivePlant].MyceliumOnLiveFoliage.TotalPopulation",
                 "[Potato].Leaf.Live.Wt"
               ],
               "EventNames": [
@@ -13853,396 +13850,6 @@
                   "Name": "ConidiaOnDecayingFoliage",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Reproduction",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Migration",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Development",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Mortality",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "LifeCyclePhaseForGraduates": null,
-                  "CurrentCohort": null,
-                  "Immigrants": 0.0,
-                  "DevelopmentRate": 0.0,
-                  "Mortalities": 0.0,
-                  "Graduates": 0.0,
-                  "Progeny": 0.0,
-                  "Migrants": 0.0,
-                  "Name": "MyceliumOnDecayingFoliage",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Development",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Mortality",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "individuals /d",
-                      "Name": "Reproduction",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "Migration",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "RainFactor",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "RainFallFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    2.0,
-                                    20.0,
-                                    30.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[IWeather].Rain",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "CoverFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.5,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    0.05
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Potato].Leaf.CoverTotal",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "IrrigFactor",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "IrrigationFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    1.0,
-                                    2.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Irrigation].IrrigationApplied",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "CoverFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.5,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    0.05
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Potato].Leaf.CoverTotal",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "WindFact",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "WindFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    3.0,
-                                    8.0,
-                                    10.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Weather].Wind",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "CoverFactor",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    3.0,
-                                    8.0,
-                                    10.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Potato].Leaf.CoverTotal",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.LifeCycle.MigrantDestinationPhase, Models",
-                      "NameOfLifeCycleForMigrants": "Alternaria_solani_OnLivePlant",
-                      "NameOfPhaseForMigrants": "ConidiaOnFreshFoliage",
-                      "Name": "MigrantDestinationPhase",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.LifeCycle.LifeCycle, Models",
-              "Name": "Alternaria_solani_OnLivePlant",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "***Adding a Life Cycle***\n\nThe first step in building a population model is to build the LifeCycle. \n\nTo do this, go to the FIELD object, right click and select **Add Model > LifeCycle** \n\n***Initiating the LifeCycle Model***\n\nThe initial populations of all stages of individuals needs to be initiated with some individuals.\n\nThis is done at the **LifeCycle** level. \n\nSelect the LifeCycle model and then for \"Initial population at each LifeStage\" enter **\"1,0\"** for the two LifeStages (Juvenile and Adult) that we are using in our example, i.d., we have 1 juvenile and 0 adults. \n\n***Adding a Life Stage***\n\nThe LifeStage icon represents one LifeStage of the species being modelled.  A number of \nenvironmental factors (eg. temperature, moisture, predators, availability of food, diseases, \netc.) influence the species’ rate of development, survival and reproduction.  The LifeCycle model can be \nset to simulate these processes by adding functions to the LifeStage, each of which \ncontrols some aspect of the LifeStage. \n\nEach LifeStage defines a particular stage (eg. egg, pupa, adult, etc.) together with its \nenvironment and attributes.  The number of stages is set by the user.  \n\nFor the PseudoAphid two stages are required (juvenile and adult); however several stages could be used depending \nupon the detail required by the model or the life cycle of the organism.  Many insects may \nrequire a number of LifeStages depending upon the instars that are present.  For example, a \nmodel of a tree fern would probably include stages corresponding to spore, gametophyte, \ngamete and sporophyte.  However, it is conceivable that a user may wish to condense two of \nthese three stages into one for a particular model and might end up with the three stages of \nspore, gametophyte-gamete and sporophyte.  Exactly how the model is constructed depends \ncompletely on the requirements and applications of the user.\n\n**To add a LifeStage to the life cycle** right click on the LifeCycle and select **Add model > select LifeStage**. \n\nFor this tutorial:\n\nAdd a lifstage and rename it to **Juvenile**.\n\nAdd a second LifeStage and rename to **Adult**.\n\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "LifeCyclePhaseForGraduates": null,
-                  "CurrentCohort": null,
-                  "Immigrants": 0.0,
-                  "DevelopmentRate": 0.0,
-                  "Mortalities": 0.0,
-                  "Graduates": 0.0,
-                  "Progeny": 0.0,
-                  "Migrants": 0.0,
-                  "Name": "ConidiaOnFreshFoliage",
-                  "Children": [
-                    {
                       "$type": "Models.Functions.DivideFunction, Models",
                       "Name": "Development",
                       "Children": [
@@ -14252,17 +13859,17 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.HourlyInterpolation, Models",
-                              "agregationMethod": 0,
+                              "agregationMethod": 1,
                               "Name": "TemperatureResponse",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    23.0,
+                                    15.0,
                                     24.0,
                                     29.0,
-                                    30.0
+                                    35.0
                                   ],
                                   "Y": [
                                     0.0,
@@ -14278,18 +13885,17 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ThreeHourSin, Models",
-                                  "TempRangeFactors": null,
-                                  "Name": "InterpolationMethod",
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "",
+                                  "Name": "Memo",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "",
-                                  "Name": "Memo",
+                                  "$type": "Models.Functions.HourlySinPpAdjusted, Models",
+                                  "Name": "InterpolationMethod",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -14345,8 +13951,615 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 2.0,
                           "Units": "individuals /d",
+                          "Name": "DurationInOptConditions",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "individuals /d",
+                      "Name": "Reproduction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "individuals /d",
+                      "Name": "Mortality",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Migration",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[ConidiaOnDecayingFoliage].CurrentCohort.Population",
+                          "Name": "CohortPopulation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "Dispersal",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "RainFactor",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "RainFallFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            2.0,
+                                            20.0,
+                                            30.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.0,
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[IWeather].Rain",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "CoverFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            0.5,
+                                            1.0
+                                          ],
+                                          "Y": [
+                                            1.0,
+                                            1.0,
+                                            0.05
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Potato].Leaf.CoverTotal",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "IrrigFactor",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "IrrigationFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0,
+                                            2.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Irrigation].IrrigationApplied",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "CoverFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            0.5,
+                                            1.0
+                                          ],
+                                          "Y": [
+                                            1.0,
+                                            1.0,
+                                            0.05
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Potato].Leaf.CoverTotal",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "WindFact",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "WindFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            3.0,
+                                            8.0,
+                                            10.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.0,
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Weather].Wind",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "CoverFactor",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            3.0,
+                                            8.0,
+                                            10.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.0,
+                                            1.0,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Potato].Leaf.CoverTotal",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": "individuals /d",
+                              "Name": "One",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.MigrantDestinationPhase, Models",
+                      "NameOfLifeCycleForMigrants": "Alternaria_solani_OnLivePlant",
+                      "NameOfPhaseForMigrants": "ConidiaOnFreshFoliage",
+                      "Name": "MigrantDestinationPhase",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.LifeCycle.LifeCyclePhase, Models",
+                  "LifeCyclePhaseForGraduates": null,
+                  "CurrentCohort": null,
+                  "Immigrants": 0.0,
+                  "DevelopmentRate": 0.0,
+                  "Mortalities": 0.0,
+                  "Graduates": 0.0,
+                  "Progeny": 0.0,
+                  "Migrants": 0.0,
+                  "Name": "MyceliumOnDecayingFoliage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "individuals /d",
+                      "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Mortality",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[MyceliumOnDecayingFoliage].CurrentCohort.Population",
+                          "Name": "CohortPopulation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.05,
+                          "Units": "individuals /d",
+                          "Name": "MortalityRate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "individuals /d",
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Reproduction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[MyceliumOnDecayingFoliage].CurrentCohort.Population",
+                          "Name": "CohortPopulation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "AgeFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.06,
+                                0.07,
+                                0.2
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[MyceliumOnDecayingFoliage].CurrentCohort.PhysiologicalAge",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "Alternaria_solani_InSoil",
+                      "NameOfPhaseForProgeny": "ConidiaOnDecayingFoliage",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestinationPhase",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.LifeCycle.LifeCycle, Models",
+              "Name": "Alternaria_solani_OnLivePlant",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "***Adding a Life Cycle***\n\nThe first step in building a population model is to build the LifeCycle. \n\nTo do this, go to the FIELD object, right click and select **Add Model > LifeCycle** \n\n***Initiating the LifeCycle Model***\n\nThe initial populations of all stages of individuals needs to be initiated with some individuals.\n\nThis is done at the **LifeCycle** level. \n\nSelect the LifeCycle model and then for \"Initial population at each LifeStage\" enter **\"1,0\"** for the two LifeStages (Juvenile and Adult) that we are using in our example, i.d., we have 1 juvenile and 0 adults. \n\n***Adding a Life Stage***\n\nThe LifeStage icon represents one LifeStage of the species being modelled.  A number of \nenvironmental factors (eg. temperature, moisture, predators, availability of food, diseases, \netc.) influence the species’ rate of development, survival and reproduction.  The LifeCycle model can be \nset to simulate these processes by adding functions to the LifeStage, each of which \ncontrols some aspect of the LifeStage. \n\nEach LifeStage defines a particular stage (eg. egg, pupa, adult, etc.) together with its \nenvironment and attributes.  The number of stages is set by the user.  \n\nFor the PseudoAphid two stages are required (juvenile and adult); however several stages could be used depending \nupon the detail required by the model or the life cycle of the organism.  Many insects may \nrequire a number of LifeStages depending upon the instars that are present.  For example, a \nmodel of a tree fern would probably include stages corresponding to spore, gametophyte, \ngamete and sporophyte.  However, it is conceivable that a user may wish to condense two of \nthese three stages into one for a particular model and might end up with the three stages of \nspore, gametophyte-gamete and sporophyte.  Exactly how the model is constructed depends \ncompletely on the requirements and applications of the user.\n\n**To add a LifeStage to the life cycle** right click on the LifeCycle and select **Add model > select LifeStage**. \n\nFor this tutorial:\n\nAdd a lifstage and rename it to **Juvenile**.\n\nAdd a second LifeStage and rename to **Adult**.\n\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.LifeCycle.LifeCyclePhase, Models",
+                  "LifeCyclePhaseForGraduates": null,
+                  "CurrentCohort": null,
+                  "Immigrants": 0.0,
+                  "DevelopmentRate": 0.0,
+                  "Mortalities": 0.0,
+                  "Graduates": 0.0,
+                  "Progeny": 0.0,
+                  "Migrants": 0.0,
+                  "Name": "ConidiaOnFreshFoliage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "Development",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DevelopmentRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.HourlyInterpolation, Models",
+                              "agregationMethod": 1,
+                              "Name": "TemperatureResponse",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    13.0,
+                                    24.0,
+                                    29.0,
+                                    30.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    1.0,
+                                    1.0,
+                                    0.0
+                                  ],
+                                  "Name": "Response",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.HourlySinPpAdjusted, Models",
+                                  "Name": "InterpolationMethod",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "HumidityResponse",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.5,
+                                    1.0,
+                                    5.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[IWeather].VPD",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 24.0,
+                          "Units": "Hours to germinate",
                           "Name": "DurationInOptConditions",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14437,15 +14650,11 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                0.5,
-                                1.0,
-                                5.0
+                                3.0
                               ],
                               "Y": [
-                                0.01,
-                                1.0,
                                 0.0,
-                                0.0
+                                1.0
                               ],
                               "Name": "XYPairs",
                               "Children": [],
@@ -14705,16 +14914,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
-                          "Units": "individuals / population",
-                          "Name": "MortanityRate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "LeafAgeFactor",
                           "Children": [
@@ -14722,14 +14921,10 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                0.2,
-                                0.3,
-                                0.4
+                                1.0
                               ],
                               "Y": [
                                 0.0,
-                                0.0,
-                                1.0,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -14739,10 +14934,28 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[MyceliumOnLiveFoliage].CurrentCohort.PhysiologicalAge",
+                              "$type": "Models.Functions.DivideFunction, Models",
                               "Name": "XValue",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Potato].Leaf.",
+                                  "Name": "DeadLeaves",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Potato].Structure.FinalLeafNumber",
+                                  "Name": "TotalLeaves",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -14762,18 +14975,18 @@
                       "NameOfLifeCycleForMigrants": "Alternaria_solani_InSoil",
                       "NameOfPhaseForMigrants": "MyceliumOnDecayingFoliage",
                       "Name": "MigrantDestinationPhase",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Constant",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "Alternaria_solani_OnLivePlant",
+                      "NameOfPhaseForProgeny": "ConidiaOnFreshFoliage",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestinationPhase",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -14951,17 +15164,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
-                      "NameOfLifeCycleForProgeny": "Alternaria_solani_OnLivePlant",
-                      "NameOfPhaseForProgeny": null,
-                      "ProgenyToDestination": 0.0,
-                      "Name": "ProgenyDestinationPhase",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -16077,7 +16279,7 @@
                               "Name": "CohortPopulation",
                               "Children": [],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -16099,7 +16301,7 @@
                                   "Name": "XYPairs",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -16108,12 +16310,12 @@
                                   "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -16123,17 +16325,17 @@
                               "Name": "MaximumLegionArea",
                               "Children": [],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
@@ -16184,17 +16386,17 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
-                  "Line": 0,
+                  "Line": 1,
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.Egg.TotalPopulation",
+                  "YFieldName": "Alternaria_solani_InSoil.ConidiaOnDecayingFoliage.TotalPopulation",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -16202,7 +16404,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "Egg",
+                  "Name": "Spores in soil",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -16213,8 +16415,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -16223,7 +16425,7 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.1stInstar.TotalPopulation",
+                  "YFieldName": "Alternaria_solani_InSoil.MyceliumOnDecayingFoliage.TotalPopulation",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -16231,7 +16433,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "1stInstar",
+                  "Name": "Mycelium in soil",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -16242,17 +16444,17 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
-                  "Line": 0,
+                  "Line": 1,
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.2ndInstar.TotalPopulation",
+                  "YFieldName": "Alternaria_solani_OnLivePlant.ConidiaOnFreshFoliage.TotalPopulation",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -16260,7 +16462,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "2ndInstar",
+                  "Name": "Spores on foliage",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -16271,8 +16473,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -16281,7 +16483,7 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.3rdInstar.TotalPopulation",
+                  "YFieldName": "Alternaria_solani_OnLivePlant.MyceliumOnLiveFoliage.TotalPopulation",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -16289,101 +16491,14 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "3rdInstar",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.4thInstar.TotalPopulation",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "4thInstar",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.5thInstar.TotalPopulation",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "5thInstar",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Graph series",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "TomatoPotatoPsyllid.Adult.TotalPopulation",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Adult",
+                  "Name": "Mycelium on foliage",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
