@@ -1,6 +1,4 @@
-﻿//TBI
-/*
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using System;
@@ -81,4 +79,3 @@ namespace UserInterface.Views
         }
     }
 }
-*/

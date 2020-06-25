@@ -1,6 +1,4 @@
-﻿/*
-TBI - requires HTMLView
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -40,7 +38,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as IMapView;
+            this.view = view as MapView;
             this.explorerPresenter = explorerPresenter;
 
             // Tell the view to populate the axis.
@@ -168,4 +166,3 @@ namespace UserInterface.Presenters
         }
     }
 }
-*/

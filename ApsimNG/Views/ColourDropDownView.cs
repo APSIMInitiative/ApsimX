@@ -46,7 +46,7 @@
                 combobox1.Changed -= OnChanged;
                 combobox1.SetCellDataFunc(comboRender, null);
                 comboModel.Dispose();
-                comboRender.Dispose();
+                comboRender.Destroy();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -99,7 +99,7 @@
                     {
                         typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
-                        //color = combobox1.Style.Base(StateType.Normal);
+                        color = combobox1.Style.Base(StateType.Normal);
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);
                 }
@@ -168,7 +168,7 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDrawColourCombo(ICellLayout cell_layout, CellRenderer cell, ITreeModel model, TreeIter iter)
+        private void OnDrawColourCombo(CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             try
             {

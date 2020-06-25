@@ -11,7 +11,6 @@
     using Models.Core;
     using Views;
     using System.Linq;
-    using Microsoft.CodeAnalysis;
     using System.Diagnostics;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -162,13 +161,13 @@
         public void ProcessStartupScript(string code)
         {
             // Allow UI scripts to reference gtk/gdk/etc
-            List<MetadataReference> assemblies = new List<MetadataReference>()
+            List<string> assemblies = new List<string>()
             {
-                MetadataReference.CreateFromFile(typeof(Gtk.Widget).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Gdk.Color).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Cairo.Context).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Pango.Context).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(GLib.Log).Assembly.Location),
+                typeof(Gtk.Widget).Assembly.Location,
+                typeof(Gdk.Color).Assembly.Location,
+                typeof(Cairo.Context).Assembly.Location,
+                typeof(Pango.Context).Assembly.Location,
+                typeof(GLib.Log).Assembly.Location,
             };
 
             var compiler = new ScriptCompiler();

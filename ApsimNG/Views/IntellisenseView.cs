@@ -6,7 +6,6 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
-    using Microsoft.CodeAnalysis;
 
     class IntellisenseView : ViewBase
     {
@@ -328,26 +327,25 @@
             Populate(allItems);
             return true;
         }
-        
+
         /// <summary>
         /// Populates the completion window with data.
         /// </summary>
-        /// <param name="symbols">List of completion data.</param>
-        public void Populate(IEnumerable<ISymbol> symbols)
+        /// <param name="items">List of completion data.</param>
+        public void Populate(List<CompletionData> items)
         {
             completionModel.Clear();
 
             // Add empty first row.
             completionModel.AppendValues("", "", "", "", "", "", "");
-            Gdk.Pixbuf propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
-            foreach (ISymbol symbol in symbols)
+            foreach (CompletionData item in items)
             {
-                //IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
-                // tbi: units, image, type, 
-                completionModel.AppendValues(propertyPixbuf, symbol.Name, "units", "type", "description", "symbol.CompletionText", symbol.Kind == SymbolKind.Method);
+                IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
+                string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
-        
+
         /// <summary>
         /// Populates the completion window with data.
         /// </summary>

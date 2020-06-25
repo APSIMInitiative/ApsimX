@@ -1,7 +1,4 @@
-﻿using Cairo;
-using Gdk;
-using Gtk;
-using System;
+﻿using Gtk;
 
 namespace UserInterface.Classes
 {
@@ -25,23 +22,12 @@ namespace UserInterface.Classes
         /// <param name="cell_area">The cell area</param>
         /// <param name="expose_area">Expose the area</param>
         /// <param name="flags">Render flags</param>
-        protected override void OnRender(Context cr, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, CellRendererState flags)
-        {
-            throw new NotImplementedException();
-            //base.OnRender(cr, widget, background_area, cell_area, flags);
-            //lastRect = new Gdk.Rectangle(cell_area.X, cell_area.Y, cell_area.Width, cell_area.Height);
-            //Gdk.GC gc = new Gdk.GC(window);
-            //window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
-        }
-
-        /*
         protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
         {
             lastRect = new Gdk.Rectangle(cell_area.X, cell_area.Y, cell_area.Width, cell_area.Height);
             Gdk.GC gc = new Gdk.GC(window);
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
-        */
 
         public Gdk.Rectangle lastRect;
     }

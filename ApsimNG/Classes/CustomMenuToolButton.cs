@@ -54,8 +54,7 @@ namespace UserInterface.Classes
         {
             try
             {
-                //throw new NotImplementedException("Don't even konw what this is supposed to do");
-                //GetMenuButton().State = GetToggleButton().State;
+                GetMenuButton().State = GetToggleButton().State;
             }
             catch //(Exception err) // fixme
             {
@@ -74,12 +73,11 @@ namespace UserInterface.Classes
         {
             try
             {
-                //throw new NotImplementedException();
-                //if (!(sender is Widget))
-                //    return;
-                //foreach (Button button in GetButtons())
-                //    button.State = (sender as Widget).State;
-                //GetMenuButton().State = GetToggleButton().State;
+                if (!(sender is Widget))
+                    return;
+                foreach (Button button in GetButtons())
+                    button.State = (sender as Widget).State;
+                GetMenuButton().State = GetToggleButton().State;
             }
             catch //(Exception err) // fixme
             {

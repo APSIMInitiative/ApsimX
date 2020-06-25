@@ -73,7 +73,7 @@
                 combobox1.Changed -= OnComboBox1SelectedValueChanged;
                 frameRadio1.Toggled -= FrameRadio_Toggled;
                 comboModel.Dispose();
-                comboRender.Dispose();
+                comboRender.Destroy();
                 graphView1.MainWidget.Destroy();
                 graphView1 = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;

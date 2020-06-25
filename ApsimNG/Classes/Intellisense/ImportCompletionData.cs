@@ -1,5 +1,4 @@
-﻿/*
-using ICSharpCode.NRefactory.CSharp.Refactoring;
+﻿using ICSharpCode.NRefactory.CSharp.Refactoring;
 using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.CSharp.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem;
@@ -31,4 +30,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-*/

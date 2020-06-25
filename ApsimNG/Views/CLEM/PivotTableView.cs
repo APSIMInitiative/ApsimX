@@ -198,8 +198,7 @@ namespace ApsimNG.Views.CLEM
             {
                 get
                 {
-                    throw new NotImplementedException();
-                    //return box.ActiveText;
+                    return box.ActiveText;
                 }
             }
 
@@ -244,8 +243,7 @@ namespace ApsimNG.Views.CLEM
             /// <param name="text">The text to add</param>
             public void AddText(string text)
             {
-                throw new NotImplementedException();
-                //box.AppendText(text);
+                box.AppendText(text);
             }
 
             /// <summary>

@@ -4,11 +4,11 @@
     using System;
     using System.IO;
     using System.Linq;
-    //using MonoMac;
+    using MonoMac;
     using Gtk;
     using APSIM.Shared.Utilities;
     using Models.Core;
-    //using MonoMac.AppKit;
+    using MonoMac.AppKit;
 
     /// <summary>
     /// All access to this class should be via <see cref="IFileDialog"/>.
@@ -109,14 +109,14 @@
         /// <returns>Array containing the paths of the chosen files/directories.</returns>
         private string[] GetFiles(bool selectMultiple)
         {
-            //if (ProcessUtilities.CurrentOS.IsWindows)
-            //    return WindowsFileDialog(selectMultiple);
-            //else if (ProcessUtilities.CurrentOS.IsMac)
-            //    return OSXFileDialog(selectMultiple);
-            //else
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return WindowsFileDialog(selectMultiple);
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return OSXFileDialog(selectMultiple);
+            else
                 return GenericFileDialog(selectMultiple);
         }
-        /*
+
         /// <summary>
         /// Ask user for a filename to open on Windows.
         /// </summary>
@@ -216,12 +216,12 @@
             
             result = panel.RunModal();
             string[] fileNames = new string[0];
-            if (result == 1) // aka NSFileHandlingPanelOKButton
+            if (result == 1 /*NSFileHandlingPanelOKButton*/)
                 fileNames = panel is NSOpenPanel ? (panel as NSOpenPanel).Urls.Select(u => u.Path).ToArray() : new string[] { panel.Url.Path };
             panel.Dispose();
             return fileNames;
         }
-*/
+
         /// <summary>
         /// Ask the user for a file name. Used on OSs which are not Windows or MacOS.
         /// </summary>
@@ -276,11 +276,11 @@
             string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
-            fileChooser.Dispose();
+            fileChooser.Destroy();
 
             return fileNames;
         }
-        /*
+
         /// <summary>Ask user for a directory on Windows.</summary>
         /// <param name="Prompt">String to use as dialog heading</param>        
         /// <param name="initialPath">Optional Initial starting filename or directory</param>
@@ -314,6 +314,5 @@
             dialog = null;
             return new string[] { fileName };
         }
-        */
     }
 }

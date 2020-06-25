@@ -35,7 +35,6 @@ namespace UserInterface.Views
 
         public TernaryGraphView(ViewBase owner) : base(owner)
         {
-            throw new NotImplementedException("This relies on the expose event. Need to find an alternative event which exists in gtk3");
             HBox container = new HBox();
             chart = new DrawingArea();
             chart.AddEvents((int)Gdk.EventMask.ExposureMask
@@ -43,7 +42,7 @@ namespace UserInterface.Views
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-            //chart.ExposeEvent += OnDrawChart;
+            chart.ExposeEvent += OnDrawChart;
             chart.ButtonPressEvent += OnMouseButtonPress;
             chart.ButtonReleaseEvent += OnMouseButtonRelease;
             chart.MotionNotifyEvent += OnMouseMove;
@@ -62,14 +61,14 @@ namespace UserInterface.Views
             container.PackStart(labels, true, true, 0);
 
             mainWidget = container;
-            mainWidget.Hide();
+            mainWidget.HideAll();
         }
 
         public void Detach()
         {
             try
             {
-                //chart.ExposeEvent -= OnDrawChart;
+                chart.ExposeEvent -= OnDrawChart;
                 chart.ButtonPressEvent -= OnMouseButtonPress;
                 chart.ButtonReleaseEvent -= OnMouseButtonRelease;
                 chart.MotionNotifyEvent -= OnMouseMove;
@@ -158,7 +157,7 @@ namespace UserInterface.Views
             double y3 = height + offsetY;
 
             context.NewPath();
-            //context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
+            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
 
             context.MoveTo(x1, y1);
 
@@ -209,17 +208,17 @@ namespace UserInterface.Views
             context.NewPath();
             context.Arc(p.X, p.Y, markerRadius, 0, 2 * Math.PI);
             context.StrokePreserve();
-            //context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
+            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
             context.Fill();
         }
 
         private void Refresh()
         {
-            //if (chart.IsAppPaintable && chart.Visible)
-            //{
-            //    Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
-            //    DrawMarker(context);
-            //}
+            if (chart.IsAppPaintable && chart.Visible)
+            {
+                Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
+                DrawMarker(context);
+            }
         }
 
         /// <summary>
@@ -243,7 +242,7 @@ namespace UserInterface.Views
         {
             return Distance(clickPoint, MarkerPosition()) < markerRadius;
         }
-        /*
+
         /// <summary>
         /// Invoked when the chart is rendered. Handles drawing of the
         /// lines of the triangle.
@@ -263,7 +262,7 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-        */
+
         /// <summary>
         /// Mouse button has been pressed down. If the cursor is on the marker,
         /// set state variables correspondingly.

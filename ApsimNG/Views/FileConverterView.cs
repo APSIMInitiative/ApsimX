@@ -176,7 +176,7 @@
                 if (value)
                     mainWindow.ShowAll();
                 else
-                    mainWindow.Hide();
+                    mainWindow.HideAll();
             }
         }
 

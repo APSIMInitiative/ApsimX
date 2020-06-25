@@ -1,6 +1,4 @@
-﻿//TBI
-/*
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System.IO;
     using Models;
@@ -75,4 +73,3 @@ namespace UserInterface.Presenters
 
     }
 }
-*/

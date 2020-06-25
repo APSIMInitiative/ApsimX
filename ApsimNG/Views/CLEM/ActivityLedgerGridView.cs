@@ -157,7 +157,7 @@ namespace UserInterface.Views
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-                foreach (CellRenderer render in col.Cells)
+                foreach (CellRenderer render in col.CellRenderers)
                 {
                     if (render is CellRendererText)
                     {
@@ -169,14 +169,14 @@ namespace UserInterface.Views
                         CellRendererPixbuf pixRender = render as CellRendererPixbuf;
                         col.SetCellDataFunc(pixRender, (CellLayoutDataFunc)null);
                     }
-                    render.Dispose();
+                    render.Destroy();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
             }
             while (Fixedcolview.Columns.Length > 0)
             {
                 TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.Cells)
+                foreach (CellRenderer render in col.CellRenderers)
                 {
                     if (render is CellRendererText)
                     {
@@ -273,10 +273,10 @@ namespace UserInterface.Views
             }
 
             gridmodel = new ListStore(colTypes);
-            //Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
-            //Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
-            //Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-            //Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+            Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
+            Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
+            Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+            Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
 
             image1.Visible = false;
             // Now set up the grid columns
@@ -394,7 +394,7 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
@@ -446,7 +446,7 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             TreePath path = model.GetPath(iter);
             Gtk.TreeView view = col.TreeView as Gtk.TreeView;
@@ -613,7 +613,7 @@ namespace UserInterface.Views
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
                     {
-                        foreach (CellRenderer render in col.Cells)
+                        foreach (CellRenderer render in col.CellRenderers)
                         {
                             if (render is CellRendererText)
                             {
@@ -714,7 +714,7 @@ namespace UserInterface.Views
                 Fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
                 Fixedcolview.Visible = false;
                 splitter.Position = 0;
-                splitter.Child1.Hide();
+                splitter.Child1.HideAll();
             }
             numberLockedCols = number;
         }
@@ -722,17 +722,16 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of grid.</summary>
         public System.Drawing.Image GetScreenshot()
         {
-            throw new NotImplementedException();
-            //// Create a Bitmap and draw the DataGridView on it.
-            //int width;
-            //int height;
-            //Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
-            //gridWindow.GetSize(out width, out height);
-            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            //byte[] buffer = screenshot.SaveToBuffer("png");
-            //MemoryStream stream = new MemoryStream(buffer);
-            //System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            //return bitmap;
+            // Create a Bitmap and draw the DataGridView on it.
+            int width;
+            int height;
+            Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
+            gridWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            MemoryStream stream = new MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new Bitmap(stream);
+            return bitmap;
         }
 
         /// <summary>

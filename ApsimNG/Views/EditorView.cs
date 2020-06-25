@@ -4,17 +4,11 @@
     using System.Reflection;
     using EventArguments;
     using Gtk;
-    using GtkSharp;
-    using System.IO;
+    using Mono.TextEditor;
     using Utility;
     using Cairo;
     using System.Globalization;
-    using System.Linq;
-    using GtkSharp.SourceView;
-    using System.Collections.Generic;
-    using global::UserInterface.Intellisense;
-
-    //using Mono.TextEditor.Highlighting;
+    using Mono.TextEditor.Highlighting;
 
     /// <summary>
     /// What sort of text is this editor displaying?
@@ -145,106 +139,17 @@
         /// Redraws the text editor.
         /// </summary>
         void Refresh();
-
-        /// <summary>
-        /// Display a list of completion items to the user.
-        /// </summary>
-        void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionItems);
     }
-/*
-    public class EditorView : ViewBase, IEditorView
-    {
-        private GtkSourceView sourceView;
 
-        public EditorView(ViewBase owner) : base(owner)
-        {
-            sourceView = new GtkSourceView();
-            mainWidget = sourceView;
-            sourceView.ShowAll();
-        }
-
-        public string Text
-        {
-            get
-            {
-                return sourceView.Buffer.Text;
-            }
-            set
-            {
-                sourceView.Buffer.Text = value;
-            }
-        }
-        public string[] Lines
-        {
-            get
-            {
-                return sourceView.Buffer.Text.Split('\n');
-            }
-            set
-            {
-                sourceView.Buffer.Text = string.Join('\n', value);
-            }
-        }
-        
-        // TBI
-        public EditorType Mode { get; set; }
-        public string IntelliSenseChars { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public int CurrentLineNumber => throw new NotImplementedException();
-
-        public System.Drawing.Rectangle Location { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public int Offset => throw new NotImplementedException();
-
-        public bool HasFocus => throw new NotImplementedException();
-
-        public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
-        public event EventHandler TextHasChangedByUser;
-        public event EventHandler LeaveEditor;
-        public event EventHandler StyleChanged;
-
-        public MenuItem AddContextActionWithAccel(string menuItemText, EventHandler onClick, string shortcut)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MenuItem AddContextSeparator()
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.Drawing.Point GetPositionOfCursor()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InsertAtCaret(string text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void InsertCompletionOption(string completionOption, string triggerWord)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Refresh()
-        {
-            throw new NotImplementedException();
-        }
-    }
-*/
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
     public class EditorView : ViewBase, IEditorView
     {
-        private ScriptCompletionProvider completionProvider;
-
-        ///// <summary>
-        ///// The find-and-replace form
-        ///// </summary>
-        //private FindAndReplaceForm findForm = new FindAndReplaceForm();
+        /// <summary>
+        /// The find-and-replace form
+        /// </summary>
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
 
         /// <summary>
         /// Scrolled window
@@ -254,7 +159,7 @@
         /// <summary>
         /// The main text editor
         /// </summary>
-        private GtkSourceView textEditor;
+        private TextEditor textEditor;
 
         /// <summary>
         /// The popup menu options on the editor
@@ -303,37 +208,21 @@
         {
             get
             {
-                return textEditor.Buffer.Text;
+                return textEditor.Text;
             }
 
             set
             {
-                textEditor.Buffer.Text = value;
-                //tbi: set mime type
+                textEditor.Text = value;
                 if (Mode == EditorType.ManagerScript)
+                    textEditor.Document.MimeType = "text/x-csharp";
+                else if (Mode == EditorType.Report)
                 {
-                    textEditor.AutoIndent = true;
-                    textEditor.ShowLineNumbers = true;
-                    //textEditor.HighlightCurrentLine = true;
-
-                    // Move to the first/last non-whitespace char on the first
-                    // press of home/end keys, and to the beginning/end of the
-                    // line on the second press.
-                    textEditor.SmartHomeEnd = GtkSourceSmartHomeEndType.Before;
-                    string tempFile = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".cs");
-                    File.WriteAllText(tempFile, Text);
-                    GtkSourceLanguage lang = GtkSourceLanguageManager.Default.GuessLanguage(tempFile, null);
-                    if (lang != null)
-                        (textEditor.Buffer as GtkSourceBuffer).Language = lang;
-                    File.Delete(tempFile);
-                    //textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
+                    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
+                        LoadReportSyntaxMode();
+                    textEditor.Document.MimeType = "text/x-apsimreport";
                 }
-                //else if (Mode == EditorType.Report)
-                //{
-                //    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
-                //        LoadReportSyntaxMode();
-                //    textEditor.Document.MimeType = "text/x-apsimreport";
-                //}
+                textEditor.Document.SetNotDirtyState();
             }
         }
 
@@ -343,13 +232,12 @@
         /// </summary>
         private void LoadReportSyntaxMode()
         {
-            // tbi: syntax highlighting in report
-            //string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
-            //using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
-            //{
-            //    ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
-            //    SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
-            //}
+            string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
+            using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
+            {
+                ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
+                SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
+            }
         }
 
         /// <summary>
@@ -359,12 +247,23 @@
         {
             get
             {
-                string text = Text.TrimEnd("\r\n".ToCharArray());
-                return text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                string text = textEditor.Text.TrimEnd("\r\n".ToCharArray());
+                return text.Split(new string[] { textEditor.EolMarker, "\r\n", "\n" }, StringSplitOptions.None);
             }
+
             set
             {
-                Text = string.Join(Environment.NewLine, value);
+                string st = string.Empty;
+                if (value != null)
+                {
+                    foreach (string avalue in value)
+                    {
+                        if (st != string.Empty)
+                            st += textEditor.EolMarker;
+                        st += avalue;
+                    }
+                }
+                Text = st;
             }
         }
 
@@ -385,21 +284,7 @@
         {
             get
             {
-                // todo - test this
-                return Text.Substring(0, textEditor.Buffer.CursorPosition).Split(Environment.NewLine).Length;
-            }
-        }
-
-        /// <summary>
-        /// Get the current column number.
-        /// </summary>
-        public int CurrentColumnNumber
-        {
-            get
-            {
-                // todo: does this actually work?
-                string currentLine = Lines[CurrentLineNumber];
-                return Offset - Text.IndexOf(currentLine);
+                return textEditor.Caret.Line;
             }
         }
 
@@ -415,14 +300,13 @@
         {
             get
             {
-                // fixme
-                return new System.Drawing.Rectangle(0 /*textEditor.GetVisualColumn(iter)*/, CurrentLineNumber, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
+                DocumentLocation loc = textEditor.Caret.Location;
+                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
             }
 
             set
             {
-                // tbi
-                //textEditor.Caret.Location = new DocumentLocation(value.Y, value.X);
+                textEditor.Caret.Location = new DocumentLocation(value.Y, value.X);
                 horizScrollPos = value.Width;
                 vertScrollPos = value.Height;
 
@@ -440,7 +324,7 @@
         {
             get
             {
-                return textEditor.Buffer.CursorPosition;
+                return textEditor.Caret.Offset;
             }
         }
 
@@ -463,36 +347,26 @@
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
-
-            //GtkSourceLanguage csharp = GtkSourceLanguageManager.Default.GetLanguage("text/x-csharp");
-            //GtkSourceBuffer buffer = new GtkSourceBuffer(csharp);
-            textEditor = new GtkSourceView();
-
-            // Intellisense initialisation.
-            completionProvider = new ScriptCompletionProvider(ShowError);
-            var adapter = new GtkSourceCompletionProviderAdapter(completionProvider);
-            completionProvider.Adapter = adapter;
-            textEditor.Completion.AddProvider(adapter);
-            
+            textEditor = new TextEditor();
             scroller.Add(textEditor);
             mainWidget = scroller;
-            //Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
-            //Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
-            //options.EnableSyntaxHighlighting = true;
-            //options.ColorScheme = Configuration.Settings.EditorStyleName;
-            //options.Zoom = Configuration.Settings.EditorZoom;
-            //options.HighlightCaretLine = true;
-            //options.EnableSyntaxHighlighting = true;
-            //options.HighlightMatchingBracket = true;
-            //textEditor.Options = options;
-            //textEditor.Options.Changed += EditorOptionsChanged;
-            //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
-            //textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
-            //textEditor.PopupMenu = DoPopup;
-            textEditor.Buffer.Changed += OnTextHasChanged;
-            textEditor.FocusInEvent += OnTextBoxEnter;
-            textEditor.FocusOutEvent += OnTextBoxLeave;
-            textEditor.KeyPressEvent += OnKeyPress;
+            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
+            Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
+            options.EnableSyntaxHighlighting = true;
+            options.ColorScheme = Configuration.Settings.EditorStyleName;
+            options.Zoom = Configuration.Settings.EditorZoom;
+            options.HighlightCaretLine = true;
+            options.EnableSyntaxHighlighting = true;
+            options.HighlightMatchingBracket = true;
+            textEditor.Options = options;
+            textEditor.Options.Changed += EditorOptionsChanged;
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
+            textEditor.TextArea.DoPopupMenu = DoPopup;
+            textEditor.Document.LineChanged += OnTextHasChanged;
+            textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
+            textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
+            textEditor.TextArea.KeyPressEvent += OnKeyPress;
             scroller.Hadjustment.Changed += Hadjustment_Changed;
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -500,6 +374,7 @@
             AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
             AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
+            AddContextActionWithAccel("Delete", OnDelete, "Delete");
             AddContextSeparator();
             AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
@@ -510,18 +385,18 @@
             Menu styles = new Menu();
 
             // find all the editor styles and add sub menu items to the popup
-            //string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
-            //Array.Sort(styleNames, StringComparer.InvariantCulture);
-            //foreach (string name in styleNames)
-            //{
-            //    CheckMenuItem subItem = new CheckMenuItem(name);
-            //    if (string.Compare(name, options.ColorScheme, true) == 0)
-            //        subItem.Toggle();
-            //    subItem.Activated += OnChangeEditorStyle;
-            //    subItem.Visible = true;
-            //    styles.Append(subItem);
-            //}
-            //styleMenu.Submenu = styles;
+            string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
+            Array.Sort(styleNames, StringComparer.InvariantCulture);
+            foreach (string name in styleNames)
+            {
+                CheckMenuItem subItem = new CheckMenuItem(name);
+                if (string.Compare(name, options.ColorScheme, true) == 0)
+                    subItem.Toggle();
+                subItem.Activated += OnChangeEditorStyle;
+                subItem.Visible = true;
+                styles.Append(subItem);
+            }
+            styleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
         }
@@ -535,14 +410,13 @@
         {
             try
             {
-                //textEditor.Completion.RemoveProvider(completionProvider);
-                textEditor.Buffer.Changed -= OnTextHasChanged;
-                textEditor.FocusInEvent -= OnTextBoxEnter;
-                textEditor.FocusOutEvent -= OnTextBoxLeave;
-                textEditor.KeyPressEvent -= OnKeyPress;
+                textEditor.Document.LineChanged -= OnTextHasChanged;
+                textEditor.TextArea.FocusInEvent -= OnTextBoxEnter;
+                textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
+                textEditor.TextArea.KeyPressEvent -= OnKeyPress;
                 scroller.Hadjustment.Changed -= Hadjustment_Changed;
                 scroller.Vadjustment.Changed -= Vadjustment_Changed;
-                //textEditor.Options.Changed -= EditorOptionsChanged;
+                textEditor.Options.Changed -= EditorOptionsChanged;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
 
                 // It's good practice to disconnect all event handlers, as it makes memory leaks
@@ -572,7 +446,7 @@
                 accel.Dispose();
                 textEditor.Destroy();
                 textEditor = null;
-                //findForm.Destroy();
+                findForm.Destroy();
                 owner = null;
             }
             catch (Exception err)
@@ -644,14 +518,14 @@
 
                 bool controlSpace = IsControlSpace(e.Event);
                 bool controlShiftSpace = IsControlShiftSpace(e.Event);
-                string textBeforePeriod = GetWordBeforePosition(Offset);
+                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
                 double x; // unused, but needed as an out parameter.
                 if (e.Event.Key == Gdk.Key.F3)
                 {
-                    //if (string.IsNullOrEmpty(findForm.LookFor))
-                    //    findForm.ShowFor(textEditor, false);
-                    //else
-                    //    findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, false);
+                    else
+                        findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
                     e.RetVal = true;
                 }
                 // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
@@ -662,7 +536,7 @@
                     e.RetVal = true;
                     if (keyChar == '.')
                     {
-                        textEditor.Buffer.InsertAtCursor(keyChar.ToString());
+                        textEditor.InsertAtCaret(keyChar.ToString());
 
                         // Process all events in the main loop, so that the period is inserted into the text editor.
                         while (GLib.MainContext.Iteration()) ;
@@ -670,12 +544,12 @@
                     NeedContextItemsArgs args = new NeedContextItemsArgs
                     {
                         Coordinates = GetPositionOfCursor(),
-                        Code = Text,
+                        Code = textEditor.Text,
                         Offset = this.Offset,
                         ControlSpace = controlSpace,
                         ControlShiftSpace = controlShiftSpace,
-                        LineNo = CurrentLineNumber,
-                        ColNo = CurrentColumnNumber
+                        LineNo = textEditor.Caret.Line,
+                        ColNo = textEditor.Caret.Column - 1
                     };
 
                     ContextItemsNeeded?.Invoke(this, args);
@@ -684,14 +558,11 @@
                 {
                     switch (e.Event.Key)
                     {
-                        // tbi
-                        //case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Add:
-                        //case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Subtract:
-                        //case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
-                        default:
-                            break;
+                        case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
+                        case Gdk.Key.KP_Add:
+                        case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
+                        case Gdk.Key.KP_Subtract:
+                        case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
                     }
                 }
             }
@@ -731,8 +602,8 @@
             if (pos == 0)
                 return string.Empty;
 
-            int posDelimiter = Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-            return Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
+            int posDelimiter = textEditor.Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
+            return textEditor.Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
         }
 
         /// <summary>
@@ -741,17 +612,14 @@
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         public System.Drawing.Point GetPositionOfCursor()
         {
-            // tbi
-            return new System.Drawing.Point(0, 0);
-            //Point p = textEditor.LocationToPoint(textEditor.Caret.Location);
-            //p.Y += (int)textEditor.LineHeight;
-            //textEditor.Coord
-            //// Need to convert to screen coordinates....
-            //int x, y, frameX, frameY;
-            //MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            //textEditor.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+            p.Y += (int)textEditor.LineHeight;
+            // Need to convert to screen coordinates....
+            int x, y, frameX, frameY;
+            MasterView.MainWindow.GetOrigin(out frameX, out frameY);
+            textEditor.TextArea.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
-            //return new System.Drawing.Point(x + frameX, y + frameY);
+            return new System.Drawing.Point(x + frameX, y + frameY);
         }
 
         /// <summary>
@@ -759,16 +627,8 @@
         /// </summary>
         public void Refresh()
         {
-            //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
             textEditor.QueueDraw();
-        }
-
-        /// <summary>
-        /// Display a list of completion options to the user.
-        /// </summary>
-        public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
-        {
-
         }
 
         /// <summary>
@@ -780,7 +640,7 @@
         {
             try
             {
-                //textEditor.Document.ReadOnly = false;
+                textEditor.Document.ReadOnly = false;
                 textEditor.GrabFocus();
             }
             catch (Exception err)
@@ -799,8 +659,6 @@
         /// <param name="completionOption">Completion option to be inserted.</param>
         public void InsertCompletionOption(string completionOption, string triggerWord)
         {
-            // todo - this shouldn't be necessary. need to overhaul the whole completion
-            // mechanism with the new method built into the sourceview.
             if (string.IsNullOrEmpty(completionOption))
                 return;
 
@@ -808,31 +666,30 @@
             if (string.IsNullOrEmpty(triggerWord))
             {
                 int offset = Offset + completionOption.Length;
-                textEditor.Buffer.InsertAtCursor(completionOption);
-                // fixme
-                //textEditor.Buffer.CursorPosition = offset;
+                textEditor.InsertAtCaret(completionOption);
+                textEditor.Caret.Offset = offset;
                 return;
             }
 
             // If trigger word is entire text, replace the entire text.
-            if (Text == triggerWord)
+            if (textEditor.Text == triggerWord)
             {
-                Text = completionOption;
-                //Offset = completionOption.Length;
+                textEditor.Text = completionOption;
+                textEditor.Caret.Offset = completionOption.Length;
                 return;
             }
 
             // Overwrite the last occurrence of this word before the caret.
-            int index = Text.Substring(0, Offset).LastIndexOf(triggerWord);
+            int index = textEditor.GetTextBetween(0, Offset).LastIndexOf(triggerWord);
             if (index < 0)
                 // If text does not contain trigger word, isnert at caret.
-                InsertAtCaret(completionOption);
+                textEditor.InsertAtCaret(completionOption);
 
-            string textBeforeTriggerWord = Text.Substring(0, index);
+            string textBeforeTriggerWord = textEditor.Text.Substring(0, index);
 
             string textAfterTriggerWord = "";
-            if (Text.Length > index + triggerWord.Length)
-                textAfterTriggerWord = Text.Substring(index + triggerWord.Length);
+            if (textEditor.Text.Length > index + triggerWord.Length)
+                textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
 
             // Changing the text property of the text editor will reset the scroll
             // position. To work around this, we record the scroll position before
@@ -840,8 +697,8 @@
             double verticalPosition = scroller.Vadjustment.Value;
             double horizontalPosition = scroller.Hadjustment.Value;
 
-            Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
-            //Offset = index + completionOption.Length;
+            textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
+            textEditor.Caret.Offset = index + completionOption.Length;
 
             scroller.Vadjustment.Value = verticalPosition;
             scroller.Hadjustment.Value = horizontalPosition;
@@ -854,7 +711,17 @@
         /// <param name="e">The event arguments</param>
         public void InsertAtCaret(string text)
         {
-            textEditor.Buffer.InsertAtCursor(text);
+            textEditor.Document.ReadOnly = false;
+            string textToCaret = textEditor.Text.Substring(0, Offset);
+            if (textToCaret.LastIndexOf('.') != Offset - 1)
+            {
+                string textBeforeCaret = textEditor.Text.Substring(0, Offset);
+                // TODO : insert text at the correct location
+                // Currently, if we half-type a word, then hit control-space, the word will be inserted at the caret.
+                textEditor.Text = textEditor.Text.Substring(0, textEditor.Text.LastIndexOf('.')) + textEditor.Text.Substring(Offset);
+            }
+            textEditor.InsertAtCaret(text);
+            textEditor.GrabFocus();
         }
 
         /// <summary>
@@ -1001,8 +868,7 @@
         {
             try
             {
-                // todo: test this
-                textEditor.Buffer.CutClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)), true);
+                ClipboardActions.Cut(textEditor.TextArea.GetTextEditorData());
             }
             catch (Exception err)
             {
@@ -1019,8 +885,7 @@
         {
             try
             {
-                // todo: test this
-                textEditor.Buffer.CopyClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)));
+                ClipboardActions.Copy(textEditor.TextArea.GetTextEditorData());
             }
             catch (Exception err)
             {
@@ -1037,8 +902,24 @@
         {
             try
             {
-                // todo: test this
-                textEditor.Buffer.PasteClipboard(Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", true)));
+                ClipboardActions.Paste(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// The Delete menu handler
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnDelete(object sender, EventArgs e)
+        {
+            try
+            {
+                DeleteActions.Delete(textEditor.TextArea.GetTextEditorData());
             }
             catch (Exception err)
             {
@@ -1055,8 +936,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+                MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
             }
             catch (Exception err)
             {
@@ -1073,8 +953,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+                MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
             }
             catch (Exception err)
             {
@@ -1091,7 +970,7 @@
         {
             try
             {
-                //findForm.ShowFor(textEditor, false);
+                findForm.ShowFor(textEditor, false);
             }
             catch (Exception err)
             {
@@ -1108,7 +987,7 @@
         {
             try
             {
-                //findForm.ShowFor(textEditor, true);
+                findForm.ShowFor(textEditor, true);
             }
             catch (Exception err)
             {
@@ -1136,7 +1015,7 @@
                 }
 
                 Utility.Configuration.Settings.EditorStyleName = caption;
-                //textEditor.Options.ColorScheme = caption;
+                textEditor.Options.ColorScheme = caption;
                 textEditor.QueueDraw();
 
                 StyleChanged?.Invoke(this, EventArgs.Empty);
@@ -1157,7 +1036,7 @@
         {
             try
             {
-                //Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
+                Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
             }
             catch (Exception err)
             {
@@ -1165,29 +1044,29 @@
             }
         }
 
-        //// The following block comes from the example code provided at 
-        //// http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
-        //// I leave it here because it provides the handlers needed for a popup menu
-        //// Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
-        //
-        //private void menuToggleBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
-        //    TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
-        //}
-        //
-        //private void menuGoToNextBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
-        //        (bookmark => true));
-        //}
-        //
-        //private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
-        //        (bookmark => true));
-        //}
-        
+        // The following block comes from the example code provided at 
+        // http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
+        // I leave it here because it provides the handlers needed for a popup menu
+        // Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
+        /*
+        private void menuToggleBookmark_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
+            TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
+        }
+
+        private void menuGoToNextBookmark_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
+                (bookmark => true));
+        }
+
+        private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
+        {
+            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
+                (bookmark => true));
+        }
+        */
 
         #endregion
     }

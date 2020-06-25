@@ -21,7 +21,7 @@
         /// <summary>
         /// The view object
         /// </summary>
-        private IEditorView view;
+        private EditorView view;
 
         /// <summary>
         /// The explorer presenter
@@ -42,7 +42,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.operations = model as Operations;
-            this.view = view as IEditorView;
+            this.view = view as EditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;

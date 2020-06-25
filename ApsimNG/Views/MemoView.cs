@@ -1,6 +1,4 @@
-﻿//TBI
-/*
-using System;
+﻿using System;
 using System.Drawing;
 using Gtk;
 using System.Collections.Generic;
@@ -295,6 +293,7 @@ namespace UserInterface.Views
         /// </summary>
         public void Export(int width, int height, Graphics graphics)
         {
+            /* TBI
             float x = 10;
             float y = 0;
             int charpos = 0;
@@ -317,8 +316,9 @@ namespace UserInterface.Views
                     charpos++;
                 }
             }
-        }
+            */
 
+        }
         private void HelpBtn_Clicked(object sender, EventArgs e)
         {
             try
@@ -345,4 +345,3 @@ namespace UserInterface.Views
         public string TextString;
     }
 }
-*/

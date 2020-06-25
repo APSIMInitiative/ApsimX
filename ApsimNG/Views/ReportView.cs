@@ -83,14 +83,14 @@
                                       (Entry)builder.GetObject("groupByEdit")); 
 
             mainWidget = notebook1;
+            notebook1.SwitchPage += OnSwitchPage;
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
             vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
-            
+
             frequencyEditor = new EditorView(this);
             frequencyEditor.StyleChanged += OnStyleChanged;
             vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
-            notebook1.SwitchPage += OnSwitchPage;
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
@@ -171,9 +171,9 @@
                 variableEditor.StyleChanged -= OnStyleChanged;
                 notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
-                (variableEditor as ViewBase).MainWidget.Destroy();
+                variableEditor.MainWidget.Destroy();
                 variableEditor = null;
-                (frequencyEditor as ViewBase).MainWidget.Destroy();
+                frequencyEditor.MainWidget.Destroy();
                 frequencyEditor = null;
                 dataStoreView1.MainWidget.Destroy();
                 dataStoreView1 = null;

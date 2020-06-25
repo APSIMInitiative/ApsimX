@@ -48,7 +48,7 @@
 
     public class IkonView : IconView
     {
-        public IkonView(ITreeModel model) : base(model) { }
+        public IkonView(TreeModel model) : base(model) { }
 
         public int ItemPadding
         {
@@ -91,7 +91,7 @@
             Listview.PixbufColumn = 1;
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
-            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+            Listview.Orientation = Gtk.Orientation.Horizontal;
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;

@@ -26,7 +26,7 @@ namespace UserInterface.Views
     {
 
         private GridView grid;
-        private IEditorView scriptEditor;
+        private EditorView scriptEditor;
         private Notebook notebook;
 
 
@@ -40,7 +40,7 @@ namespace UserInterface.Views
             grid = new GridView(this);
             scriptEditor = new EditorView(this);
             notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
-            notebook.AppendPage((scriptEditor as ViewBase).MainWidget, new Label("Script"));
+            notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -50,7 +50,7 @@ namespace UserInterface.Views
             {
                 grid.MainWidget.Destroy();
                 grid = null;
-                (scriptEditor as ViewBase).MainWidget.Destroy();
+                scriptEditor.MainWidget.Destroy();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

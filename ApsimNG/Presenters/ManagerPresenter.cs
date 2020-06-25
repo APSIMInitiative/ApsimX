@@ -8,7 +8,7 @@
     using Models;
     using Models.Core;
     using Views;
-    //using ICSharpCode.NRefactory.CSharp;
+    using ICSharpCode.NRefactory.CSharp;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -72,7 +72,7 @@
             propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
-            //managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
+            managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
@@ -91,7 +91,7 @@
             propertyPresenter.Detach();
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
-            //managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
+            managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
             managerView.Editor.LeaveEditor -= OnEditorLeave;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
@@ -106,10 +106,10 @@
         {
             try
             {
-                //if (e.ControlShiftSpace)
-                //    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                //else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
-                //    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+                if (e.ControlShiftSpace)
+                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
+                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -223,11 +223,10 @@
         {
             try
             {
-                throw new NotImplementedException();
-                //CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-                //string newText = formatter.Format(managerView.Editor.Text);
-                //managerView.Editor.Text = newText;
-                //explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+                string newText = formatter.Format(managerView.Editor.Text);
+                managerView.Editor.Text = newText;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
             }
             catch (Exception err)
             {

@@ -167,14 +167,13 @@ namespace UserInterface.Views
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
             graphViewRainfall = new GraphView(this);
-            //fixme - need to check packing defaults here.
-            vboxRainChart.PackEnd(graphViewRainfall.MainWidget, false, false, 0);
+            vboxRainChart.PackEnd(graphViewRainfall.MainWidget);
             graphViewMonthlyRainfall = new GraphView(this);
-            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget, false, false, 0);
+            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget);
             graphViewTemperature = new GraphView(this);
-            vboxTemp.PackEnd(graphViewTemperature.MainWidget, false, false, 0);
+            vboxTemp.PackEnd(graphViewTemperature.MainWidget);
             graphViewRadiation = new GraphView(this);
-            vboxRadn.PackEnd(graphViewRadiation.MainWidget, false, false, 0);
+            vboxRadn.PackEnd(graphViewRadiation.MainWidget);
             gridViewData = new GridView(this);
             gridViewData.ReadOnly = true;
             alignData.Add(gridViewData.MainWidget);

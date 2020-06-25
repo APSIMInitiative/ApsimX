@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.Editor;
@@ -153,4 +152,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-*/

@@ -1,10 +1,10 @@
 ﻿namespace UserInterface
 {
+    using Models;
     using Presenters;
     using System;
     using System.IO;
     using Views;
-    using Gtk;
 
     static class UserInterface
     {
@@ -14,17 +14,16 @@
         [STAThread]
         public static int Main(string[] args)
         {
+            Gtk.Application.Init();
+            Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
+            IntellisensePresenter.Init();
+            MainView mainForm = new MainView();
+            MainPresenter mainPresenter = new MainPresenter();
+
             try
             {
-                Application.Init();
-                Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
-                //IntellisensePresenter.Init();
-
-                MainView mainForm = new MainView();
-                MainPresenter mainPresenter = new MainPresenter();
-
                 mainPresenter.Attach(mainForm, args);
-                mainForm.MainWidget.Show();
+                mainForm.MainWidget.ShowAll();
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
                     Gtk.Application.Run();
             }

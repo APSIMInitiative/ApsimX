@@ -171,7 +171,7 @@
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
             Pango.FontDescription font = Utility.Configuration.Settings.Font;
-            if (font != null && font != btnLabel.Style.FontDesc)
+            if (font != null && font != btnLabel.Style.FontDescription)
                 btnLabel.ModifyFont(Utility.Configuration.Settings.Font);
             btnLabel.LineWrap = true;
             btnLabel.LineWrapMode = Pango.WrapMode.Word;
@@ -282,7 +282,7 @@
         {
             try
             {
-                ((sender as Label).Parent as Box).Spacing = 0;
+                ((sender as Label).Parent as VBox).Spacing = 0;
                 Pango.Layout layout = (sender as Label).Layout;
                 Pango.Rectangle ink;
                 Pango.Rectangle logical;

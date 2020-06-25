@@ -169,12 +169,14 @@ namespace UserInterface.Views
             chkMyJobsOnly.Active = true;
             chkMyJobsOnly.Yalign = 0;
 
-            downloadProgress = new ProgressBar();
+            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
             downloadProgressContainer = new HBox();
             downloadProgressContainer.PackStart(new Label("Downloading: "), false, false, 0);
             downloadProgressContainer.PackStart(downloadProgress, false, false, 0);
 
-            loadingProgress = new ProgressBar();
+            loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
+            loadingProgress.Adjustment.Lower = 0;
+            loadingProgress.Adjustment.Upper = 100;
 
             btnChangeDownloadDir = new Button("Change Download Directory");
             btnChangeDownloadDir.Clicked += OnChangeDownloadPath;
@@ -220,10 +222,7 @@ namespace UserInterface.Views
 
 
             VBox vboxPrimary = new VBox();
-
-            // fixme: this was previously `vboxPrimary.PackStart(hboxPrimary);`
-            vboxPrimary.PackStart(hboxPrimary, false, false, 0);
-            
+            vboxPrimary.PackStart(hboxPrimary);
             vboxPrimary.PackEnd(jobLoadProgressContainer, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
@@ -231,7 +230,7 @@ namespace UserInterface.Views
             mainWidget.Destroyed += OnDestroyed;
             vboxPrimary.ShowAll();
 
-            downloadProgressContainer.Hide();
+            downloadProgressContainer.HideAll();
             HideLoadingProgressBar();
         }
 
@@ -275,13 +274,13 @@ namespace UserInterface.Views
         {
             get
             {
-                return loadingProgress.Fraction;
+                return loadingProgress.Adjustment.Value;
             }
             set
             {
                 Application.Invoke(delegate
                 {
-                    loadingProgress.Fraction = Math.Max(0, Math.Min(1, value));
+                    loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
                 });
             }
         }
@@ -293,14 +292,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return downloadProgress.Fraction;
+                return downloadProgress.Adjustment.Value;
             }
             set
             {
-                Application.Invoke(delegate
-                {
-                    downloadProgress.Fraction = Math.Max(0, Math.Min(1, value));
-                });
+                // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
+                Application.Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
             }
         }
 
@@ -357,7 +354,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.Hide(); });
+            Application.Invoke(delegate { downloadProgressContainer.HideAll(); });
         }
 
         /// <summary>
@@ -373,7 +370,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideLoadingProgressBar()
         {
-            Application.Invoke(delegate { jobLoadProgressContainer.Hide(); });
+            Application.Invoke(delegate { jobLoadProgressContainer.HideAll(); });
         }
 
         /// <summary>
@@ -457,7 +454,7 @@ namespace UserInterface.Views
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
-        private void OnSetCellData(TreeViewColumn column, CellRenderer cell, ITreeModel model, TreeIter iter)
+        private void OnSetCellData(TreeViewColumn column, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             try
             {
@@ -487,7 +484,7 @@ namespace UserInterface.Views
         /// <param name="b">Path to the second row.</param>
         /// <param name="i">Column to take values from.</param>
         /// <returns></returns>
-        private int SortData(ITreeModel model, TreeIter a, TreeIter b, int i)
+        private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
         {
             if (i == (int)Columns.Name || i == (int)Columns.ID || i == (int)Columns.State)
                 return SortStrings(model, a, b, i);
@@ -511,7 +508,7 @@ namespace UserInterface.Views
         /// <param name="b">Second row</param>
         /// <param name="x">Column number (0-indexed)</param>
         /// <returns>-1 if the first string is lexographically less than the second. 1 otherwise.</returns>
-        private int SortStrings(ITreeModel model, TreeIter a, TreeIter b, int x)
+        private int SortStrings(TreeModel model, TreeIter a, TreeIter b, int x)
         {
             string s1 = (string)model.GetValue(a, x);
             string s2 = (string)model.GetValue(b, x);
@@ -525,7 +522,7 @@ namespace UserInterface.Views
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="n"></param>
-        private int SortInts(ITreeModel model, TreeIter a, TreeIter b, int n)
+        private int SortInts(TreeModel model, TreeIter a, TreeIter b, int n)
         {
             int x, y;
             if (!int.TryParse((string)model.GetValue(a, n), out x) || !Int32.TryParse((string)model.GetValue(b, n), out y))
@@ -539,7 +536,7 @@ namespace UserInterface.Views
         /// <param name="model"></param>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        private int SortProgress(ITreeModel model, TreeIter a, TreeIter b)
+        private int SortProgress(TreeModel model, TreeIter a, TreeIter b)
         {
             int columnIndex = (int)Columns.Progress;
             if (!int.TryParse(((string)model.GetValue(a, columnIndex)).Replace("%", ""), out int x))
@@ -557,7 +554,7 @@ namespace UserInterface.Views
         /// <param name="a">TreeIter pointing to a row in the tree.</param>
         /// <param name="b">TreeIter pointing to a row in the tree.</param>
         /// <param name="n">The column (4 for start time, 5 for end time).</param>
-        private int SortDateStrings(ITreeModel model, TreeIter a, TreeIter b, int n)
+        private int SortDateStrings(TreeModel model, TreeIter a, TreeIter b, int n)
         {
             if (!(n == (int)Columns.StartTime || n == (int)Columns.EndTime)) return -1;
             string str1 = (string)model.GetValue(a, n);
@@ -587,7 +584,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Sorts two CPU time TimeSpans in the ListStore.
         /// </summary>
-        private int SortCpuTime(ITreeModel model, TreeIter a, TreeIter b)
+        private int SortCpuTime(TreeModel model, TreeIter a, TreeIter b)
         {
             int index = (int)Columns.CpuTime;
             string str1 = (string)model.GetValue(a, index);
@@ -614,7 +611,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iter.</param>
-        private bool FilterOwnerFunc(ITreeModel model, TreeIter iter)
+        private bool FilterOwnerFunc(TreeModel model, TreeIter iter)
         {
             try
             {

@@ -20,7 +20,7 @@ namespace UserInterface.Views
     {
         private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
-        //private HTMLView descriptionView;
+        private HTMLView descriptionView;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -57,7 +57,7 @@ namespace UserInterface.Views
             // Remove existing right hand view.
             foreach (var child in rightHandView.Children)
             {
-                //if (child != descriptionView?.MainWidget)
+                if (child != descriptionView?.MainWidget)
                 {
                     rightHandView.Remove(child);
                     child.Destroy();
@@ -79,41 +79,39 @@ namespace UserInterface.Views
         /// <param name="description">The description to show.</param>
         public void AddDescriptionToRightHandView(string description)
         {
-            //throw new NotImplementedException("Need HTMLView");
-            //if (description == null)
-            //{
-            //    if (descriptionView != null)
-            //    {
-            //        rightHandView.Remove(descriptionView.MainWidget);
-            //        descriptionView.MainWidget.Destroy();
-            //    }
-            //    descriptionView = null;
-            //}
-            //else
-            //{
-            //    if (descriptionView == null)
-            //    {
-            //        descriptionView = new HTMLView(this);
-            //        rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
-            //    }
-            //    descriptionView.SetContents(description, false);
-            //}
+            if (description == null)
+            {
+                if (descriptionView != null)
+                {
+                    rightHandView.Remove(descriptionView.MainWidget);
+                    descriptionView.MainWidget.Destroy();
+                }
+                descriptionView = null;
+            }
+            else
+            {
+                if (descriptionView == null)
+                {
+                    descriptionView = new HTMLView(this);
+                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                }
+                descriptionView.SetContents(description, false);
+            }
         }
 
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-            throw new NotImplementedException();
-            //// Create a Bitmap and draw the panel
-            //int width;
-            //int height;
-            //Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
-            //panelWindow.GetSize(out width, out height);
-            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            //byte[] buffer = screenshot.SaveToBuffer("png");
-            //System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            //return bitmap;
+            // Create a Bitmap and draw the panel
+            int width;
+            int height;
+            Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
+            panelWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
+            return bitmap;
         }
 
         /// <summary>

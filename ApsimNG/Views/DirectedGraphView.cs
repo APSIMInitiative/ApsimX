@@ -49,14 +49,13 @@
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
-            throw new NotImplementedException("This relies on the exposed event");
             drawable = new DrawingArea();
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-            //drawable.ExposeEvent += OnDrawingAreaExpose;
+            drawable.ExposeEvent += OnDrawingAreaExpose;
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
@@ -77,8 +76,8 @@
             }
             else
             {
-                //DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
-                //DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
             }
         }
 
@@ -102,18 +101,16 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
-            throw new NotImplementedException();
-            //int width;
-            //int height;
-            //MainWidget.GdkWindow.GetSize(out width, out height);
-            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
-            //byte[] buffer = screenshot.SaveToBuffer("png");
-            //MemoryStream stream = new MemoryStream(buffer);
-            //System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            //return bitmap;
+            int width;
+            int height;
+            MainWidget.GdkWindow.GetSize(out width, out height);
+            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            MemoryStream stream = new MemoryStream(buffer);
+            System.Drawing.Bitmap bitmap = new Bitmap(stream);
+            return bitmap;
         }
 
-        /*
         /// <summary>The drawing canvas is being exposed to user.</summary>
         private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
         {
@@ -136,7 +133,6 @@
                 ShowError(err);
             }
         }
-        */
 
         /// <summary>Mouse button has been pressed</summary>
         private void OnMouseButtonPress(object o, ButtonPressEventArgs args)

@@ -62,11 +62,10 @@ namespace UserInterface.Views
             lblCores.Yalign = 0.5f;
 
             // Use the same core count options as in MARS (16, 32, 48, 64, ... , 128, 256)
-            comboCoreCount = ComboBox.NewWithEntry();
-            throw new NotImplementedException();
-            //for (int i = 16; i <= 128; i += 16)
-            //    comboCoreCount.AppendText(i.ToString());
-            //comboCoreCount.AppendText("256");
+            comboCoreCount = ComboBox.NewText();
+            for (int i = 16; i <= 128; i += 16)
+                comboCoreCount.AppendText(i.ToString());
+            comboCoreCount.AppendText("256");
             comboCoreCount.Active = 0;
 
             // Combo boxes cannot be aligned, so it is placed in an alignment object, which can be aligned.
@@ -281,8 +280,7 @@ namespace UserInterface.Views
         {
             get
             {
-                throw new NotImplementedException();
-                //return int.Parse(comboCoreCount.ActiveText);
+                return int.Parse(comboCoreCount.ActiveText);
             }
         }
 

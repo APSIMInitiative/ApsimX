@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Threading;
 using ICSharpCode.NRefactory.TypeSystem;
 using System.IO;
@@ -324,4 +323,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-*/

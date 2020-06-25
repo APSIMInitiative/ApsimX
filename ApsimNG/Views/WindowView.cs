@@ -117,7 +117,7 @@ namespace UserInterface.Views
                 if (value)
                     popupWindow.ShowAll();
                 else
-                    popupWindow.Hide();
+                    popupWindow.HideAll();
             }
         }
     }

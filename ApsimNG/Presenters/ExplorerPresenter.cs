@@ -175,7 +175,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Dispose();
+                (this.view as Views.ExplorerView).MainWidget.Destroy();
             }
 
             this.ContextMenu = null;
@@ -709,10 +709,9 @@
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                     else
                     {
-                        // tbi
-                        //var view = new HTMLView(this.view as ViewBase);
-                        //var presenter = new DocumentationPresenter();
-                        //ShowInRightHandPanel(model, view, presenter);
+                        var view = new HTMLView(this.view as ViewBase);
+                        var presenter = new DocumentationPresenter();
+                        ShowInRightHandPanel(model, view, presenter);
                     }
                 }
             }

@@ -383,15 +383,14 @@
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
-                    throw new NotImplementedException("Need htmlview");
-                    //MapPresenter mapPresenter = new MapPresenter();
-                    //MapView mapView = new MapView(null);
-                    //mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    //string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
-                    //if (!String.IsNullOrEmpty(pngFileName))
-                    //    section.AddImage(pngFileName);
-                    //mapPresenter.Detach();
-                    //mapView.MainWidget.Destroy();
+                    MapPresenter mapPresenter = new MapPresenter();
+                    MapView mapView = new MapView(null);
+                    mapPresenter.Attach(tag, mapView, explorerPresenter);
+                    string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
+                    if (!String.IsNullOrEmpty(pngFileName))
+                        section.AddImage(pngFileName);
+                    mapPresenter.Detach();
+                    mapView.MainWidget.Destroy();
                 }
                 else if (tag is AutoDocumentation.Image)
                 {
@@ -434,17 +433,16 @@
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
 
-                            // tbi
                             // From MapView:
                             // With WebKit, it appears we need to give it time to actually update the display
                             // Really only a problem with the temporary windows used for generating documentation
-                            //if (view is MapView)
-                            //{
-                            //    var watch = new System.Diagnostics.Stopwatch();
-                            //    watch.Start();
-                            //    while (watch.ElapsedMilliseconds < 1000)
-                            //        Gtk.Application.RunIteration();
-                            //}
+                            if (view is MapView)
+                            {
+                                var watch = new System.Diagnostics.Stopwatch();
+                                watch.Start();
+                                while (watch.ElapsedMilliseconds < 1000)
+                                    Gtk.Application.RunIteration();
+                            }
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);

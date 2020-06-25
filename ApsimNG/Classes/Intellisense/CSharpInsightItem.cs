@@ -1,5 +1,4 @@
-﻿/*
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.CSharp;
@@ -105,20 +104,20 @@ namespace UserInterface.Intellisense
         /// </summary>
         private void GenerateHeader()
         {
-            //throw new System.NotImplementedException();
-            //
-            //CSharpAmbience ambience = new CSharpAmbience();
-            //ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
-            //var stringBuilder = new StringBuilder();
-            //TokenWriter formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
-            //ambience.ConvertSymbol(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
-            //var documentation = XmlDocumentationElement.Get(Method);
-            //ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList;
-            //
-            //var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
-            //Header.Inlines.Clear();
-            //Header.Inlines.AddRange(inlineBuilder.CreateRuns());
+            throw new System.NotImplementedException();
+            /*
+            CSharpAmbience ambience = new CSharpAmbience();
+            ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
+            var stringBuilder = new StringBuilder();
+            TokenWriter formatter = new ParameterHighlightingOutputFormatter(stringBuilder, highlightedParameterIndex);
+            ambience.ConvertSymbol(Method, formatter, FormattingOptionsFactory.CreateSharpDevelop());
+            var documentation = XmlDocumentationElement.Get(Method);
+            ambience.ConversionFlags = ConversionFlags.ShowTypeParameterList;
+
+            var inlineBuilder = new HighlightedInlineBuilder(stringBuilder.ToString());
+            Header.Inlines.Clear();
+            Header.Inlines.AddRange(inlineBuilder.CreateRuns());
+            */
         }
     }
 }
-*/

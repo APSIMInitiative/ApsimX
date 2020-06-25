@@ -1,5 +1,4 @@
-﻿/*
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ICSharpCode.NRefactory.Completion;
 
 namespace UserInterface.Intellisense
@@ -32,4 +31,3 @@ namespace UserInterface.Intellisense
         public IOverloadProvider OverloadProvider;
     }
 }
-*/

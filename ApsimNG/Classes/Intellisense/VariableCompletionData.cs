@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Completion;
 using ICSharpCode.NRefactory.TypeSystem;
@@ -35,4 +34,3 @@ namespace UserInterface.Intellisense
         public IVariable Variable { get; private set; }
     }
 }
-*/

@@ -2,7 +2,6 @@
 {
     using Gtk;
     using Interfaces;
-    using System;
     using System.Drawing;
     using Views;
 
@@ -207,14 +206,13 @@
         {
             get
             {
-                throw new NotImplementedException();
-                //Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
-                //if (button != null)
-                //{
-                //    Gdk.Color bg = button.Style.Backgrounds[0];
-                //    return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
-                //}
-                //else
+                Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
+                if (button != null)
+                {
+                    Gdk.Color bg = button.Style.Backgrounds[0];
+                    return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
+                }
+                else
                     return System.Drawing.Color.White;
             }
 
@@ -238,13 +236,12 @@
             get
             {
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
-                throw new NotImplementedException();
-                //if (label != null)
-                //{
-                //    Gdk.Color fg = label.Style.Foregrounds[0];
-                //    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
-                //}
-                //else
+                if (label != null)
+                {
+                    Gdk.Color fg = label.Style.Foregrounds[0];
+                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
+                }
+                else
                    return System.Drawing.Color.Black;
             }
 

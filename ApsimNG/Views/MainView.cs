@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
-    //using MonoMac.AppKit;
+    using MonoMac.AppKit;
     using System;
     using System.Drawing;
     using System.IO;
@@ -320,11 +320,8 @@
             closeBtn.Relief = ReliefStyle.None;
             closeBtn.Clicked += OnCloseBtnClick;
 
-            //fixme - check default packing settings; we used to do
-            //headerBox.PackStart(tabLabel);
-            //headerBox.PackEnd(closeBtn);
-            headerBox.PackStart(tabLabel, false, false, 0);
-            headerBox.PackEnd(closeBtn, false, false, 0);
+            headerBox.PackStart(tabLabel);
+            headerBox.PackEnd(closeBtn);
 
             // Wrap the whole thing inside an event box, so we can respond to a right-button or center-button click
             EventBox eventbox = new EventBox();
@@ -352,8 +349,7 @@
         /// </summary>
         private void InitMac()
         {
-            throw new NotImplementedException();
-            //NSApplication.Init();
+            NSApplication.Init();
         }
 
         /// <summary>
@@ -717,7 +713,7 @@
             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Dispose();
+            md.Destroy();
             switch ((ResponseType)result)
             {
                 case ResponseType.Yes: return QuestionResponseEnum.Yes;
@@ -883,7 +879,7 @@
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
             fontDialog.OkButton.Clicked += OnDestroyFontDialog;
-            //fontDialog.ApplyButton.Clicked += OnChangeFont;
+            fontDialog.ApplyButton.Clicked += OnChangeFont;
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
 
             // Show the dialog.
@@ -926,7 +922,7 @@
                 
                 fontDialog.OkButton.Clicked -= OnChangeFont;
                 fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
-                //fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                fontDialog.ApplyButton.Clicked -= OnChangeFont;
                 fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
                 fontDialog.Destroy();
             }

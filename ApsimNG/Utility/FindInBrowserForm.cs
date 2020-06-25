@@ -1,6 +1,4 @@
-﻿//TBI - probably won't even need this when we reimplement htmlview
-/*
-namespace Utility
+﻿namespace Utility
 {
 	using System;
     using Gtk;
@@ -156,4 +154,5 @@ namespace Utility
     }
 
 }
-*/
+
+    

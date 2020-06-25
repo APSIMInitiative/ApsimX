@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Gtk;
 using Mono.TextEditor;
@@ -224,4 +223,5 @@ namespace Utility
     }
 
 }
-*/
+
+    
