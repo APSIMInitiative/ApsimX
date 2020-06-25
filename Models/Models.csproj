@@ -322,9 +322,9 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
-    <Compile Include="Plant\Phenology\Responses\CalcCAMPVrnRates.cs" />
-    <Compile Include="Plant\Phenology\Responses\CAMP.cs" />
-    <Compile Include="Plant\Phenology\Responses\IVrn1Expression.cs" />
+    <Compile Include="Plant\Phenology\CAMP\CalcCAMPVrnRates.cs" />
+    <Compile Include="Plant\Phenology\CAMP\CAMP.cs" />
+    <Compile Include="Plant\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
@@ -593,7 +593,7 @@
     <Compile Include="Functions\AccumulateFunction.cs" />
     <Compile Include="Functions\AddFunction.cs" />
     <Compile Include="Functions\AgeCalculatorFunction.cs" />
-    <Compile Include="Functions\AirTemperatureFunction.cs" />
+    <Compile Include="Functions\HourlyInterpolation.cs" />
     <Compile Include="Functions\BellCurveFunction.cs" />
     <Compile Include="Functions\Constant.cs" />
     <Compile Include="Functions\DemandFunctions\AllometricDemandFunction.cs" />

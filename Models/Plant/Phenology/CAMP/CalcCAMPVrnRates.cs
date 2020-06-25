@@ -15,6 +15,8 @@ namespace Models.PMF.Phen
     [Serializable]
     public class CultivarRateParams : Model
     {
+        /// <summary>Earliest HS at which Vern saturation may occur</summary>
+        public double VernCompetenceHS { get; set; }
         /// <summary>Base delta for Upregulation of Vrn1 >20oC</summary>
         public double BaseDVrn1 { get; set; }
         /// <summary>Maximum delta for Upregulation of Vrn1 at 0oC</summary>
@@ -23,6 +25,10 @@ namespace Models.PMF.Phen
         public double MaxDVrn2 { get; set; }
         /// <summary>Base delta for Upregulation of Vrn3 at Pp below 8h </summary>
         public double BaseDVrn3 { get; set; }
+        /// <summary>Maximum delta for Upregulation of Vrn3 at Pp above 16h </summary>
+        public double MaxDVrn3 { get; set; }
+        /// <summary>Maximum delta for upregulation of Vrn1 due to long Pp</summary>
+        public double MaxDVrnX { get; set; }
     }
 
     /// <summary>
@@ -40,12 +46,13 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor,  ByName = true)]
         private CAMP camp = null;
         /// <summary>
-        /// works through calculation scheme and assigns values to each parameter
+        /// Takes observed (or estimated) final leaf numbers for genotype with (V) and without (N) vernalisation in long (L)
+        /// and short (S) photoperiods and works through calculation scheme and assigns values for vrn expresson parameters
         /// </summary>
-        /// <param name="FLNset">Final leaf number set observations (or estimations) for cultivar</param>
+        /// <param name="FLNset">Set of Final leaf number observations (or estimations) for genotype</param>
         /// <param name="TreatmentTtDuration">Thermal time duration of vernalisation treatment</param>
         /// <param name="TtEmerge">Thermal time from imbibing to emergence</param>
-        /// <param name="Tt">Temperature during vernalisatin treatment</param>
+        /// <param name="Tt">Temperature during vernalisation treatment</param>
         /// <returns></returns>
         public CultivarRateParams CalcCultivarParams(
             FinalLeafNumberSet FLNset,
@@ -58,92 +65,79 @@ namespace Models.PMF.Phen
             double VernTreatHS = TreatmentTtDuration / (camp.BasePhyllochron * 0.75);
             // Haun stage equivelents from imbibing to Emergence
             double EmergHS = TtEmerge / (camp.BasePhyllochron * 0.75);
-            // Haun stage duration from vernalisation saturation to terminal spikelet under long day conditions
-            double L_HSVsTs = 3.0;
-
+            
             // Calculate TSHS for each envronment set from FLNData
             double TSHS_LV = camp.calcTSHS(FLNset.LV);
             double TSHS_LN = camp.calcTSHS(FLNset.LN);
             double TSHS_SV = camp.calcTSHS(FLNset.SV);
             double TSHS_SN = camp.calcTSHS(FLNset.SN);
 
+            // Haun stage duration from vernalisation saturation to terminal spikelet under long day conditions
+            // Assume VS occurs at Competence HS under long Pp full vernalisation for varieties with FLN < 7.3 in these conditions
+            // Assume maximum of 3, Data from Lincoln CE showed varieties that harve a high TSHS hit VS ~3HS prior to TS under these conditions
+            // Assume HS = 1.0 is the earliest VSHS can occur
+            double MinHSVsTs = Math.Min(3.0, TSHS_LV - 1.0);
+
             // Photoperiod sensitivity (PPS)
             // the difference between TSHS at 8 and 16 h pp under 
             //full vernalisation.
             double PPS = Math.Max(0, TSHS_SV - TSHS_LV);
 
+            //Calculate VSHS for each environment from TSHS and photoperiod response
+            double VSHS_LV = Math.Max(1.0, TSHS_LV - MinHSVsTs);
+            double VSHS_LN = Math.Max(1.0, TSHS_LN - MinHSVsTs);
+            double VSHS_SV = Math.Max(1.0, TSHS_SV - (MinHSVsTs + PPS));
+            double VSHS_SN = Math.Max(1.0, TSHS_SN - (MinHSVsTs + PPS));
+
+            // The earliest possible vernalistion occurs following full vernalisation under short Pp where Vrn2 is absent
+            Params.VernCompetenceHS = VSHS_SV;
+
             // Maximum delta for Upregulation of Vrn3 (MaxDVrn3)
             // Occurs under long Pp conditions
-            // Assuming Vrn3 increases from 0 - 1 between VS to TS and this takes 
+            // Assuming Vrn3 increases from 0 - VernSatThreshold  between VS to TS and this takes 
             // 3 HS under long Pp conditions.
-            double MaxDVrn3 = 1.0 / L_HSVsTs;
+            Params.MaxDVrn3 = camp.VrnSatThreshold / MinHSVsTs;
 
             // Base delta for upredulation of Vrn3 (BaseDVrn3) 
             // Occurs under short Pp conditions
-            // Assuming Vrn3 infreases from 0 - 1 from VS to TS 
+            // Assuming Vrn3 infreases from 0 - VernSatThreshold  from VS to TS 
             // and this take 3 HS plus the additional HS from short Pp delay.
-            Params.BaseDVrn3 = 1.0 / (L_HSVsTs + PPS);
-
-            // Vernalistion Saturation Haun Stage under 8h Nil vern conditins  (VSHS8hNil)
-            // Determine how many HS it would take to express Vrn3 == 1.0 
-            // and subtract this from TSHS8hNill.
-            // Bound to CompetenceHS as Vernalisation won't occur before this.
-            double VSHS_SN = Math.Max(camp.CompetenceHS, TSHS_SN - (L_HSVsTs + PPS));
+            Params.BaseDVrn3 = camp.VrnSatThreshold / (MinHSVsTs + PPS);
 
             // Base delta for upregulation of Vrn1 (BaseDVrn1) 
             // Occurs under non vernalising conditions
             // Assuming Vernalisation saturation occurs when Vrn1 == Vrn1Target 
             // under short Pp (no Vrn2) Vrn1Target = 1.0.
             // Need to include time from imbib to emerge in duration 
-            Params.BaseDVrn1 = 1.0 / (VSHS_SN + EmergHS);
-
-            // Vernalisation Saturation Haun Stage under 16h Nil vern conditions (VSHS16hNil)
-            // Assuming Vern saturation occurs 3.0 HS before TSHS16hNil
-            // 3.0 is HS from VS to TS under long Pp conditions
-            // Bound to CompetenceHS as Vernalisation won't occur before this.
-            double VSHS_LN = Math.Max(camp.CompetenceHS, TSHS_LN - L_HSVsTs);
-
-            // Long day Increase in Vrn1Target (Vrn1TargetInc) 
-            // The extention in VSHS due to the action of Vrn2 under long days 
-            // Work out how much VSHS is delayed under long Pp conditions.
-            // Multiply this by BaseDVrn1 to get how much more Vrn1 was 
-            // expressed before vernalisation
-            double L_Vrn1TargetInc = (VSHS_LN - VSHS_SN) * Params.BaseDVrn1;
+            Params.BaseDVrn1 = camp.VrnSatThreshold / (VSHS_SN + EmergHS);
 
             // Maximum delta for upregulation of Vrn2 (MaxDVrn2)
-            // Occurs under long day conditions
-            // LDVrnTargetInc is divided by the HS duration of Vrn2 expression 
-            // which goes from CompetenceHS to VS.
-            Params.MaxDVrn2 = Math.Max(0.0, MathUtilities.Divide(L_Vrn1TargetInc,(VSHS_LN - camp.CompetenceHS),0));
-
-            // Vernalistion Saturation Haun Stage under 8h Full vern conditions (VSHS8hFull)
-            // Assuming VSHS occurs 3 HS pluss the HS delay from short Pp prior
-            // prior to TSHS
-            // Bound to CompetenceHS as Vernalisation won't occur before this.
-            double VSHS_SV = Math.Max(camp.CompetenceHS, TSHS_SV - (L_HSVsTs + PPS));
-
-            // Number of Haun stages from the end of treatment until Vernalisation saturation
-            // Under 8 H full vern conditions (TransToVSHS8hFull)
-            double TransToVSHS_SV = Math.Max(0,VSHS_SV + EmergHS - VernTreatHS);
+            // Occurs under long day conditions when Vrn2 expression increases the amount 
+            // of Vrn1 expression needed to saturate vernalisation and so VS is delayed
+            // Assume 1 unit of Vrn1 supresses 1 unit of Vrn2.
+            // So under long days without vernalisation this can be calculated as the 
+            // amount of baseVrn1 expressed at VS
+            // Any numbers below VernSatThreshold are irrelevent so make that lower bound
+            Params.MaxDVrn2 = Math.Max(camp.VrnSatThreshold,(VSHS_LN + EmergHS) * Params.BaseDVrn1);
 
             // The amount of methalated Vrn1 at the time of transition from vern treatment (MethVern1@Trans)
-            // Under 8h when VrnTarget will be 1.0
-            // VrnTarget less the amount of Vrn1 that expressed after transition
-            double MethVern1AtTrans = Math.Max(0,1.0 - TransToVSHS_SV * Params.BaseDVrn1);
+            // Under 8h when MethVrn1 will be 1.0 at VSHS
+            // less the amount of base Vrn1 that expressed after transition
+            double HSEndTreatToVS = Math.Max(0, (VSHS_SV + EmergHS) - VernTreatHS);
+            double MethVern1AtTrans = Params.MaxDVrn2 - (HSEndTreatToVS * Params.BaseDVrn1);
 
             // BaseVer1 expressed at transition from vernalisation treatment
-            double BaseVrn1AtTrans = Math.Min(0,VernTreatHS * Params.BaseDVrn1);
+            double BaseVrn1AtTrans = VernTreatHS * Params.BaseDVrn1;
 
             // Methalated Cold upredulated Vrn1 expression at the time of transition (MethColdVrn1@Trans) 
             // Subtract out BasedVrn1 expression up to transition
             double MethColdVrn1AtTrans = Math.Max(0.0, MethVern1AtTrans - BaseVrn1AtTrans);
 
-            // The timing at which methalation started 
-            // relative to transition from vernalising treatments (RelativeMethTiming)
-            double RelativeMethTiming = 1.0 - MethColdVrn1AtTrans;
-
-            // The amount of BaseVrn1 that had expressed at the time methalation of ColdVrn1 started
-            double BaseVern1AtMeth = BaseVrn1AtTrans * RelativeMethTiming;
+            // Cold upregulated Vrn1 at time of transition
+            // Will be Methalated cold vernalisation at transition plus
+            // the amount of cold Vrn1 that is required for 
+            // methalation to start (MethVrn1Threshold)
+            double ColdVern1AtTrans = camp.MethalationThreshold + MethColdVrn1AtTrans;
 
             // Cold induced delta upregulation of Vrn1 at treatment temperature ('DVrn1@Tt')
             // Methalation of Cold upregulated Vrn1 occurs when 
@@ -152,12 +146,18 @@ namespace Models.PMF.Phen
             // so ColdUpRegVrn1 at transition will be:
             // 1.0 - BaseVern1@Meth + MethColdVrn1@Trans.
             // divide by treatment HS duration to give rate
-            double DVrn1AtTt = MathUtilities.Divide((1.0 - BaseVern1AtMeth + MethColdVrn1AtTrans), VernTreatHS,0);
+            double DVrn1AtTt = MathUtilities.Divide(ColdVern1AtTrans, VernTreatHS,0);
 
             // Maximum upregulation delta Vrn1 (MUdVrn1)
             // The rate of dVrn1/HS at 0oC.  Calculate by rearanging UdVrn1 equation
             // UdVrn1 = MUdVrn1 * np.exp(k*Tt) as UdVrn1@Tt is known 
             Params.MaxDVrn1 = MathUtilities.Divide(DVrn1AtTt,Math.Exp(camp.k * Tt),0);
+
+            double BaseVrn1AtVSHS_LN = Math.Min(camp.VrnSatThreshold, (VSHS_LN + EmergHS) * Params.BaseDVrn1);
+
+
+            Params.MaxDVrnX = (1 - BaseVrn1AtVSHS_LN) / (VSHS_LN - camp.PpCompetenceHS);
+
 
             return Params;
         }
