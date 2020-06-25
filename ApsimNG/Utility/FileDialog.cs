@@ -276,7 +276,7 @@
             string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
-            fileChooser.Destroy();
+            fileChooser.Dispose();
 
             return fileNames;
         }
