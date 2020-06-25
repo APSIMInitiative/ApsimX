@@ -32,8 +32,6 @@ namespace Models.Core
         [NonSerialized]
         private Links links;
 
-        private Checkpoints checkpoints;
-
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
@@ -59,6 +57,9 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Gets a c# script compiler.</summary>
+        public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
+
         /// <summary>Returns an instance of an events service</summary>
         /// <param name="model">The model the service is for</param>
         public IEvent GetEventService(IModel model)
@@ -77,7 +78,6 @@ namespace Models.Core
         public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -211,15 +211,15 @@ namespace Models.Core
             var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
             if (storage != null)
                 services.Add(storage);
-            services.Add(this);
-            services.Add(checkpoints);
+            services.Add(ScriptCompiler);
             return services;
         }
 
         /// <summary>Create a links object</summary>
         private void CreateLinks()
         {
-            links = new Links(GetServices());
+            if (links == null)
+                links = new Links(GetServices());
         }
 
         /// <summary>
@@ -293,8 +293,6 @@ namespace Models.Core
                     Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
-                    foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
-                        child.IncludeInDocumentation = true;
 
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);

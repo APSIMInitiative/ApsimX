@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         public string BankAccountName { get; set; }
 
         private FinanceType bankAccount = null;
@@ -139,6 +139,7 @@ namespace Models.CLEM.Activities
                     saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     saleWeight += ind.Weight;
                     ruminantHerd.RemoveRuminant(ind, this);
+                    head++;
                 }
             }
             else
@@ -214,7 +215,7 @@ namespace Models.CLEM.Activities
                             expenseRequest.Required = saleValue * item.Amount;
                             break;
                         default:
-                            throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+                            throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
                     }
                     expenseRequest.Reason = item.Name;
                     // uses bank account specified in the RuminantActivityFee

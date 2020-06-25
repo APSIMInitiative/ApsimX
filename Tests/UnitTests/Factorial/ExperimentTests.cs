@@ -7,6 +7,8 @@
     using System;
     using System.Collections.Generic;
     using UnitTests.Weather;
+    using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
 
     /// <summary>This is a test class for the Experiment class</summary>
     [TestFixture]
@@ -19,12 +21,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -36,7 +38,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -70,12 +72,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -87,7 +89,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -126,12 +128,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -143,13 +145,13 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Factor",
                                 Specification = "[Weather]",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new MockWeather()
                                     {
@@ -194,12 +196,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -218,7 +220,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new CompositeFactor()
                             {
@@ -269,12 +271,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -293,12 +295,12 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Site",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new CompositeFactor()
                                     {
@@ -306,7 +308,7 @@
                                         Specifications = new List<string>() { "[Weather].MaxT = 10",
                                                                               "[Weather].MinT = 20",
                                                                               "[Clock]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new MockClock()
                                             {
@@ -322,7 +324,7 @@
                                         Specifications = new List<string>() { "[Weather].MaxT = 100",
                                                                               "[Weather].MinT = 200",
                                                                               "[Clock]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new MockClock()
                                             {
@@ -371,12 +373,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Models.Operations()
                             {
@@ -405,19 +407,19 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Site",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new CompositeFactor()
                                     {
                                         Name = "1",
                                         Specifications = new List<string>() { "[Sowing]",
                                                                               "[Cutting]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new Models.Operations()
                                             {
@@ -468,12 +470,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -485,7 +487,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -528,12 +530,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -547,11 +549,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -623,12 +625,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockModel()
                             {
@@ -642,11 +644,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -662,7 +664,7 @@
                             },
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -767,6 +769,23 @@
 
         }
 
+        /// <summary>
+        /// Ensure that property/model overrides apply to all paddocks.
+        /// </summary>
+        [Test]
+        public void TestOverridingInMultiplePaddocks()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            Runner runner = new Runner(sims);
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+        }
+
         /// <summary>Ensure a permutation correctly multiplies child factor with composite factor models.</summary>
         [Test]
         public void EnsurePermutationWithCompositeFactorsWorks()
@@ -774,12 +793,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -793,11 +812,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {

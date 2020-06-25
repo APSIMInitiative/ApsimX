@@ -33,6 +33,11 @@ if "%1"=="%uisyntax%" (
 
 if "%1"=="%prototypesyntax%" (
 	set testdir=%apsimx%\Prototypes
+	
+	rem Extract restricted grapevine dataset
+	set grapevine=%apsimx%\Prototypes\Grapevine
+	echo %GRAPEVINE_PASSWORD%| 7z x !grapevine!\Observations.zip -o!grapevine!
+	
 	goto :tests
 )
 

@@ -78,7 +78,7 @@ Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: re
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
-Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
+Name: associate; Description: &Associate .apsimx with Apsim Next Generation; GroupDescription: Other tasks:
 
 [UninstallDelete]
 Type: files; Name: "{app}\apsim.url"
@@ -91,6 +91,13 @@ Filename: "{app}\apsim.url"; Section: "InternetShortcut"; Key: "URL"; String: "h
 Name: "{group}\APSIM User Interface"; Filename: {app}\Bin\ApsimNG.exe
 Name: "{group}\APSIM Next Generation home page"; Filename: "{app}\apsim.url";
 Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
+
+[Registry]
+;do the associations
+Root: HKA; Subkey: "Software\Classes\.apsimx"; ValueType: string; ValueName: ""; ValueData: APSIMXFile; Flags: uninsdeletevalue; Tasks: associate
+Root: HKA; Subkey: "Software\Classes\APSIMXFile"; ValueType: string; ValueName: ""; ValueData: APSIM Next Generation File; Flags: uninsdeletekey; Tasks: associate
+Root: HKA; Subkey: "Software\Classes\APSIMXFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: {app}\Bin\ApsimNG.exe,0; Tasks: associate
+Root: HKA; Subkey: "Software\Classes\APSIMXFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Bin\ApsimNG.exe"" ""%1"""; Tasks: associate
 
 [Run]
 Filename: {app}\Bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

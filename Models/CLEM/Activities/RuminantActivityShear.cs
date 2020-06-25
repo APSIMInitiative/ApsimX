@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Name of Porcust store to place clip (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Store to place clip")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(ProductStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
         public string ProductStoreName { get; set; }
 

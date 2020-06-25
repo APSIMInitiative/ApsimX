@@ -35,21 +35,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public AnimalPricing Clone()
-        {
-            AnimalPricing clone = new AnimalPricing();
-
-            foreach (AnimalPriceGroup item in this.Children.OfType<AnimalPriceGroup>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-            return clone;
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>

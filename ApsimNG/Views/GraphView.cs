@@ -382,6 +382,7 @@
              Models.MarkerType markerType,
              Models.LineThicknessType lineThickness,
              Models.MarkerSizeType markerSize,
+             double markerModifier,
              bool showOnLegend)
         {
             Utility.LineSeriesWithTracker series = null;
@@ -436,8 +437,8 @@
                     series.MarkerType = type;
                 }
 
-                MarkerSize = markerSize;
-                series.MarkerSize = GetMarkerSizeNumericValue(markerSize);
+                //MarkerSize = markerSize;
+                series.MarkerSize = GetMarkerSizeNumericValue(markerSize) * markerModifier;
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)
@@ -1589,29 +1590,27 @@
                 Point location = new Point((int)e.Position.X, (int)e.Position.Y);
                 Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
-                if (plotArea.Contains(location))
+
+                Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
+                Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
+                if (legendArea.Contains(location))
                 {
-                    Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
-                    Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                    if (legendArea.Contains(location))
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
+                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                    int seriesIndex = y / itemHeight;
+                    if (this.OnLegendClick != null)
                     {
-                        int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                        int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
-                        int seriesIndex = y / itemHeight;
-                        if (this.OnLegendClick != null)
-                        {
-                            LegendClickArgs args = new LegendClickArgs();
-                            args.SeriesIndex = seriesIndex;
-                            args.ControlKeyPressed = e.IsControlDown;
-                            this.OnLegendClick.Invoke(sender, args);
-                        }
+                        LegendClickArgs args = new LegendClickArgs();
+                        args.SeriesIndex = seriesIndex;
+                        args.ControlKeyPressed = e.IsControlDown;
+                        this.OnLegendClick.Invoke(sender, args);
                     }
-                    else
+                }
+                else if (plotArea.Contains(location))
+                {
+                    if (this.OnPlotClick != null)
                     {
-                        if (this.OnPlotClick != null)
-                        {
-                            this.OnPlotClick.Invoke(sender, e);
-                        }
+                        this.OnPlotClick.Invoke(sender, e);
                     }
                 }
                 else
@@ -1638,19 +1637,19 @@
 
                     if (this.OnAxisClick != null)
                     {
-                        if (leftAxisArea.Contains(location))
+                        if (leftAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Left) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Left);
                         }
-                        else if (topAxisArea.Contains(location))
+                        else if (topAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Top) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Top);
                         }
-                        else if (rightAxisArea.Contains(location))
+                        else if (rightAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Right) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Right);
                         }
-                        else if (bottomAxisArea.Contains(location))
+                        else if (bottomAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Bottom) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Bottom);
                         }

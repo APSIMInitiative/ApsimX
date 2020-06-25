@@ -35,8 +35,6 @@ namespace Models.CLEM
         [Link]
         Clock Clock = null;
         [Link]
-        Simulation Simulation = null;
-        [Link]
         IDataStore DataStore = null;
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Models.CLEM
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
 
@@ -162,7 +160,9 @@ namespace Models.CLEM
             // this event fires after Activity and Resource validation so that resources are available to check in the validation.
             // commencing is too early as Summary has not been created for reporting.
             // some values assigned in commencing will not be checked before processing, but will be caught here
-            if (!Validate(Simulation, ""))
+            // each ZoneCLEM and Market will call this validation for all children
+            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            if (!Validate(this, "", this, Summary))
             {
                 string error = "@i:Invalid parameters in model";
 
@@ -216,10 +216,12 @@ namespace Models.CLEM
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The model being validated</param>
         /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
+        /// <param name="parentZone">The name of the containing ZoneCLEM or Market for reporting</param>
+        /// <param name="summary">Link to summary for reporting</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model, string modelPath)
+        public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary)
         {
             string starter = "[";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
@@ -255,12 +257,21 @@ namespace Models.CLEM
                 starter = "[f=";
             }
 
+            if (model is CLEMModel)
+            {
+                (model as CLEMModel).CLEMParentName = parentZone.Name;
+            }
             modelPath += starter+model.Name+"]";
             modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(model.Name.EndsWith(" "))
+            {
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
+            }
+
             if (validationResults.Count > 0)
             {
                 valid = false;
@@ -272,9 +283,13 @@ namespace Models.CLEM
                     var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
                     if (property != null)
                     {
-                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                        var description = (DescriptionAttribute)attribute;
-                        text = description.ToString();
+                        text = "";
+                        if (property.GetCustomAttributes(typeof(DescriptionAttribute), true).Count() > 0)
+                        {
+                            var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                            var description = (DescriptionAttribute)attribute;
+                            text = description.ToString();
+                        }
                     }
                     string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
@@ -282,12 +297,12 @@ namespace Models.CLEM
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );
                     }
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
-                    Summary.WriteWarning(this, error);
+                    summary.WriteWarning(parentZone, error);
                 }
             }
             foreach (var child in model.Children)
             {
-                bool result = Validate(child, modelPath);
+                bool result = Validate(child, modelPath, parentZone, summary);
                 if (valid && !result)
                 {
                     valid = false;

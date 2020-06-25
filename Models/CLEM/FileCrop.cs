@@ -23,11 +23,12 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileCropView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileCropView
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
+    [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture Nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
     [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
@@ -193,8 +194,6 @@ namespace Models.CLEM
                 string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
-
-            //this.doSeek = true;
             this.soilNumIndex = 0;
             this.cropNameIndex = 0;
             this.yearIndex = 0;
@@ -263,15 +262,6 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                //List<string> cropProps = new List<string>
-                //{
-                //    "SoilNum",
-                //    "CropName",
-                //    "Year",
-                //    "Month",
-                //    "AmtKg"
-                //};
-
                 List<string> cropProps = new List<string>
                 {
                     SoilTypeColumnName,
@@ -284,7 +274,6 @@ namespace Models.CLEM
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
                 {
-                    //                    cropProps.Add("Npct");
                     cropProps.Add(PercentNitrogenColumnName);
                 }
 
@@ -329,7 +318,26 @@ namespace Models.CLEM
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
-            string filter = $"({SoilTypeColumnName} = " + landId + $") AND ({CropNameColumnName} = " + "'" + cropName + "'" + ")"
+            string soiltypeparenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
+            string cropnameparenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
+
+            // check that entry is in correct type
+            if(forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.Single))
+            {
+                if(!System.Single.TryParse(landId, out Single val))
+                {
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                }
+            }
+            if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.Single))
+            {
+                if (!System.Single.TryParse(cropName, out Single val))
+                {
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                }
+            }
+
+            string filter = $"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth})"
                 + " AND ("
                 + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
                 + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"
@@ -392,7 +400,18 @@ namespace Models.CLEM
 
                     if (this.reader.Headings == null)
                     {
-                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
+                        string fileType = "Text file";
+                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        if(reader.IsCSVFile)
+                        {
+                            fileType = "Comma delimited text file (csv)";
+                        }
+                        if (reader.IsExcelFile)
+                        {
+                            fileType = "Excel file";
+                            extra = "";
+                        }
+                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, SoilTypeColumnName);
@@ -406,7 +425,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]"+ $" for [x={this.Name}]");
+                            throw new Exception($"@error:Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
                         }
                     }
 

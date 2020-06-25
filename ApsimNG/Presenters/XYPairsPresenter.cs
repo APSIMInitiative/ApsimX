@@ -133,13 +133,9 @@
 
                 return propertyName;
             }
-            else if (xYPairs.Parent is AirTemperatureFunction)
+            else if (xYPairs.Parent is HourlyInterpolation)
             {
-                return "Mean air temperature (oC)";
-            }
-            else if (xYPairs.Parent is SoilTemperatureFunction)
-            {
-                return "Mean soil temperature (oC)";
+                return "Air temperature (oC)";
             }
             else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
             {

@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     {
         [XmlIgnore]
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
@@ -74,6 +75,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
+                if (Clock is null)
+                {
+                    return true;
+                }
                 bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {

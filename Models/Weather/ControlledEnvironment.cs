@@ -3,6 +3,7 @@ namespace Models
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Xml.Serialization;
@@ -151,6 +152,34 @@ namespace Models
             return DayLength;
         }
 
+
+        /// <summary>
+        /// Gets the duration of the day in hours.
+        /// </summary>
+        [Description("The hour of the day for sunrise")]
+        public double SunRise { get; set; }
+
+        /// <summary>
+        /// Calculate daylength using a given twilight angle
+        /// </summary>
+        public double CalculateSunRise()
+        {
+            return SunRise;
+        }
+
+        /// <summary>
+        /// Gets the duration of the day in hours.
+        /// </summary>
+        [Description("Day Length (h)")]
+        public double SunSet { get; set; }
+
+        /// <summary>
+        /// Calculate daylength using a given twilight angle
+        /// </summary>
+        public double CalculateSunSet()
+        {
+            return SunSet;
+        }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -169,6 +198,21 @@ namespace Models
         {
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+            YesterdaysMetData = new DailyMetDataFromFile();
+            YesterdaysMetData.Radn = Radn;
+            YesterdaysMetData.Rain = Rain;
+            YesterdaysMetData.MaxT = MaxT;
+            YesterdaysMetData.MinT = MinT;
+            YesterdaysMetData.VP = VP;
+            TomorrowsMetData = YesterdaysMetData;
         }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
     }
 }

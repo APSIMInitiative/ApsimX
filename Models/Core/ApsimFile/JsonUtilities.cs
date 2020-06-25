@@ -339,17 +339,23 @@ namespace Models.Core.ApsimFile
         /// <param name="report">The report model.</param>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
-        public static void SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
+        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
         {
             var variableNames = Values(report, "VariableNames");
 
+            bool replacementMade = false;
             if (variableNames != null)
             {
                 for (int i = 0; i < variableNames.Count; i++)
-                    variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
-
-                SetValues(report, "VariableNames", variableNames);
+                    if (variableNames[i].Contains(searchPattern))
+                    {
+                        variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
+                        replacementMade = true;
+                    }
+                if (replacementMade)
+                    SetValues(report, "VariableNames", variableNames);
             }
+            return replacementMade;
         }
 
         /// <summary>
@@ -499,5 +505,71 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Helper method for renaming variables in report and manager.
+        /// </summary>
+        /// <param name="node">The JSON root node.</param>
+        /// <param name="changes">List of old and new name tuples.</param>
+        public static bool RenameVariables(JObject node, Tuple<string, string>[] changes)
+        {
+            bool replacementMade = false;
+            foreach (var manager in JsonUtilities.ChildManagers(node))
+            {
+
+                foreach (var replacement in changes)
+                {
+                    if (manager.Replace(replacement.Item1, replacement.Item2))
+                        replacementMade = true;
+                }
+                if (replacementMade)
+                    manager.Save();
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(node, "Report"))
+            {
+                foreach (var replacement in changes)
+                {
+                    if (JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2))
+                        replacementMade = true;
+                }
+            }
+
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(node, "SimpleGrazing"))
+            {
+                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"]?.ToString();
+                if (!string.IsNullOrEmpty(expression))
+                {
+                    foreach (var replacement in changes)
+                    {
+                        if (expression.Contains(replacement.Item1))
+                        {
+                            expression = expression.Replace(replacement.Item1, replacement.Item2);
+                            replacementMade = true;
+                        }
+                    }
+                    simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
+                }
+            }
+
+            foreach (var compositeFactor in JsonUtilities.ChildrenOfType(node, "CompositeFactor"))
+            {
+                var specifications = compositeFactor["Specifications"] as JArray;
+                if (specifications != null)
+                {
+                    bool replacementFound = false;
+                    foreach (var replacement in changes)
+                        for (int i = 0; i < specifications.Count; i++)
+                        {
+                            replacementFound = replacementFound || specifications[i].ToString().Contains(replacement.Item1);
+                            specifications[i] = specifications[i].ToString().Replace(replacement.Item1, replacement.Item2);
+                        }
+                    if (replacementFound)
+                    {
+                        replacementMade = true;
+                        compositeFactor["Specifications"] = specifications;
+                    }
+                }
+            }
+            return replacementMade;
+        }
     }
 }

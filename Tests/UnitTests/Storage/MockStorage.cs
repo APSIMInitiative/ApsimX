@@ -54,6 +54,8 @@ namespace UnitTests.Storage
 
         public List<string> TableAndViewNames => throw new NotImplementedException();
 
+        public List<string> TablesModified { get; set; }
+
         [Serializable]
         internal class Row
         {

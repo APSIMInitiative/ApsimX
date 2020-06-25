@@ -69,6 +69,29 @@ namespace Models.CLEM.Activities
             }
         }
 
+        ZoneCLEM parentZone = null;
+        /// <summary>
+        /// Multiplier for farms in this zone
+        /// </summary>
+        public double FarmMultiplier 
+        {
+            get
+            {
+                if(parentZone is null)
+                {
+                    parentZone = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                }
+                if(parentZone is null)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return parentZone.FarmMultiplier;
+                }
+            }
+        }
+
         /// <summary>
         /// Resource allocation style
         /// </summary>
@@ -759,7 +782,19 @@ namespace Models.CLEM.Activities
             foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
-                OnShortfallOccurred(rrEventArgs);
+
+                if (item.Resource != null && Apsim.Parent(item.Resource as Model, typeof(Market)).GetType() == typeof(Market))
+                {
+                    ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+                    if(marketActivities != null)
+                    {
+                        marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
+                    }
+                }
+                else
+                {
+                    OnShortfallOccurred(rrEventArgs);
+                }
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }

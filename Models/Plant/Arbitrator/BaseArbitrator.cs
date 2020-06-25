@@ -529,6 +529,7 @@ namespace Models.PMF
                         double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
                         BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
                     }
+                BAT.TotalRetranslocation = MathUtilities.Sum(BAT.Retranslocation);
             }
         }
 

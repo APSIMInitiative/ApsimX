@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Models;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Utilities;
+using Models.PMF;
+using Models.Functions;
+using Models.Soils;
 
 namespace UnitTests.Core.ApsimFile
 {
@@ -26,6 +29,11 @@ namespace UnitTests.Core.ApsimFile
         /// </summary>
         private string fileName;
 
+        /// <summary>
+        /// Path to a second .apsimx file which has a few weather
+        /// nodes in it, which will be imported into the first
+        /// .apsimx file via the /Edit feature.
+        /// </summary>
         private string extFile;
 
         [SetUp]
@@ -64,7 +72,34 @@ namespace UnitTests.Core.ApsimFile
             Models.Report report = new Models.Report();
             report.Name = "Report";
             Structure.Add(report, paddock);
-            
+
+            // Add the wheat model.
+            string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
+            Plant wheat = FileFormat.ReadFromString<IModel>(json, out _).Children[0] as Plant;
+            wheat.ResourceName = "Wheat";
+            Structure.Add(wheat, paddock);
+
+            Manager manager = new Manager();
+            manager.Code = @"using Models.PMF;
+using Models.Core;
+using System;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Description(""an amount"")]
+        public double Amount { get; set; }
+    }
+}";
+            Structure.Add(manager, paddock);
+
+            Physical physical = new Physical();
+            physical.BD = new double[5];
+            physical.AirDry = new double[5];
+            physical.LL15 = new double[5];
+            Structure.Add(physical, paddock);
+
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
 
@@ -107,18 +142,32 @@ namespace UnitTests.Core.ApsimFile
                 // Replace a model with a model from another file.
                 $"[Weather3] = {extFile}",
                 $"[Weather4] = {extFile};[w2]",
+
+                // Change a property of a resource model.
+                "[Wheat].Leaf.Photosynthesis.RUE.FixedValue = 0.4",
+
+                // Change a property of a manager script.
+                "[Manager].Script.Amount = 1234",
+
+                // Set an entire array.
+                "[Physical].BD = 1, 2, 3, 4, 5",
+                
+                // Modify a single element of an array.
+                "[Physical].AirDry[2] = 6",
+
+                // Modify multiple elements of an array.
+                "[Physical].LL15[3:4] = 7",
             });
 
             string models = typeof(IModel).Assembly.Location;
             string args = $"{fileName} /Edit {configFile}";
             
             var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Path.GetTempPath(), true, true);
+            proc.Start(models, args, Path.GetTempPath(), true, writeToConsole: true);
             proc.WaitForExit();
 
             // Children of simulation are, in order:
             // Clock, summary, zone, Weather, Weather2, w1, w2
-
             Assert.AreEqual(null, proc.StdOut);
             Assert.AreEqual(null, proc.StdErr);
 
@@ -161,6 +210,19 @@ namespace UnitTests.Core.ApsimFile
             Assert.NotNull(weather4);
             Assert.AreEqual("w2", weather4.Name);
             Assert.AreEqual("w2.met", weather4.FileName);
+
+            // The edit file operation should have changed RUE value to 0.4.
+            var wheat = sim.Children[2].Children[2] as Plant;
+            var rue = wheat.Children[6].Children[5].Children[0] as Constant;
+            Assert.AreEqual(0.4, rue.FixedValue);
+
+            double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
+            Assert.AreEqual(1234, amount);
+
+            Physical physical = sim.Children[2].Children[4] as Physical;
+            Assert.AreEqual(new double[5] { 1, 2, 3, 4, 5 }, physical.BD);
+            Assert.AreEqual(new double[5] { 0, 6, 0, 0, 0 }, physical.AirDry);
+            Assert.AreEqual(new double[5] { 0, 0, 7, 7, 0 }, physical.LL15);
         }
     }
 }
