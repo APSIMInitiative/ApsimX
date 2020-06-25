@@ -1863,73 +1863,21 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
                       "Name": "Metabolic",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "MetabolicNconc",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc",
-                              "Name": "CritNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].potentialDMAllocation.Structural",
-                          "Name": "PotentialDMAllocation",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
                       "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch",
-                          "Name": "NitrogenDemandSwitch",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc",
-                          "Name": "MaxNconc",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4598,7 +4546,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Yield Comparison",
               "Children": [
@@ -4677,7 +4625,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Biomass Comparison",
               "Children": [
@@ -4756,7 +4704,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Leaf Area Index",
               "Children": [
@@ -4835,7 +4783,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Nitrogen",
               "Children": [
