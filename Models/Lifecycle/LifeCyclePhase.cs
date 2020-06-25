@@ -181,8 +181,8 @@
         /// <summary>Loop through each cohort in this LifeCyclePhase to calculate development, mortality, graduation and reproduciton</summary>
         public void Process()
         {
-            if (Cohorts?.Count > 500)  //Check cohort number are not becomming silly
-                throw new Exception(Apsim.FullPath(this) + " has over 500 cohorts which is to many really.  This is why your simulation is slow and the data store is about to chuck it in.  Check your " + this.Parent.Name.ToString() + " model to ensure development and mortality are sufficient.");
+            if (Cohorts?.Count > 13000)  //Check cohort number are not becomming silly
+                throw new Exception(Apsim.FullPath(this) + " has over 1500 cohorts which is to many really.  This is why your simulation is slow and the data store is about to chuck it in.  Check your " + this.Parent.Name.ToString() + " model to ensure development and mortality are sufficient.");
 
             ZeorDeltas(); //Zero reporting properties for daily summing
 
@@ -207,15 +207,18 @@
                     foreach (ProgenyDestinationPhase dest in ProgenyDestinations)
                         dest.ProgenyToDestination += reproduction.Value() * dest.ProportionOfProgeny;
                     //Do migration for each cohort
-                    Migrants += migration.Value();
-                    if (Migrants > 0)
+                    c.Migrants = migration.Value();
+                    Migrants += c.Migrants;
+                    c.Population = Math.Max(0.0, c.Population - c.Migrants);
+                    //Add Migrants into destination phase
+                    if (c.Migrants > 0)
                     {
                         if (MigrantDestinations.Count == 0)
                             throw new Exception(Apsim.FullPath(this) + " is predicting values for migration but has no MigrationDestinationPhase specified");
                         double MtotalProportion = 0;
                         foreach (MigrantDestinationPhase mdest in MigrantDestinations)
                         {
-                            double cohortMigrants = migration.Value() * mdest.ProportionOfMigrants;
+                            double cohortMigrants = c.Migrants * mdest.ProportionOfMigrants;
                             if ((MigrantDestinations.Count == 0) && (cohortMigrants > 0))
                                 throw new Exception(Apsim.FullPath(this) + " is predicting values for migration but has not MigrantDestinationPhase specified");
                             if (cohortMigrants > 0)
