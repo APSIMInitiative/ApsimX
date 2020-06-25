@@ -717,7 +717,7 @@
             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Destroy();
+            md.Dispose();
             switch ((ResponseType)result)
             {
                 case ResponseType.Yes: return QuestionResponseEnum.Yes;
