@@ -288,7 +288,7 @@
       <Project>{83f4bd8a-a0d1-4aa7-9dc7-42af7d9bacba}</Project>
       <Name>ApsimNG</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Models\Models.csproj">
+    <ProjectReference Include="..\..\Models\Models.Core.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
     </ProjectReference>

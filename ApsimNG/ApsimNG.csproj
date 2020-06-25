@@ -5,7 +5,6 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\Bin\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
@@ -13,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DocumentationFile>..\Bin\ApsimNG.xml</DocumentationFile>
+    <DocumentationFile>..\Bin\netcoreapp3.0\ApsimNG.xml</DocumentationFile>
     <WarningsAsErrors />
     <NoWarn />
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -49,7 +48,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
-    <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Models\Models.Core.csproj" />
     <ProjectReference Include="..\..\SourceView\SourceView.csproj" />
   </ItemGroup>
 

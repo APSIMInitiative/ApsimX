@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!--<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>-->
     <OutputPath>..\Bin\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
