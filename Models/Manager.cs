@@ -339,7 +339,7 @@
                             MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location)
                          },
-                        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
                 }
 
                 MemoryStream ms = new MemoryStream();

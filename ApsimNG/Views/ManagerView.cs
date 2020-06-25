@@ -35,11 +35,10 @@ namespace UserInterface.Views
         /// </summary>
         public ManagerView(ViewBase owner) : base(owner)
         {
-            throw new NotImplementedException("Requires EditorView");
             notebook = new Notebook();
             mainWidget = notebook;
             grid = new GridView(this);
-            //scriptEditor = new EditorView(this);
+            scriptEditor = new EditorView(this);
             notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
             notebook.AppendPage((scriptEditor as ViewBase).MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;

@@ -7,6 +7,9 @@
     using System.Reflection;
     using Utility;
 
+    /// <summary>
+    /// Base class for all views.
+    /// </summary>
     public class ViewBase
     {
         /// <summary>A builder instance for extracting controls from resource.</summary>

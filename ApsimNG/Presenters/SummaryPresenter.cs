@@ -96,11 +96,14 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
-            //summaryView.HtmlView.Copy -= OnCopy;
-            summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
-            summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
-            summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
+            if (summaryView != null)
+            {
+                summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
+                //summaryView.HtmlView.Copy -= OnCopy;
+                summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
+                summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
+                summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
+            }
         }
 
         /// <summary>Populate the summary view.</summary>
