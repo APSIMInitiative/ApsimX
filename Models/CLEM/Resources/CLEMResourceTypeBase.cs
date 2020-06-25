@@ -87,13 +87,18 @@ namespace Models.CLEM.Resources
             if (price == null)
             {
                 if (financesPresent)
-                { 
-                    string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
+                {
+                    string market = "";
+                    if(MarketStoreExists)
+                    {
+                        market = this.CLEMParentName + ".";
+                    }
+                    string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
                     if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
-                    warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+                    warn += "\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (!Warnings.Exists(warn) & Summary != null)
                     {

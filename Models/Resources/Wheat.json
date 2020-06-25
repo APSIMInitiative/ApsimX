@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 102,
+  "Version": 103,
   "Name": "Simulations",
   "Children": [
     {
@@ -233,7 +233,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -248,7 +248,7 @@
                     26.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -300,7 +300,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -355,7 +355,7 @@
                         0.0,
                         -0.5
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7346,8 +7346,8 @@
                     "[Phenology].PpSensitivity.FixedValue = 0",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.X = 0,1,8",
-                    "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.Y = 0,1.204,0",
+                    "[Phenology].DailyVernalisation.TempResponseProfile.Response.X = 0,1,8",
+                    "[Phenology].DailyVernalisation.TempResponseProfile.Response.Y = 0,1.204,0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",

@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
         {
             if(!this.Parent.GetType().Name.Contains("Market"))
             {
-                throw new ApsimXException(this, "ooops");
+                throw new ApsimXException(this, $"Logic error in code. Trying to link a resource type [r={resourceType.Name}] from the market with the same market./nThis is a coding issue. Please contact the developers");
             }
 
             // find parent group type
@@ -335,7 +335,12 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
-                Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
+                if (!Warnings.Exists(warn) & Summary != null)
+                {
+                    Summary.WriteWarning(this, warn);
+                    Warnings.Add(warn);
+                }
                 return null;
             }
 
@@ -348,18 +353,26 @@ namespace Models.CLEM.Resources
             if (resType is null)
             {
                 // clone resource
-                resType = Apsim.Clone(resourceType);
+                // too many problems with linked events to clone these objects and setup again
+                // it will be the responsibility of the user to ensure the resources and details are in the market
+                // resType = Apsim.Clone(resourceType);
 
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
                     string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
-                    Warnings.Add($"The resource [r={resourceType.Name}] does not exist in the market and the resource of type [r={resourceType.GetType().ToString()}] cannot be cloned\nAdd resource and associated components to the market.");
+                    string warn = $"The resource [r={resourceType.Name}] does not exist in the market.\nAdd resource and associated components to the market to permit trading.";
+                    if (!Warnings.Exists(warn) & Summary != null)
+                    {
+                        Summary.WriteWarning(this, warn);
+                        Warnings.Add(warn);
+                    }
                     return null;
                 }
                 else
                 {
                     (resType as IModel).Parent = resGroup;
+                    (resType as CLEMModel).CLEMParentName = resGroup.CLEMParentName;
                     // add new resource type
                     resGroup.AddNewResourceType(resType as IResourceWithTransactionType);
                 }
