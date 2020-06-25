@@ -74,7 +74,14 @@ namespace Models.CLEM.Resources
         /// Finds a shared marketplace
         /// </summary>
         /// <returns>Market</returns>
-        public Market FindMarket { get; private set; }
+        [XmlIgnore]
+        public Market FoundMarket { get; private set; }
+
+        /// <summary>
+        /// Determines if a market has been located
+        /// </summary>
+        /// <returns>True or false</returns>
+        public bool MarketPresent { get { return !(FoundMarket is null); } }
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
@@ -323,7 +330,7 @@ namespace Models.CLEM.Resources
         /// <returns>Whether the search was successful</returns>
         public IResourceWithTransactionType LinkToMarketResourceType(CLEMResourceTypeBase resourceType)
         {
-            if(!this.Parent.GetType().Name.Contains("Market"))
+            if (!(this.Parent is Market))
             {
                 throw new ApsimXException(this, $"Logic error in code. Trying to link a resource type [r={resourceType.Name}] from the market with the same market./nThis is a coding issue. Please contact the developers");
             }
@@ -361,7 +368,7 @@ namespace Models.CLEM.Resources
                 {
                     // add warning the market does not have the resource
                     string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
-                    string warn = $"The resource [r={resourceType.Name}] does not exist in the market.\nAdd resource and associated components to the market to permit trading.";
+                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\nAdd resource and associated components to the market to permit trading.";
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
@@ -477,10 +484,14 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if(this.Parent.GetType() != typeof(Market))
+            if(!(this.Parent is Market))
             {
                 IModel parentSim = Apsim.Parent(this, typeof(Simulation));
-                FindMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
+                FoundMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
+            }
+            else
+            {
+                FoundMarket = this.Parent as Market;
             }
             InitialiseResourceGroupList();
         }
