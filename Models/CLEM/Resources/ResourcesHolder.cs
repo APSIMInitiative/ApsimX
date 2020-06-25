@@ -27,23 +27,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
-        // Scoping rules of Linking in Apsim means that you can only link to 
-        // Models beneath or above or siblings of the ones above.
-        // Can not link to children of siblings that are above.
-        // Because we have chosen to put Resources and Activities as siblings.
-        // Activities are not going to be able to directly link to Resources.
-        // They will only be able to link to the very top "Resources".
-        // So Activities will have to link to that very top Resources
-        // Then you have to go down from there.
-         
-        // Also we have to use a list. Can't use [Soil].SoilWater method because  
-        // you don't have to have every single Resource Group added every single
-        // simluation. You only add the Resource Groups that you are going to use
-        // in this simlulation and you do this by dragging and dropping them in
-        // as child nodes. So first thing you need to do when the simulation starts
-        // is figure out which ones have been dragged into this specific simulation.
-        // Hence we need to use this list approach.
-
         /// <summary>
         /// List of the all the Resource Groups.
         /// </summary>
