@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.Core.csproj" />
     <ProjectReference Include="..\Models\Models.Core.csproj" />
     <ProjectReference Include="..\..\SourceView\SourceView.csproj" />
   </ItemGroup>

@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{130772
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSIMRunner", "APSIMRunner\APSIMRunner.Core.csproj", "{D798B461-77B4-46C5-9368-B770FF79DF1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsimNG", "ApsimNG\ApsimNG.csproj", "{38F1A007-1345-4C71-9123-FA27B4B20983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsimNG", "ApsimNGCore\ApsimNG.csproj", "{38F1A007-1345-4C71-9123-FA27B4B20983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
