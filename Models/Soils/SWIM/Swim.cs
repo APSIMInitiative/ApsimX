@@ -984,7 +984,7 @@ namespace Models.Soils
             }
             set
             {
-                throw new NotImplementedException("Haven't implemented setting of water table in SWIM");
+                
             }
         }
 
@@ -3251,15 +3251,19 @@ namespace Models.Soils
 
         private double CalculateWaterTable()
         {
-            //   Purpose
-            //      Calculate depth of water table from soil surface
-            for (int i = 0; i <= n; i++)
+            if (psi != null)
             {
-                if (_psi[i] > 0)
-                    return (x[i] - _psi[i]) * 10.0;
+                //   Purpose
+                //      Calculate depth of water table from soil surface
+                for (int i = 0; i <= n; i++)
+                {
+                    if (_psi[i] > 0)
+                        return (x[i] - _psi[i]) * 10.0;
+                }
+                // set default value to bottom of soil profile.
+                return x[n] * 10.0;
             }
-            // set default value to bottom of soil profile.
-            return x[n] * 10.0;
+            return 0;
         }
 
         private double Suction(int node, double theta)
@@ -5907,9 +5911,11 @@ namespace Models.Soils
         }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [XmlIgnore]
         public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        
+
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [XmlIgnore]
         public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>Sets the water table.</summary>

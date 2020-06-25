@@ -132,14 +132,15 @@ namespace Models.CLEM.Reporting
                                 }
 
                                 // add pricing
-                                //if (pricingIncluded)
-                                //{
-                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
-                                //}
+                                if (pricingIncluded)
+                                {
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                }
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
 
                         }
@@ -177,14 +178,7 @@ namespace Models.CLEM.Reporting
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                    {
-                        if (fullVariableName.Contains(" of "))
-                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName));
-                        else if (!string.IsNullOrEmpty(GroupByVariableName))
-                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
-                        else
-                            columns.Add(new SimpleReportColumn(fullVariableName, locator, events));
-                    }
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {
@@ -242,7 +236,7 @@ namespace Models.CLEM.Reporting
             }
 
             // Get number of groups.
-            var numGroups = columns.Max(c => c.NumberOfGroups);
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
 
             for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {

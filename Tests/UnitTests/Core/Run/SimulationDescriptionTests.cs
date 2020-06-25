@@ -87,7 +87,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Folder()
+                    new Replacements()
                     {
                         Name = "Replacements",
                         Children = new List<Model>()

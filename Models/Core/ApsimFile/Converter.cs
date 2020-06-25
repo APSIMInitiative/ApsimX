@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Functions;
+    using Models.LifeCycle;
     using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
@@ -18,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 88; } }
+        public static int LatestVersion { get { return 93; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1570,23 +1571,7 @@
                 new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
             };
 
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-            {
-                bool managerChanged = false;
-
-                foreach (var replacement in changes)
-                {
-                    if (manager.Replace(replacement.Item1, replacement.Item2))
-                        managerChanged = true;
-                }
-                if (managerChanged)
-                    manager.Save();
-            }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                foreach (var replacement in changes)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
-            }
+            JsonUtilities.RenameVariables(root, changes);
         }
 
         /// <summary>
@@ -1634,11 +1619,17 @@
                 {
                     LSP["$type"] = "Models.LifeCycle.LifeStageMortality, Models";
                 }
+                
             }
 
             foreach (JObject LSRP in JsonUtilities.ChildrenRecursively(root, "LifeStageReproductionProcess"))
             {
                 LSRP["$type"] = "Models.LifeCycle.LifeStageReproduction, Models";
+            }
+
+            foreach (JObject LSIP in JsonUtilities.ChildrenRecursively(root, "LifeStageImmigrationProcess"))
+            {
+                LSIP["$type"] = "Models.LifeCycle.LifeStageImmigration, Models";
             }
         }
 
@@ -1843,14 +1834,6 @@
             }
         }
 		
-
-
-
-
-
-
-
-
         /// <summary>
         /// Replace SoilWater model with WaterBalance model.
         /// </summary>
@@ -1913,6 +1896,318 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flux_eff", "SoluteFluxEfficiency");
             }
 
+        }
+
+        /// <summary>
+        /// Replace 'avg' with 'mean' in report variables.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion89(JObject root, string fileName)
+        {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, "avg of ", "mean of ");
+        }
+
+        /// <summary>
+        /// Fixes a bug where a manager script's children were being serialized.
+        /// When attempting to reopen the file, the script's type cannot be resolved.
+        /// This converter will strip out all script children of managers under replacements.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion90(JObject root, string fileName)
+        {
+            foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
+                foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+                    JsonUtilities.RemoveChild(manager, "Script");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion91(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
+                new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
+                new Tuple<string, string>(".StandingHerbageWt",      ".Standing.Wt"),
+                new Tuple<string, string>(".StandingHerbageN",       ".Standing.N"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Standing.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".StandingLive.Wt"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".StandingLive.N"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".StandingDead.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".StandingDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Standing.Digestibility"),
+                new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
+                new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPLucerne].RootLengthDensity", "[AGPLucerne].Root.RootLengthDensity")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+		
+        /// <summary>
+        /// Change names of a couple of parameters in SimpleGrazing.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion92(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                simpleGrazing["FractionExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                if (simpleGrazing["FractionNExportedInAnimal"] == null)
+                    simpleGrazing["FractionNExportedInAnimal"] = 0.75;
+            }
+
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".AmountDungCReturned",  ".AmountDungWtReturned")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+
+        /// <summary>
+        /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion93(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                if (simpleGrazing["FractionNExportedInAnimal"] != null)
+                {
+                    var fractionNExportedInAnimal = Convert.ToDouble(simpleGrazing["FractionNExportedInAnimal"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = 1 - fractionNExportedInAnimal;
+
+                }
+                if (simpleGrazing["FractionExcretedNToDung"] != null)
+                {
+                    var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
+                    if (fractionExcretedNToDung.Count > 0)
+                        simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add progeny destination phase and mortality function.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion900(JObject root, string fileName)
+        {
+            foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
+            {
+                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeCyclePhase"))
+                {
+                    JsonUtilities.AddConstantFunctionIfNotExists(LP, "Migration", "0.0");
+                    JObject ProgDest = JsonUtilities.CreateNewChildModel(LP, "ProgenyDestination", "Models.LifeCycle.ProgenyDestinationPhase");
+                    ProgDest["NameOfLifeCycleForProgeny"] = LC["Name"].ToString();
+                    ProgDest["NameOfPhaseForProgeny"] = LP["NameOfPhaseForProgeny"].ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Refactor LifeCycle model
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion890(JObject root, string fileName)
+        {
+            //Method to convert LifeCycleProcesses to functions
+            void ChangeToFunction(JObject LifePhase, string OldType, string NewName, string FunctType, string SubFunctType = "")
+            {
+                JArray children = LifePhase["Children"] as JArray;
+                var Process = JsonUtilities.ChildrenOfType(LifePhase, OldType);
+                if (Process.Count >= 1)
+                {
+                    bool FirstProc = true;
+                    JObject funct = new JObject();
+                    JArray ChildFunctions = new JArray();
+                    foreach (var proc in Process)
+                    {
+                        if (FunctType == "Add")
+                        {
+                            if (FirstProc)
+                            {
+                                funct["$type"] = "Models.Functions.AddFunction, Models";
+                                funct["Name"] = NewName;
+                                FirstProc = false;
+                            }
+                            foreach (var c in proc["Children"])
+                            {
+                                if ((SubFunctType == "All") && (c["$type"].ToString() != "Models.Memo, Models"))
+                                {
+                                    JObject cld = new JObject();
+                                    cld["$type"] = "Models.Functions.MultiplyFunction, Models";
+                                    cld["Name"] = c["Name"].ToString();
+                                    JObject Popn = new JObject();
+                                    Popn["$type"] = "Models.Functions.VariableReference, Models";
+                                    Popn["Name"] = "CohortPopulation";
+                                    Popn["VariableName"] = "[" + LifePhase["Name"].ToString() + "].CurrentCohort.Population";
+                                    JArray kids = new JArray();
+                                    kids.Add(Popn);
+                                    kids.Add(c);
+                                    cld["Children"] = kids;
+                                    ChildFunctions.Add(cld);
+                                }
+                                else
+                                    ChildFunctions.Add(c);
+                            }
+                        }
+                        else if (FunctType == "Multiply")
+                        {
+                            if (FirstProc)
+                            {
+                                funct["$type"] = "Models.Functions.MultiplyFunction, Models";
+                                funct["Name"] = NewName;
+                                JObject Popn = new JObject();
+                                Popn["$type"] = "Models.Functions.VariableReference, Models";
+                                Popn["Name"] = "CohortPopulation";
+                                Popn["VariableName"] = "[" + LifePhase["Name"].ToString() + "].CurrentCohort.Population";
+                                ChildFunctions.Add(Popn);
+                                FirstProc = false;
+                            }
+                            if (SubFunctType == "All")
+                            {
+                                foreach (JObject kid in proc["Children"])
+                                    ChildFunctions.Add(kid);
+                            }
+                            else if (SubFunctType == "Min")
+                            {
+                                JObject Min = new JObject();
+                                Min["$type"] = "Models.Functions.MinimumFunction, Models";
+                                Min["Name"] = "ProgenyRate";
+                                Min["Children"] = proc["Children"];
+                                ChildFunctions.Add(Min);
+                            }
+                        }
+                        else
+                            throw new Exception("Something got Funct up");
+
+                        JsonUtilities.RemoveChild(LifePhase, proc["Name"].ToString());
+                    }
+                    funct["Children"] = ChildFunctions;
+                    children.Add(funct);
+                }
+                else
+                    JsonUtilities.AddConstantFunctionIfNotExists(LifePhase, NewName, "0.0");
+            }
+
+            // Method to add infestation object
+            void AddInfestObject(string Name, JToken zone, string Org, string Phase, JArray ChildFunction, int typeIndex)
+            {
+                JObject Infest = JsonUtilities.CreateNewChildModel(zone, Name, "Models.LifeCycle.Infestation");
+                Infest["TypeOfInfestation"] = typeIndex;
+                Infest["InfestingOrganisumName"] = Org;
+                Infest["InfestingPhaseName"] = Phase;
+                Infest["ChronoAgeOfImmigrants"] = 0;
+                Infest["PhysAgeOfImmigrants"] = 0.2;
+                Infest["Children"] = ChildFunction;
+            }
+
+            foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
+            {
+                List<string> ChildPhases = new List<string>();
+                JToken zone = JsonUtilities.Parent(LC);
+
+                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeStage"))
+                {
+                    LP["$type"] = "Models.LifeCycle.LifeCyclePhase, Models";
+                    var ReproductiveProcess = JsonUtilities.ChildrenOfType(LP, "LifeStageReproduction");
+                    //Convert LifeCycleProcesses to functions
+                    ChangeToFunction(LP, "LifeStageImmigration", "Immigration", "Add");
+                    ChangeToFunction(LP, "LifeStageGrowth", "Development", "Add");
+                    ChangeToFunction(LP, "LifeStageMortality", "Mortality", "Add", "All");
+                    ChangeToFunction(LP, "LifeStageReproduction", "Reproduction", "Multiply", "Min");
+                    ChangeToFunction(LP, "LifeStageTransfer", "Graduation", "Multiply", "All");
+
+                    //If functionality present in Graduation, move to development and delete graduation
+                    var Dev = JsonUtilities.ChildWithName(LP, "Development");
+                    var Grad = JsonUtilities.ChildWithName(LP, "Graduation");
+                    if (Dev["$type"].ToString() == "Models.Functions.Constant, Models") //There was no functionality in Development
+                    {
+                        JsonUtilities.RemoveChild(LP, "Development");
+                        Grad["Name"] = "Development"; //Set Graduation function to be Development
+                        JsonUtilities.RemoveChild(Grad, "CohortPopulation");
+                    }
+                    else
+                        JsonUtilities.RemoveChild(LP, "Graduation");
+
+                    //Fix variable references
+                    foreach (JObject xv in JsonUtilities.ChildrenOfType(LP, "VariableReference"))
+                    {
+                        if (xv["VariableName"].ToString() == "[LifeCycle].CurrentLifeStage.CurrentCohort.PhenoAge")
+                            xv["VariableName"] = "[" + LP["Name"] + "].CurrentCohort.ChronologicalAge";
+                    }
+                    foreach (JObject xv in JsonUtilities.ChildrenOfType(LP, "LinearAfterThresholdFunction"))
+                    {
+                        if (xv["XProperty"].ToString() == "[LifeCycle].CurrentLifeStage.CurrentCohort.PhenoAge")
+                            xv["XProperty"] = "[" + LP["Name"] + "].CurrentCohort.ChronologicalAge";
+                    }
+
+                    if (ReproductiveProcess.Count >= 1)
+                    {
+                        LP["NameOfPhaseForProgeny"] = ReproductiveProcess[0]["TransferTo"].ToString();
+                    }
+                    ChildPhases.Add(LP["Name"].ToString());
+                }
+
+                //Move immigration function from life phase to infestation event
+                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeCyclePhase"))
+                {
+                    JObject NumberFunction = JsonUtilities.ChildWithName(LP, "Immigration");
+                    NumberFunction["Name"] = "NumberOfImmigrants";
+                    JArray ChildFunction = new JArray();
+                    ChildFunction.Add(NumberFunction);
+                    if ((NumberFunction["$type"].ToString() == "Models.Functions.Constant, Models") &&
+                        (double.Parse(NumberFunction["FixedValue"].ToString()) == 0.0))
+                    {
+                        //Don't add immigration event, not needed
+                    }
+                    else
+                    {
+                        AddInfestObject("Ongoing Infestation " + LP["Name"], zone, LC["Name"].ToString(), LP["Name"].ToString(), ChildFunction, 3);
+                    }
+                    JsonUtilities.RemoveChild(LP, "NumberOfImmigrants");
+                }
+
+                // Add infestation phase for initial populations
+                int cou = 0;
+                foreach (double init in LC["InitialPopulation"])
+                {
+                    if (init > 0)
+                    {
+                        string Name = "Initial Infestation " + ChildPhases[cou];
+                        JObject NumberFunction = new JObject();
+                        NumberFunction["$type"] = "Models.Functions.Constant, Models";
+                        NumberFunction["Name"] = "NumberOfImmigrants";
+                        NumberFunction["FixedValue"] = init;
+                        JArray ChildFunction = new JArray();
+                        ChildFunction.Add(NumberFunction);
+                        AddInfestObject(Name, zone, LC["Name"].ToString(), ChildPhases[cou], ChildFunction, 0);
+                        cou += 1;
+                    }
+                }
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "Migrants", "Graduates");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "Mortality", "Mortalities");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "PhenologicalAge", "PhysiologicalAge");
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Replace("LifeCycle.LifeStage", "LifeCycle.LifeCyclePhase");
+                manager.Save();
+            }
         }
 
         /// <summary>

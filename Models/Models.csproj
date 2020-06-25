@@ -32,6 +32,12 @@
     <Compile Remove="DataStore.cs" />
     <Compile Remove="Functions\BoundFunction.cs" />
     <Compile Remove="GRange.cs" />
+    <Compile Remove="Lifecycle\LifeStage.cs" />
+    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
+    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
+    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
+    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
+    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
     <Compile Remove="MySoluteManager.cs" />
     <Compile Remove="Plant\BiomassSummariser.cs" />
     <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
