@@ -3652,189 +3652,589 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
-          "Name": "CultivarFolder",
-          "Children": [
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.10,0.19",
-                "[Phenology].Vegetative.Target.FixedValue = 200"
-              ],
-              "Name": "Coliban",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 28",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16"
-              ],
-              "Name": "Horizon",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 26",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18",
-                "[Phenology].Vegetative.Target.FixedValue = 200"
-              ],
-              "Name": "IlamHardy",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 19",
-                "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11",
-                "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
-                "[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
-              ],
-              "Name": "JerseyBenny",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 29",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
-              ],
-              "Name": "Karaka",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 29",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15"
-              ],
-              "Name": "Nadine",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 36",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21"
-              ],
-              "Name": "Nooksac",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
-              ],
-              "Name": "RedRascal",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 29",
-                "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
-                "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
-                "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
-              ],
-              "Name": "Rua",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Structure].FinalLeafNumber.FixedValue = 34"
-              ],
-              "Name": "RussetBurbank",
-              "Children": [
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Fianna",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "RussetRanger",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Moonlight",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Agria",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Bondi",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Crop39",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
+  "$type": "Models.PMF.CultivarFolder, Models",
+  "Name": "CultivarFolder",
+  "Children": [
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.10,0.19",
+        "[Phenology].Vegetative.Target.FixedValue = 200"
+      ],
+      "Name": "Coliban",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 28",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16"
+      ],
+      "Name": "Horizon",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 26",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18",
+        "[Phenology].Vegetative.Target.FixedValue = 200"
+      ],
+      "Name": "IlamHardy",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 19",
+        "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11",
+        "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
+        "[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
+      ],
+      "Name": "JerseyBenny",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 29",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
+      ],
+      "Name": "Karaka",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 29",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15"
+      ],
+      "Name": "Nadine",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 36",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21"
+      ],
+      "Name": "Nooksac",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
+      ],
+      "Name": "RedRascal",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 29",
+        "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
+        "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
+        "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
+        "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
+        "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
+      ],
+      "Name": "Rua",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Structure].FinalLeafNumber.FixedValue = 34"
+      ],
+      "Name": "RussetBurbank",
+      "Children": [
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Fianna",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Moonlight",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Agria",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Bondi",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Alias, Models",
+          "Name": "Crop39",
+          "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=38",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.048"
+      ],
+      "Name": "Achirana",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=353",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Alpha",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=353",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.069"
+      ],
+      "Name": "Amarilis",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=371",
+        "[Structure].FinalLeafNumber.FixedValue=44",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.06"
+      ],
+      "Name": "Asante",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Atlantic",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=335",
+        "[Structure].FinalLeafNumber.FixedValue=38",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.069"
+      ],
+      "Name": "Bintje",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=282",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Desiree",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=318",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Dianella",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=335",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.044"
+      ],
+      "Name": "Gabriela",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=335",
+        "[Structure].FinalLeafNumber.FixedValue=77",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.051"
+      ],
+      "Name": "Maria",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Jinguan",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=318",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Kaptah",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Kexin",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=265",
+        "[Structure].FinalLeafNumber.FixedValue=77",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.048"
+      ],
+      "Name": "Luky",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=38",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Maris Piper",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=318",
+        "[Structure].FinalLeafNumber.FixedValue=44",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.053"
+      ],
+      "Name": "Neishu",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=318",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Posmo",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=335",
+        "[Structure].FinalLeafNumber.FixedValue=44",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.051"
+      ],
+      "Name": "Red Lasoda",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.06"
+      ],
+      "Name": "RussetRanger",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=371",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Sava",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=335",
+        "[Structure].FinalLeafNumber.FixedValue=61",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Spunta",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=318",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.055"
+      ],
+      "Name": "Tylva",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=265",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.053"
+      ],
+      "Name": "Waycha",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Zibaihua",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        ""
+      ],
+      "Name": "39707716",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        ""
+      ],
+      "Name": "Sebago",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        ""
+      ],
+      "Name": "Kufri Bahar",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        ""
+      ],
+      "Name": "Ib0005",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=34",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Lt1",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=31",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.069"
+      ],
+      "Name": "Revolucion",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=44",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.058"
+      ],
+      "Name": "Dto33",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Cultivar, Models",
+      "Command": [
+        "[Phenology].Vegetative.Target.FixedValue=300",
+        "[Structure].FinalLeafNumber.FixedValue=51",
+        "[Tuber].MaximumPotentialGrowthRate.FixedValue=0.051"
+      ],
+      "Name": "Capiro",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": false,
+  "Enabled": true,
+  "ReadOnly": false
+}
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
