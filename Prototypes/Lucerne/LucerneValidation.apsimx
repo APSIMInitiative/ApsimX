@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 89,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -268,6 +268,9 @@
               "Children": [
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "Children": [
                     {
@@ -284,7 +287,16 @@
                         25.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "TemperatureResponse",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -297,6 +309,9 @@
                 },
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "ThermalTime1",
                   "Children": [
                     {
@@ -313,7 +328,16 @@
                         25.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "TemperatureResponse",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -829,13 +853,21 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "KLModifier",
@@ -872,6 +904,9 @@
                 },
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "TemperatureEffect",
                   "Children": [
                     {
@@ -886,7 +921,16 @@
                         1.0,
                         1.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "TemperatureResponse",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1204,16 +1248,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1659,6 +1693,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1680,6 +1753,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Name": "Nodule",
@@ -2215,6 +2289,7 @@
               "KDead": 0.0,
               "LAIDead": 0.0,
               "DMSupply": null,
+              "DMDemandPriorityFactor": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
@@ -3509,6 +3584,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "SubDailyTemperatures": null,
+                      "SubDailyResponse": null,
+                      "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "Children": [
                         {
@@ -3525,7 +3603,16 @@
                             1.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "TemperatureResponse",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4528,6 +4615,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -4839,16 +4927,6 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "SenescenceRate",
                   "Children": [],
@@ -5137,6 +5215,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5149,6 +5266,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5346,16 +5464,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5661,6 +5769,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5673,6 +5820,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5870,16 +6018,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6185,6 +6323,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -6197,6 +6374,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": false,
@@ -6719,16 +6897,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [
@@ -6834,7 +7002,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.01,
+                              "FixedValue": 0.1,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -7483,6 +7651,45 @@
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -8430,6 +8637,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Iversen_8LL",
               "Children": [
                 {
@@ -8659,7 +8867,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -12067,6 +12274,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Simulation0",
               "Children": [
                 {
@@ -12295,7 +12503,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -14852,6 +15059,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Iversen_91",
               "Children": [
                 {
@@ -15213,7 +15421,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -19904,6 +20111,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Simulation3",
               "Children": [
                 {
@@ -20132,7 +20340,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -22420,6 +22627,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "AshleyDene",
               "Children": [
                 {
@@ -22648,7 +22856,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -25381,6 +25588,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Simulation5",
               "Children": [
                 {
@@ -25874,7 +26082,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -30136,6 +30343,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Simulationtesting",
               "Children": [
                 {
@@ -30629,7 +30837,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -33155,6 +33362,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "AlexSimulation",
               "Children": [
                 {
@@ -33648,7 +33856,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -36179,6 +36386,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "NapierSimulation",
               "Children": [
                 {
@@ -36672,7 +36880,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -38886,6 +39093,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "P1 Base Simulation",
               "Children": [
                 {
@@ -39115,7 +39323,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -41243,6 +41450,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Base Simulation",
               "Children": [
                 {
@@ -41472,7 +41680,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -45218,6 +45425,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "1994_95 Hunter River",
               "Children": [
                 {
@@ -45447,7 +45655,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -46935,6 +47142,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": " 1998_01 Trifecta",
               "Children": [
                 {
@@ -47164,7 +47372,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -48247,6 +48454,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": " 1979_83 Hunter River",
               "Children": [
                 {
@@ -48476,7 +48684,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -49775,6 +49982,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "1998_2001 Sceptre",
               "Children": [
                 {
@@ -50004,7 +50212,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -51768,6 +51975,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "1997_2000 Trifecta Grant",
               "Children": [
                 {
@@ -51997,7 +52205,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -53199,6 +53406,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "1989_93 Trifecta ",
               "Children": [
                 {
@@ -53428,7 +53636,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -53989,7 +54196,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Wheat",
                       "ResourceName": "Wheat",
                       "Name": "Wheat",
                       "IncludeInDocumentation": false,
@@ -54539,6 +54745,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "RutherglenCL_Swim3",
               "Children": [
                 {
@@ -54768,7 +54975,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -56876,6 +57082,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Lysimeter1",
               "Children": [
                 {
@@ -57498,7 +57705,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -66124,6 +66330,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MooraLucerne",
               "Children": [
                 {
@@ -66353,7 +66560,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -67973,6 +68179,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Forth",
               "Children": [
                 {
@@ -68194,7 +68401,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -69890,6 +70096,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Cranbrook",
               "Children": [
                 {
@@ -70111,7 +70318,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -71736,6 +71942,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Cambridge",
               "Children": [
                 {
@@ -71963,7 +72170,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -73786,6 +73992,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Elliott",
               "Children": [
                 {
@@ -74000,7 +74207,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -75645,6 +75851,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "winter active Trenque Lauquen",
               "Children": [
                 {
@@ -75874,7 +76081,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -76825,6 +77031,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Balcarce",
               "Children": [
                 {
@@ -77054,7 +77261,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -79001,6 +79207,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Winter dormant Pergamino",
               "Children": [
                 {
@@ -79229,7 +79436,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -80119,6 +80325,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Winter dormant Rafaela",
               "Children": [
                 {
@@ -80433,7 +80640,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -81983,6 +82189,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "FD6",
               "Children": [
                 {
@@ -82255,7 +82462,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
@@ -86702,6 +86908,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "UruguayBase",
               "Children": [
                 {
@@ -87338,7 +87545,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Lucerne",
                       "ResourceName": "Lucerne",
                       "Name": "Lucerne",
                       "IncludeInDocumentation": true,
