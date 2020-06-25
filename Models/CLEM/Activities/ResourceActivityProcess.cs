@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// Resource type to process
         /// </summary>
         [Description("Resource to process")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type to process required")]
         public string ResourceTypeProcessedName { get; set; }
 
@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Resource type created
         /// </summary>
         [Description("Resource created")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type created required")]
         public string ResourceTypeCreatedName { get; set; }
 
@@ -175,7 +175,7 @@ namespace Models.CLEM.Activities
                         sumneeded = amountToProcess*item.Amount;
                         break;
                     case ResourcePaymentStyleType.perBlock:
-                        ResourcePricing price = resourceTypeProcessModel.Price;
+                        ResourcePricing price = resourceTypeProcessModel.Price(PurchaseOrSalePricingStyleType.Both);
                         double blocks = amountToProcess / price.PacketSize;
                         if(price.UseWholePackets)
                         {
@@ -184,19 +184,22 @@ namespace Models.CLEM.Activities
                         sumneeded = blocks * item.Amount;
                         break;
                     default:
-                        throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+                        throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [a={2}]", item.PaymentStyle, item.Name, this.Name));
                 }
-                ResourceRequestList.Add(new ResourceRequest()
+                if (sumneeded > 0)
                 {
-                    AllowTransmutation = false,
-                    Required = sumneeded,
-                    ResourceType = typeof(Finance),
-                    ResourceTypeName = item.BankAccount.Name,
-                    ActivityModel = this,
-                    FilterDetails = null,
-                    Reason = item.Name
+                    ResourceRequestList.Add(new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = sumneeded,
+                        ResourceType = typeof(Finance),
+                        ResourceTypeName = item.BankAccount.Name,
+                        ActivityModel = this,
+                        FilterDetails = null,
+                        Reason = item.Name
+                    }
+                    );
                 }
-                );
             }
 
             // get process resource required

@@ -52,7 +52,7 @@
           "Children": [
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -1066,7 +1066,7 @@
           "Children": [
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -2086,7 +2086,7 @@
           "Children": [
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -3076,7 +3076,7 @@
                   "Children": [
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "WeatherFiles\\Dalby.met",
+                      "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -3102,7 +3102,7 @@
                   "Children": [
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "WeatherFiles\\Goond.met",
+                      "FileName": "%root%\\Examples\\WeatherFiles\\Goond.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -3131,7 +3131,7 @@
           "Children": [
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\Dalby.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],
@@ -4227,7 +4227,7 @@
           "Children": [
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
               "Children": [],

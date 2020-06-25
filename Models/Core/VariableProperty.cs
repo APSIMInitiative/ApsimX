@@ -671,7 +671,7 @@
                 }
                 else if (this.DataType == typeof(int[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToIntegers(stringValues);
                 }
                 else if (this.DataType == typeof(string[]))
                 {

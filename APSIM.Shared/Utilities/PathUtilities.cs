@@ -62,13 +62,19 @@
         /// <returns>The absolute path</returns>
         public static string GetAbsolutePath(string path, string relativePath)
         {
-            if (path == null)
-                return null;
+            if (string.IsNullOrEmpty(path))
+                return path;
 
-            // Remove any %root% macro.
-            string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-            path = path.Replace("%root%", rootDirectory);
-            
+            // Remove any %root% macro (even if relative path is null).
+            string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+#if !NETFULL
+            apsimxDirectory = Directory.GetParent(apsimxDirectory).FullName;
+#endif
+            path = path.Replace("%root%", apsimxDirectory);
+
+            if (string.IsNullOrEmpty(relativePath))
+                return path;
+
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
             if (relativeDirectory != null)
@@ -95,8 +101,8 @@
         /// <returns>The relative path</returns>
         public static string GetRelativePath(string path, string relativePath)
         {
-            if (System.String.IsNullOrEmpty(path))
-                throw new ArgumentNullException("path");
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
+                return path;
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
@@ -104,11 +110,6 @@
             {
                 // Try getting rid of the relative directory.
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
-
-                // Try putting in a %root%.
-                string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-                // if (path.StartsWith(Path.Combine(rootDirectory, "Examples")))
-                path = path.Replace(rootDirectory, "%root%");
             }
 
             // Convert slashes.

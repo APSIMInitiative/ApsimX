@@ -32,6 +32,9 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         private Structure structure = null;
 
+        [Link(IsOptional = true)]
+        private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -53,6 +56,9 @@ namespace Models.PMF.Phen
 
         /// <summary>Occurs when phase is set externally.</summary>
         public event EventHandler StageWasReset;
+
+        /// <summary>Occurs when emergence phase completed</summary>
+        public event EventHandler PlantEmerged;
 
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
@@ -128,6 +134,9 @@ namespace Models.PMF.Phen
                     return phases[currentPhaseIndex];
             }
         }
+        
+        /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
+        public double Zadok {  get { return zadok.Stage; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -323,6 +332,17 @@ namespace Models.PMF.Phen
         }
 
 
+        /// <summary>
+        /// Resets the Vrn expression parameters for the CAMP model
+        /// </summary>
+        /// <param name="overRideFLNParams"></param>
+        public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
+        {
+            CAMP camp = Apsim.Child(this,"CAMP") as CAMP;
+            camp.ResetVernParams(overRideFLNParams);
+        }
+
+
         // 7. Private methods
         // -----------------------------------------------------------------------------------------------------------
         //
@@ -380,6 +400,7 @@ namespace Models.PMF.Phen
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
                          Emerged = true;
+                        PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
                     stagesPassedToday.Add(CurrentPhase.End);

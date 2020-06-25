@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 88,
+  "Version": 93,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -890,6 +890,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -1238,6 +1239,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
@@ -1536,7 +1538,7 @@
                         0.003
                       ],
                       "Y": [
-                        0.0,
+                        0.03,
                         0.03
                       ],
                       "Name": "XYPairs",
@@ -1570,8 +1572,8 @@
                         0.003
                       ],
                       "Y": [
-                        0.0,
-                        0.0003
+                        0.01,
+                        0.01
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -1949,6 +1951,7 @@
               "KDead": 0.2,
               "LAIDead": 0.0,
               "DMSupply": null,
+              "DMDemandPriorityFactor": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
@@ -2743,7 +2746,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRate",
                   "Children": [],
@@ -3337,6 +3340,15 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Photosynthesis.FN",
+                              "Name": "NSress",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -3601,6 +3613,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -4111,6 +4124,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5026,6 +5040,7 @@
           "EventNames": [
             "[Teff].Harvesting"
           ],
+          "GroupByVariableName": null,
           "Name": "HarvestReport",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5049,6 +5064,7 @@
             "sum([Soil].Nutrient.NO3.kgha) as ProfileNO3",
             "[Soil].Nutrient.NO3.kgha",
             "[Teff].Leaf.LAI",
+            "[Teff].Leaf.Wt",
             "[Teff].Leaf.Transpiration",
             "[Teff].Leaf.CoverGreen",
             "[Teff].Leaf.Fn",
@@ -5061,7 +5077,9 @@
             "[Teff].Grain.Wt",
             "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET",
             "[Teff].Leaf.NodeNumber",
-            "[Teff].Grain.Wt",
+            "[Teff].Stem.Wt",
+            "[Teff].Panicle.Wt",
+            "[Teff].Root.Wt",
             "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET",
             "[Teff].Leaf.NodeNumber",
             "[Teff].Leaf.FinalLeafNumber"
@@ -5069,6 +5087,7 @@
           "EventNames": [
             "[Clock].DoReport"
           ],
+          "GroupByVariableName": null,
           "Name": "Report",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5092,6 +5111,7 @@
           "EventNames": [
             "[Teff].Harvesting"
           ],
+          "GroupByVariableName": null,
           "Name": "ControlledEnvironmentReport",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -7230,6 +7250,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -7773,6 +7794,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
@@ -8510,6 +8532,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Albedo": 0.25,
@@ -10156,6 +10179,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -10891,6 +10915,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -14568,6 +14593,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14839,37 +14865,6 @@
                               ],
                               "NO3N": null,
                               "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "InitialN",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-60",
-                                "60-90"
-                              ],
-                              "Thickness": [
-                                150.0,
-                                150.0,
-                                300.0,
-                                300.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
                               "SW": [
                                 0.55,
                                 0.55,
@@ -14930,6 +14925,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -15003,7 +14999,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16736653,
+                      "ColourArgb": -16777216,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -15025,7 +15021,7 @@
                       "Children": [
                         {
                           "$type": "Models.Regression, Models",
-                          "ForEachSeries": true,
+                          "ForEachSeries": false,
                           "showOneToOne": true,
                           "showEquation": true,
                           "Name": "Regression",
@@ -15038,13 +15034,51 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
                     },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Grain",
+                  "Children": [
                     {
                       "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -1663232,
+                      "ColourArgb": -16777216,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -15492,6 +15526,207 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "SoilN",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "NRate",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "ProfileNO3",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LAI",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "NRate",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Teff.Leaf.LAI",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Biomass Timeseries1",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "NRate",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Teff.Leaf.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -15803,6 +16038,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -16331,6 +16567,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -18338,6 +18575,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -18764,6 +19002,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -21128,6 +21367,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -21150,6 +21390,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -21961,6 +22202,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -22433,6 +22675,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24122,6 +24365,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24144,6 +24388,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24616,6 +24861,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25079,6 +25325,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25581,6 +25828,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -26044,6 +26292,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -26650,6 +26899,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -27122,6 +27372,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -28779,6 +29030,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -29251,6 +29503,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -31344,6 +31597,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -31892,6 +32146,7 @@
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "ControlledEnvironmentReport",
                           "Children": [],
                           "IncludeInDocumentation": true,

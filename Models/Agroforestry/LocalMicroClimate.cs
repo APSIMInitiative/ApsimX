@@ -3,6 +3,7 @@ using Models.Core;
 using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.Agroforestry
 {
@@ -92,9 +93,24 @@ namespace Models.Agroforestry
         /// <summary>Gets the temperature amplitude.</summary>
         public double Amp { get { return weather.Amp; } }
 
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+
+        /// <summary>Met Data from yesterday</summary>
+        [JsonIgnore]
+        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+
         /// <summary>Gets the duration of the day in hours.</summary>
         public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }
 
+        /// <summary> calculate the time of sun rise </summary>
+        /// <returns>the time of sun rise</returns>
+        public double CalculateSunRise(){return 12 - CalculateDayLength(-6) / 2;}
+
+        /// <summary> calculate the time of sun set</summary>
+        /// <returns>Sun set time</returns>
+        public double CalculateSunSet(){return 12 + CalculateDayLength(-6) / 2;}
     }
 }
 

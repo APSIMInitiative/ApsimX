@@ -28,7 +28,7 @@
         /// <summary>
         /// The compiled script model.
         /// </summary>
-        private Model scriptModel;
+        private IModel scriptModel;
 
         /// <summary>
         /// The view for the manager

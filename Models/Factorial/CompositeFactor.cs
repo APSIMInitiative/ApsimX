@@ -123,6 +123,9 @@
         /// <param name="allValues">The list of values to add to.</param>
         private void ParseSpecification(string specification, List<string> allPaths, List<object> allValues)
         {
+            if (string.IsNullOrEmpty(specification))
+                return;
+
             string path = specification;
             object value;
             if (path.Contains("="))
@@ -140,6 +143,9 @@
                 var experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
                 var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
                 var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
+
+                if (modelToReplace == null)
+                    throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
                 var possibleMatches = Apsim.Children(this, modelToReplace.GetType());

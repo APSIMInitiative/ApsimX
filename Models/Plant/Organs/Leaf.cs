@@ -57,6 +57,10 @@ namespace Models.PMF.Organs
         /// [Units("CO_2")]
         public double GrowthRespiration { get; set; }
 
+        /// <summary>Factors for assigning priority to DM demands</summary>
+        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemandPriorityFactors = null;
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [XmlIgnore]
@@ -86,6 +90,9 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
+
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -182,10 +189,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Structure.Height; } }
+        public double Depth { get; set; }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
+        public double Width { get; set; }
 
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
@@ -486,6 +493,14 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FrostFraction = null;
 
+        /// <summary>The width of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction WidthFunction = null;
+
+        /// <summary>The depth of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DepthFunction = null;
+
         /// <summary>The structural fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction StructuralFraction = null;
@@ -752,7 +767,9 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
+                        if(Double.IsNaN(LightProfile[i].amount)) 
+                            TotalRadn += 0;
+                    else TotalRadn += LightProfile[i].amount;
                     return TotalRadn;                    
                 }
                 else
@@ -1221,6 +1238,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            Structure.UpdateHeight();
+            Width = WidthFunction.Value();
+            Depth = DepthFunction.Value();
+
             if (!parentPlant.IsEmerged)
                 return;
 
@@ -1267,6 +1288,9 @@ namespace Models.PMF.Organs
             PotentialEP = 0;
             WaterDemand = 0;
             LightProfile = null;
+            Structure.UpdateHeight();
+            Width = WidthFunction.Value();
+            Depth = DepthFunction.Value();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1379,6 +1403,7 @@ namespace Models.PMF.Organs
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             bool writeToSummary = false;
+            double totalBiomass = Live.Wt + Dead.Wt;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
@@ -1393,16 +1418,17 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = true;
             }
 
-            if (amountToRemove != null)
+            if (amountToRemove != null && totalBiomass != 0.0)
             {
-                var toResidue = Detached.Wt / Total.Wt * 100;
-                var removedOff = Removed.Wt / Total.Wt * 100;
-                double totalFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue +
-                                               amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
-                Summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                double totalFractionToRemove = (Removed.Wt + Detached.Wt) * 100.0 / totalBiomass;
+                double toResidue = Detached.Wt * 100.0 / (Removed.Wt + Detached.Wt);
+                double removedOff = Removed.Wt * 100.0 / (Removed.Wt + Detached.Wt);
+                Summary.WriteMessage(this, "Removing " + totalFractionToRemove.ToString("0.0")
                              + "% of " + Name.ToLower() + " biomass from " + parentPlant.Name
                              + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                              + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                Summary.WriteMessage(this, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
+                                         + Removed.N.ToString("0.0") + " g/m2 of N.");
             }
         }
 
@@ -1490,6 +1516,19 @@ namespace Models.PMF.Organs
             DMDemand.Structural = StructuralDemand;
             DMDemand.Metabolic = MetabolicDemand;
             DMDemand.Storage = StorageDemand;
+
+            if (dmDemandPriorityFactors != null)
+            {
+                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
+                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
+                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
+            }
+            else
+            {
+                DMDemandPriorityFactor.Structural = 1.0;
+                DMDemandPriorityFactor.Metabolic = 1.0;
+                DMDemandPriorityFactor.Storage = 1.0;
+            }
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -1982,6 +2021,7 @@ namespace Models.PMF.Organs
         {
             DMDemand = new BiomassPoolType();
             NDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
             Allocated = new Biomass();

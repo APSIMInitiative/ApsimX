@@ -75,7 +75,9 @@
                 foreach (Operation operation in this.operations.Operation)
                 {
                     // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                    string dateStr = DateUtilities.validateDateString(operation.Date);
+                    string dateStr = null;
+                    if (!string.IsNullOrEmpty(operation.Date))
+                        dateStr = DateUtilities.validateDateString(operation.Date);
                     string commentChar = operation.Enabled ? string.Empty : "// ";
                     st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
                 }
@@ -105,11 +107,15 @@
                             currentLine = currentLine.Remove(index, 2).Trim();
                     }
 
-                    int pos = currentLine.IndexOf(' ');
+                    int pos = currentLine.IndexOfAny(" \t".ToCharArray());
                     if (pos != -1)
                     {
                         Operation operation = new Operation();
-                        operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                        string dateString = currentLine.Substring(0, pos);
+                        operation.Date = DateUtilities.validateDateString(dateString);
+                        if (operation.Date == null)
+                            explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse date string {dateString}", Models.Core.Simulation.MessageType.Warning);
+
                         operation.Action = currentLine.Substring(pos + 1);
                         operation.Enabled = !isComment;
                         operations.Add(operation);

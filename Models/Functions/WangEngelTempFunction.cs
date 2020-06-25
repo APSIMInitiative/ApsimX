@@ -15,7 +15,7 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 
     public class 
-        WangEngelTempFunction: Model, IFunction, ICustomDocumentation
+        WangEngelTempFunction: Model, IFunction, ICustomDocumentation, IIndexedFunction
         {
         
         /// <summary>Minimum Temperature.</summary>
@@ -39,19 +39,30 @@ namespace Models.Functions
         /// <summary>The maximum temperature weighting</summary>
         [Description("Maximum Temperature Weighting")]
         public double MaximumTemperatureWeighting { get; set; }
-        
+
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
-            {
+        {
+            double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
+            return ValueIndexed(Tav);
+        }
+
+
+        /// <summary>
+        /// returns result of Wang Eagle beta function for given temperature
+        /// </summary>
+        /// <param name="T">Given temperature</param>
+        /// <returns></returns>
+        public double ValueIndexed(double T)
+        {
             double RelEff = 0.0;
             double RelEffRefTemp = 1.0;
             double p = 0.0;
-            double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
-
-            if ((Tav > MinTemp) && (Tav < MaxTemp))
+            
+            if ((T > MinTemp) && (T < MaxTemp))
             {
                 p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
-                RelEff = (2 * Math.Pow(Tav - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(Tav - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
+                RelEff = (2 * Math.Pow(T - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(T - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
             if ((RefTemp > MinTemp) && (RefTemp < MaxTemp))
@@ -60,8 +71,8 @@ namespace Models.Functions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
-            return RelEff/ RelEffRefTemp;
-            }
+            return RelEff / RelEffRefTemp;
+        }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

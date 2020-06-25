@@ -17,12 +17,13 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel: Model, ICLEMUI
+    public abstract class CLEMModel : Model, ICLEMUI
     {
         /// <summary>
         /// Link to summary
         /// </summary>
         [Link]
+        [NonSerialized]
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
@@ -53,6 +54,13 @@ namespace Models.CLEM
         /// </summary>
         [XmlIgnore]
         public string UniqueID { get { return id.ToString(); } }
+
+        /// <summary>
+        /// Parent CLEM Zone
+        /// Stored here so rapidly retrieved
+        /// </summary>
+        [XmlIgnore]
+        public String CLEMParentName { get; set; }
 
         /// <summary>
         /// Method to set defaults from   
@@ -90,7 +98,6 @@ namespace Models.CLEM
                         catch (Exception ex)
                         {
                             Summary.WriteWarning(this, ex.Message);
-                            //eat it... Or maybe Debug.Writeline(ex);
                         }
                     }
                 }
@@ -110,16 +117,6 @@ namespace Models.CLEM
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
-        }
-
-        /// <summary>
-        /// Finds a shared marketplace
-        /// </summary>
-        /// <returns>Market</returns>
-        public Market FindMarket()
-        {
-            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
-            return Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
         }
 
         /// <summary>
@@ -206,10 +203,6 @@ namespace Models.CLEM
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
                 }
-                //else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
-                //{
-                //    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                //}
             }
 
             switch (ModelSummaryStyle)

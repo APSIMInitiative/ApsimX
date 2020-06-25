@@ -156,10 +156,28 @@
         public double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
 
         /// <summary>The amount of N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
-        public double NLiveHarvestable { get { return DMLiveHarvestable / DMLive * NLive; } }
+        public double NLiveHarvestable
+        {
+            get
+            {
+                if (DMLive * NLive > 0)
+                    return DMLiveHarvestable / DMLive * NLive;
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>The amount of N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
-        public virtual double NDeadHarvestable { get { return DMDeadHarvestable / DMDead * NDead; } }
+        public virtual double NDeadHarvestable
+        {
+            get
+            {
+                if (DMDead * NDead > 0)
+                    return DMDeadHarvestable / DMDead * NDead;
+                else
+                    return 0.0;
+            }
+        }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
         public double NTotal

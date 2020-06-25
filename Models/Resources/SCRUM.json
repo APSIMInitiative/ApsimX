@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 93,
+  "Version": 103,
   "Name": "Simulations",
   "Children": [
     {
@@ -26,7 +26,7 @@
           "Name": "Phenology",
           "Children": [
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -50,7 +50,15 @@
                     30.0,
                     0.0
                   ],
-                  "Name": "XYPairs",
+                  "Name": "Response",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ThreeHourSin, Models",
+                  "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -59,7 +67,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "agregationMethod": "0"
             },
             {
               "$type": "Models.Memo, Models",
@@ -674,16 +683,6 @@
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
-              "Units": "g/m^2",
-              "Name": "InitialWtFunction",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
@@ -1065,6 +1064,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": true,
@@ -1303,7 +1328,7 @@
               "Name": "FRGR",
               "Children": [
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "FRGRFunctionTemp",
                   "Children": [
                     {
@@ -1320,7 +1345,15 @@
                         1.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "Response",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1329,7 +1362,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "agregationMethod": "0"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2476,6 +2510,11 @@
           "Name": "Root",
           "Children": [
             {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
+            {
               "$type": "Models.Memo, Models",
               "Text": "\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
               "Name": "Description",
@@ -2852,16 +2891,6 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.2,
-              "Units": "g/plant",
-              "Name": "InitialDM",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 40.0,
               "Units": "m/g",
               "Name": "SpecificRootLength",
@@ -3212,6 +3241,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.2,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": true,

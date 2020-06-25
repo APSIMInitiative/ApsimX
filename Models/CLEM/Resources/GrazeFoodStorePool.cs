@@ -77,7 +77,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// pricing
         /// </summary>
-        public ResourcePricing Price { get; set; }
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Reset timestep stores

@@ -134,7 +134,7 @@ namespace Models.GrazPlan
             if (paddIdx >= 0 && paddIdx < Paddocks.Length)
             {
                 amount = Paddocks[paddIdx].SupptFed.TotalAmount;
-                Paddocks[paddIdx].SupptFed.AverageSuppt(out this.currPaddSupp);
+                currPaddSupp = Paddocks[paddIdx].SupptFed.AverageSuppt();
             }
             else
                 amount = 0.0;
@@ -537,7 +537,7 @@ namespace Models.GrazPlan
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets or sets the amount of supplement.
         /// </summary>
         /// <value>
         /// The description.

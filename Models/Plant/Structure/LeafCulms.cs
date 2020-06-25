@@ -242,6 +242,11 @@ namespace Models.PMF.Struct
 		public double FinalLeafNo { get; set; }
 
 		/// <summary>
+		/// Leaf number.
+		/// </summary>
+		public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
+
+		/// <summary>
 		/// Wrapper around leaf.DltPotentialLAI
 		/// </summary>
 		private double dltPotentialLAI
@@ -513,7 +518,7 @@ namespace Models.PMF.Struct
 			for (int i = 0; i < Culms.Count; ++i)
 			{
 				Culms[i].UpdateVars();
-				tillers += Culms[i].getProportion();
+				tillers += Culms[i].Proportion;
 			}
 			tillers--;
 
@@ -590,14 +595,14 @@ namespace Models.PMF.Struct
 				if (stage <= fi)
 				{
 					Culms[0].calcFinalLeafNo();
-					Culms[0].setCulmNo(0);
+					Culms[0].CulmNo = 0;
 					Culms[0].calculateLeafSizes();
-					FinalLeafNo = Culms[0].getFinalLeafNo();
+					FinalLeafNo = Culms[0].FinalLeafNo;
 				}
-				double currentLeafNo = Culms[0].getCurrentLeafNo();
+				double currentLeafNo = Culms[0].CurrentLeafNo;
 				double dltLeafNoMainCulm = Culms[0].calcLeafAppearance();
 				dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
-				double newLeafNo = Culms[0].getCurrentLeafNo();
+				double newLeafNo = Culms[0].CurrentLeafNo;
 
 				CalcTillerNumber((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
 				CalcTillerAppearance((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
@@ -631,18 +636,18 @@ namespace Models.PMF.Struct
 				if (stage <= fi)
 				{
 					Culms[0].calcFinalLeafNo();
-					Culms[0].setCulmNo(0);
-					FinalLeafNo = Culms[0].getFinalLeafNo();
+					Culms[0].CulmNo = 0;
+					FinalLeafNo = Culms[0].FinalLeafNo;
 					if (leafAreaCalcTypeSwitch == null)
 						Culms[0].calculateLeafSizes();
 					else
 						Culms[0].CalcLeafSizes();
 				}
 
-				double currentLeafNo = Culms[0].getCurrentLeafNo();
+				double currentLeafNo = Culms[0].CurrentLeafNo;
 				double dltLeafNoMainCulm = Culms[0].calcLeafAppearance();
 				dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
-				double newLeafNo = Culms[0].getCurrentLeafNo();
+				double newLeafNo = Culms[0].CurrentLeafNo;
 
 				CalcTillerAppearance((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
 
@@ -728,29 +733,29 @@ namespace Models.PMF.Struct
 				{
 					double maxLaiPossible = maxSLA * (dmGreen + dltDmGreen) / 10000;
 					double remainingLaiAvailable = maxLaiPossible;
-					double dltLaiAcc = Culms[0].getLeafArea() * stress;
+					double dltLaiAcc = Culms[0].LeafArea * stress;
 
-					remainingLaiAvailable -= Culms[0].getTotalLAI();//main culm existing Lai
-					remainingLaiAvailable -= Culms[0].getLeafArea() * stress;//main culm - deltaLai (todays growth)
+					remainingLaiAvailable -= Culms[0].TotalLAI;//main culm existing Lai
+					remainingLaiAvailable -= Culms[0].LeafArea * stress;//main culm - deltaLai (todays growth)
 
 					// limit the decrease in tillering to 0.3 tillers per day
 					double accProportion = 0.0;
 					double maxTillerLoss = 0.4;
 					for (int i = 1; i < Culms.Count; i++)
 					{
-						double laiExisting = Culms[i].getTotalLAI() * Culms[i].getProportion();
-						double laiRequired = Culms[i].getLeafArea() * stress * Culms[i].getProportion();
+						double laiExisting = Culms[i].TotalLAI * Culms[i].Proportion;
+						double laiRequired = Culms[i].LeafArea * stress * Culms[i].Proportion;
 						if (remainingLaiAvailable < laiExisting + laiRequired && accProportion < maxTillerLoss) //can't grow all this culm
 						{
 							double propn = Math.Max(0.0, (remainingLaiAvailable / (laiRequired + laiExisting)));
-							double prevPRoportion = Culms[i].getProportion();
+							double prevPRoportion = Culms[i].Proportion;
 							propn = Math.Max(propn, prevPRoportion - maxTillerLoss);
 							accProportion += propn;
 
-							Culms[i].setProportion(Math.Min(propn, Culms[i].getProportion()));//can't increase the proportion
+							Culms[i].Proportion = Math.Min(propn, Culms[i].Proportion);//can't increase the proportion
 
 							remainingLaiAvailable = 0;
-							dltLaiAcc += Culms[i].getLeafArea() * Culms[i].getProportion();
+							dltLaiAcc += Culms[i].LeafArea * Culms[i].Proportion;
 						}
 						else
 						{
@@ -828,7 +833,7 @@ namespace Models.PMF.Struct
 			if (calculatedTillers > tillersAdded)
 			{
 				// calculate linear LAI
-				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipRow;
+				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipDensityScale;
 				linearLAI = pltsPerMetre * tpla / 10000.0;
 
 				double laiToday = leaf.calcLAI();
@@ -936,7 +941,7 @@ namespace Models.PMF.Struct
 				//Calc Supply = R/oCd * LA5 * Phy5
 				double L5Area = Culms[0].calcIndividualLeafSize(5);
 				double L9Area = Culms[0].calcIndividualLeafSize(9);
-				double Phy5 = Culms[0].getLeafAppearanceRate(FinalLeafNo - Culms[0].getCurrentLeafNo());
+				double Phy5 = Culms[0].getLeafAppearanceRate(FinalLeafNo - Culms[0].CurrentLeafNo);
 
 				supply = MathUtilities.Average(radiationValues) * L5Area * Phy5;
 				//Calc Demand = LA9 - LA5
@@ -1020,7 +1025,7 @@ namespace Models.PMF.Struct
 			// add fractionToAdd 
 			// if new tiller is neded add one
 			// fraction goes to proportions
-			double tillerFraction = Culms.Last().getProportion();
+			double tillerFraction = Culms.Last().Proportion;
 			//tillerFraction +=fractionToAdd;
 			fraction = tillerFraction + fractionToAdd - Math.Floor(tillerFraction);
 			//a new tiller is created with each new leaf, up the number of fertileTillers
@@ -1037,11 +1042,11 @@ namespace Models.PMF.Struct
 				//T4 = 5 leaves
 				//T5 = 6 leaves
 				//T6 = 7 leaves
-				newCulm.setCulmNo(Culms.Count);
-				newCulm.setCurrentLeafNo(0);//currentLeaf);
+				newCulm.CulmNo = Culms.Count;
+				newCulm.CurrentLeafNo = 0;//currentLeaf);
 				verticalAdjustment = aMaxVert.Value() + (tillersAdded * aTillerVert.Value());
-				newCulm.setVertLeafAdj(verticalAdjustment);
-				newCulm.setProportion(fraction);
+				newCulm.VertAdjValue = verticalAdjustment;
+				newCulm.Proportion = fraction;
 				newCulm.calcFinalLeafNo();
 				newCulm.calcLeafAppearance();
 				newCulm.calculateLeafSizes();
@@ -1049,7 +1054,7 @@ namespace Models.PMF.Struct
 			}
 			else
 			{
-				Culms.Last().setProportion(fraction);
+				Culms.Last().Proportion = fraction;
 			}
 			tillersAdded += fractionToAdd;
 		}
@@ -1066,11 +1071,11 @@ namespace Models.PMF.Struct
 			int nTillers = Culms.Count;
 			int lastTiller = Culms.Count - 1;
 
-			double propn = Culms[lastTiller].getProportion();
+			double propn = Culms[lastTiller].Proportion;
 			if (propn == 0.0)
 			{
 				lastTiller--;
-				propn = Culms[lastTiller].getProportion();
+				propn = Culms[lastTiller].Proportion;
 			}
 			double culmArea = 0.0;
 			// area of this tiller
@@ -1081,7 +1086,7 @@ namespace Models.PMF.Struct
 			//culmArea *= propn;
 			// set the proportion
 			double newPropn = (culmArea * propn - reduceArea) / culmArea;
-			Culms[nTillers - 1].setProportion(newPropn);
+			Culms[nTillers - 1].Proportion = newPropn;
 		}
 
 		/// <summary>

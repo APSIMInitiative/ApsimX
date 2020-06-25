@@ -1,10 +1,10 @@
-﻿using Microsoft.Azure.Batch;
+﻿using APSIM.Shared.Utilities;
+using ApsimNG.Cloud.Azure;
+using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Auth;
 using Microsoft.Azure.Batch.Common;
 using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Auth;
 using Microsoft.Azure.Storage.Blob;
-using Microsoft.Azure.Storage.RetryPolicies;
 using Models;
 using Models.Core;
 using Models.Core.Run;
@@ -17,8 +17,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ApsimNG.Cloud.Azure;
-using APSIM.Shared.Utilities;
 
 namespace ApsimNG.Cloud
 {
@@ -646,7 +644,7 @@ namespace ApsimNG.Cloud
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
                 {
-                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update, true))
                     {
                         foreach (string extension in extensions)
                         {

@@ -38,7 +38,24 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [XmlIgnore]
-        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
+        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
+
+        /// <summary>
+        /// Return the specified pool 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns>GraxeFoodStore pool</returns>
+        public GrazeFoodStorePool Pool(int index)
+        {
+            if (index < Pools.Count())
+            {
+                return Pools[index];
+            }
+            else
+            {
+                return null;
+            }
+        } 
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%

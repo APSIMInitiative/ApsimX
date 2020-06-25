@@ -21,7 +21,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
+    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with a pasture production database.")]
+    [Version(1, 0, 2, "Now supports generic pasture production data reader")]
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
@@ -37,7 +38,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Land type where pasture is located")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
@@ -45,16 +46,16 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Pasture to manage")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Name of the model for the GRASP pasture input file
+        /// Name of the model for the pasture input file
         /// </summary>
-        [Description("Name of model for GRASP pasture growth file")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of GRASP pasture growth file model required")]
-        [Models.Core.Display(Type = DisplayType.CLEMGraspFileName)]
-        public string ModelNameFileGRASP { get; set; }
+        [Description("Name of pasture data reader")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
+        [Models.Core.Display(Type = DisplayType.CLEMPastureFileReader)]
+        public string PastureDataReader { get; set; }
 
         /// <summary>
         /// Starting amount (kg)
@@ -80,13 +81,13 @@ namespace Models.CLEM.Activities
         /// Current land condition index
         /// </summary>
         [XmlIgnore]
-        public Relationship LandConditionIndex { get; set; }
+        public RelationshipTracker LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
-        public Relationship GrassBasalArea { get; set; }
+        public RelationshipTracker GrassBasalArea { get; set; }
 
         /// <summary>
         /// Area requested
@@ -115,15 +116,12 @@ namespace Models.CLEM.Activities
 
         // private properties
         private double unitsOfArea2Ha;
-        private IFileGRASP FileGRASP = null;
-        //private double pkGrassBA = 0; //rounded (1 decimal place) integer value used as primary key in GRASP file.
-        //private double pkLandCon = 0; //rounded (1decimal place) double value used as primary key in GRASP file.
+        private IFilePasture FilePasture = null;
         private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
-        //private double pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
-        //EcologicalCalculationIntervals worth of data read from GRASP file 
+        //EcologicalCalculationIntervals worth of data read from pasture database file 
         private List<PastureDataType> PastureDataList;
 
         /// <summary>
@@ -144,10 +142,10 @@ namespace Models.CLEM.Activities
                 string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
                 results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface", memberNames));
             }
-            if (FileGRASP == null)
+            if (FilePasture == null)
             {
-                string[] memberNames = new string[] { "FileGRASP" };
-                results.Add(new ValidationResult("Unable to locate GRASP file. Add a FileGRASP model component to the user interface tree.", memberNames));
+                string[] memberNames = new string[] { "FilePastureReader" };
+                results.Add(new ValidationResult("Unable to locate pasture database file. Add a FilePastureReader model component to the simulation tree.", memberNames));
             }
             return results;
         }
@@ -163,9 +161,9 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
-            GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
-            FileGRASP = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == ModelNameFileGRASP).FirstOrDefault() as IFileGRASP;
+            LandConditionIndex = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
+            GrassBasalArea = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
+            FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (UseAreaAvailable)
             {
@@ -212,12 +210,13 @@ namespace Models.CLEM.Activities
                 StockingRateSummed = StartingStockingRate;
 
                 //Now we have a stocking rate and we have starting values for Land Condition and Grass Basal Area
-                //get the starting pasture data list from GRASP
-                GetPastureDataList_TodayToNextEcolCalculation();
-
-                SetupStartingPasturePools(StartingAmount);
+                //get the starting pasture data list from Pasture reader
+                if (FilePasture != null)
+                {
+                    GetPastureDataList_TodayToNextEcolCalculation();
+                    SetupStartingPasturePools(StartingAmount);
+                }
             }
-
         }
 
         /// <summary>
@@ -482,7 +481,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// From GRASP File get all the Pasture Data from today to the next Ecological Calculation
+        /// From Pasture File get all the Pasture Data from today to the next Ecological Calculation
         /// </summary>
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
@@ -500,7 +499,7 @@ namespace Models.CLEM.Activities
             //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
             //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
 
-            PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
+            PastureDataList = FilePasture.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, Clock.Today.AddDays(1), ZoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 

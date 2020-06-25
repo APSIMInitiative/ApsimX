@@ -61,6 +61,9 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
 
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
+
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
 
@@ -324,6 +327,10 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
             DMDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
+            DMDemandPriorityFactor.Structural = 1.0;
+            DMDemandPriorityFactor.Metabolic = 1.0;
+            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

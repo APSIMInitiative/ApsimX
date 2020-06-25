@@ -1232,6 +1232,20 @@ namespace Models
         /// </summary>
         private void Grazing()
         {
+            Graze(fractionLiveRemovedGrazing, fractionDeadRemovedGrazing, parms.fractionCarbonGrazedReturned);
+        }
+
+        /// <summary>
+        /// Remove forage that is grazed.
+        /// Made into a public function to allow the action to be invoked from
+        /// APSIM manager scripts, with the immediate intent of providing a quick
+        /// way to simulate consumption by locusts in the World Modelers context.
+        /// </summary>
+        /// <param name="fracLiveToRemove">Fraction of live aboveground biomass to consume</param>
+        /// <param name="fracDeadToRemove">Fraction of dead aboveground biomass to consume</param>
+        /// <param name="fracCarbonReturned">Fraction of "consumed" carbon to be returned as feces, frass, etc.</param>
+        public void Graze(double fracLiveToRemove, double fracDeadToRemove, double fracCarbonReturned)
+        {
             double total_carbon = 0.0;
             double total_nitrogen = 0.0;
             double carbon_removed;
@@ -1240,11 +1254,11 @@ namespace Models
             {
                 // Shoots removed.  Moving away from Century somewhat.
                 if (leafCarbon[iFacet] > 0.0)
-                    carbon_removed = leafCarbon[iFacet] * (fractionLiveRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                    carbon_removed = leafCarbon[iFacet] * (fracLiveToRemove * parms.fractionGrazedByFacet[iFacet]);
                 else
                     carbon_removed = 0.0;
                 if (leafNitrogen[iFacet] > 0.0)
-                    nitrogen_removed = leafNitrogen[iFacet] * (fractionLiveRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                    nitrogen_removed = leafNitrogen[iFacet] * (fracLiveToRemove * parms.fractionGrazedByFacet[iFacet]);
                 else
                     nitrogen_removed = 0.0;
                 leafCarbon[iFacet] = leafCarbon[iFacet] - carbon_removed;
@@ -1256,11 +1270,11 @@ namespace Models
 
                 // Standing dead removed.
                 if (deadStandingCarbon[iFacet] > 0.0)
-                    carbon_removed = deadStandingCarbon[iFacet] * (fractionDeadRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                    carbon_removed = deadStandingCarbon[iFacet] * (fracDeadToRemove * parms.fractionGrazedByFacet[iFacet]);
                 else
                     carbon_removed = 0.0;
                 if (deadStandingNitrogen[iFacet] > 0.0)
-                    nitrogen_removed = deadStandingNitrogen[iFacet] * (fractionDeadRemovedGrazing * parms.fractionGrazedByFacet[iFacet]);
+                    nitrogen_removed = deadStandingNitrogen[iFacet] * (fracDeadToRemove * parms.fractionGrazedByFacet[iFacet]);
                 else
                     nitrogen_removed = 0.0;
                 deadStandingCarbon[iFacet] = deadStandingCarbon[iFacet] - carbon_removed;
@@ -1274,7 +1288,7 @@ namespace Models
             // Return portions of the carbon and nitrogen grazed back to the environment.  Carbon in the form of feces, urine includes nitrogen.
             double nitrogen_returned;
             double fraction_nitrogen_grazed_returned;
-            double carbon_returned = parms.fractionCarbonGrazedReturned * total_carbon;
+            double carbon_returned = fracCarbonReturned * total_carbon;
             if (carbon_returned <= 0.0)
             {
                 carbon_returned = 0.0;

@@ -130,9 +130,9 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
-                (equivalentMarketStore as WaterType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm sales");
+                (EquivalentMarketStore as WaterType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm sales");
             }
 
             request.Provided = amountRemoved;
