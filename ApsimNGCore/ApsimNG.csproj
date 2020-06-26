@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
-    <OutputPath>..\Bin\</OutputPath>
+    <OutputPath>..\NetCoreBin\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
     <Platform Condition="'$(Platform)'==''">Any CPU</Platform>
@@ -44,12 +44,12 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="Webview.Core" Version="0.0.3" />
+    <PackageReference Include="MigraDoc.RtfRendering.Core" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.Core.csproj" />
-    <ProjectReference Include="..\Models\Models.Core.csproj" />
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\..\SourceView\SourceView.csproj" />
   </ItemGroup>
-
 </Project>
