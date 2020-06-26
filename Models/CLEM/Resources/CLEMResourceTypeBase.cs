@@ -78,20 +78,35 @@ namespace Models.CLEM.Resources
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            ResourcePricing price = null;
 
-            // does simulation have finance
-            ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
-            bool financesPresent = (resources.FinanceResource() != null);
+            // if market exists look for market pricing to override local pricing as all transactions will be through the market
+            if (!((this.Parent.Parent as ResourcesHolder).FoundMarket is null) && this.MarketStoreExists)
+            {
+                price = Apsim.Children(this.EquivalentMarketStore, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            }
+            else
+            {
+                price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            }
 
             if (price == null)
             {
-                if (financesPresent)
+                // does simulation have finance
+                ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+                if (resources.FinanceResource() != null)
                 {
                     string market = "";
-                    if(MarketStoreExists)
+                    if((this.Parent.Parent as ResourcesHolder).MarketPresent)
                     {
-                        market = this.CLEMParentName + ".";
+                        if(!(this.EquivalentMarketStore is null))
+                        {
+                            market = this.EquivalentMarketStore.CLEMParentName + ".";
+                        }
+                        else
+                        {
+                            market = this.CLEMParentName + ".";
+                        }
                     }
                     string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
                     if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
@@ -228,9 +243,9 @@ namespace Models.CLEM.Resources
                 {
                     ResourcesHolder holder = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
                     // is there a market
-                    if (holder != null && holder.FindMarket != null)
+                    if (holder != null && holder.FoundMarket != null)
                     {
-                        IResourceWithTransactionType store = holder.FindMarket.Resources.LinkToMarketResourceType(this);
+                        IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
                         if (store != null)
                         {
                             EquivalentMarketStore = store as CLEMResourceTypeBase;

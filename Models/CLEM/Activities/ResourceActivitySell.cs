@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             // find market if present
-            Market market = Resources.FindMarket;
+            Market market = Resources.FoundMarket;
             // find a suitable store to place resource
             if(market != null)
             {
