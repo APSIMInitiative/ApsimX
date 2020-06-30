@@ -2,17 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
     <ApplicationIcon />
     <StartupObject />
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
+    <OutputPath>..\NetCoreBin\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
     <OutputPath>..\Bin\</OutputPath>
   </PropertyGroup>
   
@@ -32,21 +39,16 @@
     <Compile Remove="Lifecycle\LifeStageMortality.cs" />
     <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
     <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
-    <Compile Remove="MySoluteManager.cs" />
     <Compile Remove="Plant\BiomassSummariser.cs" />
     <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
     <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
     <Compile Remove="Report\RowEnumerator.cs" />
     <Compile Remove="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Remove="Resources\Scripts\GraphPanelScriptTemplate.cs" />
-    <Compile Remove="Storage\FBDataStore.cs" />
-    <Compile Remove="Storage\MyDataStore.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="DataStore.cs.saved" />
     <None Remove="Manager.cs.rej" />
-    <None Remove="Models.csproj.saved" />
     <None Remove="Resources\**" />
   </ItemGroup>
 
@@ -60,7 +62,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
-    <PackageReference Include="MigraDoc.RtfRendering.Core" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0-preview.5.20278.1" />
@@ -70,10 +71,22 @@
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
+    <PackageReference Include="MigraDoc.RtfRendering.Core" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>false</Private>
+    </Reference>
+    <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
 </Project>

@@ -31,6 +31,55 @@ namespace Models.PMF.Phen
         public double SN { get; set; }
     }
 
+
+    /// <summary>
+    /// Upregulation of Vrn1 from cold.  Is additional to base vrn1.
+    /// BaseDVrn1 in seperate calculation otherwise te same as Brown etal 2013
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(IFunction))]
+    public class ColdUpRegVrn1 : Model, IFunction, IIndexedFunction
+    {
+
+        [Link(ByName = true, Type = LinkType.Ancestor)]
+        CAMP camp = null;
+
+        /// <summary> The k factor controls the shape of the exponential decline of vernalisation with temperature </summary>
+        [Description("The exponential shape function")]
+        public double k { get; set; }
+
+        /// <summary> The temperature above which Vrn1 is down regulated </summary>
+        [Description("The temperature above which Vrn1 is down regulated")]
+        public double DeVernalisationTemp { get; set; }
+
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        /// <exception cref="System.Exception">Cannot call Value on XYPairs function. Must be indexed.</exception>
+        public double Value(int arrayIndex = -1)
+        {
+            throw new Exception("Cannot call Value onColdUpRegVrn1 function. Must be indexed.");
+        }
+
+        /// <summary>Values the indexed.</summary>
+        /// <param name="dX">The d x.</param>
+        /// <returns></returns>
+        public double ValueIndexed(double dX)
+        {
+            if (camp.Params != null)
+            {
+                double dHS = camp.dHS / 24;  //divide by 24 to make hourly
+                double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k * dX);
+                if (dX < DeVernalisationTemp)
+                    return UdVrn1 * dHS;
+                else
+                    return -10 * dHS;
+            }
+            else return 0.0;
+        }
+    }
+
     /// <summary>
     /// Development Gene Expression
     /// </summary>
@@ -53,6 +102,9 @@ namespace Models.PMF.Phen
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction haunStage = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DailyColdVrn1 = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         CalcCAMPVrnRates calcCAMPVrnRates = null;
@@ -91,24 +143,6 @@ namespace Models.PMF.Phen
             if (Tt < 0)
                 BaseDVrn1 = 0;
             return BaseDVrn1 * dHS;
-        }
-
-        /// <summary>
-        /// Upregulation of Vrn1 from cold.  Is additional to base vrn1.
-        /// BaseDVrn1 in seperate calculation otherwise te same as Brown etal 2013
-        /// </summary>
-        /// <param name="Tt">Thermal time</param>
-        /// <param name="dHS">delta Haun stage</param>
-        /// <param name="MUdVrn1">Maximum upregulation of Vrn1/HS (Notionaly at 0oC)</param>
-        /// <param name="k">temperature response coefficient</param>
-        /// <returns></returns>
-        private double CalcColdUpRegVrn1(double Tt, double dHS, double MUdVrn1, double k)
-        {
-            double UdVrn1 = MUdVrn1 * Math.Exp(k * Tt);
-            if (Tt < 20)
-                return UdVrn1 * dHS;
-            else
-                return -1;
         }
 
         /// <summary>
@@ -259,7 +293,7 @@ namespace Models.PMF.Phen
                 {
                     VSHS = haunStage.Value();
                     dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dHS, Params.BaseDVrn1);
-                    dColdVrn1 = CalcColdUpRegVrn1(tt.Value(), dHS, Params.MaxDVrn1, k);
+                    dColdVrn1 = DailyColdVrn1.Value();
                     
                     // If Vrn1(base + cold) equals Vrn1Target methalate coldVrn1.  BaseVrn1 is all methalated every day
                     if (isMethalating ==true)
