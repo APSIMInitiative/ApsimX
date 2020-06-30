@@ -688,6 +688,7 @@
     <Compile Include="Core\IPlant.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="Utilities\DebugLogger.cs" />
     <Compile Include="Utilities\R.cs" />
     <Compile Include="Utilities\RegressionUtilities.cs" />
     <Compile Include="Soils\WaterModel\CNReductionForCover.cs" />

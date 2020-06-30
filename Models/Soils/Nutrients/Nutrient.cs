@@ -28,6 +28,7 @@
     /// [DocumentType Solute]
     /// </summary>
     [Serializable]
+    [ScopedModel]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
@@ -72,11 +73,11 @@
         INutrientPool FOMLignin = null;
         [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool SurfaceResidue = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute NO3 = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute NH4 = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute Urea = null;
 
         // Carbon content of FOM
@@ -178,10 +179,13 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
+                List<IModel> Flows = Apsim.ChildrenRecursively(this, typeof(CarbonFlow));
 
                 foreach (CarbonFlow f in Flows)
-                    values = MathUtilities.Add(values, f.MineralisedN);
+                {
+                    if (f.Parent.Name == "SurfaceResidue")
+                        values = MathUtilities.Add(values, f.MineralisedN);
+                }
                 return values;
             }
         }

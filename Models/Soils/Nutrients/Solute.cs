@@ -56,7 +56,8 @@ namespace Models.Soils.Nutrients
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            kgha = value;
+            for (int i = 0; i < value.Length; i++)
+                kgha[i] = value[i];
         }
 
         /// <summary>Setter for kgha delta.</summary>

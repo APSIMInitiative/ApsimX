@@ -32,7 +32,7 @@ namespace Models.Soils.NutrientPatching
             } 
             set
             {
-                patchManager.SetSoluteKgha(SoluteSetterType.Other, Name, value);
+                patchManager?.SetSoluteKgha(SoluteSetterType.Other, Name, value);
             }
         }
 

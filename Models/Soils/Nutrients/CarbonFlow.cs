@@ -60,6 +60,8 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            destinations.Clear();
+
             foreach (string destinationName in destinationNames)
             {
                 NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
