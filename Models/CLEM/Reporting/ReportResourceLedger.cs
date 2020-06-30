@@ -68,6 +68,9 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            // check if running from a CLEM.Market
+            bool market = (Apsim.Ancestor<Zone>(this).GetType() == typeof(Market));
+
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
@@ -128,7 +131,6 @@ namespace Models.CLEM.Reporting
                                         variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + ",\"gain\") as " + item + "_Gain");
                                         variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + ",\"loss\") as " + item + "_Loss");
                                     }
-
                                 }
 
                                 // add pricing
@@ -139,15 +141,18 @@ namespace Models.CLEM.Reporting
                                 }
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
+                                // if this is a multi CLEM model simulation then add a new column with the parent Zone name
+                                if(Apsim.Child(Apsim.Ancestor<Simulation>(this), typeof(Market))!=null)
+                                {
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.CLEMParentName as Source");
+                                }
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
-
                         }
                     }
                 }
                 events.Subscribe("[Resources]." + this.VariableNames[0] + ".TransactionOccurred", DoOutputEvent);
-
             }
             // Tidy up variable/event names.
             VariableNames = variableNames.ToArray();
@@ -171,14 +176,18 @@ namespace Models.CLEM.Reporting
             string from = null;
             string to = null;
             if (!string.IsNullOrEmpty(GroupByVariableName))
+            {
                 FindFromTo(out from, out to);
+            }
 
             foreach (string fullVariableName in this.VariableNames)
             {
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
+                    {
                         columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                    }
                 }
                 catch (Exception err)
                 {
@@ -224,7 +233,9 @@ namespace Models.CLEM.Reporting
                 string folderName = null;
                 var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
                 if (folderDescriptor != null)
+                {
                     folderName = folderDescriptor.Value;
+                }
                 dataToWriteToDb = new ReportData()
                 {
                     FolderName = folderName,
@@ -256,7 +267,9 @@ namespace Models.CLEM.Reporting
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
+                {
                     throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                }
 
                 // Add row to our table that will be written to the db file
                 dataToWriteToDb.Rows.Add(valuesToWrite);

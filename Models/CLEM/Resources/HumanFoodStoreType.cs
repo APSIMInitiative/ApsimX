@@ -260,7 +260,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Back account transaction occured
+        /// Transaction occured event handler
         /// </summary>
         public event EventHandler TransactionOccurred;
 
