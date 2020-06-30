@@ -106,7 +106,7 @@
           "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "ResourceName": "Pinus",
+          "ResourceName": null,
           "Name": "Pinus",
           "Children": [
             {
