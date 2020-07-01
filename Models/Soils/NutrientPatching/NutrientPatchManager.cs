@@ -174,13 +174,6 @@
             PatchtoAdd.Urea = patch.Urea;
             PatchtoAdd.NH4 = patch.NH4;
             PatchtoAdd.NO3 = patch.NO3;
-            // need to also initialise FOM, even if it is empty
-            PatchtoAdd.FOM = new AddSoilCNPatchwithFOMFOMType();
-            PatchtoAdd.FOM.Type = "none";
-            PatchtoAdd.FOM.Pool = new SoilOrganicMaterialType[3];
-
-            for (int pool = 0; pool < 3; pool++)
-                PatchtoAdd.FOM.Pool[pool] = new SoilOrganicMaterialType();
 
             bool isDataOK = true;
 
@@ -259,7 +252,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // Create a new nutrient patch.
-            var newPatch = new NutrientPatch(soil.Thickness, MaximumNitrogenAvailableToPlants);
+            var newPatch = new NutrientPatch(soil.Thickness, this);
             newPatch.CreationDate = clock.Today;
             newPatch.Name = "base";
             patches.Add(newPatch);
@@ -286,8 +279,8 @@
             try
             {
                 // 1.5 If the calling model is a plant and the solute is NO3 or NH4 then use the 'PlantAvailable' solutes instead.
-                //if (callingModelType == SoluteSetterType.Plant && (soluteName == "NO3" || soluteName == "NH4"))
-                //    soluteName = "PlantAvailable" + soluteName;
+                if (callingModelType == SoluteSetterType.Plant && (soluteName == "NO3" || soluteName == "NH4"))
+                    soluteName = "PlantAvailable" + soluteName;
 
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[patches.Count][];

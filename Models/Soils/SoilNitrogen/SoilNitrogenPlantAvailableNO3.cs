@@ -7,6 +7,7 @@
 
     /// <summary>This class encapsulates a SoilNitrogen model 'PlantAvailableNO3' solute.</summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(SoilNitrogen))]
     public class SoilNitrogenPlantAvailableNO3 : Model, ISolute
     {
         [Link(Type = LinkType.Ancestor)]

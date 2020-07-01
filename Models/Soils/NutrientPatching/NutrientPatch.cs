@@ -21,14 +21,25 @@
         /// <summary>The maximum amount of N that is made available to plants in one day.</summary>
         private double[] soilThickness;
 
-        /// <summary>The maximum amount of N that is made available to plants in one day.</summary>
-        private double maxTotalNAvailableToPlants;
+        /// <summary>The nutrient patch manager.</summary>
+        private NutrientPatchManager patchManager;
+
+        /// <summary>The lignin pool from the Nutrient model.</summary>
+        private NutrientPool lignin;
+
+        /// <summary>The cellulose pool from the Nutrient model.</summary>
+        private NutrientPool cellulose;
+
+        /// <summary>The carbohydrate pool from the Nutrient model.</summary>
+        private NutrientPool carbohydrate;
 
         /// <summary>Constructor.</summary>
-        public NutrientPatch(double[] soilThicknesses, double maxTotalNAvailable)
+        /// <param name="soilThicknesses">Soil thicknesses (mm).</param>
+        /// <param name="nutrientPatchManager">The nutrient patch manager.</param>
+        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager)
         {
             soilThickness = soilThicknesses;
-            maxTotalNAvailableToPlants = maxTotalNAvailable;
+            patchManager = nutrientPatchManager;
             var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json"), out List<Exception> exceptions);
             if (simulations.Children.Count != 1 || !(simulations.Children[0] is Nutrient))
                 throw new Exception("Cannot create nutrient model in NutrientPatchManager");
@@ -38,19 +49,31 @@
             // Find all solutes.
             foreach (ISolute solute in Apsim.Children(Nutrient, typeof(ISolute)))
                 solutes.Add(solute.Name, solute);
+            lignin = Apsim.Find(Nutrient, "FOMLignin") as NutrientPool;
+            if (lignin == null)
+                throw new Exception("Cannot find lignin pool in the nutrient model.");
+            cellulose = Apsim.Find(Nutrient, "FOMCellulose") as NutrientPool;
+            if (cellulose == null)
+                throw new Exception("Cannot find cellulose pool in the nutrient model.");
+            carbohydrate = Apsim.Find(Nutrient, "FOMCarbohydrate") as NutrientPool;
+            if (carbohydrate == null)
+                throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }
 
         /// <summary>Copy constructor.</summary>
         public NutrientPatch(NutrientPatch from)
         {
             soilThickness = from.soilThickness;
-            maxTotalNAvailableToPlants = from.maxTotalNAvailableToPlants;
+            patchManager = from.patchManager;
             Nutrient = Apsim.Clone(from.Nutrient) as Nutrient;
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
             foreach (ISolute solute in Apsim.Children(Nutrient, typeof(ISolute)))
                 solutes.Add(solute.Name, solute);
+            lignin = from.lignin;
+            cellulose = from.cellulose;
+            carbohydrate = from.carbohydrate;
         }
 
         /// <summary>Nutrient model.</summary>
@@ -70,7 +93,7 @@
         /// <returns></returns>
         public double[] GetSoluteKgHaRelativeArea(string name)
         {
-            var values = GetSoluteObject(name).kgha;
+            var values = GetSoluteKgHa(name);
             if (values != null)
                 values = MathUtilities.Multiply_Value(values, RelativeArea);
             return values;
@@ -117,42 +140,6 @@
         }
 
         /// <summary>
-        /// Add a fraction of solutes and FOM from another patch into this patch.
-        /// </summary>
-        /// <param name="from">The other patch.</param>
-        /// <param name="fractionToAdd">The fraction to add.</param>
-        public void Add(NutrientPatch from, double fractionToAdd)
-        {
-            foreach (var solute in solutes)
-            {
-                var amountToAdd = MathUtilities.Multiply_Value(from.GetSoluteKgHaRelativeArea(solute.Key), fractionToAdd);
-                solute.Value.AddKgHaDelta(SoluteSetterType.Other, amountToAdd);
-
-                // NB The old SoilNitrogen model also added in fractions of 
-                // NH3, NO2, TodaysInitialNH4 and TodaysInitialNO3.
-                //Patch[k].nh3[layer] += Patch[j].nh3[layer] * MultiplyingFactor;
-                //Patch[k].no2[layer] += Patch[j].no2[layer] * MultiplyingFactor;
-                //Patch[k].TodaysInitialNH4[layer] += Patch[j].TodaysInitialNH4[layer] * MultiplyingFactor;
-                //Patch[k].TodaysInitialNO3[layer] += Patch[j].TodaysInitialNO3[layer] * MultiplyingFactor;
-
-
-                // NB The old SoilNitrogen model also added in FOM
-                //// Organic C and N
-                //for (int pool = 0; pool < 3; pool++)
-                //{
-                //    patches[k].fom_c[pool][layer] += patches[j].fom_c[pool][layer] * MultiplyingFactor;
-                //    patches[k].fom_n[pool][layer] += patches[j].fom_n[pool][layer] * MultiplyingFactor;
-                //}
-                //patches[k].biom_c[layer] += patches[j].biom_c[layer] * MultiplyingFactor;
-                //patches[k].biom_n[layer] += patches[j].biom_n[layer] * MultiplyingFactor;
-                //patches[k].hum_c[layer] += patches[j].hum_c[layer] * MultiplyingFactor;
-                //patches[k].hum_n[layer] += patches[j].hum_n[layer] * MultiplyingFactor;
-                //patches[k].inert_c[layer] += patches[j].inert_c[layer] * MultiplyingFactor;
-                //patches[k].inert_n[layer] += patches[j].inert_n[layer] * MultiplyingFactor;
-            }
-        }
-
-        /// <summary>
         /// Add a solutes and FOM.
         /// </summary>
         /// <param name="StuffToAdd">The instance desribing what to add.</param>
@@ -165,32 +152,28 @@
             if ((StuffToAdd.NO3 != null) && MathUtilities.IsGreaterThan(Math.Abs(StuffToAdd.NO3.Sum()), 0))
                 GetSoluteObject("NO3").AddKgHaDelta(SoluteSetterType.Other, StuffToAdd.NO3);
 
-            // NB The old SoilNitrogen model also added in FOM.
+            if ((StuffToAdd.FOM != null) && (StuffToAdd.FOM.Pool != null))
+            {
+                if (StuffToAdd.FOM.Pool.Length != 3)
+                    throw new Exception("Expected 3 pools of FOM to be added in PatchManager");
+                if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Length ||
+                    StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Length ||
+                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length || 
+                    StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Length ||
+                    StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Length ||
+                    StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Length)
+                    throw new Exception("Mismatched number of layers of FOM being added in PatchManager");
 
-            //if ((StuffToAdd.FOM != null) && (StuffToAdd.FOM.Pool != null))
-            //{
-            //    bool SomethingAdded = false;
-            //    double[][] CValues = new double[3][];
-            //    double[][] NValues = new double[3][];
-            //    for (int pool = 0; pool < StuffToAdd.FOM.Pool.Length; pool++)
-            //    {
-            //        if ((StuffToAdd.FOM.Pool[pool].C != null) && MathUtilities.IsGreaterThan(Math.Abs(StuffToAdd.FOM.Pool[pool].C.Sum()), 0))
-            //        {
-            //            CValues[pool] = StuffToAdd.FOM.Pool[pool].C;
-            //            SomethingAdded = true;
-            //        }
-            //        if ((StuffToAdd.FOM.Pool[pool].N != null) && MathUtilities.IsGreaterThan(Math.Abs(StuffToAdd.FOM.Pool[pool].N.Sum()), 0))
-            //        {
-            //            NValues[pool] = StuffToAdd.FOM.Pool[pool].N;
-            //            SomethingAdded = true;
-            //        }
-            //    }
-            //    if (SomethingAdded)
-            //    {
-            //        patches[PatchesToAdd[i]].dlt_fom_c = CValues;
-            //        patches[PatchesToAdd[i]].dlt_fom_n = NValues;
-            //    }
-            //}
+                for (int i = 0; i < lignin.C.Length; i++)
+                {
+                    lignin.C[i] += StuffToAdd.FOM.Pool[0].C[i] * RelativeArea;
+                    lignin.N[i] += StuffToAdd.FOM.Pool[0].N[i] * RelativeArea;
+                    cellulose.C[i] += StuffToAdd.FOM.Pool[1].C[i] * RelativeArea;
+                    cellulose.N[i] += StuffToAdd.FOM.Pool[1].N[i] * RelativeArea;
+                    carbohydrate.C[i] += StuffToAdd.FOM.Pool[2].C[i] * RelativeArea;
+                    carbohydrate.N[i] += StuffToAdd.FOM.Pool[2].N[i] * RelativeArea;
+                }
+            }
         }
 
         /// <summary>Calculate the amount of solute made available to plants (kgN/ha).</summary>
@@ -202,7 +185,7 @@
             double depthFromSurface = 0.0;
             double[] result = new double[solute.Length];
             double fractionAvailable = Math.Min(1.0,
-                MathUtilities.Divide(maxTotalNAvailableToPlants, CalcTotalMineralNInRootZone(), 0.0));
+                MathUtilities.Divide(patchManager.MaximumNitrogenAvailableToPlants, CalcTotalMineralNInRootZone(), 0.0));
             for (int layer = 0; layer < solute.Length; layer++)
             {
                 result[layer] = solute[layer] * fractionAvailable;

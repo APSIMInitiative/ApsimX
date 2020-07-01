@@ -763,6 +763,10 @@ namespace Models.Soils
 
             try
             {
+                if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
+                    for (int k = 0; k < nPatches; k++)
+                        Patch[k].CalcTotalMineralNInRootZone();
+
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[nPatches][];
                 for (int k = 0; k < nPatches; k++)
@@ -773,13 +777,13 @@ namespace Models.Soils
                             existingSoluteAmount[k] = Patch[k].urea;
                             break;
                         case "NH4":
-                            if (senderModule == "Plant".ToLower())
+                            if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
                                 existingSoluteAmount[k] = Patch[k].nh4AvailableToPlants;
                             else
                                 existingSoluteAmount[k] = Patch[k].nh4;
                             break;
                         case "NO3":
-                            if (senderModule == "Plant".ToLower())
+                            if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
                                 existingSoluteAmount[k] = Patch[k].no3AvailableToPlants;
                             else
                                 existingSoluteAmount[k] = Patch[k].no3;

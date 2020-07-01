@@ -293,7 +293,7 @@
         /// <param name="FOMdata">The in fo mdata.</param>
         public void DoIncorpFOM(FOMLayerType FOMdata)
         { 
-        bool nSpecified = false;
+            bool nSpecified = false;
             for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
             {
                 // If the caller specified CNR values then use them to calculate N from Amount.
