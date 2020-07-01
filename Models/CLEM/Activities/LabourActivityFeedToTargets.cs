@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if(Resources.FindMarket != null & bankAccount is null)
+            if(Resources.FoundMarket != null & bankAccount is null)
             {
                 string[] memberNames = new string[] { "AccountName" };
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
@@ -221,26 +221,26 @@ namespace Models.CLEM.Activities
 
             // for each market
             List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
-                ResourcesHolder resources = Resources.FindMarket.Resources;
-                if (resources != null)
+            ResourcesHolder resources = Resources.FoundMarket.Resources;
+            if (resources != null)
+            {
+                HumanFoodStore food = resources.HumanFoodStore();
+                if (food != null)
                 {
-                    HumanFoodStore food = resources.HumanFoodStore();
-                    if (food != null)
+                    foreach (HumanFoodStoreType foodStore in Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().ToList())
                     {
-                        foreach (HumanFoodStoreType foodStore in Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().ToList())
+                        foreach (HumanFoodStorePool pool in foodStore.Pools)
                         {
-                            foreach (HumanFoodStorePool pool in foodStore.Pools)
+                            marketFoodParcels.Add(new HumanFoodParcel()
                             {
-                                marketFoodParcels.Add(new HumanFoodParcel()
-                                {
-                                    FoodStore = foodStore,
-                                    Pool = pool,
-                                    Expires = ((foodStore.UseByAge == 0) ? maxFoodAge + 1 : foodStore.UseByAge - pool.Age)
-                                });
-                            }
+                                FoodStore = foodStore,
+                                Pool = pool,
+                                Expires = ((foodStore.UseByAge == 0) ? maxFoodAge + 1 : foodStore.UseByAge - pool.Age)
+                            });
                         }
                     }
                 }
+            }
             foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase).PricePerPacket));
 
             double fundsAvailable = double.PositiveInfinity;
