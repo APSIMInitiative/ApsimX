@@ -835,7 +835,7 @@ namespace Models.Soils
                         thisLayersTotalSolute = SumDoubleArray(thisLayerPatchSolute);
 
                         // 3.4- Check whether the existing solute is greater than the incoming delta
-                        if (thisLayersTotalSolute + incomingDelta[layer] < FatalNegativeThreshold)
+                        if (MathUtilities.IsLessThan(thisLayersTotalSolute + incomingDelta[layer], 0))
                         {
                             string myMessage = "attempt to change " + SoluteName + "[" + (layer + 1) +
                                                "] to a negative value";
