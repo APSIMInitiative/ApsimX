@@ -292,7 +292,7 @@
 
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
         [XmlIgnore]
-        public double[] SW { get; set; }
+        public double[] SW { get { return MathUtilities.Divide(Water, soil.Thickness); } set { Water = MathUtilities.Multiply(value, soil.Thickness); ; } }
 
         ///<summary>Gets soil water content (mm)</summary>
         [XmlIgnore]
@@ -494,9 +494,6 @@
             // Set solute state variables.
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
-
-            // Update the volumetric water property
-            SW = MathUtilities.Divide(Water, soil.Thickness);
         }
 
         /// <summary>Move water down the profile</summary>
