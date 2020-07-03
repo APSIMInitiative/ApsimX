@@ -57,6 +57,16 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.FieldName)]
         public string FieldName3UsedForMatch { get; set; }
 
+        /// <summary>
+        /// Normally, the only columns added to the PredictedObserved table are
+        /// those which exist in both predicted and observed tables. If this is
+        /// checked, all columns from both tables will be added to the
+        /// PredictedObserved table.
+        /// </summary>
+        [Tooltip("Normally, the only columns added to the PredictedObserved table are those which exist in both predicted and observed tables. If this is checked, all columns from both tables will be added to the PredictedObserved table.")]
+        [Description("Include all columns in PredictedObserved table")]
+        public bool AllColumns { get; set; }
+
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
@@ -103,9 +113,9 @@ namespace Models.PostSimulationTools
                     query.Append(", ");
 
                 if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                    query.Append($"O.[{obsColShort}]");
+                    query.Append($"O.\"{obsColShort}\"");
                 else
-                    query.Append($"O.[{obsColShort}] AS [Observed.{obsColShort}], P.[{predColShort}] AS [Predicted.{predColShort}]");
+                    query.Append($"O.\"{obsColShort}\" AS \"Observed.{obsColShort}\", P.\"{predColShort}\" AS \"Predicted.{predColShort}\"");
             }
 
             // Add columns which exist in one table but not both.
@@ -116,29 +126,29 @@ namespace Models.PostSimulationTools
                 // column from both predicted and observed tables if we don't have to.
                 // This does raise the question of whether we should be creating a "PredictedObserved"
                 // table at all, since we're actually duplicating data in the DB by doing so.
-                if (uncommonCol.EndsWith("Error"))
+                if (AllColumns || uncommonCol.EndsWith("Error"))
                 {
                     if (predictedDataNames.Contains(uncommonCol))
-                        query.Append($", P.[{uncommonCol}] as [Predicted.{uncommonCol}]");
+                        query.Append($", P.\"{uncommonCol}\" as \"Predicted.{uncommonCol}\"");
                     else if (observedDataNames.Contains(uncommonCol))
-                        query.Append($", O.[{uncommonCol}] as [Observed.{uncommonCol}]");
+                        query.Append($", O.\"{uncommonCol}\" as \"Observed.{uncommonCol}\"");
                 }
             }
 
             query.AppendLine();
-            query.AppendLine("FROM [" + ObservedTableName + "] O");
+            query.AppendLine($"FROM [{ObservedTableName}] O");
             query.AppendLine($"INNER JOIN [{PredictedTableName}] P");
             query.Append($"USING ([SimulationID], [CheckpointID], [{FieldNameUsedForMatch}]");
             if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
-                query.Append($", [{FieldName2UsedForMatch}]");
+                query.Append($", \"{FieldName2UsedForMatch}\"");
             if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
-                query.Append($", [{FieldName3UsedForMatch}]");
+                query.Append($", \"{FieldName3UsedForMatch}\"");
             query.AppendLine(")");
 
             int checkpointID = dataStore.Writer.GetCheckpointID("Current");
             query.AppendLine("WHERE [CheckpointID] = " + checkpointID);
-            query.Replace("O.[SimulationID] AS [Observed.SimulationID], P.[SimulationID] AS [Predicted.SimulationID]", "O.[SimulationID] AS [SimulationID]");
-            query.Replace("O.[CheckpointID] AS [Observed.CheckpointID], P.[CheckpointID] AS [Predicted.CheckpointID]", "O.[CheckpointID] AS [CheckpointID]");
+            query.Replace("O.\"SimulationID\" AS \"Observed.SimulationID\", P.\"SimulationID\" AS \"Predicted.SimulationID\"", "O.\"SimulationID\" AS \"SimulationID\"");
+            query.Replace("O.\"CheckpointID\" AS \"Observed.CheckpointID\", P.\"CheckpointID\" AS \"Predicted.CheckpointID\"", "O.\"CheckpointID\" AS \"CheckpointID\"");
 
             if (Parent is Folder)
             {
