@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 96; } }
+        public static int LatestVersion { get { return 103; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2181,6 +2181,125 @@
         }
 
         /// <summary>
+        /// Add RootShape to all simulations.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion97(JObject root, string fileName)
+        {
+            foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
+            {
+                JObject tempResponse = JsonUtilities.ChildWithName(AirTempFunc, "XYPairs");
+                tempResponse["Name"] = "TemperatureResponse";
+            }
+        }
+
+        /// <summary>
+        /// Convert stock animalparamset
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion98(JObject root, string fileName)
+        {
+            foreach (JObject paramSet in JsonUtilities.ChildrenRecursively(root, "AnimalParamSet"))
+            {
+                paramSet["$type"] = "Models.GrazPlan.Genotype, Models";
+            }
+        }
+
+        /// <summary>
+        /// Add InterpolationMethod to AirTemperature Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion99(JObject root, string fileName)
+        {
+            foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
+            {
+                AirTempFunc["agregationMethod"] = "0";
+                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+            }
+        }
+
+        /// <summary>
+        /// Change SimpleGrazing.FractionDefoliatedNToSoil from a scalar to an array.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion100(JObject root, string fileName)
+        {
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+            {
+                if (simpleGrazing["FractionDefoliatedNToSoil"] != null)
+                {
+                    var arr = new JArray();
+                    arr.Add(simpleGrazing["FractionDefoliatedNToSoil"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = arr;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion101(JObject root, string fileName)
+        {
+            foreach (JObject Leaf in JsonUtilities.ChildrenOfType(root, "Leaf"))
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(Leaf, "WidthFunction", "0");
+
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "DepthFunction";
+                varRef.VariableName = "[Leaf].Height";
+
+                JsonUtilities.AddModel(Leaf, varRef);
+            }
+        }
+
+        /// <summary>
+        /// Rename Models.Sensitivity.CroptimizR to Models.Optimisation.CroptimizR.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion102(JObject root, string fileName)
+        {
+            foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+                croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
+        }
+
+        /// <summary>
+        /// Rename TemperatureResponse to Response on Interpolate functions.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion103(JObject root, string fileName)
+        {
+            foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
+            {
+                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                foreach (JObject c in atf["Children"])
+                {
+                    if (c["Name"].ToString() == "TemperatureResponse")
+                    {
+                        c["Name"] = "Response";
+                    }
+                }
+                foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+                {
+                    if (!cultivar["Command"].HasValues)
+                        continue;
+
+                    foreach (JValue command in cultivar["Command"].Children())
+                    {
+                        command.Value = command.Value.ToString().Replace(".TemperatureResponse", ".Response");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
@@ -2401,7 +2520,7 @@
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion99(JObject root, string fileName)
+        private static void UpgradeToVersion999(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))

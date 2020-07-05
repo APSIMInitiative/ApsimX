@@ -20,6 +20,16 @@
         /// <summary>Gets or sets the name of the resource.</summary>
         public string ResourceName { get; set; }
 
+        private string FullResourceName
+        {
+            get
+            {
+                if (ResourceName.Contains('.'))
+                    return ResourceName;
+                else
+                    return $"Models.Resources.{ResourceName}.json";
+            }
+        }
         /// <summary>Allow children to be serialised?</summary>
         [JsonIgnore]
         public bool DoSerialiseChildren
@@ -49,18 +59,18 @@
         /// resource model's children. A match is defined as having the same name and
         /// type.
         /// </remarks>
-        public List<Model> ChildrenToSerialize
+        public List<IModel> ChildrenToSerialize
         {
             get
             {
                 if (string.IsNullOrEmpty(ResourceName))
                     return Children;
 
-                List<Model> officialChildren = GetResourceModel()?.Children;
+                List<IModel> officialChildren = GetResourceModel()?.Children;
                 if (officialChildren == null)
                     return Children;
 
-                List<Model> toReturn = new List<Model>();
+                List<IModel> toReturn = new List<IModel>();
                 foreach (Model child in Children)
                     if (!officialChildren.Any(m => m.GetType() == child.GetType() && string.Equals(m.Name, child.Name, StringComparison.InvariantCultureIgnoreCase)))
                         toReturn.Add(child);
@@ -77,7 +87,7 @@
             // lookup the resource get the xml and then deserialise to a model.
             if (!string.IsNullOrEmpty(ResourceName))
             {
-                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
                     Model modelFromResource = GetResourceModel();
@@ -103,7 +113,7 @@
         {
             if (ResourceName != null && ResourceName != "")
             {
-                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                string contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
                     var parameterNames = new List<string>();
@@ -147,10 +157,10 @@
 
         private Model GetResourceModel()
         {
-            if (string.IsNullOrEmpty(ResourceName))
+            if (string.IsNullOrEmpty(FullResourceName))
                 return null;
 
-            string contents = ReflectionUtilities.GetResourceAsString($"Models.Resources.{ResourceName}.json");
+            string contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
             if (string.IsNullOrEmpty(contents))
                 return null;
 
@@ -178,6 +188,7 @@
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
                 if (property.CanWrite &&
+                    property.CanRead &&
                     property.Name != "Name" &&
                     property.Name != "Parent" &&
                     property.Name != "Children" &&
@@ -227,14 +238,14 @@
         /// Class used to compare models. The models are considered equal iff they have
         /// the same name and type.
         /// </summary>
-        private class ModelComparer : IEqualityComparer<Model>
+        private class ModelComparer : IEqualityComparer<IModel>
         {
-            public bool Equals(Model x, Model y)
+            public bool Equals(IModel x, IModel y)
             {
                 return x.GetType() == y.GetType() && string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase);
             }
 
-            public int GetHashCode(Model obj)
+            public int GetHashCode(IModel obj)
             {
                 return obj.GetHashCode();
             }

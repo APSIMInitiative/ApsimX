@@ -24,7 +24,7 @@
             if (modelToRename.ReadOnly)
                 throw new ApsimXException(modelToRename, string.Format("Unable to rename {0} - it is read-only.", modelToRename.Name));
             this.modelToRename = modelToRename;
-            this.newName = newName;
+            this.newName = newName.Trim();
             this.explorerView = explorerView;
         }
 

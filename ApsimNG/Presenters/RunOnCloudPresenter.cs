@@ -17,7 +17,15 @@ using System.Threading;
 
 namespace UserInterface.Presenters
 {
-    public class RunOnCloudPresenter : IPresenter
+    /// <summary>
+    /// Presenter which allows user to send a job to run on a cloud platform.
+    /// </summary>
+    /// <remarks>
+    /// Currently, the only supported/implemented cloud platform is azure.
+    /// If this class is extended (ie if you remove the sealed modifier)
+    /// please remember to update the IDisposable implementation.
+    /// </remarks>
+    public sealed class RunOnCloudPresenter : IPresenter, IDisposable
     {
         /// <summary>The new azure job view</summary>
         private RunOnCloudView view;
@@ -124,6 +132,11 @@ namespace UserInterface.Presenters
         public void CancelJobSubmission(object sender, EventArgs args)
         {
             cancellation.Cancel();
+        }
+
+        public void Dispose()
+        {
+            cancellation.Dispose();
         }
     }
 }

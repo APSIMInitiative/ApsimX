@@ -624,6 +624,31 @@
         }
 
         /// <summary>
+        /// Force emergence on the date called if emergence has not occured already
+        /// </summary>
+        public void SetEmergenceDate(string emergencedate)
+        {
+            foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
+                {
+                    ep.EmergenceDate=emergencedate;
+                }
+            SetGerminationDate(SowingDate.ToString("d-MMM"));
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occured already
+        /// </summary>
+        public void SetGerminationDate(string germinationdate)
+        {
+            {
+                foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+                {
+                    gp.GerminationDate = germinationdate;
+                }
+            }
+        }
+
+        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>

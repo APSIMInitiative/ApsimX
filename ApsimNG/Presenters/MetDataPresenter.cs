@@ -5,7 +5,6 @@
     using System.Data;
     using System.Drawing;
     using System.Globalization;
-    using System.IO;
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
@@ -13,7 +12,7 @@
     using Views;
 
     /// <summary>A presenter for displaying weather data</summary>
-    public class MetDataPresenter : IPresenter
+    public sealed class MetDataPresenter : IPresenter, IDisposable
     {
         /// <summary>The met data</summary>
         private Weather weatherData;
@@ -88,7 +87,7 @@
         {
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
-                if (Path.GetExtension(fileName) == ExcelUtilities.ExcelExtension)
+                if (ExcelUtilities.IsExcelFile(fileName))
                 {
                     //// Extend height of Browse Panel to show Drop Down for Sheet names
                     this.weatherDataView.ShowExcelSheets(true);
@@ -183,7 +182,7 @@
                 this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
-                    if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
+                    if (ExcelUtilities.IsExcelFile(filename))
                     {
                         // Extend height of Browse Panel to show Drop Down for Sheet names
                         this.weatherDataView.ShowExcelSheets(true);
@@ -629,6 +628,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Red,
@@ -642,6 +642,7 @@
                                                      "Minimum Temperature",
                                                      months,
                                                      monthlyMinT,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,
@@ -715,6 +716,7 @@
                                                  null,
                                                  null,
                                                  null,
+                                                 null,
                                                  Axis.AxisType.Bottom,
                                                  Axis.AxisType.Left,
                                                  Color.Blue,
@@ -747,6 +749,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
                                                      Color.Blue,
@@ -761,6 +764,7 @@
                                                      "Minimum Temperature",
                                                      dates,
                                                      minTemps,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,
@@ -804,6 +808,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Blue,
@@ -817,6 +822,7 @@
                                                      "Maximum Radiation",
                                                      dates,
                                                      maxRadn,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,
@@ -835,6 +841,12 @@
             this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
+        }
+
+        public void Dispose()
+        {
+            if (graphMetData != null)
+                graphMetData.Dispose();
         }
     }
 }

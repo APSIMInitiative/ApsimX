@@ -95,77 +95,16 @@
         /// <summary>Hour angle for second sunset on tilted surface.</summary>
         private double sunsetAngle2Slope = 0.0;
 
+        /// <summary>Aspect of slope - degrees from south (in radians).</summary>
+        private double aspectFromSouthInRadians;
+
         /// <summary>Albedo of the surrounding environment (0-1).</summary>
         [Separator("General description of the site")]
         [Description("Albedo of the surrounding environment (0-1)")]
         public double SurroundsAlbedo { get; set; } = 0.2;
 
-        /// <summary>Parameter A for diffuse radiation fraction.</summary>
-        [Separator("Parameters to adjust solar radiation")]
-        [Description("Parameter A for diffuse radiation fraction")]
-        public double A_diffuseRadn { get; set; } = -3.664;
-
-        /// <summary>Parameter B for diffuse radiation fraction.</summary>
-        [Description("Parameter B for diffuse radiation fraction")]
-        public double B_diffuseRadn { get; set; } = 7.011;
-
-        /// <summary>
-        /// Mean air turbidity for direct radiation (0-1).
-        /// </summary>
-        /// <remarks>
-        /// The value should be, in practice, between 0.5 (for very dusty/polluted places) and 1.0 (for areas with natural vegetation)
-        /// Following Allen et al (2006)
-        /// </remarks>
-        [Description("Mean air turbidity for direct radiation (0-1)")]
-        public double TurbidityCoefficient { get; set; } = 0.95;
-
-        /// <summary>Parameter a of the function for transimissivity index for direct radn.</summary>
-        [Description("Parameter a of the function for transimissivity index for direct radn")]
-        public double a_ki { get; set; } = 0.98;
-
-        /// <summary>Parameter b of the function for transimissivity index for direct radn.</summary>
-        [Description("Parameter b of the function for transimissivity index for direct radn")]
-        public double b_ki { get; set; } = 0.00146;
-
-        /// <summary>parameter c of the function for transimissivity index for direct radn.</summary>
-        [Description("parameter c of the function for transimissivity index for direct radn")]
-        public double c_ki { get; set; } = 0.075;
-
-        /// <summary>Parameter d of the function for transimissivity index for direct radn.</summary>
-        [Description("Parameter d of the function for transimissivity index for direct radn")]
-        public double d_ki { get; set; } = 0.40;
-
-        /// <summary>Parameter a of the function for precipitable water (mm).</summary>
-        [Description("Parameter a of the function for precipitable water (mm)")]
-        public double a_pw { get; set; } = 2.10;
-
-        /// <summary>Parameter b for the function for precipitable water (mm/kPa^2).</summary>
-        [Description("Parameter b for the function for precipitable water (mm/kPa^2)")]
-        public double b_pw { get; set; } = 0.14;
-
-        /// <summary>Parameter aT0 of dltTemp × dltRadn function, max rate of change (oC per MJ/m2/day).</summary>
-        [Separator("Parameters to adjust min and max temperatures")]
-        [Description("Parameter aT0 of dltTemp × dltRadn function, max rate of change (oC per MJ/m2/day)")]
-        public double aT0 { get; set; } = 1.61;
-
-        /// <summary>Parameter bT of dltTemp × dltRadn function, non linear coefficient (exponent).</summary>
-        [Description("Parameter bT of dltTemp × dltRadn function, non linear coefficient (exponent)")]
-        public double bT { get; set; } = 0.88;
-
-        /// <summary>Parameter cT of dltTemp × dltRadn function, accounts for wind effects (0-1).</summary>
-        [Description("Parameter cT of dltTemp × dltRadn function, accounts for wind effects (0-1)")]
-        public double cT { get; set; } = 0.12;
-
-        /// <summary>Parameter FN of dltTemp × dltRadn function, used when dltRadn is negative (0-1).</summary>
-        [Description("Parameter FN of dltTemp × dltRadn function, used when dltRadn is negative (0-1)")]
-        public double FN { get; set; } = 0.81;
-
-        /// <summary>Parameter FM of dltTemp × dltRadn function, adjust for Tmin (0-1).</summary>
-        [Description("Parameter FM of dltTemp × dltRadn function, adjust for Tmin (0-1)")]
-        public double FM { get; set; } = 0.5;
-
         /// <summary>Relative change in rainfall.</summary>
-        [Separator("Parameters to adjust other variables (not function of slope)")]
+        [Separator("Parameters to adjust weather variables (not function of slope)")]
         [Description("Relative change in rainfall")]
         [Units("%")]
         public double dRain { get; set; } = 0.0;
@@ -179,6 +118,54 @@
         [Description("Relative change in vapour pressure")]
         [Units("%")]
         public double dVapPressure { get; set; } = 0.0;
+
+        /// <summary>Parameter A for diffuse radiation fraction.</summary>
+        public double A_diffuseRadn { get; set; } = -3.664;
+
+        /// <summary>Parameter B for diffuse radiation fraction.</summary>
+        public double B_diffuseRadn { get; set; } = 7.011;
+
+        /// <summary>
+        /// Mean air turbidity for direct radiation (0-1).
+        /// </summary>
+        /// <remarks>
+        /// The value should be, in practice, between 0.5 (for very dusty/polluted places) and 1.0 (for areas with natural vegetation)
+        /// Following Allen et al (2006)
+        /// </remarks>
+        public double TurbidityCoefficient { get; set; } = 0.95;
+
+        /// <summary>Parameter a of the function for transimissivity index for direct radn.</summary>
+        public double a_ki { get; set; } = 0.98;
+
+        /// <summary>Parameter b of the function for transimissivity index for direct radn.</summary>
+        public double b_ki { get; set; } = 0.00146;
+
+        /// <summary>parameter c of the function for transimissivity index for direct radn.</summary>
+        public double c_ki { get; set; } = 0.075;
+
+        /// <summary>Parameter d of the function for transimissivity index for direct radn.</summary>
+        public double d_ki { get; set; } = 0.40;
+
+        /// <summary>Parameter a of the function for precipitable water (mm).</summary>
+        public double a_pw { get; set; } = 2.10;
+
+        /// <summary>Parameter b for the function for precipitable water (mm/kPa^2).</summary>
+        public double b_pw { get; set; } = 0.14;
+
+        /// <summary>Parameter aT0 of dltTemp × dltRadn function, max rate of change (oC per MJ/m2/day).</summary>
+        public double aT0 { get; set; } = 1.61;
+
+        /// <summary>Parameter bT of dltTemp × dltRadn function, non linear coefficient (exponent).</summary>
+        public double bT { get; set; } = 0.88;
+
+        /// <summary>Parameter cT of dltTemp × dltRadn function, accounts for wind effects (0-1).</summary>
+        public double cT { get; set; } = 0.12;
+
+        /// <summary>Parameter FN of dltTemp × dltRadn function, used when dltRadn is negative (0-1).</summary>
+        public double FN { get; set; } = 0.81;
+
+        /// <summary>Parameter FM of dltTemp × dltRadn function, adjust for Tmin (0-1).</summary>
+        public double FM { get; set; } = 0.5;
 
         /// <summary>Original solar radiation input (MJ/m2).</summary>
         [Units("MJ/m2")]
@@ -288,9 +275,9 @@
         {
             // Check parameter values
             if ((zone.Slope < 0.0) || (zone.Slope > 90))
-                throw new Exception("Slope angle is out of the expected range (0-90deg)");
+                throw new Exception("Slope angle is out of the expected range (0-90 deg)");
             if ((zone.AspectAngle < 0.0) || (zone.AspectAngle > 360))
-                throw new Exception("Aspect angle is out of the expected range (0-600deg)");
+                throw new Exception("Aspect angle is out of the expected range (0-360 deg)");
             if ((zone.Altitude < -100.0) || (SurroundsAlbedo > 5000))
                 throw new Exception("Altitude value is out of bounds (0-1)");
             if ((SurroundsAlbedo < 0.0) || (SurroundsAlbedo > 1.0))
@@ -299,12 +286,14 @@
                 throw new Exception("Turbidity coefficient value is out of bounds (0-1)");
 
             // Convert and fix some parameters
-            // AspectAngle is degres from north. Should really check this against original 
-            // sources of the equations. Seems to make sense.
-            //if (zone.AspectAngle > 180)
-            //    zone.AspectAngle -= 180;
+            // zone.AspectAngle is degrees from north. This algorithm seems to work using aspect from south in radians.
+            // Should really check this against original sources of the equations. Seems to make sense.
+            aspectFromSouthInRadians = zone.AspectAngle + 180;
+            if (aspectFromSouthInRadians > 360)
+                aspectFromSouthInRadians -= 360;
+
             zone.Slope = Math.PI * zone.Slope / 180;
-            zone.AspectAngle = Math.PI * zone.AspectAngle / 180;
+            aspectFromSouthInRadians = Math.PI * aspectFromSouthInRadians / 180;
             latitudeAngle = Math.PI * weather.Latitude / 180;
 
             // Get the local mean atmospheric pressure, similar to Allen et al (1998)
@@ -413,10 +402,10 @@
             {
                 // Auxiliary variables for radiation (Allen et al., 2006)
                 double a_ = Math.Sin(SolarDeclination) * ((Math.Sin(latitudeAngle) * Math.Cos(zone.Slope))
-                          - (Math.Cos(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(zone.AspectAngle)));
+                          - (Math.Cos(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(aspectFromSouthInRadians)));
                 double b_ = Math.Cos(SolarDeclination) * ((Math.Cos(latitudeAngle) * Math.Cos(zone.Slope))
-                          + (Math.Sin(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(zone.AspectAngle)));
-                double c_ = Math.Cos(SolarDeclination) * (Math.Sin(zone.Slope) * Math.Sin(zone.AspectAngle));
+                          + (Math.Sin(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(aspectFromSouthInRadians)));
+                double c_ = Math.Cos(SolarDeclination) * (Math.Sin(zone.Slope) * Math.Sin(aspectFromSouthInRadians));
                 double g_ = Math.Sin(SolarDeclination) * Math.Sin(latitudeAngle);
                 double h_ = Math.Cos(SolarDeclination) * Math.Cos(latitudeAngle);
 

@@ -5,6 +5,8 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
+    using Models.GrazPlan;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -36,6 +38,13 @@ namespace UnitTests
                     arguments = new object[] { model, new EventArgs() };
                 eventToInvoke.Invoke(model, arguments);
             }
+        }
+
+        /// <summary>Call an event in a model and all child models.</summary>
+        public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
+        {
+            CallEvent(model, eventName, arguments);
+            Apsim.ChildrenRecursively(model).ForEach(child => CallEvent(child, eventName, arguments));
         }
 
         /// <summary>ResolveLinks in a model</summary>
@@ -146,12 +155,12 @@ namespace UnitTests
             Simulations sims = new Simulations()
             {
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new DataStore(),
                     new Simulation()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {
@@ -162,7 +171,7 @@ namespace UnitTests
                             new Zone()
                             {
                                 Area = 1,
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Models.Report()
                                     {
@@ -184,6 +193,32 @@ namespace UnitTests
             Apsim.ParentAllChildren(sims);
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        public static Simulations GetSimpleExperiment()
+        {
+            Simulations result = ReadFromResource<Simulations>("UnitTests.Resources.SimpleExperiment.apsimx", out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            return result;
+        }
+
+        public static T ReadFromResource<T>(string resourceName, out List<Exception> creationExceptions) where T : IModel
+        {
+            string json = ReflectionUtilities.GetResourceAsString(resourceName);
+            return FileFormat.ReadFromString<T>(json, out creationExceptions);
+        }
+
+        /// <summary>
+        /// Call OnCreated in a model and all child models.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void CallOnCreated(IModel model)
+        {
+            model.OnCreated();
+            foreach (var child in model.Children)
+                CallOnCreated(child);
         }
     }
 }

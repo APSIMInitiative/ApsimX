@@ -331,10 +331,10 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Partition root mass into layers
         /// </summary>
-        public void PartitionRootMass(double TotalRAw, double TotalDMAllocated)
+        public void PartitionRootMass(double TotalRAw, Biomass TotalDMAllocated)
         {
             DMAllocated = new double[soil.Thickness.Length];
-
+ 
             if (Depth > 0)
             {
                 double[] RAw = CalculateRootActivityValues();
@@ -342,8 +342,13 @@ namespace Models.PMF.Organs
                 for (int layer = 0; layer < soil.Thickness.Length; layer++)
                     if (TotalRAw > 0)
                     {
-                        LayerLive[layer].StructuralWt += TotalDMAllocated * RAw[layer] / TotalRAw;
-                        DMAllocated[layer] += TotalDMAllocated * RAw[layer] / TotalRAw;
+                        LayerLive[layer].StructuralWt += TotalDMAllocated.StructuralWt * RAw[layer] / TotalRAw;
+                        LayerLive[layer].StorageWt += TotalDMAllocated.StorageWt * RAw[layer] / TotalRAw;
+                        LayerLive[layer].MetabolicWt += TotalDMAllocated.MetabolicWt * RAw[layer] / TotalRAw;
+
+                        DMAllocated[layer] += (TotalDMAllocated.StructuralWt + 
+                                               TotalDMAllocated.StorageWt +
+                                               TotalDMAllocated.MetabolicWt)* RAw[layer] / TotalRAw;
                     }
             }
         }

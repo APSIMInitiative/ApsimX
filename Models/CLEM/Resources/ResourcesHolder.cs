@@ -27,23 +27,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
-        // Scoping rules of Linking in Apsim means that you can only link to 
-        // Models beneath or above or siblings of the ones above.
-        // Can not link to children of siblings that are above.
-        // Because we have chosen to put Resources and Activities as siblings.
-        // Activities are not going to be able to directly link to Resources.
-        // They will only be able to link to the very top "Resources".
-        // So Activities will have to link to that very top Resources
-        // Then you have to go down from there.
-         
-        // Also we have to use a list. Can't use [Soil].SoilWater method because  
-        // you don't have to have every single Resource Group added every single
-        // simluation. You only add the Resource Groups that you are going to use
-        // in this simlulation and you do this by dragging and dropping them in
-        // as child nodes. So first thing you need to do when the simulation starts
-        // is figure out which ones have been dragged into this specific simulation.
-        // Hence we need to use this list approach.
-
         /// <summary>
         /// List of the all the Resource Groups.
         /// </summary>
@@ -74,7 +57,14 @@ namespace Models.CLEM.Resources
         /// Finds a shared marketplace
         /// </summary>
         /// <returns>Market</returns>
-        public Market FindMarket { get; private set; }
+        [XmlIgnore]
+        public Market FoundMarket { get; private set; }
+
+        /// <summary>
+        /// Determines if a market has been located
+        /// </summary>
+        /// <returns>True or false</returns>
+        public bool MarketPresent { get { return !(FoundMarket is null); } }
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
@@ -131,7 +121,7 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type Model</returns>
-        public Model GetResourceItem(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             if (request.FilterDetails != null)
             {
@@ -210,13 +200,13 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
-        public Model GetResourceItem(Model requestingModel, Type resourceGroupType, string resourceItemName, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(Model requestingModel, Type resourceGroupType, string resourceItemName, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             // locate specified resource
             Model resourceGroup = Apsim.Children(this, resourceGroupType).FirstOrDefault() as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
+                IModel resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
@@ -260,7 +250,7 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
-        public Model GetResourceItem(Model requestingModel, string resourceGroupAndItem, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(Model requestingModel, string resourceGroupAndItem, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             if(resourceGroupAndItem == null)
             {
@@ -278,7 +268,7 @@ namespace Models.CLEM.Resources
             Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
+                IModel resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
@@ -323,9 +313,9 @@ namespace Models.CLEM.Resources
         /// <returns>Whether the search was successful</returns>
         public IResourceWithTransactionType LinkToMarketResourceType(CLEMResourceTypeBase resourceType)
         {
-            if(!this.Parent.GetType().Name.Contains("Market"))
+            if (!(this.Parent is Market))
             {
-                throw new ApsimXException(this, "ooops");
+                throw new ApsimXException(this, $"Logic error in code. Trying to link a resource type [r={resourceType.Name}] from the market with the same market./nThis is a coding issue. Please contact the developers");
             }
 
             // find parent group type
@@ -335,7 +325,12 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
-                Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
+                if (!Warnings.Exists(warn) & Summary != null)
+                {
+                    Summary.WriteWarning(this, warn);
+                    Warnings.Add(warn);
+                }
                 return null;
             }
 
@@ -348,18 +343,26 @@ namespace Models.CLEM.Resources
             if (resType is null)
             {
                 // clone resource
-                resType = Apsim.Clone(resourceType);
+                // too many problems with linked events to clone these objects and setup again
+                // it will be the responsibility of the user to ensure the resources and details are in the market
+                // resType = Apsim.Clone(resourceType);
 
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
                     string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
-                    Warnings.Add($"The resource [r={resourceType.Name}] does not exist in the market and the resource of type [r={resourceType.GetType().ToString()}] cannot be cloned\nAdd resource and associated components to the market.");
+                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\nAdd resource and associated components to the market to permit trading.";
+                    if (!Warnings.Exists(warn) & Summary != null)
+                    {
+                        Summary.WriteWarning(this, warn);
+                        Warnings.Add(warn);
+                    }
                     return null;
                 }
                 else
                 {
                     (resType as IModel).Parent = resGroup;
+                    (resType as CLEMModel).CLEMParentName = resGroup.CLEMParentName;
                     // add new resource type
                     resGroup.AddNewResourceType(resType as IResourceWithTransactionType);
                 }
@@ -464,10 +467,14 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if(this.Parent.GetType() != typeof(Market))
+            if(!(this.Parent is Market))
             {
                 IModel parentSim = Apsim.Parent(this, typeof(Simulation));
-                FindMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
+                FoundMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
+            }
+            else
+            {
+                FoundMarket = this.Parent as Market;
             }
             InitialiseResourceGroupList();
         }

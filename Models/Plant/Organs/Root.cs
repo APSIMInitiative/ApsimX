@@ -124,20 +124,10 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
 
-        /// <summary>The N retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction nRetranslocationFactor = null;
-
         /// <summary>The N reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction nReallocationFactor = null;
-
-        /// <summary>The DM retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -679,7 +669,7 @@
                 throw new Exception("Error trying to partition root biomass");
 
             foreach (ZoneState Z in Zones)
-                Z.PartitionRootMass(TotalRAw, Allocated.Wt);
+                Z.PartitionRootMass(TotalRAw, Allocated);
             needToRecalculateLiveDead = true;
         }
 
@@ -992,9 +982,7 @@
         private void DoSupplyCalculations()
         {
             dmMReallocationSupply = AvailableDMReallocation();
-            dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
-            nRetranslocationSupply = AvailableNRetranslocation();
         }
 
         /// <summary>Computes root total water supply.</summary>
@@ -1081,30 +1069,6 @@
             return 0.0;
         }
 
-        /// <summary>Computes the N amount available for retranslocation.</summary>
-        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
-        private double AvailableNRetranslocation()
-        {
-            if (nRetranslocationFactor != null)
-            {
-                double labileN = 0.0;
-                double minNConc = minimumNConc.Value();
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minNConc);
-
-                double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N retranslocation value computed for " + Name);
-
-                return availableN;
-            }
-            else
-            {  // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
         /// <summary>Computes the N amount available for reallocation.</summary>
         private double AvailableNReallocation()
         {
@@ -1123,28 +1087,6 @@
             }
             else
             {  // By default reallocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of DM available for retranslocation.</summary>
-        private double AvailableDMRetranslocation()
-        {
-            if (dmRetranslocationFactor != null)
-            {
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-
-                double availableDM = Math.Max(0.0, rootLiveStorageWt - dmMReallocationSupply) * dmRetranslocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-                return availableDM;
-            }
-            else
-            { // By default retranslocation is turned off!!!!
                 return 0.0;
             }
         }
