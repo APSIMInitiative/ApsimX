@@ -91,7 +91,8 @@
         /// <param name="y">The y values for the series</param>
         /// <param name="xFieldName">The name of the x variable.</param>
         /// <param name="yFieldName">The name of the y variable.</param>
-        /// <param name="error">The error values for the series</param>
+        /// <param name="xError">The error values for the x series</param>
+        /// <param name="yError">The error values for the y series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -107,7 +108,8 @@
              IEnumerable y,
              string xFieldName,
              string yFieldName,
-             IEnumerable error,
+             IEnumerable xError,
+             IEnumerable yError,
              Models.Axis.AxisType xAxisType, 
              Models.Axis.AxisType yAxisType,
              Color colour,

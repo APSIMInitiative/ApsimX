@@ -517,7 +517,7 @@
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null, null,
                                      Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
                                      Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, 1, true);
