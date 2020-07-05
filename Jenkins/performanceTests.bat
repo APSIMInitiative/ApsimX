@@ -43,14 +43,13 @@ rem Cleanup any modified files.
 cd APSIM.PerformanceTests\APSIM.PerformanceTests.Collector
 git checkout .
 git clean -fdxq
-git checkout master
+git checkout net472
 git pull
 
-echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
-nuget restore -verbosity quiet
-
 echo Compiling APSIM.PerformanceTests.Collector...
-msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
+nuget restore
+dotnet build -v m -c Release
+
 copy /y "%apsimx%\DeploymentSupport\Windows\Bin32\sqlite3.dll" bin\Release\
 echo Running performance tests collector...
 bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
