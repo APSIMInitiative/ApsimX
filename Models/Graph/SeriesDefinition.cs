@@ -219,8 +219,11 @@
         /// <summary>The simulation names for each point.</summary>
         public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
 
-        /// <summary>Gets the error values</summary>
-        public IEnumerable<double> Error { get; private set; }
+        /// <summary>Gets the error values for the x series</summary>
+        public IEnumerable<double> XError { get; private set; }
+
+        /// <summary>Gets the error values for the y series</summary>
+        public IEnumerable<double> YError { get; private set; }
 
         /// <summary>Add a clause to the filter.</summary>
         /// <param name="filter">The filter to add to.</param>
@@ -351,7 +354,8 @@
                     Y = GetDataFromTable(Data, YFieldName);
                     X2 = GetDataFromTable(Data, X2FieldName);
                     Y2 = GetDataFromTable(Data, Y2FieldName);
-                    Error = GetErrorDataFromTable(Data, YFieldName);
+                    XError = GetErrorDataFromTable(Data, XFieldName);
+                    YError = GetErrorDataFromTable(Data, YFieldName);
                     if (series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (series.CumulativeX)

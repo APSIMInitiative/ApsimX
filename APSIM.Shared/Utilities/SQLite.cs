@@ -914,13 +914,14 @@ namespace APSIM.Shared.Utilities
             sql.Append(tableName);
             sql.Append("](");
 
-            foreach (var columnName in columnNames)
+            for (int i = 0; i < columnNames.Count(); i++)
             {
-                if (sql[sql.Length-1] == ']')
+                string columnName = columnNames.ElementAt(i);
+                if (i > 0)
                     sql.Append(',');
-                sql.Append('[');
+                sql.Append('"');
                 sql.Append(columnName);
-                sql.Append(']');
+                sql.Append('"');
             }
             sql.Append(") VALUES (");
 
@@ -1065,9 +1066,9 @@ namespace APSIM.Shared.Utilities
                 if (sql.Length > 0)
                     sql.Append(',');
 
-                sql.Append("[");
+                sql.Append("\"");
                 sql.Append(colNames[c]);
-                sql.Append("] ");
+                sql.Append("\" ");
                 if (colTypes[c] == null)
                     sql.Append("integer");
                 else
@@ -1093,9 +1094,9 @@ namespace APSIM.Shared.Utilities
                 if (columnNamesCSV.Length > 0)
                     columnNamesCSV.Append(',');
 
-                columnNamesCSV.Append("[");
+                columnNamesCSV.Append('"');
                 columnNamesCSV.Append(colNames[c]);
-                columnNamesCSV.Append("] ");
+                columnNamesCSV.Append("\" ");
             }
 
             string uniqueString = null;
