@@ -38,7 +38,7 @@ namespace Models.CLEM
         /// Warning log for this CLEM model
         /// </summary>
         [XmlIgnore]
-        public WarningLog Warnings = new WarningLog(50);
+        public WarningLog Warnings = WarningLog.GetInstance(50);
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -54,6 +54,13 @@ namespace Models.CLEM
         /// </summary>
         [XmlIgnore]
         public string UniqueID { get { return id.ToString(); } }
+
+        /// <summary>
+        /// Parent CLEM Zone
+        /// Stored here so rapidly retrieved
+        /// </summary>
+        [XmlIgnore]
+        public String CLEMParentName { get; set; }
 
         /// <summary>
         /// Method to set defaults from   
