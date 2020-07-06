@@ -785,7 +785,7 @@ namespace Models.CLEM.Activities
 
                 if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>().GetType() == typeof(Market))
                 {
-                    ActivitiesHolder marketActivities = Resources.FindMarket.FindAllChildren<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+                    ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)
                     {
                         marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);

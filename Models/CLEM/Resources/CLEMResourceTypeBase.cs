@@ -78,22 +78,42 @@ namespace Models.CLEM.Resources
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            ResourcePricing price = this.FindAllChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            ResourcePricing price = null;
 
-            // does simulation have finance
-            ResourcesHolder resources = FindAncestor<ResourcesHolder>();
-            bool financesPresent = (resources.FinanceResource() != null);
+            // if market exists look for market pricing to override local pricing as all transactions will be through the market
+            if (!((this.Parent.Parent as ResourcesHolder).FoundMarket is null) && this.MarketStoreExists)
+            {
+                price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
+            }
+            else
+            {
+                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
+            }
 
             if (price == null)
             {
-                if (financesPresent)
-                { 
-                    string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                    if (Clock != null & FindAllChildren<ResourcePricing>().Count() > 0)
+                // does simulation have finance
+                ResourcesHolder resources = FindAncestor<ResourcesHolder>();
+                if (resources.FinanceResource() != null)
+                {
+                    string market = "";
+                    if((this.Parent.Parent as ResourcesHolder).MarketPresent)
+                    {
+                        if(!(this.EquivalentMarketStore is null))
+                        {
+                            market = this.EquivalentMarketStore.CLEMParentName + ".";
+                        }
+                        else
+                        {
+                            market = this.CLEMParentName + ".";
+                        }
+                    }
+                    string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
+                    if (Clock != null && FindAllChildren<ResourcePricing>().Any())
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
-                    warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+                    warn += "\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
@@ -223,9 +243,9 @@ namespace Models.CLEM.Resources
                 {
                     ResourcesHolder holder = FindAncestor<ResourcesHolder>();
                     // is there a market
-                    if (holder != null && holder.FindMarket != null)
+                    if (holder != null && holder.FoundMarket != null)
                     {
-                        IResourceWithTransactionType store = holder.FindMarket.Resources.LinkToMarketResourceType(this);
+                        IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
                         if (store != null)
                         {
                             EquivalentMarketStore = store as CLEMResourceTypeBase;

@@ -71,9 +71,6 @@ namespace Models.CLEM.Resources
             // locate resources
             availabilityList = this.FindAllChildren<LabourAvailabilityList>().Cast<LabourAvailabilityList>().FirstOrDefault();
 
-            // locate AE relationship
-            adultEquivalentRelationship = this.FindAllChildren<Relationship>().Where(a => a.Name.ToUpper().Contains("AE")).Cast<Relationship>().FirstOrDefault();
-
             if (Clock.Today.Day != 1)
             {
                 OnStartOfMonth(this, null);
@@ -142,6 +139,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // locate AE relationship
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
+
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {

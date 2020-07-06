@@ -190,12 +190,12 @@
                     if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
                         return m.ChildrenToSerialize;
 
-                    return new DynamicValueProvider(memberInfo).GetValue(target);
+                    return new ExpressionValueProvider(memberInfo).GetValue(target);
                 }
 
                 public void SetValue(object target, object value)
                 {
-                    new DynamicValueProvider(memberInfo).SetValue(target, value);
+                    new ExpressionValueProvider(memberInfo).SetValue(target, value);
                 }
             }
         }

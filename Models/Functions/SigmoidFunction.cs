@@ -14,7 +14,7 @@ namespace Models.Functions
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(x-Xo)/b)")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SigmoidFunction : Model, IFunction, ICustomDocumentation
+    public class SigmoidFunction : Model, IFunction, ICustomDocumentation, IIndexedFunction
     {
         /// <summary>The ymax</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -43,6 +43,22 @@ namespace Models.Functions
                 throw new Exception("Error with values to Sigmoid function");
             }
         }
+
+        /// <summary>Values the indexed.</summary>
+        /// <param name="dX">The d x.</param>
+        /// <returns></returns>
+        public double ValueIndexed(double dX)
+        {
+            try
+            {
+                return Ymax.Value(-1) * 1 / (1 + Math.Exp(-(dX - Xo.Value(-1)) / b.Value(-1)));
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error with values to Sigmoid function");
+            }
+        }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
