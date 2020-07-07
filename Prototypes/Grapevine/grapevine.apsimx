@@ -147,7 +147,6 @@
                     },
                     {
                       "$type": "Models.Functions.HourlySinPpAdjusted, Models",
-                      "Tsset": 0.0,
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -290,7 +289,6 @@
                         },
                         {
                           "$type": "Models.Functions.HourlySinPpAdjusted, Models",
-                          "Tsset": 0.0,
                           "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -418,7 +416,6 @@
                         },
                         {
                           "$type": "Models.Functions.HourlySinPpAdjusted, Models",
-                          "Tsset": 0.0,
                           "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -8544,6 +8541,7 @@
           "FieldNameUsedForMatch": "Zone",
           "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": "CurrentSeason",
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [
             {
@@ -8942,6 +8940,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -11831,47 +11830,57 @@
                             "[Clock].Today",
                             "[Clock].Today.Year",
                             "[Clock].Today.DayOfYear",
-                            "[Weather].DaysSinceWinterSolstice as DAWS",
-                            "[PlantVariables].Script.Height as height",
-                            "[PlantVariables].Script.LAI as lai",
-                            "[PlantVariables].Script.LAIPerVine as LAIPerVine",
-                            "[PlantVariables].Script.FRadInt as f.rad.int",
-                            "[PlantVariables].Script.ET as transpiration",
-                            "[PlantVariables].Script.ES as Es",
-                            "[PlantVariables].Script.PET as PET",
-                            "[PlantVariables].Script.RootDepth as rootDepth",
+                            "[Weather].DaysSinceWinterSolstice   as DAWS",
+                            "[PlantVariables].Script.Height \t\tas height",
+                            "[PlantVariables].Script.LAI         as lai",
+                            "[PlantVariables].Script.FRadInt     as f.rad.int",
+                            "[PlantVariables].Script.ET          as transpiration",
+                            "[PlantVariables].Script.ES          as Es",
+                            "[PlantVariables].Script.PET         as PET",
+                            "[PlantVariables].Script.RootDepth   as rootDepth",
                             "",
                             "[Soil].OutputLayers.SW",
-                            "sum([Soil].OutputLayers.SWmm) as psw",
+                            "sum([Soil].OutputLayers.SWmm)       as psw",
                             "[Weather].Rain",
                             "[Irrigation].IrrigationApplied",
                             "[Soil].SoilWater.Drainage",
                             "",
-                            "[Row].Grapevine.Structure.TotalLeavesPerShoot",
-                            "[Row].Grapevine.Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as LAIMeanMainStem",
-                            "[Row].Grapevine.Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as LAIMeanLateral",
-                            "",
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
+                            "[Grapevine].Phenology.BudBurstDOY      as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY     as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY      as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
+                            "",
                             "[Grapevine].Structure.PrimaryBudNo",
                             "[Grapevine].Structure.MainStemPopn",
                             "[Grapevine].Structure.LeafTipsAppeared",
-                            "[Grapevine].Leaf.LAI",
+                            "",
+                            "[Grapevine].Structure.TotalLeavesPerShoot as leaf.no.shoot",
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
                             "[Grapevine].Leaf.CohortSize",
+                            "",
+                            "[Grapevine].Leaf.LAI as LAI",
+                            "[Grapevine].Leaf.LAI/[Grapevine].Population             as leaf.area.vine",
+                            "[Grapevine].Leaf.LAI/[Grapevine].Structure.MainStemPopn as leaf.area.shoot",
+                            "[Grapevine].Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as leaf.area.shoot.main",
+                            "[Grapevine].Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as leaf.area.shoot.lateral",
+                            "",
+                            "",
                             "[Grapevine].Leaf.Fn",
                             "[Grapevine].Leaf.Fw",
                             "[Grapevine].Leaf.Live.Wt",
-                            "[Grapevine].Leaf.Live.Wt/[Grapevine].Structure.MainStemPopn as LeafWtPerShoot",
-                            "[Grapevine].Shoot.Live.Wt/[Grapevine].Structure.MainStemPopn as ShootWtPerShoot",
+                            "[Grapevine].Leaf.Live.Wt/[Grapevine].Structure.MainStemPopn as leaf.dw.shoot",
+                            "",
+                            "[Grapevine].Shoot.Live.Wt",
+                            "[Grapevine].Shoot.Live.Wt/[Grapevine].Structure.MainStemPopn as shoot.dw",
+                            "[Grapevine].Shoot.Live.StructuralWt",
+                            "[Grapevine].Shoot.Live.StorageWt",
+                            "",
                             "[Grapevine].Cordon.Live.Wt",
                             "[Grapevine].Cordon.Live.StructuralWt",
                             "[Grapevine].Cordon.Live.StorageWt",
@@ -11891,29 +11900,29 @@
                             "",
                             "[Grapevine].Berry.Live.Wt",
                             "[Grapevine].Berry.SingleBerryDW",
-                            "[Grapevine].Berry.SingleBerryFW",
+                            "[Grapevine].Berry.SingleBerryFW     as berry.fw.mean",
                             "[Grapevine].Berry.TotalBerryFW  ",
                             "[Grapevine].Berry.NumberFunction",
                             "[Grapevine].Berry.ThermalTimeAfterFlowering",
                             "[Grapevine].Berry.WaterContent",
-                            "[Grapevine].Berry.Brix as brix",
-                            "[Grapevine].Berry.TitratableAcid as ta",
+                            "[Grapevine].Berry.Brix \t\t\t\tas brix",
+                            "[Grapevine].Berry.TitratableAcid \tas ta",
                             "",
-                            "[Grapevine].Berry.MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
-                            "[Grapevine].Berry.MetFactors.BUN_RadIni1 as BUN_RadIni",
+                            "[Grapevine].Berry.MetFactors.BUN_TmaxIni1    as BUN_TmaxIni",
+                            "[Grapevine].Berry.MetFactors.BUN_RadIni1     as BUN_RadIni",
                             "[Grapevine].Berry.MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
-                            "[Grapevine].Berry.MetFactors.BEN_TmaxIni1 as BEN_TmaxIni1",
-                            "[Grapevine].Berry.MetFactors.BEN_TmeanFlow as BEN_TmeanFlow",
-                            "[Grapevine].Berry.MetFactors.BM_RadFlow as BM_RadFlow",
-                            "[Grapevine].Berry.MetFactors.BM_RainTotFlow as BM_RainTotFlow",
-                            "[Grapevine].Berry.MetFactors.BM_RainTotVer as BM_RainTotVer",
-                            "[Grapevine].Berry.MetFactors.BM_TmeanFlow as BM_TmeanFlow",
+                            "[Grapevine].Berry.MetFactors.BEN_TmaxIni1    as BEN_TmaxIni1",
+                            "[Grapevine].Berry.MetFactors.BEN_TmeanFlow   as BEN_TmeanFlow",
+                            "[Grapevine].Berry.MetFactors.BM_RadFlow      as BM_RadFlow",
+                            "[Grapevine].Berry.MetFactors.BM_RainTotFlow  as BM_RainTotFlow",
+                            "[Grapevine].Berry.MetFactors.BM_RainTotVer   as BM_RainTotVer",
+                            "[Grapevine].Berry.MetFactors.BM_TmeanFlow    as BM_TmeanFlow",
                             "",
                             "[Grapevine].Berry.YieldComponent.BunchesPerShoot as bunch.no.shoot",
-                            "[Grapevine].Berry.YieldComponent.BunchesPerVine as bunch.no.vine",
-                            "[Grapevine].Berry.YieldComponent.BerryNum as BerryNum",
-                            "[Grapevine].Berry.YieldComponent.BerryMass as berry.fw.mean",
-                            "[Grapevine].Berry.YieldPerVine as yield.per.vine"
+                            "[Grapevine].Berry.YieldComponent.BunchesPerVine  as bunch.no.vine",
+                            "[Grapevine].Berry.YieldComponent.BerryNum    as BerryNum",
+                            "[Grapevine].Berry.YieldComponent.BerryMass   as berry.fw.est",
+                            "[Grapevine].Berry.YieldPerVine               as yield.per.vine"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -12390,6 +12399,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -12608,7 +12618,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double LAIPerVine {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                //LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "FRadInt",
@@ -12628,10 +12638,6 @@
                             },
                             {
                               "Key": "LAI",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "LAIPerVine",
                               "Value": "0"
                             },
                             {
@@ -13078,6 +13084,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -15696,6 +15703,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -16384,6 +16392,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -17943,6 +17952,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -18583,6 +18593,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -23568,6 +23579,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -24270,6 +24282,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -30794,6 +30807,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -31531,6 +31545,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -35003,6 +35018,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -35975,6 +35991,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -39097,6 +39114,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -39812,6 +39830,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -41553,6 +41572,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -42268,6 +42288,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -44384,6 +44405,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -45099,6 +45121,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -47231,6 +47254,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -47919,6 +47943,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -49196,6 +49221,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -49884,6 +49910,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51257,6 +51284,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51945,6 +51973,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -53222,6 +53251,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -53910,6 +53940,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -55187,6 +55218,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -55875,6 +55907,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -56795,6 +56828,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
