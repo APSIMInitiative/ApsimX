@@ -107,8 +107,6 @@ namespace Models.PMF.Arbitrator
                 uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
-                uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
-                uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
                 ZWNs.Add(uptake);
             }
             return ZWNs;
