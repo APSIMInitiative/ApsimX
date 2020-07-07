@@ -44,6 +44,7 @@
         {
             Zone = zone;
             soilInZone = Apsim.Child(zone, typeof(Soil)) as Soil;
+            Initialise();
         }
 
         /// <summary>

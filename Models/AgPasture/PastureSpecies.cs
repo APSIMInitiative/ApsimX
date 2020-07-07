@@ -52,6 +52,12 @@
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
+        // These two fields are needed to reproduce a bug in the N uptake as described here:
+        // https://github.com/APSIMInitiative/ApsimX/issues/5356
+        private int counter = 1;
+        private SoilState savedSoilState;
+
+
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating surface OM.</summary>
@@ -386,6 +392,26 @@
         /// <returns>The potential N uptake (kg/ha)</returns>
         public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
+            // The code below reproduces existing behaviour (a bug identified here:
+            // https://github.com/APSIMInitiative/ApsimX/issues/5356)
+            // Essentially PastureSpecies only uses the soilstate passed in on
+            // the first call from SoilArbitrator. It ignores the subsequent 
+            // 3 soil states from SoilArbitrator.
+            // The logic is the save the soilstate on the first call from SoilArbitrator
+            // and use that saved soilstate for the next 3 calls from SoilArbitrator.
+
+            if (counter == 1)
+                savedSoilState = soilstate;
+            else
+                soilstate = savedSoilState;
+            
+            if (counter == 4)
+                counter = 1;
+            else
+                counter++;
+
+            // ************** End of section reproducing existing behaviour.
+
             if (IsAlive)
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
