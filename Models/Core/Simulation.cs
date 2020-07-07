@@ -231,6 +231,9 @@ namespace Models.Core
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
 
+            // Call OnPreLink in all models.
+            Apsim.ChildrenRecursively(this).ForEach(m => m.OnPreLink());
+
             if (Services == null || Services.Count < 1)
             {
                 var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;

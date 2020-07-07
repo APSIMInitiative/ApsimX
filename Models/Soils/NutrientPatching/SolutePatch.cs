@@ -1,12 +1,11 @@
 ﻿
 
-namespace Models.Soils.Nutrients
+namespace Models.Soils.NutrientPatching
 {
     using Core;
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -18,18 +17,37 @@ namespace Models.Soils.Nutrients
     /// [DocumentType NFlow]
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Nutrient))]
-    public class Solute : Model, ISolute
+    [ValidParent(ParentType = typeof(NutrientPatchManager))]
+    public class SolutePatch : Model, ISolute
     {
-        [Link]
-        Soil soil = null;
+        private Soil soil;
+        private NutrientPatchManager patchManager;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
-        public double[] kgha { get; set; }
+        public double[] kgha 
+        { 
+            get 
+            { 
+                return patchManager.GetSoluteKgha(Name); 
+            } 
+            set
+            {
+                patchManager?.SetSoluteKgha(SoluteSetterType.Other, Name, value);
+            }
+        }
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+
+        /// <summary>
+        /// Invoked when model is first created.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            soil = Apsim.Parent(this, typeof(Soil)) as Soil;
+            patchManager = Apsim.Parent(this, typeof(NutrientPatchManager)) as NutrientPatchManager;
+        }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -47,17 +65,16 @@ namespace Models.Soils.Nutrients
         {
             double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
             if (initialkgha == null)
-                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
+                SetKgHa(SoluteSetterType.Other, new double[soil.Thickness.Length]);  // Urea will fall to here.
             else
-                kgha = ReflectionUtilities.Clone(initialkgha) as double[];
+                SetKgHa(SoluteSetterType.Other, ReflectionUtilities.Clone(initialkgha) as double[]);
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            for (int i = 0; i < value.Length; i++)
-                kgha[i] = value[i];
+            patchManager.SetSoluteKgha(callingModelType, Name, value);
         }
 
         /// <summary>Setter for kgha delta.</summary>
@@ -65,8 +82,10 @@ namespace Models.Soils.Nutrients
         /// <param name="delta">New delta values</param>
         public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
+            var values = kgha;
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];
+            SetKgHa(callingModelType, values);
         }
     }
 }
