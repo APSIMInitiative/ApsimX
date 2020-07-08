@@ -1689,7 +1689,7 @@ namespace Models.PMF.OilPalm
                 UnderstoryNUptake[j] = UnderstoryPotNUptake[j] * Fr;
                 no3[j] = no3[j] - UnderstoryNUptake[j];
             }
-            NO3.kgha = no3;
+            NO3.SetKgHa(SoluteSetterType.Plant, no3);
 
             //UnderstoryNFixation += UnderstoryNdemand - MathUtilities.Sum(UnderstoryNUptake);
 

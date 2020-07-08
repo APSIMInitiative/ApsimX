@@ -232,6 +232,9 @@ namespace Models.Core
                     model.OnCreated();
             }
 
+            // Call OnPreLink in all models.
+            Apsim.ChildrenRecursively(this).ForEach(m => m.OnPreLink());
+
             if (Services == null || Services.Count < 1)
             {
                 var simulations = FindAncestor<Simulations>();

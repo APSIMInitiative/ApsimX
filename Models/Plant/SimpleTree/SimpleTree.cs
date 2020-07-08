@@ -222,8 +222,6 @@ namespace Models.PMF
             Uptake.NO3N = new double[SWUptake.Length];
             Uptake.NH4N = new double[SWUptake.Length];
             Uptake.NH4N = new double[SWUptake.Length];
-            Uptake.PlantAvailableNO3N = new double[SWUptake.Length];
-            Uptake.PlantAvailableNH4N = new double[SWUptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -260,8 +258,6 @@ namespace Models.PMF
             ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
-            Uptake.PlantAvailableNO3N = new double[NO3Uptake.Length];
-            Uptake.PlantAvailableNH4N = new double[NO3Uptake.Length];
             Uptake.Water = new double[NO3Uptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;

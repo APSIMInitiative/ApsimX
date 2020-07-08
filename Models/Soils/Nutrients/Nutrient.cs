@@ -28,6 +28,7 @@
     /// [DocumentType Solute]
     /// </summary>
     [Serializable]
+    [ScopedModel]
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
@@ -72,11 +73,11 @@
         INutrientPool FOMLignin = null;
         [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool SurfaceResidue = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute NO3 = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute NH4 = null;
-        [Link(ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         private ISolute Urea = null;
 
         // Carbon content of FOM
@@ -172,9 +173,13 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
+                IEnumerable<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>();
 
-                foreach (CarbonFlow f in FindAllChildren<CarbonFlow>())
-                    values = MathUtilities.Add(values, f.MineralisedN);
+                foreach (CarbonFlow f in Flows)
+                {
+                    if (f.Parent.Name == "SurfaceResidue")
+                        values = MathUtilities.Add(values, f.MineralisedN);
+                }
                 return values;
             }
         }
@@ -281,7 +286,7 @@
         /// <param name="FOMdata">The in fo mdata.</param>
         public void DoIncorpFOM(FOMLayerType FOMdata)
         { 
-        bool nSpecified = false;
+            bool nSpecified = false;
             for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
             {
                 // If the caller specified CNR values then use them to calculate N from Amount.

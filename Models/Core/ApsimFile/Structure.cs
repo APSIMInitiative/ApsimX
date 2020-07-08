@@ -46,6 +46,9 @@
                 links.Resolve(modelToAdd, true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
+
+                // Call StartOfSimulation events
+                events.PublishToModelAndChildren("StartOfSimulation", new object[] { parent, new EventArgs() });
             }
 
             Apsim.ClearCaches(modelToAdd);

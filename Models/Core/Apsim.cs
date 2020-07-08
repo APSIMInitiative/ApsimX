@@ -49,18 +49,43 @@
         /// <returns>The clone of the model</returns>
         public static T Clone<T>(this T model) where T : IModel
         {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
+            // If the simulation is currently running then we do not want to 
+            // clone all the model dependencies as this will mean we clone
+            // them as well. The strategy is to disconnect all the links and 
+            // events, do the clone and then reconnect them all. This is
+            // probably an expensive thing to do.
+            Links links = null;
+            IModel parentModel = null;
+            Simulation simulation = model.FindAncestor<Simulation>();
+            if (simulation != null && simulation.IsRunning)
             {
-                formatter.Serialize(stream, model);
+                parentModel = model.Parent;
+                model.Parent = null;
+                links = new Links();
+                links.Unresolve(model, allLinks: true);
+            }
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new MemoryStream();
+                using (stream)
+                {
+                    formatter.Serialize(stream, model);
 
-                stream.Seek(0, SeekOrigin.Begin);
-                T newModel =  (T)formatter.Deserialize(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    T newModel = (T)formatter.Deserialize(stream);
 
-                newModel.ParentAllDescendants();
-
-                return newModel;
+                    newModel.ParentAllDescendants();
+                    return newModel;
+                }
+            }
+            finally
+            {
+                if (links != null)
+                {
+                    model.Parent = parentModel;
+                    links.Resolve(model, allLinks: true, recurse: true);
+                }
             }
         }
 

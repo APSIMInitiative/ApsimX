@@ -143,7 +143,12 @@
                     int columnIndex = 1;
                     foreach (var documentDescription in model["Documents"] as JArray)
                     {
-                        documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
+                        var html = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
+                        if (columnIndex > 3)
+                            documentationRow[3] += html;
+                        else
+                            documentationRow[columnIndex] = html;
+
                         columnIndex++;
                     }
                     documentationTable.Rows.Add(documentationRow);
