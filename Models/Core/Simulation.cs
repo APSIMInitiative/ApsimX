@@ -233,7 +233,8 @@ namespace Models.Core
             }
 
             // Call OnPreLink in all models.
-            Apsim.ChildrenRecursively(this).ForEach(m => m.OnPreLink());
+            foreach (IModel model in FindAllDescendants())
+                model.OnPreLink();
 
             if (Services == null || Services.Count < 1)
             {
