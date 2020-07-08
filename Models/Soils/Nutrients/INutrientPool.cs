@@ -4,7 +4,7 @@
     public interface INutrientPool
     {
         /// <summary>Amount of carbon (kg/ha)</summary>
-        double[] C { get; set; }
+        double[] C { get; }
 
         /// <summary>Initial carbon/nitrogen ratio</summary>
         double[] CNRatio { get; }
@@ -13,7 +13,7 @@
         double[] LayerFraction { get; set; }
 
         /// <summary>Amount of nitrogen (kg/ha)</summary>
-        double[] N { get; set; }
+        double[] N { get; }
 
         /// <summary>Add C and N into nutrient pool</summary>
         /// <param name="CAdded">Amount of carbon added (kg/ha).</param>

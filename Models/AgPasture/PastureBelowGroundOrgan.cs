@@ -559,8 +559,8 @@
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
-                mySoilNH4Available[layer] = myZone.PlantAvailableNH4N[layer] * layerFrac;
-                mySoilNO3Available[layer] = myZone.PlantAvailableNO3N[layer] * layerFrac;
+                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
+                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
             }
         }
 
@@ -594,12 +594,12 @@
                 }
 
                 // get NH4 available
-                potAvailableN = Math.Pow(myZone.PlantAvailableNH4N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNH4;
-                mySoilNH4Available[layer] = Math.Min(myZone.PlantAvailableNH4N[layer] * layerFrac, potAvailableN);
+                potAvailableN = Math.Pow(myZone.NH4N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNH4;
+                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
 
                 // get NO3 available
-                potAvailableN = Math.Pow(myZone.PlantAvailableNO3N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNO3;
-                mySoilNO3Available[layer] = Math.Min(myZone.PlantAvailableNO3N[layer] * layerFrac, potAvailableN);
+                potAvailableN = Math.Pow(myZone.NO3N[layer] * layerFrac, 2.0) * swFac * bdFac * myKNO3;
+                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
             }
 
             // check for maximum uptake
@@ -648,11 +648,11 @@
                 }
 
                 // get NH4 available
-                potAvailableN = myZone.PlantAvailableNH4N[layer] * layerFrac;
+                potAvailableN = myZone.NH4N[layer] * layerFrac;
                 mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNH4);
 
                 // get NO3 available
-                potAvailableN = myZone.PlantAvailableNO3N[layer] * layerFrac;
+                potAvailableN = myZone.NO3N[layer] * layerFrac;
                 mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * myKuNO3);
             }
 
@@ -687,11 +687,11 @@
                 double swuFac = MathUtilities.Divide(mySoilWaterUptake[layer], myZone.Water[layer], 0.0);
 
                 // get NH4 available
-                potAvailableN = myZone.PlantAvailableNH4N[layer] * layerFrac;
+                potAvailableN = myZone.NH4N[layer] * layerFrac;
                 mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNH4);
 
                 // get NO3 available
-                potAvailableN = myZone.PlantAvailableNO3N[layer] * layerFrac;
+                potAvailableN = myZone.NO3N[layer] * layerFrac;
                 mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * myKuNO3);
             }   
 

@@ -199,17 +199,43 @@
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
+            // If the simulation is currently running then we do not want to 
+            // clone all the model dependencies as this will mean we clone
+            // them as well. The strategy is to disconnect all the links and 
+            // events, do the clone and then reconnect them all. This is
+            // probably an expensive thing to do.
+            Links links = null;
+            IModel parentModel = null;
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation != null && simulation.IsRunning)
             {
-                formatter.Serialize(stream, model);
+                parentModel = model.Parent;
+                model.Parent = null;
+                links = new Links();
+                links.Unresolve(model, allLinks: true);
+            }
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new MemoryStream();
+                using (stream)
+                {
+                    formatter.Serialize(stream, model);
 
-                stream.Seek(0, SeekOrigin.Begin);
-                IModel newModel =  (IModel)formatter.Deserialize(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    IModel newModel = (IModel)formatter.Deserialize(stream);
 
-                ParentAllChildren(newModel);
-                return newModel;
+                    ParentAllChildren(newModel);
+                    return newModel;
+                }
+            }
+            finally
+            {
+                if (links != null)
+                {
+                    model.Parent = parentModel;
+                    links.Resolve(model, allLinks: true, recurse: true);
+                }
             }
         }
 

@@ -77,5 +77,12 @@
         /// cloning or deserialisation.
         /// </summary>
         public virtual void OnCreated() { }
+
+        /// <summary>
+        /// Called immediately before a simulation has its links resolved and is run.
+        /// It provides an opportunity for a simulation to restructure itself 
+        /// e.g. add / remove models.
+        /// </summary>
+        public virtual void OnPreLink() { }
     }
 }
