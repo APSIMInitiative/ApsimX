@@ -20,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 104; } }
+        public static int LatestVersion { get { return 106; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2300,12 +2300,46 @@
             }
         }
 
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion104(JObject root, string fileName)
+        {
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "NodeNumberPhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "LeafTipNumber";
+                varRef.VariableName = "[Structure].LeafTipsAppeared";
+                JsonUtilities.AddModel(NNP, varRef);
+            }
+        }
+
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion105(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "FinalLeafNumber";
+                varRef.VariableName = "[Structure].FinalLeafNumber";
+                JsonUtilities.AddModel(LAP, varRef);
+            }
+        }
+
         /// <summary>
         /// Modify manager scripts to use the new generic model locator API.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion104(JObject root, string fileName)
+        private static void UpgradeToVersion106(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
