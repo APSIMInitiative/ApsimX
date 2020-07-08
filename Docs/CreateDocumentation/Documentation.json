@@ -46,9 +46,13 @@
                             "ModelNameToDocument": "AGPWhiteClover"
                         },
                         {
-                            "Name": "PDF",
+                            "Name": "Science documentation",
                             "URL": "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf"
-                        }
+                        },
+                        {
+                            "Name": "Species parameters",
+                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx",
+                        }						
                     ]
                 },
                 {
