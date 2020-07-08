@@ -7,6 +7,7 @@ using Models.PMF.Struct;
 using System.IO;
 using APSIM.Shared;
 using APSIM.Shared.Utilities;
+using Models.Functions;
 
 namespace Models.PMF.Phen
 {
@@ -23,8 +24,8 @@ namespace Models.PMF.Phen
         [Link]
         Leaf leaf = null;
 
-        [Link]
-        Structure structure = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction FinalLeafNumber = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ namespace Models.PMF.Phen
             if (First)
             {
                 LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
-                TargetLeafForCompletion = structure.finalLeafNumber.Value() - LeafNoAtStart;
+                TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 
