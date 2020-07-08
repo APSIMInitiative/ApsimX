@@ -59,6 +59,11 @@
                     if (!tableName.StartsWith("_"))
                         database.ExecuteNonQuery(string.Format("DELETE FROM [{0}]", tableName));
                 }
+                // remove any database Views created (CLEM SQL Query report)
+                foreach (string viewName in database.GetViewNames())
+                {
+                        database.ExecuteNonQuery(string.Format("DROP VIEW IF EXISTS [{0}]", viewName));
+                }
             }
 
             // Delete empty tables.
