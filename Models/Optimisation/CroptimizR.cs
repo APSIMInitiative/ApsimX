@@ -278,10 +278,11 @@ namespace Models.Optimisation
             if (replacements != null && !sims.Children.Any(c => c is Replacements))
                 sims.Children.Add(Apsim.Clone(replacements));
 
-            DataStore storage = this.FindInScope<DataStore>();
+            // Search for IDataStore, not DataStore - to allow for StorageViaSockets.
+            IDataStore storage = this.FindInScope<IDataStore>();
             IModel newDataStore = new DataStore();
-            if (storage != null)
-                newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
+            if (storage != null && storage is IModel m)
+                newDataStore.Children.AddRange(m.Children.Select(c => Apsim.Clone(c)));
 
             sims.Children.Add(newDataStore);
             sims.ParentAllDescendants();
@@ -290,7 +291,8 @@ namespace Models.Optimisation
 
             string originalFile = rootNode?.FileName;
             if (string.IsNullOrEmpty(originalFile))
-                originalFile = (storage as IDataStore)?.FileName;
+                originalFile = storage?.FileName;
+
             // Copy files across.
             foreach (IReferenceExternalFiles fileReference in sims.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
                 foreach (string file in fileReference.GetReferencedFileNames())
