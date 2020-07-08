@@ -243,15 +243,8 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
-                //// method is performed on last day of month but needs to work with next month's details
-                //int year = Clock.Today.AddDays(1).Year;
-                //int month = Clock.Today.AddDays(1).Month;
-
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month;
-
                 //Get this months pasture data from the pasture data list
-                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
+                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.Today.Year && a.Month == Clock.Today.Month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.

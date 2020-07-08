@@ -95,7 +95,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Description("Minimum Nitrogen %")]
+        [Description("Minimum nitrogen %")]
         [Required, Percentage]
         public double MinimumNitrogen { get; set; }
 
@@ -142,6 +142,8 @@ namespace Models.CLEM.Resources
         public double IntakeQualityCoefficient { get; set; }
 
         private IPastureManager manager;
+        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
         /// </summary>
@@ -332,6 +334,7 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this.Name
             };
+            grazeFoodStoreFertilityLimiter = Apsim.Children(this, typeof(GrazeFoodStoreFertilityLimiter)).FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -457,6 +460,12 @@ namespace Models.CLEM.Resources
             {
                 case "GrazeFoodStorePool":
                     pool = resourceAmount as GrazeFoodStorePool;
+                    // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
+                    if (pool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    {
+                        double reduction = grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(pool.Amount / Manager.Area);
+                        pool.Nitrogen = Math.Max(MinimumNitrogen, pool.Nitrogen * reduction);
+                    }
                     break;
                 case "FoodResourcePacket":
                     pool = new GrazeFoodStorePool();
@@ -704,7 +713,16 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            html += "This pasture has an initial green nitrogen content of <span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
+            html += "This pasture has an initial green nitrogen content of ";
+            if(this.GreenNitrogen == 0)
+            {
+                html += "<span class=\"errorlink\">Not set</span>%";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
+            }
+            
             if (DecayNitrogen > 0)
             {
                 html += " and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>";
