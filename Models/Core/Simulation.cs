@@ -233,8 +233,10 @@ namespace Models.Core
             }
 
             // Call OnPreLink in all models.
-            foreach (IModel model in FindAllDescendants())
-                model.OnPreLink();
+            // Note the ToList(). This is important because some models can
+            // add/remove models from the simulations tree in their OnPreLink()
+            // method, and FindAllDescendants() is lazy.
+            FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
 
             if (Services == null || Services.Count < 1)
             {
