@@ -8206,6 +8206,16 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -3.5,
+                  "Units": null,
+                  "Name": "FrostKillSevere",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 10.0,
                   "Units": null,
                   "Name": "SenWaterTimeConst",

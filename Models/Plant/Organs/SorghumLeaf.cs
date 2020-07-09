@@ -127,7 +127,7 @@ namespace Models.PMF.Organs
         /// Linke to weather, used for frost senescence calcs.
         /// </summary>
         [Link]
-        private IWeather weather;
+        private IWeather weather = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -315,9 +315,15 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
-        /// <summary>Temperature threshold for leaf death.</summary>
+        /// <summary>
+        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+        /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frostKill = null;
+
+        /// <summary>Temperature threshold for leaf death.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction frostKillSevere = null;
 
         /// <summary>Delay factor for water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -734,38 +740,40 @@ namespace Models.PMF.Organs
             DltSenescedLai = Math.Min(DltSenescedLai, LAI);
         }
 
+        /// <summary>
+        /// Calculate senescence due to frost.
+        /// </summary>
         private double calcLaiSenescenceFrost()
         {
-            double severeFrost = FrostKill - 3.0;
-            //  calculate senescence due to frost
-            if (weather.MinT > FrostKill)
+            if (weather.MinT > FrostKill || !Plant.IsEmerged)
                 return 0;
 
-            if (!Plant.IsEmerged)
-                return 0;
-            
-            if (weather.MinT > severeFrost)
+            if (weather.MinT > frostKillSevere.Value())
             {
+                // Temperature is warmer than frostKillSevere, but cooler than frostKill.
+                // So the plant will only die if between floral init - flowering.
+
                 if (phenology.Between("Germination", "FloralInitiation"))
                 {
                     // The plant will survive but all of the leaf area is removed except a fraction.
                     // 3 degrees is a default for now - extract to a parameter to customise it.
                     Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
-
-                    return Math.Max(0, LAI - 0.01);
+                    return Math.Max(0, LAI - 0.1);
+                }
+                else if (phenology.Between("FloralInitiation", "Flowering"))
+                {
+                    // Plant is between floral init and flowering - time to die.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+                    return LAI; // rip
                 }
                 else
-                {
-                    // After flowering it takes a servere frost to kill the plant.
-                    // Not sure what the effect on LAI should be at this stage.
-                    // todo: write to summary?
-                    return 0.0;
-                }
+                    // After flowering it takes a severe frost to kill the plant
+                    // (which didn't happen today).
+                    return 0;
             }
 
+            // Temperature is below frostKillSevere parameter, senesce all LAI.
             Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
-
-            //the plant will be killed as it's LAI will be 0
             return LAI;
         }
 
