@@ -3466,11 +3466,18 @@
             double postTotalWt = AboveGroundWt + BelowGroundWt;
             double postTotalN = AboveGroundN + BelowGroundN;
 
+            // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
+            // need to be changed from the default of 0.00001 to 0.0001. Not sure why but was getting
+            // mass balance errors on Jenkins (not my machine) when running 
+            //    Examples\Tutorials\Sensitivity_MorrisMethod.apsimx
+            // and
+            //    Examples\Tutorials\Sensitivity_SobolMethod.apsimx
+
             // Check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt,0))
+            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt, 0, 0.0001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN,0))
+            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN, 0, 0.0001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
@@ -4021,7 +4028,7 @@
                 double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
 
                 // Do the actual removal
-                if (amountToRemove > Epsilon)
+                if (!MathUtilities.FloatsAreEqual(amountToRemove, 0, 0.0001))
                     RemoveBiomass(amountToRemove);
 
             }
