@@ -41,15 +41,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
-                "[Phenology].EndoDormancy.Progression.Response.X = -4.89,-4.88, 11.03,16.9,16.91",
-                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
-                "[Phenology].Budding.Target.FixedValue = 806.78",
-                "[Phenology].Budding.Progression.Response.X = 0,2.03,12.03,22.03",
-                "[Phenology].ThermalTime.Response.MinTemp = 2.11",
-                "[Phenology].ThermalTime.Response.OptTemp = 30.72",
-                "[Phenology].ThermalTime.Response.MaxTemp = 38.71",
-                "[Phenology].Flowering.Target.FixedValue = 14.23"
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 52.0647",
+                "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 10.98",
+                "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -25.5611",
+                "[Phenology].Budding.Target.FixedValue = 906.4065",
+                "[Phenology].Budding.Progression.Response.X = 0,0.27668,10.27668,20.27668",
+                "[Phenology].ThermalTime.Response.MinTemp = 0.239618",
+                "[Phenology].ThermalTime.Response.OptTemp = 27.149",
+                "[Phenology].ThermalTime.Response.MaxTemp = 48.75",
+                "[Phenology].Flowering.Target.FixedValue = 45.41293",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 47.77695"
               ],
               "Name": "Chardonnay",
               "Children": [],
@@ -60,15 +61,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70",
-                "[Phenology].EndoDormancy.Progression.Response.X = 1.07,1.08, 11.03,12.07,12.08",
-                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
-                "[Phenology].Budding.Target.FixedValue = 548.4",
-                "[Phenology].Budding.Progression.Response.X = 0,1.21,11.21,21.21",
-                "[Phenology].ThermalTime.Response.MinTemp = 9.97",
-                "[Phenology].ThermalTime.Response.OptTemp = 22.84",
-                "[Phenology].ThermalTime.Response.MaxTemp = 35.02",
-                "[Phenology].Flowering.Target.FixedValue = 28.6"
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 88.74292",
+                "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 15.07995",
+                "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -1.27593",
+                "[Phenology].Budding.Target.FixedValue = 767.6113",
+                "[Phenology].Budding.Progression.Response.X = 0,0.353281,10.353281,20.353281",
+                "[Phenology].ThermalTime.Response.MinTemp = 2.09",
+                "[Phenology].ThermalTime.Response.OptTemp = 27.4088",
+                "[Phenology].ThermalTime.Response.MaxTemp = 49.108",
+                "[Phenology].Flowering.Target.FixedValue = 55.75583",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 44.75583"
               ],
               "Name": "Merlot",
               "Children": [],
@@ -79,15 +81,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 50.79",
-                "[Phenology].EndoDormancy.Progression.Response.X = -3.65,-3.64, 11.03,14.74,14.75",
-                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
-                "[Phenology].Budding.Target.FixedValue = 609.5",
-                "[Phenology].Budding.Progression.Response.X = 0,4.8,14.8,24.8",
-                "[Phenology].ThermalTime.Response.MinTemp = 1.57",
-                "[Phenology].ThermalTime.Response.OptTemp = 29.6",
-                "[Phenology].ThermalTime.Response.MaxTemp = 39.3",
-                "[Phenology].Flowering.Target.FixedValue = 19.36"
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 72.1",
+                "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue =7.95",
+                "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -45.3083",
+                "[Phenology].Budding.Target.FixedValue = 627.0382",
+                "[Phenology].Budding.Progression.Response.X = 0,0.244,10.244,20.244",
+                "[Phenology].ThermalTime.Response.MinTemp = 1.514",
+                "[Phenology].ThermalTime.Response.OptTemp = 26.42341",
+                "[Phenology].ThermalTime.Response.MaxTemp = 36.87527",
+                "[Phenology].Flowering.Target.FixedValue = 27.5666",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 29.75368"
               ],
               "Name": "PinotNoir",
               "Children": [],
@@ -98,15 +101,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
-                "[Phenology].EndoDormancy.Progression.Response.X = -4.89,-4.88, 11.03,16.9,16.91",
-                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
-                "[Phenology].Budding.Target.FixedValue = 806.78",
-                "[Phenology].Budding.Progression.Response.X = 0,2.03,12.03,22.03",
-                "[Phenology].ThermalTime.Response.MinTemp = 2.11",
-                "[Phenology].ThermalTime.Response.OptTemp = 30.72",
-                "[Phenology].ThermalTime.Response.MaxTemp = 38.71",
-                "[Phenology].Flowering.Target.FixedValue = 14.23"
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 74.163",
+                "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 12.53467",
+                "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -66.5092",
+                "[Phenology].Budding.Target.FixedValue = 519.1688",
+                "[Phenology].Budding.Progression.Response.X = 0, 1.93454,11.93454,21.93454",
+                "[Phenology].ThermalTime.Response.MinTemp = 1.173588",
+                "[Phenology].ThermalTime.Response.OptTemp = 25.6193",
+                "[Phenology].ThermalTime.Response.MaxTemp = 35.65306",
+                "[Phenology].Flowering.Target.FixedValue = 31.13788",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 32.965"
               ],
               "Name": "PinotGris",
               "Children": [],
