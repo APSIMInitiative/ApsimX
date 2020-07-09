@@ -511,7 +511,7 @@
                 double SRt = IRblackt * Math.Exp(-Kt * LAIt) +
                             (1 - IRblackt) * Math.Exp(-Kt * LAIthomo);   // Transmission of light to bottom of top layer in tallest strip
                 double W = 0;
-                if (vine.Canopies.Count > 0 & LAIt > 0)                                 // If it exists...
+                if (vine.Canopies.Count > 0 & LAIt > 0 & Kt > 0)                                 // If it exists...
                    W = (SPt - SRt) / (1 - Math.Exp(-Kt * LAIt));
 
                 double ftop = fhomo * (1 - W) + fcompr * W;              // light interception by the vine row
