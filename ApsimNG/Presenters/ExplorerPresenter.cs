@@ -250,31 +250,34 @@
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
+            // Need to hide the right hand panel because some views may not have saved
+            // their contents until they get a 'Detach' call.
             try
             {
-                // Need to hide the right hand panel because some views may not have saved
-                // their contents until they get a 'Detach' call.
-                this.HideRightHandPanel();
-
-                if (this.ApsimXFile.FileName == null)
-                {
-                    this.SaveAs();
-                }
-
-                if (this.ApsimXFile.FileName != null)
-                {
-                    this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                    return true;
-                }
+                HideRightHandPanel();
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
+                MainPresenter.ShowError(err);
             }
-            finally
+
+            if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                SaveAs();
+
+            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
             {
-                this.ShowRightHandPanel();
+                ApsimXFile.Write(ApsimXFile.FileName);
+                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                return true;
+            }
+
+            try
+            {
+                ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -867,8 +870,18 @@
         /// <param name="e">Node arguments</param>
         private void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            try
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
+
+            // If an exception is thrown while loding the view, this
+            // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
 
             Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
