@@ -79,15 +79,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 50.79",
-                "[Phenology].EndoDormancy.Progression.Response.X = -3.65,-3.64, 11.03,14.74,14.75",
-                "[Phenology].EndoDormancy.Progression.Response.Y = 0,1,1,1,0",
-                "[Phenology].Budding.Target.FixedValue = 609.5",
-                "[Phenology].Budding.Progression.Response.X = 0,4.8,14.8,24.8",
-                "[Phenology].ThermalTime.Response.MinTemp = 1.57",
-                "[Phenology].ThermalTime.Response.OptTemp = 29.6",
-                "[Phenology].ThermalTime.Response.MaxTemp = 39.3",
-                "[Phenology].Flowering.Target.FixedValue = 19.36"
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 72.1",
+                "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue =7.95",
+                "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -45.3083",
+                "[Phenology].Budding.Target.FixedValue = 627.0382",
+                "[Phenology].Budding.Progression.Response.X = 0,0.244,10.244,20.244",
+                "[Phenology].ThermalTime.Response.MinTemp = 1.514",
+                "[Phenology].ThermalTime.Response.OptTemp = 26.42341",
+                "[Phenology].ThermalTime.Response.MaxTemp = 36.87527",
+                "[Phenology].Flowering.Target.FixedValue = 27.5666",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 29.75368"
               ],
               "Name": "PinotNoir",
               "Children": [],
@@ -134,9 +135,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 1.85,
-                      "OptTemp": 29.15,
-                      "MaxTemp": 39.86,
+                      "MinTemp": 1.8,
+                      "OptTemp": 31.0,
+                      "MaxTemp": 40.0,
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
                       "Name": "Response",
@@ -170,7 +171,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 49.5,
+                          "FixedValue": 47.5,
                           "Units": "hours",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -398,7 +399,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 25.27,
+                      "FixedValue": 20.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -979,6 +980,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].Phyllochron.MultiplyFunction.Constant.FixedValue",
+                      "Name": "XValue",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2437,44 +2447,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "AgeFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            5.0,
-                            10.0,
-                            20.0
-                          ],
-                          "Y": [
-                            0.4,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Age.Years",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "SeasonalWidthPattern",
                       "Children": [
                         {
@@ -2502,6 +2474,44 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0,
+                            10.0,
+                            20.0
+                          ],
+                          "Y": [
+                            0.4,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Age.Years",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -8663,7 +8673,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observations\\Observed.xlsx"
+            "C:\\ApsimX\\Prototypes\\Grapevine\\Observations\\Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
