@@ -12,6 +12,7 @@ using Models.PMF.Struct;
 using System.Linq;
 using Models.Functions.DemandFunctions;
 using Models.Functions.SupplyFunctions;
+using System.Text;
 
 namespace Models.PMF.Organs
 {
@@ -121,6 +122,12 @@ namespace Models.PMF.Organs
 
         [Link]
         private Phenology phenology = null;
+
+        /// <summary>
+        /// Linke to weather, used for frost senescence calcs.
+        /// </summary>
+        [Link]
+        private IWeather weather;
 
         /// <summary>The met data</summary>
         [Link]
@@ -729,22 +736,54 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceFrost()
         {
-            //  calculate senecence due to frost
-            double dltSlaiFrost = 0.0;
-            if (MetData.MinT < FrostKill)
+            double severeFrost = FrostKill - 3.0;
+            //  calculate senescence due to frost
+            if (weather.MinT > FrostKill)
+                return 0;
+
+            if (!Plant.IsEmerged)
+                return 0;
+            
+            if (weather.MinT > severeFrost)
             {
-                if(phenology.Between("Germination", "FloralInitiation"))
+                if (phenology.Between("Germination", "FloralInitiation"))
                 {
-                    dltSlaiFrost = Math.Max(0.0, LAI - 0.01);
+                    // The plant will survive but all of the leaf area is removed except a fraction.
+                    // 3 degrees is a default for now - extract to a parameter to customise it.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
+
+                    return Math.Max(0, LAI - 0.01);
                 }
                 else
                 {
-                    dltSlaiFrost = LAI;
+                    // After flowering it takes a servere frost to kill the plant.
+                    // Not sure what the effect on LAI should be at this stage.
+                    // todo: write to summary?
+                    return 0.0;
                 }
-
             }
 
-            return dltSlaiFrost;
+            Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+
+            //the plant will be killed as it's LAI will be 0
+            return LAI;
+        }
+
+        /// <summary>
+        /// Generates a message to be displayed when senescence due to frost
+        /// occurs. Putting this in a method for now so we don't have the same
+        /// code twice, but if frost senescence is tweaked in the future it might
+        /// just be easier to do away with the method and hardcode similar
+        /// messages multiple times.
+        /// </summary>
+        /// <param name="fatal">Was the frost event fatal?</param>
+        private string GetFrostSenescenceMessage(bool fatal)
+        {
+            StringBuilder message = new StringBuilder();
+            message.AppendLine($"Frost Event: ({(fatal ? "Fatal" : "Non Fatal")})");
+            message.AppendLine($"\tMin Temp     = {weather.MinT}");
+            message.AppendLine($"\tSenesced LAI = {LAI - 0.01}");
+            return message.ToString();
         }
 
         private double calcLaiSenescenceWater()
