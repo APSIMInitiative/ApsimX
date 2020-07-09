@@ -13,8 +13,6 @@
     {
         private ISolute NO3Solute;
         private ISolute NH4Solute;
-        private ISolute PlantAvailableNO3Solute;
-        private ISolute PlantAvailableNH4Solute;
 
         private Soil soilInZone;
 
@@ -31,14 +29,6 @@
 
         /// <summary>Amount of NH4 (kg/ha)</summary>
         public double[] NH4N;
-
-        /// <summary>Amount of plant-avilable NO3 (kg/ha)</summary>
-        public double[] PlantAvailableNO3N;
-
-        /// <summary>Amount of plant-available NH4 (kg/ha)</summary>
-        public double[] PlantAvailableNH4N;
-
-        
 
         /// <summary>Gets the sum of 'Water' (mm)</summary>
         public double TotalWater { get { return MathUtilities.Sum(Water); } }
@@ -65,16 +55,12 @@
         {
             NO3Solute = from.NO3Solute;
             NH4Solute = from.NH4Solute;
-            PlantAvailableNO3Solute = from.PlantAvailableNO3Solute;
-            PlantAvailableNH4Solute = from.PlantAvailableNH4Solute;
             soilInZone = from.soilInZone;
             Zone = from.Zone;
 
             Water = from.Water;
             NO3N = from.NO3N;
             NH4N = from.NH4N;
-            PlantAvailableNO3N = from.PlantAvailableNO3N;
-            PlantAvailableNH4N = from.PlantAvailableNH4N;
         }
 
         /// <summary>
@@ -94,8 +80,12 @@
         {
             NO3Solute = Apsim.Find(soilInZone, "NO3") as ISolute;
             NH4Solute = Apsim.Find(soilInZone, "NH4") as ISolute;
-            PlantAvailableNO3Solute = Apsim.Find(soilInZone, "PlantAvailableNO3") as ISolute;
-            PlantAvailableNH4Solute = Apsim.Find(soilInZone, "PlantAvailableNH4") as ISolute;
+            var PlantAvailableNO3Solute = Apsim.Find(soilInZone, "PlantAvailableNO3") as ISolute;
+            if (PlantAvailableNO3Solute != null)
+                NO3Solute = PlantAvailableNO3Solute;
+            var PlantAvailableNH4Solute = Apsim.Find(soilInZone, "PlantAvailableNH4") as ISolute;
+            if (PlantAvailableNH4Solute != null)
+                NH4Solute = PlantAvailableNH4Solute;
         }
 
         /// <summary>Initialises this instance.</summary>
@@ -104,14 +94,6 @@
             Water = soilInZone.Water;
             NO3N = NO3Solute.kgha;
             NH4N = NH4Solute.kgha;
-            if (PlantAvailableNO3Solute != null)
-                PlantAvailableNO3N = PlantAvailableNO3Solute.kgha;
-            else
-                PlantAvailableNO3N = NO3Solute.kgha;
-            if (PlantAvailableNH4Solute != null)
-                PlantAvailableNH4N = PlantAvailableNH4Solute.kgha;
-            else
-                PlantAvailableNH4N = NH4Solute.kgha;
         }
 
         /// <summary>Implements the operator *.</summary>
@@ -124,8 +106,6 @@
             NewZ.Water = MathUtilities.Multiply_Value(zone.Water, value);
             NewZ.NO3N = MathUtilities.Multiply_Value(zone.NO3N, value);
             NewZ.NH4N = MathUtilities.Multiply_Value(zone.NH4N, value);
-            NewZ.PlantAvailableNO3N = MathUtilities.Multiply_Value(zone.PlantAvailableNO3N, value);  
-            NewZ.PlantAvailableNH4N = MathUtilities.Multiply_Value(zone.PlantAvailableNH4N, value);
             return NewZ;
         }
 
@@ -142,8 +122,6 @@
             NewZ.Water = MathUtilities.Add(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Add(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Add(ZWN1.NH4N, ZWN2.NH4N);
-            NewZ.PlantAvailableNO3N = MathUtilities.Add(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
-            NewZ.PlantAvailableNH4N = MathUtilities.Add(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
 
@@ -160,8 +138,6 @@
             NewZ.Water = MathUtilities.Subtract(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Subtract(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Subtract(ZWN1.NH4N, ZWN2.NH4N);
-            NewZ.PlantAvailableNO3N = MathUtilities.Subtract(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
-            NewZ.PlantAvailableNH4N = MathUtilities.Subtract(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
     }
