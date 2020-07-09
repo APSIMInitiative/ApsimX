@@ -197,7 +197,7 @@
                         relativeTo.ParentAllDescendants();
 
                         // Call OnCreated in all models.
-                        foreach (IModel model in relativeTo.FindAllDescendants())
+                        foreach (IModel model in relativeTo.FindAllDescendants().ToList())
                             model.OnCreated();
                     }
 

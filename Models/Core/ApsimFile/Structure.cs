@@ -35,7 +35,7 @@
 
             // Call OnCreated
             modelToAdd.OnCreated();
-            foreach (IModel model in modelToAdd.FindAllDescendants())
+            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
 
             // If the model is being added at runtime then need to resolve links and events.
@@ -99,7 +99,7 @@
             EnsureNameIsUnique(modelToAdd);
 
             // Call OnCreated
-            foreach (IModel model in modelToAdd.FindAllDescendants())
+            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
                 model.OnCreated();
 
             return modelToAdd;

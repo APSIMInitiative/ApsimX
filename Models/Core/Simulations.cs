@@ -94,7 +94,7 @@ namespace Models.Core
             newSimulations.ParentAllDescendants();
 
             // Call OnCreated in all models.
-            foreach (IModel model in newSimulations.FindAllDescendants())
+            foreach (IModel model in newSimulations.FindAllDescendants().ToList())
                 model.OnCreated();
 
             return newSimulations;
@@ -181,7 +181,7 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in this.FindAllDescendants())
+            foreach (Model child in this.FindAllDescendants().ToList())
             {
                 if (child is Simulation)
                     (child as Simulation).FileName = FileName;
@@ -232,7 +232,7 @@ namespace Models.Core
         {
             // Clears the locator caches for our Simulations.
             // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in this.FindAllDescendants())
+            foreach (Model simulation in this.FindAllDescendants().ToList())
                 if (simulation is Simulation)
                     (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists

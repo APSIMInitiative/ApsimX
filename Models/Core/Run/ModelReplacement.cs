@@ -83,7 +83,7 @@
             // will make it reread the resource string and replace this child with
             // the 'official' child from the resource.
             newModel.OnCreated();
-            foreach (var model in newModel.FindAllDescendants())
+            foreach (var model in newModel.FindAllDescendants().ToList())
                 model.OnCreated();
         }
     }

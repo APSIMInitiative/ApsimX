@@ -99,7 +99,7 @@
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in newModel.FindAllDescendants())
+            foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
                 {

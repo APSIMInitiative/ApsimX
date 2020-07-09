@@ -228,7 +228,7 @@ namespace Models.Core
                 this.ParentAllDescendants();
 
                 // Call OnCreated in all models.
-                foreach (IModel model in FindAllDescendants())
+                foreach (IModel model in FindAllDescendants().ToList())
                     model.OnCreated();
             }
 
