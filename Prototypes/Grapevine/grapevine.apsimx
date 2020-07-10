@@ -8667,7 +8667,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observations\\Observed.xlsx"
+            "C:\\ApsimX\\Prototypes\\Grapevine\\Observations\\Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
