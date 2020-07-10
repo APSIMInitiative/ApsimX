@@ -2614,16 +2614,6 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "percentage",
-                  "Name": "DMRetranslocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -2740,7 +2730,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
@@ -3088,6 +3078,16 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "percentage",
+                  "Name": "DMRetranslocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
                   "Children": [],
@@ -3258,9 +3258,19 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "percentage",
+                  "Name": "DMRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3291,16 +3301,6 @@
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "percentage",
-                  "Name": "DMRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4227,9 +4227,19 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.15,
+                  "FixedValue": 0.1,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4377,16 +4387,6 @@
                   "FixedValue": 0.0,
                   "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8667,7 +8667,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\ApsimX\\Prototypes\\Grapevine\\Observations\\Observed.xlsx"
+            "Observations\\Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
