@@ -81,13 +81,13 @@ namespace Models.CLEM.Activities
         /// Current land condition index
         /// </summary>
         [XmlIgnore]
-        public RelationshipTracker LandConditionIndex { get; set; }
+        public RelationshipRunningValue LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
-        public RelationshipTracker GrassBasalArea { get; set; }
+        public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
         /// Area requested
@@ -134,13 +134,13 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
             if (LandConditionIndex == null)
             {
-                string[] memberNames = new string[] { "LandConditionIndexRelationship" };
-                results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface", memberNames));
+                string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [o=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [LC] below a [o=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
             }
             if (GrassBasalArea == null)
             {
-                string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
-                results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface", memberNames));
+                string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [o=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [GBA] below a [o=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
             }
             if (FilePasture == null)
             {
@@ -161,8 +161,8 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
-            GrassBasalArea = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
+            LandConditionIndex = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+            GrassBasalArea = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (UseAreaAvailable)

@@ -469,6 +469,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipRunningValue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStoreFertilityLimiter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HourlyInterpolation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ColdUpRegVrn1.png" />
