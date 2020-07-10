@@ -60,7 +60,7 @@
             // probably an expensive thing to do.
             Links links = null;
 
-            Simulation simulation = model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
             if (simulation != null && simulation.IsRunning)
             {
                 links = new Links();
