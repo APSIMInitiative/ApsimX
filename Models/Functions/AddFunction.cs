@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 
 namespace Models.Functions
@@ -18,7 +19,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>(); 
+                ChildFunctions = FindAllChildren<IFunction>().ToList(); 
 
             double returnValue = 0.0;
 

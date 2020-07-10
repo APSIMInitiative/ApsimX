@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -71,7 +72,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (Phenology.Stage >= StartStageName && Phenology.Stage <= EndStageName)
             {

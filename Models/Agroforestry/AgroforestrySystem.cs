@@ -82,7 +82,7 @@ namespace Models.Agroforestry
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             tree = FindChild<TreeProxy>();
-            ZoneList = FindAllChildren<Zone>();
+            ZoneList = FindAllChildren<Zone>().ToList();
         }
 
         /// <summary>

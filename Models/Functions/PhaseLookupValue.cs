@@ -47,7 +47,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (Start == "")
                 throw new Exception("Phase start name not set:" + Name);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -27,7 +28,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
             foreach (IFunction child in ChildFunctions)
                 if (child != Lower && child != Upper)
                     return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)),Lower.Value(arrayIndex));

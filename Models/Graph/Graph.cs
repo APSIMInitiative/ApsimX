@@ -129,7 +129,7 @@
         /// Gets or sets a list of all series
         /// </summary>
         [XmlIgnore]
-        public List<IModel> Series { get { return FindAllChildren<Series>().ToList<IModel>(); } }
+        public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
 
         /// <summary>
         /// Gets or sets the location of the legend

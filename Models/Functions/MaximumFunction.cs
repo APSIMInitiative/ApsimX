@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Models.Core;
@@ -21,7 +22,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             double ReturnValue = -999999999;
             foreach (IFunction F in ChildFunctions)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.IO;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -21,7 +22,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             foreach (IFunction F in ChildFunctions)
             {

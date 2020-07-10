@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = this.FindAllChildren<CompositeFactor>().Where(f => f.Enabled).Cast<CompositeFactor>();
+            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -68,7 +68,7 @@
         /// <returns></returns>
         public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
         {
-            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>().Cast<CompositeFactor>();
+            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>();
             if (childCompositeFactors.Count() > 0)
             {
                 var newFactorValues = new List<CompositeFactor>();

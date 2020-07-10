@@ -389,11 +389,11 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Parent.FindAllChildren<Zone>();
+            ZoneList = Parent.FindAllChildren<Zone>().ToList();
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Parent.FindAllDescendants<Zone>();
+            forestryZones = Parent.FindAllDescendants<Zone>().ToList();
             treeZone = ZoneList.FirstOrDefault();
             treeZoneWater = treeZone.FindInScope<ISoilWater>();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -112,7 +113,7 @@ namespace Models.Functions
         private void OnCalcEvent(object sender, EventArgs e)
         {
             if (childFunctions == null)
-                childFunctions = FindAllChildren<IFunction>();
+                childFunctions = FindAllChildren<IFunction>().ToList();
 
             if (phenology.Between(startStageIndex, endStageIndex))
             {
