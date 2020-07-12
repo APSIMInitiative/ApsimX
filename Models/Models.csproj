@@ -163,9 +163,11 @@
     <Compile Include="CLEM\RainfallShuffler.cs" />
     <Compile Include="CLEM\RandomNumberGenerator.cs" />
     <Compile Include="CLEM\Relationship.cs" />
+    <Compile Include="CLEM\RelationshipRunningValue.cs" />
     <Compile Include="CLEM\RelationshipTracker.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
+    <Compile Include="CLEM\Resources\GrazeFoodStoreFertilityLimiter.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />

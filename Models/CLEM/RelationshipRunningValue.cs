@@ -1,5 +1,4 @@
-﻿using Models.CLEM.Activities;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -12,16 +11,16 @@ using System.Xml.Serialization;
 namespace Models.CLEM
 {
     /// <summary>
-    /// This determines a relationship
+    /// This provides the ability to track a value based on an associated relationship of change in value provided by Y for a given X
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This model component specifies a relationship where the y value related to a change in running value as a function of x. This component tracks a value through time as modified by the specificed relationship.")]
-    [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Relationships/RelationshipTracker.htm")]
-    public class RelationshipTracker : Relationship, IValidatableObject
+    [ValidParent(ParentType = typeof(Relationship))]
+    [Description("Tracks a bound running value based on a relationship where Y represents the change in this value for a given X")]
+    [Version(1, 0, 1, "This component replaces the depreciated RelationshipTracker and is placed below a Relationship")]
+    [HelpUri(@"Content/Features/Relationships/RelationshipRunningValue.htm")]
+    public class RelationshipRunningValue: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Current value
@@ -56,7 +55,7 @@ namespace Models.CLEM
         /// <param name="x">x value</param>
         public void Modify(double x)
         {
-            Value += SolveY(x);
+            Value += (this.Parent as Relationship).SolveY(x);
             Value = Math.Min(Value, Maximum);
             Value = Math.Max(Value, Minimum);
         }
@@ -67,7 +66,7 @@ namespace Models.CLEM
         /// <param name="x">x value</param>
         public void Calculate(double x)
         {
-            Value = SolveY(x);
+            Value = (this.Parent as Relationship).SolveY(x);
             Value = Math.Min(Value, Maximum);
             Value = Math.Max(Value, Minimum);
         }
@@ -86,15 +85,38 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="validationContext"></param>
         /// <returns></returns>
-        public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            List<ValidationResult> results = base.Validate(validationContext).ToList();
+            List<ValidationResult> results = new List<ValidationResult>();
             if (Maximum <= Minimum)
             {
                 string[] memberNames = new string[] { "Maximum" };
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
             }
             return results;
+        }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">";
+            html += $"A running value starting at <span class=\"setvalue\">{StartingValue}</span>";
+            html += $" and ranging between <span class=\"setvalue\">{Minimum}</span> and ";
+            if (Maximum <= Minimum)
+            {
+                html += "<span class=\"errorlink\">Invalid</span>";
+            }
+            else
+            {
+                html += $"<span class=\"setvalue\">{Maximum}</span>";
+            }
+            html += "</div>";
+            return html;
         }
     }
 }

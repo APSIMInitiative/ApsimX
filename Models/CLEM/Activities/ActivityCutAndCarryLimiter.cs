@@ -69,8 +69,16 @@ namespace Models.CLEM.Activities
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Limit cut and carry activities to <span class=\"setvalueextra\">";
-            html += WeightLimitPerDay.ToString();
+            html += "Limit cut and carry activities to ";
+            if(!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += WeightLimitPerDay.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">Not Set";
+            }
             html += "</span> dry kg/day ";
             html += "</div>";
             html += "\n</div>";
