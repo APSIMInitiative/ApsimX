@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 103; } }
+        public static int LatestVersion { get { return 105; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2296,6 +2296,40 @@
                         command.Value = command.Value.ToString().Replace(".TemperatureResponse", ".Response");
                     }
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion104(JObject root, string fileName)
+        {
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "NodeNumberPhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "LeafTipNumber";
+                varRef.VariableName = "[Structure].LeafTipsAppeared";
+                JsonUtilities.AddModel(NNP, varRef);
+            }
+        }
+
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion105(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "FinalLeafNumber";
+                varRef.VariableName = "[Structure].FinalLeafNumber";
+                JsonUtilities.AddModel(LAP, varRef);
             }
         }
 

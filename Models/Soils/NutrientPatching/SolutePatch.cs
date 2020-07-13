@@ -1,0 +1,91 @@
+﻿
+
+namespace Models.Soils.NutrientPatching
+{
+    using Core;
+    using Interfaces;
+    using System;
+    using APSIM.Shared.Utilities;
+
+    /// <summary>
+    /// # [Name]
+    /// [DocumentType Memo]
+    /// 
+    /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.
+    /// 
+    /// ## Mineral N Flows
+    /// [DocumentType NFlow]
+    /// </summary>
+    [Serializable]
+    [ValidParent(ParentType = typeof(NutrientPatchManager))]
+    public class SolutePatch : Model, ISolute
+    {
+        private Soil soil;
+        private NutrientPatchManager patchManager;
+
+        /// <summary>Solute amount (kg/ha)</summary>
+        public double[] kgha 
+        { 
+            get 
+            { 
+                return patchManager.GetSoluteKgha(Name); 
+            } 
+            set
+            {
+                patchManager?.SetSoluteKgha(SoluteSetterType.Other, Name, value);
+            }
+        }
+
+        /// <summary>Solute amount (ppm)</summary>
+        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+
+        /// <summary>
+        /// Invoked when model is first created.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            soil = Apsim.Parent(this, typeof(Soil)) as Soil;
+            patchManager = Apsim.Parent(this, typeof(NutrientPatchManager)) as NutrientPatchManager;
+        }
+
+        /// <summary>Performs the initial checks and setup</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
+        /// <summary>
+        /// Set solute to initialisation state
+        /// </summary>
+        public void Reset()
+        {
+            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            if (initialkgha == null)
+                SetKgHa(SoluteSetterType.Other, new double[soil.Thickness.Length]);  // Urea will fall to here.
+            else
+                SetKgHa(SoluteSetterType.Other, ReflectionUtilities.Clone(initialkgha) as double[]);
+        }
+        /// <summary>Setter for kgha.</summary>
+        /// <param name="callingModelType">Type of calling model.</param>
+        /// <param name="value">New values.</param>
+        public void SetKgHa(SoluteSetterType callingModelType, double[] value)
+        {
+            patchManager.SetSoluteKgha(callingModelType, Name, value);
+        }
+
+        /// <summary>Setter for kgha delta.</summary>
+        /// <param name="callingModelType">Type of calling model</param>
+        /// <param name="delta">New delta values</param>
+        public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
+        {
+            var values = kgha;
+            for (int i = 0; i < delta.Length; i++)
+                kgha[i] += delta[i];
+            SetKgHa(callingModelType, values);
+        }
+    }
+}

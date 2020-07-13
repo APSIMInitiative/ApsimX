@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 103,
+  "Version": 105,
   "Name": "Simulations",
   "Children": [
     {
@@ -77,7 +77,6 @@
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "WaterAvailableMethod": 0,
-      "NitrogenAvailableMethod": 0,
       "Name": "AGPWhiteClover",
       "Children": [
         {
@@ -243,6 +242,8 @@
           "RootDepthMinimum": 30.0,
           "RootDepthMaximum": 350.0,
           "RootElongationRate": 25.0,
+          "KNO3": 0.01,
+          "KNH4": 0.005,
           "Name": "Root",
           "Children": [
             {

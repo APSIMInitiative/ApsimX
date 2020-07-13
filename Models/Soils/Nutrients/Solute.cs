@@ -6,6 +6,7 @@ namespace Models.Soils.Nutrients
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -24,6 +25,7 @@ namespace Models.Soils.Nutrients
         Soil soil = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
+        [XmlIgnore]
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
@@ -32,7 +34,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();
@@ -54,7 +56,8 @@ namespace Models.Soils.Nutrients
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            kgha = value;
+            for (int i = 0; i < value.Length; i++)
+                kgha[i] = value[i];
         }
 
         /// <summary>Setter for kgha delta.</summary>
