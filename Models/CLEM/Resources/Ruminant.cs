@@ -246,7 +246,7 @@ namespace Models.CLEM.Resources
         public double MilkIntakePotential { get; set; }
 
         /// <summary>
-        /// Percentage Nitrogen of current intake
+        /// Percentage nitrogen of current intake
         /// </summary>
         public double PercentNOfIntake { get; set; }
 

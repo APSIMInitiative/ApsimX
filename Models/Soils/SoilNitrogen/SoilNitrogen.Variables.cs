@@ -10,6 +10,7 @@ using Models;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.Surface;
+using Models.Soils.NutrientPatching;
 
 namespace Models.Soils
 {
@@ -1338,16 +1339,6 @@ namespace Models.Soils
         #region Parameter for handling patches
 
         /// <summary>
-        /// The approach used for partitioning the N between patches.
-        /// </summary>
-        [XmlIgnore]
-        public string NPartitionApproach
-        {
-            get { return patchNPartitionApproach; }
-            set { patchNPartitionApproach = value.Trim(); }
-        }
-
-        /// <summary>
         /// Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).
         /// </summary>
         [Units("mm")]
@@ -1430,17 +1421,6 @@ namespace Models.Soils
         #region Parameter for amalgamating patches
 
         /// <summary>
-        /// Flag for whether auto amalgamation of CN patches is allowed (yes/no).
-        /// </summary>
-        [Units("yes/no")]
-        [XmlIgnore]
-        public string AllowPatchAutoAmalgamation
-        {
-            get { return (patchAutoAmalgamationAllowed) ? "yes" : "no"; }
-            set { patchAutoAmalgamationAllowed = value.ToLower().Contains("yes"); }
-        }
-
-        /// <summary>
         /// Approach to use when comparing patches for AutoAmalagamation.
         /// </summary>
         /// <remarks>
@@ -1450,10 +1430,10 @@ namespace Models.Soils
         ///  - CompareMerge: Patches are compare and merged at once if deemed equal, then compare to next
         /// </remarks>
         [XmlIgnore]
-        public string AutoAmalgamationApproach
+        public AutoAmalgamationApproachEnum AutoAmalgamationApproach
         {
             get { return patchAmalgamationApproach; }
-            set { patchAmalgamationApproach = value.Trim(); }
+            set { patchAmalgamationApproach = value; }
         }
 
         /// <summary>
@@ -1467,10 +1447,10 @@ namespace Models.Soils
         ///  - AreaBased: The [first] patch with the biggest area is used as base
         /// </remarks>
         [XmlIgnore]
-        public string basePatchApproach
+        public BaseApproachEnum basePatchApproach
         {
             get { return patchbasePatchApproach; }
-            set { patchbasePatchApproach = value.Trim(); }
+            set { patchbasePatchApproach = value; }
         }
 
         /// <summary>
@@ -1478,10 +1458,10 @@ namespace Models.Soils
         /// </summary>
         [Units("yes/no")]
         [XmlIgnore]
-        public string AllowPatchAmalgamationByAge
+        public bool AllowPatchAmalgamationByAge
         {
-            get { return (patchAmalgamationByAgeAllowed) ? "yes" : "no"; }
-            set { patchAmalgamationByAgeAllowed = value.ToLower().Contains("yes"); }
+            get { return (patchAmalgamationByAgeAllowed); }
+            set { patchAmalgamationByAgeAllowed = value; }
         }
 
         /// <summary>
@@ -2467,7 +2447,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "Urea", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "Urea", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
@@ -2546,7 +2526,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "NH4", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "NH4", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
@@ -2633,7 +2613,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "NO3", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "NO3", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];
@@ -6298,17 +6278,12 @@ namespace Models.Soils
         /// <summary>
         /// Approach to use when partitioning dltN amongst patches.
         /// </summary>
-        private string patchNPartitionApproach = "BasedOnConcentrationAndDelta";
-
-        /// <summary>
-        /// Whether auto amalgamation of patches is allowed.
-        /// </summary>
-        private bool patchAutoAmalgamationAllowed = false;
+        public PartitionApproachEnum NPartitionApproach { get; set; } = PartitionApproachEnum.BasedOnConcentrationAndDelta;
 
         /// <summary>
         /// Approach to use for AutoAmalagamation (CompareAll, CompareBase, CompareMerge).
         /// </summary>
-        private string patchAmalgamationApproach = "CompareAll";
+        private AutoAmalgamationApproachEnum patchAmalgamationApproach = AutoAmalgamationApproachEnum.CompareAll;
 
         /// <summary>
         /// indicates whether an age check is used to force amalgamation of patches.
@@ -6323,7 +6298,7 @@ namespace Models.Soils
         /// <summary>
         /// Approach to use for defining the base patch (IDBased, AreaBased).
         /// </summary>
-        private string patchbasePatchApproach = "AreaBased";
+        private BaseApproachEnum patchbasePatchApproach = BaseApproachEnum.AreaBased;
 
         /// <summary>
         /// Layer down to which test for diffs are made (upon auto amalgamation).
@@ -6496,6 +6471,19 @@ namespace Models.Soils
     /// <param name="Data">The data.</param>
     public delegate void AddSoilCNPatchwithFOMFOMDelegate(AddSoilCNPatchwithFOMFOMType Data);
 
+    /// <summary>Specifies the different types of deposition in calls to add a patch.</summary>
+    public enum DepositionTypeEnum
+    {
+        /// <summary></summary>
+        ToNewPatch,
+        /// <summary></summary>
+        NewOverlappingPatches,
+        /// <summary></summary>
+        ToSpecificPatch,
+        /// <summary></summary>
+        ToAllPaddock,
+    }
+
     /// <summary>
     /// AddSoilCNPatchwithFOM
     /// </summary>
@@ -6504,9 +6492,9 @@ namespace Models.Soils
         /// <summary>The Sender</summary>
         public String Sender = "";
         /// <summary>The SuppressMessages</summary>
-        public String SuppressMessages = "";
+        public bool SuppressMessages;
         /// <summary>The DepositionType</summary>
-        public String DepositionType = "";
+        public DepositionTypeEnum DepositionType = DepositionTypeEnum.ToAllPaddock;
         /// <summary>The AffectedPatches_nm</summary>
         public String[] AffectedPatches_nm;
         /// <summary>The AffectedPatches_id</summary>
@@ -6547,9 +6535,9 @@ namespace Models.Soils
         /// <summary>The Sender</summary>
         public String Sender = "";
         /// <summary>The SuppressMessages</summary>
-        public String SuppressMessages = "";
+        public bool SuppressMessages;
         /// <summary>The DepositionType</summary>
-        public String DepositionType = "";
+        public DepositionTypeEnum DepositionType = DepositionTypeEnum.ToAllPaddock;
         /// <summary>The AffectedPatches_nm</summary>
         public String[] AffectedPatches_nm;
         /// <summary>The AffectedPatches_id</summary>
@@ -6583,12 +6571,6 @@ namespace Models.Soils
         /// <summary>The FOM_N</summary>
         public Double[] FOM_N;
     }
-
-    /// <summary>
-    /// AddSoilCNPatchDelegate
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void AddSoilCNPatchDelegate(AddSoilCNPatchType Data);
 
     #endregion
 
@@ -6688,6 +6670,31 @@ namespace Models.Soils
     {
         /// <summary>The pool</summary>
         public SurfaceOrganicMatterDecompPoolType[] Pool;
+
+        /// <summary>Add two pools together.</summary>
+        /// <param name="from">The pool to add into this instance.</param>
+        public void Add(SurfaceOrganicMatterDecompType from)
+        {
+            if (Pool.Length != from.Pool.Length)
+                throw new Exception("Cannot add SurfaceOrganicMatterDecompType together. Pool lengths differ.");
+            for (int p = 0; p < Pool.Length; p++)
+            {
+                Pool[p].FOM.amount += from.Pool[p].FOM.amount;
+                Pool[p].FOM.C += from.Pool[p].FOM.C;
+                Pool[p].FOM.N += from.Pool[p].FOM.N;
+            }
+        }
+
+        /// <summary>Multiply the FOM C and N by a value.</summary>
+        /// <param name="value">The value to multiply the C and N by.</param>
+        public void Multiply(double value)
+        {
+            foreach (var pool in Pool)
+            {
+                pool.FOM.C *= value;
+                pool.FOM.N *= value;
+            }
+        }
     }
 
     /// <summary>

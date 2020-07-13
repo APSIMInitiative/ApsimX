@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
+    [ValidParent(ParentType = typeof(GrazeFoodStoreFertilityLimiter))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
@@ -38,14 +39,14 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Start month of annual period to perform activities
         /// </summary>
-        [Description("Start month of annual period to perform activities (1-12)")]
+        [Description("Start month of annual period to perform activity (1-12)")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Month]
         public int StartMonth { get; set; }
         /// <summary>
         /// End month of annual period to perform activities
         /// </summary>
-        [Description("End month of annual period to perform activities (1-12)")]
+        [Description("End month of annual period to perform activity (1-12)")]
         [Required, Month]
         [System.ComponentModel.DefaultValueAttribute(12)]
         public int EndMonth { get; set; }

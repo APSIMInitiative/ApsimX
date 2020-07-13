@@ -5,6 +5,8 @@
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -17,7 +19,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
-    public class CompositeFactor : Model
+    public class CompositeFactor : Model, IReferenceExternalFiles
     {
         /// <summary>Parameterless constrctor needed for serialisation</summary>
         public CompositeFactor()
@@ -67,20 +69,7 @@
         /// <param name="simulationDescription">A description of a simulation.</param>
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
-            List<string> allPaths = new List<string>();
-            List<object> allValues = new List<object>();
-            if (Specifications != null)
-            {
-                // Compound factorvalue i.e. multiple specifications that all
-                // work on a single simulation.
-                foreach (var specification in Specifications)
-                    ParseSpecification(specification, allPaths, allValues);
-            }
-            if (Paths != null)
-            {
-                allPaths.AddRange(Paths);
-                allValues.AddRange(Values);
-            }
+            ParseAllSpecifications(out List<string> allPaths, out List<object> allValues);
 
             if (allPaths.Count > 1 && allPaths.Count != allValues.Count)
                 throw new Exception("The number of factor paths does not match the number of factor values");
@@ -112,6 +101,25 @@
                     else
                         simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
                 }
+            }
+        }
+
+        private void ParseAllSpecifications(out List<string> paths, out List<object> values)
+        {
+            paths = new List<string>();
+            values = new List<object>();
+
+            if (Specifications != null)
+            {
+                // Compound factorvalue i.e. multiple specifications that all
+                // work on a single simulation.
+                foreach (var specification in Specifications)
+                    ParseSpecification(specification, paths, values);
+            }
+            if (Paths != null)
+            {
+                paths.AddRange(Paths);
+                values.AddRange(Values);
             }
         }
 
@@ -157,6 +165,16 @@
                 allPaths.Add(path.Trim());
                 allValues.Add(value);
             }
+        }
+
+        /// <summary>Return paths to all files referenced by this model.</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            ParseAllSpecifications(out List<string> paths, out List<object> values);
+
+            Simulations sims = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(sims.FileName, str)));
+            return result;
         }
     }
 }

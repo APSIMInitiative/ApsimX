@@ -12,6 +12,7 @@ using Models.PMF.Struct;
 using System.Linq;
 using Models.Functions.DemandFunctions;
 using Models.Functions.SupplyFunctions;
+using System.Text;
 
 namespace Models.PMF.Organs
 {
@@ -121,6 +122,12 @@ namespace Models.PMF.Organs
 
         [Link]
         private Phenology phenology = null;
+
+        /// <summary>
+        /// Linke to weather, used for frost senescence calcs.
+        /// </summary>
+        [Link]
+        private IWeather weather = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -308,9 +315,15 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
-        /// <summary>Temperature threshold for leaf death.</summary>
+        /// <summary>
+        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+        /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frostKill = null;
+
+        /// <summary>Temperature threshold for leaf death.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction frostKillSevere = null;
 
         /// <summary>Delay factor for water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -727,24 +740,58 @@ namespace Models.PMF.Organs
             DltSenescedLai = Math.Min(DltSenescedLai, LAI);
         }
 
+        /// <summary>
+        /// Calculate senescence due to frost.
+        /// </summary>
         private double calcLaiSenescenceFrost()
         {
-            //  calculate senecence due to frost
-            double dltSlaiFrost = 0.0;
-            if (MetData.MinT < FrostKill)
+            if (weather.MinT > FrostKill || !Plant.IsEmerged)
+                return 0;
+
+            if (weather.MinT > frostKillSevere.Value())
             {
-                if(phenology.Between("Germination", "FloralInitiation"))
+                // Temperature is warmer than frostKillSevere, but cooler than frostKill.
+                // So the plant will only die if between floral init - flowering.
+
+                if (phenology.Between("Germination", "FloralInitiation"))
                 {
-                    dltSlaiFrost = Math.Max(0.0, LAI - 0.01);
+                    // The plant will survive but all of the leaf area is removed except a fraction.
+                    // 3 degrees is a default for now - extract to a parameter to customise it.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
+                    return Math.Max(0, LAI - 0.1);
+                }
+                else if (phenology.Between("FloralInitiation", "Flowering"))
+                {
+                    // Plant is between floral init and flowering - time to die.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+                    return LAI; // rip
                 }
                 else
-                {
-                    dltSlaiFrost = LAI;
-                }
-
+                    // After flowering it takes a severe frost to kill the plant
+                    // (which didn't happen today).
+                    return 0;
             }
 
-            return dltSlaiFrost;
+            // Temperature is below frostKillSevere parameter, senesce all LAI.
+            Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+            return LAI;
+        }
+
+        /// <summary>
+        /// Generates a message to be displayed when senescence due to frost
+        /// occurs. Putting this in a method for now so we don't have the same
+        /// code twice, but if frost senescence is tweaked in the future it might
+        /// just be easier to do away with the method and hardcode similar
+        /// messages multiple times.
+        /// </summary>
+        /// <param name="fatal">Was the frost event fatal?</param>
+        private string GetFrostSenescenceMessage(bool fatal)
+        {
+            StringBuilder message = new StringBuilder();
+            message.AppendLine($"Frost Event: ({(fatal ? "Fatal" : "Non Fatal")})");
+            message.AppendLine($"\tMin Temp     = {weather.MinT}");
+            message.AppendLine($"\tSenesced LAI = {LAI - 0.01}");
+            return message.ToString();
         }
 
         private double calcLaiSenescenceWater()

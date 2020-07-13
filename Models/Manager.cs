@@ -23,7 +23,7 @@
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
-    public class Manager : Model, IOptionallySerialiseChildren
+    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
     {
         [NonSerialized]
         [Link]
@@ -228,6 +228,20 @@
                                              ReflectionUtilities.ObjectToString(value)));
                     }
                 }
+            }
+        }
+
+        /// <summary>Ovewrite default auto-doc.</summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // document children
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

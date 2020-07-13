@@ -93,8 +93,8 @@
                " 2,Sim2,   Folder2\r\n");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-               "ID,   Name,Version,Date,OnGraphs\r\n" +
-               " 1,Current,       ,    ,        \r\n");
+               "ID,   Name,Version,OnGraphs\r\n" +
+               " 1,Current,       ,        \r\n");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
                "TableName,ColumnHeading,Units\r\n" +
@@ -398,8 +398,8 @@
                            "           1,           2,2017-01-01,21.000\r\n" +
                            "           1,           2,2017-01-02,22.000\r\n");
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-                "ID,   Name,Version,Date,OnGraphs\r\n" +
-                " 1,Current,       ,    ,        \r\n");
+                "ID,   Name,Version,OnGraphs\r\n" +
+                " 1,Current,       ,        \r\n");
         }
 
         /// <summary>Revert a checkpoint</summary>
