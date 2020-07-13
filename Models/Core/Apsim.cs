@@ -49,10 +49,6 @@
         /// <returns>The clone of the model</returns>
         public static T Clone<T>(this T model) where T : IModel
         {
-            // Don't clone the entire simulations tree, just everything from here down.
-            IModel parentModel = model.Parent;
-            model.Parent = null;
-
             // If the simulation is currently running then we do not want to 
             // clone all the model dependencies as this will mean we clone
             // them as well. The strategy is to disconnect all the links and 
@@ -83,7 +79,6 @@
             }
             finally
             {
-                model.Parent = parentModel;
                 if (links != null)
                     links.Resolve(model, allLinks: true, recurse: true);
             }
