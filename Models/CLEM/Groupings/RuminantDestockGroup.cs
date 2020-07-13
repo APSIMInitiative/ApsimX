@@ -20,7 +20,8 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [Description("This ruminant filter group specifies individuals from the ruminant herd for destocking using any number of Ruminant Filters. Multiple filters will select groups of individuals required.")]
+    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [Description("This ruminant filter group specifies individuals from the ruminant herd for destocking/mustering using any number of Ruminant Filters. Multiple instances will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
     public class RuminantDestockGroup : CLEMModel, IFilterGroup

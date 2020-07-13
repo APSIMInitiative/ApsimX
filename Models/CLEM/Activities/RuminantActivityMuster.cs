@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMustering.htm")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
     {
-        /// <summary>
+        /// <summary>F
         /// Managed pasture to muster to
         /// </summary>
         [Description("Managed pasture to muster to")]
@@ -72,29 +72,29 @@ namespace Models.CLEM.Activities
         private void Muster()
         {
             Status = ActivityStatus.NotNeeded;
-            foreach (Ruminant ind in this.CurrentHerd(false))
+            // allow multiple filter groups for mustering.. Use RuminantDestockGroup
+            foreach (RuminantDestockGroup item in Apsim.Children(this, typeof(RuminantDestockGroup)))
             {
-                // set new location ID
-                if(ind.Location != pastureName)
+                foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
                 {
-                    this.Status = ActivityStatus.Success;
-                }
-
-                ind.Location = pastureName;
-
-                // check if sucklings are to be moved with mother
-                if (MoveSucklings)
-                {
-                    // if female
-                    if (ind.GetType() == typeof(RuminantFemale))
+                    // set new location ID
+                    if (ind.Location != pastureName)
                     {
-                        RuminantFemale female = ind as RuminantFemale;
-                        // check if mother with sucklings
-                        if (female.SucklingOffspringList.Count > 0)
+                        this.Status = ActivityStatus.Success;
+                        ind.Location = pastureName;
+
+                        // check if sucklings are to be moved with mother
+                        if (MoveSucklings)
                         {
-                            foreach (var suckling in female.SucklingOffspringList)
+                            // if female
+                            if (ind is RuminantFemale)
                             {
-                                suckling.Location = pastureName;
+                                RuminantFemale female = ind as RuminantFemale;
+                                // check if mother with sucklings
+                                foreach (var suckling in female.SucklingOffspringList)
+                                {
+                                    suckling.Location = pastureName;
+                                }
                             }
                         }
                     }
