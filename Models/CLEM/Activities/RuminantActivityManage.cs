@@ -242,6 +242,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            if(this.MinimumBreedersKept > this.MaximumBreedersKept)
+            {
+                this.MinimumBreedersKept = this.MaximumBreedersKept;
+            }
+
             // create local version of max breeders so we can modify without affecting user set value
             maxBreeders = Math.Max(this.MaximumBreedersKept, this.MinimumBreedersKept);
 
@@ -827,6 +832,8 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitycontentlight\">";
             html += "\n<div class=\"activityentry\">";
 
+            MinimumBreedersKept = Math.Min(MinimumBreedersKept, MaximumBreedersKept);
+
             int maxBreed = Math.Max(MinimumBreedersKept, MaximumBreedersKept);
             html += "The herd will be maintained";
             if (MinimumBreedersKept == 0)
@@ -920,7 +927,7 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + GrazeFoodStoreNameBreeders + "</span>";
                 if (MinimumPastureBeforeRestock > 0)
                 {
-                    html += " with no restocking while pasture is below <span class=\"activityentry\">" + MinimumPastureBeforeRestock.ToString() + "</span>";
+                    html += " with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha";
                 }
             }
             html += "</div>";
@@ -936,7 +943,7 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + GrazeFoodStoreNameSires + "</span>";
                 if (MinimumPastureBeforeRestock > 0)
                 {
-                    html += " with no restocking while pasture is below <span class=\"activityentry\">" + MinimumPastureBeforeRestock.ToString() + "</span>";
+                    html += " with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha";
                 }
             }
             html += "</div>";

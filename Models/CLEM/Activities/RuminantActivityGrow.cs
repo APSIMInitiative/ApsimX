@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
+    [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
@@ -203,13 +204,17 @@ namespace Models.CLEM.Activities
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
                         CalculateMilkProduction(femaleind);
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkProduction * 30.4;
+//                        femaleind.MilkProducedThisTimeStep = femaleind.MilkProduction * 30.4;
+                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
                     else
                     {
                         femaleind.MilkProduction = 0;
                         femaleind.MilkProductionPotential = 0;
                         femaleind.MilkCurrentlyAvailable = 0;
+                        femaleind.MilkMilkedThisTimeStep = 0;
+                        femaleind.MilkSuckledThisTimeStep = 0;
+                        femaleind.MilkProducedThisTimeStep = 0;
                     }
                 }
                 
