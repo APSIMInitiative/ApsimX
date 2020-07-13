@@ -135,12 +135,12 @@ namespace Models.CLEM.Activities
             if (LandConditionIndex == null)
             {
                 string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [o=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [LC] below a [o=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
             }
             if (GrassBasalArea == null)
             {
                 string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [o=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [GBA] below a [o=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
             }
             if (FilePasture == null)
             {
@@ -203,9 +203,15 @@ namespace Models.CLEM.Activities
                 LinkedNativeFoodType.Manager = this as IPastureManager;
 
                 soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
-    
-                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+
+                if (!(LandConditionIndex is null))
+                {
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
+                }
+                if (!(GrassBasalArea is null))
+                {
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+                }
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
                 StockingRateSummed = StartingStockingRate;
 
