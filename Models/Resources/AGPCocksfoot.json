@@ -109,7 +109,7 @@
       "NuptakeSWFactor": 0.25,
       "MaximumUptakeRateNH4": 0.5,
       "MaximumUptakeRateNO3": 0.5,
-      "Name": "Cocksfoot",
+      "Name": "AGPCocksfoot",
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
