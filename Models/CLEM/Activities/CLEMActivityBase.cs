@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
-        public virtual bool TimingOK
+        public virtual new bool TimingOK
         {
             get
             {

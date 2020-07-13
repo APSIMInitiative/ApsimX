@@ -77,7 +77,6 @@
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "WaterAvailableMethod": 0,
-      "NitrogenAvailableMethod": 0,
       "PhotosyntheticEfficiency": 0.01,
       "PhotosynthesisCurveFactor": 0.8,
       "FractionPAR": 0.5,
@@ -275,6 +274,8 @@
           "RootDepthMinimum": 50.0,
           "RootDepthMaximum": 1000.0,
           "RootElongationRate": 25.0,
+          "KNO3": 0.02,
+          "KNH4": 0.01,
           "Name": "Root",
           "Children": [
             {

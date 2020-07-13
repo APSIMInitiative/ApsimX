@@ -99,7 +99,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">";
                 html += StartSeasonMonth.ToString();
             }
-            html += "</class>";
+            html += "</span>";
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\">";

@@ -105,6 +105,22 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Is timing ok for the current model
+        /// </summary>
+        public bool TimingOK
+        {
+            get
+            {
+                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
+                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                return (res == 0);
+            }
+        }
+
+        /// <summary>
         /// Returns the opacity value for this component in the summary display
         /// </summary>
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);

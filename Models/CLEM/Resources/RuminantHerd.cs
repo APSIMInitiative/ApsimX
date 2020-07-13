@@ -58,7 +58,6 @@ namespace Models.CLEM.Resources
             id = 1;
             Herd = new List<Ruminant>();
             PurchaseIndividuals = new List<Ruminant>();
-            //LastIndividualChanged = new Ruminant();
 
             // for each Ruminant type 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
@@ -170,7 +169,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // assigning values for the remaining females who haven't just bred.
-                    // i.e meet breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
+                    // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
                     foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.Age > a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant))
                     {
@@ -188,7 +187,6 @@ namespace Models.CLEM.Resources
                         female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
                         
                         // no longer needed as only work with stats during the simulation.
-
                         // fill breeding stats prior to simulation start
                         // assumes all previous births successful
                         //female.NumberOfConceptions = female.NumberOfBirths;

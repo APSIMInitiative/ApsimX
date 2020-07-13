@@ -484,48 +484,64 @@
                              
                 double WaOp = Wa +Wt - CWt;                               // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy
-                double Fs = WaOp / (Wt + Wa);                              // Fraction of open space in the alley row
+                double Fs = WaOp / (Wt + Wa);                             // Fraction of open space in the alley row
 
                
-                double LAIt = MathUtilities.Sum(vine.LAItotsum) * Wt/ CWt;      // adjusting the LAI of tallest strip based on new width
-                double LAIs = MathUtilities.Sum(alley.LAItotsum)* Wa / WaOp;     // adjusting the LAI of shortest strip based on new width
+                double LAIt = MathUtilities.Sum(vine.LAItotsum) * Wt/ CWt;  // adjusting the LAI of tallest strip based on new width
+                double LAIs = MathUtilities.Sum(alley.LAItotsum)* Wa/ WaOp; // adjusting the LAI of shortest strip based on new width
 
-                double Kt = 0;                                                // Extinction Coefficient of the tallest strip
-                if (vine.Canopies.Count > 0)                                 // If it exists...
+                double Kt = 0;                                               // Extinction Coefficient of the tallest strip
+                if (vine.Canopies.Count > 0 & LAIt > 0 )                                 // If it exists...
                     Kt = vine.Canopies[0].Ktot;
                 double Ka = 0;                                                // Extinction Coefficient of the shortest strip
-                if (alley.Canopies.Count > 0)                                // If it exists...
+                if (alley.Canopies.Count > 0 & LAIs > 0)                                 // If it exists...
                     Ka = alley.Canopies[0].Ktot;
 
                 double Httop = Ht-Ha;                                       // distance from top of shortest to top of tallest
                 double LAIthomo = Ft * LAIt;                                // LAI of top layer of tallest strip if spread homogeneously across all of the space
                 
-                double Ftblack = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;  // View factor for top layer of tallest strip
-                
-                double Fsblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(WaOp, 2)) - Httop) / WaOp;  // View factor for top layer of shortest strip
-                
-                double Tt = Ft * (Ftblack * Math.Exp(-Kt * LAIt)
-                          + Ft * (1 - Ftblack) * Math.Exp(-Kt * LAIthomo))
-                          + Fs * Ft * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo);  //  Transmission of light to bottom of top layer in tallest strip
-                
-                double Ts = Fs * (Fsblack + Fs * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo))
-                          + Ft * Fs * ((1 - Ftblack) * Math.Exp(-Kt * LAIthomo));           //  Transmission of light to bottom of top layer in shortest strip
-                //this method may overestimed the light interception by the tree top layer, however the fraction of light interception at the interrow compared to the observation is improved
-                double Intttop = 1 - Tt - Ts;                                // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
-                double Inttbot = (Tt * (1 - Math.Exp(-Kt * 0)));             // Interception by the bottom layer of the tallest strip
-                double Soilt = (Tt * (Math.Exp(-Kt * 0)));                   // Transmission to the soil below tallest strip
-                double Ints = Ts * (1 - Math.Exp(-Ka * LAIs));               // Interception by the shortest strip
-                double Soils = Ts * (Math.Exp(-Ka * LAIs));                  // Transmission to the soil below shortest strip
-                double EnergyBalanceCheck = Intttop + Inttbot + Soilt + Ints + Soils;  // Sum of all light fractions (should equal 1)
-               
-                if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
-                    throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
+                double fhomo = 1 - Math.Exp(-Kt * LAIthomo);
+                double fcompr = (1 - Math.Exp(-Kt * LAIt)) * CWt / WaOp;
 
+                double IPblackt = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;
+
+                double IRblackt = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;  // View factor for top layer of tallest strip
+
+                double SPt = IPblackt + (1 - IPblackt) * Math.Exp(-Kt * LAIthomo);
+                double SRt = IRblackt * Math.Exp(-Kt * LAIt) +
+                            (1 - IRblackt) * Math.Exp(-Kt * LAIthomo);   // Transmission of light to bottom of top layer in tallest strip
+                double W = 0;
+                if (vine.Canopies.Count > 0 & LAIt > 0 & Kt > 0)                                 // If it exists...
+                   W = (SPt - SRt) / (1 - Math.Exp(-Kt * LAIt));
+
+                double ftop = fhomo * (1 - W) + fcompr * W;              // light interception by the vine row
+
+                //use different height and LAI distribution for calculating the light penetrate to the interrow
+                //this is for accounting the effect of trunk, cordon, and post that shading on the interrow
+
+                double IPblackb = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(WaOp, 2)) - Httop) / WaOp; //bottom part
+
+                double IRblackb = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(CWt, 2)) - Httop) / CWt;  // View factor for top layer of tallest strip
+
+                double SPb = IPblackb + (1 - IPblackb) * Math.Exp(-Kt * LAIthomo);
+                double SRb = IRblackb * Math.Exp(-Kt * LAIt) +
+                            (1 - IRblackb) * Math.Exp(-Kt * LAIthomo);  //  Transmission of light to bottom of top layer in tallest strip
+                //double Wb = (SPt - SRt) / (1 - Math.Exp(-Kt * LAIt));
+
+                //double fb = fhomo * (1 - W) + fcompr * W;  //light interception by the vine row
+
+                double Soilt = SRb * Ft ;                   // Transmission to the soil below tallest strip        
+ 
+                double Intttop = ftop;   // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
+                              
+                double Ints =  SPb * (1 - Math.Exp(-Ka * LAIs)) * Fs;               // Interception by the shortest strip
+                double Soils = SPb * (Math.Exp(-Ka * LAIs)) * Fs;                  // Transmission to the soil below shortest strip
+ 
                 Ft = (Wt) / (Wt + Wa);  // Scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Scaling back to zone ground area works
 
-                if (vine.Canopies.Count > 0)
-                    vine.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                if (vine.Canopies.Count > 0 & LAIt > 0 )
+                    vine.Canopies[0].Rs[0] = weather.Radn * (Intttop)/Ft; //intttop is already a fraction compare to the overall layer
                     vine.SurfaceRs = weather.Radn * Soilt / Ft;
                 
                 if (alley.Canopies.Count > 0 && alley.Canopies[0].Rs != null)

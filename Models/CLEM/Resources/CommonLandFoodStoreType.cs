@@ -408,7 +408,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null)
             {
                 html += "<div class=\"activityentry\">";
-                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current Nitrogen percent";
+                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent";
                 html += "</div>";
             }
             else

@@ -110,7 +110,7 @@
             if (string.IsNullOrEmpty(namePath))
                 throw new Exception($"Unable to find variable with null variable name");
             else if (namePath[0] != '.' &&
-                     (namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1
+                     (namePath.Replace("()", "").IndexOfAny("+*/^".ToCharArray()) != -1
                      | (namePath.IndexOfAny("(".ToCharArray()) >= 0 && namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1)))
             {
                 // expression - need a better way of detecting an expression
