@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using StdUnits;
@@ -156,6 +157,23 @@ namespace Models.CLEM.Activities
                                         female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                         // report conception status changed
                                         female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+
+                                        // check for perenatal mortality
+                                        for (int j = i; j < monthsAgoStop; j++)
+                                        {
+                                            for (int k = 0; k < female.CarryingCount; i++)
+                                            {
+                                                if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                {
+                                                    female.OneOffspringDies();
+                                                    if (female.NumberOfOffspring == 0)
+                                                    {
+                                                        // report conception status changed when last multiple birth dies.
+                                                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -180,6 +198,24 @@ namespace Models.CLEM.Activities
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                 // report conception status changed
                                                 female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+
+                                                // check for perenatal mortality
+                                                for (int j = i; j < monthsAgoStop; j++)
+                                                {
+                                                    for (int k = 0; k < female.CarryingCount; i++)
+                                                    {
+                                                        if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                        {
+                                                            female.OneOffspringDies();
+                                                            if (female.NumberOfOffspring == 0)
+                                                            {
+                                                                // report conception status changed when last multiple birth dies.
+                                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
                                             }
                                             numberServiced++;
                                         }

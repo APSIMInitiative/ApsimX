@@ -85,8 +85,19 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                normalisedWeight = StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                normalisedWeight = CalculateNormalisedWeight(age);
+                    //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
+        }
+
+        /// <summary>
+        /// Calculate normalised weight from age
+        /// </summary>
+        /// <param name="age">Age in months</param>
+        /// <returns></returns>
+        public double CalculateNormalisedWeight(double age)
+        {
+            return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
 
         /// <summary>
