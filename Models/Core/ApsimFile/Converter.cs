@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 105; } }
+        public static int LatestVersion { get { return 106; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2301,7 +2301,7 @@
 
 
         /// <summary>
-        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// Add VariableReference function to replace direct call to structure in nodenumberphase
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -2318,7 +2318,7 @@
 
 
         /// <summary>
-        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// Add VariableReference function to replace direct call to structure in LeafAppearancePhase
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -2333,6 +2333,21 @@
             }
         }
 
+        /// <summary>
+        /// Add expression function to replace direct call to structure in LeafAppearancePhase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion106(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                ExpressionFunction expFunction = new ExpressionFunction();
+                expFunction.Name = "LeafNumber";
+                expFunction.Expression = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
+                JsonUtilities.AddModel(LAP, expFunction);
+            }
+        }
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>

@@ -27,6 +27,9 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FinalLeafNumber = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction LeafNumber = null;
+
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -53,7 +56,7 @@ namespace Models.PMF.Phen
             get
             {
                 double F = 0;
-                F = (leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
+                F = (LeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
                 F = MathUtilities.Bound(F,0,1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
@@ -70,7 +73,7 @@ namespace Models.PMF.Phen
                         
             if (First)
             {
-                LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
+                LeafNoAtStart = LeafNumber.Value();
                 TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
