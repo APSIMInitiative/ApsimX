@@ -21,8 +21,8 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
-        Leaf leaf = null;
+//        [Link]
+//        Leaf leaf = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FinalLeafNumber = null;
@@ -80,7 +80,8 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+            //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+            if (LeafNumber.Value()>= FinalLeafNumber.Value())
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
