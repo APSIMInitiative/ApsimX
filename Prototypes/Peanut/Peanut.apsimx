@@ -400,16 +400,23 @@
                   "Name": "VegetativeThermalTime",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This approach is based upon the that outlined in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        10.0,
-                        20.0,
-                        30.0,
-                        40.0
+                        9.0,
+                        29.0,
+                        39.0
                       ],
                       "Y": [
                         0.0,
-                        10.0,
                         20.0,
                         0.0
                       ],
@@ -440,12 +447,12 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        14.43,
-                        21.19
+                        1.0,
+                        24.0
                       ],
                       "Y": [
                         1.0,
-                        0.0
+                        1.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -522,12 +529,12 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        14.43,
-                        21.19
+                        1.0,
+                        24.0
                       ],
                       "Y": [
                         1.0,
-                        0.0
+                        1.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -665,7 +672,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhotoperiodFunction, Models",
-                  "Twilight": 0.0,
+                  "Twilight": -6.0,
                   "DayLength": 0.0,
                   "Name": "Photoperiod",
                   "Children": [],
@@ -685,8 +692,8 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
-                  "ShootLag": 10.0,
-                  "ShootRate": 1.0,
+                  "ShootLag": 15.0,
+                  "ShootRate": 1.5,
                   "Start": "Germination",
                   "End": "Emergence",
                   "TTForTimeStep": 0.0,
@@ -698,6 +705,15 @@
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This approach is based upon the that outlined in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -714,7 +730,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 200.0,
+                      "FixedValue": 390.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -940,7 +956,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 500.0,
+                          "FixedValue": 1020.0,
                           "Units": null,
                           "Name": "EntireGrainfillPeriod",
                           "Children": [],
@@ -1226,7 +1242,7 @@
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
               "LightProfile": null,
-              "KDead": 0.2,
+              "KDead": 0.3,
               "LAIDead": 0.0,
               "DMSupply": null,
               "DMDemandPriorityFactor": null,
@@ -1251,10 +1267,20 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.2,
+                      "FixedValue": 1.5,
                       "Units": null,
                       "Name": "RUE",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This approach is based upon the value used in [robertson_simulation_2002] increased to account for partitioning to roots.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1265,10 +1291,19 @@
                       "Name": "FT",
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             10.0,
-                            20.0,
+                            21.0,
                             30.0,
                             40.0
                           ],
@@ -1532,21 +1567,23 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        200.0,
+                        50.0,
+                        350.0,
                         1000.0
                       ],
                       "Y": [
-                        0.6,
+                        0.65,
+                        0.45,
                         0.4
                       ],
                       "Name": "XYPairs",
@@ -1762,6 +1799,16 @@
                                 }
                               ],
                               "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 5.0,
+                              "Units": null,
+                              "Name": "Modifier",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -2259,22 +2306,32 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.1,
-                        6.0
+                        0.0,
+                        0.3,
+                        0.8,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0
                       ],
                       "Y": [
+                        0.035,
                         0.03,
-                        0.03
+                        0.023,
+                        0.02,
+                        0.02,
+                        0.02,
+                        0.02
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -2335,10 +2392,10 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "",
+                                          "Text": "This approach is based upon that used in [robertson_simulation_2002].",
                                           "Name": "Memo",
                                           "Children": [],
-                                          "IncludeInDocumentation": false,
+                                          "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -2346,15 +2403,17 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             2.0,
+                                            4.0,
+                                            6.0,
                                             7.0,
-                                            10.0,
-                                            18.0
+                                            10.0
                                           ],
                                           "Y": [
-                                            0.6666,
+                                            0.5,
                                             1.0,
                                             1.0,
-                                            0.83
+                                            1.0,
+                                            1.0
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -2389,7 +2448,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.4,
+                                      "FixedValue": 1.0,
                                       "Units": null,
                                       "Name": "RelativeArea",
                                       "Children": [],
@@ -2421,20 +2480,29 @@
                               "Name": "Branches",
                               "Children": [
                                 {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "This approach is based upon the that outlined in [robertson_simulation_2002].",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    6.0,
+                                    3.0,
+                                    5.0,
                                     7.0,
-                                    8.0,
-                                    9.0
+                                    12.0
                                   ],
                                   "Y": [
                                     1.0,
-                                    1.0,
-                                    2.0,
-                                    2.0,
-                                    2.0
+                                    4.0,
+                                    7.0,
+                                    10.0,
+                                    12.0
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -2521,7 +2589,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
+                  "FixedValue": 0.004,
                   "Units": null,
                   "Name": "AreaLargestLeaf",
                   "Children": [],
@@ -2531,10 +2599,20 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 45.0,
+                  "FixedValue": 56.0,
                   "Units": null,
                   "Name": "Phyllochron",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This value is based upon that used in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2577,10 +2655,20 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
+                  "FixedValue": 0.45,
                   "Units": null,
                   "Name": "PotentialHarvestIndex",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2717,7 +2805,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.12,
+                  "FixedValue": 0.13,
                   "Units": null,
                   "Name": "WaterContent",
                   "Children": [],
@@ -3080,6 +3168,15 @@
                   "Name": "RootFrontVelocity",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Germination",
                       "End": "Emergence",
@@ -3087,7 +3184,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 5.0,
+                          "FixedValue": 15.0,
                           "Units": null,
                           "Name": "Function",
                           "Children": [],
@@ -3108,7 +3205,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 30.0,
+                          "FixedValue": 35.0,
                           "Units": null,
                           "Name": "Function",
                           "Children": [],
@@ -3129,7 +3226,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 5.0,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "Function",
                           "Children": [],
@@ -3348,10 +3445,20 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 40.0,
+                  "FixedValue": 60.0,
                   "Units": "m/g",
                   "Name": "SpecificRootLength",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3675,7 +3782,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.2,
+                      "FixedValue": 0.1,
                       "Units": "g/plant",
                       "Name": "Structural",
                       "Children": [],
@@ -5471,8 +5578,17 @@
                               "Name": "StemGrowthPhase",
                               "Children": [
                                 {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.75,
+                                  "FixedValue": 0.9,
                                   "Units": null,
                                   "Name": "Fraction",
                                   "Children": [],
@@ -5943,16 +6059,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 160",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "EarlyBunch",
                   "Children": [],
@@ -5963,16 +6076,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "VirginiaBunch",
                   "Children": [],
@@ -5983,16 +6093,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "TMV2",
                   "Children": [],
@@ -6003,16 +6110,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "Tapir",
                   "Children": [],
@@ -6023,16 +6127,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "VB97",
                   "Children": [],
@@ -6043,16 +6144,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
+                    "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
                   ],
                   "Name": "Florunner",
                   "Children": [],
