@@ -12,8 +12,8 @@ namespace Models
 	/// <summary>
 	/// This script must implement the IGraphPanelScript interface.
 	/// </summary>
-    [Serializable]
-	public class Script : Model, IGraphPanelScript
+	[Serializable]
+	public class GraphPanelScriptTemplate : Model, IGraphPanelScript
 	{
 		/// <summary>
         /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.
