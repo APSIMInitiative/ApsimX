@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Soils.Nutrients;
     using Soils;
     using System;
     using System.Collections.Generic;

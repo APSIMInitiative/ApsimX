@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 105; } }
+        public static int LatestVersion { get { return 106; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2330,6 +2330,37 @@
                 varRef.Name = "FinalLeafNumber";
                 varRef.VariableName = "[Structure].FinalLeafNumber";
                 JsonUtilities.AddModel(LAP, varRef);
+            }
+        }
+
+        /// <summary>
+        /// Change Nutrient.FOMC and Nutrient.FOMN to Nutrient.FOM.C and Nutrient.FOM.N
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion106(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("Nutrient.FOMC",  "Nutrient.FOM.C"),
+                new Tuple<string, string>("Nutrient.FOMN",  "Nutrient.FOM.N")
+            };
+
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Add Models.Soils.Nutrients namespace to all manager files that
+            // reference Nutrient or Solute.
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var code = manager.ToString();
+                if (code != null && (code.Contains("Nutrient") || code.Contains("Solute")))
+                {
+                    var usingLines = manager.GetUsingStatements().ToList();
+                    usingLines.Add("Models.Soils.Nutrients");
+                    manager.SetUsingStatements(usingLines);
+                    manager.Save();
+                }
             }
         }
 

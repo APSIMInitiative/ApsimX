@@ -4,6 +4,7 @@
     using Models;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
