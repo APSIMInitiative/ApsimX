@@ -414,7 +414,6 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
-    <Compile Include="Plant\Arbitrator\SorghumArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\SorghumArbitratorN.cs" />
     <Compile Include="Plant\Biomass\BiomassDemand.cs" />
     <Compile Include="Plant\Phenology\Phases\PhotoperiodPhase.cs" />
