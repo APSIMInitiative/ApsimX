@@ -105,11 +105,11 @@ namespace UserInterface.Views
                     // line on the second press.
                     textEditor.SmartHomeEnd = SmartHomeEndType.Before;
                     string tempFile = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".cs");
-                    File.WriteAllText(tempFile, Text);
+                    System.IO.File.WriteAllText(tempFile, Text);
                     Language lang = LanguageManager.Default.GuessLanguage(tempFile, null);
                     if (lang != null)
-                        (textEditor.Buffer as Buffer).Language = lang;
-                    File.Delete(tempFile);
+                        textEditor.Buffer.Language = lang;
+                    System.IO.File.Delete(tempFile);
                     //textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
                 }
                 //else if (Mode == EditorType.Report)
@@ -250,7 +250,7 @@ namespace UserInterface.Views
 
             //Language csharp = LanguageManager.Default.GetLanguage("text/x-csharp");
             //Buffer buffer = new Buffer(csharp);
-            textEditor = new View();
+            textEditor = new SourceView();
 
             // Intellisense initialisation.
             completionProvider = new ScriptCompletionProvider(ShowError);
