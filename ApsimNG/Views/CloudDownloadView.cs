@@ -124,22 +124,22 @@ namespace UserInterface.Views
             outputPathContainer.PackStart(btnChangeOutputDir, false, false, 0);
 
             // Put all form controls into the primary vbox
-            vboxPrimary.PackStart(includeDebugFiles);
-            vboxPrimary.PackStart(chkDownloadResults);
-            vboxPrimary.PackStart(extractResults);
-            vboxPrimary.PackStart(generateCsv);
-            vboxPrimary.PackStart(keepRawOutputs);
-            vboxPrimary.PackStart(outputPathContainer);
+            vboxPrimary.PackStart(includeDebugFiles, true, true, 0);
+            vboxPrimary.PackStart(chkDownloadResults, true, true, 0);
+            vboxPrimary.PackStart(extractResults, true, true, 0);
+            vboxPrimary.PackStart(generateCsv, true, true, 0);
+            vboxPrimary.PackStart(keepRawOutputs, true, true, 0);
+            vboxPrimary.PackStart(outputPathContainer, true, true, 0);
 
             // This empty label will put a gap between the controls above it and below it.
-            vboxPrimary.PackStart(new Label(""));
+            vboxPrimary.PackStart(new Label(""), true, true, 0);
 
             vboxPrimary.PackEnd(btnDownload, false, false, 0);
 
             Frame primaryContainer = new Frame("Download Settings");
             primaryContainer.Add(vboxPrimary);
             window.Add(primaryContainer);
-            window.HideAll();
+            window.Hide();
 
             window.Destroyed += OnDestroyed;
             window.DeleteEvent += OnDelete;
@@ -212,7 +212,7 @@ namespace UserInterface.Views
                 if (value)
                     window.ShowAll();
                 else
-                    window.HideAll();
+                    window.Hide();
             }
         }
 

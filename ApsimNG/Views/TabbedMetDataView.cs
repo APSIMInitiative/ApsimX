@@ -167,13 +167,13 @@ namespace UserInterface.Views
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
             graphViewRainfall = new GraphView(this);
-            vboxRainChart.PackEnd(graphViewRainfall.MainWidget);
+            vboxRainChart.PackEnd(graphViewRainfall.MainWidget, true, true, 0);
             graphViewMonthlyRainfall = new GraphView(this);
-            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget);
+            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget, true, true, 0);
             graphViewTemperature = new GraphView(this);
-            vboxTemp.PackEnd(graphViewTemperature.MainWidget);
+            vboxTemp.PackEnd(graphViewTemperature.MainWidget, true, true, 0);
             graphViewRadiation = new GraphView(this);
-            vboxRadn.PackEnd(graphViewRadiation.MainWidget);
+            vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
             gridViewData = new GridView(this);
             gridViewData.ReadOnly = true;
             alignData.Add(gridViewData.MainWidget);

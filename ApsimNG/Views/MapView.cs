@@ -1,4 +1,5 @@
-﻿namespace UserInterface.Views
+﻿#if NETFRAMEWORK
+namespace UserInterface.Views
 {
     using System;
     using System.IO;
@@ -7,48 +8,7 @@
     using System.Drawing;
     using APSIM.Shared.Utilities;
     using System.Globalization;
-
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface IMapView
-    {
-        /// <summary>
-        /// Invoked when the zoom level or map center is changed
-        /// </summary>
-        event EventHandler ViewChanged;
-
-        /// <summary>
-        /// Invoked when the user wants to preview the map as it will appear
-        /// in the autodocs.
-        /// </summary>
-        event EventHandler PreviewDocs;
-
-        /// <summary>Show the map</summary>
-        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
-
-        /// <summary>Export the map to an image.</summary>
-        Image Export();
-        /// <summary>
-        /// Get or set the zoom factor of the map
-        /// </summary>
-        double Zoom { get; set; }
-
-        /// <summary>
-        /// Get or set the center position of the map
-        /// </summary>
-        Models.Map.Coordinate Center { get; set; }
-
-        /// <summary>
-        /// Store current position and zoom settings
-        /// </summary>
-        void StoreSettings();
-
-        /// <summary>
-        /// Hide zoom controls.
-        /// </summary>
-        void HideZoomControls();
-    }
+    using Interfaces;
 
     /// It would be good if we could retrieve the current center and zoom values for a map,
     /// and store them as part of the Map object, so that maps can be recreated and exported
@@ -357,3 +317,4 @@
         }
     }
 }
+#endif

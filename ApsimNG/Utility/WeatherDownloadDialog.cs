@@ -511,8 +511,14 @@ namespace Utility
                         list.AppendValues(lineInfo);
                     }
                     tree.Model = list;
-                    md.VBox.PackStart(tree, true, true, 5);
-                    md.VBox.ShowAll();
+#if NETFRAMEWORK
+                    Box box = md.VBox;
+#else
+                    Box box = md.ContentArea;
+#endif
+                    box.PackStart(tree, true, true, 5);
+                    box.ShowAll();
+
                     ResponseType result = (ResponseType)md.Run();
                     if (result == ResponseType.Ok)
                     {

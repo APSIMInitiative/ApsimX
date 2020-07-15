@@ -7,6 +7,7 @@
     using Models;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Map with a 
@@ -38,15 +39,18 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as MapView;
+            this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
 
-            // Tell the view to populate the axis.
-            this.PopulateView();
-            this.view.Zoom = this.map.Zoom;
-            this.view.Center = this.map.Center;
-            this.view.ViewChanged += this.OnViewChanged;
-            this.view.PreviewDocs += OnPreviewDocs;
+            if (view != null)
+            {
+                // Tell the view to populate the axis.
+                this.PopulateView();
+                this.view.Zoom = this.map.Zoom;
+                this.view.Center = this.map.Center;
+                this.view.ViewChanged += this.OnViewChanged;
+                this.view.PreviewDocs += OnPreviewDocs;
+            }
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -62,6 +66,7 @@
             // map uses the current zoom/coordinates as the main map.
             this.view.StoreSettings();
 
+#if NETFRAMEWORK
             var newView = new MapView(null);
             var newPresenter = new MapPresenter();
 
@@ -72,13 +77,16 @@
 
             newPresenter.Attach(map, newView, explorerPresenter);
             newView.HideZoomControls();
-
             // If the user moves/zooms the map in the popup window,
             // changes will be saved to the map object when the presenter
             // is detached, and will be propagated automatically to the
             // master map via the OnModelChanged method below.
             window.Closed += (_, __) => newPresenter.Detach();
             window.Visible = true;
+
+#else
+            throw new NotImplementedException("tbi - gtk3 mapview");
+#endif
         }
 
         /// <summary>
@@ -86,10 +94,13 @@
         /// </summary>
         public void Detach()
         {
-            view.PreviewDocs -= OnPreviewDocs;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            this.view.StoreSettings();
-            this.view.ViewChanged -= this.OnViewChanged;
+            if (view != null)
+            {
+                view.PreviewDocs -= OnPreviewDocs;
+                this.view.StoreSettings();
+                this.view.ViewChanged -= this.OnViewChanged;
+            }
         }
 
         /// <summary>Export the map to PDF</summary>
@@ -158,7 +169,7 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.map)
+            if (view != null && changedModel == this.map)
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

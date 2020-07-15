@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Gtk;
 using UserInterface.Views;
+using UserInterface.Extensions;
 
 namespace ApsimNG.Views.CLEM
 {
@@ -198,7 +199,7 @@ namespace ApsimNG.Views.CLEM
             {
                 get
                 {
-                    return box.ActiveText;
+                    return box.GetActiveText();
                 }
             }
 
@@ -243,7 +244,14 @@ namespace ApsimNG.Views.CLEM
             /// <param name="text">The text to add</param>
             public void AddText(string text)
             {
+#if NETFRAMEWORK
                 box.AppendText(text);
+#else
+                if (box.Model is ListStore model)
+                    model.AppendValues(text);
+                else
+                    throw new Exception("ComboBox does not use a ListStore. If you see this error, please file a bug report.");
+#endif
             }
 
             /// <summary>

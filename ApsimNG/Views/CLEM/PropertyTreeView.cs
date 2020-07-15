@@ -17,6 +17,7 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
 
     /// <summary>
     /// A cut down version of the ExplorerView.
@@ -169,6 +170,7 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
+#if NETFRAMEWORK
             // Create a Bitmap and draw the panel
             int width;
             int height;
@@ -179,6 +181,9 @@ namespace UserInterface.Views
             System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
+#else
+            throw new NotImplementedException("tbi - gtk3 equivalent");
+#endif
         }
 
         /// <summary>Show the wait cursor</summary>
@@ -195,7 +200,7 @@ namespace UserInterface.Views
             set { treeview1.WidthRequest = value; }
         }
 
-        #region Protected & Privates
+#region Protected & Privates
 
         /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
@@ -305,9 +310,9 @@ namespace UserInterface.Views
             return result;         
         }
 
-        #endregion
+#endregion
 
-        #region Events
+#region Events
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
@@ -377,7 +382,7 @@ namespace UserInterface.Views
                         Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                         if (e.Event.X > rect.X + 18)
                         {
-                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
                             timer.AutoReset = false;
                             timer.Start();
                         }
@@ -439,6 +444,6 @@ namespace UserInterface.Views
             cb.Text = text;            
         }
 
-        #endregion
+#endregion
     }
 }

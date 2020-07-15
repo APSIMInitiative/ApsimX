@@ -262,11 +262,11 @@ namespace ApsimNG.Cloud
                 if (ct.IsCancellationRequested)
                     return jobs;
 
-                ShowProgress(100.0 * i / cloudJobs.Count);
+                ShowProgress(1.0 * i / cloudJobs.Count);
                 jobs.Add(await GetJobDetails(cloudJobs[i], ct));
             }
 
-            ShowProgress(100);
+            ShowProgress(1);
             return jobs;
         }
 

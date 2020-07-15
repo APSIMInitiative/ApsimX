@@ -13,6 +13,8 @@ namespace UserInterface.Classes
         /// Gets or sets the pixbuf object
         /// </summary>
         public Gdk.Pixbuf Pixbuf { get; set; }
+
+#if NETFRAMEWORK
         /// <summary>
         /// Render the cell in the window
         /// </summary>
@@ -28,7 +30,23 @@ namespace UserInterface.Classes
             Gdk.GC gc = new Gdk.GC(window);
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
-
+#else
+        /// <summary>
+        /// Override the OnRender function to add a button to the cell.
+        /// </summary>
+        /// <param name="cr"></param>
+        /// <param name="widget"></param>
+        /// <param name="background_area"></param>
+        /// <param name="cell_area"></param>
+        /// <param name="flags"></param>
+        protected override void OnRender(Cairo.Context cr, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, CellRendererState flags)
+        {
+            //base.OnRender(cr, widget, background_area, cell_area, flags);
+            lastRect = new Gdk.Rectangle(cell_area.X, cell_area.Y, cell_area.Width, cell_area.Height);
+            // This probably doesn't work
+            cr.SetSource(new Cairo.SurfacePattern(new Cairo.ImageSurface(Pixbuf.SaveToBuffer("png"), Cairo.Format.ARGB32, cell_area.Width, cell_area.Height, 1)));
+        }
+#endif
         public Gdk.Rectangle lastRect;
     }
 }

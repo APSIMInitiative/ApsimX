@@ -5,6 +5,11 @@ using ApsimNG.Cloud;
 using ApsimNG.EventArguments;
 using ApsimNG.Interfaces;
 using Gtk;
+using UserInterface.Extensions;
+
+#if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
 
 namespace UserInterface.Views
 {
@@ -169,14 +174,12 @@ namespace UserInterface.Views
             chkMyJobsOnly.Active = true;
             chkMyJobsOnly.Yalign = 0;
 
-            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
+            downloadProgress = WidgetExtensions.CreateProgressBar();
             downloadProgressContainer = new HBox();
             downloadProgressContainer.PackStart(new Label("Downloading: "), false, false, 0);
             downloadProgressContainer.PackStart(downloadProgress, false, false, 0);
 
-            loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
-            loadingProgress.Adjustment.Lower = 0;
-            loadingProgress.Adjustment.Upper = 100;
+            loadingProgress = WidgetExtensions.CreateProgressBar();
 
             btnChangeDownloadDir = new Button("Change Download Directory");
             btnChangeDownloadDir.Clicked += OnChangeDownloadPath;
@@ -222,7 +225,7 @@ namespace UserInterface.Views
 
 
             VBox vboxPrimary = new VBox();
-            vboxPrimary.PackStart(hboxPrimary);
+            vboxPrimary.PackStart(hboxPrimary, true, true, 0);
             vboxPrimary.PackEnd(jobLoadProgressContainer, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
@@ -230,7 +233,7 @@ namespace UserInterface.Views
             mainWidget.Destroyed += OnDestroyed;
             vboxPrimary.ShowAll();
 
-            downloadProgressContainer.HideAll();
+            downloadProgressContainer.Hide();
             HideLoadingProgressBar();
         }
 
@@ -274,13 +277,13 @@ namespace UserInterface.Views
         {
             get
             {
-                return loadingProgress.Adjustment.Value;
+                return loadingProgress.GetFractionComplete();
             }
             set
             {
                 Application.Invoke(delegate
                 {
-                    loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
+                    loadingProgress.SetFractionComplete(value);
                 });
             }
         }
@@ -292,12 +295,15 @@ namespace UserInterface.Views
         {
             get
             {
-                return downloadProgress.Adjustment.Value;
+                return downloadProgress.GetFractionComplete();
             }
             set
             {
                 // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
-                Application.Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
+                Application.Invoke(delegate
+                {
+                    downloadProgress.SetFractionComplete(value);
+                });
             }
         }
 
@@ -354,7 +360,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.HideAll(); });
+            Application.Invoke(delegate { downloadProgressContainer.Hide(); });
         }
 
         /// <summary>
@@ -370,7 +376,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideLoadingProgressBar()
         {
-            Application.Invoke(delegate { jobLoadProgressContainer.HideAll(); });
+            Application.Invoke(delegate { jobLoadProgressContainer.Hide(); });
         }
 
         /// <summary>

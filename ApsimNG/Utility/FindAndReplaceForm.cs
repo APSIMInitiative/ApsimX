@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Collections.Generic;
 using Gtk;
 using Mono.TextEditor;
@@ -223,5 +224,4 @@ namespace Utility
     }
 
 }
-
-    
+#endif

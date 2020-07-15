@@ -7,6 +7,7 @@
 
 namespace UserInterface.Views
 {
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -20,7 +21,7 @@ namespace UserInterface.Views
     {
         private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
-        private HTMLView descriptionView;
+        private IHTMLView descriptionView;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -57,7 +58,7 @@ namespace UserInterface.Views
             // Remove existing right hand view.
             foreach (var child in rightHandView.Children)
             {
-                if (child != descriptionView?.MainWidget)
+                if (child != (descriptionView as ViewBase)?.MainWidget)
                 {
                     rightHandView.Remove(child);
                     child.Destroy();
@@ -79,12 +80,15 @@ namespace UserInterface.Views
         /// <param name="description">The description to show.</param>
         public void AddDescriptionToRightHandView(string description)
         {
+#if NETFRAMEWORK
+            // tbi - requires HTMLView
             if (description == null)
             {
                 if (descriptionView != null)
                 {
-                    rightHandView.Remove(descriptionView.MainWidget);
-                    descriptionView.MainWidget.Destroy();
+                    Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
+                    rightHandView.Remove(descriptionWidget);
+                    descriptionWidget.Destroy();
                 }
                 descriptionView = null;
             }
@@ -93,15 +97,17 @@ namespace UserInterface.Views
                 if (descriptionView == null)
                 {
                     descriptionView = new HTMLView(this);
-                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                    rightHandView.PackStart((descriptionView as ViewBase).MainWidget, false, false, 0);
                 }
                 descriptionView.SetContents(description, false);
             }
+#endif
         }
 
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
+#if NETFRAMEWORK
             // Create a Bitmap and draw the panel
             int width;
             int height;
@@ -112,6 +118,9 @@ namespace UserInterface.Views
             System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         /// <summary>

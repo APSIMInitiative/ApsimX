@@ -18,6 +18,7 @@
     using UserInterface.Commands;
     using UserInterface.Presenters;
     using UserInterface.Views;
+    using UserInterface.Interfaces;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.
@@ -403,6 +404,7 @@
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
+#if NETFRAMEWORK
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, explorerPresenter);
@@ -411,6 +413,9 @@
                         section.AddImage(pngFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
+#else
+                    section.AddParagraph("MapView has not been implemented in gtk3. Use the framework/gtk2 build instead.");
+#endif
                 }
                 else if (tag is AutoDocumentation.Image)
                 {
@@ -452,7 +457,7 @@
 
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
-
+#if NETFRAMEWORK
                             // From MapView:
                             // With WebKit, it appears we need to give it time to actually update the display
                             // Really only a problem with the temporary windows used for generating documentation
@@ -463,7 +468,7 @@
                                 while (watch.ElapsedMilliseconds < 1000)
                                     Gtk.Application.RunIteration();
                             }
-
+#endif
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
                             presenter.Detach();

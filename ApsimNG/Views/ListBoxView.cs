@@ -1,4 +1,8 @@
-﻿namespace UserInterface.Views
+﻿# if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -91,7 +95,11 @@
             Listview.PixbufColumn = 1;
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
+#if NETFRAMEWORK
             Listview.Orientation = Gtk.Orientation.Horizontal;
+#else
+            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+#endif
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;

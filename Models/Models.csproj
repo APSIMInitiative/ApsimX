@@ -11,6 +11,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
@@ -77,7 +78,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>false</Private>
     </Reference>
-    <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    
+    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
+	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   </ItemGroup>
 
   <ItemGroup>

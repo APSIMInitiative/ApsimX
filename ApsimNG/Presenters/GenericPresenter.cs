@@ -9,6 +9,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// Presenter of unspecified type

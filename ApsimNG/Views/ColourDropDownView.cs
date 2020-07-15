@@ -2,8 +2,13 @@
 {
     using System;
     using System.Drawing;
+    using global::UserInterface.Extensions;
     using Gtk;
-    /// using System.Windows.Forms;
+
+#if NETCOREAPP
+    using CellLayout = Gtk.ICellLayout;
+    using TreeModel = Gtk.ITreeModel;
+#endif
 
     /// <summary>An interface for a drop down</summary>
     public interface IColourDropDownView
@@ -46,7 +51,7 @@
                 combobox1.Changed -= OnChanged;
                 combobox1.SetCellDataFunc(comboRender, null);
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -60,6 +65,7 @@
         public event EventHandler Changed;
 
         /// <summary>Get or sets the list of valid values. Can be Color or string objects.</summary>
+        /// <remarks>fixme - why is this of type object[]?</remarks>
         public object[] Values
         {
             get
@@ -99,7 +105,11 @@
                     {
                         typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
+#if NETFRAMEWORK
                         color = combobox1.Style.Base(StateType.Normal);
+#else
+                        color = combobox1.StyleContext.GetBackgroundColor(StateFlags.Normal).ToGdkColor();
+#endif
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);
                 }
