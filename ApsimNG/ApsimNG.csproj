@@ -34,14 +34,15 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+	
+	<!-- Shared project references -->
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
+	
+	<!-- Shared package references -->
     <PackageReference Include="ClosedXML" Version="0.95.0-beta2" />
     <PackageReference Include="Microsoft.Azure.Batch" Version="13.0.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.3" />
@@ -64,6 +65,7 @@
     <PackageReference Include="OxyPlot.GtkSharp3" Version="1.0.0" />
     <PackageReference Include="MigraDoc.Rendering.Core" Version="1.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
+	<PackageReference Include="SourceView" Version="1.0.0" />
 	
 	<!-- Remove ICSharpCode.NRefactory intellisense implementation -->
 	<Compile Remove="Classes\Intellisense\*" />
@@ -147,15 +149,5 @@
 	<PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
 	<PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
 	<PackageReference Include="System.ComponentModel" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
-    <ProjectReference Include="..\Models\Models.csproj" />
-  </ItemGroup>
-  
-  <!-- SourceView is only used in netcore (gtk3) build -->
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
-    <ProjectReference Include="..\..\SourceView\SourceView.csproj" />
   </ItemGroup>
 </Project>
