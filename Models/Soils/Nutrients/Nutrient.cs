@@ -43,6 +43,9 @@
         // Potential soil organic matter decomposition for today.
         private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
 
+        [NonSerialized]
+        private INutrientPool fom;
+
         /// <summary>Summary file Link</summary>
         [Link]
         private ISummary Summary = null;
@@ -80,8 +83,7 @@
         public INutrientPool FOMLignin { get; set; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        [field:NonSerialized]
-        public INutrientPool FOM { get; set; }
+        public INutrientPool FOM { get { return fom; } }
 
         /// <summary>The fresh organic matter surface residue pool.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -371,7 +373,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            FOM = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
+            fom = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
         }
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
