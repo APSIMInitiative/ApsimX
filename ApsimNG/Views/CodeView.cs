@@ -5,16 +5,15 @@ namespace UserInterface.Views
     using System.Reflection;
     using EventArguments;
     using Gtk;
-    using GtkSharp;
     using System.IO;
     using Utility;
     using Cairo;
     using System.Globalization;
     using System.Linq;
-    using GtkSharp.SourceView;
     using System.Collections.Generic;
     using Intellisense;
     using Interfaces;
+    using GtkSource;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
@@ -39,7 +38,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The main text editor
         /// </summary>
-        private GtkSourceView textEditor;
+        private SourceView textEditor;
 
         /// <summary>
         /// The popup menu options on the editor
@@ -104,12 +103,12 @@ namespace UserInterface.Views
                     // Move to the first/last non-whitespace char on the first
                     // press of home/end keys, and to the beginning/end of the
                     // line on the second press.
-                    textEditor.SmartHomeEnd = GtkSourceSmartHomeEndType.Before;
+                    textEditor.SmartHomeEnd = SmartHomeEndType.Before;
                     string tempFile = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".cs");
                     File.WriteAllText(tempFile, Text);
-                    GtkSourceLanguage lang = GtkSourceLanguageManager.Default.GuessLanguage(tempFile, null);
+                    Language lang = LanguageManager.Default.GuessLanguage(tempFile, null);
                     if (lang != null)
-                        (textEditor.Buffer as GtkSourceBuffer).Language = lang;
+                        (textEditor.Buffer as Buffer).Language = lang;
                     File.Delete(tempFile);
                     //textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
                 }
@@ -249,13 +248,13 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
 
-            //GtkSourceLanguage csharp = GtkSourceLanguageManager.Default.GetLanguage("text/x-csharp");
-            //GtkSourceBuffer buffer = new GtkSourceBuffer(csharp);
-            textEditor = new GtkSourceView();
+            //Language csharp = LanguageManager.Default.GetLanguage("text/x-csharp");
+            //Buffer buffer = new Buffer(csharp);
+            textEditor = new View();
 
             // Intellisense initialisation.
             completionProvider = new ScriptCompletionProvider(ShowError);
-            var adapter = new GtkSourceCompletionProviderAdapter(completionProvider);
+            var adapter = new CompletionProviderAdapter(completionProvider);
             completionProvider.Adapter = adapter;
             textEditor.Completion.AddProvider(adapter);
             

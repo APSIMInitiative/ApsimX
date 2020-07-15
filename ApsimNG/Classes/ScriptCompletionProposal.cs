@@ -4,8 +4,8 @@ namespace UserInterface.Intellisense
     using System;
     using Gdk;
     using GLib;
-    using global::UserInterface.EventArguments;
-    using GtkSharp.SourceView;
+    using EventArguments;
+    using GtkSource;
 
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace UserInterface.Intellisense
     /// functions should return a value different from NULL, if they all return
     /// NULL no icon will be used.
     /// </remarks>
-    internal class ScriptCompletionProposal : GLib.Object, IGtkSourceCompletionProposal, IGtkSourceCompletionProposalImplementor
+    internal class CustomScriptCompletionProposal : GLib.Object, ICompletionProposal, ICompletionProposalImplementor
     {
         private bool isProperty;
 
@@ -103,7 +103,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         public string Text { get; private set; }
 
-        public ScriptCompletionProposal(NeedContextItemsArgs.ContextItem item) : base()
+        public CustomScriptCompletionProposal(NeedContextItemsArgs.ContextItem item) : base()
         {
             isProperty = item.IsProperty;
             Label = item.Name;
@@ -116,16 +116,16 @@ namespace UserInterface.Intellisense
         /// Invoked whenever the name, icon or info of the proposal have
         /// changed.
         /// </summary>
-        public event EventHandler Changed;
+        public event EventHandler EmitChanged;
 
         /// <summary>
         /// Emits the "changed" signal on proposal. This should be called by
         /// implementations whenever the name, icon or info of the proposal has
         /// changed.
         /// </summary>
-        public void EmitChanged()
+        public void FireChangedSignal()
         {
-            Changed?.Invoke(this, EventArgs.Empty);
+            EmitChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equal(IGtkSourceCompletionProposal other)
+        public bool Equal(ICompletionProposal other)
         {
             return string.Equals(Text, other.Text, StringComparison.InvariantCulture);
             //return Equals(other);
@@ -151,6 +151,11 @@ namespace UserInterface.Intellisense
         public uint Hash()
         {
             return Convert.ToUInt32(GetHashCode());
+        }
+
+        void ICompletionProposal.Changed()
+        {
+            throw new NotImplementedException();
         }
     }
 }

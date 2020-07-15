@@ -7,11 +7,11 @@ namespace UserInterface.Intellisense
     using GLib;
     using EventArguments;
     using Gtk;
-    using GtkSharp.SourceView;
+    using GtkSource;
     using Presenters;
     using System.Threading.Tasks;
 
-    internal class ScriptCompletionProvider : GLib.Object, IGtkSourceCompletionProvider, IGtkSourceCompletionProviderImplementor
+    internal class ScriptCompletionProvider : GLib.Object, ICompletionProvider, ICompletionProviderImplementor
     {
         /// <summary>
         /// A function which will display an error to the user.
@@ -26,7 +26,7 @@ namespace UserInterface.Intellisense
         /// <summary>
         /// Temp debugging measure.
         /// </summary>
-        public IGtkSourceCompletionProvider Adapter { get; set; }
+        public ICompletionProvider Adapter { get; set; }
 
         /// <summary>
         /// Get with what kind of activation the provider should be activated.
@@ -34,11 +34,11 @@ namespace UserInterface.Intellisense
         /// <remarks>
         /// Basically - what causes the intellisense to show up?
         /// </remarks>
-        public GtkSourceCompletionActivation Activation
+        public CompletionActivation Activation
         {
             get
             {
-                return GtkSourceCompletionActivation.Interactive;
+                return CompletionActivation.Interactive;
             }
         }
 
@@ -137,7 +137,7 @@ namespace UserInterface.Intellisense
         /// <param name="proposal"></param>
         /// <param name="iter"></param>
         /// <returns></returns>
-        public bool ActivateProposal(IGtkSourceCompletionProposal proposal, TextIter iter)
+        public bool ActivateProposal(ICompletionProposal proposal, TextIter iter)
         {
             // tbi
             return false;
@@ -157,7 +157,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         /// <param name="proposal"></param>
         /// <returns></returns>
-        public Widget GetInfoWidget(IGtkSourceCompletionProposal proposal)
+        public Widget GetInfoWidget(ICompletionProposal proposal)
         {
             // tbi
             return null;
@@ -184,7 +184,7 @@ namespace UserInterface.Intellisense
         /// <param name="proposal"></param>
         /// <param name="iter"></param>
         /// <returns></returns>
-        public bool GetStartIter(GtkSourceCompletionContext context, IGtkSourceCompletionProposal proposal, TextIter iter)
+        public bool GetStartIter(CompletionContext context, ICompletionProposal proposal, TextIter iter)
         {
             return false;
         }
@@ -198,7 +198,7 @@ namespace UserInterface.Intellisense
         /// If implemented, gtk_source_completion_provider_update_info() must
         /// also be implemented.
         /// </remarks>
-        public bool Match(GtkSourceCompletionContext context)
+        public bool Match(CompletionContext context)
         {
             // tbi - for now just match every context.
             return true;
@@ -209,7 +209,7 @@ namespace UserInterface.Intellisense
         /// gtk_source_completion_context_add_proposals() function.
         /// </summary>
         /// <param name="context"></param>
-        public void Populate(GtkSourceCompletionContext context)
+        public void Populate(CompletionContext context)
         {
             try
             {
@@ -220,8 +220,8 @@ namespace UserInterface.Intellisense
                 if (contextItems == null || contextItems.Result == null)
                     return;
                     
-                List proposals = new List(contextItems.Result.Select(c => new GtkSourceCompletionProposalAdapter(new ScriptCompletionProposal(c))).ToArray(),
-                                          typeof(GtkSourceCompletionProposalAdapter),
+                List proposals = new List(contextItems.Result.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
+                                          typeof(CompletionProposalAdapter),
                                           true,
                                           true);
                 context.AddProposals(Adapter, proposals, true);
@@ -241,7 +241,7 @@ namespace UserInterface.Intellisense
         /// This function must be implemented when
         /// gtk_source_completion_provider_get_info_widget() is implemented.
         /// </remarks>
-        public void UpdateInfo(IGtkSourceCompletionProposal proposal, GtkSourceCompletionInfo info)
+        public void UpdateInfo(ICompletionProposal proposal, CompletionInfo info)
         {
             // Not using this feature (for now at least).
             return;
