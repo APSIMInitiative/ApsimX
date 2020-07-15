@@ -13,6 +13,7 @@
 	<IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
     <WarningsAsErrors />
     <NoWarn />
+	<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -150,4 +151,9 @@
 	<PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
 	<PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
+  
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
+  </Target>
 </Project>
