@@ -37,9 +37,6 @@ if "%1"=="/r" (
 rem Generate a version number.
 call :getVersion
 
-rem Restore nuget packages
-dotnet restore "%solution_file%"
-
 rem Build
 dotnet build %flags% "%solution_file%"
 endlocal
