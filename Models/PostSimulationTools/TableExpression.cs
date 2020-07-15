@@ -6,7 +6,6 @@
     using Models.Storage;
     using System;
     using System.Collections.Generic;
-    using System.Collections;
     using System.Data;
     using System.Linq;
 
@@ -40,7 +39,7 @@
         public string SourceTableName { get; set; }
 
         /// <summary>The expression.</summary>
-        [Description("The expression")]
+        [Description("Expression (using simulation names)")]
         [Display]
         public string Expression { get; set; }
 
