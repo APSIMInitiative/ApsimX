@@ -7,6 +7,7 @@
     using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using Newtonsoft.Json;
     using System;

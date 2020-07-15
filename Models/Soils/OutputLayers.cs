@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
     using Models.Soils.Standardiser;
     using System;
     using System.Xml.Serialization;
