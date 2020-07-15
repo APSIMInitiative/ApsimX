@@ -469,6 +469,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TableExpression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SolutePatch.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NutrientPatchManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipRunningValue.png" />
