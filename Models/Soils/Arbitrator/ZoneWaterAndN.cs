@@ -4,6 +4,7 @@
     using APSIM.Shared.Utilities;
     using Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
 
     /// <summary>
     /// Represents a zone (point, field etc) that has water and N values.

@@ -125,6 +125,9 @@
                             {
                                 Children = new List<IModel>()
                                 {
+                                    new MockNutrientPool() { Name = "Inert" },
+                                    new MockNutrientPool() { Name = "Microbial" },
+                                    new MockNutrientPool() { Name = "Humic" },
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
                                     new MockNutrientPool() { Name = "FOMLignin" },
