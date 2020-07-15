@@ -9381,44 +9381,19 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogen, Models",
-                      "fom_types": [
-                        "default",
-                        "manure",
-                        "mucuna",
-                        "lablab",
-                        "shemp",
-                        "stable"
-                      ],
-                      "fract_carb": [
-                        0.2,
-                        0.3,
-                        0.54,
-                        0.57,
-                        0.45,
-                        0.0
-                      ],
-                      "fract_cell": [
-                        0.7,
-                        0.3,
-                        0.37,
-                        0.37,
-                        0.47,
-                        0.1
-                      ],
-                      "fract_lign": [
-                        0.1,
-                        0.4,
-                        0.09,
-                        0.06,
-                        0.08,
-                        0.9
-                      ],
+                      "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
+                      "MaximumNitrogenAvailableToPlants": 0.0,
                       "NPartitionApproach": 0,
-                      "Name": "SoilNitrogen",
+                      "AutoAmalgamationApproach": 0,
+                      "basePatchApproach": 0,
+                      "AllowPatchAmalgamationByAge": false,
+                      "PatchAgeForForcedMerge": 0.0,
+                      "LayerForNPartition": -99.0,
+                      "Name": "NutrientPatchManager",
                       "Children": [
                         {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                          "kgha": null,
                           "Name": "NO3",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9426,7 +9401,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                          "kgha": null,
                           "Name": "NH4",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9434,7 +9410,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                          "kgha": null,
                           "Name": "Urea",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9442,7 +9419,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                          "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                          "kgha": null,
                           "Name": "PlantAvailableNO3",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9450,7 +9428,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                          "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                          "kgha": null,
                           "Name": "PlantAvailableNH4",
                           "Children": [],
                           "IncludeInDocumentation": true,

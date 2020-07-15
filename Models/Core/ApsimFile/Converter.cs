@@ -2342,8 +2342,8 @@
         {
             Tuple<string, string>[] changes =
             {
-                new Tuple<string, string>("Nutrient.FOMC",  "Nutrient.FOM.C"),
-                new Tuple<string, string>("Nutrient.FOMN",  "Nutrient.FOM.N")
+                new Tuple<string, string>("utrient.FOMC",  "utrient.FOM.C"),
+                new Tuple<string, string>("utrient.FOMN",  "utrient.FOM.N")
             };
 
             JsonUtilities.RenameVariables(root, changes);
