@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.Surface;
 using Models.Soils.NutrientPatching;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -2855,6 +2856,27 @@ namespace Models.Soils
         }
 
         /// <summary>
+        /// Soil organic carbon, old style
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] organic_c
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        result[layer] += (Patch[k].fom_c[0][layer]
+                                       + Patch[k].fom_c[1][layer]
+                                       + Patch[k].fom_c[2][layer]
+                                       + Patch[k].hum_c[layer]
+                                       + Patch[k].biom_c[layer]) * Patch[k].RelativeArea;
+
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Total N in soil
         /// </summary>
         [Units("kg/ha")]
@@ -3356,6 +3378,23 @@ namespace Models.Soils
                 for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].inert_c[layer] * Patch[k].RelativeArea;
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Amount of N in inert humic pool
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] InertN
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        result[layer] += Patch[k].inert_n[layer] * Patch[k].RelativeArea;
 
                 return result;
             }
@@ -6379,6 +6418,69 @@ namespace Models.Soils
         }
 
         #endregion
+
+        /// <summary>The inert pool.</summary>
+        public INutrientPool Inert { get { return new NutrientPool() { C = InertC, N = InertN }; } }
+
+        /// <summary>The microbial pool.</summary>
+        public INutrientPool Microbial { get { return new NutrientPool() { C = MicrobialC, N = MicrobialN }; } }
+
+        /// <summary>The humic pool.</summary>
+        public INutrientPool Humic { get { return new NutrientPool() { C = HumicC, N = HumicN }; } }
+
+        /// <summary>The fresh organic matter cellulose pool.</summary>
+        public INutrientPool FOMCellulose => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter carbohydrate pool.</summary>
+        public INutrientPool FOMCarbohydrate => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter lignin pool.</summary>
+        public INutrientPool FOMLignin => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter pool.</summary>
+        public INutrientPool FOM { get { return new NutrientPool() { C = FOMC, N = FOMN }; } }
+
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
+        public INutrientPool Organic { get { return new NutrientPool() { C = organic_c, N = organic_n }; } }
+
+        /// <summary>The fresh organic matter surface residue pool.</summary>
+        public INutrientPool SurfaceResidue => throw new NotImplementedException();
+
+        /// <summary>The NO3 pool.</summary>
+        public ISolute NO3 { get { return new Solute(Soil, "NO3", CalculateNO3()); } }
+
+        /// <summary>The NH4 pool.</summary>
+        public ISolute NH4 { get { return new Solute(Soil, "NH4", CalculateNH4()); } }
+
+        /// <summary>The Urea pool.</summary>
+        public ISolute Urea { get { return new Solute(Soil, "Urea", CalculateUrea()); } }
+
+        /// <summary>Total C lost to the atmosphere</summary>
+        public double[] Catm => co2_atm;
+
+        /// <summary>Total N lost to the atmosphere</summary>
+        public double[] Natm => n2_atm;
+
+        /// <summary>Total N2O lost to the atmosphere</summary>
+        public double[] N2Oatm => n2o_atm;
+
+        /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
+        public double[] DenitrifiedN => Denitrification;
+
+        /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
+        public double[] NitrifiedN => Nitrification;
+
+        /// <summary>Urea converted to NH4 via hydrolysis.</summary>
+        public double[] HydrolysedN => dlt_urea_hydrol;
+
+        /// <summary>Total Mineral N in each soil layer</summary>
+        public double[] MineralN => mineral_n;
+
+        /// <summary>Net N Mineralisation from surface residue</summary>
+        public double[] MineralisedNSurfaceResidue => dlt_n_min_res;
+
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer</summary>
+        public double[] FOMCNR => throw new NotImplementedException();
     }
 
     #region classes for organising data

@@ -348,6 +348,7 @@
     <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />
     <Compile Include="Soils\NutrientPatching\SolutePatch.cs" />
+    <Compile Include="Soils\Nutrients\CompositeNutrientPool.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -455,8 +456,8 @@
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
-    <Compile Include="Interfaces\ISolute.cs" />
-    <Compile Include="Interfaces\INutrient.cs" />
+    <Compile Include="Soils\Nutrients\ISolute.cs" />
+    <Compile Include="Soils\Nutrients\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\LifeCycle.cs" />
