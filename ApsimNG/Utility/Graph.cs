@@ -17,7 +17,7 @@
     {
         public static Models.Graph CreateGraphFromResource(string resourceName)
         {
-            string graphXmL = ApsimNG.Properties.Resources.ResourceManager.GetString(resourceName);
+            string graphXmL = ReflectionUtilities.GetResourceAsString("ApsimNG.Resources.WaterGraph.xml");
 
             if (graphXmL != null)
             {

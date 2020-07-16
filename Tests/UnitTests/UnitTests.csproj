@@ -2,30 +2,35 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputPath>..\..\Bin\</OutputPath>
+	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>
-	<EmbeddedResource Include="**\*.xml" />
+	  <EmbeddedResource Include="**\*.xml" />
     <EmbeddedResource Include="**\*.json" />
-	<EmbeddedResource Include="**\*.apsimx" />
-	<EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+	  <EmbeddedResource Include="**\*.apsim" />
+	  <EmbeddedResource Include="**\*.apsimx" />
+	  <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
-	<!-- Project references -->
+	  <!-- Project references -->
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj" />
-	<ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
-	<ProjectReference Include="..\..\Models\Models.csproj" />
+	  <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
+	  <ProjectReference Include="..\..\Models\Models.csproj" />
 	
     <!-- nuget -->
-	<PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable0956" />
-	<PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
-	<PackageReference Include="NUnit" Version="3.12.0" />
+	  <PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable0956" />
+	  <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
+	  <PackageReference Include="NUnit" Version="3.12.0" />
+	  <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0"/>
+	  <PackageReference Include="Mono.Cecil" Version="0.9.6.0" />
+	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
 	
 	<!-- Other misc assemblies required for framework builds -->
 	<Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">

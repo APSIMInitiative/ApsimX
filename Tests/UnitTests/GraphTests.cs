@@ -63,11 +63,15 @@ namespace UnitTests
                 }
             };
 
+            var storage = sim.Children[4] as DataStore;
+            storage.Open();
             var runner = new Runner(sim);
-            runner.Run();
+            List<Exception> errors = runner.Run();
+
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
 
             var faultySeries = sim.Children[3].Children[0] as Series;
-            var storage = sim.Children[4] as DataStore;
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
             faultySeries.GetSeriesToPutOnGraph(storage.Reader, definitions);
             if (definitions == null || definitions.Count < 1)
