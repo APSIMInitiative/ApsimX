@@ -1,4 +1,4 @@
-﻿namespace Models.Interfaces
+﻿namespace Models.Soils.Nutrients
 {
 
     /// <summary>The known types of solute setters.</summary>

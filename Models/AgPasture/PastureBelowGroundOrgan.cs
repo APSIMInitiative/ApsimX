@@ -6,6 +6,7 @@
     using Models.PMF;
     using Models.Soils;
     using Models.Soils.Arbitrator;
+    using Models.Soils.Nutrients;
     using System;
     using System.Linq;
     using System.Xml.Serialization;

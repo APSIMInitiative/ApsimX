@@ -7,6 +7,7 @@ using System.Linq;
 using Models.Soils.Standardiser;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
 {
