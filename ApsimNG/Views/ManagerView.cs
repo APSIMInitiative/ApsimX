@@ -26,7 +26,7 @@ namespace UserInterface.Views
     {
 
         private GridView grid;
-        private EditorView scriptEditor;
+        private IEditorView scriptEditor;
         private Notebook notebook;
 
 
@@ -38,9 +38,13 @@ namespace UserInterface.Views
             notebook = new Notebook();
             mainWidget = notebook;
             grid = new GridView(this);
+#if NETFRAMEWORK
             scriptEditor = new EditorView(this);
+#else
+            throw new NotImplementedException("tbi: gtk3 IEditorView implementation");
+#endif
             notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
-            notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
+            notebook.AppendPage((scriptEditor as ViewBase).MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -50,7 +54,7 @@ namespace UserInterface.Views
             {
                 grid.MainWidget.Destroy();
                 grid = null;
-                scriptEditor.MainWidget.Destroy();
+                (scriptEditor as ViewBase)?.MainWidget?.Destroy();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

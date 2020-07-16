@@ -1,4 +1,5 @@
-﻿namespace UserInterface.Presenters
+﻿#if NETFRAMEWORK
+namespace UserInterface.Presenters
 {
     using System.IO;
     using Models;
@@ -73,3 +74,4 @@
 
     }
 }
+#endif

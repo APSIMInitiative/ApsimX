@@ -3,7 +3,9 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
+#if NETFRAMEWORK
     using MonoMac.AppKit;
+#endif
     using System;
     using System.Drawing;
     using System.IO;
@@ -320,8 +322,8 @@
             closeBtn.Relief = ReliefStyle.None;
             closeBtn.Clicked += OnCloseBtnClick;
 
-            headerBox.PackStart(tabLabel);
-            headerBox.PackEnd(closeBtn);
+            headerBox.PackStart(tabLabel, true, true, 0);
+            headerBox.PackEnd(closeBtn, true, true, 0);
 
             // Wrap the whole thing inside an event box, so we can respond to a right-button or center-button click
             EventBox eventbox = new EventBox();
@@ -349,7 +351,9 @@
         /// </summary>
         private void InitMac()
         {
+#if NETFRAMEWORK
             NSApplication.Init();
+#endif
         }
 
         /// <summary>
@@ -879,7 +883,9 @@
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
             fontDialog.OkButton.Clicked += OnDestroyFontDialog;
+#if NETFRAMEWORK
             fontDialog.ApplyButton.Clicked += OnChangeFont;
+#endif
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
 
             // Show the dialog.
@@ -922,7 +928,9 @@
                 
                 fontDialog.OkButton.Clicked -= OnChangeFont;
                 fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+#if NETFRAMEWORK
                 fontDialog.ApplyButton.Clicked -= OnChangeFont;
+#endif
                 fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
                 fontDialog.Destroy();
             }

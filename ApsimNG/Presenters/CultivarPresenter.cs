@@ -5,6 +5,7 @@
     using EventArguments;
     using Models.PMF;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// A presenter class for showing a cultivar.

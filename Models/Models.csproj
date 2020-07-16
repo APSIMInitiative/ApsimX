@@ -11,6 +11,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
@@ -30,24 +31,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="DataStore.cs" />
-    <Compile Remove="Functions\BoundFunction.cs" />
-    <Compile Remove="GRange.cs" />
-    <Compile Remove="Lifecycle\LifeStage.cs" />
-    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
-    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
-    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
-    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
-    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
-    <Compile Remove="Plant\BiomassSummariser.cs" />
-    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
-    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
-    <Compile Remove="Report\RowEnumerator.cs" />
-    <Compile Remove="Resources\Scripts\CSharpExpressionTemplate.cs" />
-    <Compile Remove="Resources\Scripts\GraphPanelScriptTemplate.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Manager.cs.rej" />
     <None Remove="Resources\**" />
   </ItemGroup>
@@ -66,7 +49,23 @@
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0-preview.5.20278.1" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <Compile Remove="DataStore.cs" />
+    <Compile Remove="Functions\BoundFunction.cs" />
+    <Compile Remove="GRange.cs" />
+    <Compile Remove="Lifecycle\LifeStage.cs" />
+    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
+    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
+    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
+    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
+    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
+    <Compile Remove="Plant\BiomassSummariser.cs" />
+    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
+    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
+    <Compile Remove="Report\RowEnumerator.cs" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
   </ItemGroup>
@@ -79,7 +78,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>false</Private>
     </Reference>
-    <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    
+    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
+	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   </ItemGroup>
 
   <ItemGroup>

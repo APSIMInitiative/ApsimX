@@ -1,4 +1,5 @@
-﻿namespace Utility
+﻿#if NETFRAMEWORK
+namespace Utility
 {
 	using System;
     using Gtk;
@@ -154,5 +155,4 @@
     }
 
 }
-
-    
+#endif

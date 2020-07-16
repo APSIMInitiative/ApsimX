@@ -3,6 +3,8 @@ using Gtk;
 using System.IO;
 using System.Threading.Tasks;
 using ApsimNG.EventArguments;
+using UserInterface.Extensions;
+using System.Collections.Generic;
 
 namespace UserInterface.Views
 {
@@ -62,10 +64,18 @@ namespace UserInterface.Views
             lblCores.Yalign = 0.5f;
 
             // Use the same core count options as in MARS (16, 32, 48, 64, ... , 128, 256)
-            comboCoreCount = ComboBox.NewText();
+            List<string> coreCounts = new List<string>();
             for (int i = 16; i <= 128; i += 16)
-                comboCoreCount.AppendText(i.ToString());
-            comboCoreCount.AppendText("256");
+                coreCounts.Add(i.ToString());
+            coreCounts.Add("256");
+
+#if NETFRAMEWORK
+            comboCoreCount = ComboBox.NewText();
+            foreach (string core in coreCounts)
+                comboCoreCount.AppendText(core);
+#else
+            comboCoreCount = new ComboBox(coreCounts.ToArray());
+#endif
             comboCoreCount.Active = 0;
 
             // Combo boxes cannot be aligned, so it is placed in an alignment object, which can be aligned.
@@ -280,7 +290,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return int.Parse(comboCoreCount.ActiveText);
+                return int.Parse(comboCoreCount.GetActiveText());
             }
         }
 

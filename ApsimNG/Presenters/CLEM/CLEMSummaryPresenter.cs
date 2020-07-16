@@ -8,6 +8,7 @@ namespace UserInterface.Presenters
     using Models.CLEM;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// Presenter to provide HTML description summary for CLEM models

@@ -3,6 +3,7 @@
     using System;
     using GLib;
     using Gtk;
+    using Interfaces;
 
     interface IReportView
     {
@@ -49,8 +50,8 @@
         private VBox vbox2 = null;
         private Alignment alignment1 = null;
 
-        private EditorView variableEditor;
-        private EditorView frequencyEditor;
+        private IEditorView variableEditor;
+        private IEditorView frequencyEditor;
         private ViewBase dataStoreView1;
         private VPaned panel;
         private EditView groupByEdit;
@@ -84,13 +85,14 @@
 
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
+
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
-            vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
+            vbox1.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
 
             frequencyEditor = new EditorView(this);
             frequencyEditor.StyleChanged += OnStyleChanged;
-            vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
+            vbox2.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
@@ -171,9 +173,9 @@
                 variableEditor.StyleChanged -= OnStyleChanged;
                 notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
-                variableEditor.MainWidget.Destroy();
+                (variableEditor as ViewBase).MainWidget.Destroy();
                 variableEditor = null;
-                frequencyEditor.MainWidget.Destroy();
+                (frequencyEditor as ViewBase).MainWidget.Destroy();
                 frequencyEditor = null;
                 dataStoreView1.MainWidget.Destroy();
                 dataStoreView1 = null;

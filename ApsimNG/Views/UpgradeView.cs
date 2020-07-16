@@ -7,6 +7,7 @@
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
 
@@ -59,7 +60,7 @@
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView htmlView;
+        private IHTMLView htmlView;
 
         /// <summary>
         /// Constructor
@@ -121,8 +122,11 @@
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
+#if NETFRAMEWORK
+            // tbi - gtk3 htmlview or text renderer
             htmlView = new HTMLView(new ViewBase(null));
-            htmlAlign.Add(htmlView.MainWidget);
+            htmlAlign.Add((htmlView as HTMLView).MainWidget);
+#endif
             tabbedExplorerView = owner as IMainView;
 
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
@@ -205,7 +209,7 @@
                 button1.Sensitive = false;
                 table2.Hide();
                 checkbutton1.Hide();
-                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
+                htmlView?.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
             }
             else
             {
@@ -213,7 +217,7 @@
                 {
                     // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
                     // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                    htmlView?.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
                 }
                 catch (Exception)
                 {
@@ -393,7 +397,7 @@
             if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
                 string.IsNullOrWhiteSpace(lastNameBox.Text) ||
                 string.IsNullOrWhiteSpace(emailBox.Text) || 
-                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                string.IsNullOrWhiteSpace(countryBox.GetActiveText()))
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
@@ -513,7 +517,7 @@
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.ActiveText);
+            url = AddToURL(url, "country", countryBox.GetActiveText());
             url = AddToURL(url, "email", emailBox.Text);
             url = AddToURL(url, "product", "APSIM Next Generation");
             url = AddToURL(url, "version", version);
@@ -566,7 +570,7 @@
                 Utility.Configuration.Settings.LastName = lastNameBox.Text;
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
-                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+                Utility.Configuration.Settings.Country = countryBox.GetActiveText();
             }
             catch (Exception err)
             {

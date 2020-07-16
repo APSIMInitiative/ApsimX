@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using Interfaces;
     using Gtk;
     using System;
 
@@ -23,7 +24,7 @@
         public DropDownView SimulationDropDown { get; private set; }
 
         /// <summary>View which displays the summary data.</summary>
-        public HTMLView HtmlView { get; }
+        public IHTMLView HtmlView { get; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -48,8 +49,10 @@
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
+#if NETFRAMEWORK
             HtmlView = new HTMLView(this);
-            mainControl.PackEnd(HtmlView.MainWidget, true, true, 0);
+            mainControl.PackEnd((HtmlView as ViewBase).MainWidget, true, true, 0);
+#endif
 
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -68,7 +71,7 @@
                 middleBox.Destroy();
                 SimulationDropDown.MainWidget.Destroy();
                 mainControl.Destroy();
-                HtmlView.MainWidget.Destroy();
+                (HtmlView as ViewBase)?.MainWidget?.Destroy();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }

@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// Connects a CompositeFactor model to a EditorView.

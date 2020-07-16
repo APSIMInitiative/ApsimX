@@ -6,6 +6,7 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
+    using Interfaces;
 
     class IntellisenseView : ViewBase
     {
@@ -332,13 +333,13 @@
         /// Populates the completion window with data.
         /// </summary>
         /// <param name="items">List of completion data.</param>
-        public void Populate(List<CompletionData> items)
+        public void Populate(List<ICompletionItem> items)
         {
             completionModel.Clear();
 
             // Add empty first row.
             completionModel.AppendValues("", "", "", "", "", "", "");
-            foreach (CompletionData item in items)
+            foreach (ICompletionItem item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
                 string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);

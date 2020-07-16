@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
@@ -22,6 +23,6 @@ namespace UserInterface.Views
         DropDownView SimulationDropDown { get; }
 
         /// <summary>View which displays the summary data.</summary>
-        HTMLView HtmlView { get; }
+        IHTMLView HtmlView { get; }
     }
 }

@@ -1,11 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using Pango;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+#if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using Pango;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>An interface for a list view</summary>
     public interface IListView

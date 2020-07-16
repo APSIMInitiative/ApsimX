@@ -34,7 +34,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         /// <param name="owner"></param>
         public HelpView(MainView owner) : base(owner)
         {
-            window = new Dialog("Help", owner.MainWidget as Window, DialogFlags.DestroyWithParent | DialogFlags.Modal | DialogFlags.NoSeparator);
+            window = new Dialog("Help", owner.MainWidget as Window, DialogFlags.DestroyWithParent | DialogFlags.Modal);
             window.WindowPosition = WindowPosition.Center;
             window.DeleteEvent += OnDelete;
             window.Destroyed += OnClose;
@@ -99,7 +99,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
                 if (value)
                     window.ShowAll();
                 else
-                    window.HideAll();
+                    window.Hide();
             }
         }
 

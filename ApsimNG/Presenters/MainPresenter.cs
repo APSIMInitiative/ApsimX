@@ -171,7 +171,11 @@
             };
 
             var compiler = new ScriptCompiler();
+#if NETFRAMEWORK
             var results = compiler.Compile(code, new Model(), assemblies);
+#else
+            var results = compiler.Compile(code, new Model());
+#endif
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 

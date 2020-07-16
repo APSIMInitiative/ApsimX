@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserInterface.Classes.Intellisense
+namespace UserInterface.Intellisense
 {
     /// <summary>
     /// Used to store completion information about a method.
