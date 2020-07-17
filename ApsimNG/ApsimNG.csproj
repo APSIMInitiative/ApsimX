@@ -14,6 +14,7 @@
     <WarningsAsErrors />
     <NoWarn />
 	<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -63,7 +64,7 @@
   <!-- .NET Core-specific references -->
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
     <PackageReference Include="GtkSharp" Version="3.22.25.98" />
-    <PackageReference Include="OxyPlot.GtkSharp3" Version="1.0.0" />
+    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.0-netcorebeta" />
     <PackageReference Include="MigraDoc.Rendering.Core" Version="1.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
 	<PackageReference Include="SourceView" Version="1.0.0" />
