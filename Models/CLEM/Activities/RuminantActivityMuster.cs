@@ -20,9 +20,10 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
+    [Version(1, 0, 2, "Now uses multiple RuminantDestockGroups to identify individuals to be mustered")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMustering.htm")]
-    public class RuminantActivityMuster: CLEMRuminantActivityBase
+    public class RuminantActivityMuster: CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>F
         /// Managed pasture to muster to
@@ -46,6 +47,31 @@ namespace Models.CLEM.Activities
         [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
+
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // check that this model contains children RuminantDestockGroups with filters
+            var results = new List<ValidationResult>();
+            // check that this activity contains at least one RuminantDestockGroups group with filters
+
+            if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
+            {
+                string[] memberNames = new string[] { "Ruminant filter group" };
+                results.Add(new ValidationResult("The use of [f=RuminantFilterGroup] is no longer supported in [a=RuminantActivityMuster]. This activity now uses multiple [f=RuminantDestockGroup] to identify groups of individuals to muster", memberNames));
+            }
+
+            if (Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)
+            {
+                string[] memberNames = new string[] { "Ruminant destocking group" };
+                results.Add(new ValidationResult("At least one [f=RuminantDestockGroup] is required for the [a=RuminantActivityMuster]", memberNames));
+            }
+            return results;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
