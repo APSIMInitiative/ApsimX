@@ -111,65 +111,71 @@ namespace Models.CLEM.Activities
                                    where
                                    (ind.Gender == Sex.Male && ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
                                    (ind.Gender == Sex.Female &&
-                                   ind.Age + i >= ind.BreedParams.MinimumAge1stMating //&&
-                                                                                      // ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+                                   ind.Age + i >= ind.BreedParams.MinimumAge1stMating &&
+                                   !(ind as RuminantFemale).IsPregnant
                                    )
                                    group ind by ind.Location into grp
                                    select grp;
 
                     int breedersCount = breeders.Count();
-                    int numberPossible = breedersCount;
-                    int numberServiced = 1;
-                    double limiter = 1;
 
-                    // for each location where parts of this herd are located
-                    foreach (var location in breeders)
+                    // must be breeders to bother checking any further
+                    // must be either uncontrolled mating or the timing of controlled mating
+                    if (breedersCount > 0 & (!UseAI || this.TimingCheck(previousDate)))
                     {
-                        // uncontrolled conception
-                        if (!UseAI)
+                        int numberPossible = breedersCount;
+                        int numberServiced = 1;
+                        double limiter = 1;
+
+                        // for each location where parts of this herd are located
+                        foreach (var location in breeders)
                         {
-                            // check if males and females of breeding condition are together
-                            if (location.GroupBy(a => a.Gender).Count() == 2)
+                            // uncontrolled conception
+                            if (!UseAI)
                             {
-                                // servicing rate
-                                int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
-                                int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-                                double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-
-                                double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
-
-                                // only get non-pregnant females of breeding age at the time before the simulation included
-                                var availableBreeders = location.Where(b => b.Gender == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
-                                    .Cast<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
-
-                                // only get selection of these of breeders available to spread conceptions
-                                // only 15% of breeding herd of age can conceive in any month or male limited proportion whichever is smaller
-                                int count = Convert.ToInt32(Math.Ceiling(availableBreeders.Count() * Math.Min(0.15, maleLimiter)));
-                                availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count).ToList();
-
-                                foreach (RuminantFemale female in availableBreeders)
+                                // check if males and females of breeding condition are together
+                                if (location.GroupBy(a => a.Gender).Count() == 2)
                                 {
-                                    // calculate conception
-                                    Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
-                                    double conceptionRate = ConceptionRate(female, out status);
-                                    if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
-                                    {
-                                        female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
-                                        // report conception status changed
-                                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                                    // servicing rate
+                                    int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                                    int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                                    double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
 
-                                        // check for perenatal mortality
-                                        for (int j = i; j < monthsAgoStop; j++)
+                                    double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
+
+                                    // only get non-pregnant females of breeding age at the time before the simulation included
+                                    var availableBreeders = location.Where(b => b.Gender == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
+                                        .Cast<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
+
+                                    // only get selection of these of breeders available to spread conceptions
+                                    // only 15% of breeding herd of age can conceive in any month or male limited proportion whichever is smaller
+                                    int count = Convert.ToInt32(Math.Ceiling(availableBreeders.Count() * Math.Min(0.15, maleLimiter)));
+                                    availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count).ToList();
+
+                                    foreach (RuminantFemale female in availableBreeders)
+                                    {
+                                        // calculate conception
+                                        Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
+                                        double conceptionRate = ConceptionRate(female, out status);
+                                        if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                         {
-                                            for (int k = 0; k < female.CarryingCount; i++)
+                                            female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                            // report conception status changed
+                                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+
+                                            // check for perenatal mortality
+                                            for (int j = i; j < monthsAgoStop; j++)
                                             {
-                                                if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                for (int k = 0; k < female.CarryingCount; i++)
                                                 {
-                                                    female.OneOffspringDies();
-                                                    if (female.NumberOfOffspring == 0)
+                                                    if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                     {
-                                                        // report conception status changed when last multiple birth dies.
-                                                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                        female.OneOffspringDies();
+                                                        if (female.NumberOfOffspring == 0)
+                                                        {
+                                                            // report conception status changed when last multiple birth dies.
+                                                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                        }
                                                     }
                                                 }
                                             }
@@ -177,11 +183,8 @@ namespace Models.CLEM.Activities
                                     }
                                 }
                             }
-                        }
-                        // controlled conception
-                        else
-                        {
-                            if (this.TimingCheck(previousDate))
+                            // controlled conception
+                            else
                             {
                                 numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
@@ -202,7 +205,7 @@ namespace Models.CLEM.Activities
                                                 // check for perenatal mortality
                                                 for (int j = i; j < monthsAgoStop; j++)
                                                 {
-                                                    for (int k = 0; k < female.CarryingCount; i++)
+                                                    for (int k = 0; k < female.CarryingCount; k++)
                                                     {
                                                         if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                         {
