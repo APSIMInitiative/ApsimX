@@ -606,10 +606,10 @@
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    if (DateTime.IsLeapYear(clock.Today.Year-1))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;  
                     else
-                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear; 
                 }
                 else
                     DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;

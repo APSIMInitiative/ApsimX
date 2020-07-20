@@ -38,7 +38,7 @@ namespace Models.CLEM
         /// Warning log for this CLEM model
         /// </summary>
         [XmlIgnore]
-        public WarningLog Warnings = new WarningLog(50);
+        public WarningLog Warnings = WarningLog.GetInstance(50);
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -101,6 +101,22 @@ namespace Models.CLEM
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Is timing ok for the current model
+        /// </summary>
+        public bool TimingOK
+        {
+            get
+            {
+                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
+                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                return (res == 0);
             }
         }
 

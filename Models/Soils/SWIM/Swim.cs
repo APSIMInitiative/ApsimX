@@ -10,6 +10,7 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Soils.Standardiser;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {

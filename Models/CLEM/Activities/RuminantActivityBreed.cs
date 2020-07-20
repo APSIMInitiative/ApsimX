@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
     [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\nThis change requires all simulations to be performed again.")]
     [Version(1, 0, 4, "Implemented conception status reporting.")]
     [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
@@ -96,7 +97,7 @@ namespace Models.CLEM.Activities
                 // go back (gestation - 1) months
                 // this won't include those individuals due to give birth on day 1.
 
-                int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength), CultureInfo.InvariantCulture) - 1);
+                int monthsAgoStart = 0 - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength), CultureInfo.InvariantCulture) - 1);
                 int monthsAgoStop = -1;
 
                 for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
@@ -133,21 +134,28 @@ namespace Models.CLEM.Activities
                                 int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
                                 int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
                                 double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-                                double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
 
-                                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                                double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
+
+                                // only get non-pregnant females of breeding age at the time before the simulation included
+                                var availableBreeders = location.Where(b => b.Gender == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
+                                    .Cast<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
+
+                                // only get selection of these of breeders available to spread conceptions
+                                // only 15% of breeding herd of age can conceive in any month or male limited proportion whichever is smaller
+                                int count = Convert.ToInt32(Math.Ceiling(availableBreeders.Count() * Math.Min(0.15, maleLimiter)));
+                                availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count).ToList();
+
+                                foreach (RuminantFemale female in availableBreeders)
                                 {
-                                    if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                    // calculate conception
+                                    Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
+                                    double conceptionRate = ConceptionRate(female, out status);
+                                    if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                     {
-                                        // calculate conception
-                                        Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
-                                        double conceptionRate = ConceptionRate(female, out status) * maleLimiter;
-                                        if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
-                                        {
-                                            female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
-                                            // report conception status changed
-                                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
-                                        }
+                                        female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                        // report conception status changed
+                                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                                     }
                                 }
                             }

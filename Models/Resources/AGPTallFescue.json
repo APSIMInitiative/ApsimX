@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 103,
+  "Version": 107,
   "Name": "Simulations",
   "Children": [
     {
@@ -77,7 +77,6 @@
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "WaterAvailableMethod": 0,
-      "NitrogenAvailableMethod": 0,
       "PhotosyntheticEfficiency": 0.01,
       "PhotosynthesisCurveFactor": 0.8,
       "FractionPAR": 0.5,
@@ -110,7 +109,7 @@
       "NuptakeSWFactor": 0.25,
       "MaximumUptakeRateNH4": 0.5,
       "MaximumUptakeRateNO3": 0.5,
-      "Name": "TallFescue",
+      "Name": "AGPTallFescue",
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
@@ -275,6 +274,8 @@
           "RootDepthMinimum": 50.0,
           "RootDepthMaximum": 1000.0,
           "RootElongationRate": 30.0,
+          "KNO3": 0.02,
+          "KNH4": 0.01,
           "Name": "Root",
           "Children": [
             {
