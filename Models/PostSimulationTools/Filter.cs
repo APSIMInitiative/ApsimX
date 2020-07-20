@@ -4,6 +4,7 @@
     using Models.Core.Run;
     using Models.Storage;
     using System;
+    using System.Collections.Generic;
     using System.Data;
 
     /// <summary>
@@ -29,6 +30,11 @@
         [Display]
         public string FilterString { get; set; }
 
+        /// <summary>The row filter.</summary>
+        [Description("List columns to include (csv). Leave empty for all columns")]
+        [Display]
+        public string[] ColumnFilter { get; set; }
+
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
@@ -41,8 +47,29 @@
                 var view = new DataView(sourceData);
                 view.RowFilter = FilterString;
 
-                // Give the new data table to the data store.
+                // Strip out unwanted columns.
                 var table = view.ToTable();
+                
+                if (ColumnFilter != null && ColumnFilter.Length > 0)
+                {
+                    var columnsToKeep = new List<string>(ColumnFilter);
+                    columnsToKeep.Add("SimulationName");
+
+                    // Trim spaces from all column names.
+                    for (int i = 0; i < columnsToKeep.Count; i++)
+                        columnsToKeep[i] = columnsToKeep[i].Trim();
+
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        if (!columnsToKeep.Contains(table.Columns[i].ColumnName))
+                        {
+                            table.Columns.Remove(table.Columns[i]);
+                            i--;
+                        }
+                    }
+                }
+
+                // Give the new data table to the data store.
                 table.TableName = Name;
                 dataStore.Writer.WriteTable(table);
             }
