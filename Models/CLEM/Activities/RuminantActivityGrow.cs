@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ind.Weaner)
+                if (ind.IsWeaner)
                 {
                     // Reference: SCA Metabolic LWTs
                     // restored in v112 of NABSA for weaner animals
@@ -399,10 +399,10 @@ namespace Models.CLEM.Activities
             double intakeDaily = ind.Intake / 30.4;
 
             // Sme 1 for females and castrates
-            // TODO: castrates not implemented
+            // TODO: castrates available but not implemented
             double sme = 1;
-            // Sme 1.15 for all males.
-            if (ind.Gender == Sex.Male)
+            // Sme 1.15 for all non-castrated males.
+            if (ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
             {
                 sme = 1.15;
             }

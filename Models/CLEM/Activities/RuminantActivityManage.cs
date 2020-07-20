@@ -267,11 +267,12 @@ namespace Models.CLEM.Activities
 
                     if (cohorts != null)
                     {
+                        int heifers = Convert.ToInt32(Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
                         List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
-                        if (initialBreeders < this.MinimumBreedersKept)
+                        if (initialBreeders < (this.MinimumBreedersKept-heifers))
                         {
-                            double scaleFactor = this.MinimumBreedersKept / Convert.ToDouble(initialBreeders);
+                            double scaleFactor = (this.MinimumBreedersKept-heifers) / Convert.ToDouble(initialBreeders);
                             // add new individuals
                             foreach (var item in cohortList)
                             {
@@ -289,9 +290,9 @@ namespace Models.CLEM.Activities
                             }
                             breederHerdSize = initialBreeders + numberAdded;
                         }
-                        else if (initialBreeders > maxBreeders)
+                        else if (initialBreeders > (maxBreeders - heifers))
                         {
-                            int reduceBy = Math.Max(0, initialBreeders - maxBreeders);
+                            int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
                             List<Ruminant> breeders = rumHerd.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
@@ -339,7 +340,7 @@ namespace Models.CLEM.Activities
                 {
                     // get number in herd
                     List<Ruminant> rumHerd = this.CurrentHerd(false);
-                    int numberPresent = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+                    int numberPresent = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).Count();
                     if (numberPresent < SiresKept)
                     {
                         // fill to number needed
@@ -349,7 +350,7 @@ namespace Models.CLEM.Activities
                             {
                                 Breed = this.PredictedHerdBreed,
                                 HerdName = this.PredictedHerdName,
-                                BreedingSire = true,
+                                IsSire = true,
                                 ID = herd.NextUniqueID,
                                 SaleFlag = HerdChangeReason.FillInitialHerd
                             };
@@ -362,7 +363,7 @@ namespace Models.CLEM.Activities
                         int reduceBy = Math.Max(0,numberPresent - SiresKept);
                         // reduce initial sire herd size
                         // randomly select the individuals to remove form the breeder herd
-                        List<RuminantMale> sires = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
+                        List<RuminantMale> sires = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
                         foreach (var item in sires)
                         {
                             item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
@@ -451,7 +452,7 @@ namespace Models.CLEM.Activities
                     if (ind.GetType() == typeof(RuminantMale))
                     {
                         // don't sell breeding sires.
-                        sell = !((ind as RuminantMale).BreedingSire);
+                        sell = !((ind as RuminantMale).IsSire);
                     }
                     else
                     {
@@ -502,7 +503,7 @@ namespace Models.CLEM.Activities
 
                 // MALES
                 // check for sires after sale of old individuals and buy/sell
-                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
 
                 // Number of females
                 int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating && a.SaleFlag == HerdChangeReason.None).Count();
@@ -521,7 +522,7 @@ namespace Models.CLEM.Activities
                     int numberToRemove = numberMaleSiresInHerd - SiresKept;
                     if (numberToRemove > 0)
                     {
-                        foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderByDescending(a => a.Age).Take(numberToRemove))
+                        foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderByDescending(a => a.Age).Take(numberToRemove))
                         {
                             male.Location = grazeStoreSires;
                             male.SaleFlag = HerdChangeReason.ExcessSireSale;
@@ -545,7 +546,7 @@ namespace Models.CLEM.Activities
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
-                                male.BreedingSire = true;
+                                male.IsSire = true;
                                 numberMaleSiresInHerd++;
                                 if (numberMaleSiresInHerd >= SiresKept)
                                 {
@@ -577,7 +578,7 @@ namespace Models.CLEM.Activities
                                         Location = grazeStoreSires,
                                         Breed = this.PredictedHerdBreed,
                                         HerdName = this.PredictedHerdName,
-                                        BreedingSire = true,
+                                        IsSire = true,
                                         Gender = Sex.Male,
                                         ID = 0, // Next unique ide will be assigned when added
                                         SaleFlag = HerdChangeReason.SirePurchase

@@ -217,15 +217,75 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Determine the category of this individual
+        /// </summary>
+        public string Category
+        {
+            get
+            {
+                if(this.IsCalf)
+                {
+                    return "Calf";
+                }
+                else if(this.IsWeaner)
+                {
+                    return "Weaner";
+                }
+                else
+                {
+                    if(this is RuminantFemale)
+                    {
+                        if ((this as RuminantFemale).IsHeifer)
+                        {
+                            return "Heifer";
+                        }
+                        else
+                        {
+                            return "Breeder";
+                        }
+                    }
+                    else
+                    {
+                        if((this as RuminantMale).IsSire)
+                        {
+                            return "Sire";
+                        }
+                        else if((this as RuminantMale).IsCastrated)
+                        {
+                            return "Castraded";
+                        }
+                        else
+                        {
+                            return "Steer";
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
-        public bool Weaner
+        public bool IsWeaner
         {
             get
             {
                 return (Weaned && Age<12);
             }
         }
+
+        /// <summary>
+        /// Determine if weaned and less that 12 months old. Weaner
+        /// </summary>
+        public bool IsCalf
+        {
+            get
+            {
+                return (!Weaned);
+            }
+        }
+
 
         /// <summary>
         /// The current weight as a proportion of Standard Reference Weight

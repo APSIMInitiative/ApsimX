@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 90,
+  "Version": 105,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -31,6 +31,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
           "Name": "Grazing",
           "Children": [
             {
@@ -707,7 +708,16 @@
                           "PredictedHerdBreed": null,
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Muster to pasture",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Groupings.RuminantDestockGroup, Models",
+                              "Name": "MusterAll",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false

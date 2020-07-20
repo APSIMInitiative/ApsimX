@@ -285,11 +285,11 @@
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
 
-            if (CLEMValidate != null)
-                CLEMValidate.Invoke(this, args);
-
             if (FinalInitialise != null)
                 FinalInitialise.Invoke(this, args);
+
+            if (CLEMValidate != null)
+                CLEMValidate.Invoke(this, args);
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {

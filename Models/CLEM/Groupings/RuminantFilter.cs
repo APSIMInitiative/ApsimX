@@ -220,11 +220,11 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Is male breeding sire
         /// </summary>
-        BreedingSire = 15,
+        IsSire = 15,
         /// <summary>
         /// Is male draught individual
         /// </summary>
-        Draught = 14,
+        IsDraught = 14,
         /// <summary>
         /// Gender of individuals
         /// </summary>
@@ -276,10 +276,14 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Is individual a weaner (weaned, but less than 12 months)
         /// </summary>
-        Weaner = 10,
+        IsWeaner = 10,
         /// <summary>
         /// Weight of individuals
         /// </summary>
         Weight = 5,
+        /// <summary>
+        /// Is individual a calf (not weaned)
+        /// </summary>
+        IsCalf = 18,
     }
 }
