@@ -285,7 +285,7 @@
         {
             try
             {
-                ((sender as Label).Parent as VBox).Spacing = 0;
+                ((sender as Label).Parent as Box).Spacing = 0;
                 Pango.Layout layout = (sender as Label).Layout;
                 Pango.Rectangle ink;
                 Pango.Rectangle logical;
