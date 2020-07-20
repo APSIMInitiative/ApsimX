@@ -31,10 +31,10 @@ namespace Models.Agroforestry
         public DateTime EndDate { get { return weather.EndDate; } }
 
         /// <summary>Gets or sets the maximum temperature (oc)</summary>
-        public double MaxT { get { return weather.MaxT; } }
+        public double MaxT { get { return weather.MaxT; } set { weather.MaxT = value; } }
 
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
-        public double MinT { get { return weather.MinT; } }
+        public double MinT { get { return weather.MinT; } set { weather.MinT = value; } }
 
         /// <summary>
         /// Daily Mean temperature (oC)
@@ -61,23 +61,23 @@ namespace Models.Agroforestry
         }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>
-        public double Rain { get { return weather.Rain; } }
+        public double Rain { get { return weather.Rain; } set { weather.Rain = value; } }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        public double Radn { get { return weather.Radn * ParentSystem.GetRadiationReduction(Parent as Zone) ; } }
+        public double Radn { get { return weather.Radn * ParentSystem.GetRadiationReduction(Parent as Zone) ; } set { weather.Radn = value; } }
 
         /// <summary>Gets or sets the vapor pressure</summary>
-        public double VP { get { return weather.VP; } }
+        public double VP { get { return weather.VP; } set { weather.VP = value; } }
 
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
-        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone); } }
+        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone); } set { weather.Wind = value; } }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
-        public double CO2 { get { return weather.CO2; } }
+        public double CO2 { get { return weather.CO2; } set { weather.CO2 = value; } }
 
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.

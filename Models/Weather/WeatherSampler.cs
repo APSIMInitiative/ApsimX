@@ -84,6 +84,13 @@
         [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
         public double[] Years { get; set; }
 
+
+        /// <summary>The number of lead in years before weather sampling begins.</summary>
+        [Summary]
+        [Description("Number of lead in years before weather sampling begins.")]
+        [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
+        public int NumberOfLeadInYears { get; set; }
+
         /// <summary>The sample years.</summary>
         [Summary]
         [Description("Number of years to sample from the weather file.")]
@@ -255,6 +262,14 @@
                 var random = new Random();
                 for (int i = 0; i < NumYears; i++)
                     Years[i] = random.Next(firstYearToSampleFrom, lastYearToSampleFrom);
+            }
+            else if (NumberOfLeadInYears > 0)
+            {
+                // Use lead in years.
+                var yearsWithLeadIn = new List<double>(Years);
+                for (int i = 0; i < NumberOfLeadInYears; i++)
+                    yearsWithLeadIn.Insert(0, Years[0]);
+                Years = yearsWithLeadIn.ToArray();
             }
 
             if (Years == null || Years.Length == 0)
