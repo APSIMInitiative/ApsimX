@@ -48,6 +48,7 @@
         }
 
         /// <summary>Sets the controls to show.</summary>
+        /// <remarks>This should be reworked once we ditch gtk2 support.</remarks>
         public void SetContols(List<GraphView> controls)
         {
             int numControls = controls.Count;

@@ -456,7 +456,7 @@ namespace UserInterface.Views
         /// Sets the contents of a cell being display on a grid.
         /// Appends owner to display name if showing other people's jobs.
         /// </summary>
-        /// <param name="col">The column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>

@@ -209,9 +209,9 @@
         }
 
         /// <summary>Show the filter help.</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Help_ButtonPressEvent(object o, ButtonReleaseEventArgs args)
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void Help_ButtonPressEvent(object sender, ButtonReleaseEventArgs args)
         {
             try
             {

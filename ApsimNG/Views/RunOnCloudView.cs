@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// A view for submitting a job to be run on a cloud platform.
+    /// </summary>
     public class RunOnCloudView : ViewBase
     {
         private Entry entryName;
@@ -29,6 +32,10 @@ namespace UserInterface.Views
         private Button btnModelPath;
         private Label lblStatus;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="owner">Owner view.</param>
         public RunOnCloudView(ViewBase owner) : base(owner)
         {
             // This vbox holds both alignment objects (which in turn hold the frames).

@@ -1,3 +1,4 @@
+#nullable enable
 namespace UserInterface.Intellisense
 {
     using System;
@@ -50,3 +51,4 @@ namespace UserInterface.Intellisense
         }
     }
 }
+#nullable disable
