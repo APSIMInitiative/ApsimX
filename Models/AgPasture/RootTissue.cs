@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using System;
     using System.Linq;

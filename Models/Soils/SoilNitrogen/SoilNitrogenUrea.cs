@@ -4,6 +4,7 @@
     using System;
     using Models.Core;
     using System.Xml.Serialization;
+    using Models.Soils.Nutrients;
 
     /// <summary>This class encapsulates a SoilNitrogen model urea solute.</summary>
     [Serializable]

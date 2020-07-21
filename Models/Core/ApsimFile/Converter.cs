@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 105; } }
+        public static int LatestVersion { get { return 107; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2332,6 +2332,66 @@
                 JsonUtilities.AddModel(LAP, varRef);
             }
         }
+
+        /// <summary>
+        /// Change Nutrient.FOMC and Nutrient.FOMN to Nutrient.FOM.C and Nutrient.FOM.N
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion106(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("utrient.FOMC",  "utrient.FOM.C"),
+                new Tuple<string, string>("utrient.FOMN",  "utrient.FOM.N")
+            };
+
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Add Models.Soils.Nutrients namespace to all manager files that
+            // reference Nutrient or Solute.
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var code = manager.ToString();
+                if (code != null && (code.Contains("Nutrient") || code.Contains("Solute")))
+                {
+                    var usingLines = manager.GetUsingStatements().ToList();
+                    usingLines.Add("Models.Soils.Nutrients");
+                    manager.SetUsingStatements(usingLines);
+                    manager.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in LeafAppearancePhase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion107(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                ExpressionFunction expFunction = new ExpressionFunction();
+                expFunction.Name = "LeafNumber";
+                expFunction.Expression = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
+                JsonUtilities.AddModel(LAP, expFunction);
+
+                VariableReference varRef1 = new VariableReference();
+                varRef1.Name = "FullyExpandedLeafNo";
+                varRef1.VariableName = "[Leaf].ExpandedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef1);
+
+                VariableReference varRef2 = new VariableReference();
+                varRef2.Name = "InitialisedLeafNumber";
+                varRef2.VariableName = "[Leaf].InitialisedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef2);
+
+            }
+        }
+
+
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

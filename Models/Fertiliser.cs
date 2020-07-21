@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Interfaces;
+using Models.Soils.Nutrients;
 
 namespace Models
 {

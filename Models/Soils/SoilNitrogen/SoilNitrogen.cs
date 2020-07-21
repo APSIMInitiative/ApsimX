@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using Models.Surface;
 using Models.Interfaces;
 using Models.Soils.NutrientPatching;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {

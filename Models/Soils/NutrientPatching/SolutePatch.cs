@@ -6,6 +6,7 @@ namespace Models.Soils.NutrientPatching
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
+    using Models.Soils.Nutrients;
 
     /// <summary>
     /// # [Name]
@@ -55,7 +56,8 @@ namespace Models.Soils.NutrientPatching
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
+            if (!Name.Contains("PlantAvailable"))
+                Reset();
         }
 
         /// <summary>

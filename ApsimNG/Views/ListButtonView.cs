@@ -285,7 +285,7 @@
         {
             try
             {
-                if (sender is Label label && label.Parent is VBox vbox)
+                if (sender is Label label && label.Parent is Box vbox)
                 {
                     vbox.Spacing = 0;
                     Pango.Layout layout = label.Layout;
