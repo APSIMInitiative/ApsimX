@@ -168,19 +168,6 @@ namespace ApsimNG.Cloud
             if (!Directory.Exists(job.ModelPath))
                 Directory.CreateDirectory(job.ModelPath);
 
-            // Copy weather files to models directory to be compressed.
-            Simulations sims = Apsim.Parent(job.Model, typeof(Simulations)) as Simulations;
-            foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
-            {
-                if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(sims.FileName))
-                    throw new Exception("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);
-
-                string sourceFile = child.FullFileName;
-                string destFile = Path.Combine(job.ModelPath, child.FileName);
-                if (!File.Exists(destFile))
-                    File.Copy(sourceFile, destFile);
-            }
-
             if (ct.IsCancellationRequested)
             {
                 UpdateStatus("Cancelled");
@@ -189,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ });
+            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
