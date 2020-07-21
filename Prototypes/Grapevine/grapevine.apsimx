@@ -2156,11 +2156,11 @@
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "BudBurst",
                           "End": "Flowering",
-                          "Name": "Juvenile",
+                          "Name": "Vegetative",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.3,
+                              "FixedValue": 0.85,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2176,33 +2176,12 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Flowering",
-                          "End": "Veraison",
-                          "Name": "Vegetative",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.5,
-                              "Units": "g/MJ",
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Veraison",
                           "End": "LeafFall",
                           "Name": "Reproductive",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.5,
+                              "FixedValue": 0.9,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2600,12 +2579,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            5.0,
+                            2.0,
                             10.0,
                             20.0
                           ],
                           "Y": [
-                            0.4,
+                            1.0,
                             1.0,
                             1.0,
                             1.0
@@ -2646,8 +2625,8 @@
                           "Y": [
                             100.0,
                             200.0,
-                            600.0,
-                            600.0,
+                            500.0,
+                            500.0,
                             100.0
                           ],
                           "Name": "XYPairs",
@@ -2746,7 +2725,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.07,
                   "Units": "percentage",
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -3421,7 +3400,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.07,
                   "Units": "percentage",
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -4380,7 +4359,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.07,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -5057,7 +5036,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.07,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -19373,7 +19352,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2006-02-25T00:00:00",
-                      "End": "2012-05-02T00:00:00",
+                      "End": "2011-05-02T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -19470,8 +19449,12 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk height(m)\")]\r\n        public double TrunkHeight { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous Root dry matter(g/vine)\")]\r\n        public double RootDM { get; set; }\r\n\r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *0.5 * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkHeight*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n               \r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Root biomass is  per plant\r\n                double rootBiomass = RootDM * pop;\r\n                double rootNSC = RootDM * pop * RootNSC; \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk height(m)\")]\r\n        public double TrunkHeight { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous Root dry matter(g/vine)\")]\r\n        public double RootDM { get; set; }\r\n\r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *0.5 * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkHeight*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n               \r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Root biomass is  per plant\r\n                double rootBiomass = RootDM * pop;\r\n                double rootNSC = RootDM * pop * RootNSC; \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
+                            {
+                              "Key": "BudNumber",
+                              "Value": "48"
+                            },
                             {
                               "Key": "CultivarName",
                               "Value": "SauvignonBlanc"
@@ -19483,10 +19466,6 @@
                             {
                               "Key": "VineDistance",
                               "Value": "1.8"
-                            },
-                            {
-                              "Key": "BudNumber",
-                              "Value": "48"
                             },
                             {
                               "Key": "CordonNumber",
@@ -21419,102 +21398,6 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "LeafAreaIndex",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": "Node",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Zone",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "LAIStrip",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": "Node",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "LAIStrip",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
                   "Name": "LeafAreaVine",
                   "Children": [
                     {
@@ -22885,6 +22768,73 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "ShootBiomass1",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.shoot.dw",
+                      "YFieldName": "Predicted.shoot.dw",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
