@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
+    [Version(1, 0, 1, "Included new ProportionOfAvailable option for moving pasture")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
@@ -104,32 +105,28 @@ namespace Models.CLEM.Activities
 
             if (this.TimingOK)
             {
-                List<Ruminant> herd = new List<Ruminant>();
-
-                // determine amount to be cut and carried
-                if (CutStyle != RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                {
-                    herd = CurrentHerd(false);
-                }
                 switch (CutStyle)
                 {
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                        AmountHarvested += pasture.Amount * Supply;
+                        break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                         AmountHarvested += Supply * 30.4;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * ind.Weight * 30.4;
                         }
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * ind.PotentialIntake;
                         }
                         break;
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * (ind.PotentialIntake - ind.Intake);
                         }
