@@ -133,7 +133,8 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
                 RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+
+                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
                 {
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
@@ -147,6 +148,7 @@ namespace Models.CLEM.Activities
                     double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
+
                     GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 

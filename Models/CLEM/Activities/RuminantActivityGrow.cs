@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ind.Weaner)
+                if (ind.IsWeaner)
                 {
                     // Reference: SCA Metabolic LWTs
                     // restored in v112 of NABSA for weaner animals
@@ -212,8 +212,7 @@ namespace Models.CLEM.Activities
                         femaleind.MilkProduction = 0;
                         femaleind.MilkProductionPotential = 0;
                         femaleind.MilkCurrentlyAvailable = 0;
-                        femaleind.MilkMilkedThisTimeStep = 0;
-                        femaleind.MilkSuckledThisTimeStep = 0;
+                        femaleind.MilkMilkedThisTimeStep = 0;                        femaleind.MilkSuckledThisTimeStep = 0;
                         femaleind.MilkProducedThisTimeStep = 0;
                     }
                 }
@@ -244,7 +243,7 @@ namespace Models.CLEM.Activities
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.MilkingPerformed)
+            if (ind.SucklingOffspringList.Count() == 0)
             {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             }
@@ -396,13 +395,14 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            double intakeDaily = ind.MetabolicIntake / 30.4;
+            // previously ind.MetabolicIntake / 30.4 - sure this was mistake
+            double intakeDaily = ind.Intake / 30.4;
 
             // Sme 1 for females and castrates
-            // TODO: castrates not implemented
+            // TODO: castrates available but not implemented
             double sme = 1;
-            // Sme 1.15 for all males.
-            if (ind.Gender == Sex.Male)
+            // Sme 1.15 for all non-castrated males.
+            if (ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
             {
                 sme = 1.15;
             }

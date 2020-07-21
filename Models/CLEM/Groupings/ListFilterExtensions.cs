@@ -50,8 +50,8 @@ namespace Models.CLEM.Groupings
                 string gender = "";
                 switch (filter.Parameter)
                 {
-                    case RuminantFilterParameters.Draught:
-                    case RuminantFilterParameters.BreedingSire:
+                    case RuminantFilterParameters.IsDraught:
+                    case RuminantFilterParameters.IsSire:
                         maleProperties = true;
                         gender = "Male";
                         break;

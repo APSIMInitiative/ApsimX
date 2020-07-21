@@ -260,7 +260,7 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
                     {
-                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.BreedingSire, "true");
+                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.IsSire, "true");
                     }
                     else
                     {
@@ -360,7 +360,7 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
                                 {
-                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.BreedingSire, "true");
+                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
                                 }
                                 else
                                 {
