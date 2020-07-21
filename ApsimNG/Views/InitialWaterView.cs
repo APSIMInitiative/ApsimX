@@ -4,6 +4,7 @@
     using Interfaces;
     using Gtk;
     using System.Globalization;
+    using Extensions;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -74,7 +75,7 @@
                 frameRadio1.Toggled -= FrameRadio_Toggled;
                 comboModel.Dispose();
                 comboRender.Dispose();
-                graphView1.MainWidget.Destroy();
+                graphView1.MainWidget.Cleanup();
                 graphView1 = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

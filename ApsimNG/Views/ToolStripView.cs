@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -68,7 +69,7 @@
                     }
                 }
                 toolStrip.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
         }
 
@@ -79,7 +80,7 @@
             foreach (Widget child in toolStrip.Children)
             {
                 toolStrip.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
@@ -101,7 +102,6 @@
                     if (description.RightAligned)
                         toolbarlabel.Xalign = 1.0F;
                     toolbarlabel.Xpad = 10;
-                    toolbarlabel.ModifyFg(StateType.Normal, new Gdk.Color(0x99, 0x99, 0x99));
                     toolbarlabel.Text = description.Name;
                     toolbarlabel.TooltipText = description.ToolTip;
                     toolbarlabel.Visible = !String.IsNullOrEmpty(toolbarlabel.Text);

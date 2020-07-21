@@ -4,6 +4,7 @@ using UserInterface.Interfaces;
 using Utility;
 using Gtk;
 using ApsimNG.Cloud.Azure;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -221,7 +222,7 @@ namespace UserInterface.Views
         /// </summary>
         public void Destroy()
         {
-            window.Destroy();
+            window.Cleanup();
         }
 
         /// <summary>

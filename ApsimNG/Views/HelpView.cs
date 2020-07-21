@@ -6,6 +6,12 @@ using Gtk;
 
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// This view displays some basic info about the application.
+    /// </summary>
+    /// <remarks>
+    /// Pretty sure gtk3 has a built-in widget which could do this for us.
+    /// </remarks>
     public class HelpView : ViewBase
     {
         private const string citationMarkup = @"<b>APSIM Next Generation citation:</b>
@@ -45,7 +51,6 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             Frame websiteFrame = new Frame("Website");
             website = new LinkButton("https://apsimnextgeneration.netlify.com", "Apsim Next Generation Website");
             website.Clicked += OnWebsiteClicked;
-            website.SetAlignment(0, 0);
             websiteFrame.Add(website);
             container.PackStart(websiteFrame, false, false, 0);
 

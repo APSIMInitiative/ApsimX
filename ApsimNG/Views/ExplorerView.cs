@@ -21,7 +21,7 @@ namespace UserInterface.Views
     {
         private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
-        private IHTMLView descriptionView;
+        private IHTMLView descriptionView = null;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -52,7 +52,6 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
-        /// <param name="description">Descriptive text to show at top of view.</param>
         public void AddRightHandView(object control)
         {
             // Remove existing right hand view.
@@ -61,7 +60,7 @@ namespace UserInterface.Views
                 if (child != (descriptionView as ViewBase)?.MainWidget)
                 {
                     rightHandView.Remove(child);
-                    child.Destroy();
+                    child.Cleanup();
                 }
             }
 
@@ -163,7 +162,7 @@ namespace UserInterface.Views
                     foreach (Widget child in rightHandView.Children)
                     {
                         rightHandView.Remove(child);
-                        child.Destroy();
+                        child.Cleanup();
                     }
                 }
                 ToolStrip.Destroy();

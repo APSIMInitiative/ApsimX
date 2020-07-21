@@ -7,6 +7,7 @@
     using Gtk;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using UserInterface.Extensions;
 #if NETFRAMEWORK
     using MonoMac;
     using MonoMac.AppKit;
@@ -177,7 +178,7 @@
             string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
-            fileChooser.Destroy();
+            fileChooser.Cleanup();
 
             return fileNames;
         }

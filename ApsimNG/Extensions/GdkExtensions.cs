@@ -34,5 +34,14 @@ namespace UserInterface.Extensions
 #endif
         }
 
+#if NETFRAMEWORK
+        /// <summary>
+        /// Yes, it's technically not a gdk type.
+        /// </summary>
+        public static Cairo.Surface GetTarget(this Cairo.Context context)
+        {
+            return context.Target;
+        }
+#endif
     }
 }

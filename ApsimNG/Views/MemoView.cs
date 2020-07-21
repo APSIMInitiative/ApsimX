@@ -261,7 +261,7 @@ namespace UserInterface.Views
                     foreach (Widget w in menu)
                     {
                         menu.Remove(w);
-                        w.Destroy();
+                        w.Cleanup();
                     }
                     foreach (MenuInfo item in menuItemList)
                     {

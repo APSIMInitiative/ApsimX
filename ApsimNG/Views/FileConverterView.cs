@@ -7,6 +7,7 @@
     using System.Linq;
     using APSIM.Shared.Utilities;
     using System.Collections.Specialized;
+    using Extensions;
 
     class FileConverterView : ViewBase, IFileConverterView
     {
@@ -185,7 +186,7 @@
         /// </summary>
         public void Destroy()
         {
-            mainWindow.Destroy();
+            mainWindow.Cleanup();
         }
 
         /// <summary>

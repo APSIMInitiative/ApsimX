@@ -3,6 +3,7 @@
     using Interfaces;
     using Gtk;
     using System;
+    using Extensions;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
@@ -64,14 +65,14 @@
         {
             try
             {
-                topBox.Destroy();
-                SummaryCheckBox.MainWidget.Destroy();
-                WarningCheckBox.MainWidget.Destroy();
-                ErrorCheckBox.MainWidget.Destroy();
-                middleBox.Destroy();
-                SimulationDropDown.MainWidget.Destroy();
-                mainControl.Destroy();
-                (HtmlView as ViewBase)?.MainWidget?.Destroy();
+                topBox.Cleanup();
+                SummaryCheckBox.MainWidget.Cleanup();
+                WarningCheckBox.MainWidget.Cleanup();
+                ErrorCheckBox.MainWidget.Cleanup();
+                middleBox.Cleanup();
+                SimulationDropDown.MainWidget.Cleanup();
+                mainControl.Cleanup();
+                (HtmlView as ViewBase)?.MainWidget?.Cleanup();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }

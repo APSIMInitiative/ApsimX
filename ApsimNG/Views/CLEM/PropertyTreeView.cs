@@ -82,7 +82,7 @@ namespace UserInterface.Views
                 foreach (Widget child in rightHandView.Children)
                 {
                     rightHandView.Remove(child);
-                    child.Destroy();
+                    child.Cleanup();
                 }
             }
             treeview1.CursorChanged -= OnAfterSelect;
@@ -156,7 +156,7 @@ namespace UserInterface.Views
             foreach (Widget child in rightHandView.Children)
             {
                 rightHandView.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             //create new Right Hand View
             ViewBase view = control as ViewBase;
@@ -315,7 +315,7 @@ namespace UserInterface.Views
 #region Events
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="e"/> instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             if (SelectedNodeChanged != null)

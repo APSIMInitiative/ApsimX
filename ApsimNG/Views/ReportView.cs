@@ -2,6 +2,7 @@
 {
     using System;
     using GLib;
+    using Extensions;
     using Gtk;
     using Interfaces;
 
@@ -43,6 +44,9 @@
         int SplitterPosition { get; set; }
     }
 
+    /// <summary>
+    /// View for a report component.
+    /// </summary>
     public class ReportView : ViewBase, IReportView
     {
         private Notebook notebook1 = null;
@@ -173,11 +177,11 @@
                 variableEditor.StyleChanged -= OnStyleChanged;
                 notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
-                (variableEditor as ViewBase).MainWidget.Destroy();
+                (variableEditor as ViewBase).MainWidget.Cleanup();
                 variableEditor = null;
-                (frequencyEditor as ViewBase).MainWidget.Destroy();
+                (frequencyEditor as ViewBase).MainWidget.Cleanup();
                 frequencyEditor = null;
-                dataStoreView1.MainWidget.Destroy();
+                dataStoreView1.MainWidget.Cleanup();
                 dataStoreView1 = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

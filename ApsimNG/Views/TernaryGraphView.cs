@@ -114,7 +114,7 @@ namespace UserInterface.Views
             {
                 x = value;
                 xlabel.Text = $"x: {x:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -131,7 +131,7 @@ namespace UserInterface.Views
             {
                 y = value;
                 ylabel.Text = $"y: {y:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -148,7 +148,7 @@ namespace UserInterface.Views
             {
                 z = value;
                 zlabel.Text = $"z: {z:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -201,7 +201,7 @@ namespace UserInterface.Views
         /// the marker location, label text and internal variable value
         /// but does update the model/presenter.
         /// </summary>
-        /// <param name="movePoint"></param>
+        /// <param name="point"></param>
         private void MoveTo(PointD point)
         {
             // Coordinates must be adjusted according to offset/scale.
@@ -226,7 +226,7 @@ namespace UserInterface.Views
             context.Fill();
         }
 
-        private void Refresh()
+        private void Refresh(bool drawTriangle)
         {
 #if NETFRAMEWORK
             bool isPaintable = chart.IsAppPaintable;
@@ -235,7 +235,15 @@ namespace UserInterface.Views
 #endif
             if (isPaintable && chart.Visible)
             {
+#if NETFRAMEWORK
                 Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
+#else
+                Gdk.DrawingContext drawingContext = chart.GetGdkWindow().BeginDrawFrame(chart.GetGdkWindow().VisibleRegion);
+                Context context = drawingContext.CairoContext;
+#endif
+
+                if (drawTriangle)
+                    DrawTriangle(context);
                 DrawMarker(context);
             }
         }
@@ -272,9 +280,7 @@ namespace UserInterface.Views
         {
             try
             {
-                Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
-                DrawTriangle(context);
-                DrawMarker(context);
+                Refresh(true);
             }
             catch (Exception err)
             {

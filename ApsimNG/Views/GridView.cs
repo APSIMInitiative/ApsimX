@@ -956,9 +956,9 @@
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
-                    splitter.Position = Math.Min(fixedColView.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(fixedColView.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
                 else
-                    splitter.Position = fixedColView.SizeRequest().Width + splitterWidth;
+                    splitter.Position = fixedColView.WidthRequest + splitterWidth;
             }
             else
             {
@@ -1532,7 +1532,7 @@
         {
             int frameX, frameY, containerX, containerY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            Grid.GdkWindow.GetOrigin(out containerX, out containerY);
+            Grid.GetGdkWindow().GetOrigin(out containerX, out containerY);
             Point relCoordinates = GetCellPosition(col, row + 1);
             return new Point(relCoordinates.X + containerX, relCoordinates.Y + containerY);
         }
@@ -2739,8 +2739,8 @@
                                     if (ButtonList.Contains(location) && e.Event.Type == Gdk.EventType.ButtonPress)
                                     {
                                         CellRendererActiveButton button = column.GetCells()[3] as CellRendererActiveButton;
-                                        if (e.Event.X >= button.lastRect.X &&
-                                            e.Event.X <= button.lastRect.X + button.lastRect.Width)
+                                        if (e.Event.X >= button.LastRect.X &&
+                                            e.Event.X <= button.LastRect.X + button.LastRect.Width)
                                         {
                                             OnChooseFile(button, null);
                                             e.RetVal = false;

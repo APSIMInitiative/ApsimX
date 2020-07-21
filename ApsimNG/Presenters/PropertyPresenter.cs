@@ -1021,7 +1021,6 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets the property in a given displayed by a given cell.
         /// </summary>
-        /// <remarks>
         /// <param name="row">Row inex.</param>
         /// <param name="column">Column index.</param>
         protected virtual IVariable GetProperty(int row, int column)

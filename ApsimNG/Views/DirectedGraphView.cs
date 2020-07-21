@@ -20,6 +20,10 @@
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
+    /// <remarks>
+    /// This code should be reworked to better work in the gtk3 way of thinking.
+    /// Specifically, the way colours are handled seems to be different between gtk 2/3.
+    /// </remarks>
     public class DirectedGraphView : ViewBase
     {
         /// <summary>
@@ -75,9 +79,14 @@
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
-            
+
+#if NETFRAMEWORK
             scroller.AddWithViewport(drawable);
-            
+#else
+            // In gtk3, a viewport will automatically be added if required.
+            scroller.Add(drawable);
+#endif
+
             mainWidget = scroller;
             drawable.Realized += OnRealized;
             if (owner == null)
@@ -86,6 +95,7 @@
             }
             else
             {
+                // Needs to be reimplemented for gtk3.
                 DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
                 DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
             }
@@ -132,14 +142,17 @@
             {
                 DrawingArea area = (DrawingArea)sender;
 
+#if NETFRAMEWORK
                 Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
-
+#else
+                Cairo.Context context = args.Cr;
+#endif
                 foreach (DGArc tmpArc in arcs)
                     tmpArc.Paint(context);
                 foreach (DGNode tmpNode in nodes)
                     tmpNode.Paint(context);
 
-                ((IDisposable)context.Target).Dispose();
+                ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
             }
             catch (Exception err)

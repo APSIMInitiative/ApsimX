@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
     using System;
+    using Extensions;
     using Gtk;
     using Interfaces;
 
@@ -69,11 +70,11 @@
         {
             try
             {
-                profileGrid.MainWidget.Destroy();
+                profileGrid.MainWidget.Cleanup();
                 profileGrid = null;
-                propertyGrid.MainWidget.Destroy();
+                propertyGrid.MainWidget.Cleanup();
                 propertyGrid = null;
-                graph.MainWidget.Destroy();
+                graph.MainWidget.Cleanup();
                 graph = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

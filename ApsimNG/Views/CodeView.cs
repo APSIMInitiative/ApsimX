@@ -14,12 +14,15 @@ namespace UserInterface.Views
     using Intellisense;
     using Interfaces;
     using GtkSource;
+    using global::UserInterface.Extensions;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
     /// <remarks>
     /// This is the .net core/gtk3 version, which uses SourceView.
+    /// This class could probably be trimmed down significantly, there's
+    /// probably a lot of stuff that's specific to gtk2.
     /// </remarks>
     public class EditorView : ViewBase, IEditorView
     {
@@ -104,12 +107,7 @@ namespace UserInterface.Views
                     // press of home/end keys, and to the beginning/end of the
                     // line on the second press.
                     textEditor.SmartHomeEnd = SmartHomeEndType.Before;
-                    string tempFile = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".cs");
-                    System.IO.File.WriteAllText(tempFile, Text);
-                    Language lang = LanguageManager.Default.GuessLanguage(tempFile, null);
-                    if (lang != null)
-                        textEditor.Buffer.Language = lang;
-                    System.IO.File.Delete(tempFile);
+                    Language = "c-sharp";
                     //textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
                 }
                 //else if (Mode == EditorType.Report)
@@ -240,6 +238,30 @@ namespace UserInterface.Views
             }
         }
 
+        public bool ShowLineNumbers
+        {
+            get
+            {
+                return textEditor.ShowLineNumbers;
+            }
+            set
+            {
+                textEditor.ShowLineNumbers = value;
+            }
+        }
+
+        public string Language
+        {
+            get
+            {
+                return textEditor.Buffer.Language.Name;
+            }
+            set
+            {
+                textEditor.Buffer.Language = LanguageManager.Default.GetLanguage(value);
+            }
+        }
+
         /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
@@ -352,9 +374,9 @@ namespace UserInterface.Views
                     }
                 }
 
-                popupMenu.Destroy();
+                popupMenu.Cleanup();
                 accel.Dispose();
-                textEditor.Destroy();
+                textEditor.Cleanup();
                 textEditor = null;
                 //findForm.Destroy();
                 owner = null;
@@ -374,12 +396,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
-                {
-                    scroller.Vadjustment.Value = vertScrollPos;
-                    scroller.Vadjustment.ChangeValue();
-                    vertScrollPos = -1;
-                }
+                scroller.Vadjustment.SetValue(vertScrollPos);
             }
             catch (Exception err)
             {
@@ -396,12 +413,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
-                {
-                    scroller.Hadjustment.Value = horizScrollPos;
-                    scroller.Hadjustment.ChangeValue();
-                    horizScrollPos = -1;
-                }
+                scroller.Hadjustment.SetValue(horizScrollPos);
             }
             catch (Exception err)
             {
@@ -634,8 +646,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
+        /// <param name="text">The text to be inserted.</param>
         public void InsertAtCaret(string text)
         {
             textEditor.Buffer.InsertAtCursor(text);

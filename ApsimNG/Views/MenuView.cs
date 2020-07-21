@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -26,7 +27,7 @@
         public void Destroy()
         {
             ClearMenu();
-            menu.Destroy();
+            menu.Cleanup();
         }
 
         /// <summary>Populate the main menu tool strip.</summary>
@@ -129,7 +130,7 @@
                     }
                 }
                 menu.Remove(w);
-                w.Destroy();
+                w.Cleanup();
             }
         }
     }

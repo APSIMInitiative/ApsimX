@@ -18,6 +18,7 @@
     using System.Globalization;
     using Models.Core.Apsim710File;
     using Models.WaterModel;
+    using UserInterface.Extensions;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -211,7 +212,7 @@
                             String.Format("No location matching the name '{0}' could be found.", entryPlacename.Text));
                             md.Title = "Location not found";
                             md.Run();
-                            md.Destroy();
+                            md.Cleanup();
                             break;
                         }
                     }
@@ -227,7 +228,7 @@
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            dialog1.Destroy();
+            dialog1.Cleanup();
         }
 
         /// <summary>
@@ -266,7 +267,7 @@
                                    String.Format("The value for {0} should be a number in the range {1:F2} to {2:F2}", contents, minVal, maxVal));
                 md.Title = "Invalid entry";
                 md.Run();
-                md.Destroy();
+                md.Cleanup();
             }
             return result;
         }
@@ -301,7 +302,7 @@
                                    "Unable to obtain data for this site");
                 md.Title = "Data read error";
                 md.Run();
-                md.Destroy();
+                md.Cleanup();
             }
             else
             {
@@ -320,8 +321,8 @@
                                    "Please set sensible values before using this soil in a simulation.");
                 md.Title = "Soil use warning";
                 md.Run();
-                md.Destroy();
-                dialog1.Destroy();
+                md.Cleanup();
+                dialog1.Cleanup();
             }
         }
 
@@ -571,7 +572,7 @@
             TreePath path;
             soilsView.GetCursor(out path, out col);
             curSel = path.Indices[0];
-            selWindow.Destroy();
+            selWindow.Cleanup();
         }
 
         /// <summary>
@@ -609,7 +610,7 @@
             else if (e.Event.Key == Gdk.Key.Escape && selWindow.Visible)
             {
                 curSel = -2;
-                selWindow.Destroy();
+                selWindow.Cleanup();
                 e.RetVal = true;
             }
         }
@@ -1128,9 +1129,9 @@
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

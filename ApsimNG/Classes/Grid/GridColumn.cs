@@ -131,12 +131,13 @@
         {
             get
             {
-                return ""; /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                return "";
             }
 
             set
             {
-                /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
             }
         }
 

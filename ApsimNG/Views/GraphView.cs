@@ -19,6 +19,7 @@
     using System.Linq;
     using System.Globalization;
     using MathNet.Numerics.Statistics;
+    using Extensions;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -72,11 +73,6 @@
                         series.MarkerSize = numericValue;
             }
         }
-
-        /// <summary>
-        /// Overall font size for the graph.
-        /// </summary>
-        //public double MarkerSize = -1;
 
         /// <summary>
         /// Overall font to use.
@@ -175,8 +171,8 @@
                     }
                 }
                 Clear();
-                popup.Dispose();
-                plot1.Destroy();
+                popup.Cleanup();
+                plot1.Cleanup();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -262,14 +258,36 @@
 
         public int Width
         {
-            get { return this.plot1.Allocation.Width > 1 ? this.plot1.Allocation.Width : this.plot1.ChildRequisition.Width; }
-            set { this.plot1.WidthRequest = value; }
+            get
+            {
+#if NETFRAMEWORK
+                int preferredWidth = plot1.ChildRequisition.Width;
+#else
+                plot1.GetPreferredWidth(out _, out int preferredWidth);
+#endif
+                return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
+            }
+            set
+            {
+                plot1.WidthRequest = value;
+            }
         }
 
         public int Height
         {
-            get { return this.plot1.Allocation.Height > 1 ? this.plot1.Allocation.Height : this.plot1.ChildRequisition.Height; }
-            set { this.plot1.HeightRequest = value; }
+            get
+            {
+#if NETFRAMEWORK
+                int preferredHeight = plot1.ChildRequisition.Height;
+#else
+                plot1.GetPreferredHeight(out _, out int preferredHeight);
+#endif
+                return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
+            }
+            set
+            {
+                plot1.HeightRequest = value;
+            }
         }
 
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
@@ -1147,7 +1165,7 @@
                     if (widget != label2)
                     {
                         expander1.Remove(widget);
-                        widget.Destroy();
+                        widget.Cleanup();
                     }
                 });
                 expander1.Add(editor);

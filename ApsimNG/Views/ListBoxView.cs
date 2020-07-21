@@ -13,6 +13,7 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
+    using Extensions;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -54,11 +55,13 @@ namespace UserInterface.Views
     {
         public IkonView(TreeModel model) : base(model) { }
 
+#if NETFRAMEWORK
         public int ItemPadding
         {
             get { return (int)GetProperty("item-padding"); }
             set { SetProperty("item-padding", new GLib.Value(value)); }
         }
+#endif
     }
 
     /// <summary>A list view.</summary>
@@ -117,7 +120,7 @@ namespace UserInterface.Views
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
                 ClearPopup();
-                popup.Destroy();
+                popup.Cleanup();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -411,6 +414,9 @@ namespace UserInterface.Views
                 else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
                     ImageMenuItem imageItem = new ImageMenuItem(description.Name);
+                    // fixme: GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
+                    // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
+                    // with a GtkImage and a GtkLabel instead.
                     imageItem.Image = new Image(null, description.ResourceNameForImage);
                     item = imageItem;
                 }
@@ -472,7 +478,7 @@ namespace UserInterface.Views
                     }
                 }
                 popup.Remove(w);
-                w.Destroy();
+                w.Cleanup();
             }
         }
     }

@@ -15,7 +15,9 @@
         public static int Main(string[] args)
         {
             Gtk.Application.Init();
+#if NETFRAMEWORK
             Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
+#endif
             IntellisensePresenter.Init();
             MainView mainForm = new MainView();
             MainPresenter mainPresenter = new MainPresenter();

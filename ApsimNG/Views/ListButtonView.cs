@@ -285,12 +285,15 @@
         {
             try
             {
-                ((sender as Label).Parent as VBox).Spacing = 0;
-                Pango.Layout layout = (sender as Label).Layout;
-                Pango.Rectangle ink;
-                Pango.Rectangle logical;
-                layout.GetExtents(out ink, out logical);
-                (sender as Label).Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                if (sender is Label label && label.Parent is VBox vbox)
+                {
+                    vbox.Spacing = 0;
+                    Pango.Layout layout = label.Layout;
+                    Pango.Rectangle ink;
+                    Pango.Rectangle logical;
+                    layout.GetExtents(out ink, out logical);
+                    label.Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                }
             }
             catch (Exception err)
             {

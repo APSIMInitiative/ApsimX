@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gtk;
 using Models.Core;
+using UserInterface.Extensions;
 using UserInterface.Presenters;
 
 namespace Utility
@@ -117,7 +118,9 @@ namespace Utility
             data = new ListStore(typeof(string), typeof(string), typeof(string));
             tree.Model = data;
             tree.CanFocus = true;
+#if NETFRAMEWORK
             tree.RulesHint = true; // Allows for alternate-row colouring.
+#endif
             tree.CursorChanged += OnSelectionChanged;
             tree.KeyPressEvent += OnKeyPress;
 
@@ -191,7 +194,7 @@ namespace Utility
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             if (args.Event.Key == Gdk.Key.Escape)
-                window.Destroy();
+                window.Cleanup();
         }
 
         /// <summary>

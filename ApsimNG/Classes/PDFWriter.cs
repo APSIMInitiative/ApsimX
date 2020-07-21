@@ -19,6 +19,7 @@
     using UserInterface.Presenters;
     using UserInterface.Views;
     using UserInterface.Interfaces;
+    using UserInterface.Extensions;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.
@@ -40,11 +41,11 @@
             this.portrait = portraitOrientation;
             markDown.ExtraMode = true;
 
-            /// This is a bit tricky on non-Windows platforms. 
-            /// Normally PdfSharp tries to get a Windows DC for associated font information
-            /// See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
-            /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
-            /// The work-around is to register our own fontresolver. We don't need to do this on Windows.
+            // This is a bit tricky on non-Windows platforms. 
+            // Normally PdfSharp tries to get a Windows DC for associated font information
+            // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
+            // See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
+            // The work-around is to register our own fontresolver. We don't need to do this on Windows.
             if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
                 Environment.OSVersion.Platform != PlatformID.Win32Windows &&
                 GlobalFontSettings.FontResolver == null)
@@ -137,7 +138,7 @@
         }
 
         /// <summary>Scans for citations.</summary>
-        /// <param name="t">The tags to go through looking for citations.</param>
+        /// <param name="tags">The tags to go through looking for citations.</param>
         private void ScanForCitations(List<AutoDocumentation.ITag> tags)
         {
             foreach (AutoDocumentation.ITag tag in tags)
@@ -269,8 +270,6 @@
         /// Remove the gap in heading levels for a 'branch' of tags.
         /// </summary>
         /// <param name="tags"></param>
-        /// <param name="thisTag"></param>
-        /// <param name="nextTag"></param>
         private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
         {
             int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
@@ -289,7 +288,6 @@
         }
 
         /// <summary>Creates a table of contents.</summary>
-        /// <param name="writer">The writer to write to.</param>
         /// <param name="tags">The autodoc tags.</param>
         private void NumberHeadings(List<AutoDocumentation.ITag> tags)
         {
@@ -400,7 +398,7 @@
                     if (caption != null)
                         section.AddParagraph(caption);
                     graphPresenter.Detach();
-                    graphView.MainWidget.Destroy();
+                    graphView.MainWidget.Cleanup();
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
@@ -472,8 +470,8 @@
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
                             presenter.Detach();
-                            view.MainWidget.Destroy();
-                            popupWin.Destroy();
+                            view.MainWidget.Cleanup();
+                            popupWin.Cleanup();
                         }
                     }
                 }
@@ -501,7 +499,7 @@
         }
 
         /// <summary>Creates the graph.</summary>
-        /// <param name="writer">The writer.</param>
+        /// <param name="section">The section.</param>
         /// <param name="graphAndTable">The graph and table to convert to html.</param>
         private void CreateGraphPDF(Section section, AutoDocumentation.GraphAndTable graphAndTable)
         {
@@ -561,7 +559,7 @@
                 gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
             }
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
-            graph.MainWidget.Destroy();
+            graph.MainWidget.Cleanup();
             image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
             MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(pngFileName);
             sectionImage.LockAspectRatio = true;

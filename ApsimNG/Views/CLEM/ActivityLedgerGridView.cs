@@ -289,7 +289,7 @@ namespace UserInterface.Views
             // Now set up the grid columns
             for (int i = 0; i < nCols; i++)
             {
-                /// Design plan: include renderers for text, toggles and combos, but hide all but one of them
+                // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
@@ -564,9 +564,9 @@ namespace UserInterface.Views
                 }
                 else if (value < RowCount) // Remove existing rows. But let's check first to be sure they're empty
                 {
-                    /// TBI
+                    // TBI
                 }
-                /// TBI this.Grid.RowCount = value;
+                // TBI this.Grid.RowCount = value;
             }
         }
 
@@ -713,11 +713,11 @@ namespace UserInterface.Views
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
                 {
-                    splitter.Position = Math.Min(Fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(Fixedcolview.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
                 }
                 else
                 {
-                    splitter.Position = Fixedcolview.SizeRequest().Width + splitterWidth;
+                    splitter.Position = Fixedcolview.WidthRequest + splitterWidth;
                 }
 
             }

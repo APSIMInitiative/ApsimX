@@ -7,6 +7,7 @@
     using Intellisense;
     using System.Linq;
     using Interfaces;
+    using Extensions;
 
     class IntellisenseView : ViewBase
     {
@@ -296,6 +297,9 @@
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
+            //
+            // fixme - need to rewrite this using GdkMonitor.
+            // This must have always been broken on multi-monitor setups(?).
             int xres = MainWindow.Screen.Width;
             int yres = MainWindow.Screen.Height;
 
@@ -380,9 +384,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Destroy();
-            completionView.Dispose();
-            completionForm.Destroy();
+                completionForm.Cleanup();
+            completionView.Cleanup();
+            completionForm.Cleanup();
             completionForm = null;
         }
 
@@ -422,8 +426,8 @@
         /// (Mouse) button press event handler. If it is a left mouse double click, consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {

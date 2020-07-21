@@ -58,9 +58,6 @@ namespace UserInterface.Extensions
         }
 
         // Functions provided for backwards-compatibility with shared gtk2 code.
-#if NETCOREAPP
-        [Obsolete("Use widget.StyleContext.GetColor()")]
-#endif
         public static Gdk.Color GetForegroundColour(this Widget widget, StateType state)
         {
 #if NETFRAMEWORK
@@ -72,7 +69,7 @@ namespace UserInterface.Extensions
 
         // Functions provided for backwards-compatibility with shared gtk2 code.
 #if NETCOREAPP
-        [Obsolete("Use widget.StyleContext.GetColor()")]
+        [Obsolete("Use gtk_render_background() instead")]
 #endif
         public static Gdk.Color GetBackgroundColour(this Widget widget, StateType state)
         {
@@ -137,6 +134,47 @@ namespace UserInterface.Extensions
                 return iter;
 
             return TextIter.Zero;
+#endif
+        }
+
+        /// <summary>
+        /// Set an adjustment's value.
+        /// </summary>
+        /// <param name="adjustment">The adjustment to be adjusted.</param>
+        /// <param name="value">The new value.</param>
+        public static void SetValue(this Adjustment adjustment, double value)
+        {
+            if (value > 0 && value < adjustment.Upper)
+            {
+                adjustment.Value = value;
+#if NETFRAMEWORK
+                adjustment.ChangeValue();
+#endif
+            }
+        }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Set the font name of a font chooser dialog.
+        /// </summary>
+        /// <param name="fontChooser"></param>
+        /// <param name="fontName"></param>
+        public static void SetFontName(this FontChooserDialog fontChooser, string fontName)
+        {
+            fontChooser.Font = fontName;
+        }
+#endif
+
+        /// <summary>
+        /// Returns a widget's Gdk.Window.
+        /// </summary>
+        /// <param name="widget">A widget.</param>
+        public static Gdk.Window GetGdkWindow(this Widget widget)
+        {
+#if NETFRAMEWORK
+            return widget.GdkWindow;
+#else
+            return widget.Window;
 #endif
         }
     }

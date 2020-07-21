@@ -5,6 +5,7 @@ using Gtk;
 using Utility;
 using UserInterface.Interfaces;
 using System.IO;
+using UserInterface.Extensions;
 
 namespace ApsimNG.Cloud.Azure
 {
@@ -248,7 +249,7 @@ namespace ApsimNG.Cloud.Azure
             try
             {
                 Finished?.Invoke(this, e);
-                Destroy();
+                this.Cleanup();
             }
             catch// (Exception err) // fixme
             {

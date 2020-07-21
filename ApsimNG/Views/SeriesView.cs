@@ -3,6 +3,7 @@
     using Interfaces;
     using Gtk;
     using System;
+    using Extensions;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
@@ -113,25 +114,25 @@
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
-                dataSourceDropDown.MainWidget.Destroy();
-                xDropDown.MainWidget.Destroy();
-                yDropDown.MainWidget.Destroy();
-                x2DropDown.MainWidget.Destroy();
-                y2DropDown.MainWidget.Destroy();
-                seriesDropDown.MainWidget.Destroy();
-                lineTypeDropDown.MainWidget.Destroy();
-                markerTypeDropDown.MainWidget.Destroy();
-                colourDropDown.MainWidget.Destroy();
-                lineThicknessDropDown.MainWidget.Destroy();
-                markerSizeDropDown.MainWidget.Destroy();
-                checkBoxView1.MainWidget.Destroy();
-                checkBoxView2.MainWidget.Destroy();
-                checkBoxView3.MainWidget.Destroy();
-                checkBoxView4.MainWidget.Destroy();
-                checkBoxView5.MainWidget.Destroy();
-                checkBoxView6.MainWidget.Destroy();
-                graphView1.MainWidget.Destroy();
-                editView1.MainWidget.Destroy();
+                dataSourceDropDown.MainWidget.Cleanup();
+                xDropDown.MainWidget.Cleanup();
+                yDropDown.MainWidget.Cleanup();
+                x2DropDown.MainWidget.Cleanup();
+                y2DropDown.MainWidget.Cleanup();
+                seriesDropDown.MainWidget.Cleanup();
+                lineTypeDropDown.MainWidget.Cleanup();
+                markerTypeDropDown.MainWidget.Cleanup();
+                colourDropDown.MainWidget.Cleanup();
+                lineThicknessDropDown.MainWidget.Cleanup();
+                markerSizeDropDown.MainWidget.Cleanup();
+                checkBoxView1.MainWidget.Cleanup();
+                checkBoxView2.MainWidget.Cleanup();
+                checkBoxView3.MainWidget.Cleanup();
+                checkBoxView4.MainWidget.Cleanup();
+                checkBoxView5.MainWidget.Cleanup();
+                checkBoxView6.MainWidget.Cleanup();
+                graphView1.MainWidget.Cleanup();
+                editView1.MainWidget.Cleanup();
                 owner = null;
             }
             catch (Exception err)

@@ -242,7 +242,7 @@ namespace UserInterface.Views
         /// </summary>
         public void Destroy()
         {
-            mainWidget.Destroy();
+            mainWidget.Cleanup();
         }
 
         /// <summary>

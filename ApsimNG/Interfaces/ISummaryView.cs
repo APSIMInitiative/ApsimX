@@ -16,7 +16,7 @@ namespace UserInterface.Views
         /// <summary>Warning messages checkbox</summary>
         CheckBoxView WarningCheckBox { get; }
 
-        /// <summary>Warning messages checkboxsummary>
+        /// <summary>Warning messages checkbox</summary>
         CheckBoxView ErrorCheckBox { get; }
 
         /// <summary>Drop down box which displays the simulation names.</summary>

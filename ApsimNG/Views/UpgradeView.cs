@@ -122,11 +122,9 @@
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
-#if NETFRAMEWORK
             // tbi - gtk3 htmlview or text renderer
             htmlView = new HTMLView(new ViewBase(null));
             htmlAlign.Add((htmlView as HTMLView).MainWidget);
-#endif
             tabbedExplorerView = owner as IMainView;
 
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
@@ -152,13 +150,13 @@
         {
             try
             {
-                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GdkWindow.Cursor = null;
+                window1.GetGdkWindow().Cursor = null;
                 if (loadFailure)
-                    window1.Destroy();
+                    window1.Cleanup();
             }
             catch (Exception err)
             {
@@ -330,7 +328,7 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
@@ -373,11 +371,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Destroy();
+                                waitDlg.Cleanup();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GdkWindow != null)
-                                window1.GdkWindow.Cursor = null;
+                            if (window1 != null && window1.GetGdkWindow() != null)
+                                window1.GetGdkWindow().Cursor = null;
                         }
 
                     }
@@ -437,7 +435,7 @@
             {
                 if (waitDlg != null)
                 {
-                    waitDlg.Destroy();
+                    waitDlg.Cleanup();
                     waitDlg = null;
                 }
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
@@ -484,16 +482,16 @@
                             }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
-                            window1.GdkWindow.Cursor = null;
+                            window1.GetGdkWindow().Cursor = null;
 
                             // Shutdown the user interface
-                            window1.Destroy();
+                            window1.Cleanup();
                             tabbedExplorerView.Close();
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GdkWindow.Cursor = null;
+                        window1.GetGdkWindow().Cursor = null;
                         Application.Invoke(delegate
                         {
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);

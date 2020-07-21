@@ -170,6 +170,11 @@
             }
         }
 
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
@@ -178,11 +183,6 @@
                                             }
                     )
         ]
-        /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>        
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
         public void RunOnCloud(object sender, EventArgs e)
         {
             try

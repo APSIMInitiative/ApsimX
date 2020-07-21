@@ -11,6 +11,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
+    using Extensions;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -112,7 +113,7 @@ namespace UserInterface.Presenters
             this.HideRightHandView();
             if (this.treeview is Views.PropertyTreeView)
             {
-                (this.treeview as Views.PropertyTreeView).MainWidget.Destroy();
+                (this.treeview as Views.PropertyTreeView).MainWidget.Cleanup();
             }
         }
 

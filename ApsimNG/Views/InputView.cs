@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -64,7 +65,7 @@ namespace UserInterface.Views
             try
             {
                 button1.Clicked -= OnBrowseButtonClick;
-                grid.MainWidget.Destroy();
+                grid.MainWidget.Cleanup();
                 grid = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

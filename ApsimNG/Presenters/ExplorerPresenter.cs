@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Commands;
+    using Extensions;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -175,7 +176,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Destroy();
+                (this.view as Views.ExplorerView).MainWidget.Cleanup();
             }
 
             this.ContextMenu = null;

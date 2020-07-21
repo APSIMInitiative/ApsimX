@@ -6,6 +6,7 @@
     using System.Drawing;
     using System.Collections.Generic;
     using Intellisense;
+    using Extensions;
 
     /// <summary>
     /// View for a small intellisense window which displays the 
@@ -304,7 +305,7 @@
 
         public void Destroy()
         {
-            mainWindow.Destroy();
+            mainWindow.Cleanup();
         }
     }
 }

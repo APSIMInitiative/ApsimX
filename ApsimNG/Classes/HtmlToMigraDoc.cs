@@ -10,6 +10,9 @@
     using System.Net;
     using System.Reflection;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class HtmlToMigraDoc
     {
         private static bool foundCode = false;
