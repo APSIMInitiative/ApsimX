@@ -19,6 +19,7 @@
 #if NETCOREAPP
     using TreeModel = Gtk.ITreeModel;
     using CellLayout = Gtk.ICellLayout;
+    using StateType = Gtk.StateFlags;
 #endif
 
     /// <summary>
@@ -494,6 +495,7 @@
         /// <param name="iter">The tree iterator.</param>
         /// <remarks>
         /// In netcore builds, TreeModel is an alias for ITreeModel (see using statement at top of file).
+        /// Need to rework how colours are handled once we drop gtk2 support.
         /// </remarks>
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
@@ -513,13 +515,9 @@
                     textRenderer.Editable = true;
                     if (IsSeparator(rowNo))
                     {
-#if NETFRAMEWORK
                         // tbi - gtk3 equivalent
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
-#else
-                        Color separatorColour = Color.LightSteelBlue;
-#endif
+                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Normal);
+                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Active)) : Color.LightSteelBlue;
 
                         cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                         textRenderer.Editable = false;
@@ -531,19 +529,14 @@
                     }
                     else
                     {
-#if NETFRAMEWORK
                         // tbi - gtk3 equivalent
-                        cell.CellBackgroundGdk = Grid.Style.Base(cellState);
-                        textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
-#endif
+                        cell.CellBackgroundGdk = Grid.GetForegroundColour(cellState);
+                        textRenderer.ForegroundGdk = Grid.GetForegroundColour(cellState);
                     }
 
                     if (IsRowReadonly(rowNo))
                     {
-#if NETFRAMEWORK
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
-
-#endif
+                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Insensitive);
                         textRenderer.Editable = false;
                     }
 
@@ -803,7 +796,7 @@
                 return Grid.Style.Base(StateType.Normal);
 #else
                 // fixme
-                return Grid.StyleContext.GetBackgroundColor(StateFlags.Normal).ToGdkColor();
+                return Grid.GetBackgroundColour(StateType.Normal);
 #endif
         }
 
@@ -1766,13 +1759,8 @@
                 if (!colAttributes.TryGetValue(i, out _))
                 {
                     ColRenderAttributes attrib = new ColRenderAttributes();
-#if NETFRAMEWORK
-                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-#else
-                    attrib.ForegroundColor = Grid.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
-                    attrib.BackgroundColor = Grid.StyleContext.GetBackgroundColor(StateFlags.Normal).ToGdkColor();
-#endif
+                    attrib.ForegroundColor = Grid.GetForegroundColour(StateType.Normal);
+                    attrib.BackgroundColor = Grid.GetBackgroundColour(StateType.Normal);
                     colAttributes.Add(i, attrib);
                 }
             }

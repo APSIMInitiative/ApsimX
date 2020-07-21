@@ -50,7 +50,11 @@ namespace UserInterface.Views
                     if (numGraphs % numCols > 0)
                         numRows++;
 
+#if NETFRAMEWORK
                     Table panel = new Table((uint)numRows, (uint)numCols, true);
+#else
+                    Grid panel = new Grid();
+#endif
                     for (int n = 0; n < numGraphs; n++)
                     {
                         GraphPresenter presenter = new GraphPresenter();
@@ -64,9 +68,13 @@ namespace UserInterface.Views
                         tab.Graphs[n].Presenter = presenter;
                         tab.Graphs[n].View = view;
 
+#if NETFRAMEWORK
                         uint i = (uint)(n / numCols);
                         uint j = (uint)(n % numCols);
-
+#else
+                        int i = n / numCols;
+                        int j = n % numCols;
+#endif
                         panel.Attach(view.MainWidget, j, j + 1, i, i + 1);
                     }
 

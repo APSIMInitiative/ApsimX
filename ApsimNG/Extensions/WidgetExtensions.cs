@@ -68,9 +68,9 @@ namespace UserInterface.Extensions
         }
 
         // Functions provided for backwards-compatibility with shared gtk2 code.
-#if NETCOREAPP
-        [Obsolete("Use gtk_render_background() instead")]
-#endif
+//#if NETCOREAPP
+//        [Obsolete("Use gtk_render_background() instead")]
+//#endif
         public static Gdk.Color GetBackgroundColour(this Widget widget, StateType state)
         {
 #if NETFRAMEWORK
@@ -193,6 +193,11 @@ namespace UserInterface.Extensions
         /// <param name="xPadding"></param>
         /// <param name="yPadding"></param>
         public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom, AttachOptions xOptions, AttachOptions yOptions, int xPadding, int yPadding)
+        {
+            grid.Attach(child, left, top, right - left, bottom - top);
+        }
+
+        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom)
         {
             grid.Attach(child, left, top, right - left, bottom - top);
         }
