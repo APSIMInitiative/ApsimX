@@ -52,7 +52,11 @@ namespace UserInterface.Views
             alignTblAzure.LeftPadding = alignTblAzure.RightPadding = alignTblAzure.TopPadding = alignTblAzure.BottomPadding = 5;
 
             // Azure table - contains all fields in the azure job frame.
+#if NETFRAMEWORK
             Table tblAzure = new Table(4, 2, false);
+#else
+            Grid tblAzure = new Grid();
+#endif
             tblAzure.RowSpacing = 5;
 
             // Job Name
@@ -117,7 +121,11 @@ namespace UserInterface.Views
 
             // Apsim Version Selection frame/table.
             Frame frmVersion = new Frame("APSIM Next Generation Version Selection");
+#if NETFRAMEWORK
             Table tblVersion = new Table(2, 3, false);
+#else
+            Grid tblVersion = new Grid();
+#endif
             tblVersion.ColumnSpacing = 5;
             tblVersion.RowSpacing = 10;
 
@@ -168,7 +176,11 @@ namespace UserInterface.Views
             // Alignment object to ensure a 10px border around the inside of the results frame.
             Alignment alignFrameResults = new Alignment(0f, 0f, 1f, 1f);
             alignFrameResults.LeftPadding = alignFrameResults.RightPadding = alignFrameResults.TopPadding = alignFrameResults.BottomPadding = 10;
+#if NETFRAMEWORK
             Table tblResults = new Table(4, 3, false);
+#else
+            Grid tblResults = new Grid();
+#endif
             tblResults.ColumnSpacing = 5;
             tblResults.RowSpacing = 5;
 

@@ -177,5 +177,25 @@ namespace UserInterface.Extensions
             return widget.Window;
 #endif
         }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Mimics the GtkTable.Attach() method for gtk2 compat
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="child"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="xOptions"></param>
+        /// <param name="yOptions"></param>
+        /// <param name="xPadding"></param>
+        /// <param name="yPadding"></param>
+        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom, AttachOptions xOptions, AttachOptions yOptions, int xPadding, int yPadding)
+        {
+            grid.Attach(child, left, top, right - left, bottom - top);
+        }
+#endif
     }
 }

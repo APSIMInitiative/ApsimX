@@ -8,7 +8,11 @@
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
     {
+#if NETFRAMEWORK
         private Table table1 = null;
+#else
+        private Grid table1;
+#endif
         private VBox vbox1 = null;
         private Label label4 = null;
         private Label label5 = null;
@@ -39,7 +43,15 @@
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
+#if NETFRAMEWORK
             table1 = (Table)builder.GetObject("table1");
+#else
+            Widget table = (Widget)builder.GetObject("table1");
+            vbox1.Remove(table);
+            table1 = new Grid();
+            vbox1.PackStart(table1, true, true, 0);
+            vbox1.ReorderChild(table1, 0);
+#endif
             label4 = (Label)builder.GetObject("label4");
             label5 = (Label)builder.GetObject("label5");
             mainWidget = vbox1;
@@ -74,6 +86,14 @@
 
             editView1 = new EditView(this);
 
+            Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
+            helpBox = new EventBox();
+            helpBox.Add(helpImage);
+            helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
+            HBox filterBox = new HBox();
+            filterBox.PackStart(editView1.MainWidget, true, true, 0);
+            filterBox.PackEnd(helpBox, false, true, 0);
+
             table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(xDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(yDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
@@ -83,14 +103,6 @@
             table1.Attach(lineTypeDropDown.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(markerTypeDropDown.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(colourDropDown.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
-
-            Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
-            helpBox = new EventBox();
-            helpBox.Add(helpImage);
-            helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
-            HBox filterBox = new HBox();
-            filterBox.PackStart(editView1.MainWidget, true, true, 0);
-            filterBox.PackEnd(helpBox, false, true, 0);
 
             //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(filterBox, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
@@ -224,6 +236,9 @@
             }
         }
 
+        /// <summary>
+        /// Called when the user has finished editing the filter.
+        /// </summary>
         public void EndEdit()
         {
             editView1.EndEdit();

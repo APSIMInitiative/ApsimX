@@ -184,7 +184,11 @@ namespace UserInterface.Views
             btnChangeDownloadDir = new Button("Change Download Directory");
             btnChangeDownloadDir.Clicked += OnChangeDownloadPath;
 
+#if NETFRAMEWORK
             Table tblButtonContainer = new Table(1, 1, false);
+#else
+            Grid tblButtonContainer = new Grid();
+#endif
             tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
 
             btnDownload = new Button("Download");
