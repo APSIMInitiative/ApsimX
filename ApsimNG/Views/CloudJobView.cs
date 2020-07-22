@@ -317,39 +317,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Should results be extracted?
-        /// </summary>
-        public bool ExtractResults
-        {
-            get
-            {
-                return dl.ExtractResults;
-            }
-        }
-
-        /// <summary>
-        /// Should results be exported to .csv format?
-        /// </summary>
-        public bool ExportCsv
-        {
-            get
-            {
-                return dl.ExportCsv;
-            }
-        }
-
-        /// <summary>
-        /// Should debug files be downloaded?
-        /// </summary>
-        public bool DownloadDebugFiles
-        {
-            get
-            {
-                return dl.DownloadDebugFiles;
-            }
-        }
-
-        /// <summary>
         /// Makes the download progress bar invisible.
         /// </summary>
         public void HideDownloadProgressBar()
