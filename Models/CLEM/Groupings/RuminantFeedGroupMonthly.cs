@@ -55,20 +55,6 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            switch ((this.Parent as RuminantActivityFeed).FeedStyle)
-            {
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    if(MonthlyValues.Max() > 1)
-                    {
-                        string[] memberNames = new string[] { "Monthly values" };
-                        results.Add(new ValidationResult("Invalid monthly value provided [v"+ MonthlyValues.Max().ToString() + "] for ["+this.Name+"] Feed Group for ["+this.Parent.Name+"] given the style of feeding selected requires a proportion.", memberNames));
-                    }
-                    break;
-                default:
-                    break;
-            }
             if(MonthlyValues.Count() > 0)
             {
                 if(MonthlyValues.Max() == 0)
@@ -162,6 +148,10 @@ namespace Models.CLEM.Groupings
             }
             html += "</span> is fed each month to the individuals that match the following conditions:";
 
+            html += "</div>";
+
+            html += "\n<div class=\"activityentry\">";
+            html += "Individual's intake will automatically be limited to 1.2 x potential intake, with excess food still utilised";
             html += "</div>";
 
             return html;

@@ -293,10 +293,11 @@
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
-                if (currentYearIndex >= Years.Length)
-                    throw new Exception("Have run out of years to sample in WeatherRandomiser");
-                var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
-                currentRowIndex = FindRowForDate(dateToFind);
+                if (currentYearIndex < Years.Length)
+                {
+                    var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
+                    currentRowIndex = FindRowForDate(dateToFind);
+                }
             }
 
             MaxT = Convert.ToDouble(data.Rows[currentRowIndex]["MaxT"]);

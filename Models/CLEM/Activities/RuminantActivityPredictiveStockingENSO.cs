@@ -306,7 +306,7 @@ namespace Models.CLEM.Activities
             // remove steers
             if (this.SellSteers)
             {
-                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
+                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire == false).ToList();
                 int cnt = 0;
                 while (cnt < steers.Count() && aEforSale > 0)
                 {
@@ -399,8 +399,8 @@ namespace Models.CLEM.Activities
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        BreedingSire = false,
-                        Draught = false,
+                        IsSire = false,
+                        IsDraught = false,
                         Location = paddockName,
                     }
                     );
