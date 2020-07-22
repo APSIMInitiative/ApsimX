@@ -399,7 +399,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "C:\\Users\\holzworthdp\\Repos\\ApsimX\\Tests\\WeatherFiles\\Ruakura.met",
+              "FileName": "%root%\\Tests\\WeatherFiles\\Ruakura.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
