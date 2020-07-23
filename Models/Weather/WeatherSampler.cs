@@ -181,6 +181,13 @@
         [JsonIgnore]
         public double Amp { get; set; }
 
+        /// <summary>
+        /// This event will be invoked immediately before models get their weather data.
+        /// models and scripts an opportunity to change the weather data before other models
+        /// reads it.
+        /// </summary>
+        public event EventHandler PreparingNewWeatherData;
+
         /// <summary>Duration of the day in hours.</summary>
         /// <param name="Twilight">The twilight angle.</param>
         public double CalculateDayLength(double Twilight)
@@ -312,6 +319,8 @@
                 this.AirPressure = 1010;
 
             currentRowIndex++;
+
+            PreparingNewWeatherData?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
