@@ -1031,6 +1031,8 @@ namespace APSIM.Shared.Utilities
                 return "real";
             else if (type.ToString() == "System.Double")
                 return "real";
+            else if (type.ToString() == "System.Boolean")
+                return "integer";
             else
                 return "text";
         }
