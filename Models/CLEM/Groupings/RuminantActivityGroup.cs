@@ -1,29 +1,29 @@
 ﻿using Models.CLEM.Activities;
-using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individuals able to undertake labour
+    /// Defines a group of individual ruminants for whcih all activities below the implimentation consider
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(LabourRequirement))]
-    [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
-    [ValidParent(ParentType = typeof(LabourFilterGroup))]
-    [ValidParent(ParentType = typeof(TransmutationCostLabour))]
-    [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
+    [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourFilterGroup.htm")]
-    public class LabourFilterGroup: CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
+    public class RuminantActivityGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -44,7 +44,8 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
+            string html = "<div class=\"filtername\">";
+            html += "This filter is applied to this activity and all activities within this branch</div>";
             return html;
         }
 
@@ -84,14 +85,10 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.Parent.GetType() == typeof(LabourFilterGroup))
+            html += "\n<div class=\"filterborder filteractivityborder clearfix\">";
+            if (Apsim.Children(this, typeof(RuminantFilter)).Count() < 1)
             {
-                html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            }
-            html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
-            {
-                html += "<div class=\"filter\">Any labour</div>";
+                html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
         }

@@ -289,6 +289,8 @@ namespace Models.CLEM.Activities
 
             foreach (string breed in breeds)
             {
+                int unfed = 0;
+                int unfedcalves = 0;
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
@@ -296,6 +298,12 @@ namespace Models.CLEM.Activities
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
+                        // check that they had some food
+                        if(ind.Intake == 0)
+                        {
+                            unfed++;
+                        }
+
                         // calculate protein concentration
 
                         // Calculate diet dry matter digestibilty from the %N of the current diet intake.
@@ -340,6 +348,11 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
+                        if (ind.Intake == 0)
+                        {
+                            unfedcalves++;
+                        }
+
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
                         ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
@@ -357,6 +370,18 @@ namespace Models.CLEM.Activities
                     // grow wool and cashmere
                     ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
                     ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
+                }
+
+                // alert user to unfed animals in the month as this should not happen
+                if (unfed > 0)
+                {
+                    string warn = $"{unfed} individual{((unfed>1)?"s":"")} of [r={breed}] {((unfed == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
+                    Summary.WriteWarning(this, warn);
+                }
+                if (unfedcalves > 0)
+                {
+                    string warn = $"{unfedcalves} cal{((unfedcalves == 1) ? "ves" : "f")} of [r={breed}] {((unfedcalves == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check calves have food or access to pasture when no milk is available from mother";
+                    Summary.WriteWarning(this, warn);
                 }
 
                 if (methaneEmissions != null)
