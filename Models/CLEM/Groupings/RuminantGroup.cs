@@ -45,6 +45,14 @@ namespace Models.CLEM.Groupings
         public double Proportion { get; set; }
 
         /// <summary>
+        /// Constructor to apply defaults
+        /// </summary>
+        public RuminantGroup()
+        {
+            this.SetDefaults();
+        }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
