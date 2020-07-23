@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("First month of annual pasture yield")]
         [System.ComponentModel.DefaultValue(typeof(MonthsOfYear), "January")]
-        [Required]
+        [Required, Month]
         public MonthsOfYear AnnualYieldStartMonth { get; set; }
 
         /// <summary>
