@@ -66,7 +66,6 @@ namespace UserInterface.Presenters
             this.view.CancelSubmission += CancelJobSubmission;
             
             this.model = model as IModel;
-            this.view.JobName = this.model.Name;
         }
 
         public void Detach()
@@ -80,14 +79,11 @@ namespace UserInterface.Presenters
             JobParameters job = new JobParameters
             {
                 ID = Guid.NewGuid(),
-                DisplayName = view.JobName,
+                DisplayName = model.Name,
                 Model = model,
                 ApsimXPath = view.ApsimXPath,
-                SendEmail = view.SendEmail,
-                EmailRecipient = view.EmailRecipient,
                 CpuCount = view.CpuCount,
-                SaveModelFiles = view.SaveModelFiles,
-                ModelPath = view.ModelPath,
+                ModelPath = Path.GetTempPath() + Guid.NewGuid(),
                 CoresPerProcess = 1,
                 ApsimXVersion = Path.GetFileName(view.ApsimXPath).Substring(Path.GetFileName(view.ApsimXPath).IndexOf('-') + 1),
                 JobManagerShouldSubmitTasks = true,
