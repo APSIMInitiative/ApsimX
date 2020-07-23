@@ -1,29 +1,34 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Resources;
-using Models.Core;
-using Models.Core.Attributes;
+﻿using Models.Core;
+using Models.CLEM.Activities;
+using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core.Attributes;
 using System.Xml.Serialization;
+using Models.CLEM.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individuals able to undertake labour
+    /// Contains a group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(LabourRequirement))]
-    [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
-    [ValidParent(ParentType = typeof(LabourFilterGroup))]
-    [ValidParent(ParentType = typeof(TransmutationCostLabour))]
-    [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
-    [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourFilterGroup.htm")]
-    public class LabourFilterGroup: CLEMModel, IFilterGroup
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
+    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
+    [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
+    [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
+    public class RuminantGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -34,7 +39,9 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Description("Proportion of group to use")]
+        [Required, GreaterThanValue(0), Proportion]
         public double Proportion { get; set; }
 
         /// <summary>
@@ -44,7 +51,12 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
+            string html = "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
             return html;
         }
 
@@ -84,14 +96,24 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.Parent.GetType() == typeof(LabourFilterGroup))
-            {
-                html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            }
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+
+            if (Proportion < 1)
             {
-                html += "<div class=\"filter\">Any labour</div>";
+                html += "<div class=\"filter\">";
+                if (Proportion <= 0)
+                {
+                    html += "<span class=\"errorlink\">[NOT SET%]</span>";
+                }
+                else
+                {
+                    html += $"{Proportion.ToString("P0")} of";
+                }
+                html += "</div>";
+            }
+            if (Apsim.Children(this, typeof(RuminantFilter)).Count() < 1)
+            {
+                html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
         }

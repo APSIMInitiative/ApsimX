@@ -45,5 +45,10 @@ namespace Models.CLEM.Groupings
         [XmlIgnore]
         public object CombinedRules { get; set; } = null;
 
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
     }
 }
