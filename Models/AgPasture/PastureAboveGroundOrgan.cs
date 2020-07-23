@@ -356,10 +356,10 @@
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
         public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
-            EmergingTissue.ResetTo(emergingWt, emergingWt * NConcOptimum);
-            DevelopingTissue.ResetTo(developingWt, developingWt * NConcOptimum);
-            MatureTissue.ResetTo(matureWt, matureWt * NConcOptimum);
-            DeadTissue.ResetTo(deadWt, deadWt * NConcMinimum);
+            EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
+            DevelopingTissue.Reset(developingWt, developingWt * NConcOptimum);
+            MatureTissue.Reset(matureWt, matureWt * NConcOptimum);
+            DeadTissue.Reset(deadWt, deadWt * NConcMinimum);
         }
 
         /// <summary>
@@ -371,10 +371,10 @@
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
         public void ResetEmergence(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
-            EmergingTissue.ResetTo(emergingWt, emergingWt * NConcOptimum);
-            DevelopingTissue.ResetTo(developingWt, developingWt * NConcOptimum);
-            MatureTissue.ResetTo(matureWt, matureWt * NConcOptimum);
-            DeadTissue.ResetTo(deadWt, deadWt * NConcOptimum);
+            EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
+            DevelopingTissue.Reset(developingWt, developingWt * NConcOptimum);
+            MatureTissue.Reset(matureWt, matureWt * NConcOptimum);
+            DeadTissue.Reset(deadWt, deadWt * NConcOptimum);
         }
 
         /// <summary>
@@ -402,24 +402,21 @@
         public void DoResetOrgan()
         {
             for (int t = 0; t < Tissue.Length; t++)
-            {
-                Tissue[t].Reset();
-                DoCleanTransferAmounts();
-            }
+                Tissue[t].Reset(0, 0);
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         public void DoCleanTransferAmounts()
         {
             for (int t = 0; t < Tissue.Length; t++)
-            {
-                Tissue[t].DMTransferedIn = 0.0;
-                Tissue[t].DMTransferedOut = 0.0;
-                Tissue[t].NTransferedIn = 0.0;
-                Tissue[t].NTransferedOut = 0.0;
-                Tissue[t].NRemobilisable = 0.0;
-                Tissue[t].NRemobilised = 0.0;
-            }
+                Tissue[t].ClearDailyDeltas();
+        }
+
+        /// <summary>Preparation before the main daily processes.</summary>
+        public void OnDoDailyInitialisation()
+        {
+            foreach (var tissue in Tissue)
+                tissue.OnDoDailyInitialisation();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
@@ -440,7 +437,7 @@
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
                     DeadTissue.AddBiomass(Tissue[t].DM.Wt, Tissue[t].DM.N);
-                    Tissue[t].Reset();
+                    Tissue[t].Reset(0, 0);
                 }
             }
         }
@@ -493,7 +490,7 @@
 
             // update all tissues
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].DoUpdateTissue();
+                Tissue[t].Update();
 
             // check mass balance
             bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0);

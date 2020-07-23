@@ -3708,9 +3708,9 @@
             // Update N remobilised in each organ
             if (senescedNRemobilised > Epsilon)
             {
-                leaf.Tissue[leaf.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                stem.Tissue[stem.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                stolon.Tissue[stolon.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                leaf.DeadTissue.NRemobilised = leaf.DeadTissue.NRemobilisable * fracRemobilised;
+                stem.DeadTissue.NRemobilised = stem.DeadTissue.NRemobilisable * fracRemobilised;
+                stolon.DeadTissue.NRemobilised = stolon.DeadTissue.NRemobilisable * fracRemobilised;
                 roots[0].Tissue[roots[0].Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    root.Tissue[root.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
@@ -3738,9 +3738,9 @@
                         // remove the luxury N
                         for (int tissue = 0; tissue < 3; tissue++)
                         {
-                            leaf.Tissue[tissue].DoRemobiliseN(1.0);
-                            stem.Tissue[tissue].DoRemobiliseN(1.0);
-                            stolon.Tissue[tissue].DoRemobiliseN(1.0);
+                            leaf.Tissue[tissue].NRemobilised = leaf.Tissue[tissue].NRemobilisable;
+                            stem.Tissue[tissue].NRemobilised = stem.Tissue[tissue].NRemobilisable;
+                            stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable;
                             if (tissue == 0)
                             {
                                 roots[0].Tissue[tissue].DoRemobiliseN(1.0);
@@ -3769,9 +3769,9 @@
                         }
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
-                        leaf.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        stem.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        stolon.Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                        leaf.Tissue[tissue].NRemobilised = leaf.Tissue[tissue].NRemobilisable * fracRemobilised;
+                        stem.Tissue[tissue].NRemobilised = stem.Tissue[tissue].NRemobilisable * fracRemobilised;
+                        stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable * fracRemobilised;
                         if (tissue == 0)
                         {
                             roots[0].Tissue[tissue].DoRemobiliseN(fracRemobilised);
