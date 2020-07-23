@@ -145,7 +145,7 @@
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
-                if (Descriptors.Count > 0)
+                if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
 
