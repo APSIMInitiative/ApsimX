@@ -202,5 +202,25 @@ namespace UserInterface.Extensions
             grid.Attach(child, left, top, right - left, bottom - top);
         }
 #endif
+
+        public static MenuItem CreateImageMenuItem(string text, Image image)
+        {
+#if NETFRAMEWORK
+            ImageMenuItem imageItem = new ImageMenuItem(text);
+            imageItem.Image = image;
+#else
+                    // GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
+                    // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
+                    // with a GtkImage and a GtkLabel instead.
+                    HBox container = new HBox();
+                    Label label = new Label(text);
+                    MenuItem imageItem = new MenuItem();
+
+                    container.Add(image);
+                    container.Add(label);
+                    imageItem.Add(container);
+#endif
+            return imageItem;
+        }
     }
 }

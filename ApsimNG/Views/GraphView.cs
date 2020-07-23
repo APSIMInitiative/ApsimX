@@ -1213,7 +1213,7 @@
         /// <param name="onClick">Event handler for menu item click</param>
         public void AddContextAction(string menuText, System.EventHandler onClick)
         {
-            ImageMenuItem item = new ImageMenuItem(menuText);
+            MenuItem item = new MenuItem(menuText);
             item.Activated += onClick;
             popup.Append(item);
             popup.ShowAll();

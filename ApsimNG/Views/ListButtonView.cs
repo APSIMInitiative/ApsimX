@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using Classes;
+    using global::UserInterface.Extensions;
     using Gtk;
 
     /// <summary>An interface for a list with a button bar</summary>
@@ -266,9 +267,7 @@
             if (toplevel.Menu as Menu == null)
                 toplevel.Menu = new Menu();
             Menu menu = toplevel.Menu as Menu;
-
-            ImageMenuItem menuItem = new ImageMenuItem(text);
-            menuItem.Image = image;
+            MenuItem menuItem = WidgetExtensions.CreateImageMenuItem(text, image);
             menuItem.Activated += handler;
             menu.Append(menuItem);
             menuItem.ShowAll();

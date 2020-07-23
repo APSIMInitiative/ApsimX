@@ -49,8 +49,7 @@
                     ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
                     if (info != null)
                     {
-                        ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                        imageItem.Image = new Gtk.Image(null, description.ResourceNameForImage);
+                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(description.Name, new Gtk.Image(null, description.ResourceNameForImage));
                         item = imageItem;
                     }
                     else

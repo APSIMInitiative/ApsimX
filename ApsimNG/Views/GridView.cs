@@ -2093,7 +2093,7 @@
         /// <param name="shortcut">The shortcut keys.</param>
         private void AddContextActionWithAccel(string menuItemText, EventHandler onClick, string shortcut)
         {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
+            MenuItem item = new MenuItem(menuItemText);
             if (!string.IsNullOrEmpty(shortcut))
             {
                 string keyName = string.Empty;
