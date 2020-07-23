@@ -43,7 +43,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
-        private List<RuminantFilterGroup> herdFilters { get; set; }
+        private List<RuminantGroup> herdFilters { get; set; }
 
         /// <summary>
         /// Report item generated and ready for reporting 
@@ -57,7 +57,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
-        public List<RuminantFilterGroup> HerdFilters { get; set; }
+        public List<RuminantGroup> HerdFilters { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -66,11 +66,11 @@ namespace Models.CLEM
         private void OnCommencing(object sender, EventArgs e)
         {
             // determine any herd filtering
-            herdFilters = new List<RuminantFilterGroup>();
+            herdFilters = new List<RuminantGroup>();
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantFilterGroup>().Cast<RuminantFilterGroup>();
+                var filtergroup = current.Children.OfType<RuminantGroup>().Cast<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
                     Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
@@ -129,7 +129,7 @@ namespace Models.CLEM
         {
             timestep++;
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
-            foreach (RuminantFilterGroup filter in herdFilters)
+            foreach (RuminantGroup filter in herdFilters)
             {
                 herd = herd.Filter(filter).ToList();
             }

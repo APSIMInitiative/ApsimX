@@ -8,6 +8,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
@@ -17,16 +18,17 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [ValidParent(ParentType = typeof(CLEMActivityBase))]
-    [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
-    [Version(1, 0, 1, "")]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
+    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
+    [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantFilterGroup : CLEMModel, IFilterGroup
+    public class RuminantGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -35,13 +37,34 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Description("Proportion of group to use")]
+        [Required, GreaterThanValue(0), Proportion]
+        public double Proportion { get; set; }
+
+        /// <summary>
+        /// Constructor to apply defaults
+        /// </summary>
+        public RuminantGroup()
+        {
+            this.SetDefaults();
+        }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
+            string html = "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
             return html;
         }
 
@@ -82,7 +105,21 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+
+            if (Proportion < 1)
+            {
+                html += "<div class=\"filter\">";
+                if (Proportion <= 0)
+                {
+                    html += "<span class=\"errorlink\">[NOT SET%]</span>";
+                }
+                else
+                {
+                    html += $"{Proportion.ToString("P0")} of";
+                }
+                html += "</div>";
+            }
+            if (Apsim.Children(this, typeof(RuminantFilter)).Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

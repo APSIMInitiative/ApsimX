@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum number of breeders that can be kept
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Herd size", "Breeding females")]
         [Description("Maximum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MaximumBreedersKept { get; set; } 
@@ -42,16 +42,16 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum number of breeders that can be kept
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Herd size", "Breeding females")]
         [Description("Minimum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MinimumBreedersKept { get; set; }
 
         /// <summary>
-        /// Maximum breeder age (months) for culling
+        /// Maximum breeder age (months) for removal
         /// </summary>
-        [Category("General", "Breeding females")]
-        [Description("Maximum female breeder age (months) for culling")]
+        [Category("Destock", "Breeding females")]
+        [Description("Maximum female breeder age (months) for removal")]
         [Required, GreaterThanEqualValue(0)]
         [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumBreederAge { get; set; }
@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Proportion of min breeders in single purchase
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Restock", "Breeding females")]
         [Description("Proportion of min female breeders in single purchase")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion, GreaterThanEqualValue(0)]
@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The number of 12 month age classes to spread breeder purchases across
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Restock", "Breeding females")]
         [Description("Number of age classes to distribute female breeder purchases across")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Range(1, 4)]
@@ -77,14 +77,14 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Fill breeding males up to required amount at startup
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Start up", "Breeding females")]
         [Description("Adjust breeding females at start-up")]
         public bool AdjustBreedingFemalesAtStartup { get; set; }
 
         /// <summary>
         /// Maximum number of breeding sires kept
         /// </summary>
-        [Category("General", "Breeding males")]
+        [Category("Herd size", "Breeding males")]
         [Description("Maximum number of male breeders kept")]
         [Required, GreaterThanEqualValue(0)]
         public double MaximumSiresKept { get; set; }
@@ -96,10 +96,10 @@ namespace Models.CLEM.Activities
         public int SiresKept { get; set; }
 
         /// <summary>
-        /// Maximum sire age (months) for culling
+        /// Maximum sire age (months) for removal
         /// </summary>
-        [Category("General", "Breeding males")]
-        [Description("Maximum sire age (months) for culling")]
+        [Category("Destock", "Breeding males")]
+        [Description("Maximum sire age (months) for removal")]
         [Required, GreaterThanEqualValue(0)]
         [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumSireAge { get; set; }
@@ -107,7 +107,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Sire age (months) at purchase
         /// </summary>
-        [Category("General", "Breeding males")]
+        [Category("Restock", "Breeding males")]
         [Description("Sire age (months) at purchase")]
         [System.ComponentModel.DefaultValueAttribute(48)]
         [Required, GreaterThanValue(0)]
@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Allow natural herd replacement of sires
         /// </summary>
-        [Category("General", "Breeding males")]
+        [Category("Restock", "Breeding males")]
         [Description("Allow male breeder replacement from herd")]
         [Required]
         public bool AllowSireReplacement { get; set; }
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum number of sires in a single purchase
         /// </summary>
-        [Category("General", "Breeding males")]
+        [Category("Restock", "Breeding males")]
         [Description("Maximum number of male breeders in a single purchase")]
         [Required, GreaterThanEqualValue(0)]
         public int MaximumSiresPerPurchase { get; set; }
@@ -132,14 +132,14 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Fill breeding males up to required amount at startup
         /// </summary>
-        [Category("General", "Breeding males")]
+        [Category("Start up", "Breeding males")]
         [Description("Adjust breeding sires to number kept at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
 
         /// <summary>
         /// Male selling age (months)
         /// </summary>
-        [Category("General", "Males")]
+        [Category("Destock", "Males")]
         [Description("Male selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Male selling weight (kg)
         /// </summary>
-        [Category("General", "Males")]
+        [Category("Destock", "Males")]
         [Description("Male selling weight (kg)")]
         [Required]
         public double MaleSellingWeight { get; set; }
@@ -156,7 +156,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchased sires in for grazing
         /// </summary>
-        [Category("General", "Pasture details")]
+        [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased sires in")]
         [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreNameSires { get; set; }
@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchased breeders in for grazing
         /// </summary>
-        [Category("General", "Pasture details")]
+        [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased breeders in")]
         [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreNameBreeders { get; set; }
@@ -175,7 +175,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum pasture (kg/ha) before restocking if placed in paddock
         /// </summary>
-        [Category("General", "Pasture details")]
+        [Category("Restock", "Pasture")]
         [Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
         [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
         public double MinimumPastureBeforeRestock { get; set; }
@@ -183,7 +183,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform selling of young females the same as males
         /// </summary>
-        [Category("General", "Breeding females")]
+        [Category("Destock", "Breeding females")]
         [Description("Perform selling of young females the same as males")]
         [Required]
         public bool SellFemalesLikeMales { get; set; }
@@ -191,7 +191,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Identify males for sale every time step
         /// </summary>
-        [Category("General", "Males")]
+        [Category("Destock", "Males")]
         [Description("Identify males for sale every time step")]
         [Required]
         public bool ContinuousMaleSales { get; set; }
@@ -628,7 +628,7 @@ namespace Models.CLEM.Activities
                     // this allows the user to sell old females over young breeders and heifers if required. 
                     // must be female (check that males not included in validation)
                     // remove individuals to sale as specified by destock groups
-                    foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
+                    foreach (RuminantGroup item in Apsim.Children(this, typeof(RuminantGroup)))
                     {
                         // works with current filtered herd to obey filtering.
                         List<Ruminant> herdToSell = herd.Filter(item);
@@ -948,6 +948,13 @@ namespace Models.CLEM.Activities
                 }
             }
             html += "</div>";
+
+            if (Apsim.Children(this, typeof(RuminantGroup)).Count() > 0)
+            {
+                html += "\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">";
+                html += "<div class=\"labournote\">Any Ruminant Filter Group below will determine which breeders (and in which order) will be sold prior to selling heifers in order to reduce the breeder herd size. Note: You are responsible for ensuring these filter groups can be applied to a list of breeders.</div>";
+                html += "</div>";
+            }
             return html;
         }
 
@@ -958,10 +965,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(RuminantDestockGroup)).Count() > 0)
-            {
-                html += "\n</div>";
-            }
+            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
+            //{
+            //    html += "\n</div>";
+            //}
             return html;
         }
 
@@ -972,11 +979,11 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(RuminantDestockGroup)).Count() > 0)
-            {
-                html += "\n<div class=\"activitygroupsborder\">";
-                html += "<div class=\"labournote\">The following breeders will be sold prior to heifers</div>";
-            }
+            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
+            //{
+            //    html += "\n<div class=\"activitygroupsborder\">";
+            //    html += "<div class=\"labournote\">The following breeders will be sold prior to heifers</div>";
+            //}
             return html;
         }
 
