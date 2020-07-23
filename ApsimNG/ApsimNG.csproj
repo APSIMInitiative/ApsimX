@@ -470,6 +470,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TableExpression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SolutePatch.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NutrientPatchManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipRunningValue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStoreFertilityLimiter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HourlyInterpolation.png" />
