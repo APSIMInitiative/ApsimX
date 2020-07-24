@@ -8,6 +8,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,10 +22,10 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityMuster))]
-    [Description("This ruminant filter group specifies individuals from the ruminant herd for destocking/mustering using any number of Ruminant Filters. Multiple instances will select groups of individuals required.")]
+    [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
-    public class RuminantDestockGroup : CLEMModel, IFilterGroup
+    public class RuminantDestockGroup : CLEMModel, IFilterGroup, IValidatableObject
     {
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -33,11 +34,30 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        protected RuminantDestockGroup()
+        public RuminantDestockGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            string[] memberNames = new string[] { "Ruminant destock filter group" };
+            results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantFilterGroup]", memberNames));
+            return results;
         }
 
         /// <summary>
@@ -47,7 +67,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
+            string html = "NO LONGER SUPPORTED! Please change to [f=RuminantFilterGroup]";
             return html;
         }
 
@@ -73,7 +93,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            if (Apsim.Children(this, typeof(RuminantFilter)).Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

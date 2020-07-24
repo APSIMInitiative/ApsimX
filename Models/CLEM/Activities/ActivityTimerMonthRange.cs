@@ -31,6 +31,9 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
+        private int startMonth;
+        private int endMonth;
+
         /// <summary>
         /// Notify CLEM that this Timer was performed
         /// </summary>
@@ -39,17 +42,18 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Start month of annual period to perform activities
         /// </summary>
-        [Description("Start month of annual period to perform activity (1-12)")]
+        [Description("Start month of annual period to perform activity")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Month]
-        public int StartMonth { get; set; }
+        public MonthsOfYear StartMonth { get; set; }
+
         /// <summary>
         /// End month of annual period to perform activities
         /// </summary>
-        [Description("End month of annual period to perform activity (1-12)")]
+        [Description("End month of annual period to perform activity")]
         [Required, Month]
         [System.ComponentModel.DefaultValueAttribute(12)]
-        public int EndMonth { get; set; }
+        public MonthsOfYear EndMonth { get; set; }
 
         /// <summary>
         /// Constructor
@@ -80,19 +84,30 @@ namespace Models.CLEM.Activities
             return IsMonthInRange(dateToCheck);
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            startMonth = (int)StartMonth;
+            endMonth = (int)EndMonth;
+        }
+
+
         private bool IsMonthInRange(DateTime date)
         {
             bool due = false;
-            if (StartMonth <= EndMonth)
+            if (startMonth <= endMonth)
             {
-                if ((date.Month >= StartMonth) & (date.Month <= EndMonth))
+                if ((date.Month >= startMonth) & (date.Month <= endMonth))
                 {
                     due = true;
                 }
             }
             else
             {
-                if ((date.Month <= EndMonth) | (date.Month >= StartMonth))
+                if ((date.Month <= endMonth) | (date.Month >= startMonth))
                 {
                     due = true;
                 }
@@ -126,7 +141,7 @@ namespace Models.CLEM.Activities
             else
             {
                 html += "<span class=\"setvalueextra\">";
-                html += new DateTime(2000, StartMonth, 1).ToString("MMMM") + "</span>";
+                html += StartMonth.ToString() + "</span>";
             }
             html += " and <span class=\"setvalueextra\">";
             if (EndMonth == 0)
@@ -136,7 +151,7 @@ namespace Models.CLEM.Activities
             else
             {
                 html += "<span class=\"setvalueextra\">";
-                html += new DateTime(2000, EndMonth, 1).ToString("MMMM") + "</span>";
+                html += EndMonth.ToString() + "</span>";
             }
             html += "</div>";
             if (!this.Enabled)
@@ -162,6 +177,12 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string html = "";
+            html += "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
         }

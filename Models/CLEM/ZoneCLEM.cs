@@ -62,7 +62,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [XmlIgnore]
+        [XmlIgnore, GreaterThanValue(0)]
         public int EcologicalIndicatorsCalculationInterval { get; set; }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Models.CLEM
         [System.ComponentModel.DefaultValueAttribute(7)]
         [Description("End of month to calculate ecological indicators")]
         [Required, Month]
-        public int EcologicalIndicatorsCalculationMonth { get; set; }
+        public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
 
         /// <summary>
         /// Month this overhead is next due.
@@ -183,10 +183,10 @@ namespace Models.CLEM
 
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
-                if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+                if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
                 {
                     // go back from start month in intervals until
-                    DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
                     {
                         trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
@@ -195,7 +195,7 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
                     {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);

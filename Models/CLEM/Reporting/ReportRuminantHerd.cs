@@ -77,10 +77,10 @@ namespace Models.CLEM.Reporting
         {
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
-            if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
+            if (this.Children.Where(a => a.GetType() == typeof(RuminantGroup)).Count() > 0)
             {
                 // get all filter groups below.
-                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
                 {
                     foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
                     {
