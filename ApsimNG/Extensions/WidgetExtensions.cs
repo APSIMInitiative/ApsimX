@@ -68,9 +68,9 @@ namespace UserInterface.Extensions
         }
 
         // Functions provided for backwards-compatibility with shared gtk2 code.
-#if NETCOREAPP
-        [Obsolete("Use gtk_render_background() instead")]
-#endif
+//#if NETCOREAPP
+//        [Obsolete("Use gtk_render_background() instead")]
+//#endif
         public static Gdk.Color GetBackgroundColour(this Widget widget, StateType state)
         {
 #if NETFRAMEWORK
@@ -176,6 +176,51 @@ namespace UserInterface.Extensions
 #else
             return widget.Window;
 #endif
+        }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Mimics the GtkTable.Attach() method for gtk2 compat
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="child"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="xOptions"></param>
+        /// <param name="yOptions"></param>
+        /// <param name="xPadding"></param>
+        /// <param name="yPadding"></param>
+        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom, AttachOptions xOptions, AttachOptions yOptions, int xPadding, int yPadding)
+        {
+            grid.Attach(child, left, top, right - left, bottom - top);
+        }
+
+        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom)
+        {
+            grid.Attach(child, left, top, right - left, bottom - top);
+        }
+#endif
+
+        public static MenuItem CreateImageMenuItem(string text, Image image)
+        {
+#if NETFRAMEWORK
+            ImageMenuItem imageItem = new ImageMenuItem(text);
+            imageItem.Image = image;
+#else
+                    // GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
+                    // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
+                    // with a GtkImage and a GtkLabel instead.
+                    HBox container = new HBox();
+                    Label label = new Label(text);
+                    MenuItem imageItem = new MenuItem();
+
+                    container.Add(image);
+                    container.Add(label);
+                    imageItem.Add(container);
+#endif
+            return imageItem;
         }
     }
 }

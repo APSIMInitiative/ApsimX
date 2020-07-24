@@ -413,12 +413,7 @@ namespace UserInterface.Views
                 }
                 else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                    // fixme: GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
-                    // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
-                    // with a GtkImage and a GtkLabel instead.
-                    imageItem.Image = new Image(null, description.ResourceNameForImage);
-                    item = imageItem;
+                    item = WidgetExtensions.CreateImageMenuItem(description.Name, new Image(null, description.ResourceNameForImage));
                 }
                 else
                 {

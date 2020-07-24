@@ -31,7 +31,9 @@ namespace UserInterface.Views
         /// <summary>
         /// This won't be used in this view...
         /// </summary>
+#pragma warning disable CS0067
         public event EventHandler<CopyEventArgs> Copy;
+#pragma warning restore CS0067
 
         /// <summary>
         /// TBI
