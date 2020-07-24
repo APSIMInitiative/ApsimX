@@ -11,7 +11,7 @@ namespace Models
     [Serializable]
     public class Script : Model, IFunction
     {
-        [Link] Clock Clock;
+        //[Link] Clock Clock = null;
 
         /// <summary>Gets the value of the function.</summary>
         public double Value(int arrayIndex = -1)

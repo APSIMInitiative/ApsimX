@@ -69,7 +69,11 @@ namespace UserInterface.Views
             helpBtn.Clicked += HelpBtn_Clicked;
             mainWidget = vbox1;
             // fixme - add css class for memo text?
+#if NETFRAMEWORK
             TextView.ModifyFont(Pango.FontDescription.FromString("monospace"));
+#else
+            TextView.Monospace = true;
+#endif
             TextView.FocusOutEvent += RichTextBox1_Leave;
             TextView.Buffer.Changed += RichTextBox1_TextChanged;
             TextView.PopulatePopup += TextView_PopulatePopup;

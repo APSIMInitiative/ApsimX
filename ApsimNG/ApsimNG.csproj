@@ -14,7 +14,7 @@
     <WarningsAsErrors />
     <NoWarn />
 	<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -45,7 +45,7 @@
     <ProjectReference Include="..\Models\Models.csproj" />
 	
 	<!-- Shared package references -->
-    <PackageReference Include="ClosedXML" Version="0.95.0-beta2" />
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
     <PackageReference Include="Microsoft.Azure.Batch" Version="13.0.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.3" />
     <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.1.3" />
@@ -139,7 +139,7 @@
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
+    <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
+    <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
   </Target>
 </Project>
