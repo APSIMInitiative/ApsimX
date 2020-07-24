@@ -327,39 +327,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Should results be extracted?
-        /// </summary>
-        public bool ExtractResults
-        {
-            get
-            {
-                return dl.ExtractResults;
-            }
-        }
-
-        /// <summary>
-        /// Should results be exported to .csv format?
-        /// </summary>
-        public bool ExportCsv
-        {
-            get
-            {
-                return dl.ExportCsv;
-            }
-        }
-
-        /// <summary>
-        /// Should debug files be downloaded?
-        /// </summary>
-        public bool DownloadDebugFiles
-        {
-            get
-            {
-                return dl.DownloadDebugFiles;
-            }
-        }
-
-        /// <summary>
         /// Makes the download progress bar invisible.
         /// </summary>
         public void HideDownloadProgressBar()
@@ -411,12 +378,15 @@ namespace UserInterface.Views
                 store.Clear();
                 foreach (JobDetails job in jobs)
                 {
-                    string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
-                    string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
-                    string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
-                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
-                    store.AppendValues(job.DisplayName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr, job.Owner);
+                    if (job != null)
+                    {
+                        string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
+                        string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
+                        string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
+                        string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
+                        string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
+                        store.AppendValues(job.DisplayName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr, job.Owner);
+                    }
                 }
             });
         }

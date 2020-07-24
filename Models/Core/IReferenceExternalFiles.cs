@@ -7,5 +7,8 @@
     {
         /// <summary>Return paths to all files referenced by this model.</summary>
         IEnumerable<string> GetReferencedFileNames();
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        void RemovePathsFromReferencedFileNames();
     }
 }

@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ind.Weaner)
+                if (ind.IsWeaner)
                 {
                     // Reference: SCA Metabolic LWTs
                     // restored in v112 of NABSA for weaner animals
@@ -212,8 +212,7 @@ namespace Models.CLEM.Activities
                         femaleind.MilkProduction = 0;
                         femaleind.MilkProductionPotential = 0;
                         femaleind.MilkCurrentlyAvailable = 0;
-                        femaleind.MilkMilkedThisTimeStep = 0;
-                        femaleind.MilkSuckledThisTimeStep = 0;
+                        femaleind.MilkMilkedThisTimeStep = 0;                        femaleind.MilkSuckledThisTimeStep = 0;
                         femaleind.MilkProducedThisTimeStep = 0;
                     }
                 }
@@ -244,7 +243,7 @@ namespace Models.CLEM.Activities
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.MilkingPerformed)
+            if (ind.SucklingOffspringList.Count() == 0)
             {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             }
@@ -290,6 +289,8 @@ namespace Models.CLEM.Activities
 
             foreach (string breed in breeds)
             {
+                int unfed = 0;
+                int unfedcalves = 0;
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
@@ -297,6 +298,12 @@ namespace Models.CLEM.Activities
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
+                        // check that they had some food
+                        if(ind.Intake == 0)
+                        {
+                            unfed++;
+                        }
+
                         // calculate protein concentration
 
                         // Calculate diet dry matter digestibilty from the %N of the current diet intake.
@@ -341,6 +348,11 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
+                        if (ind.Intake == 0)
+                        {
+                            unfedcalves++;
+                        }
+
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
                         ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
@@ -358,6 +370,18 @@ namespace Models.CLEM.Activities
                     // grow wool and cashmere
                     ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
                     ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
+                }
+
+                // alert user to unfed animals in the month as this should not happen
+                if (unfed > 0)
+                {
+                    string warn = $"{unfed} individual{((unfed>1)?"s":"")} of [r={breed}] {((unfed == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
+                    Summary.WriteWarning(this, warn);
+                }
+                if (unfedcalves > 0)
+                {
+                    string warn = $"{unfedcalves} cal{((unfedcalves == 1) ? "ves" : "f")} of [r={breed}] {((unfedcalves == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check calves have food or access to pasture when no milk is available from mother";
+                    Summary.WriteWarning(this, warn);
                 }
 
                 if (methaneEmissions != null)
@@ -396,13 +420,14 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            double intakeDaily = ind.MetabolicIntake / 30.4;
+            // previously ind.MetabolicIntake / 30.4 - sure this was mistake
+            double intakeDaily = ind.Intake / 30.4;
 
             // Sme 1 for females and castrates
-            // TODO: castrates not implemented
+            // TODO: castrates available but not implemented
             double sme = 1;
-            // Sme 1.15 for all males.
-            if (ind.Gender == Sex.Male)
+            // Sme 1.15 for all non-castrated males.
+            if (ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
             {
                 sme = 1.15;
             }

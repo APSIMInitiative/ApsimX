@@ -17,31 +17,6 @@ namespace UserInterface.Views
     class CloudDownloadView : ViewBase
     {
         /// <summary>
-        /// Whether 'debug' (.stdout) files should be downloaded.
-        /// </summary>
-        private CheckButton includeDebugFiles;
-
-        /// <summary>
-        /// Wether results should be unzipped.
-        /// </summary>
-        private CheckButton extractResults;
-
-        /// <summary>
-        /// Whether results should be saved after being combined into a .csv file.
-        /// </summary>
-        private CheckButton keepRawOutputs;
-
-        /// <summary>
-        /// Whether the results should be combined into a .csv file.
-        /// </summary>
-        private CheckButton generateCsv;
-
-        /// <summary>
-        /// Whether results should be downloaded.
-        /// </summary>
-        private CheckButton chkDownloadResults;
-
-        /// <summary>
         /// Button to initiate the download.
         /// </summary>
         private Button btnDownload;
@@ -77,38 +52,6 @@ namespace UserInterface.Views
             vboxPrimary = new VBox();
             HBox outputPathContainer = new HBox();
 
-            // Checkbox initialisation
-            includeDebugFiles = new CheckButton("Include Debugging Files");
-
-            chkDownloadResults = new CheckButton("Download results")
-            {
-                Active = true,
-                TooltipText = "Results will be downloaded if and only if this option is enabled."
-            };
-            chkDownloadResults.Toggled += OnToggleDownloadResults;
-
-            extractResults = new CheckButton("Unzip results")
-            {
-                Active = true,
-                TooltipText = "Check this option to automatically unzip the results."
-            };
-            extractResults.Toggled += OnToggleExtractResults;
-
-            generateCsv = new CheckButton("Collate Results")
-            {
-                Active = true,
-                TooltipText = "Check this option to automatically combine results into a CSV file."
-            };
-            generateCsv.Toggled += OnToggleGenerateCsv;
-
-            keepRawOutputs = new CheckButton("Keep raw output files")
-            {
-                Active = true,
-                TooltipText = "By default, the raw output files are deleted after being combined into a CSV. Check this option to keep the raw outputs."
-            };
-
-            extractResults.Active = false;
-
             // Button initialisation
             btnDownload = new Button("Download");
             btnDownload.Clicked += OnDownload;
@@ -118,19 +61,11 @@ namespace UserInterface.Views
 
             entryOutputDir = new Entry();
             entryOutputDir.Sensitive = false;
-            entryOutputDir.WidthChars = entryOutputDir.Text.Length;
+            entryOutputDir.WidthChars = 50;
 
             outputPathContainer.PackStart(new Label("Output Directory: "), false, false, 0);
             outputPathContainer.PackStart(entryOutputDir, true, true, 0);
             outputPathContainer.PackStart(btnChangeOutputDir, false, false, 0);
-
-            // Put all form controls into the primary vbox
-            vboxPrimary.PackStart(includeDebugFiles, true, true, 0);
-            vboxPrimary.PackStart(chkDownloadResults, true, true, 0);
-            vboxPrimary.PackStart(extractResults, true, true, 0);
-            vboxPrimary.PackStart(generateCsv, true, true, 0);
-            vboxPrimary.PackStart(keepRawOutputs, true, true, 0);
-            vboxPrimary.PackStart(outputPathContainer, true, true, 0);
 
             // This empty label will put a gap between the controls above it and below it.
             vboxPrimary.PackStart(new Label(""), true, true, 0);
@@ -163,39 +98,6 @@ namespace UserInterface.Views
             set
             {
                 entryOutputDir.Text = value;
-            }
-        }
-
-        /// <summary>
-        /// Should results be extracted?
-        /// </summary>
-        public bool ExtractResults
-        {
-            get
-            {
-                return extractResults.Active;
-            }
-        }
-
-        /// <summary>
-        /// Should results be exported to .csv format?
-        /// </summary>
-        public bool ExportCsv
-        {
-            get
-            {
-                return generateCsv.Active;
-            }
-        }
-
-        /// <summary>
-        /// Should debug files be downloaded?
-        /// </summary>
-        public bool DownloadDebugFiles
-        {
-            get
-            {
-                return includeDebugFiles.Active;
             }
         }
 
@@ -272,63 +174,6 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-        
-        /// <summary>
-        /// Event handler for toggling the generate CSV checkbox.
-        /// Disables the keep raw outputs checkbox.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnToggleGenerateCsv(object sender, EventArgs e)
-        {
-            try
-            {
-                keepRawOutputs.Active = false;
-                keepRawOutputs.Sensitive = generateCsv.Active;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for toggling the unzip results checkbox.
-        /// Disables the generate csv checkbox.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnToggleExtractResults(object sender, EventArgs e)
-        {
-            try
-            {
-                generateCsv.Active = false;
-                generateCsv.Sensitive = extractResults.Active;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for toggling the download results checkbox.
-        /// Disables the unzip results checkbox.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnToggleDownloadResults(object sender, EventArgs e)
-        {
-            try
-            {
-                extractResults.Active = false;
-                extractResults.Sensitive = chkDownloadResults.Active;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
         /// <summary>
         /// Invoked when the window is closed for good, when apsim
@@ -342,10 +187,6 @@ namespace UserInterface.Views
             {
                 btnDownload.Clicked -= OnDownload;
                 btnChangeOutputDir.Clicked -= OnChangeOutputDir;
-
-                chkDownloadResults.Toggled -= OnToggleDownloadResults;
-                extractResults.Toggled -= OnToggleExtractResults;
-                generateCsv.Toggled -= OnToggleGenerateCsv;
             }
             catch (Exception err)
             {

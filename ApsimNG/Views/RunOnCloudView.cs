@@ -13,7 +13,6 @@ namespace UserInterface.Views
     /// </summary>
     public class RunOnCloudView : ViewBase
     {
-        private Entry entryName;
         private RadioButton radioApsimDir;
         private RadioButton radioApsimZip;
         private Entry entryApsimDir;
@@ -21,15 +20,7 @@ namespace UserInterface.Views
         private Button btnApsimDir;
         private Button btnApsimZip;
         private Button BtnOK;
-        private Entry entryOutputDir;
         private ComboBox comboCoreCount;
-        private CheckButton chkEmail;
-        private Entry entryEmail;
-        private CheckButton chkDownload;
-        private CheckButton chkSummarise;
-        private CheckButton chkSaveModels;
-        private Entry entryModelPath;
-        private Button btnModelPath;
         private Label lblStatus;
 
         /// <summary>
@@ -46,7 +37,7 @@ namespace UserInterface.Views
             primaryContainer.LeftPadding = primaryContainer.RightPadding = primaryContainer.TopPadding = primaryContainer.BottomPadding = 5;
 
             // Azure Job Frame.
-            Frame frmAzure = new Frame("Azure Job");
+            Frame frmAzure = new Frame();
 
             Alignment alignTblAzure = new Alignment(0.5f, 0.5f, 1f, 1f);
             alignTblAzure.LeftPadding = alignTblAzure.RightPadding = alignTblAzure.TopPadding = alignTblAzure.BottomPadding = 5;
@@ -58,16 +49,6 @@ namespace UserInterface.Views
             Grid tblAzure = new Grid();
 #endif
             tblAzure.RowSpacing = 5;
-
-            // Job Name
-            Label lblName = new Label("Job Description/Name:");
-            lblName.Xalign = 0;
-            lblName.Yalign = 0.5f;
-
-            entryName = new Entry();
-
-            tblAzure.Attach(lblName, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblAzure.Attach(entryName, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 20, 0);
 
             // Number of cores
             Label lblCores = new Label("Number of CPU cores to use:");
@@ -103,22 +84,6 @@ namespace UserInterface.Views
             tblModel.ColumnSpacing = 5;
             tblModel.RowSpacing = 10;
 
-            chkSaveModels = new CheckButton("Save model files");
-            chkSaveModels.Toggled += OnToggleSaveModelFiles;
-            entryModelPath = new Entry();
-            btnModelPath = new Button("...");
-            btnModelPath.Clicked += OnChooseModelPath;
-            
-            chkSaveModels.Active = true;
-            chkSaveModels.Active = false;
-            
-            HBox hboxModelpath = new HBox();
-            hboxModelpath.PackStart(entryModelPath, true, true, 0);
-            hboxModelpath.PackStart(btnModelPath, false, false, 5);
-            
-            tblAzure.Attach(chkSaveModels, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblAzure.Attach(hboxModelpath, 1, 2, 2, 3, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
-
             // Apsim Version Selection frame/table.
             Frame frmVersion = new Frame("APSIM Next Generation Version Selection");
 #if NETFRAMEWORK
@@ -139,6 +104,7 @@ namespace UserInterface.Views
 
             // Populate this input field with the directory containing this executable.
             entryApsimDir = new Entry(Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString());
+            entryApsimDir.WidthChars = 50;
             btnApsimDir = new Button("...");
             btnApsimDir.Clicked += new EventHandler(OnChooseApsimDir);
             tblVersion.Attach(radioApsimDir, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
@@ -170,54 +136,6 @@ namespace UserInterface.Views
             alignTblAzure.Add(tblAzure);
             frmAzure.Add(alignTblAzure);
 
-            // Results frame
-            Frame frameResults = new Frame("Results");
-
-            // Alignment object to ensure a 10px border around the inside of the results frame.
-            Alignment alignFrameResults = new Alignment(0f, 0f, 1f, 1f);
-            alignFrameResults.LeftPadding = alignFrameResults.RightPadding = alignFrameResults.TopPadding = alignFrameResults.BottomPadding = 10;
-#if NETFRAMEWORK
-            Table tblResults = new Table(4, 3, false);
-#else
-            Grid tblResults = new Grid();
-#endif
-            tblResults.ColumnSpacing = 5;
-            tblResults.RowSpacing = 5;
-
-            // Auto send email
-            chkEmail = new CheckButton("Send email  upon completion to:");
-            entryEmail = new Entry();
-
-            tblResults.Attach(chkEmail, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblResults.Attach(entryEmail, 1, 2, 0, 1, (AttachOptions.Expand | AttachOptions.Fill), AttachOptions.Fill, 0, 0);
-
-            // Auto download results
-            chkDownload = new CheckButton("Automatically download results once complete");
-            chkSummarise = new CheckButton("Summarise Results");
-
-            tblResults.Attach(chkDownload, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblResults.Attach(chkSummarise, 1, 3, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
-
-            // Output directory options
-            Label lblOutputDir = new Label("Output Directory:");
-            lblOutputDir.Xalign = 0;
-
-            Button btnOutputDir = new Button("...");
-            btnOutputDir.Clicked += new EventHandler(OnChooseOutputDirectoryPath);
-            entryOutputDir = new Entry();
-            tblResults.Attach(lblOutputDir, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblResults.Attach(entryOutputDir, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            tblResults.Attach(btnOutputDir, 2, 3, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            Alignment alignNameTip = new Alignment(0f, 0f, 1f, 1f);
-            Label lblNameTip = new Label("(note: if you close Apsim before the job completes, the results will not be automatically downloaded)");
-            alignNameTip.Add(lblNameTip);
-
-            tblResults.Attach(alignNameTip, 0, 3, 3, 4, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            alignFrameResults.Add(tblResults);
-            frameResults.Add(alignFrameResults);
-
             // OK/Cancel buttons
             BtnOK = new Button("OK");
             BtnOK.Clicked += OnOKClicked;
@@ -235,7 +153,7 @@ namespace UserInterface.Views
             vboxPrimary.PackStart(frmAzure, false, true, 0);
 
             // Add results frame to primary vbox.
-            vboxPrimary.PackStart(frameResults, false, true, 0);
+            //vboxPrimary.PackStart(frameResults, false, true, 0);
             vboxPrimary.PackStart(alignButtons, false, true, 0);
             vboxPrimary.PackStart(lblStatus, false, true, 0);
 
@@ -255,21 +173,6 @@ namespace UserInterface.Views
         public event EventHandler CancelSubmission;
 
         /// <summary>
-        /// Job display name.
-        /// </summary>
-        public string JobName
-        {
-            get
-            {
-                return entryName.Text;
-            }
-            set
-            {
-                entryName.Text = value;
-            }
-        }
-
-        /// <summary>
         /// Path to ApsimX.
         /// </summary>
         public string ApsimXPath
@@ -281,28 +184,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Should an email be sent on job completion?
-        /// </summary>
-        public bool SendEmail
-        {
-            get
-            {
-                return chkEmail.Active;
-            }
-        }
-
-        /// <summary>
-        /// Email will be sent to this address on job completion.
-        /// </summary>
-        public string EmailRecipient
-        {
-            get
-            {
-                return entryEmail.Text;
-            }
-        }
-
-        /// <summary>
         /// Number of vCPUs to use when running the job.
         /// </summary>
         public int CpuCount
@@ -310,28 +191,6 @@ namespace UserInterface.Views
             get
             {
                 return int.Parse(comboCoreCount.GetActiveText());
-            }
-        }
-
-        /// <summary>
-        /// Path to which model files will be saved.
-        /// </summary>
-        public string ModelPath
-        {
-            get
-            {
-                return chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid();
-            }
-        }
-
-        /// <summary>
-        /// Model files will be deleted after being uploaded iff this is false.
-        /// </summary>
-        public bool SaveModelFiles
-        {
-            get
-            {
-                return chkSaveModels.Active;
             }
         }
 
@@ -460,43 +319,6 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-
-        private void OnChooseOutputDirectoryPath(object sender, EventArgs e)
-        {
-            try
-            {
-                entryOutputDir.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }        
-
-        private void OnToggleSaveModelFiles(object sender, EventArgs e)
-        {
-            try
-            {
-                entryModelPath.IsEditable = chkSaveModels.Active;
-                entryModelPath.Sensitive = chkSaveModels.Active;
-                btnModelPath.Sensitive = chkSaveModels.Active;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        private void OnChooseModelPath(object sender, EventArgs e)
-        {
-            try
-            {
-                entryModelPath.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
+       
     }
 }

@@ -126,7 +126,6 @@ namespace Models.Core
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
-        [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -209,8 +208,6 @@ namespace Models.Core
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken = null)
         {
-            IsRunning = true;
-
             // If the cancelToken is null then give it a default one. This can happen 
             // when called from the unit tests.
             if (cancelToken == null)
@@ -259,6 +256,8 @@ namespace Models.Core
 
                 // Resolve all links
                 links.Resolve(this, true);
+
+                IsRunning = true;
 
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());

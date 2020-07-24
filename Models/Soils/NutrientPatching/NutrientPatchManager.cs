@@ -35,7 +35,7 @@
         private double minimumPatchArea = 0.000001;
 
         /// <summary>The maximum amount of N that is made available to plants in one day (kg/ha/day).</summary>
-        public double MaximumNitrogenAvailableToPlants { get; set; }
+        public double MaximumNitrogenAvailableToPlants { get; set; } = 3;
 
         /// <summary>The approach used for partitioning the N between patches.</summary>
         public PartitionApproachEnum NPartitionApproach { get; set; } = PartitionApproachEnum.BasedOnConcentrationAndDelta;
@@ -143,6 +143,18 @@
 
         /// <summary>The number of patches.</summary>
         public int NumPatches {  get { return patches.Count; } }
+
+        /// <summary>The amount of NO3 in each patch (kg/ha).</summary>
+        public double[] NO3EachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()).ToArray(); } }
+
+        /// <summary>The amount of NH4 in each patch (kg/ha).</summary>
+        public double[] NH4EachPatch { get { return patches.Select(patch => patch.Nutrient.NH4.kgha.Sum()).ToArray(); } }
+
+        /// <summary>The amount of Urea in each patch (kg/ha).</summary>
+        public double[] UreaEachPatch { get { return patches.Select(patch => patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
+
+        /// <summary>The amount of mineral N in each patch (kg/ha).</summary>
+        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()+ patch.Nutrient.NH4.kgha.Sum()+ patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
         /// <summary>Calculate actual decomposition</summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()

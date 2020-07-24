@@ -172,5 +172,11 @@
         {
             return GetCompositeFactors().SelectMany(factor => factor.GetReferencedFileNames());
         }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
