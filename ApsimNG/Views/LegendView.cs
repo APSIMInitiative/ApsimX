@@ -252,7 +252,7 @@ namespace UserInterface.Views
 
         /// <summary>Called when user checks an item.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
             try

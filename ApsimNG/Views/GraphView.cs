@@ -385,7 +385,8 @@
         /// <param name="markerType">The type of series markers</param>
         /// <param name="lineThickness">The line thickness</param>
         /// <param name="markerSize">The size of the marker</param>
-        /// <param name="showInLegend">Show in legend?</param>
+        /// <param name="markerModifier">Multiplier on marker size.</param>
+        /// <param name="showOnLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -507,6 +508,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawBar(
             string title,
@@ -549,6 +551,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawRegion(
             string title,
@@ -612,6 +615,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawArea(
             string title,
@@ -641,6 +645,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawStackedArea(
             string title,
@@ -735,6 +740,10 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
+        /// <param name="lineType">Type of line to be used.</param>
+        /// <param name="markerType">Type of marker to be used.</param>
+        /// <param name="lineThickness">Line thickness.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawBoxPLot(
             string title,
@@ -1154,7 +1163,8 @@
         /// <summary>
         /// Show the specified editor.
         /// </summary>
-        /// <param name="editor">The editor to show</param>
+        /// <param name="editorObj">The editor to show</param>
+        /// <param name="expanderLabel">Text to be displayed in the editor.</param>
         public void ShowEditorPanel(object editorObj, string expanderLabel)
         {
             Widget editor = editorObj as Widget;
@@ -1179,6 +1189,7 @@
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
+        /// <param name="r">Desired image size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
         public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
         {
@@ -1224,6 +1235,7 @@
         /// </summary>
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
+        /// <param name="active">Should the context item be active?</param>
         public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
         {
             CheckMenuItem item = null;
@@ -1402,6 +1414,7 @@
         /// </summary>
         /// <param name="x">The x values</param>
         /// <param name="y">The y values</param>
+        /// <param name="xError">The error size values for the x-axis.</param>
         /// <param name="yError">The error size values</param>
         /// <param name="xAxisType">The x axis the data is associated with</param>
         /// <param name="yAxisType">The y axis the data is associated with</param>
@@ -1459,7 +1472,7 @@
         }
 
         /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="xEnum">The enumumerator</param>
+        /// <param name="enumerator">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Axis.AxisType axisType)
@@ -1831,7 +1844,7 @@
                 e.Handled = false;
 
                 inRightClick = e.ChangedButton == OxyMouseButton.Right;
-                if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
+                if (e.ChangedButton == OxyMouseButton.Left) // Left clicks only
                 {
                     if (e.ClickCount == 1 && SingleClick != null)
                         SingleClick.Invoke(this, e);

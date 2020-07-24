@@ -6,6 +6,9 @@
     using NUnit.Framework;
     using System.Data;
 
+    /// <summary>
+    /// Tests for <see cref="IndexedDataTable"/>.
+    /// </summary>
     [TestFixture]
     public class IndexedDataTableTests
     {

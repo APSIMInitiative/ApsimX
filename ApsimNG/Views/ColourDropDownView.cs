@@ -179,8 +179,10 @@
         /// <summary>
         /// Handles the DrawItem combo box event to display colours.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="cell_layout">The cell layout.</param>
+        /// <param name="cell">The cell.</param>
+        /// <param name="model">The tree model.</param>
+        /// <param name="iter">The TreeIter.</param>
         private void OnDrawColourCombo(CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             try

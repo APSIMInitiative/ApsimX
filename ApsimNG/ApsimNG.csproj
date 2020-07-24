@@ -12,7 +12,7 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
     <WarningsAsErrors />
-    <NoWarn />
+    <NoWarn>CS1591,CS1572</NoWarn>
 	<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>

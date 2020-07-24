@@ -308,7 +308,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A helper function for creating a node description object for the category hierarchy.
         /// </summary>
-        /// <param name="properties">List of properties </param>
+        /// <param name="categoryTree">List of properties </param>
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {

@@ -186,10 +186,7 @@
         /// <summary>
         /// Ask user for a filename to open on Windows.
         /// </summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="fileSpec">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save").</param>
-        /// <param name="InitialPath">Optional Initial starting filename or directory.</param>      
+        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
         private string[] WindowsFileDialog(bool selectMultiple)
         {
             System.Windows.Forms.FileDialog dialog = null;
@@ -227,10 +224,7 @@
         /// <summary>
         /// Ask user for a filename to open on Windows.
         /// </summary>
-        /// <param name="Prompt">String to use as dialog heading</param>
-        /// <param name="FileType">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save")</param>
-        /// <param name="InitialDirectory">Optional Initial starting filename or directory</param>      
+        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
         private string[] OSXFileDialog(bool selectMultiple)
         {
             int result = 0;
@@ -289,8 +283,7 @@
         }
 
         /// <summary>Ask user for a directory on Windows.</summary>
-        /// <param name="Prompt">String to use as dialog heading</param>        
-        /// <param name="initialPath">Optional Initial starting filename or directory</param>
+        /// <param name="selectMultiple">Allow the user to select multiple directories?</param>
         /// <returns>string containing the path to the chosen directory.</returns>
         /// <remarks>
         /// For reasons which are unclear to me, the Windows file chooser dialog cannot not be 

@@ -207,7 +207,7 @@
                             value = 0.0;
                         else if (!Double.TryParse(tb.Text, out value) || value < 0.0 || value > maxVal)
                         {
-                            /// e.Cancel = true;
+                            // e.Cancel = true;
                             cancel = true;
                             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
                                                String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));

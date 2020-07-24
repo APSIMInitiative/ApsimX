@@ -101,7 +101,7 @@
             }
         }
 
-        /// <summary>The description (nodes & arcs) of the directed graph.</summary>
+        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
         public DirectedGraph DirectedGraph
         {
             get

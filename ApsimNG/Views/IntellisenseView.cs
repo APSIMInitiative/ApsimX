@@ -483,7 +483,7 @@
         /// Key release event handler. If the key is enter, consumes the ItemSelected event.
         /// </summary>
         /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            

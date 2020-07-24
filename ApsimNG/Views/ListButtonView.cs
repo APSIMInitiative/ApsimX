@@ -253,7 +253,7 @@
         /// <summary>
         /// Adds a menu item button to a menu button.
         /// </summary>
-        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="parentButtonText">Text on the parent button.</param>
         /// <param name="text">Text on the button.</param>
         /// <param name="image">Image on the button.</param>
         /// <param name="handler">Handler to call when button is clicked.</param>

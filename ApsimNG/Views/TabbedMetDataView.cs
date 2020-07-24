@@ -337,7 +337,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Populates the data.</summary>
-        /// <param name="Data">The data.</param>
+        /// <param name="data">The data.</param>
         public void PopulateData(DataTable data)
         {
             //fill the grid with data

@@ -51,6 +51,7 @@ namespace Utility
         /// <summary>
         /// Initialises and populates the view.
         /// </summary>
+        /// <param name="model">The reference model.</param>
         /// <param name="references">List of references to be displayed.</param>
         /// <param name="presenter">The ExplorerPresenter for this tab.</param>
         public FindAllReferencesDialog(IModel model, List<Reference> references, ExplorerPresenter presenter)
@@ -90,7 +91,7 @@ namespace Utility
         /// <summary>
         /// Get the prefix common to all paths in all references.
         /// </summary>
-        /// <param name="references"></param>
+        /// <param name="paths">The paths.</param>
         /// <returns></returns>
         private string GetCommonPathElements(string[] paths)
         {

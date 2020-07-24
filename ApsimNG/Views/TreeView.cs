@@ -164,7 +164,7 @@ namespace UserInterface.Views
         public MenuView ContextMenu { get; set; }
 
         /// <summary>Populate the treeview.</summary>
-        /// <param name="rootNode">A description of the top level root node</param>
+        /// <param name="topLevelNode">A description of the top level root node</param>
         public void Populate(TreeViewNode topLevelNode)
         {
             rootNode = topLevelNode;
@@ -374,9 +374,8 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Return a full path for the specified node.</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
+        /// <summary>Return a string representation of the specified path.</summary>
+        /// <param name="path">The path.</param>
         private string GetFullPath(TreePath path)
         {
             string result = "";
@@ -485,7 +484,7 @@ namespace UserInterface.Views
 
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             try
@@ -829,7 +828,7 @@ namespace UserInterface.Views
 
         /// <summary>User is about to start renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs> instance containing the event data.</param>
         private void OnBeforeLabelEdit(object sender, EditingStartedArgs e)
         {
             try
@@ -846,7 +845,7 @@ namespace UserInterface.Views
         
         /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
             try

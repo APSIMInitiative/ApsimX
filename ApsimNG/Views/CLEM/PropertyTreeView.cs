@@ -24,7 +24,7 @@ namespace UserInterface.Views
     /// Does not allow for adding, deleting or moving of nodes in the tree.
     /// Only displays the tree and allows the user to select different nodes.
     /// No toolbar and context menus either.
-    /// </remarks>
+    /// </summary>
     public class PropertyTreeView : ViewBase, IPropertyTreeView
     {
         /// <summary>The previously selected node path.</summary>
@@ -241,8 +241,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Return a full path for the specified node.</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
+        /// <param name="path">The node.</param>
         private string FullPath(TreePath path)
         {
             string result = "";
@@ -315,7 +314,7 @@ namespace UserInterface.Views
 #region Events
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="e"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             if (SelectedNodeChanged != null)

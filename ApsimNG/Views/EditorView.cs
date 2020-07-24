@@ -581,8 +581,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
+        /// <param name="text">Text to be inserted.</param>
         public void InsertAtCaret(string text)
         {
             textEditor.Document.ReadOnly = false;

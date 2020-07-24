@@ -415,6 +415,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="containerName">Name of the container to upload the file to</param>
         /// <param name="filePath">Path to the file on disk</param>
+        /// <param name="ct">Allows for cancellation of the task.</param>
         private async Task<string> UploadFileIfNeededAsync(string containerName, string filePath, CancellationToken ct)
         {
             CloudBlobContainer container = storageClient.GetContainerReference(containerName);

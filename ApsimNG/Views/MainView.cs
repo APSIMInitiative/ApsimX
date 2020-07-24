@@ -1104,7 +1104,11 @@
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="msgType">Message type (info, warning, error, ...).</param>
+        /// <param name="buttonType">Type of buttons to be shown in the dialog.</param>
         /// <param name="errorLevel">The error level.</param>
+        /// <param name="masterWindow">The main window.</param>
         public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
         {
             MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,

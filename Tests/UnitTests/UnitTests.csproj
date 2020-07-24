@@ -8,6 +8,7 @@
     <OutputPath>..\..\Bin\</OutputPath>
 	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
 	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+	<NoWarn>CS1591,CS1572,CS1573</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

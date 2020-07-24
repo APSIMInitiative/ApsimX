@@ -1375,8 +1375,7 @@
         /// <summary>
         /// Handles navigation in the grid.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="keyValue"></param>
+        /// <param name="eventKey">The keypress event data.</param>
         private void HandleNavigation(Gdk.EventKey eventKey)
         {
             Gdk.Key key = eventKey.Key;
@@ -1798,8 +1797,7 @@
             }
         }
 
-        /// Invoked when the view needs a tooltip.
-        /// </summary>
+        /// <summary>Invoked when the view needs a tooltip.</summary>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         private void OnQueryTooltip(object o, QueryTooltipArgs args)
@@ -2565,6 +2563,7 @@
         /// </summary>
         /// <param name="row">(0-based) Row index of the cell.</param>
         /// <param name="column">(0-based) column index of the cell.</param>
+        /// <param name="startEdit">Start editing the cell as well?</param>
         private void SelectCell(int row, int column, bool startEdit)
         {
             if (ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex))

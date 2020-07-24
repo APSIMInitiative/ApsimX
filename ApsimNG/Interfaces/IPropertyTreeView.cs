@@ -45,6 +45,7 @@ namespace UserInterface.Interfaces
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text"></param>
+        /// <param name="clipboardName">Name of the clipboard.</param>
         void SetClipboardText(string text, string clipboardName);
 
         /// <summary>

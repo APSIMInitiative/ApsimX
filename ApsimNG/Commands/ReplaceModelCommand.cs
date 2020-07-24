@@ -26,9 +26,9 @@
         private bool modelWasReplaced;
 
         /// <summary>Constructor.</summary>
-        /// <param name="explorerView">The explorer view.</param>
         /// <param name="modelToReplace">The model to move.</param>
         /// <param name="modelToInsert">The new model to put in place of the old one</param>
+        /// <param name="presenter">The explorer presenter.</param>
         public ReplaceModelCommand(IModel modelToReplace, IModel modelToInsert, ExplorerPresenter presenter)
         {
             if (modelToReplace.ReadOnly)

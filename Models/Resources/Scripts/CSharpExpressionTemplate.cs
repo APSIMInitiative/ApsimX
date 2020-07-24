@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 using Models;
@@ -8,6 +7,9 @@ using Models.Core;
 
 namespace Models
 {
+    /// <summary>
+    /// An example/template IFunction implementation.
+    /// </summary>
     [Serializable]
     public class Script : Model, IFunction
     {

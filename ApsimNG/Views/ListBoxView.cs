@@ -185,6 +185,7 @@ namespace UserInterface.Views
         /// Add a list item based on a file name
         /// </summary>
         /// <param name="fileName">The filename.</param>
+        /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();

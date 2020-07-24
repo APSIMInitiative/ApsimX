@@ -160,7 +160,7 @@ namespace UserInterface.Views
         /// Invoked for every cell in grid.
         /// </summary>
         /// <param name="col">The column.</param>
-        /// <param name="cell">The cell.</param>
+        /// <param name="baseCell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
         public void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)

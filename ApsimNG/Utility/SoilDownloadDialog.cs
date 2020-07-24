@@ -329,7 +329,7 @@
         /// <summary>
         /// Initialises and displays the dialog
         /// </summary>
-        /// <param name="soil">The soil object to be replaced</param>
+        /// <param name="dest">The soil object to be replaced</param>
         /// <param name="view">The ExplorerView displaying the soil object in its tree</param>
         /// <param name="nodePath">The path to the soil object within the view's tree</param>
         /// <param name="explorerPresenter">The ExplorerPresenter that is managing all of this</param>
@@ -579,8 +579,8 @@
         /// (Mouse) button press event handler. If it is a left mouse double click, selects the item and consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
@@ -1047,6 +1047,7 @@
         /// Converts data for 7 input levels to layerCount (up to 10) depth ranges
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="layerCount">Number of layers.</param>
         /// <returns></returns>
         private double[] ConvertLayers(double[] inputs, int layerCount)
         {

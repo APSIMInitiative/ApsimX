@@ -269,7 +269,9 @@
         /// <summary>
         /// Remove the gap in heading levels for a 'branch' of tags.
         /// </summary>
-        /// <param name="tags"></param>
+        /// <param name="tags">List of tags.</param>
+        /// <param name="tagIndex">Index of the tag to be removed.</param>
+        /// <param name="deltaHeadingLevel">Change heading level by this amount.</param>
         private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
         {
             int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
@@ -733,6 +735,7 @@
         /// </summary>
         /// <param name="paragraph">The paragaraph to add text to</param>
         /// <param name="text">The text</param>
+        /// <param name="width">Width of the text.</param>
         private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
         {
             // For some reason, a parapraph converts all sequences of white
