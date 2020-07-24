@@ -273,6 +273,7 @@ namespace UserInterface.Views
             //Language csharp = LanguageManager.Default.GetLanguage("text/x-csharp");
             //Buffer buffer = new Buffer(csharp);
             textEditor = new SourceView();
+            textEditor.Monospace = true;
 
             // Intellisense initialisation.
             completionProvider = new ScriptCompletionProvider(ShowError);

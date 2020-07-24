@@ -207,7 +207,23 @@
 
             if (!ProcessUtilities.CurrentOS.IsLinux)
                 RefreshTheme();
+
+#if NETCOREAPP
+            LoadStylesheets();
+#endif
         }
+
+#if NETCOREAPP
+        private void LoadStylesheets()
+        {
+            string css = ReflectionUtilities.GetResourceAsString("ApsimNG.Resources.Style.global.css");
+            CssProvider provider = new CssProvider();
+            if (!provider.LoadFromData(css))
+                throw new Exception("Unable to parse global.css");
+
+            window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+        }
+#endif
 
         /// <summary>
         /// Invoked when the user changes tabs.
@@ -1043,7 +1059,7 @@
             StringBuilder css = new StringBuilder();
             css.AppendLine("* {");
             css.AppendLine($"font-family: {newFont.Family};");
-            css.AppendLine($"font-size: {newFont.Size / Pango.Scale.PangoScale};");
+            css.AppendLine($"font-size: {newFont.Size / Pango.Scale.PangoScale}px;");
             css.AppendLine($"font-style: {newFont.Style};");
             css.AppendLine($"font-variant: {newFont.Variant};");
             css.AppendLine($"font-weight: {newFont.Weight};");
