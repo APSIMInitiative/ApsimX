@@ -2713,18 +2713,15 @@
             InitiliaseSoilArrays();
 
             // Set the minimum green DM
-            leaf.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
-            stem.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
-            stolon.MinimumLiveDM = 0.0;
+            leaf.Initialise(MinimumGreenWt * MinimumGreenLeafProp);
+            stem.Initialise(MinimumGreenWt * (1.0 - MinimumGreenLeafProp));
+            stolon.Initialise(0.0);
 
             // set initial plant state
             SetInitialState();
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
-
-            // initialise parameters for biomass removal
-            InitBiomassRemovals();
 
             // check whether there is a resource arbitrator, it will control the uptake
             if (soilArbitrator != null)
@@ -2857,33 +2854,6 @@
             allocationIncreaseRepro = ReproSeasonMaxAllocationIncrease / (1.0 + reproAux);
         }
 
-        /// <summary>Initialises the default biomass removal fractions.</summary>
-        private void InitBiomassRemovals()
-        {
-            // leaves, stems
-            var removalFractions = new OrganBiomassRemovalType()
-            {
-                FractionLiveToRemove = 0.5,
-                FractionDeadToRemove = 0.5
-            };
-            leaf.SetRemovalFractions("Harvest", removalFractions);
-            leaf.SetRemovalFractions("Graze", removalFractions);
-            leaf.SetRemovalFractions("Cut", removalFractions);
-            stem.SetRemovalFractions("Harvest", removalFractions);
-            stem.SetRemovalFractions("Graze", removalFractions);
-            stem.SetRemovalFractions("Cut", removalFractions);
-
-            // stolon
-            var stolonRemovalFractions2 = new OrganBiomassRemovalType()
-            {
-                FractionLiveToRemove = 0.5,
-                FractionDeadToRemove = 0.0
-            };
-            stolon.SetRemovalFractions("Harvest", stolonRemovalFractions2);
-            stolon.SetRemovalFractions("Graze", stolonRemovalFractions2);
-            stolon.SetRemovalFractions("Cut", stolonRemovalFractions2);
-        }
-
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Daily processes  -------------------------------------------------------------------------------------------
@@ -2896,6 +2866,9 @@
         {
             // 1. Zero out several variables
             RefreshVariables();
+            leaf.OnDoDailyInitialisation();
+            stem.OnDoDailyInitialisation();
+            stolon.OnDoDailyInitialisation();
         }
 
         /// <summary>Zeroes out the value of several variables.</summary>
@@ -3314,14 +3287,14 @@
             // Do the actual turnover, update DM and N
             // - Leaves and stems
             double[] turnoverRates = new double[] { gama * RelativeTurnoverEmerging, gama, gama, gamaD };
-            leaf.DoTissueTurnover(turnoverRates);
-            stem.DoTissueTurnover(turnoverRates);
+            leaf.CalculateTissueTurnover(turnoverRates);
+            stem.CalculateTissueTurnover(turnoverRates);
 
             // - Stolons
             if (isLegume)
             {
                 turnoverRates = new double[] { gamaS * RelativeTurnoverEmerging, gamaS, gamaS, 1.0 };
-                stolon.DoTissueTurnover(turnoverRates);
+                stolon.CalculateTissueTurnover(turnoverRates);
             }
 
             // - Roots (only 2 tissues)
@@ -3454,13 +3427,13 @@
             double preTotalN = AboveGroundN + BelowGroundN;
 
             // Update each organ, returns test for mass balance
-            if (leaf.DoOrganUpdate() == false)
+            if (leaf.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for leaves");
 
-            if (stem.DoOrganUpdate() == false)
+            if (stem.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stems");
 
-            if (stolon.DoOrganUpdate() == false)
+            if (stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
             roots[0].DoOrganUpdate();
@@ -4220,10 +4193,10 @@
 
             // get chlorophyll effect
             double effect = 0.0;
-            if (leaf.NconcLive > leaf.NConcMinimum)
+            if (leaf.NConcLive > leaf.NConcMinimum)
             {
-                if (leaf.NconcLive < leaf.NConcOptimum * fN)
-                    effect = MathUtilities.Divide(leaf.NconcLive - leaf.NConcMinimum, (leaf.NConcOptimum * fN) - leaf.NConcMinimum, 1.0);
+                if (leaf.NConcLive < leaf.NConcOptimum * fN)
+                    effect = MathUtilities.Divide(leaf.NConcLive - leaf.NConcMinimum, (leaf.NConcOptimum * fN) - leaf.NConcMinimum, 1.0);
                 else
                     effect = 1.0;
             }

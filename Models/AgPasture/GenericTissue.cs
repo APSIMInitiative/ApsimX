@@ -35,55 +35,55 @@
 
         //---------------------------- Parameters -----------------------
 
-        /// <summary>Gets or sets the fraction of luxury N remobilisable per day (0-1).</summary>
+        /// <summary>The fraction of luxury N remobilisable per day (0-1).</summary>
         [XmlIgnore]
         public double FractionNLuxuryRemobilisable { get; set; } = 0.1;
 
-        /// <summary>Gets or sets the sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
+        /// <summary>The sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         [XmlIgnore]
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
-        /// <summary>Gets or sets the digestibility of cell walls (0-1).</summary>
+        /// <summary>The digestibility of cell walls (0-1).</summary>
         [XmlIgnore]
         public double DigestibilityCellWall { get; set; } = 0.5;
 
-        /// <summary>Gets or sets the digestibility of proteins (0-1).</summary>
+        /// <summary>The digestibility of proteins (0-1).</summary>
         [XmlIgnore]
         public double DigestibilityProtein { get; set; } = 1.0;
 
         //----------------------- Daily Deltas -----------------------
         // These get applied once each day during Update()
 
-        /// <summary>Gets or sets the DM amount transferred into this tissue (kg/ha).</summary>
+        /// <summary>DM transferred into this tissue (kg/ha).</summary>
         public double DMTransferedIn { get; set; }
 
-        /// <summary>Gets or sets the DM amount transferred out of this tissue (kg/ha).</summary>
+        /// <summary>DM transferred out of this tissue (kg/ha).</summary>
         public double DMTransferedOut { get; set; }
 
-        /// <summary>Gets or sets the amount of N transferred into this tissue (kg/ha).</summary>
+        /// <summary>N transferred into this tissue (kg/ha).</summary>
         public double NTransferedIn { get; set; }
 
-        /// <summary>Gets or sets the amount of N transferred out of this tissue (kg/ha).</summary>
+        /// <summary>N transferred out of this tissue (kg/ha).</summary>
         public double NTransferedOut { get; set; }
 
-        /// <summary>Gets or sets the amount of N available for remobilisation (kg/ha).</summary>
+        /// <summary>N available for remobilisation (kg/ha).</summary>
         public double NRemobilisable { get; set; }
 
-        /// <summary>Gets or sets the amount of N remobilised into new growth (kg/ha).</summary>
+        /// <summary>N remobilised into new growth (kg/ha).</summary>
         public double NRemobilised { get; set; }
 
         //----------------------- States -----------------------
 
-        /// <summary>Amount of dry matter.</summary>
+        /// <summary>Dry matter.</summary>
         public IAGPBiomass DM { get { return dryMatter; } }
 
-        /// <summary>The amount of DM removed from this tissue (kg/ha).</summary>
+        /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get; private set; }
 
-        /// <summary>The amount of N removed from this tissue (kg/ha).</summary>
+        /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved { get; private set; }
 
-        /// <summary>Gets the digestibility of this tissue (kg/kg).</summary>
+        /// <summary>Digestibility of this tissue (kg/kg).</summary>
         /// <remarks>Digestibility of sugars is assumed to be 100%.</remarks>
         public double Digestibility { get; private set; }
 
