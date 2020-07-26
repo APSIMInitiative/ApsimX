@@ -8,12 +8,12 @@ using Models.Core;
 namespace Models
 {
     /// <summary>
-    /// An example/template IFunction implementation.
+    /// A template script used by CSharpExpressionFunction.
     /// </summary>
     [Serializable]
     public class Script : Model, IFunction
     {
-        //[Link] Clock Clock = null;
+        [Link] Clock Clock = null;
 
         /// <summary>Gets the value of the function.</summary>
         public double Value(int arrayIndex = -1)

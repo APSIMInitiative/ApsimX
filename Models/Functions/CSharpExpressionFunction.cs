@@ -116,7 +116,7 @@ namespace Models.Functions
             template = template.Replace("class Script", $"class {Name}Script");
 
             // Replace the link place holder in the template with links created above.
-            template = template.Replace("        [Link] Clock Clock;", links.ToString());
+            template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
 
             // Replace the expression place holder in the template with the real expression.
             template = template.Replace("return 123456;", "return " + Expression + ";");

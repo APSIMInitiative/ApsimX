@@ -285,6 +285,7 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Linq.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
