@@ -9,6 +9,7 @@
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.IO;
     using System.Xml.Serialization;
 
     ///<summary>
@@ -461,7 +462,13 @@
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return new string[] { FullFileName };
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            FileName = Path.GetFileName(FileName);
         }
 
         /// <summary>
