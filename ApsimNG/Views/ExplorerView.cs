@@ -79,15 +79,13 @@ namespace UserInterface.Views
         /// <param name="description">The description to show.</param>
         public void AddDescriptionToRightHandView(string description)
         {
-#if NETFRAMEWORK
-            // tbi - requires HTMLView
             if (description == null)
             {
                 if (descriptionView != null)
                 {
                     Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
                     rightHandView.Remove(descriptionWidget);
-                    descriptionWidget.Destroy();
+                    descriptionWidget.Cleanup();
                 }
                 descriptionView = null;
             }
@@ -100,7 +98,6 @@ namespace UserInterface.Views
                 }
                 descriptionView.SetContents(description, false);
             }
-#endif
         }
 
         /// <summary>Get screenshot of right hand panel.</summary>

@@ -26,6 +26,9 @@ namespace Utility
         /// </remarks>
         public static string ToHtml(string markdown)
         {
+            if (markdown == null)
+                return null;
+
             MarkdownDocument doc = MarkdownParser.Parse(markdown);
             var renderer = new HtmlRenderer(new StringWriter());
             renderer.BaseUrl = new Uri(Path.GetTempPath());
@@ -61,9 +64,10 @@ namespace Utility
                 foreach (HtmlNode image in images)
                 {
                     string src = image.GetAttributeValue("src", null);
-                    if (!File.Exists(src) && !string.IsNullOrEmpty(src))
+                    Uri uri = new Uri(src);
+                    if (!string.IsNullOrEmpty(src) && !File.Exists(uri.AbsolutePath))
                     {
-                        string tempFileName = HtmlToMigraDoc.GetImagePath(src, Path.GetTempPath());
+                        string tempFileName = HtmlToMigraDoc.GetImagePath(uri.AbsolutePath, Path.GetTempPath());
                         if (!string.IsNullOrEmpty(tempFileName))
                             image.SetAttributeValue("src", tempFileName);
                     }

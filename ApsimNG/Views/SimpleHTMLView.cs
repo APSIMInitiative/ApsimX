@@ -21,6 +21,7 @@ namespace UserInterface.Views
         public HTMLView(ViewBase owner) : base(owner)
         {
             textWidget.Editable = false;
+            mainWidget = textWidget;
         }
 
         /// <summary>
