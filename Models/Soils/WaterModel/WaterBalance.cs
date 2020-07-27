@@ -516,6 +516,9 @@
             // Set solute state variables.
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
+
+            // Now that we've finished moving water, calculate volumetric water
+            waterVolumetric = MathUtilities.Divide(Water, soil.Thickness);
         }
 
         /// <summary>Move water down the profile</summary>
