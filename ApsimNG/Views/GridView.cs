@@ -530,7 +530,7 @@
                     else
                     {
                         // tbi - gtk3 equivalent
-                        cell.CellBackgroundGdk = Grid.GetForegroundColour(cellState);
+                        cell.CellBackgroundGdk = Grid.GetBackgroundColour(cellState);
                         textRenderer.ForegroundGdk = Grid.GetForegroundColour(cellState);
                     }
 
