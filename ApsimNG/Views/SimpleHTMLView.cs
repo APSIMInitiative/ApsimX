@@ -42,7 +42,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         public string GetMarkdown()
         {
-            throw new NotImplementedException();
+            return textWidget.Buffer.Text;
         }
 
         /// <summary>
