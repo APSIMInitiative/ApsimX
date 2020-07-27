@@ -87,6 +87,7 @@
 
             // Initialise root DM, N, depth, and distribution
             Depth = initialDepth;
+            CalculateRootZoneBottomLayer();
             TargetDistribution = RootDistributionTarget();
 
             double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
@@ -182,10 +183,7 @@
         internal double Depth { get; set; }
 
         /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
-        internal int BottomLayer 
-        {
-            get { return RootZoneBottomLayer(); }
-        }
+        internal int BottomLayer { get; private set; }
 
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
@@ -460,6 +458,7 @@
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
+            CalculateRootZoneBottomLayer();
 
             var rootFractions = CurrentRootDistributionTarget();
             var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
@@ -470,6 +469,7 @@
         internal void DoResetOrgan()
         {
             Depth = 0;
+            CalculateRootZoneBottomLayer();
             for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].Reset();
@@ -535,18 +535,21 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
+            double[] dulmm = mySoil.DULmm;
+            double[] ll15mm = mySoil.LL15mm;
+
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
                 bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= mySoil.DULmm[layer])
+                if (myZone.Water[layer] >= dulmm[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
+                else if (myZone.Water[layer] <= ll15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15mm[layer]) /
+                                        (dulmm[layer] - ll15mm[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
@@ -597,22 +600,20 @@
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
         /// <returns>The index of a layer</returns>
-        private int RootZoneBottomLayer()
+        private void CalculateRootZoneBottomLayer()
         {
-            int result = 0;
+            BottomLayer = 0;
             double currentDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
                 if (Depth > currentDepth)
                 {
-                    result = layer;
+                    BottomLayer = layer;
                     currentDepth += mySoil.Thickness[layer];
                 }
                 else
                     layer = nLayers;
             }
-
-            return result;
         }
 
         /// <summary>Computes the target (or ideal) distribution of roots in the soil profile.</summary>
@@ -762,6 +763,7 @@
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 dRootDepth = RootElongationRate * tempFactor;
                 Depth = Math.Min(RootDepthMaximum, Math.Max(RootDepthMinimum, Depth + dRootDepth));
+                CalculateRootZoneBottomLayer();
             }
             else
             {
