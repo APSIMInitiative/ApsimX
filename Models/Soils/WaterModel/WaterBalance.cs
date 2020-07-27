@@ -225,7 +225,7 @@
             set 
             { 
                 waterMM = value; 
-                waterVolumetric = MathUtilities.Divide(Water, soil.Thickness); 
+                waterVolumetric = MathUtilities.Divide(value, soil.Thickness); 
             } 
         }
 
@@ -237,7 +237,7 @@
             set
             {
                 waterVolumetric = value;
-                waterMM = MathUtilities.Multiply(Water, soil.Thickness);
+                waterMM = MathUtilities.Multiply(value, soil.Thickness);
             }
         }
 
