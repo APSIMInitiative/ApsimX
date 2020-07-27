@@ -50,10 +50,10 @@
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
-#if NETFRAMEWORK
+
             HtmlView = new HTMLView(this);
             mainControl.PackEnd((HtmlView as ViewBase).MainWidget, true, true, 0);
-#endif
+
 
             mainWidget.Destroyed += MainWidgetDestroyed;
         }

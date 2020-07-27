@@ -1012,9 +1012,14 @@
                 {
                     foreach (Widget child in ((Gtk.Button)widget).AllChildren)
                     {
+#if NETFRAMEWORK
                         if (child.GetType() != typeof(Gtk.HBox))
+#else
+                        if (!(child is Box))
+#endif
                             continue;
-                        foreach (Widget grandChild in ((Gtk.HBox)child).AllChildren)
+
+                        foreach (Widget grandChild in ((Box)child).AllChildren)
                         {
                             if (grandChild.GetType() != typeof(Gtk.Alignment))
                                 continue;

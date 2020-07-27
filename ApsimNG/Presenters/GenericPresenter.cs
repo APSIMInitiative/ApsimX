@@ -10,6 +10,11 @@
     using Models.Core;
     using Views;
     using Interfaces;
+    using Markdig;
+    using Markdig.Renderers;
+    using Markdig.Syntax;
+    using Markdig.Parsers;
+    using Utility;
 
     /// <summary>
     /// Presenter of unspecified type
@@ -67,12 +72,8 @@
                 }
             }
 
-            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-            markDown.ExtraMode = true;
-            markDown.DocumentLocation = Path.GetTempPath();
-            markDown.UrlBaseLocation = markDown.DocumentLocation;
+            string html = MarkdownConverter.ToHtml(contents.ToString());
 
-            string html = markDown.Transform(contents.ToString());
             this.genericView.SetContents(html, false, false);
         }
 

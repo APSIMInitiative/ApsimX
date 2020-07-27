@@ -56,9 +56,7 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="Webview.Core" Version="0.0.3" />
-	
-	<!-- this actually appears to support net472 as well as netcore -->
-    <PackageReference Include="MarkdownDeep.NET.Core" Version="1.5.0.4" />
+	<PackageReference Include="Markdig.Signed" Version="0.20.0" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->

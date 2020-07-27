@@ -20,6 +20,7 @@
     using UserInterface.Views;
     using UserInterface.Interfaces;
     using UserInterface.Extensions;
+    using Markdig;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.
@@ -28,7 +29,6 @@
     {
         private readonly ExplorerPresenter explorerPresenter;
         private readonly bool portrait;
-        private MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
         private BibTeX bibTeX;
         private List<BibTeX.Citation> citations;
 
@@ -39,7 +39,6 @@
         {
             this.explorerPresenter = explorerPresenter;
             this.portrait = portraitOrientation;
-            markDown.ExtraMode = true;
 
             // This is a bit tricky on non-Windows platforms. 
             // Normally PdfSharp tries to get a Windows DC for associated font information
@@ -485,7 +484,7 @@
         /// <param name="paragraph">The paragraph.</param>
         private void AddFormattedParagraphToSection(Section section, AutoDocumentation.Paragraph paragraph)
         {
-            string html = markDown.Transform(paragraph.text);
+            string html = Markdown.ToHtml(paragraph.text);
 
             HtmlToMigraDoc.Convert(html, section, WorkingDirectory);
 
