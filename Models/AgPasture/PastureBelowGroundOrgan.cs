@@ -29,6 +29,9 @@
         /// <summary>Soil nitrogen model.</summary>
         private INutrient SoilNitrogen;
 
+        private double[] dulMM;
+        private double[] ll15MM;
+
         /// <summary>The NO3 solute.</summary>
         public ISolute NO3 = null;
 
@@ -79,6 +82,8 @@
             myReferenceKSuptake = referenceKSuptake;
             myReferenceRLD = referenceRLD;
             myExponentSoilMoisture = exponentSoilMoisture;
+            dulMM = mySoil.DULmm;
+            ll15MM = mySoil.LL15mm;
 
             // Link to soil and initialise variables
             myZoneName = mySoil.Parent.Name;
@@ -342,14 +347,14 @@
             {
                 double rldFac = Math.Min(1.0, RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
                 else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
@@ -383,14 +388,14 @@
                 double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / myReferenceKSuptake);
                 double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
-                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
+                else if (mySoil.SoilWater.SWmm[layer] <= ll15MM[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
@@ -535,21 +540,19 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
-            double[] dulmm = mySoil.DULmm;
-            double[] ll15mm = mySoil.LL15mm;
 
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 layerFrac = FractionLayerWithRoots(layer);
                 bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= dulmm[layer])
+                if (myZone.Water[layer] >= dulMM[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= ll15mm[layer])
+                else if (myZone.Water[layer] <= ll15MM[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - ll15mm[layer]) /
-                                        (dulmm[layer] - ll15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
