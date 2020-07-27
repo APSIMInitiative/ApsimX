@@ -215,7 +215,7 @@
 
                 // todo: test if this is correct default usage.
                 // We previously just called HBox.PackStart(Widget).
-                hboxContainer.PackStart(child, false, false, 0);
+                hboxContainer.PackStart(child, true, true, 0);
             }
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
