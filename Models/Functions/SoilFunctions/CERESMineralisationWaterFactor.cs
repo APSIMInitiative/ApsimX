@@ -6,7 +6,6 @@ using Models.Core;
 using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
-using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -21,13 +20,7 @@ namespace Models.Functions
         [Link]
         Soil soil = null;
 
-
-        [Link]
-        Physical physical = null;
-
-        [Link]
-        ISoilWater waterBalance = null;
-
+   
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -36,24 +29,18 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
             double WF = 0;
 
-            if (waterBalance.SW[arrayIndex] < physical.LL15[arrayIndex])
+            if (soil.SoilWater.SW[arrayIndex] < soil.LL15[arrayIndex])
                 WF = 0;
-            else if (waterBalance.SW[arrayIndex] < physical.DUL[arrayIndex])
-            {
-                double a = 0.0;
-                double b = 1.0;
-                if (soil.SoilType != null && string.Equals(soil.SoilType, "sand", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    a = 0.05;
-                    b = 0.95;
-                }
-                if (physical.DUL[arrayIndex] > physical.LL15[arrayIndex])
-                    WF = a + b * Math.Min(1, 2 * (waterBalance.SW[arrayIndex] - physical.LL15[arrayIndex]) / (physical.DUL[arrayIndex] - physical.LL15[arrayIndex]));
-            }
-            else if (physical.SAT[arrayIndex] > physical.DUL[arrayIndex])
-                WF = 1 - 0.5 * (waterBalance.SW[arrayIndex] - physical.DUL[arrayIndex]) / (physical.SAT[arrayIndex] - physical.DUL[arrayIndex]);
+            else if (soil.SoilWater.SW[arrayIndex] < soil.DUL[arrayIndex])
+                if (soil.SoilType!=null)
+                    if (soil.SoilType.ToLower()=="sand")
+                        WF = 0.05+0.95*Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex], soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
+                    else
+                        WF = Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex], soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
+                else
+                    WF = Math.Min(1, 2 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex],soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
             else
-                WF = 1;
+                WF = 1 - 0.5 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex], soil.SAT[arrayIndex] - soil.DUL[arrayIndex],0.0);
 
             return WF;
         }
