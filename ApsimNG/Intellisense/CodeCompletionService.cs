@@ -66,7 +66,7 @@ namespace UserInterface.Intellisense
                             var symbols = await item.GetCompletionSymbolsAsync(recommendedSymbols, document);
                             if (symbols.Any())
                             {
-                                foreach (var symbol in symbols)
+                                foreach (ISymbol symbol in symbols)
                                 {
                                     if (item.UseDisplayTextAsCompletionText())
                                     {
@@ -96,8 +96,14 @@ namespace UserInterface.Intellisense
                                             completions.Add(new NeedContextItemsArgs.ContextItem()
                                             {
                                                 Name = symbol.Name,
-                                                Descr = symbol.ToDisplayString()
+                                                Descr = symbol.ToDisplayString(),
+                                                IsMethod = symbol.Kind == SymbolKind.Method,
+                                                IsProperty = symbol.Kind == SymbolKind.Property,
+                                                IsEvent = symbol.Kind == SymbolKind.Event
                                             });
+
+                                            if (symbol is IPropertySymbol property)
+                                                completions.Last().IsWriteable = !property.IsReadOnly;
                                         }
                                     }
                                 }

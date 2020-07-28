@@ -276,9 +276,7 @@ namespace UserInterface.Views
             textEditor.Monospace = true;
 
             // Intellisense initialisation.
-            completionProvider = new ScriptCompletionProvider(ShowError);
-            var adapter = new CompletionProviderAdapter(completionProvider);
-            completionProvider.Adapter = adapter;
+            completionProvider = new ScriptCompletionProvider(ShowError, textEditor);
             textEditor.Completion.AddProvider(completionProvider);
             
             scroller.Add(textEditor);

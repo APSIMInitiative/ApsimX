@@ -103,6 +103,11 @@ namespace UserInterface.Intellisense
         /// </summary>
         public string Text { get; private set; }
 
+        /// <summary>
+        /// Additional info about the completion proposal.
+        /// </summary>
+        public NeedContextItemsArgs.ContextItem Item { get; private set; }
+
         public CustomScriptCompletionProposal(NeedContextItemsArgs.ContextItem item) : base()
         {
             isProperty = item.IsProperty;
@@ -110,6 +115,7 @@ namespace UserInterface.Intellisense
             Text = item.Name;
             Markup = item.Name;
             Info = item.Descr;
+            Item = item;
         }
 
         /// <summary>

@@ -11,6 +11,8 @@ namespace UserInterface.Intellisense
     using Presenters;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using Views;
+    using System.Reflection.Metadata;
 
     internal class ScriptCompletionProvider : GLib.Object, ICompletionProvider, ICompletionProviderImplementor
     {
@@ -20,15 +22,20 @@ namespace UserInterface.Intellisense
         private Action<Exception> ShowError;
 
         /// <summary>
+        /// The code editor widget.
+        /// </summary>
+        private SourceView view;
+
+        /// <summary>
         /// The code completion service. This object handles generation
         /// of code completion/intellisense items.
         /// </summary>
         private CodeCompletionService service = new CodeCompletionService();
 
         /// <summary>
-        /// Temp debugging measure.
+        /// A popup window which shows method signature info.
         /// </summary>
-        public ICompletionProvider Adapter { get; set; }
+        private CompletionInfo methodSignaturePopup;
 
         /// <summary>
         /// Get with what kind of activation the provider should be activated.
@@ -113,12 +120,13 @@ namespace UserInterface.Intellisense
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ShowError">
-        /// A function which will display an error to the user.
-        /// </param>
-        public ScriptCompletionProvider(Action<Exception> ShowError) : base()
+        /// <param name="ShowError">A function which will display an error to the user.</param>
+        /// <param name="view">The SourceView widget. Used in creation of method signature popup.</param>
+        public ScriptCompletionProvider(Action<Exception> ShowError, SourceView view) : base()
         {
             this.ShowError = ShowError;
+            this.view = view;
+            view.Completion.ShowHeaders = false;
         }
 
         /// <summary>
@@ -140,8 +148,54 @@ namespace UserInterface.Intellisense
         /// <returns></returns>
         public bool ActivateProposal(ICompletionProposal proposal, TextIter iter)
         {
-            // tbi
+            if (proposal is CompletionProposalAdapter adapter && adapter.Implementor is CustomScriptCompletionProposal prop && prop.Item.IsMethod)
+            {
+                // The user has just activated a completion item which is a method.
+                // Let's show the method signature in a popup window.
+
+                // First, remove any existing method signature popups.
+                if (methodSignaturePopup != null)
+                {
+                    methodSignaturePopup.Hide();
+                    methodSignaturePopup.Dispose();
+                }
+
+                // TBI - parameter names, descriptions.
+                // Also need to look into manual activation of the popup (ie
+                // ctrl + shift + space).
+                methodSignaturePopup = new CompletionInfo();
+                methodSignaturePopup.Add(new Label(proposal.Info));
+
+                // We need to attach the popup window to the sourceview, so it
+                // gets hidden/removed when the sourceview loses focus.
+                methodSignaturePopup.AttachedTo = view;
+                view.KeyPressEvent += OnCompletionInfoKeyPress;
+
+                // Move the info window to the location of the cursor.
+                methodSignaturePopup.MoveToIter(view, iter);
+                methodSignaturePopup.ShowAll();
+            }
+
+            // Return false, to allow the sourceview to automatically handle
+            // insertion of the selected completion item.
             return false;
+        }
+
+        [GLib.ConnectBefore]
+        private void OnCompletionInfoKeyPress(object o, KeyPressEventArgs args)
+        {
+            try
+            {
+                if (args.Event.Key == Gdk.Key.Escape)
+                {
+                    methodSignaturePopup.Hide();
+                    methodSignaturePopup.Dispose();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -228,7 +282,7 @@ namespace UserInterface.Intellisense
                                           typeof(CompletionProposalAdapter),
                                           true,
                                           true);
-                context.AddProposals(Adapter, proposals, true);
+                context.AddProposals(this, proposals, true);
             }
             catch (Exception err)
             {
