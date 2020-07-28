@@ -116,19 +116,23 @@
             if (calculationType == Estimate.CalcType.Water)
             {
                 var totalUptake = previousUptakeEstimate.CalculateWaterUptakeFromZone(Zone.Name);
-                for (int i = 0; i < Water.Length; i++)
-                    Water[i] = soilInZone.Water[i] - totalUptake[i] * multipler;
+                if (totalUptake != null)
+                    for (int i = 0; i < Water.Length; i++)
+                        Water[i] = soilInZone.Water[i] - totalUptake[i] * multipler;
             }
             else
             {
                 var totalNO3Uptake = previousUptakeEstimate.CalculateNO3UptakeFromZone(Zone.Name);
                 var totalNH4Uptake = previousUptakeEstimate.CalculateNH4UptakeFromZone(Zone.Name);
-                var no3 = NO3Solute.kgha;
-                var nh4 = NH4Solute.kgha;
-                for (int i = 0; i < Water.Length; i++)
+                if (totalNO3Uptake != null)
                 {
-                    NO3N[i] = no3[i] - totalNO3Uptake[i] * multipler;
-                    NH4N[i] = nh4[i] - totalNH4Uptake[i] * multipler;
+                    var no3 = NO3Solute.kgha;
+                    var nh4 = NH4Solute.kgha;
+                    for (int i = 0; i < Water.Length; i++)
+                    {
+                        NO3N[i] = no3[i] - totalNO3Uptake[i] * multipler;
+                        NH4N[i] = nh4[i] - totalNH4Uptake[i] * multipler;
+                    }
                 }
             }
         }
