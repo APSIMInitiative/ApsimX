@@ -10,6 +10,7 @@ namespace UserInterface.Intellisense
     using GtkSource;
     using Presenters;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
 
     internal class ScriptCompletionProvider : GLib.Object, ICompletionProvider, ICompletionProviderImplementor
     {
@@ -19,9 +20,10 @@ namespace UserInterface.Intellisense
         private Action<Exception> ShowError;
 
         /// <summary>
-        /// This handles parsing the code and coming up with suggestions.
+        /// The code completion service. This object handles generation
+        /// of code completion/intellisense items.
         /// </summary>
-        private IntellisensePresenter intellisense;
+        private CodeCompletionService service = new CodeCompletionService();
 
         /// <summary>
         /// Temp debugging measure.
@@ -38,7 +40,7 @@ namespace UserInterface.Intellisense
         {
             get
             {
-                return CompletionActivation.Interactive;
+                return CompletionActivation.Interactive | CompletionActivation.UserRequested;
             }
         }
 
@@ -117,7 +119,6 @@ namespace UserInterface.Intellisense
         public ScriptCompletionProvider(Action<Exception> ShowError) : base()
         {
             this.ShowError = ShowError;
-            intellisense = new IntellisensePresenter();
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace UserInterface.Intellisense
         public bool Match(CompletionContext context)
         {
             // tbi - for now just match every context.
-            return true;
+            return context.Completion.View.IsRealized;
         }
 
         /// <summary>
@@ -215,12 +216,15 @@ namespace UserInterface.Intellisense
             {
                 string code = context.Iter.Buffer.Text;
                 int offset = context.Iter.Buffer.CursorPosition;
-                var contextItems = intellisense.GenerateScriptCompletions(code, offset);
-                contextItems.Wait();
-                if (contextItems == null || contextItems.Result == null)
+                int line = context.Iter.Line + 1;
+
+                Task<IEnumerable<NeedContextItemsArgs.ContextItem>> task = service.GetCompletionItemsAsync(code, offset);
+                task.Wait();
+                if (task.Result == null)
                     return;
-                    
-                List proposals = new List(contextItems.Result.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
+
+                IEnumerable<NeedContextItemsArgs.ContextItem> contextItems = task.Result.OrderBy(c => c.Name);
+                List proposals = new List(contextItems.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
                                           typeof(CompletionProposalAdapter),
                                           true,
                                           true);

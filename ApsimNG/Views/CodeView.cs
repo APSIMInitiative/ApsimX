@@ -279,7 +279,7 @@ namespace UserInterface.Views
             completionProvider = new ScriptCompletionProvider(ShowError);
             var adapter = new CompletionProviderAdapter(completionProvider);
             completionProvider.Adapter = adapter;
-            textEditor.Completion.AddProvider(adapter);
+            textEditor.Completion.AddProvider(completionProvider);
             
             scroller.Add(textEditor);
             mainWidget = scroller;
