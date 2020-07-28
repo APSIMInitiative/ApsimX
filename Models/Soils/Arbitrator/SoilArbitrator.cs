@@ -58,6 +58,10 @@
         private List<Zone> zones = null;
         private SoilState InitialSoilState;
 
+        [NonSerialized] private Estimate UptakeEstimate1;
+        [NonSerialized] private Estimate UptakeEstimate2;
+        [NonSerialized] private Estimate UptakeEstimate3;
+        [NonSerialized] private Estimate UptakeEstimate4;
 
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
@@ -70,6 +74,11 @@
             InitialSoilState = new SoilState(zones);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
+
+            UptakeEstimate1 = new Estimate(Parent, uptakeModels);
+            UptakeEstimate2 = new Estimate(Parent, uptakeModels);
+            UptakeEstimate3 = new Estimate(Parent, uptakeModels);
+            UptakeEstimate4 = new Estimate(Parent, uptakeModels);
         }
 
         /// <summary>Called by clock to do water arbitration</summary>
@@ -98,10 +107,18 @@
         {
             InitialSoilState.Initialise();
 
-            Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
-            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
-            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
-            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
+            UptakeEstimate1.PerformEstimate(arbitrationType, InitialSoilState);
+
+            InitialSoilState.ApplyTransform(UptakeEstimate1, 0.5, arbitrationType);
+            UptakeEstimate2.PerformEstimate(arbitrationType, InitialSoilState);
+
+            InitialSoilState.ApplyTransform(UptakeEstimate2, 0.5, arbitrationType);
+            UptakeEstimate3.PerformEstimate(arbitrationType, InitialSoilState);
+
+            InitialSoilState.ApplyTransform(UptakeEstimate3, 1.0, arbitrationType);
+            UptakeEstimate4.PerformEstimate(arbitrationType, InitialSoilState);
+
+            InitialSoilState.Initialise();
 
             List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
             List <CropUptakes> ActualUptakes = new List<CropUptakes>();

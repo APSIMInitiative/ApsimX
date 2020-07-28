@@ -16,6 +16,7 @@
         private ISolute NH4Solute;
 
         private Soil soilInZone;
+        private SoilState soilState;
 
         /// <summary>
         /// The Zone for this water and N
@@ -23,13 +24,13 @@
         public Zone Zone { get; private set; }
 
         /// <summary>Amount of water (mm)</summary>
-        public double[] Water;
+        public double[] Water { get; set; }
 
         /// <summary>Amount of NO3 (kg/ha)</summary>
-        public double[] NO3N;
+        public double[] NO3N { get; set; }
 
         /// <summary>Amount of NH4 (kg/ha)</summary>
-        public double[] NH4N;
+        public double[] NH4N { get; set; }
 
         /// <summary>Gets the sum of 'Water' (mm)</summary>
         public double TotalWater { get { return MathUtilities.Sum(Water); } }
@@ -55,6 +56,7 @@
             NO3Solute = from.NO3Solute;
             NH4Solute = from.NH4Solute;
             soilInZone = from.soilInZone;
+            soilState = from.soilState;
             Zone = from.Zone;
 
             Water = from.Water;
@@ -67,10 +69,12 @@
         /// </summary>
         /// <param name="zone"></param>
         /// <param name="soil">The soil in the zone.</param>
-        public ZoneWaterAndN(Zone zone, Soil soil)
+        /// <param name="parentSoilState">Parent soil state.</param>
+        public ZoneWaterAndN(Zone zone, Soil soil, SoilState parentSoilState)
         {
             Zone = zone;
             soilInZone = soil;
+            soilState = parentSoilState;
             Initialise();
         }
 
@@ -90,9 +94,43 @@
         /// <summary>Initialises this instance.</summary>
         public void InitialiseToSoilState()
         {
-            Water = soilInZone.Water;
-            NO3N = NO3Solute.kgha;
-            NH4N = NH4Solute.kgha;
+            if (Water == null)
+            {
+                Water = new double[soilInZone.Water.Length];
+                NO3N = new double[soilInZone.Water.Length];
+                NH4N = new double[soilInZone.Water.Length];
+            }
+            Array.Copy(soilInZone.Water, Water, soilInZone.Water.Length);
+            Array.Copy(NO3Solute.kgha, NO3N, NO3Solute.kgha.Length);
+            Array.Copy(NH4Solute.kgha, NH4N, NH4Solute.kgha.Length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="previousUptakeEstimate"></param>
+        /// <param name="multipler"></param>
+        /// <param name="calculationType"></param>
+        public void ApplyTransform(Estimate previousUptakeEstimate, double multipler, Estimate.CalcType calculationType)
+        {
+            if (calculationType == Estimate.CalcType.Water)
+            {
+                var totalUptake = previousUptakeEstimate.CalculateWaterUptakeFromZone(Zone.Name);
+                for (int i = 0; i < Water.Length; i++)
+                    Water[i] = soilInZone.Water[i] - totalUptake[i] * multipler;
+            }
+            else
+            {
+                var totalNO3Uptake = previousUptakeEstimate.CalculateNO3UptakeFromZone(Zone.Name);
+                var totalNH4Uptake = previousUptakeEstimate.CalculateNH4UptakeFromZone(Zone.Name);
+                var no3 = NO3Solute.kgha;
+                var nh4 = NH4Solute.kgha;
+                for (int i = 0; i < Water.Length; i++)
+                {
+                    NO3N[i] = no3[i] - totalNO3Uptake[i] * multipler;
+                    NH4N[i] = nh4[i] - totalNH4Uptake[i] * multipler;
+                }
+            }
         }
 
         /// <summary>Implements the operator *.</summary>
