@@ -393,8 +393,6 @@
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
-                // Get the zone this plant is in
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
@@ -410,7 +408,7 @@
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
                         UptakeDemands.Water = new double[zone.NO3N.Length];
 
-                        NSupply += (MathUtilities.Sum(myRoot.mySoilNH4Available) + MathUtilities.Sum(myRoot.mySoilNO3Available)) * zone.Zone.Area;
+                        NSupply += (myRoot.mySoilNH4Available.Sum() + myRoot.mySoilNO3Available.Sum()) * zone.Zone.Area;
                     }
                 }
 
@@ -421,7 +419,7 @@
                 EvaluateSoilNitrogenDemand();
 
                 // 2. Get the amount of soil N demanded
-                double NDemand = mySoilNDemand * parentZone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // 3. Estimate fraction of N used up
                 double fractionUsed = 0.0;
@@ -3657,23 +3655,24 @@
         {
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
+            var remobilisableSenescedN = RemobilisableSenescedN;
             if (adjNDemand - fixedN < Epsilon)
             {
                 // N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if (adjNDemand - (fixedN + RemobilisableSenescedN) < Epsilon)
+            else if (adjNDemand - (fixedN + remobilisableSenescedN) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
                 mySoilNDemand = 0.0;
-                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, RemobilisableSenescedN, 0.0);
+                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
-                senescedNRemobilised = RemobilisableSenescedN;
+                senescedNRemobilised = remobilisableSenescedN;
                 mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }

@@ -540,30 +540,39 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
-
+            var thickness = mySoil.Thickness;
+            var bd = mySoil.BD;
+            var water = myZone.Water;
+            var nh4 = myZone.NH4N;
+            var no3 = myZone.NO3N;
+            double depthOfTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                layerFrac = FractionLayerWithRoots(layer);
-                bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= dulMM[layer])
+                layerFrac = (Depth - depthOfTopOfLayer) / thickness[layer];
+                layerFrac = Math.Min(1.0, Math.Max(0.0, layerFrac));
+
+                bdFac = 100.0 / (thickness[layer] * bd[layer]);
+                if (water[layer] >= dulMM[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= ll15MM[layer])
+                else if (water[layer] <= ll15MM[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                    double waterRatio = (water[layer] - ll15MM[layer]) /
                                         (dulMM[layer] - ll15MM[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
+                potAvailableN = nh4[layer] * layerFrac * swFac * bdFac * KNH4;
+                mySoilNH4Available[layer] = Math.Min(nh4[layer] * layerFrac, potAvailableN);
 
                 // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
+                potAvailableN = no3[layer] * layerFrac * swFac * bdFac * KNO3;
+                mySoilNO3Available[layer] = Math.Min(no3[layer] * layerFrac, potAvailableN);
+
+                depthOfTopOfLayer += thickness[layer];
             }
 
             // check for maximum uptake
