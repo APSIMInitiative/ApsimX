@@ -163,7 +163,7 @@
 
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
-            hbox1.HeightRequest = 20;            
+            hbox1.HeightRequest = 20;
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -188,15 +188,18 @@
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
 
-            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            if (ProcessUtilities.CurrentOS.IsWindows && string.IsNullOrEmpty(Utility.Configuration.Settings.Font))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (Utility.Configuration.Settings.Font != null)
-                ChangeFont(Utility.Configuration.Settings.Font);
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.Font))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+                ChangeFont(font);
+            }
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -955,7 +958,7 @@
                     string fontName = fontDialog.Font;
 #endif
                     Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
-                    Utility.Configuration.Settings.Font = newFont;
+                    Utility.Configuration.Settings.Font = newFont.ToString();
                     ChangeFont(newFont);
                 }
 
@@ -1055,11 +1058,12 @@
         private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
         {
 #if NETCOREAPP
+            int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
             CssProvider provider = new CssProvider();
             StringBuilder css = new StringBuilder();
             css.AppendLine("* {");
             css.AppendLine($"font-family: {newFont.Family};");
-            css.AppendLine($"font-size: {newFont.Size / Pango.Scale.PangoScale}px;");
+            css.AppendLine($"font-size: {sizePt}pt;");
             css.AppendLine($"font-style: {newFont.Style};");
             css.AppendLine($"font-variant: {newFont.Variant};");
             css.AppendLine($"font-weight: {newFont.Weight};");
