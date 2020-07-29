@@ -216,8 +216,8 @@ namespace UserInterface.Extensions
                     Label label = new Label(text);
                     MenuItem imageItem = new MenuItem();
 
-                    container.Add(image);
-                    container.Add(label);
+                    container.PackStart(image, false, false, 0);
+                    container.PackStart(label, false, false, 0);
                     imageItem.Add(container);
 #endif
             return imageItem;
