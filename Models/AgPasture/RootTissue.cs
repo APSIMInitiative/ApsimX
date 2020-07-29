@@ -118,8 +118,9 @@
                 dmLayer[layer] = amountDMToRemove * prevRootFraction[layer];
 
             UpdateDM();
+            double[] newRootFraction = FractionWt;
             for (int layer = 0; layer < dmLayer.Length; layer++)
-                nLayer[layer] = amountNToRemove * FractionWt[layer];
+                nLayer[layer] = amountNToRemove * newRootFraction[layer];
 
             // additions need to consider distribution over the profile
             dmTransferedIn = dmLayersTransferedIn.Sum();
@@ -143,12 +144,13 @@
             if (amountDM + amountN > 0.0)
             {
                 FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[dmLayer.Length];
+                var fractionWt = FractionWt;
                 for (int layer = 0; layer < dmLayer.Length; layer++)
                 {
                     FOMType fomData = new FOMType();
-                    fomData.amount = amountDM * FractionWt[layer];
-                    fomData.N = amountN * FractionWt[layer];
-                    fomData.C = amountDM * carbonFractionInDM * FractionWt[layer];
+                    fomData.amount = amountDM * fractionWt[layer];
+                    fomData.N = amountN * fractionWt[layer];
+                    fomData.C = amountDM * carbonFractionInDM * fractionWt[layer];
                     fomData.P = 0.0; // P not considered here
                     fomData.AshAlk = 0.0; // Ash not considered here
 
