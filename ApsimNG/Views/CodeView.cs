@@ -26,13 +26,6 @@ namespace UserInterface.Views
     /// </remarks>
     public class EditorView : ViewBase, IEditorView
     {
-        private ScriptCompletionProvider completionProvider;
-
-        ///// <summary>
-        ///// The find-and-replace form
-        ///// </summary>
-        //private FindAndReplaceForm findForm = new FindAndReplaceForm();
-
         /// <summary>
         /// Scrolled window
         /// </summary>
@@ -96,20 +89,10 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Buffer.Text = value;
-                //tbi: set mime type
-                if (Mode == EditorType.ManagerScript)
-                {
-                    textEditor.AutoIndent = true;
-                    textEditor.ShowLineNumbers = true;
-                    //textEditor.HighlightCurrentLine = true;
-
-                    // Move to the first/last non-whitespace char on the first
-                    // press of home/end keys, and to the beginning/end of the
-                    // line on the second press.
-                    textEditor.SmartHomeEnd = SmartHomeEndType.Before;
-                    Language = "c-sharp";
-                    //textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
-                }
+                //if (Mode == EditorType.ManagerScript)
+                //{
+                //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
+                //}
                 //else if (Mode == EditorType.Report)
                 //{
                 //    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
@@ -167,8 +150,7 @@ namespace UserInterface.Views
         {
             get
             {
-                // todo - test this
-                return Text.Substring(0, textEditor.Buffer.CursorPosition).Split(Environment.NewLine).Length;
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line;
             }
         }
 
@@ -179,9 +161,7 @@ namespace UserInterface.Views
         {
             get
             {
-                // todo: does this actually work?
-                string currentLine = Lines[CurrentLineNumber];
-                return Offset - Text.IndexOf(currentLine);
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).LineOffset;
             }
         }
 
@@ -192,13 +172,18 @@ namespace UserInterface.Views
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
         /// way to store these values.
+        /// 
+        /// X is column, Y is line number, width is horizontal scroll position, height is vertical scroll position.
         /// </summary>
         public System.Drawing.Rectangle Location
         {
             get
             {
-                // fixme
-                return new System.Drawing.Rectangle(0 /*textEditor.GetVisualColumn(iter)*/, CurrentLineNumber, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
+                int scrollX = Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture);
+                int scrollY = Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture);
+
+                // x is column, y is line number.
+                return new System.Drawing.Rectangle(CurrentColumnNumber, CurrentLineNumber, scrollX, scrollY);
             }
 
             set
@@ -212,6 +197,10 @@ namespace UserInterface.Views
                 // We make these calls to set the position if we can, but otherwise we'll just hold on to the values until the scrollers are ready
                 Hadjustment_Changed(this, null);
                 Vadjustment_Changed(this, null);
+
+                // x is column, y is line number.
+                TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Y, value.X);
+                textEditor.Buffer.PlaceCursor(iter);
             }
         }
 
@@ -270,30 +259,24 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
 
-            //Language csharp = LanguageManager.Default.GetLanguage("text/x-csharp");
-            //Buffer buffer = new Buffer(csharp);
             textEditor = new SourceView();
             textEditor.Monospace = true;
+            textEditor.HighlightCurrentLine = true;
+            textEditor.AutoIndent = true;
+            textEditor.TabWidth = 4; // Should probably be in css?
+            textEditor.ShowLineNumbers = true;
+
+            // Move to the first/last non-whitespace char on the first
+            // press of home/end keys, and to the beginning/end of the
+            // line on the second press.
+            textEditor.SmartHomeEnd = SmartHomeEndType.Before;
 
             // Intellisense initialisation.
-            completionProvider = new ScriptCompletionProvider(ShowError, textEditor);
-            textEditor.Completion.AddProvider(completionProvider);
+            // fixme - this should only happen if we're in manager script mode.
+            textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
             
             scroller.Add(textEditor);
             mainWidget = scroller;
-            //Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
-            //Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
-            //options.EnableSyntaxHighlighting = true;
-            //options.ColorScheme = Configuration.Settings.EditorStyleName;
-            //options.Zoom = Configuration.Settings.EditorZoom;
-            //options.HighlightCaretLine = true;
-            //options.EnableSyntaxHighlighting = true;
-            //options.HighlightMatchingBracket = true;
-            //textEditor.Options = options;
-            //textEditor.Options.Changed += EditorOptionsChanged;
-            //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
-            //textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
-            //textEditor.PopupMenu = DoPopup;
             textEditor.Buffer.Changed += OnTextHasChanged;
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
@@ -340,14 +323,15 @@ namespace UserInterface.Views
         {
             try
             {
-                //textEditor.Completion.RemoveProvider(completionProvider);
+                foreach (ICompletionProvider completion in textEditor.Completion.Providers)
+                    textEditor.Completion.RemoveProvider(completion);
+
                 textEditor.Buffer.Changed -= OnTextHasChanged;
                 textEditor.FocusInEvent -= OnTextBoxEnter;
                 textEditor.FocusOutEvent -= OnTextBoxLeave;
                 textEditor.KeyPressEvent -= OnKeyPress;
                 scroller.Hadjustment.Changed -= Hadjustment_Changed;
                 scroller.Vadjustment.Changed -= Vadjustment_Changed;
-                //textEditor.Options.Changed -= EditorOptionsChanged;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
 
                 // It's good practice to disconnect all event handlers, as it makes memory leaks
@@ -377,7 +361,6 @@ namespace UserInterface.Views
                 accel.Dispose();
                 textEditor.Cleanup();
                 textEditor = null;
-                //findForm.Destroy();
                 owner = null;
             }
             catch (Exception err)
@@ -636,7 +619,6 @@ namespace UserInterface.Views
             double horizontalPosition = scroller.Hadjustment.Value;
 
             Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
-            //Offset = index + completionOption.Length;
 
             scroller.Vadjustment.Value = verticalPosition;
             scroller.Hadjustment.Value = horizontalPosition;
@@ -660,8 +642,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (TextHasChangedByUser != null)
-                    TextHasChangedByUser(sender, e);
+                TextHasChangedByUser?.Invoke(sender, e);
             }
             catch (Exception err)
             {
@@ -958,31 +939,6 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-
-        //// The following block comes from the example code provided at 
-        //// http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
-        //// I leave it here because it provides the handlers needed for a popup menu
-        //// Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
-        //
-        //private void menuToggleBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
-        //    TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
-        //}
-        //
-        //private void menuGoToNextBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
-        //        (bookmark => true));
-        //}
-        //
-        //private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
-        //{
-        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
-        //        (bookmark => true));
-        //}
-        
-
         #endregion
     }
 }

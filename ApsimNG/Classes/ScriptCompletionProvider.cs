@@ -270,7 +270,6 @@ namespace UserInterface.Intellisense
             {
                 string code = context.Iter.Buffer.Text;
                 int offset = context.Iter.Buffer.CursorPosition;
-                int line = context.Iter.Line + 1;
 
                 Task<IEnumerable<NeedContextItemsArgs.ContextItem>> task = service.GetCompletionItemsAsync(code, offset);
                 task.Wait();
