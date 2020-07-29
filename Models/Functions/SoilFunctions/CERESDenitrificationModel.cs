@@ -45,10 +45,8 @@ namespace Models.Functions
             double ActiveCppm = ActiveC/(soil.BD[arrayIndex] * soil.Thickness[arrayIndex] / 100);
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = 0.0006 * CarbonModifier;
-
-            double RateModifier = Math.Min(CERESTF.Value(arrayIndex), CERESWF.Value(arrayIndex));            
-                       
-            return PotentialRate * RateModifier;
+             
+            return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
