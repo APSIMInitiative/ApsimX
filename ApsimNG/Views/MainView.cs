@@ -155,7 +155,7 @@
 
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
-            hbox1.HeightRequest = 20;            
+            hbox1.HeightRequest = 20;
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -182,17 +182,21 @@
 
             // If font is null, or font family is null, or font size is 0, fallback
             // to the default font (on windows only).
-            if (ProcessUtilities.CurrentOS.IsWindows && (Utility.Configuration.Settings.Font == null ||
-                                                         Utility.Configuration.Settings.Font.Family == null ||
-                                                         Utility.Configuration.Settings.Font.Size == 0))
+            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.Font) ||
+                                                         f.Family == null ||
+                                                         f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (Utility.Configuration.Settings.Font != null)
-                ChangeFont(Utility.Configuration.Settings.Font);
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.Font))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+                ChangeFont(font);
+            }
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -902,7 +906,7 @@
             try
             {
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
-                Utility.Configuration.Settings.Font = newFont;
+                Utility.Configuration.Settings.Font = newFont.ToString();
                 ChangeFont(newFont);
             }
             catch (Exception err)
