@@ -355,13 +355,20 @@
         {
             get
             {
+                // NOTE: these are included for runtime efficiency
                 double[] nh4 = NH4.kgha;
                 double[] no3 = NO3.kgha;
+                double[] FOMCarbohydrateC = FOMCarbohydrate.C;
+                double[] FOMCelluloseC = FOMCellulose.C;
+                double[] FOMLigninC = FOMLignin.C;
+                double[] FOMCarbohydrateN = FOMCarbohydrate.N;
+                double[] FOMCelluloseN = FOMCellulose.N;
+                double[] FOMLigninN = FOMLignin.N;
 
-                double[] values = new double[FOMLignin.C.Length];
-                for (int i = 0; i < FOMLignin.C.Length; i++)
-                    values[i] = MathUtilities.Divide(FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i],
-                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + nh4[i] + no3[i], 0.0);
+                double[] values = new double[FOMLigninN.Length];
+                for (int i = 0; i < FOMLigninN.Length; i++)
+                    values[i] = MathUtilities.Divide(FOMCarbohydrateC[i] + FOMCelluloseC[i] + FOMLigninC[i],
+                               FOMCarbohydrateN[i] + FOMCelluloseN[i] + FOMLigninN[i] + nh4[i] + no3[i], 0.0);
 
                 return values;
             }
