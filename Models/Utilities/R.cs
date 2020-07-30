@@ -252,6 +252,16 @@ namespace Models.Utilities
             string rFileName = Path.ChangeExtension(tempFileName, ".R");
             File.WriteAllText(rFileName, script);
 
+            try
+            {
+                if (!Directory.Exists(PackagesDirectory))
+                    Directory.CreateDirectory(PackagesDirectory);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to install R package {package}: {PackagesDirectory} does not exist and cannot be created.", err);
+            }
+
             Run(rFileName, true, package, PackagesDirectory);
             try
             {
