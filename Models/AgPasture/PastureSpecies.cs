@@ -393,8 +393,6 @@
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
-                // Get the zone this plant is in
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
@@ -410,7 +408,7 @@
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
                         UptakeDemands.Water = new double[zone.NO3N.Length];
 
-                        NSupply += (MathUtilities.Sum(myRoot.mySoilNH4Available) + MathUtilities.Sum(myRoot.mySoilNO3Available)) * zone.Zone.Area;
+                        NSupply += (myRoot.mySoilNH4Available.Sum() + myRoot.mySoilNO3Available.Sum()) * zone.Zone.Area;
                     }
                 }
 
@@ -421,7 +419,7 @@
                 EvaluateSoilNitrogenDemand();
 
                 // 2. Get the amount of soil N demanded
-                double NDemand = mySoilNDemand * parentZone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // 3. Estimate fraction of N used up
                 double fractionUsed = 0.0;
@@ -2713,18 +2711,15 @@
             InitiliaseSoilArrays();
 
             // Set the minimum green DM
-            leaf.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
-            stem.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
-            stolon.MinimumLiveDM = 0.0;
+            leaf.Initialise(MinimumGreenWt * MinimumGreenLeafProp);
+            stem.Initialise(MinimumGreenWt * (1.0 - MinimumGreenLeafProp));
+            stolon.Initialise(0.0);
 
             // set initial plant state
             SetInitialState();
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
-
-            // initialise parameters for biomass removal
-            InitBiomassRemovals();
 
             // check whether there is a resource arbitrator, it will control the uptake
             if (soilArbitrator != null)
@@ -2857,33 +2852,6 @@
             allocationIncreaseRepro = ReproSeasonMaxAllocationIncrease / (1.0 + reproAux);
         }
 
-        /// <summary>Initialises the default biomass removal fractions.</summary>
-        private void InitBiomassRemovals()
-        {
-            // leaves, stems
-            var removalFractions = new OrganBiomassRemovalType()
-            {
-                FractionLiveToRemove = 0.5,
-                FractionDeadToRemove = 0.5
-            };
-            leaf.SetRemovalFractions("Harvest", removalFractions);
-            leaf.SetRemovalFractions("Graze", removalFractions);
-            leaf.SetRemovalFractions("Cut", removalFractions);
-            stem.SetRemovalFractions("Harvest", removalFractions);
-            stem.SetRemovalFractions("Graze", removalFractions);
-            stem.SetRemovalFractions("Cut", removalFractions);
-
-            // stolon
-            var stolonRemovalFractions2 = new OrganBiomassRemovalType()
-            {
-                FractionLiveToRemove = 0.5,
-                FractionDeadToRemove = 0.0
-            };
-            stolon.SetRemovalFractions("Harvest", stolonRemovalFractions2);
-            stolon.SetRemovalFractions("Graze", stolonRemovalFractions2);
-            stolon.SetRemovalFractions("Cut", stolonRemovalFractions2);
-        }
-
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Daily processes  -------------------------------------------------------------------------------------------
@@ -2896,6 +2864,9 @@
         {
             // 1. Zero out several variables
             RefreshVariables();
+            leaf.OnDoDailyInitialisation();
+            stem.OnDoDailyInitialisation();
+            stolon.OnDoDailyInitialisation();
         }
 
         /// <summary>Zeroes out the value of several variables.</summary>
@@ -3314,14 +3285,14 @@
             // Do the actual turnover, update DM and N
             // - Leaves and stems
             double[] turnoverRates = new double[] { gama * RelativeTurnoverEmerging, gama, gama, gamaD };
-            leaf.DoTissueTurnover(turnoverRates);
-            stem.DoTissueTurnover(turnoverRates);
+            leaf.CalculateTissueTurnover(turnoverRates);
+            stem.CalculateTissueTurnover(turnoverRates);
 
             // - Stolons
             if (isLegume)
             {
                 turnoverRates = new double[] { gamaS * RelativeTurnoverEmerging, gamaS, gamaS, 1.0 };
-                stolon.DoTissueTurnover(turnoverRates);
+                stolon.CalculateTissueTurnover(turnoverRates);
             }
 
             // - Roots (only 2 tissues)
@@ -3454,13 +3425,13 @@
             double preTotalN = AboveGroundN + BelowGroundN;
 
             // Update each organ, returns test for mass balance
-            if (leaf.DoOrganUpdate() == false)
+            if (leaf.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for leaves");
 
-            if (stem.DoOrganUpdate() == false)
+            if (stem.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stems");
 
-            if (stolon.DoOrganUpdate() == false)
+            if (stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
             roots[0].DoOrganUpdate();
@@ -3684,23 +3655,24 @@
         {
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
+            var remobilisableSenescedN = RemobilisableSenescedN;
             if (adjNDemand - fixedN < Epsilon)
             {
                 // N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if (adjNDemand - (fixedN + RemobilisableSenescedN) < Epsilon)
+            else if (adjNDemand - (fixedN + remobilisableSenescedN) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
                 mySoilNDemand = 0.0;
-                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, RemobilisableSenescedN, 0.0);
+                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
                 // N demand is greater than fixation and remobilisation, N uptake is needed
-                senescedNRemobilised = RemobilisableSenescedN;
+                senescedNRemobilised = remobilisableSenescedN;
                 mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
@@ -3708,9 +3680,9 @@
             // Update N remobilised in each organ
             if (senescedNRemobilised > Epsilon)
             {
-                leaf.Tissue[leaf.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                stem.Tissue[stem.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
-                stolon.Tissue[stolon.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                leaf.DeadTissue.NRemobilised = leaf.DeadTissue.NRemobilisable * fracRemobilised;
+                stem.DeadTissue.NRemobilised = stem.DeadTissue.NRemobilisable * fracRemobilised;
+                stolon.DeadTissue.NRemobilised = stolon.DeadTissue.NRemobilisable * fracRemobilised;
                 roots[0].Tissue[roots[0].Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    root.Tissue[root.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
@@ -3738,9 +3710,9 @@
                         // remove the luxury N
                         for (int tissue = 0; tissue < 3; tissue++)
                         {
-                            leaf.Tissue[tissue].DoRemobiliseN(1.0);
-                            stem.Tissue[tissue].DoRemobiliseN(1.0);
-                            stolon.Tissue[tissue].DoRemobiliseN(1.0);
+                            leaf.Tissue[tissue].NRemobilised = leaf.Tissue[tissue].NRemobilisable;
+                            stem.Tissue[tissue].NRemobilised = stem.Tissue[tissue].NRemobilisable;
+                            stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable;
                             if (tissue == 0)
                             {
                                 roots[0].Tissue[tissue].DoRemobiliseN(1.0);
@@ -3769,9 +3741,9 @@
                         }
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
-                        leaf.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        stem.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        stolon.Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                        leaf.Tissue[tissue].NRemobilised = leaf.Tissue[tissue].NRemobilisable * fracRemobilised;
+                        stem.Tissue[tissue].NRemobilised = stem.Tissue[tissue].NRemobilisable * fracRemobilised;
+                        stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable * fracRemobilised;
                         if (tissue == 0)
                         {
                             roots[0].Tissue[tissue].DoRemobiliseN(fracRemobilised);
@@ -4220,10 +4192,10 @@
 
             // get chlorophyll effect
             double effect = 0.0;
-            if (leaf.NconcLive > leaf.NConcMinimum)
+            if (leaf.NConcLive > leaf.NConcMinimum)
             {
-                if (leaf.NconcLive < leaf.NConcOptimum * fN)
-                    effect = MathUtilities.Divide(leaf.NconcLive - leaf.NConcMinimum, (leaf.NConcOptimum * fN) - leaf.NConcMinimum, 1.0);
+                if (leaf.NConcLive < leaf.NConcOptimum * fN)
+                    effect = MathUtilities.Divide(leaf.NConcLive - leaf.NConcMinimum, (leaf.NConcOptimum * fN) - leaf.NConcMinimum, 1.0);
                 else
                     effect = 1.0;
             }

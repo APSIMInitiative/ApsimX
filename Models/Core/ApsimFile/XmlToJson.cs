@@ -100,7 +100,7 @@ namespace Models.Core.ApsimFile
             "Models.Functions.CERESMineralisationFOMCNRFactor","Models.Functions.DayCentN2OFractionModel",
             "Models.Functions.CERESNitrificationpHFactor","Models.Functions.CERESNitrificationWaterFactor",
             "Models.Functions.CERESUreaHydrolysisModel","Models.Functions.CERESMineralisationWaterFactor",
-            "Models.Functions.CERESMineralisationTemperatureFactor","Models.Functions.CERESNitrificationModel",
+            "Models.Functions.CERESMineralisationTemperatureFactor","Models.Functions.CERESNitrificationModel","Models.Functions.CERESDenitrificationModel",
             "Models.Functions.StringComparisonFunction","Models.Functions.AccumulateByDate",
             "Models.Functions.AccumulateByNumericPhase","Models.Functions.TrackerFunction",
             "Models.Functions.ArrayFunction","Models.Functions.WangEngelTempFunction",
