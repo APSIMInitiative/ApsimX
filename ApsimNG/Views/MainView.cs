@@ -182,19 +182,19 @@
 
             // If font is null, or font family is null, or font size is 0, fallback
             // to the default font (on windows only).
-            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
-            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.Font) ||
+            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
                                                          f.Family == null ||
                                                          f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11").ToString();
+                Utility.Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.Font))
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
             {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
                 ChangeFont(font);
             }
 
@@ -881,8 +881,8 @@
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            if (Utility.Configuration.Settings.Font != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+            if (Utility.Configuration.Settings.FontName != null)
+                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
 
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
@@ -906,7 +906,7 @@
             try
             {
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
-                Utility.Configuration.Settings.Font = newFont.ToString();
+                Utility.Configuration.Settings.FontName = newFont.ToString();
                 ChangeFont(newFont);
             }
             catch (Exception err)

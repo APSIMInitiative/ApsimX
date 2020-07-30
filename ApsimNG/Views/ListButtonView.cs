@@ -170,7 +170,7 @@
 
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
-            Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+            Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             if (font != null && font != btnLabel.Style.FontDescription)
                 btnLabel.ModifyFont(font);
 

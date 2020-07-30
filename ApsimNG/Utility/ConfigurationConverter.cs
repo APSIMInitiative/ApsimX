@@ -96,7 +96,7 @@ namespace Utility
                 string fontString = $"{family} {style} {variant} {weight} {stretch} {gravity} {size}";
 
                 rootNode.RemoveChild(fontNode);
-                XmlNode newFontNode = rootNode.OwnerDocument.CreateElement("Font");
+                XmlNode newFontNode = rootNode.OwnerDocument.CreateElement("FontName");
                 newFontNode.InnerText = fontString;
                 rootNode.AppendChild(newFontNode);
             }
