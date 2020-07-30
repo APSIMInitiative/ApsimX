@@ -66,11 +66,11 @@
                 "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -1.27593",
                 "[Phenology].Budding.Target.FixedValue = 767.6113",
                 "[Phenology].Budding.Progression.Response.X = 0,0.353281,10.353281,20.353281",
-                "[Phenology].ThermalTime.Response.MinTemp = 2.09",
-                "[Phenology].ThermalTime.Response.OptTemp = 27.4088",
-                "[Phenology].ThermalTime.Response.MaxTemp = 49.108",
-                "[Phenology].Flowering.Target.FixedValue = 55.75583",
-                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 44.75583"
+                "[Phenology].ThermalTime.Response.MinTemp = 2.51",
+                "[Phenology].ThermalTime.Response.OptTemp = 22.245",
+                "[Phenology].ThermalTime.Response.MaxTemp = 40.316",
+                "[Phenology].Flowering.Target.FixedValue = 42.007",
+                "[Phenology].BerryDevelopment.Target.Base.FixedValue = 50.84"
               ],
               "Name": "Merlot",
               "Children": [],
@@ -8985,6 +8985,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "BaseSim",
           "Children": [
             {
@@ -13039,6 +13040,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "VineFacts1",
                   "Children": [
                     {
@@ -16281,6 +16283,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "VineFacts2",
                   "Children": [
                     {
@@ -19347,6 +19350,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "RetainedNodNum",
                   "Children": [
                     {
@@ -25143,6 +25147,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "RPC_1",
                   "Children": [
                     {
@@ -32352,6 +32357,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "RPC_2",
                   "Children": [
                     {
@@ -36500,6 +36506,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Renwick",
                   "Children": [
                     {
@@ -40437,6 +40444,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "Seaview_2Cane",
               "Children": [
                 {
@@ -42739,6 +42747,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "Seaview_4Cane",
               "Children": [
                 {
@@ -45041,6 +45050,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "Seaview_4Cane08",
               "Children": [
                 {
@@ -47366,6 +47376,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "OtherRegions",
                   "Children": [
                     {
@@ -49261,6 +49272,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Chardonnay",
                   "Children": [
                     {
@@ -51239,6 +51251,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Merlot",
                   "Children": [
                     {
@@ -53121,6 +53134,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "PinotNoir",
                   "Children": [
                     {
@@ -55003,6 +55017,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "PinotGris",
                   "Children": [
                     {
