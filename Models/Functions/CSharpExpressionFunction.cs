@@ -119,7 +119,7 @@ namespace Models.Functions
             template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
 
             // Replace the expression place holder in the template with the real expression.
-            template = template.Replace("return 123456;", "return " + Expression + ";");
+            template = template.Replace("return Clock.FractionComplete;", "return " + Expression + ";");
 
             // Create a new manager that will compile the expression.
             var result = Compiler().Compile(template, this);
