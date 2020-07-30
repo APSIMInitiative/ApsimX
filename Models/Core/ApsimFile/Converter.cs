@@ -2408,7 +2408,8 @@
 
             foreach (Type type in typesToMove)
                 foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, type.Name))
-                    instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
+                    if (!instance["$type"].ToString().Contains("Models.Climate"))
+                        instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
 
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
