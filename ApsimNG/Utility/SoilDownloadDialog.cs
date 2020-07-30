@@ -18,6 +18,7 @@
     using System.Globalization;
     using Models.Core.Apsim710File;
     using Models.WaterModel;
+    using Models.Climate;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC

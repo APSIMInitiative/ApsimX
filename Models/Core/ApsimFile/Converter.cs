@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Climate;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
@@ -19,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 107; } }
+        public static int LatestVersion { get { return 108; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2391,7 +2392,40 @@
             }
         }
 
+        /// <summary>
+        /// Create Models.Climate namespace.
+        /// The following types will be moved into Models.Climate:
+        /// - ControlledEnvironment
+        /// - SlopeEffectsOnWeather
+        /// - Weather
+        /// - WeatherSampler
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion108(JObject root, string fileName)
+        {
+            Type[] typesToMove = new Type[] { typeof(ControlledEnvironment), typeof(SlopeEffectsOnWeather), typeof(Weather), typeof(WeatherSampler) };
 
+            foreach (Type type in typesToMove)
+                foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, type.Name))
+                    instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
+
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                string code = manager.ToString();
+                foreach (Type type in typesToMove)
+                {
+                    if (code.Contains(type.Name))
+                    {
+                        List<string> usings = manager.GetUsingStatements().ToList();
+                        usings.Add("Models.Climate");
+                        manager.SetUsingStatements(usings);
+                        manager.Save();
+                        break;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Add progeny destination phase and mortality function.
