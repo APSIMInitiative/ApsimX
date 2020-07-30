@@ -188,7 +188,10 @@
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
 
-            if (ProcessUtilities.CurrentOS.IsWindows && string.IsNullOrEmpty(Utility.Configuration.Settings.Font))
+            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.Font) ||
+                                                         f.Family == null ||
+                                                         f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
                 Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11").ToString();
