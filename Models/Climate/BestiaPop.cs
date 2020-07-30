@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,14 +19,17 @@ namespace Models.Climate
     /// for a given latitude/longitude/dates/etc.
     /// https://github.com/JJguri/bestiapop
     /// </summary>
+    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
+    [Serializable]
     public class BestiaPop : Model, IWeather
     {
         /// <summary>
         /// Summary file, used for logging purposes.
         /// </summary>
-        [Link] private ISummary summary;
+        [Link] private ISummary summary = null;
 
         /// <summary>
         /// Url of bestiapop github repo.
@@ -209,31 +213,28 @@ namespace Models.Climate
                     summary.WriteMessage(this, $"OutputPath was not specified. Files will be generated to temp directory: '{output}'");
             }
 
-            // todo: check if this is necessary.
-            //if (!Directory.Exists(output))
-            //    Directory.CreateDirectory(output);
+            if (!Directory.Exists(output))
+                Directory.CreateDirectory(output);
 
             string bestiapop = Path.Combine(bestiapopPath, "bestiapop", "bestiapop.py");
-            ProcessWithRedirectedOutput proc = new ProcessWithRedirectedOutput();
-            StringBuilder args = new StringBuilder($"{bestiapop} -a download-and-convert-to-met -y {StartDate.Year}-{EndDate.Year} -lat {Latitude} -lon {Longitude} ");
+            StringBuilder args = new StringBuilder($"{bestiapop} -a generate-met-file -y {StartDate.Year}-{EndDate.Year} -lat {Latitude} -lon {Longitude} ");
 
             // todo: check that these are correct variables
-            args.Append("-c daily_rain max_temp min_temp vp vp_deficit evap_pan radiation et_short_crop");
+            args.Append("-c \"daily_rain max_temp min_temp vp vp_deficit evap_pan radiation et_short_crop\" ");
             if (MultiProcess)
                 args.Append($"-m ");
             args.Append($"-o {output}");
 
             if (summary != null)
                 summary.WriteMessage(this, $"Running bestiapop with command: 'python {args}' from directory {output}");
-            proc.Start("python", args.ToString(), output, true, cancelToken);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
+
+            try
             {
-                StringBuilder error = new StringBuilder();
-                error.AppendLine("Encountered an error while running bestiapop");
-                error.AppendLine(proc.StdOut);
-                error.AppendLine(proc.StdErr);
-                throw new Exception(error.ToString());
+                RunCommand("python", args.ToString(), output);
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Encountered an error while running bestiapop", err);
             }
 
             Weather result = new Weather();
@@ -252,6 +253,9 @@ namespace Models.Climate
         {
             try
             {
+                string parentDirectory = Directory.GetParent(installPath).FullName;
+                if (!Directory.Exists(parentDirectory))
+                    Directory.CreateDirectory(parentDirectory);
                 CloneBestiapop(installPath);
                 InstallDeps(installPath);
             }
@@ -274,16 +278,13 @@ namespace Models.Climate
         /// <param name="path">Bestiapop install directory.</param>
         private static void InstallDeps(string path)
         {
-            ProcessWithRedirectedOutput proc = new ProcessWithRedirectedOutput();
-            proc.Start("pip", "install -r requirements.txt", path, true);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
+            try
             {
-                StringBuilder error = new StringBuilder();
-                error.AppendLine("Unable to install bestiapop requirements");
-                error.AppendLine(proc.StdOut);
-                error.AppendLine(proc.StdErr);
-                throw new Exception(error.ToString());
+                RunCommand("pip", "install -r requirements.txt", path);
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Unable to install bestiapop requirements", err);
             }
         }
 
@@ -293,16 +294,14 @@ namespace Models.Climate
         /// <param name="targetPath">The target directory. Bestiapop will be cloned into a subdirectory at this path.</param>
         private static void CloneBestiapop(string targetPath)
         {
-            ProcessWithRedirectedOutput proc = new ProcessWithRedirectedOutput();
-            proc.Start("git", $"clone {url} {targetPath}", targetPath, true);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
+            try
             {
-                StringBuilder error = new StringBuilder();
-                error.AppendLine("Unable to clone bestiapop");
-                error.AppendLine(proc.StdOut);
-                error.AppendLine(proc.StdErr);
-                throw new Exception(error.ToString());
+                if (!Directory.Exists(targetPath))
+                    RunCommand("git", $"clone {url} {targetPath}", Directory.GetParent(targetPath).FullName);
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Unable to clone bestiapop", err);
             }
         }
 
@@ -321,5 +320,33 @@ namespace Models.Climate
         /// Calculate time of sunset in hours.
         /// </summary>
         public double CalculateSunSet() => weather.CalculateSunSet();
+
+        private static void RunCommand(string fileName, string arguments, string workingDirectory)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = fileName;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            StringBuilder output = new StringBuilder();
+            process.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
+            {
+                output.AppendLine(e.Data);
+            };
+            process.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+            {
+                output.AppendLine(e.Data);
+            };
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+                throw new Exception($"Error while running command '{fileName} {arguments}'. Process output: {output}");
+        }
     }
 }
