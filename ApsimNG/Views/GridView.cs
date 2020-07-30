@@ -1764,7 +1764,11 @@
                 {
                     ColRenderAttributes attrib = new ColRenderAttributes();
                     attrib.ForegroundColor = Grid.GetForegroundColour(StateType.Normal);
+#if NETFRAMEWORK
+                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+#else
                     attrib.BackgroundColor = Grid.GetBackgroundColour(StateType.Normal);
+#endif
                     colAttributes.Add(i, attrib);
                 }
             }
