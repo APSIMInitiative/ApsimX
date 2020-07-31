@@ -239,6 +239,10 @@ namespace Models.Optimisation
             string apsimxFileName = GenerateApsimXFile();
 
             contents.AppendLine($"variable_names <- c('{VariableName}')");
+
+            // If we're reading from the PredictedObserved table, need to fix
+            // Predicted./Observed. suffix for the observed variables.
+            contents.AppendLine($"observed_variable_names <- c('{GetObservedVariableName()}', 'Clock.Today')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
             contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
@@ -258,6 +262,13 @@ namespace Models.Optimisation
             contents.Append(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.OptimizR.r"));
 
             File.WriteAllText(fileName, contents.ToString());
+        }
+
+        private string GetObservedVariableName()
+        {
+            if (PredictedTableName == ObservedTableName)
+                return VariableName.Replace("Predicted.", "Observed.");
+            return VariableName;
         }
 
         /// <summary>

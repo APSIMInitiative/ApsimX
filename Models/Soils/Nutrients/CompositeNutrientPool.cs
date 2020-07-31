@@ -36,9 +36,6 @@
             }
         }
 
-        /// <summary>Carbon/nitrogen ratio.</summary>
-        public double[] CNRatio { get { return MathUtilities.Divide(C, N); } }
-
         /// <summary>Amount of nitrogen (kg/ha).</summary>
         public double[] N
         {

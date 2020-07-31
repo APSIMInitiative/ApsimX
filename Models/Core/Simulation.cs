@@ -126,7 +126,6 @@ namespace Models.Core
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
-        [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
         /// <summary>Gets the value of a variable or model.</summary>
