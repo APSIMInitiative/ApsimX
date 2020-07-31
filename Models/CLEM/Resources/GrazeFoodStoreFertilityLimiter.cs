@@ -89,7 +89,6 @@ namespace Models.CLEM.Resources
                 reduction = ((shortfall * (1 - NitrogenReduction)) + (nRequired - shortfall)) / nRequired;
             }
             annualNUsed += (nRequired*reduction);
-            System.Diagnostics.Debug.WriteLine($"{Clock.Today.ToShortDateString()}\t{annualNUsed}\t{nRequired}\t{reduction}");
             return reduction;
         }
 
