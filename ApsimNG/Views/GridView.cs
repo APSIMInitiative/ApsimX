@@ -437,7 +437,8 @@
                 if (Grid.HasFocus || !fixedColView.Visible)
                 {
                     Grid.GetCursor(out path, out col);
-                    if (path != null && col != null && col.Cells.Length > 0)
+
+                    if (path != null && col != null && col.TreeView != null && col.Cells.Length > 0)
                     {
                         int colNo, rowNo;
                         rowNo = path.Indices[0];
@@ -449,7 +450,7 @@
                 if (fixedColView.HasFocus)
                 {
                     fixedColView.GetCursor(out path, out col);
-                    if (path != null && col != null && col.Cells.Length > 0)
+                    if (path != null && col != null && col.TreeView != null && col.Cells.Length > 0)
                     {
                         int colNo, rowNo;
                         rowNo = path.Indices[0];
@@ -1742,9 +1743,9 @@
             SetColumnHeaders(fixedColView);
 
             Grid.EnableSearch = false;
-            //// gridview.SearchColumn = 0;
+            // gridview.SearchColumn = 0;
             fixedColView.EnableSearch = false;
-            //// fixedcolview.SearchColumn = 0;
+            // fixedcolview.SearchColumn = 0;
 
             UpdateControls();
 
@@ -2579,7 +2580,12 @@
                 startEdit = false;
 
             Gtk.TreeView view = GetTreeView(column);
+
+#if NETFRAMEWORK
+            // In gtk3 this breaks everything. Can't remember why it's
+            // necessary in gtk2, but I'm not brave enough to remove it.
             view.GrabFocus();
+#endif
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);
