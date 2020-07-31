@@ -95,7 +95,7 @@ namespace Models.Soils.Nutrients
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destinations[j].N[i], destinations[j].C[i], 0.0);
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j], destinations[j].CNRatio[i], 0.0);
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
