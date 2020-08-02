@@ -1978,7 +1978,12 @@
             {
                 Label newLabel = new Label();
                 view.Columns[i].Widget = newLabel;
+#if NETFRAMEWORK
+                // In gtk3, explicit newline (\n) will cause the header to wrap anyway.
+                // In fact, setting Label.Wrap to true causes problems with the height
+                // of the fixed column treeview.
                 newLabel.Wrap = true;
+#endif
                 newLabel.Justify = Justification.Center;
                 /*
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
