@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural");
                     if (ind.Mother != null)
                     {
-                        // report conception status changed when last multiple birth dies.
+                        // report conception status changed when offspring weans.
                         ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
                     }
                 }
@@ -564,10 +564,6 @@ namespace Models.CLEM.Activities
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
             ind.PreviousWeight = ind.Weight;
-            if(ind.Gender == Sex.Female && (ind as RuminantFemale).BirthDue)
-            {
-                ind.Weight -= (ind as RuminantFemale).WeightLossDueToCalf;
-            }
             ind.Weight += energyPredictedBodyMassChange;
             ind.Weight = Math.Max(0.0, ind.Weight);
             ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
