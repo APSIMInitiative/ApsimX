@@ -124,8 +124,7 @@ namespace Utility
         /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
-        /// <value></value>
-        public string Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
 
         public ApsimFileMetadata GetMruFile(string fileName)
         {

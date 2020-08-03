@@ -173,9 +173,12 @@
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
             // todo - check if this is necessary in gtk3
-            Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.Font);
-            if (font != null && font != btnLabel.Style.FontDescription)
-                btnLabel.ModifyFont(font);
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                if (font != null && font != btnLabel.Style.FontDescription)
+                    btnLabel.ModifyFont(font);
+            }
 #endif
             btnLabel.LineWrap = true;
             btnLabel.LineWrapMode = Pango.WrapMode.Word;

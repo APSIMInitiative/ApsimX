@@ -228,7 +228,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
             }
             catch (Exception err)
             {
