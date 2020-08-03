@@ -141,9 +141,6 @@
             }
         }
 
-        /// <summary>The current cultivar definition.</summary>
-        private Cultivar cultivarDefinition;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -394,9 +391,8 @@
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
-            cultivarDefinition = PMF.Cultivar.Find(Cultivars, SowingData.Cultivar);
+            Cultivar cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
             cultivarDefinition.Apply(this);
-
 
             // Invoke an AboutToSow event.
             if (Sowing != null)
@@ -472,8 +468,6 @@
 
             Clear();
             IsEnding = true;
-            if (cultivarDefinition != null)
-                cultivarDefinition.Unapply();
             IsAlive = false;
         }
 
