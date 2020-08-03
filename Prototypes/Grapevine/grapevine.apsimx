@@ -2160,7 +2160,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.85,
+                              "FixedValue": 0.9,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2181,7 +2181,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.9,
+                              "FixedValue": 1.0,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -4980,7 +4980,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
+                              "FixedValue": 0.3,
                               "Units": "gc/gDM",
                               "Name": "Constant",
                               "Children": [],
@@ -5001,7 +5001,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
+                              "FixedValue": 0.5,
                               "Units": "gc/gDM",
                               "Name": "Constant",
                               "Children": [],
@@ -19355,8 +19355,8 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2006-02-25T00:00:00",
-                      "End": "2011-05-02T00:00:00",
+                      "Start": "2008-02-25T00:00:00",
+                      "End": "2012-05-02T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -19465,7 +19465,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "02/25/2006 00:00:00"
+                              "Value": "02/25/2008 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
