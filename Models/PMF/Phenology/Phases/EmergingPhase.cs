@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using System.IO;
@@ -49,7 +49,7 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get
@@ -62,20 +62,20 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Thermal time target to end this phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get; set; } 
 
         /// <summary>Thermal time for this time-step.</summary>
         public double TTForTimeStep { get; set; }
 
         /// <summary>Accumulated units of thermal time as progress through phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProgressThroughPhase { get; set; }
 
         /// <summary>
         /// Date for emergence to occur.  null by default so model is used
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string EmergenceDate { get; set; }
 
         // 3. Public methods

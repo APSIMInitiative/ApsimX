@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
 using Models.Functions;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -63,19 +63,19 @@ namespace Models.PMF.Organs
         private BiomassDemand dmDemandPriorityFactors = null;
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; set; }
 
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; set; }
 
         /// <summary>Gets the dm supply photosynthesis.</summary>
@@ -225,7 +225,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterAllocation { get; set; }
 
         #endregion
@@ -560,7 +560,7 @@ namespace Models.PMF.Organs
         public bool IsAboveGround { get { return true; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Nconc
         {
             get
@@ -712,7 +712,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the cohort live.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Live
         {
@@ -725,7 +725,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the cohort dead.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Dead
         {
@@ -807,7 +807,7 @@ namespace Models.PMF.Organs
         }
         
         /// <summary>Gets the DeltaPotentialArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double[] DeltaPotentialArea
         {
@@ -828,7 +828,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the DeltaStressConstrainedArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double [] DeltaStressConstrainedArea
         {
@@ -848,7 +848,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double [] DeltaCarbonConstrainedArea
         {
@@ -871,7 +871,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double[] CohortStructuralDMDemand
         {
@@ -892,7 +892,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double[] CohortMetabolicDMDemand
         {
@@ -912,7 +912,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the DeltaCarbonConstrainedArea</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm2")]
         public double[] CohortStorageDMDemand
         {
@@ -932,7 +932,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the cohort population.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm3")]
         public double[] CohortPopulation
         {
@@ -954,7 +954,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the size of the cohort.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm3")]
         public double[] CohortSize
         {
@@ -1124,7 +1124,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the live stem  number to represent the observed stem numbers in an experiment.</summary>
         /// <value>Stem number.</value>
         [Units("0-1")]
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("In the field experiment, we count stem number according whether a stem number has a green leaf. A green leaf is definied as a leaf has more than half green part.")]
         public double LiveStemNumber
         {

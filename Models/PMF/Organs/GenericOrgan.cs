@@ -8,7 +8,7 @@
     using Library;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using PMF;
 
     /// <summary>
@@ -171,70 +171,70 @@
         public bool IsAboveGround { get; set; } = true;
 
         /// <summary>The live biomass</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Live { get; private set; }
 
         /// <summary>The dead biomass</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Dead { get; private set; }
 
         /// <summary>Gets the total biomass</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Total { get { return Live + Dead; } }
         
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; private set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; private set; }
 
         /// <summary>Gets the biomass detached (sent to soil/surface organic matter)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; private set; }
 
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; private set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Growth Respiration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double GrowthRespiration { get; set; }
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public virtual double NFixationCost { get { return 0; } }
 
         /// <summary>Gets the maximum N concentration.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxNconc { get { return maximumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MinNconc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CritNconc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double N { get { return Live.N + Dead.N; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Nconc
         {
             get

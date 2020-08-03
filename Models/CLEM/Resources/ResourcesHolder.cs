@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Activities;
@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of the all the Resource Groups.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<IModel> ResourceGroupList;
 
         private void InitialiseResourceGroupList()
@@ -57,7 +57,7 @@ namespace Models.CLEM.Resources
         /// Finds a shared marketplace
         /// </summary>
         /// <returns>Market</returns>
-        [XmlIgnore]
+        [JsonIgnore]
         public Market FoundMarket { get; private set; }
 
         /// <summary>

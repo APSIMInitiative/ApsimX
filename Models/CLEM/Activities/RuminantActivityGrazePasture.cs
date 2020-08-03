@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 
@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// paddock or pasture to graze
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

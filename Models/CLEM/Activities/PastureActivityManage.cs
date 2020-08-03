@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -74,19 +74,19 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of pasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Current land condition index
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RelationshipRunningValue LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
@@ -105,13 +105,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         // private properties

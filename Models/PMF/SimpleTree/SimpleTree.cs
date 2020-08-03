@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using Models.Soils;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -59,11 +59,11 @@ namespace Models.PMF
         public double FRGR { get { return 1; } }
 
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialEP { get; set; }
 
         /// <summary>Sets the actual water demand.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double WaterDemand { get; set; }
 
@@ -136,7 +136,7 @@ namespace Models.PMF
         public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string plant_status = "alive";
 
         /// <summary>The sw uptake</summary>
@@ -147,11 +147,11 @@ namespace Models.PMF
         double[] NH4Uptake;
 
         /// <summary>A list of uptakes generated for the soil arbitrator</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ZoneWaterAndN> Uptakes;
         /// <summary>The actual uptake of the plant</summary>
         /// <value>The uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Uptake {get;set;}
 
         /// <summary>Constructor</summary>
@@ -170,7 +170,7 @@ namespace Models.PMF
         }
 
         /// <summary>MicroClimate supplies PotentialEP</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double EP { get; set; }
 
         /// <summary>Simulation start</summary>

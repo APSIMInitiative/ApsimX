@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 
@@ -49,7 +49,7 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get

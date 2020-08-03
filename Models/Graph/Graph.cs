@@ -7,7 +7,7 @@ namespace Models
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents a graph
@@ -128,7 +128,7 @@ namespace Models
         /// <summary>
         /// Gets or sets a list of all series
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<IModel> Series { get { return Apsim.Children(this, typeof(Series)); } }
 
         /// <summary>

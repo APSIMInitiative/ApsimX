@@ -15,7 +15,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
@@ -128,7 +127,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get

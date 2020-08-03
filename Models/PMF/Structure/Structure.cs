@@ -2,7 +2,7 @@
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 
@@ -117,99 +117,99 @@ namespace Models.PMF.Struct
         // 5. Public properties
         //-------------------------------------------------------------------------------------------
         /// <summary>The Leaf Appearance Data </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CohortInitParams InitParams { get; set; }
 
         /// <summary>CohortToInitialise</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int CohortToInitialise { get; set; }
 
         /// <summary>TipToAppear</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int TipToAppear { get; set; }
 
         /// <summary>Did another leaf appear today?</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool TimeForAnotherLeaf { get; set; }
 
         /// <summary>Have all leaves appeared?</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool AllLeavesAppeared { get; set; }
 
         /// <summary>The Leaf Appearance Data </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ApparingLeafParams CohortParams { get; set; }
 
         /// <summary>Gets or sets the primary bud no.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PrimaryBudNo { get; set; }
 
         /// <summary>Gets or sets the total stem popn.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TotalStemPopn { get; set; }
 
         //Plant leaf number state variables
         /// <summary>Number of mainstem nodes which have their tips appeared</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotLeafTipsAppeared { get; set; }
 
         /// <summary>"Number of mainstem nodes which have their tips appeared"</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafTipsAppeared { get; set; }
 
         /// <summary>Number of leaves appeared per plant including all main stem and branch leaves</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PlantTotalNodeNo { get; set; }
 
         /// <summary>Gets or sets the proportion branch mortality.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProportionBranchMortality { get; set; }
 
         /// <summary>Gets or sets the proportion plant mortality.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProportionPlantMortality { get; set; }
 
         /// <value>The change in HaunStage each day.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DeltaHaunStage { get; set; }
 
         /// <value>The delta node number.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DeltaTipNumber { get; set; }
 
         /// <summary>The number of branches, used by zadoc class for calcualting zadoc score in the 20's</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double BranchNumber { get; set; }
 
         /// <summary>The relative size of the current cohort.  Is always 1.0 apart for the final cohort where it can be less than 1.0 if final leaf number is not an interger value</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double NextLeafProportion { get; set; }
 
         /// <summary> The change in plant population due to plant mortality set in the plant class </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DeltaPlantPopulation { get; set; }
 
         /// <summary>"Number of mainstems per meter"</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MainStemPopn { get { return plant.Population * PrimaryBudNo; } }
 
         /// <summary>Number of leaves yet to appear</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double RemainingNodeNo { get { return finalLeafNumber.Value() - LeafTipsAppeared; } }
 
         /// <summary>Gets the height.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Height { get; private set; }
 
         /// <summary>Number of appeared leaves per primary bud unit including all main stem and branch leaves</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PrimaryBudTotalNodeNo { get { return PlantTotalNodeNo / PrimaryBudNo; } }
 
         /// <summary>Relative progress toward final leaf.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double RelativeNodeApperance { get { return LeafTipsAppeared / finalLeafNumber.Value(); } }
         /// <summary>Total number of leaves per shoot .</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TotalLeavesPerShoot { get; set; }
 
         // 6. Public methods

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Collections;
 using Models.Functions;
 using Models.Soils;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Models.Soils.Arbitrator;
@@ -101,17 +101,17 @@ namespace Models.PMF.OilPalm
         public double FRGR { get { return 1; } }
 
         /// <summary>Potential evapotranspiration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double PotentialEP { get; set; }
 
         /// <summary>Sets the actual water demand.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double WaterDemand { get; set; }
 
         /// <summary>MicroClimate supplies LightProfile</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         #endregion
@@ -137,7 +137,7 @@ namespace Models.PMF.OilPalm
         public void EndCrop() { }
 
         /// <summary>The plant_status</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string plant_status = "out";
         /// <summary>The clock</summary>
         [Link]
@@ -208,7 +208,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>Height to top of plant canopy</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double height = 10000.0;
 
@@ -251,13 +251,13 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Potential daily evapotranspiration for the palm canopy</summary>
         /// <value>The pep.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double PEP { get; set; }
 
         /// <summary>Daily evapotranspiration from the palm canopy</summary>
         /// <value>The ep.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double EP { get; set; }
 
@@ -270,7 +270,7 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Factor for daily water stress effect on photosynthesis</summary>
         /// <value>The fw.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double FW { get; set; }
 
@@ -279,26 +279,26 @@ namespace Models.PMF.OilPalm
         double FWexpan = 0.0;
 
         /// <summary>Factor for daily VPD effect on photosynthesis</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double Fvpd { get; set; }
 
 
         /// <summary>Factor for daily nitrogen stress effect on photosynthesis</summary>
         /// <value>The function.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double Fn { get; set; }
 
         /// <summary>Cumulative frond production since planting</summary>
         /// <value>The cumulative frond number.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/palm")]
         public double CumulativeFrondNumber { get; set; }
 
         /// <summary>Cumulative bunch production since planting</summary>
         /// <value>The cumulative bunch number.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/palm")]
         public double CumulativeBunchNumber { get; set; }
 
@@ -309,48 +309,48 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Amount of carbon limitation for todays potential growth (ie supply/demand)</summary>
         /// <value>The carbon stress.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double CarbonStress { get; set; }
 
         /// <summary>Number of bunches harvested on a harvesting event</summary>
         /// <value>The harvest bunches.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/palm")]
         public double HarvestBunches { get; set; }
 
         /// <summary>Mass of harvested FFB on a harvesting event</summary>
         /// <value>The harvest FFB.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("t/ha")]
         public double HarvestFFB { get; set; }
 
         /// <summary>Nitrogen removed at a harvesting event</summary>
         /// <value>The harvest n removed.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double HarvestNRemoved { get; set; }
 
         /// <summary>Mean size of bunches at a harvesting event</summary>
         /// <value>The size of the harvest bunch.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg")]
         public double HarvestBunchSize { get; set; }
 
         /// <summary>Time since planting</summary>
         /// <value>The age.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("y")]
         public double Age { get; set; }
 
         /// <summary>Gets or sets the population.</summary>
         /// <value>The population.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/m^2")]
         public double Population { get; set; }
 
         /// <summary>The sowing data</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public SowPlant2Type SowingData = new SowPlant2Type();
 
         /// <summary>Potential daily nitrogen uptake from each soil layer by palms</summary>
@@ -359,39 +359,39 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Daily nitrogen uptake from each soil layer by palms</summary>
         /// <value>The n uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] NUptake { get; set; }
 
         /// <summary>Daily stem dry matter growth</summary>
         /// <value>The stem growth.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double StemGrowth { get; set; }
         /// <summary>Daily frond dry matter growth</summary>
         /// <value>The frond growth.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double FrondGrowth { get; set; }
         /// <summary>Daily root dry matter growth</summary>
         /// <value>The root growth.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double RootGrowth { get; set; }
         /// <summary>Daily bunch dry matter growth</summary>
         /// <value>The bunch growth.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double BunchGrowth { get; set; }
 
         /// <summary>The fronds</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<FrondType> Fronds = new List<FrondType>();
         /// <summary>The bunches</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<BunchType> Bunches = new List<BunchType>();
         /// <summary>The roots</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<RootType> Roots = new List<RootType>();
 
         /// <summary>The frond appearance rate</summary>
@@ -563,37 +563,37 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Actual soil nitrogen uptake from each soil layer by understory</summary>
         /// <value>The understory n uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UnderstoryNUptake { get; set; }
 
         /// <summary>Understory rooting depth</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double UnderstoryRootDepth = 500;
 
         /// <summary>Potential daily evapotranspiration for the understory</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double UnderstoryPEP { get; set; }
 
         /// <summary>Daily evapotranspiration for the understory</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double UnderstoryEP {get;set;}
 
         /// <summary>Understory plant water stress factor</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double UnderstoryFW {get;set;}
 
         /// <summary>Daily understory dry matter growth</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double UnderstoryDltDM{get;set;}
 
         /// <summary>Daily understory nitrogen fixation</summary>
         /// <value>The understory n fixation.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double UnderstoryNFixation { get; set; }
 
@@ -648,21 +648,21 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets or sets the stem mass.</summary>
         /// <value>The stem mass.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         //[Description("Stem mass on a dry matter basis")]
         [Units("g/m^2")]
         public double StemMass { get; set; }
 
         /// <summary>Gets or sets the stem n.</summary>
         /// <value>The stem n.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         //[Description("Stem nitrogen")]
         [Units("g/m^2")]
         public double StemN { get; set; }
 
         /// <summary>Gets the stem n conc.</summary>
         /// <value>The stem n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Stem nitrogen concention on a dry mass basis")]
         [Units("%")]
         double StemNConc
@@ -685,7 +685,7 @@ namespace Models.PMF.OilPalm
         /// <c>true</c> if this instance is crop in ground; otherwise, <c>false</c>.
         /// </value>
         [Units("True/False")]
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsCropInGround
         {
             get { return CropInGround; }
@@ -1700,7 +1700,7 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets or sets the defoliation fraction.</summary>
         /// <value>The defoliation fraction.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DefoliationFraction
         {
             get

@@ -2,7 +2,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
 using System;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF
 {
@@ -12,7 +12,6 @@ namespace Models.PMF
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
-    [XmlInclude(typeof(CompositeBiomass))]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(IOrgan))]
     public class Biomass: Model
@@ -35,7 +34,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double StorageN
         {
@@ -48,7 +47,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the structural n.</summary>
         /// <value>The structural n.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double StructuralN
         {
@@ -61,7 +60,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the non structural wt.</summary>
         /// <value>The non structural wt.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double StorageWt
         {
@@ -74,7 +73,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the structural wt.</summary>
         /// <value>The structural wt.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double StructuralWt
         {
@@ -87,7 +86,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the metabolic wt.</summary>
         /// <value>The metabolic wt.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicWt
         {
@@ -100,7 +99,7 @@ namespace Models.PMF
 
         /// <summary>Gets or sets the metabolic n.</summary>
         /// <value>The metabolic n.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double MetabolicN
         {
@@ -113,7 +112,7 @@ namespace Models.PMF
 
         /// <summary>Gets the wt.</summary>
         /// <value>The wt.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double Wt
         {
@@ -125,7 +124,7 @@ namespace Models.PMF
 
         /// <summary>Gets the N amount.</summary>
         /// <value>The n.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         virtual public double N
         {
@@ -137,7 +136,7 @@ namespace Models.PMF
 
         /// <summary>Gets the N concentration.</summary>
         /// <value>The n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double NConc
         {

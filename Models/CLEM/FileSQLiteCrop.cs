@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -111,7 +111,7 @@ namespace Models.CLEM
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -211,7 +211,7 @@ namespace Models.CLEM
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>

@@ -11,7 +11,6 @@ namespace Models
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -61,7 +60,7 @@ namespace Models
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] public int ActiveTabIndex = 0;
 
         /// <summary>
         /// Gets or sets variable names for outputting

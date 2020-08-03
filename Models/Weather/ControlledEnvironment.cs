@@ -6,7 +6,6 @@ namespace Models
     using Newtonsoft.Json;
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Xml.Serialization;
 
     ///<summary>
     /// Reads in controlled environment weather data and makes it available to models.
@@ -55,14 +54,14 @@ namespace Models
         /// Daily Mean temperature (oC)
         /// </summary>
         [Units("°C")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
         /// <summary>
         /// Daily mean VPD (hPa)
         /// </summary>
         [Units("hPa")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double VPD
         {
             get

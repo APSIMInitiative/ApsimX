@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -40,7 +40,7 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [XmlIgnore, GreaterThanValue(0)]
+        [JsonIgnore, GreaterThanValue(0)]
         public int EcologicalIndicatorsCalculationInterval { get; set; }
 
         /// <summary>
@@ -76,29 +76,29 @@ namespace Models.CLEM
         /// <summary>
         /// Month this overhead is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
         // ignore zone base class properties
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Slope { get; set; }
 
         /// <summary>
         /// not used in CLEM
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
         /// <summary>

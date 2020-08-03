@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Land allocation details for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandActivityAllocation ReportedLandAllocation { get; set; }
 
         private bool ChangeOccurred = false;

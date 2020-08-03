@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Base class for all models
@@ -38,13 +38,13 @@
         /// <summary>
         /// Gets or sets the parent of the model.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IModel Parent { get { return modelParent; } set { modelParent = value; } }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsHidden { get; set; }
 
         /// <summary>

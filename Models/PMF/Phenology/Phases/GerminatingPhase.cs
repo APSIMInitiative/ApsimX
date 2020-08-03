@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.IO;
 using Models.Soils;
 using Models.Functions;
@@ -54,13 +54,13 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete { get { return 0.999; } }
 
         /// <summary>
         /// Date for germination to occur.  null by default so model is used
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string GerminationDate { get; set; }
 
         // 4. Public method

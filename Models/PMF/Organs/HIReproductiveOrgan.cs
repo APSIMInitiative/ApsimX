@@ -4,7 +4,7 @@ using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.Interfaces;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Organs
 {
@@ -62,19 +62,19 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; set; }
 
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
@@ -100,11 +100,11 @@ namespace Models.PMF.Organs
          public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter) { }
         
         /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
          public double NFixationCost { get { return 0; } }
 
         /// <summary>Minimum N concentration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
          public double MinNconc { get { return 0; } }
 
 

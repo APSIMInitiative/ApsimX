@@ -1,6 +1,6 @@
 using System;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.IO;
 using Models.Functions;
 
@@ -26,14 +26,14 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get { return 0.0; }
         }
 
         /// <summary>Thermal time target.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get { return 0; } }
 
         //6. Public methods

@@ -4,7 +4,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Arbitrator
 {
@@ -22,17 +22,17 @@ namespace Models.PMF.Arbitrator
 
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WDemand { get; protected set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WAllocated { get; protected set; }
 
 

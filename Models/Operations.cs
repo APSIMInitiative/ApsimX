@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Models.Core;
 using System.IO;
 using System.Reflection;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Globalization;
 using APSIM.Shared.Utilities;
 

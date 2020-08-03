@@ -6,7 +6,7 @@ using Models.Core;
 using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
@@ -31,7 +31,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// The number of winters the crop has passed
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("y")]
         public int Years { get { return years; } set { years = value; } }
 

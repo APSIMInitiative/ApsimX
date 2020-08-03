@@ -8,7 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     /// <summary>
     /// 
     /// </summary>
@@ -22,7 +22,7 @@
         private List<double> apexGroupAge = new List<double>();
 
         /// <summary>Total apex number in plant.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Total apex number in plant")]
         public double Number { get; set; }
 
@@ -86,12 +86,12 @@
         private List<double> apexGroupAge = new List<double>();
 
         /// <summary>Total apex number in plant.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Total apex number in plant")]
         public double Number { get; set; }
 
         /// <value>Senscenced by age.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool SenescenceByAge { get; set; }
 
         /// <summary>Total apex number in plant.</summary>

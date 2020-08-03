@@ -3,7 +3,7 @@ using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Interfaces;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Library;
 using Models.Interfaces;
 
@@ -40,19 +40,19 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; set; }
 
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
@@ -74,7 +74,7 @@ namespace Models.PMF.Organs
         public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double NFixationCost { get { return 0; } }
 
         /// <summary>The water content</summary>
@@ -155,12 +155,12 @@ namespace Models.PMF.Organs
         public bool IsAboveGround { get { return true; } }
 
         /// <summary>The number</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/m^2")]
         public double Number { get; set; }
 
         /// <summary>The maximum potential size of grains</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("/m^2")]
         public double MaximumSize { get; set; }
 

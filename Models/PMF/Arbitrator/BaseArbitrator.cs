@@ -6,7 +6,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF
 {
@@ -71,11 +71,11 @@ namespace Models.PMF
         protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
 
         /// <summary>The variables for DM</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public BiomassArbitrationType DM { get; private set; }
 
         /// <summary>The variables for N</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public BiomassArbitrationType N { get; private set; }
 
         /// <summary>Occurs when a plant is about to be sown.</summary>
@@ -93,12 +93,12 @@ namespace Models.PMF
 
         /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
         /// <value>The dry mass supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the dry mass supply relative to dry structural demand plus metabolic demand.</summary>
         /// <value>The dry mass supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double StructuralCarbonSupplyDemand { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, (DM.TotalStructuralDemand + DM.TotalMetabolicDemand), 0); } }
 
         /// <summary>Gets the delta wt.</summary>
@@ -107,22 +107,22 @@ namespace Models.PMF
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WDemand { get; protected set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WAllocated { get; protected set; }
 
         #endregion

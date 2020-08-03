@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Core;
     using APSIM.Shared.Utilities;
 

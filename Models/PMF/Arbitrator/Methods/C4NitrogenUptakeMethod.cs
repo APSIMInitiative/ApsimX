@@ -7,7 +7,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Arbitrator
 {
@@ -44,11 +44,11 @@ namespace Models.PMF.Arbitrator
 
         private const double kgha2gsm = 0.1;
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] MassFlow { get; private set; }
 
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Diffusion { get; private set; }
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>

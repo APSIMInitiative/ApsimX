@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Resource to check
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IResourceType ResourceTypeModel { get; set; }
 
         /// <summary>

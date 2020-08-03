@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Functions;
 
 namespace Models.PMF.Struct
@@ -29,7 +29,7 @@ namespace Models.PMF.Struct
         private List<IModel> ChildFunctions;
 
         /// <summary>Gets or sets the height of the delta.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DeltaHeight { get; set; }
 
         /// <summary>Gets the value.</summary>

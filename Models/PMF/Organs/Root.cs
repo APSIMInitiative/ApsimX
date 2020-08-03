@@ -10,7 +10,7 @@
     using Models.Soils.Arbitrator;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Soils.Nutrients;
 
     ///<summary>
@@ -245,27 +245,27 @@
         public bool IsAboveGround { get { return false; } }
 
         /// <summary>A list of other zone names to grow roots in</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
 
         /// <summary>The root depths for each addition zone.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<double> ZoneRootDepths { get; set; }
 
         /// <summary>The live weights for each addition zone.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<BiomassDemand> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ZoneState> Zones { get; set; }
 
         /// <summary>The zone where the plant is growing</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ZoneState PlantZone { get; set; }
 
         /// <summary>Gets the live biomass.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Live
         {
@@ -277,7 +277,7 @@
         }
 
         /// <summary>Gets the dead biomass.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Dead
         {
@@ -307,32 +307,32 @@
 
         ///<Summary>Total DM demanded by roots</Summary>
         [Units("g/m2")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double TotalDMDemand { get; set; }
 
         ///<Summary>The amount of N taken up after arbitration</Summary>
         [Units("g/m2")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NTakenUp { get; set; }
 
         /// <summary>Root depth.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get { return PlantZone.Depth; } }
 
         /// <summary>Root length.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
 
         /// <summary>Root area.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get { return PlantZone.RootArea; } }
 
         /// <summary>Layer live</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
 
         /// <summary>Layer dead.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
         /// <summary>Gets or sets the water uptake.</summary>
@@ -362,11 +362,11 @@
         }
 
         /// <summary>Gets or sets the mid points of each layer</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LayerMidPointDepth { get; private set; }
 
         /// <summary>Gets or sets root water content</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] RWC { get; private set; }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
@@ -442,11 +442,11 @@
         public double N { get { return Total.N; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Nconc { get{ return MathUtilities.Divide(N,Wt,0.0);}}
         
         /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double NFixationCost { get { return 0; } }
 
         /// <summary>Growth Respiration</summary>
@@ -457,26 +457,26 @@
         public double MaintenanceRespiration { get; set; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; set; }
 
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; set; }
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
         /// <summary>Gets or sets the root length modifier due to root damage (0-1).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
 
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 
@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// List of the all the Activities.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<IModel> activities;
 
         private void BindEvents(List<IModel> root)

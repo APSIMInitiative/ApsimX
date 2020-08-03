@@ -5,7 +5,7 @@
     using Models.Interfaces;
     using Models.PMF.Interfaces;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
@@ -94,7 +94,7 @@
         public double R50 { get; set; }
 
         /// <summary>Gets the LAI</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
@@ -130,12 +130,12 @@
         }
 
         /// <summary>Gets or sets the height.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Height { get; set; }
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; set; }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
@@ -144,13 +144,13 @@
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FRGR { get; set; }
 
         private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialEP
         {
             get { return _PotentialEP; }
@@ -162,15 +162,15 @@
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterDemand { get; set; }
 
         /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterAllocation { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 

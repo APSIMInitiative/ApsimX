@@ -11,7 +11,6 @@
     using System.Linq;
     using System.IO;
     using System.Threading;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -42,7 +41,7 @@
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("EXCEL file name")]
         public string[] FullFileNames
         {

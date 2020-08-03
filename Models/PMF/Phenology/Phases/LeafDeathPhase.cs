@@ -1,7 +1,7 @@
 using System;
 using Models.Core;
 using Models.PMF.Organs;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Struct;
 using System.IO;
 using Models.Functions;
@@ -45,7 +45,7 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get

@@ -6,7 +6,7 @@ using Models.Core;
 using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen

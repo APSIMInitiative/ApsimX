@@ -2,7 +2,7 @@
 using Models.Functions;
 using System;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -48,15 +48,15 @@ namespace Models.PMF.Phen
         public string ResetStage { get; set; }
 
         /// <summary>Gets the value vernalisation days.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TodaysVernalisation { get; set; }
 
         /// <summary>Gets the cummulative number of days vernalised.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DaysVernalised { get; set; }
 
         /// <summary>Gets the value number of days under temporary vernalisation.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DaysVernalising { get; set; }
 
  

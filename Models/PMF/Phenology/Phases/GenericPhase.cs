@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get
@@ -48,15 +48,15 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Units of progress through phase on this time step.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProgressionForTimeStep { get; set; }
 
         /// <summary>Accumulated units of progress through this phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProgressThroughPhase { get; set; }
 
         /// <summary>Thermal time target to end this phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get { return target.Value(); } }
 
         // 3. Public methods

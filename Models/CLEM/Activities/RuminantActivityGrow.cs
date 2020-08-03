@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>

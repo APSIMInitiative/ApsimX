@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -38,11 +38,11 @@ namespace Models.PMF.Phen
         public string PhaseNameToGoto { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete { get;}
 
         /// <summary>Thermal time target</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get; set; }
 
         //6. Public methods

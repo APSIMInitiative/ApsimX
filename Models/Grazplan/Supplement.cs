@@ -6,7 +6,7 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Core;
 
     /// <summary>
@@ -791,7 +791,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Used to keep track of the selected SupplementItem in the user interface
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int CurIndex = 0;
 
         /// <summary>

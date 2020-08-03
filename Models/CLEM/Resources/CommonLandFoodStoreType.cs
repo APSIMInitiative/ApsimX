@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount
         {
             get
@@ -362,7 +362,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Ecological indicators of this pasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
 

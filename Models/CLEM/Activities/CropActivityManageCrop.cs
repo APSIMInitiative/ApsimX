@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -52,13 +52,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?

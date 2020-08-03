@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Globalization;
 
 namespace Models.CLEM.Activities
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Calculated sires kept
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int SiresKept { get; set; }
 
         /// <summary>

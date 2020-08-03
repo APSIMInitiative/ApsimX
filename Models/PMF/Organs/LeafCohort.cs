@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -76,11 +76,11 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The live</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Live = new Biomass();
 
         /// <summary>The dead</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Dead = new Biomass();
 
         /// <summary>The live start</summary>
@@ -101,7 +101,7 @@ namespace Models.PMF.Organs
 
         //Leaf coefficients
         /// <summary>The age</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Age;
 
         /// <summary>The n reallocation factor</summary>
@@ -127,84 +127,84 @@ namespace Models.PMF.Organs
         private ISummary Summary = null;
 
         /// <summary>The structural fraction</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double StructuralFraction;
 
         /// <summary>The non structural fraction</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double StorageFraction;
 
         /// <summary>The maximum live area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxLiveArea;
 
         /// <summary>The maximum live area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxCohortPopulation;
 
         /// <summary>The growth duration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double GrowthDuration;
 
         /// <summary>The lag duration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LagDuration;
 
         /// <summary>The senescence duration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SenescenceDuration;
 
         /// <summary>The detachment lag duration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DetachmentLagDuration;
 
         /// <summary>The detachment duration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DetachmentDuration;
 
         /// <summary>The specific leaf area maximum</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SpecificLeafAreaMax;
 
         /// <summary>The specific leaf area minimum</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SpecificLeafAreaMin;
 
         /// <summary>The maximum n conc</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaximumNConc;
 
         /// <summary>The minimum n conc</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MinimumNConc;
 
         /// <summary>The initial n conc</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double InitialNConc;
 
         /// <summary>The live area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LiveArea;
 
         /// <summary>The dead area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DeadArea;
 
         /// <summary>The maximum area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxArea;
 
         /// <summary>The maximum area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafSizeShape = 0.01;
 
         /// <summary>The size of senessing leaves relative to the other leaves in teh cohort</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SenessingLeafRelativeSize = 1;
 
         /// <summary>Gets or sets the cover above.</summary>
         /// <value>The cover above.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CoverAbove { get; set; }
 
         /// <summary>The shade induced sen rate</summary>
@@ -217,85 +217,85 @@ namespace Models.PMF.Organs
         private double DetachedFrac;
 
         /// <summary>The cohort population</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CohortPopulation; //Number of leaves in this cohort
 
         /// <summary>The cell division stress factor</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CellDivisionStressFactor = 1;
 
         /// <summary>The cell division stress accumulation</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CellDivisionStressAccumulation;
 
         /// <summary>The cell division stress days</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CellDivisionStressDays;
 
         //Leaf Initial status paramaters
         /// <summary>The leaf start n retranslocation supply</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartNRetranslocationSupply;
 
         /// <summary>The leaf start n reallocation supply</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartNReallocationSupply;
 
         /// <summary>The leaf start dm retranslocation supply</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartDMRetranslocationSupply;
 
         /// <summary>The leaf start dm reallocation supply</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartDMReallocationSupply;
 
         /// <summary>The leaf start area</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartArea;
 
         /// <summary>
         /// The leaf start metabolic n reallocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartMetabolicNReallocationSupply;
 
         /// <summary>
         /// The leaf start non structural n reallocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartStorageNReallocationSupply;
 
         /// <summary>
         /// The leaf start metabolic n retranslocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartMetabolicNRetranslocationSupply;
 
         /// <summary>
         /// The leaf start non structural n retranslocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartStorageNRetranslocationSupply;
 
         /// <summary>
         /// The leaf start metabolic dm reallocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartMetabolicDMReallocationSupply;
 
         /// <summary>
         /// The leaf start non structural dm reallocation supply
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeafStartStorageDMReallocationSupply;
 
         //variables used in calculating daily supplies and deltas
         /// <summary>Gets the DM amount detached (send to surface OM) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; set; }
 
         /// <summary>The delta potential area</summary>
@@ -348,7 +348,7 @@ namespace Models.PMF.Organs
         #region Class Properties
 
         /// <summary>Has the leaf chort been initialised?</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsInitialised;
 
         /// <summary>Gets a value indicating whether this instance has not appeared.</summary>
@@ -373,7 +373,7 @@ namespace Models.PMF.Organs
         /// <value>
         /// <c>true</c> if this instance is appeared; otherwise, <c>false</c>.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsAppeared { get; set; }
 
         /// <summary>Gets a value indicating whether this instance is fully expanded.</summary>

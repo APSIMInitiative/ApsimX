@@ -11,7 +11,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using APSIM.Shared.Utilities;
 
     ///<summary>
@@ -65,19 +65,19 @@
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Legumosity { get; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsC4 { get; }
 
         /// <summary>The sowing data</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public SowPlant2Type SowingData { get; set; }
 
         /// <summary>Gets the organs.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IOrgan[] Organs { get; private set; }
  
         /// <summary>Gets a list of cultivar names</summary>
@@ -159,11 +159,11 @@
         /// <summary>
         /// Holds the date of sowing
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime SowingDate { get; set; }
 
         /// <summary>Gets or sets the plant population.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Number of plants per meter2")]
         [Units("/m2")]
         public double Population

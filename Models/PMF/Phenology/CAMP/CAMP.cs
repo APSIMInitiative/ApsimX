@@ -3,7 +3,6 @@ using Models.Functions;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {

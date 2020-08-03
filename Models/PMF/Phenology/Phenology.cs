@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.IO;
 using System.Data;
 using System.Linq;
@@ -68,23 +68,23 @@ namespace Models.PMF.Phen
         /// --------------------------------------------------------------------------------------------------
 
         /// <summary>The Thermal time accumulated tt</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AccumulatedTT {get; set;}
       
         /// <summary>The Thermal time accumulated tt following emergence</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AccumulatedEmergedTT { get; set; }
 
         /// <summary>The emerged</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool Emerged { get; set; } = false;
                 
         /// <summary>A one based stage number.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Stage { get; set; }
 
         /// <summary>This property is used to retrieve or set the current phase name.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string CurrentPhaseName
         {
             get
@@ -97,7 +97,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Return current stage name.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string CurrentStageName
         {
             get
@@ -119,11 +119,11 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Gets the days after sowing.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int DaysAfterSowing { get; set; }
 
         /// <summary>A utility property to return the current phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IPhase CurrentPhase
         {
             get

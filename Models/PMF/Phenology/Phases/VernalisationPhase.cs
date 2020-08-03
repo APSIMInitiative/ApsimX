@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -29,15 +29,15 @@ namespace Models.PMF.Phen
         public string End { get; set; }
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete { get; set; }
 
         /// <summary>Accumulated units of progress through this phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ProgressThroughPhase { get; set; }
 
         /// <summary>Thermal time target to end this phase.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get; set; }
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>

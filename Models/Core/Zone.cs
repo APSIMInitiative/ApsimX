@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -35,7 +35,7 @@
         public double Altitude { get; set; } = 50;
 
         /// <summary>Return a list of plant models.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<IPlant> Plants { get { return Apsim.Children(this, typeof(IPlant)).Cast<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>

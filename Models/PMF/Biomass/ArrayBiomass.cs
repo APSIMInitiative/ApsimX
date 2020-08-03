@@ -5,7 +5,7 @@ using System.Collections;
 using System.Reflection;
 using Models.Core;
 using Models.Functions;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Globalization;
 
 namespace Models.PMF
@@ -28,7 +28,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
         /// <exception cref="System.Exception">Cannot set StorageN in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] StorageN
         {
@@ -43,7 +43,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the structural n.</summary>
         /// <value>The structural n.</value>
         /// <exception cref="System.Exception">Cannot set StructuralN in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] StructuralN
         {
@@ -58,7 +58,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the metabolic n.</summary>
         /// <value>The metabolic n.</value>
         /// <exception cref="System.Exception">Cannot set MetabolicN in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] MetabolicN
         {
@@ -73,7 +73,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the non structural wt.</summary>
         /// <value>The non structural wt.</value>
         /// <exception cref="System.Exception">Cannot set StorageWt in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] StorageWt
         {
@@ -87,7 +87,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the structural wt.</summary>
         /// <value>The structural wt.</value>
         /// <exception cref="System.Exception">Cannot set StructuralWt in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] StructuralWt
         {
@@ -102,7 +102,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the metabolic wt.</summary>
         /// <value>The metabolic wt.</value>
         /// <exception cref="System.Exception">Cannot set MetabolicWt in ArrayBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double[] MetabolicWt
         {
@@ -116,7 +116,7 @@ namespace Models.PMF
 
         /// <summary>Gets the n conc.</summary>
         /// <value>The n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double[] NConc
         {
@@ -128,7 +128,7 @@ namespace Models.PMF
 
         /// <summary>Gets the structural n conc.</summary>
         /// <value>The structural n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double[] StructuralNConc
         {
@@ -140,7 +140,7 @@ namespace Models.PMF
 
         /// <summary>Gets the non structural n conc.</summary>
         /// <value>The non structural n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double[] StorageNConc
         {
@@ -152,7 +152,7 @@ namespace Models.PMF
 
         /// <summary>Gets the metabolic n conc.</summary>
         /// <value>The metabolic n conc.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double[] MetabolicNConc
         {

@@ -9,7 +9,7 @@ using Models.PMF.Struct;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Linq;
 
 namespace Models.PMF.Organs
@@ -34,7 +34,7 @@ namespace Models.PMF.Organs
         IFunction CarbonConcentration = null;
 
         /// <summary>Gets the cohort live.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Live
         {
@@ -48,7 +48,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the cohort live.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public Biomass Dead
         {
@@ -101,11 +101,11 @@ namespace Models.PMF.Organs
         public double GrowthRespiration { get; set; }
 
         /// <summary>Gets the DM amount removed from the system (harvested, grazed, etc) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed = new Biomass();
 
         /// <summary>Gets the DM amount detached (sent to soil/surface organic matter) (g/m2)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; set; }
 
         #region Canopy interface
@@ -292,7 +292,7 @@ namespace Models.PMF.Organs
         public double Transpiration { get { return WaterAllocation; } }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
@@ -410,7 +410,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Gets or sets the water allocation.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterAllocation { get; set; }
         #endregion
 
@@ -518,7 +518,7 @@ namespace Models.PMF.Organs
         #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
 

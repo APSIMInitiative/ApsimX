@@ -6,7 +6,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Arbitrator
 {
@@ -31,17 +31,17 @@ namespace Models.PMF.Arbitrator
 
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WDemand { get; protected set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WatSupply { get; protected set; }
 
         /// <summary>Gets the water allocated in the plant (taken up).</summary>
         /// <value>The water uptake.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WAllocated { get; protected set; }
 
         ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table

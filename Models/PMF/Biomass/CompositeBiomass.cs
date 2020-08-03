@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Models.PMF
@@ -64,7 +64,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the non structural n.</summary>
         /// <value>The non structural n.</value>
         /// <exception cref="System.Exception">Cannot set StorageN in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double StorageN
         {
@@ -75,7 +75,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the structural n.</summary>
         /// <value>The structural n.</value>
         /// <exception cref="System.Exception">Cannot set StructuralN in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double StructuralN
         {
@@ -86,7 +86,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the non structural wt.</summary>
         /// <value>The non structural wt.</value>
         /// <exception cref="System.Exception">Cannot set StorageWt in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double StorageWt
         {
@@ -97,7 +97,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the structural wt.</summary>
         /// <value>The structural wt.</value>
         /// <exception cref="System.Exception">Cannot set StructuralWt in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double StructuralWt
         {
@@ -108,7 +108,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the metabolic n.</summary>
         /// <value>The metabolic n.</value>
         /// <exception cref="System.Exception">Cannot set MetabolicN in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double MetabolicN
         {
@@ -119,7 +119,7 @@ namespace Models.PMF
         /// <summary>Gets or sets the metabolic wt.</summary>
         /// <value>The metabolic wt.</value>
         /// <exception cref="System.Exception">Cannot set MetabolicWt in CompositeBiomass</exception>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         override public double MetabolicWt
         {

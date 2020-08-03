@@ -11,7 +11,7 @@ namespace Models
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -43,7 +43,7 @@ namespace Models
         public int ColourArgb { get; set; }
 
         /// <summary>Gets or sets the color</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Color Colour
         {
             get
