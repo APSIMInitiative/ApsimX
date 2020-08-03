@@ -184,8 +184,6 @@ namespace Models.PMF.Phen
         /// <summary>IsPpCompetent True when HS>1.1, the plant is large enough to sense and respond to Pp stimulus</summary>
         private bool isPpCompetent { get; set; }
         /// <summary>IsVernCompetent True when the plant is large enough to proceed to vrn saturation</summary>
-        private bool isVernCompetent { get; set; }
-        /// <summary>isVernalisaed True when Methalated Vrn1 reaches Vrn1Target, enables occurance of floral initiation and terminal spikelet</summary>
         private bool isVernalised { get; set; }
         /// <summary>IsInduced True when floral initiation occurs, when Vrn3 > 0.3 </summary>
         private bool isInduced { get; set; }
@@ -242,8 +240,8 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double dColdVrn1 { get; set; }
         /// <summary>daily delta methalation of ColdVrn1</summary>
         [JsonIgnore] public double dMethColdVrn1 { get; set; }
-        /// <summary>daily delta upregulation of Vrn2</summary>
-        [JsonIgnore] public double dVrn2 { get; set; }
+        /// <summary>Potential upregulation of Vrn2</summary>
+        [JsonIgnore] public double pVrn2 { get; set; }
         /// <summary>daily delta upregulation of Vrn3</summary>
         [JsonIgnore] public double dVrn3 { get; set; }
         /// <summary>daily delta upregulation of VrnX</summary>
@@ -282,9 +280,6 @@ namespace Models.PMF.Phen
                 else
                     dHS = deltaHaunStage.Value(); 
                 
-                if ((haunStage.Value() >= Params.VernCompetenceHS) && (isVernCompetent == false))
-                    isVernCompetent = true;
-
                 if ((haunStage.Value()>= PpCompetenceHS)&& (isPpCompetent == false))
                     isPpCompetent = true;
 
@@ -314,8 +309,8 @@ namespace Models.PMF.Phen
                 if ((isVernalised == false) && (isPpCompetent == true))
                 {
                     SDDurationFactor = Math.Max(0.5, SDDurationFactor - (1 - CalcdPPVrn(pp.Value(), 0, 1, 1)) / 35);
-                    dVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, Params.MaxDVrn2, 1) * SDDurationFactor;
-                    Vrn2 = Math.Max(0, dVrn2 - MethVrn1);
+                    pVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, Params.MaxVrn2, 1) * SDDurationFactor;
+                    Vrn2 = Math.Max(0, pVrn2 - MethVrn1);
                 }
                  
                 // Workout if methalation of cold response has started
@@ -323,7 +318,7 @@ namespace Models.PMF.Phen
                     isMethalating = true;
 
                 // Work out if vernalisation is complete
-                if ((MethVrn1 >= 1.0) && (Vrn2 ==0.0) && (isVernCompetent == true) && (isVernalised == false))
+                if ((MethVrn1 >= 1.0) && (Vrn2 ==0.0) && (isVernalised == false))
                 {
                     isVernalised = true;
                     Vrn1atVS = Vrn1;
@@ -331,7 +326,7 @@ namespace Models.PMF.Phen
                 }
 
                 // Then work out Vrn3 expression
-                if ((isVernalised == true) && (isVernCompetent == true) && (isReproductive == false))
+                if ((isVernalised == true) && (isReproductive == false))
                     dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, Params.MaxDVrn3, dHS);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
@@ -393,7 +388,6 @@ namespace Models.PMF.Phen
             isMethalating = false;
             isEmerged = false;
             isPpCompetent = false;
-            isVernCompetent = false;
             isVernalised = false;
             isInduced = false;
             isReproductive = false;
@@ -419,7 +413,7 @@ namespace Models.PMF.Phen
             dBaseVrn1 = 0;
             dColdVrn1 = 0;
             dMethColdVrn1 = 0;
-            dVrn2 = 0.0;
+            pVrn2 = 0.0;
             dVrn3 = 0.0;
             dVrnX = 0.0;
         }
