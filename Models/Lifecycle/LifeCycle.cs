@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// # [Name]
@@ -113,12 +114,12 @@
         }
 
         /// <summary>Method to bring a new cohort of individuls to the specified LifeCyclePhase</summary>
-        /// <param name="Immigrants"></param>
-        public void Infest(Cohort Immigrants)
+        /// <param name="InfestationInfo"></param>
+        public void Infest(SourceInfo InfestationInfo)
         {
-            LifeCyclePhase InfestingPhase = Immigrants.BelongsToPhase;
-            InfestingPhase.NewCohort(Immigrants.Population, Immigrants.ChronologicalAge, Immigrants.PhysiologicalAge);
-            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + Apsim.FullPath(this) + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
+            LifeCyclePhase InfestingPhase = Apsim.Child(this, InfestationInfo.LifeCyclePhase) as LifeCyclePhase;
+            InfestingPhase.NewCohort(InfestationInfo);
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + Apsim.FullPath(this) + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
         }
     }
 }

@@ -10,6 +10,9 @@
         /// <summary>Name of plant that can be damaged.</summary>
         string Name { get; }
 
+        /// <summary>Return true if plant is alive and in the ground.</summary>
+        bool IsAlive { get; }
+
         /// <summary>A list of organs that can be damaged.</summary>
         List<IOrganDamage> Organs { get; }
 
