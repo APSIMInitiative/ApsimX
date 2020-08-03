@@ -4,9 +4,11 @@
     using System;
     using Models.Core;
     using System.Xml.Serialization;
+    using Models.Soils.Nutrients;
 
     /// <summary>This class encapsulates a SoilNitrogen model NO3 solute.</summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(SoilNitrogen))]
     public class SoilNitrogenNO3 : Model, ISolute
     {
         [Link(Type = LinkType.Ancestor)]

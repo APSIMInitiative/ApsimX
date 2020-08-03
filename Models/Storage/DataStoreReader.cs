@@ -265,7 +265,7 @@
                         sql.Append(", ");
                     firstField = false;
                     sql.Append("T.");
-                    sql.Append("[");
+                    sql.Append('"');
                     if (!(Connection is Firebird) || tableName.StartsWith("_")
                       || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
@@ -274,7 +274,7 @@
                         sql.Append(fieldName);
                     else
                         sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
-                    sql.Append(']');
+                    sql.Append('"');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
                 }

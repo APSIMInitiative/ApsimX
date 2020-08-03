@@ -93,6 +93,13 @@
             return FileNames;
         }
 
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
+        }
+
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
@@ -163,5 +170,6 @@
                             row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
+
     }
 }

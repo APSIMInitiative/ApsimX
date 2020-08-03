@@ -57,9 +57,11 @@ namespace Models.Soils.Nutrients
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            destinations.Clear();
+
             foreach (string destinationName in destinationNames)
             {
                 NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
@@ -85,7 +87,7 @@ namespace Models.Soils.Nutrients
             {
 
                 double carbonFlowFromSource = Rate.Value(i) * source.C[i];
-                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
+                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource * source.N[i], source.C[i], 0);
 
                 double[] carbonFlowToDestination = new double[destinations.Count];
                 double[] nitrogenFlowToDestination = new double[destinations.Count];
@@ -93,7 +95,7 @@ namespace Models.Soils.Nutrients
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j], destinations[j].CNRatio[i], 0.0);
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destinations[j].N[i], destinations[j].C[i], 0.0);
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);

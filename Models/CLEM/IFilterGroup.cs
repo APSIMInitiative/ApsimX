@@ -17,5 +17,10 @@ namespace Models.CLEM
         /// Avoids needing to calculate this value multiple times for improved performance
         /// </summary>
         object CombinedRules { get; set; }
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        double Proportion { get; set; }
     }
 }

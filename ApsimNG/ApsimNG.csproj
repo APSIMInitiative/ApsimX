@@ -469,6 +469,13 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TableExpression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SolutePatch.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NutrientPatchManager.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipRunningValue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStoreFertilityLimiter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HourlyInterpolation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ColdUpRegVrn1.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Stics.png" />
@@ -557,7 +564,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceLedger.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityBuy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantDestockGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroupMonthly.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
@@ -641,7 +647,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityWean.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilter.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantHerd.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantInitialCohorts.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantType.png" />

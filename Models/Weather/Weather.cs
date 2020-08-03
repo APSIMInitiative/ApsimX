@@ -9,6 +9,7 @@
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.IO;
     using System.Xml.Serialization;
 
     ///<summary>
@@ -461,7 +462,13 @@
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return new string[] { FullFileName };
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            FileName = Path.GetFileName(FileName);
         }
 
         /// <summary>
@@ -606,10 +613,10 @@
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
-                    if (DateTime.IsLeapYear(clock.Today.Year))
-                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    if (DateTime.IsLeapYear(clock.Today.Year-1))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;  
                     else
-                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear; 
                 }
                 else
                     DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;

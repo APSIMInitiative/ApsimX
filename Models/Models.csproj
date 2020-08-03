@@ -158,14 +158,17 @@
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
+    <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />
     <Compile Include="CLEM\RandomNumberGenerator.cs" />
     <Compile Include="CLEM\Relationship.cs" />
+    <Compile Include="CLEM\RelationshipRunningValue.cs" />
     <Compile Include="CLEM\RelationshipTracker.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
+    <Compile Include="CLEM\Resources\GrazeFoodStoreFertilityLimiter.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
@@ -277,6 +280,7 @@
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Functions\BetaGrowthFunction.cs" />
+    <Compile Include="Functions\SoilFunctions\CERESDenitrificationModel.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
@@ -332,6 +336,8 @@
     <Compile Include="Plant\Structure\Culm.cs" />
     <Compile Include="Plant\Structure\CulmParams.cs" />
     <Compile Include="Plant\Structure\LeafCulms.cs" />
+    <Compile Include="PostSimulationTools\Filter.cs" />
+    <Compile Include="PostSimulationTools\TableExpression.cs" />
     <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Optimisation\Criteria.cs" />
@@ -340,6 +346,11 @@
     <Compile Include="Optimisation\IOptimizationMethod.cs" />
     <Compile Include="Optimisation\Likelihood.cs" />
     <Compile Include="Optimisation\Simplex.cs" />
+    <Compile Include="Soils\NutrientPatching\INutrientPatchManager.cs" />
+    <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
+    <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />
+    <Compile Include="Soils\NutrientPatching\SolutePatch.cs" />
+    <Compile Include="Soils\Nutrients\CompositeNutrientPool.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -408,7 +419,6 @@
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
     <Compile Include="Functions\ArrayFunction.cs" />
-    <Compile Include="Plant\Arbitrator\SorghumArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\SorghumArbitratorN.cs" />
     <Compile Include="Plant\Biomass\BiomassDemand.cs" />
     <Compile Include="Plant\Phenology\Phases\PhotoperiodPhase.cs" />
@@ -448,8 +458,8 @@
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
-    <Compile Include="Interfaces\ISolute.cs" />
-    <Compile Include="Interfaces\INutrient.cs" />
+    <Compile Include="Soils\Nutrients\ISolute.cs" />
+    <Compile Include="Soils\Nutrients\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\LifeCycle.cs" />
@@ -684,6 +694,7 @@
     <Compile Include="Core\IPlant.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Utilities\Accumulator.cs" />
+    <Compile Include="Utilities\DebugLogger.cs" />
     <Compile Include="Utilities\R.cs" />
     <Compile Include="Utilities\RegressionUtilities.cs" />
     <Compile Include="Soils\WaterModel\CNReductionForCover.cs" />
@@ -730,7 +741,7 @@
     <Compile Include="CLEM\Activities\TruckingSettings.cs" />
     <Compile Include="CLEM\Activities\CLEMRuminantActivityBase.cs" />
     <Compile Include="CLEM\FileCrop.cs" />
-    <Compile Include="CLEM\Groupings\RuminantFilterGroup.cs" />
+    <Compile Include="CLEM\Groupings\RuminantGroup.cs" />
     <Compile Include="CLEM\Groupings\LabourFilterGroup.cs" />
     <Compile Include="CLEM\FilePasture.cs" />
     <Compile Include="CLEM\IActivityTimer.cs" />

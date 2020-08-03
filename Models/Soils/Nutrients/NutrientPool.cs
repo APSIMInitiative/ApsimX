@@ -31,9 +31,6 @@
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialNitrogen = null;
 
-        /// <summary>Initial carbon/nitrogen ratio</summary>
-        public double[] CNRatio { get { return MathUtilities.Divide(C, N, 0); } }
-
         /// <summary>Amount of carbon (kg/ha)</summary>
         public double[] C { get; set; }
 
@@ -48,7 +45,7 @@
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();

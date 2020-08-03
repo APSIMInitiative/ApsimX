@@ -25,13 +25,17 @@
         /// <summary>Connect all events in the specified simulation.</summary>
         public void ConnectEvents()
         {
-            // Get a complete list of all models in simulation (including the simulation itself).
-            List<IModel> allModels = new List<IModel>();
-            allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            // Get a list of all models that need to have event subscriptions resolved in.
+            var modelsToInspectForSubscribers = new List<IModel>();
+            modelsToInspectForSubscribers.Add(relativeTo);
+            modelsToInspectForSubscribers.AddRange(Apsim.ChildrenRecursively(relativeTo));
 
-            var publishers = Publisher.FindAll(allModels);
-            var subscribers = Subscriber.GetAll(allModels);
+            // Get a list of models in scope that publish events.
+            var modelsToInspectForPublishers = scope.FindAll(relativeTo).ToList();
+
+            // Get a complete list of all models in scope
+            var publishers = Publisher.FindAll(modelsToInspectForPublishers);
+            var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
 
             foreach (Publisher publisher in publishers)
                 if (subscribers.ContainsKey(publisher.Name))
@@ -108,7 +112,7 @@
         }
 
         /// <summary>
-        /// Call the specified event on the specified model and all child models.
+        /// Publish the specified event to the specified model and all models in scope.
         /// </summary>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
@@ -119,7 +123,26 @@
             foreach (Subscriber subscriber in subscribers)
                 subscriber.Invoke(args);
         }
-        
+
+        /// <summary>
+        /// Publish the specified event to the specified model and all child models.
+        /// </summary>
+        /// <param name="eventName">The name of the event</param>
+        /// <param name="args">The event arguments. Can be null</param>
+        public void PublishToModelAndChildren(string eventName, object[] args)
+        {
+            var modelsToInspectForSubscribers = new List<IModel>();
+            modelsToInspectForSubscribers.Add(relativeTo);
+            modelsToInspectForSubscribers.AddRange(Apsim.ChildrenRecursively(relativeTo));
+
+            var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
+
+            foreach (var subscriber in subscribers.Where(sub => sub.Key == eventName))
+                foreach (var subscriberMethod in subscriber.Value)
+                    subscriberMethod.Invoke(args);
+        }
+
+
         /// <summary>A wrapper around an event subscriber MethodInfo.</summary>
         internal class Subscriber
         {
