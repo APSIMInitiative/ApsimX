@@ -331,7 +331,7 @@
             a.Population = sourceInfo.Population;
             a.ChronologicalAge = sourceInfo.ChronologicalAge;
             a.PhysiologicalAge = sourceInfo.PhysiologicalAge;
-            a.sorceInfo = sourceInfo;
+            a.sourceInfo = sourceInfo;
             this.Cohorts.Add(a);
         }
         

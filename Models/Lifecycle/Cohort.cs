@@ -30,7 +30,7 @@
         public double Emigrants { get; set; }
 
         /// <summary>Information about where this cohort came from</summary>
-        public SourceInfo sorceInfo { get; set; }
+        public SourceInfo sourceInfo { get; set; }
 
         /// <summary>The LifeCyclePhase this cohort belongs to.</summary>
         public LifeCyclePhase BelongsToPhase;
