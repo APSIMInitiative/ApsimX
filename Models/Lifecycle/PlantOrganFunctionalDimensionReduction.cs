@@ -1,6 +1,7 @@
 ﻿using System;
 using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Models.LifeCycle;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -21,10 +22,7 @@ namespace Models.LifeCycle
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g")]
-        private IFunction RateOfOrganObstructionPerIndividual = null;
-
-        [Link(Type = LinkType.Ancestor)]
-        private LifeCyclePhase ParentStage = null;
+        private IFunction Reduction = null;
 
         /// <summary>Host plant that Pest/Disease bothers</summary>
         [Description("Select host plant that Pest/Disease may bother")]
@@ -39,7 +37,12 @@ namespace Models.LifeCycle
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            HostPlant.ReduceCanopy(ParentStage.TotalPopulation * RateOfOrganObstructionPerIndividual.Value());
+            if (HostOrgan.GetType() == typeof(ICanopy))
+                HostPlant.ReduceCanopy(Reduction.Value());
+            else if (HostOrgan.GetType() == typeof(IRoot))
+                HostPlant.ReduceRootLengthDensity(Reduction.Value());
+            else
+                throw new Exception("FunctionalDimensionReduction is only possible for organs implementing ICanopy or IRoot interfaces");
         }
     }
 }
