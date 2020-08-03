@@ -23,7 +23,6 @@
     [ScopedModel]
     public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
     {
-        #region Class links
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
@@ -61,10 +60,6 @@
         /// <summary> Clock </summary>
         [Link]
         public Clock Clock = null;
-
-        #endregion
-
-        #region Class properties and fields
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string CropType { get; set; }
@@ -260,9 +255,7 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("")]
         IFunction MortalityRate = null;
-        #endregion
 
-        #region Class Events
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
@@ -281,9 +274,7 @@
         public event EventHandler Grazing;
         /// <summary>Occurs when a plant is about to flower</summary>
         public event EventHandler Flowering;
-        #endregion
 
-        #region External Communications.  Method calls and EventHandlers
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -485,9 +476,7 @@
                 cultivarDefinition.Unapply();
             IsAlive = false;
         }
-        #endregion
 
-        #region Private methods
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
@@ -495,7 +484,6 @@
             plantPopulation = 0.0;
             IsAlive = false;
         }
-        #endregion
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
