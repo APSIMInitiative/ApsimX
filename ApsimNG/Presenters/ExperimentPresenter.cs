@@ -142,7 +142,7 @@
         private List<string> GetSelectedSimulationNamesFromView()
         {
             var selectedSimulationNames = new List<string>();
-            foreach (var row in view.List.SelectedRows)
+            foreach (var row in view.List.SelectedIndicies)
                 selectedSimulationNames.Add(view.List.DataSource.Rows[row]["SimulationName"].ToString());
             return selectedSimulationNames;
         }

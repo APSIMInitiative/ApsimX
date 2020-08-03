@@ -25,6 +25,11 @@ namespace UserInterface.Views
 
         private CheckButton checkbutton1;
 
+        /// <summary>Constructor.</summary>
+        public CheckBoxView()
+        {
+        }
+
         /// <summary>Constructor</summary>
         public CheckBoxView(ViewBase owner) : base(owner)
         {
@@ -97,6 +102,20 @@ namespace UserInterface.Views
         {
             get { return checkbutton1.Label; }
             set { checkbutton1.Label = value; }
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            checkbutton1 = (CheckButton)gtkControl;
+            checkbutton1.Clicked += OnCheckChanged;
+            mainWidget = checkbutton1;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
     }
 }

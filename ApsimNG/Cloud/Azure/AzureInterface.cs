@@ -227,34 +227,39 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
-        public async Task<List<JobDetails>> ListJobsAsync(CancellationToken ct, Action<double> ShowProgress)
+        public async void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJobHandler)
         {
-            if (batchClient == null || storageClient == null)
-                return null;
-
-            ShowProgress(0);
-
-            ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-
-            // Download raw job list via the Azure API.
-            List<CloudJob> cloudJobs = await batchClient.JobOperations.ListJobs(jobDetailLevel).ToListAsync(ct);
-
-            if (ct.IsCancellationRequested)
-                return null;
-
-            // Parse jobs into a list of JobDetails objects.
-            List<JobDetails> jobs = new List<JobDetails>();
-            for (int i = 0; i < cloudJobs.Count; i++)
+            try
             {
+                if (batchClient == null || storageClient == null)
+                    return;
+
+                ShowProgress(0);
+
+                ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
+
+                // Download raw job list via the Azure API.
+                List<CloudJob> cloudJobs = await batchClient.JobOperations.ListJobs(jobDetailLevel).ToListAsync(ct);
+
                 if (ct.IsCancellationRequested)
-                    return jobs;
+                    return;
 
-                ShowProgress(100.0 * i / cloudJobs.Count);
-                jobs.Add(await GetJobDetails(cloudJobs[i], ct));
+                // Parse jobs into a list of JobDetails objects.
+                //List<JobDetails> jobs = new List<JobDetails>();
+                for (int i = 0; i < cloudJobs.Count; i++)
+                {
+                    if (ct.IsCancellationRequested)
+                        return;
+
+                    ShowProgress(100.0 * i / cloudJobs.Count);
+                    AddJobHandler(await GetJobDetails(cloudJobs[i], ct));
+
+                }
             }
-
-            ShowProgress(100);
-            return jobs;
+            finally
+            {
+                ShowProgress(100);
+            }
         }
 
         /// <summary>
@@ -314,44 +319,45 @@ namespace ApsimNG.Cloud
             List<CloudBlockBlob> toDownload = new List<CloudBlockBlob>();
             CloudBlockBlob results = outputs.Find(b => string.Equals(b.Name, resultsFileName, StringComparison.InvariantCultureIgnoreCase));
             if (results != null)
+            {
                 toDownload.Add(results);
+
+                // Now download the necessary files.
+                for (int i = 0; i < toDownload.Count; i++)
+                {
+                    ShowProgress(i / toDownload.Count);
+                    CloudBlockBlob blob = toDownload[i];
+
+                    // todo: Download in parallel?
+                    await blob.DownloadToFileAsync(archive, FileMode.Create, ct);
+
+                    if (ct.IsCancellationRequested)
+                        return;
+                }
+                ShowProgress(100);
+
+                string resultsDir = Path.Combine(options.Path, "Temp");
+                if (File.Exists(archive))
+                {
+                    // Extract the result files.
+                    using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
+                        zip.ExtractToDirectory(resultsDir);
+
+                    try
+                    {
+                        // Merge results into a single .db file.
+                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, resultsDB);
+                        Directory.Delete(resultsDir, true);
+                        File.Delete(archive);
+                    }
+                    catch (Exception err)
+                    {
+                        throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
+                    }
+                }
+            }
             else
-                // Always download debug files if no results archive can be found.
-                toDownload.AddRange(outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))));
-
-            // Now download the necessary files.
-            for (int i = 0; i < toDownload.Count; i++)
-            {
-                ShowProgress(i / toDownload.Count);
-                CloudBlockBlob blob = toDownload[i];
-
-                // todo: Download in parallel?
-                await blob.DownloadToFileAsync(archive, FileMode.Create, ct);
-
-                if (ct.IsCancellationRequested)
-                    return;
-            }
-            ShowProgress(100);
-
-            string resultsDir = Path.Combine(options.Path, "Temp");
-            if (File.Exists(archive))
-            {
-                // Extract the result files.
-                using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
-                    zip.ExtractToDirectory(resultsDir);
-
-                try
-                {
-                    // Merge results into a single .db file.
-                    DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, resultsDB);
-                    Directory.Delete(resultsDir, true);
-                    File.Delete(archive);
-                }
-                catch (Exception err)
-                {
-                    throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
-                }
-            }
+                throw new Exception($"No results were found. Is this an APSIM 7.10 run?");
         }
 
         /// <summary>
@@ -448,39 +454,45 @@ namespace ApsimNG.Cloud
         /// <param name="ct">Cancellation token.</param>
         private async Task<JobDetails> GetJobDetails(CloudJob cloudJob, CancellationToken ct)
         {
-            if (!await storageClient.GetContainerReference($"job-{cloudJob.Id}").ExistsAsync(ct))
+            try
             {
-                await DeleteJobAsync(cloudJob.Id, ct);
+                if (!await storageClient.GetContainerReference($"job-{cloudJob.Id}").ExistsAsync(ct))
+                {
+                    await DeleteJobAsync(cloudJob.Id, ct);
+                    return null;
+                }
+                string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner", ct);
+
+                TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct);
+                int numTasks = tasks.Active + tasks.Running + tasks.Completed;
+
+                // If there are no tasks, set progress to 100%.
+                double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+
+                // If cpu time is unavailable, set this field to 0.
+                TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
+                JobDetails job = new JobDetails
+                {
+                    Id = cloudJob.Id,
+                    DisplayName = cloudJob.DisplayName,
+                    State = cloudJob.State.ToString(),
+                    Owner = owner,
+                    NumSims = numTasks - 1, // subtract one because one of these is the job manager
+                    Progress = jobProgress,
+                    CpuTime = cpu
+                };
+
+                if (cloudJob.ExecutionInformation != null)
+                {
+                    job.StartTime = cloudJob.ExecutionInformation.StartTime;
+                    job.EndTime = cloudJob.ExecutionInformation.EndTime;
+                }
+                return job;
+            }
+            catch (Exception)
+            {
                 return null;
             }
-            string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner", ct);
-
-            TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct);
-            int numTasks = tasks.Active + tasks.Running + tasks.Completed;
-
-            // If there are no tasks, set progress to 100%.
-            double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
-
-            // If cpu time is unavailable, set this field to 0.
-            TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
-            JobDetails job = new JobDetails
-            {
-                Id = cloudJob.Id,
-                DisplayName = cloudJob.DisplayName,
-                State = cloudJob.State.ToString(),
-                Owner = owner,
-                NumSims = numTasks - 1, // subtract one because one of these is the job manager
-                Progress = jobProgress,
-                CpuTime = cpu
-            };
-
-            if (cloudJob.ExecutionInformation != null)
-            {
-                job.StartTime = cloudJob.ExecutionInformation.StartTime;
-                job.EndTime = cloudJob.ExecutionInformation.EndTime;
-            }
-
-            return job;
         }
 
         /// <summary>
