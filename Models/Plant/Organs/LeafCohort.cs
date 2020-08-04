@@ -805,8 +805,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the potential growth.</summary>
         /// <param name="tt">The tt.</param>
+        /// <param name="extinctionCoefficient">The extinctionCoefficient.</param>
         /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
-        public void DoPotentialGrowth(double tt, Leaf.LeafCohortParameters leafCohortParameters)
+        public void DoPotentialGrowth(double tt, double extinctionCoefficient, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
@@ -859,7 +860,7 @@ namespace Models.PMF.Organs
                 DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
 
-                CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
+                CoverAbove = Leaf.CoverAboveCohort(Rank,extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
                 SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
                 SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);

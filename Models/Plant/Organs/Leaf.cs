@@ -1238,25 +1238,29 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            Structure.UpdateHeight();
-            Width = WidthFunction.Value();
-            Depth = DepthFunction.Value();
+
 
             if (!parentPlant.IsEmerged)
                 return;
 
-            if (FrostFraction.Value() > 0)
+            Structure.UpdateHeight();
+            Width = WidthFunction.Value();
+            Depth = DepthFunction.Value();
+
+            double frostfraction = FrostFraction.Value();
+            if (frostfraction > 0)
                 foreach (LeafCohort l in Leaves)
-                    l.DoFrost(FrostFraction.Value());
+                    l.DoFrost(frostfraction);
 
             CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
             bool nextExpandingLeaf = false;
             double thermalTime = ThermalTime.Value();
+            double extinctionCoefficient = ExtinctionCoeff.Value();
 
             foreach (LeafCohort L in Leaves)
             {
                 CurrentRank = L.Rank;
-                L.DoPotentialGrowth(thermalTime, CohortParameters);
+                L.DoPotentialGrowth(thermalTime, extinctionCoefficient, CohortParameters);
                 needToRecalculateLiveDead = true;
                 if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                 {
@@ -1385,14 +1389,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Fractional interception "above" a given node position</summary>
         /// <param name="cohortno">cohort position</param>
+        /// <param name="extinctionoeff">extinction coefficient</param>
         /// <returns>fractional interception (0-1)</returns>
-        public double CoverAboveCohort(double cohortno)
+        public double CoverAboveCohort(double cohortno, double extinctionoeff)
         {
             int MM2ToM2 = 1000000; // Conversion of mm2 to m2
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value() * LAIabove);
+            return 1 - Math.Exp(-extinctionoeff * LAIabove);
         }
 
         /// <summary>
