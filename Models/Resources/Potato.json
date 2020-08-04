@@ -1,12 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 109,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 108,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
+      "CropType": "Potato",
+      "IsEnding": false,
+      "DaysAfterEnding": 0,
       "ResourceName": null,
       "Name": "Potato",
       "Children": [
@@ -25,7 +27,6 @@
           "Children": [
             {
               "$type": "Models.Functions.HourlyInterpolation, Models",
-              "agregationMethod": 0,
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -57,7 +58,6 @@
                 },
                 {
                   "$type": "Models.Functions.ThreeHourSin, Models",
-                  "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -67,7 +67,8 @@
               ],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "agregationMethod": "0"
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -319,71 +320,39 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "ReallocationMethod"
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "AllocateFixationMethod"
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "RetranslocationMethod"
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
-                      "Name": "SendPotentialDMAllocationsMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  ]
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
-                      "Name": "NutrientConstrainedAllocationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "NutrientConstrainedAllocationMethod"
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
-                      "Name": "DryMatterAllocationsMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "DryMatterAllocationsMethod"
                     }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  ]
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -393,10 +362,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             },
             {
               "$type": "Models.PMF.BiomassTypeArbitrator, Models",
@@ -404,65 +370,37 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "ReallocationMethod"
                     }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  ]
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
                   "Name": "ActualPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "AllocateFixationMethod"
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "RetranslocationMethod"
                     }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  ]
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
-                      "Name": "NitrogenAllocationsMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Name": "NitrogenAllocationsMethod"
                     }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  ]
                 },
                 {
                   "$type": "Models.PMF.PrioritythenRelativeAllocation, Models",
@@ -474,32 +412,17 @@
                 },
                 {
                   "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
-                  "Name": "AllocateUptakesMethod",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Name": "AllocateUptakesMethod"
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             },
             {
               "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
-              "Name": "WaterUptakeMethod",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "Name": "WaterUptakeMethod"
             },
             {
               "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
-              "Name": "NitrogenUptakeMethod",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "Name": "NitrogenUptakeMethod"
             }
           ],
           "IncludeInDocumentation": false,
@@ -770,10 +693,8 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
-          "IsAboveGround": true,
           "Name": "Tuber",
           "Children": [
             {
@@ -1185,7 +1106,6 @@
                                     },
                                     {
                                       "$type": "Models.Functions.HourlyInterpolation, Models",
-                                      "agregationMethod": 0,
                                       "Name": "ThermalTime",
                                       "Children": [
                                         {
@@ -1208,7 +1128,6 @@
                                         },
                                         {
                                           "$type": "Models.Functions.ThreeHourSin, Models",
-                                          "TempRangeFactors": null,
                                           "Name": "InterpolationMethod",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1218,7 +1137,8 @@
                                       ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
-                                      "ReadOnly": false
+                                      "ReadOnly": false,
+                                      "agregationMethod": "0"
                                     }
                                   ],
                                   "IncludeInDocumentation": false,
@@ -1439,28 +1359,15 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Metabolic",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Storage",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -1472,20 +1379,18 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
+          "RootAngle": 45.0,
+          "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
             {
               "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "Children": []
             },
             {
               "$type": "Models.Functions.PhaseBasedSwitch, Models",
@@ -2085,28 +1990,15 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Metabolic",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Storage",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -2125,19 +2017,16 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "Albedo": 0.26,
           "Gsmax350": 0.03,
           "R50": 200.0,
-          "LAI": 0.0,
-          "Depth": 0.0,
-          "Width": 0.0,
           "FRGR": 0.0,
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
+          "MicroClimatePresent": true,
           "KDead": 0.3,
           "MaximumMainStemLeafNumber": 40,
           "TipsAtEmergence": 0,
@@ -3199,13 +3088,8 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
               "Name": "WidthFunction",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "FixedValue": "0"
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
@@ -3227,10 +3111,8 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
-          "IsAboveGround": true,
           "Name": "Stem",
           "Children": [
             {
@@ -3711,28 +3593,15 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Metabolic",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
                   "Name": "Storage",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.0"
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             }
           ],
           "IncludeInDocumentation": false,

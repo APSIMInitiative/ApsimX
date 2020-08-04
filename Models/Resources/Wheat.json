@@ -1,12 +1,15 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 109,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 108,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
+      "CropType": "Wheat",
+      "IsAlive": false,
+      "IsEnding": false,
+      "DaysAfterEnding": 0,
       "ResourceName": null,
       "Name": "Wheat",
       "Children": [
