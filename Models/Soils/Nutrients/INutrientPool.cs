@@ -6,9 +6,6 @@
         /// <summary>Amount of carbon (kg/ha)</summary>
         double[] C { get; }
 
-        /// <summary>Carbon/nitrogen ratio</summary>
-        double[] CNRatio { get; }
-
         /// <summary>Amount of nitrogen (kg/ha)</summary>
         double[] N { get; }
     }

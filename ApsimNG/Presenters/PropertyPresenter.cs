@@ -540,11 +540,7 @@ namespace UserInterface.Presenters
                         properties[i].Display.Type == DisplayType.LifePhaseName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    LifeCycle lifeCycle;
-                    if (properties[i].Display.LifeCycleName != null)
-                        lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
-                    else
-                        lifeCycle = GetLifeCycle(properties);
+                    LifeCycle lifeCycle = GetLifeCycle(properties);
                     if (lifeCycle != null)
                     {
                         cell.DropDownStrings = GetPhaseNames(lifeCycle);
@@ -852,20 +848,13 @@ namespace UserInterface.Presenters
         /// <returns>The found Life Cycle or null if none found.</returns>
         private LifeCycle GetLifeCycle(List<IVariable> properties)
         {
+            LifeCycle lc = null;
             foreach (IVariable property in properties)
             {
-                if (property.DataType == typeof(LifeCycle))
-                {
-                    LifeCycle lifeCycle = property.Value as LifeCycle;
-                    if (lifeCycle != null)
-                    {
-                        return lifeCycle;
-                    }
-                }
+                if (lc == null)
+                    lc = Apsim.Find(model, property.Value.ToString()) as LifeCycle;
             }
-
-            // Not found so look for one in scope.
-            return Apsim.Find(model, typeof(LifeCycle)) as LifeCycle;
+            return lc;
         }
 
         private string[] GetResidueNames()
