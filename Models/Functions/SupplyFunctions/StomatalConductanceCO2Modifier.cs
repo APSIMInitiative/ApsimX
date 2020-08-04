@@ -8,7 +8,7 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on RUE using the approach of [Reyenga1999].
+    /// This model calculates the CO<sub>2</sub> impact on stomatal conductance using the approach of Elli et al (2020).
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on stomatal conductance RUE using the approach of <br>Elli et al (2020) <br>Global sensitivity-based modelling approach to identify suitable Eucalyptus traits for adaptation to climate variability and change. <br> in silico Plants Vol. 2, No. 1, pp. 1–17")]
@@ -22,7 +22,7 @@ namespace Models.Functions.SupplyFunctions
         protected IWeather MetData = null;
 
         /// <summary>Photosynthesis CO2 Modifier</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PhotosynthesisCO2Modifier = null;
 
         /// <summary>Gets the value.</summary>
@@ -35,16 +35,12 @@ namespace Models.Functions.SupplyFunctions
                     return 1.0;
                 else
                 {
-                    double CP;      //co2 compensation point (ppm)
-                    double first;
-                    double second;
                     double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
+                    double CP = (163.0 - temp) / (5.0 - 0.1 * temp);  //co2 compensation point (ppm)
 
-                    CP = (163.0 - temp) / (5.0 - 0.1 * temp);
-
-                    first = (MetData.CO2 - CP);
-                    second = (350.0 - CP);
-                    return PhotosynthesisCO2Modifier.Value()/ first / second;
+                    double first = (MetData.CO2 - CP);
+                    double second = (350.0 - CP);
+                    return PhotosynthesisCO2Modifier.Value() / (first / second);
                 }
         }
     }
