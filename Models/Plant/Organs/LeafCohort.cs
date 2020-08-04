@@ -827,7 +827,7 @@ namespace Models.PMF.Organs
             if (IsNotAppeared)
             {
                 CellDivisionStressDays += 1;
-                CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value();
+                CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStressValue;
                 CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
             }
 
@@ -836,9 +836,9 @@ namespace Models.PMF.Organs
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
                 if (IsFullyExpanded && IsNotSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAccelerationValue;
                 else if (IsSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
+                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAccelerationValue;
                 else thermalTime = tt;
 
                 //Modify leaf area using tillering approach
@@ -861,8 +861,8 @@ namespace Models.PMF.Organs
                 //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank,extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
-                ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
-                SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
+                ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRateValue;
+                SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSizeValue;
                 SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
 
                 // Doing leaf mass growth in the cohort

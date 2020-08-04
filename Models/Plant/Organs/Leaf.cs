@@ -421,7 +421,18 @@ namespace Models.PMF.Organs
 
             /// <summary>The expansion stress</summary>
             public double ExpansionStressValue { get; set; }
+            /// <summary>The CellDivisionStressValue</summary>
+            public double CellDivisionStressValue { get; set; }
+            /// <summary>The DroughtInducedLagAccelerationValue</summary>
+            public double DroughtInducedLagAccelerationValue { get; set; }
+            /// <summary>The DroughtInducedSenAccelerationValue</summary>
+            public double DroughtInducedSenAccelerationValue { get; set; }
+            /// <summary>The ShadeInducedSenescenceRateValue</summary>
+            public double ShadeInducedSenescenceRateValue { get; set; }
+            /// <summary>The SenessingLeafRelativeSizeValue</summary>
+            public double SenessingLeafRelativeSizeValue { get; set; }
 
+            
             /// <summary>The critical n conc</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction CriticalNConc = null;
@@ -1238,21 +1249,26 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-
-
-            if (!parentPlant.IsEmerged)
-                return;
-
             Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
+
+            if (!parentPlant.IsEmerged)
+                return;
 
             double frostfraction = FrostFraction.Value();
             if (frostfraction > 0)
                 foreach (LeafCohort l in Leaves)
                     l.DoFrost(frostfraction);
 
+            // Store values prior to looping through all leaves
             CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
+            CohortParameters.CellDivisionStressValue = CohortParameters.CellDivisionStress.Value();
+            CohortParameters.DroughtInducedLagAccelerationValue = CohortParameters.DroughtInducedLagAcceleration.Value();
+            CohortParameters.DroughtInducedSenAccelerationValue = CohortParameters.DroughtInducedSenAcceleration.Value();
+            CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
+            CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
+
             bool nextExpandingLeaf = false;
             double thermalTime = ThermalTime.Value();
             double extinctionCoefficient = ExtinctionCoeff.Value();
