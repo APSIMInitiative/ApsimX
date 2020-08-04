@@ -732,6 +732,7 @@
                 }
                 else
                 {
+                    double maxNUptake = maxDailyNUptake.Value();
                     for (int layer = 0; layer < thickness.Length; layer++)
                     {
                         accuDepth += thickness[layer];
@@ -744,12 +745,12 @@
 
                             double kno3 = this.kno3.Value(layer);
                             double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
+                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
                             NO3Uptake += NO3Supply[layer];
 
                             double knh4 = this.knh4.Value(layer);
                             double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
+                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
                             NH4Uptake += NH4Supply[layer];
                         }
                     }
