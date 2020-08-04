@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 107; } }
+        public static int LatestVersion { get { return 108; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2391,6 +2391,21 @@
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion108(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("Wheat.Structure.HaunStage",          "Wheat.Phenology.HaunStage"),
+                new Tuple<string, string>("[Wheat].Structure.HaunStage",          "[Wheat].Phenology.HaunStage"),
+                new Tuple<string, string>("Wheat.Structure.PTQ",          "Wheat.Phenology.PTQ"),
+                new Tuple<string, string>("[Wheat].Structure.PTQ",          "[Wheat].Phenology.PTQ")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
 
 
         /// <summary>

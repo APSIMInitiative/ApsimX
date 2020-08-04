@@ -43,8 +43,5 @@
                 else return 1.0;
             }
         }
-
-        /// <summary> the number of projeny added to the destination by this phase</summary>
-        public double ProgenyToDestination { get; set; }
     }
 }
