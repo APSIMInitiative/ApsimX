@@ -3,8 +3,6 @@
     using Models.Core;
     using Functions;
     using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
     /// <summary>
     /// # [Name]
     /// [DocumentType Memo]

@@ -139,11 +139,11 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                int NumLayers = values.Length;
+                int numLayers = values.Length;
                 List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
 
                 foreach (NutrientPool P in Pools)
-                    for (int i = 0; i < NumLayers; i++)
+                    for (int i = 0; i < numLayers; i++)
                         values[i] += P.C[i];
                 return values;
             }
@@ -339,11 +339,11 @@
             get
             {
                 double[] values = new double[FOMLignin.N.Length];
-                int NumLayers = values.Length;
+                int numLayers = values.Length;
                 List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
 
                 foreach (NutrientPool P in Pools)
-                    for (int i = 0; i < NumLayers; i++)
+                    for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
                 return values;
             }
