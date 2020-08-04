@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 281,
   "Version": 107,
-  "ApsimVersion": "0.0.0.0",
+  "ApsimVersion": "2020.8.3.5474",
   "Name": "Simulations",
   "Children": [
     {
@@ -1315,8 +1315,8 @@
                                   "X": [
                                     0.0,
                                     90.0,
-                                    230.0,
-                                    270.0,
+                                    150.0,
+                                    177.0,
                                     315.0,
                                     316.0,
                                     366.0
@@ -2617,17 +2617,17 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            90.0,
-                            230.0,
+                            127.0,
+                            177.0,
                             320.0,
                             361.0
                           ],
                           "Y": [
-                            100.0,
+                            10.0,
                             200.0,
-                            500.0,
-                            500.0,
-                            100.0
+                            470.0,
+                            470.0,
+                            10.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -2662,8 +2662,8 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        90.0,
-                        230.0,
+                        100.0,
+                        177.0,
                         313.0,
                         314.0,
                         366.0
@@ -2713,6 +2713,288 @@
               "IsAboveGround": true,
               "Name": "Shoot",
               "Children": [
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DeltaFunction, Models",
+                      "StartStageName": null,
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Integral",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].MainStemPopn",
+                              "Name": "ShootPopulation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.BetaGrowthFunction, Models",
+                              "tm": 43.0,
+                              "te": 79.2,
+                              "Name": "BetaGrowthFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 40.0,
+                                  "Units": "g",
+                                  "Name": "Ymax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Storage",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "StructuralWt",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Shoot.Live.StructuralWt",
+                                      "Name": "StructuralWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.26,
+                                      "Units": "gStorageDM/gStructureDM",
+                                      "Name": "MaxConcentration",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Shoot.Live.StorageWt",
+                                  "Name": "StorageWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookup, Models",
+                              "Name": "DailySynthesis",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "BudBurst",
+                                  "End": "Veraison",
+                                  "Name": "Juvenile",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.02,
+                                      "Units": "gc/gDM",
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "Veraison",
+                                  "End": "LeafFall",
+                                  "Name": "Reproductive",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.04,
+                                      "Units": "gc/gDM",
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.001,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "Veraison",
+                          "Name": "Juvenile",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.2,
+                              "Units": "gc/gDM",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Veraison",
+                          "End": "LeafFall",
+                          "Name": "Reproductive",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.4,
+                              "Units": "gc/gDM",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
@@ -2901,208 +3183,6 @@
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.DeltaFunction, Models",
-                      "StartStageName": null,
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Integral",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].MainStemPopn",
-                              "Name": "ShootPopulation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 43.0,
-                              "te": 79.2,
-                              "Name": "BetaGrowthFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 18.0,
-                                  "Units": "g",
-                                  "Name": "Ymax",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "StructuralWt",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Shoot.Live.StructuralWt",
-                                      "Name": "StructuralWt",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.26,
-                                      "Units": "gStorageDM/gStructureDM",
-                                      "Name": "MaxConcentration",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Shoot.Live.StorageWt",
-                                  "Name": "StorageWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookup, Models",
-                              "Name": "DailySynthesis",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "BudBurst",
-                                  "End": "Veraison",
-                                  "Name": "Juvenile",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.02,
-                                      "Units": "gc/gDM",
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Veraison",
-                                  "End": "LeafFall",
-                                  "Name": "Reproductive",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.04,
-                                      "Units": "gc/gDM",
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -3228,86 +3308,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemandPriorityFactors",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "Veraison",
-                          "Name": "Juvenile",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": "gc/gDM",
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Veraison",
-                          "End": "LeafFall",
-                          "Name": "Reproductive",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": "gc/gDM",
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.AccumulateFunction, Models",
                   "StartStageName": "BudBurst",
                   "EndStageName": "LeafFall",
@@ -3388,6 +3388,401 @@
               "IsAboveGround": true,
               "Name": "Cordon",
               "Children": [
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Storage",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "StructuralWt",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Cordon.Live.StructuralWt",
+                                      "Name": "StructuralWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.26,
+                                      "Units": "gStorageDM/gStructureDM",
+                                      "Name": "MaxConcentration",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Cordon.Live.StorageWt",
+                                  "Name": "StorageWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookup, Models",
+                              "Name": "DailySynthesis",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "BudBurst",
+                                  "End": "Veraison",
+                                  "Name": "Juvenile",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.02,
+                                      "Units": "gc/gDM",
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "Veraison",
+                                  "End": "LeafFall",
+                                  "Name": "Reproductive",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.03,
+                                      "Units": "gc/gDM",
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "2",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 3.1415926,
+                          "Units": null,
+                          "Name": "PI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PowerFunction, Models",
+                          "Exponent": 0.5,
+                          "Name": "Radius",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "RadiusSquare",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cordon].Live.Wt",
+                                  "Name": "Wt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Population",
+                                  "Name": "population",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cordon].CordonNumber",
+                                  "Name": "CordonNumber",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 500000.0,
+                                  "Units": "g/m3",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cordon].CordonLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 400000.0,
+                          "Units": "g/m3",
+                          "Name": "Density",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 9E-06,
+                          "Units": "meter",
+                          "Name": "RadiusGR",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Cordon].CordonLength",
+                          "Name": "Length",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Cordon].CordonNumber",
+                          "Name": "CordonNumber",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.47,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.001,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "Veraison",
+                          "Name": "Juvenile",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.2,
+                              "Units": "gc/gDM",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Veraison",
+                          "End": "LeafFall",
+                          "Name": "Reproductive",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.4,
+                              "Units": "gc/gDM",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 10.0,
+                  "Units": "mm",
+                  "Name": "CordonDiameter",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.9,
+                  "Units": "meter",
+                  "Name": "CordonLength",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
@@ -3586,16 +3981,6 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": null,
-                  "Name": "CordonDiameter",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 4.0,
                   "Units": null,
                   "Name": "CordonNumber",
@@ -3722,258 +4107,6 @@
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemandPriorityFactors",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.47,
-                      "Units": null,
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "Veraison",
-                          "Name": "Juvenile",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": "gc/gDM",
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Veraison",
-                          "End": "LeafFall",
-                          "Name": "Reproductive",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": "gc/gDM",
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "StructuralWt",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Cordon.Live.StructuralWt",
-                                      "Name": "StructuralWt",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.26,
-                                      "Units": "gStorageDM/gStructureDM",
-                                      "Name": "MaxConcentration",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Cordon.Live.StorageWt",
-                                  "Name": "StorageWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookup, Models",
-                              "Name": "DailySynthesis",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "BudBurst",
-                                  "End": "Veraison",
-                                  "Name": "Juvenile",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.02,
-                                      "Units": "gc/gDM",
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Veraison",
-                                  "End": "LeafFall",
-                                  "Name": "Reproductive",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.03,
-                                      "Units": "gc/gDM",
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].Live.Wt",
-                          "Name": "wt",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0001,
-                          "Units": null,
-                          "Name": "growthRate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -4076,9 +4209,10 @@
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].Live.Wt",
-                          "Name": "wt",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "2",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4086,48 +4220,114 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0001,
+                          "FixedValue": 3.1415926,
                           "Units": null,
-                          "Name": "growthRate",
+                          "Name": "PI",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "AgeFactor",
+                          "$type": "Models.Functions.PowerFunction, Models",
+                          "Exponent": 0.5,
+                          "Name": "Radius",
                           "Children": [
                             {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                5.0,
-                                20.0,
-                                30.0
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "RadiusSquare",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].Live.Wt",
+                                  "Name": "Wt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Population",
+                                  "Name": "population",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].TrunkLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 500000.0,
+                                  "Units": "g/m3",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
                               ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.01,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Age.Years",
-                              "Name": "XValue",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Trunk].TrunkLength",
+                          "Name": "Length",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 500000.0,
+                          "Units": "g/m3",
+                          "Name": "Density",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 8E-06,
+                          "Units": "meter",
+                          "Name": "RadiusGR",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Population",
+                          "Name": "population",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -4664,6 +4864,26 @@
                 {
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 75.0,
+                  "Units": "mm",
+                  "Name": "TrunkDiameter",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.9,
+                  "Units": "meter",
+                  "Name": "TrunkLength",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8672,6 +8892,7 @@
             "[Grapevine].Fibrousroot.Live.StorageWt",
             "[Grapevine].Fibrousroot.Live.StorageWt/[Grapevine].Fibrousroot.Live.Wt as total.NSC.concentration.root",
             " ",
+            "[Grapevine].Trunk.DMDemands.Structural.Radius",
             "",
             "[Grapevine].Arbitrator.FDM",
             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
@@ -19453,12 +19674,8 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk height(m)\")]\r\n        public double TrunkHeight { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous Root dry matter(g/vine)\")]\r\n        public double RootDM { get; set; }\r\n\r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *0.5 * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkHeight*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n               \r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Root biomass is  per plant\r\n                double rootBiomass = RootDM * pop;\r\n                double rootNSC = RootDM * pop * RootNSC; \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous Root dry matter(g/vine)\")]\r\n        public double RootDM { get; set; }\r\n\r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\t            double woodDensity = 0.4; //g/mm2/m\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n\t            zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Root biomass is  per plant\r\n                double rootBiomass = RootDM * pop;\r\n                double rootNSC = RootDM * pop * RootNSC; \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
-                            {
-                              "Key": "BudNumber",
-                              "Value": "48"
-                            },
                             {
                               "Key": "CultivarName",
                               "Value": "SauvignonBlanc"
@@ -19470,6 +19687,10 @@
                             {
                               "Key": "VineDistance",
                               "Value": "1.8"
+                            },
+                            {
+                              "Key": "BudNumber",
+                              "Value": "48"
                             },
                             {
                               "Key": "CordonNumber",
@@ -19485,7 +19706,7 @@
                             },
                             {
                               "Key": "TrunkDiameter",
-                              "Value": "48"
+                              "Value": "35"
                             },
                             {
                               "Key": "TrunkHeight",
@@ -19634,7 +19855,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t        //int TargetLeafRank = 20;    \r\n    \t        //int LeafTipsAppeared = 25;//(int)Grapevine.Structure.LeafTipsAppeared;\r\n\r\n    \t        //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \t\r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 21.815 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n\t            double cordonNSC = cordonBiomass * 0.18;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n\r\n\t            //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280); \t\r\n\t           // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70); \t\r\n\r\n\t           // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531); \t\r\n\t           // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349); \t\r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n\t\t   //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n\t\t   //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t        //int TargetLeafRank = 20;    \r\n    \t        //int LeafTipsAppeared = 25;//(int)Grapevine.Structure.LeafTipsAppeared;\r\n\r\n    \t        //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \t\r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n\t            double cordonNSC = cordonBiomass * 0.18;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n\r\n\t            //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280); \t\r\n\t           // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70); \t\r\n\r\n\t           // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531); \t\r\n\t           // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349); \t\r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n\t\t   //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n\t\t   //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
