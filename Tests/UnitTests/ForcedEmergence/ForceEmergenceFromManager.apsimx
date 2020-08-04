@@ -83,7 +83,7 @@
                 "[Wheat].Grain.Total.N",
                 "[Wheat].Total.Wt",
                 "[Wheat].Phenology.Stage",
-                "[Wheat].Structure.HaunStage"
+                "[Wheat].Phenology.HaunStage"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -714,7 +714,7 @@
                 "[Wheat].Grain.Total.N",
                 "[Wheat].Total.Wt",
                 "[Wheat].Phenology.Stage",
-                "[Wheat].Structure.HaunStage"
+                "[Wheat].Phenology.HaunStage"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -1349,7 +1349,7 @@
                 "[Wheat].Grain.Total.N",
                 "[Wheat].Total.Wt",
                 "[Wheat].Phenology.Stage",
-                "[Wheat].Structure.HaunStage"
+                "[Wheat].Phenology.HaunStage"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -2049,7 +2049,7 @@
           "LineThickness": 0,
           "TableName": "Report",
           "XFieldName": "Clock.Today",
-          "YFieldName": "Wheat.Structure.HaunStage",
+          "YFieldName": "Wheat.Phenology.HaunStage",
           "X2FieldName": "",
           "Y2FieldName": "",
           "ShowInLegend": true,
