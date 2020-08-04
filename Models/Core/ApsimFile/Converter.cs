@@ -2414,6 +2414,8 @@
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
                 string code = manager.ToString();
+                if (code == null)
+                    continue;
                 foreach (Type type in typesToMove)
                 {
                     if (code.Contains(type.Name))
