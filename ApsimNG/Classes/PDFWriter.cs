@@ -18,6 +18,9 @@
     using UserInterface.Commands;
     using UserInterface.Presenters;
     using UserInterface.Views;
+    using UserInterface.Interfaces;
+    using UserInterface.Extensions;
+    using Markdig;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.
@@ -26,7 +29,6 @@
     {
         private readonly ExplorerPresenter explorerPresenter;
         private readonly bool portrait;
-        private MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
         private BibTeX bibTeX;
         private List<BibTeX.Citation> citations;
 
@@ -37,13 +39,12 @@
         {
             this.explorerPresenter = explorerPresenter;
             this.portrait = portraitOrientation;
-            markDown.ExtraMode = true;
 
-            /// This is a bit tricky on non-Windows platforms. 
-            /// Normally PdfSharp tries to get a Windows DC for associated font information
-            /// See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
-            /// See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
-            /// The work-around is to register our own fontresolver. We don't need to do this on Windows.
+            // This is a bit tricky on non-Windows platforms. 
+            // Normally PdfSharp tries to get a Windows DC for associated font information
+            // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
+            // See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
+            // The work-around is to register our own fontresolver. We don't need to do this on Windows.
             if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
                 Environment.OSVersion.Platform != PlatformID.Win32Windows &&
                 GlobalFontSettings.FontResolver == null)
@@ -125,11 +126,18 @@
             xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
-            //tableStyle.Font.Size = 8;
+            tableStyle.Font.Size = 10;
+
+            Style smallStyle = document.Styles.AddStyle("Small", "Normal");
+            smallStyle.Font.Size = 8;
+
+            Style verySmallStyle = document.Styles.AddStyle("VerySmall", "Normal");
+            verySmallStyle.Font.Size = 6;
+
         }
 
         /// <summary>Scans for citations.</summary>
-        /// <param name="t">The tags to go through looking for citations.</param>
+        /// <param name="tags">The tags to go through looking for citations.</param>
         private void ScanForCitations(List<AutoDocumentation.ITag> tags)
         {
             foreach (AutoDocumentation.ITag tag in tags)
@@ -260,9 +268,9 @@
         /// <summary>
         /// Remove the gap in heading levels for a 'branch' of tags.
         /// </summary>
-        /// <param name="tags"></param>
-        /// <param name="thisTag"></param>
-        /// <param name="nextTag"></param>
+        /// <param name="tags">List of tags.</param>
+        /// <param name="tagIndex">Index of the tag to be removed.</param>
+        /// <param name="deltaHeadingLevel">Change heading level by this amount.</param>
         private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
         {
             int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
@@ -281,7 +289,6 @@
         }
 
         /// <summary>Creates a table of contents.</summary>
-        /// <param name="writer">The writer to write to.</param>
         /// <param name="tags">The autodoc tags.</param>
         private void NumberHeadings(List<AutoDocumentation.ITag> tags)
         {
@@ -359,7 +366,20 @@
                 else if (tag is GraphPage)
                     CreateGraphPage(section, tag as GraphPage);
                 else if (tag is AutoDocumentation.NewPage)
+                {
                     section.AddPageBreak();
+                    if ((tag as AutoDocumentation.NewPage).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
+                else if (tag is AutoDocumentation.PageSetup)
+                {
+                    if ((tag as AutoDocumentation.PageSetup).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
                 else if (tag is AutoDocumentation.Table)
                     CreateTable(section, tag as AutoDocumentation.Table);
                 else if (tag is Graph)
@@ -379,10 +399,11 @@
                     if (caption != null)
                         section.AddParagraph(caption);
                     graphPresenter.Detach();
-                    graphView.MainWidget.Destroy();
+                    graphView.MainWidget.Cleanup();
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
+#if NETFRAMEWORK
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, explorerPresenter);
@@ -391,6 +412,9 @@
                         section.AddImage(pngFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
+#else
+                    section.AddParagraph("MapView has not been implemented in gtk3. Use the framework/gtk2 build instead.");
+#endif
                 }
                 else if (tag is AutoDocumentation.Image)
                 {
@@ -432,7 +456,7 @@
 
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
-
+#if NETFRAMEWORK
                             // From MapView:
                             // With WebKit, it appears we need to give it time to actually update the display
                             // Really only a problem with the temporary windows used for generating documentation
@@ -443,12 +467,12 @@
                                 while (watch.ElapsedMilliseconds < 1000)
                                     Gtk.Application.RunIteration();
                             }
-
+#endif
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
                             presenter.Detach();
-                            view.MainWidget.Destroy();
-                            popupWin.Destroy();
+                            view.MainWidget.Cleanup();
+                            popupWin.Cleanup();
                         }
                     }
                 }
@@ -460,7 +484,7 @@
         /// <param name="paragraph">The paragraph.</param>
         private void AddFormattedParagraphToSection(Section section, AutoDocumentation.Paragraph paragraph)
         {
-            string html = markDown.Transform(paragraph.text);
+            string html = Markdown.ToHtml(paragraph.text);
 
             HtmlToMigraDoc.Convert(html, section, WorkingDirectory);
 
@@ -476,7 +500,7 @@
         }
 
         /// <summary>Creates the graph.</summary>
-        /// <param name="writer">The writer.</param>
+        /// <param name="section">The section.</param>
         /// <param name="graphAndTable">The graph and table to convert to html.</param>
         private void CreateGraphPDF(Section section, AutoDocumentation.GraphAndTable graphAndTable)
         {
@@ -536,7 +560,7 @@
                 gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
             }
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
-            graph.MainWidget.Destroy();
+            graph.MainWidget.Cleanup();
             image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
             MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(pngFileName);
             sectionImage.LockAspectRatio = true;
@@ -627,14 +651,15 @@
         private void CreateTable(Section section, AutoDocumentation.Table tableObj)
         {
             var table = section.AddTable();
-            table.Style = "Table";
+            table.Style = tableObj.Style;
             table.Borders.Color = Colors.Blue;
             table.Borders.Width = 0.25;
             table.Borders.Left.Width = 0.5;
             table.Borders.Right.Width = 0.5;
             table.Rows.LeftIndent = 0;
 
-            var gdiFont = new XFont("Arial", 10);
+            var fontSize = section.Document.Styles[tableObj.Style].Font.Size.Value;
+            var gdiFont = new XFont("Arial", fontSize);
             XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
             // Add the required columns to the table.
@@ -698,7 +723,7 @@
                 // The actual column width is whichever of these two values is smaller.
                 // MigraDoc will automatically wrap text to ensure the column respects this width.
                 double maxWidth = graphics.MeasureString(new string('m', tableObj.ColumnWidth), gdiFont).Width;
-                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 10);
+                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 0);
             }
             
             section.AddParagraph();
@@ -709,6 +734,7 @@
         /// </summary>
         /// <param name="paragraph">The paragaraph to add text to</param>
         /// <param name="text">The text</param>
+        /// <param name="width">Width of the text.</param>
         private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
         {
             // For some reason, a parapraph converts all sequences of white

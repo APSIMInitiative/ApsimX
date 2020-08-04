@@ -2,6 +2,7 @@
 using System.Drawing;
 using Gtk;
 using System.Collections.Generic;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -67,7 +68,12 @@ namespace UserInterface.Views
             helpBtn.Image.Visible = true;
             helpBtn.Clicked += HelpBtn_Clicked;
             mainWidget = vbox1;
+            // fixme - add css class for memo text?
+#if NETFRAMEWORK
             TextView.ModifyFont(Pango.FontDescription.FromString("monospace"));
+#else
+            TextView.Monospace = true;
+#endif
             TextView.FocusOutEvent += RichTextBox1_Leave;
             TextView.Buffer.Changed += RichTextBox1_TextChanged;
             TextView.PopulatePopup += TextView_PopulatePopup;
@@ -245,17 +251,29 @@ namespace UserInterface.Views
             {
                 if (menuItemList.Count > 0)
                 {
-                    foreach (Widget w in args.Menu)
+#if NETFRAMEWORK
+                    Menu menu = args.Menu;
+#else
+                    // In gtk3, the popup is not necessarily a GtkMenu. If populate-all is set
+                    // to true, then touchscreen popups will also trigger this event, and the
+                    // popup will be a different type of container, e.g. a GtkToolbar. We cannot
+                    // make assumptions about the type of args.Popup.
+                    // https://developer.gnome.org/gtk3/stable/GtkTextView.html#GtkTextView-populate-popup
+                    Menu menu = args.Popup as Menu;
+                    if (menu == null)
+                        return;
+#endif
+                    foreach (Widget w in menu)
                     {
-                        args.Menu.Remove(w);
-                        w.Destroy();
+                        menu.Remove(w);
+                        w.Cleanup();
                     }
                     foreach (MenuInfo item in menuItemList)
                     {
                         MenuItem menuItem = new MenuItem(item.MenuText);
                         menuItem.Activated += item.Action;
                         menuItem.Visible = true;
-                        args.Menu.Append(menuItem);
+                        menu.Append(menuItem);
                     }
                     args.RetVal = true;
                 }

@@ -15,6 +15,9 @@ using UserInterface.Classes;
 
 namespace UnitTests.ApsimNG.Views
 {
+    /// <summary>
+    /// Tests for the GridView UI component.
+    /// </summary>
     [TestFixture]
     public class GridViewTests
     {

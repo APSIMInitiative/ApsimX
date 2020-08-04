@@ -7,7 +7,7 @@
     [TestFixture]
     class DBMergerTests
     {
-        /// <summary>Ensure two .db files, which have the same tables, can be merged.
+        /// <summary>Ensure two .db files, which have the same tables, can be merged.</summary>
         [Test]
         public void DBsThatHaveTheSameTablesMergeCorrectly()
         {
@@ -69,7 +69,7 @@
 
         }
 
-        /// <summary>Ensure two .db files, which have the same simulation names, can be merged.
+        /// <summary>Ensure two .db files, which have the same simulation names, can be merged.</summary>
         [Test]
         public void DBsThatHaveTheSameSimulationsMergeCorrectly()
         {
@@ -129,7 +129,7 @@
 
         }
 
-        /// <summary>Ensure two .db files, which have different tables, can be merged.
+        /// <summary>Ensure two .db files, which have different tables, can be merged.</summary>
         [Test]
         public void DBThatHaveTheDifferentTablesMergeCorrectly()
         {
@@ -193,7 +193,7 @@
                "           4,21.000,str4\r\n");
         }
 
-        /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.
+        /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.</summary>
         [Test]
         public void DBsThatHaveTablesWithNoSimulationIDMergeCorrectly()
         {

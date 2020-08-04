@@ -85,6 +85,7 @@ namespace UserInterface.Intellisense
         /// <param name="projectContent">Content of the project.</param>
         /// <param name="usings">The usings.</param>
         /// <param name="variables">The variables</param>
+        /// <param name="namespace">The namespace.</param>
         public CSharpCompletionContext(IDocument document, int offset, IProjectContent projectContent, string usings = null, string variables = null, string @namespace = null)
         {
             OriginalDocument = document;

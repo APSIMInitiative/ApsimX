@@ -4,6 +4,7 @@
     using Models;
     using Views;
     using System;
+    using Interfaces;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -18,7 +19,7 @@
         /// <summary>
         /// The memo view
         /// </summary>
-        private HTMLView memoViewer;
+        private IHTMLView memoViewer;
 
         /// <summary>
         /// The explorer presenter used
@@ -34,7 +35,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.memoModel = model as Memo;
-            this.memoViewer = view as HTMLView;
+            this.memoViewer = view as IHTMLView;
             this.explorerPresenter = explorerPresenter;
             this.memoViewer.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
             this.memoViewer.SetContents(this.memoModel.Text, true);

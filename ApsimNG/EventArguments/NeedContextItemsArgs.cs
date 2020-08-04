@@ -32,12 +32,12 @@
         /// Context item information
         /// </summary>
         public List<string> Items;
-
+#if NETFRAMEWORK
         /// <summary>
         /// Completion data.
         /// </summary>
         public List<CompletionData> CompletionData { get; set; }
-
+#endif
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.
         /// </summary>
@@ -273,7 +273,9 @@
         /// </summary>
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
-        /// <returns></returns>
+        /// <param name="properties">Include properties?</param>
+        /// <param name="methods">Include methods?</param>
+        /// <param name="events">Include events?</param>
         public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool events)
         {
             List<ContextItem> contextItems = new List<ContextItem>();

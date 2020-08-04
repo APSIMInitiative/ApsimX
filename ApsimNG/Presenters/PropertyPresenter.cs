@@ -768,7 +768,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Get a list of phases for lifecycle.</summary>
-        /// <param name="lifecycle">The lifecycle.</param>
+        /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
         private string[] GetPhaseNames(LifeCycle lifeCycle)
         {
@@ -1000,8 +1000,10 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Fetches from the model the value which should be displayed in a given cell.
         /// </summary>
+        /// <param name="property">The row and column correspond to this property.</param>
         /// <param name="row">Row index of the cell.</param>
         /// <param name="column">Column index of the cell.</param>
+        /// <remarks>Why do we need to pass row/column and property as well??</remarks>
         protected virtual object GetCellValue(IVariable property, int row, int column)
         {
             object result = property.ValueWithArrayHandling;
@@ -1021,7 +1023,6 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets the property in a given displayed by a given cell.
         /// </summary>
-        /// <remarks>
         /// <param name="row">Row inex.</param>
         /// <param name="column">Column index.</param>
         protected virtual IVariable GetProperty(int row, int column)
@@ -1033,6 +1034,7 @@ namespace UserInterface.Presenters
         /// Gets the new value of the cell from a string containing the
         /// cell's new contents.
         /// </summary>
+        /// <param name="property">Property to which the cell belongs.</param>
         /// <param name="cell">Cell which has been changed.</param>
         protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {

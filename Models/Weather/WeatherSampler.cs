@@ -84,6 +84,13 @@
         [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
         public double[] Years { get; set; }
 
+
+        /// <summary>The number of lead in years before weather sampling begins.</summary>
+        [Summary]
+        [Description("Number of lead in years before weather sampling begins.")]
+        [Display(EnabledCallback = "IsSpecifyYearsEnabled")]
+        public int NumberOfLeadInYears { get; set; }
+
         /// <summary>The sample years.</summary>
         [Summary]
         [Description("Number of years to sample from the weather file.")]
@@ -174,6 +181,13 @@
         [JsonIgnore]
         public double Amp { get; set; }
 
+        /// <summary>
+        /// This event will be invoked immediately before models get their weather data.
+        /// models and scripts an opportunity to change the weather data before other models
+        /// reads it.
+        /// </summary>
+        public event EventHandler PreparingNewWeatherData;
+
         /// <summary>Duration of the day in hours.</summary>
         /// <param name="Twilight">The twilight angle.</param>
         public double CalculateDayLength(double Twilight)
@@ -256,6 +270,14 @@
                 for (int i = 0; i < NumYears; i++)
                     Years[i] = random.Next(firstYearToSampleFrom, lastYearToSampleFrom);
             }
+            else if (NumberOfLeadInYears > 0)
+            {
+                // Use lead in years.
+                var yearsWithLeadIn = new List<double>(Years);
+                for (int i = 0; i < NumberOfLeadInYears; i++)
+                    yearsWithLeadIn.Insert(0, Years[0]);
+                Years = yearsWithLeadIn.ToArray();
+            }
 
             if (Years == null || Years.Length == 0)
                 throw new Exception("No years specified in WeatherRandomiser");
@@ -278,10 +300,11 @@
             {
                 // Need to change years to next one in sequence.
                 currentYearIndex++;
-                if (currentYearIndex >= Years.Length)
-                    throw new Exception("Have run out of years to sample in WeatherRandomiser");
-                var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
-                currentRowIndex = FindRowForDate(dateToFind);
+                if (currentYearIndex < Years.Length)
+                {
+                    var dateToFind = new DateTime(Convert.ToInt32(Years[currentYearIndex]), StartDate.Month, StartDate.Day);
+                    currentRowIndex = FindRowForDate(dateToFind);
+                }
             }
 
             MaxT = Convert.ToDouble(data.Rows[currentRowIndex]["MaxT"]);
@@ -296,6 +319,8 @@
                 this.AirPressure = 1010;
 
             currentRowIndex++;
+
+            PreparingNewWeatherData?.Invoke(this, new EventArgs());
         }
 
         /// <summary>

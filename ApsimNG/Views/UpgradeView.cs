@@ -7,6 +7,7 @@
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
 
@@ -59,7 +60,7 @@
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView htmlView;
+        private IHTMLView htmlView;
 
         /// <summary>
         /// Constructor
@@ -121,8 +122,9 @@
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
+            // tbi - gtk3 htmlview or text renderer
             htmlView = new HTMLView(new ViewBase(null));
-            htmlAlign.Add(htmlView.MainWidget);
+            htmlAlign.Add((htmlView as HTMLView).MainWidget);
             tabbedExplorerView = owner as IMainView;
 
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
@@ -148,13 +150,13 @@
         {
             try
             {
-                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GdkWindow.Cursor = null;
+                window1.GetGdkWindow().Cursor = null;
                 if (loadFailure)
-                    window1.Destroy();
+                    window1.Cleanup();
             }
             catch (Exception err)
             {
@@ -205,7 +207,7 @@
                 button1.Sensitive = false;
                 table2.Hide();
                 checkbutton1.Hide();
-                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
+                htmlView?.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
             }
             else
             {
@@ -213,7 +215,7 @@
                 {
                     // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
                     // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                    htmlView?.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
                 }
                 catch (Exception)
                 {
@@ -326,7 +328,7 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
@@ -369,11 +371,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Destroy();
+                                waitDlg.Cleanup();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GdkWindow != null)
-                                window1.GdkWindow.Cursor = null;
+                            if (window1 != null && window1.GetGdkWindow() != null)
+                                window1.GetGdkWindow().Cursor = null;
                         }
 
                     }
@@ -393,7 +395,7 @@
             if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
                 string.IsNullOrWhiteSpace(lastNameBox.Text) ||
                 string.IsNullOrWhiteSpace(emailBox.Text) || 
-                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                string.IsNullOrWhiteSpace(countryBox.GetActiveText()))
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
@@ -433,7 +435,7 @@
             {
                 if (waitDlg != null)
                 {
-                    waitDlg.Destroy();
+                    waitDlg.Cleanup();
                     waitDlg = null;
                 }
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
@@ -480,16 +482,16 @@
                             }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
-                            window1.GdkWindow.Cursor = null;
+                            window1.GetGdkWindow().Cursor = null;
 
                             // Shutdown the user interface
-                            window1.Destroy();
+                            window1.Cleanup();
                             tabbedExplorerView.Close();
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GdkWindow.Cursor = null;
+                        window1.GetGdkWindow().Cursor = null;
                         Application.Invoke(delegate
                         {
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
@@ -513,7 +515,7 @@
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.ActiveText);
+            url = AddToURL(url, "country", countryBox.GetActiveText());
             url = AddToURL(url, "email", emailBox.Text);
             url = AddToURL(url, "product", "APSIM Next Generation");
             url = AddToURL(url, "version", version);
@@ -566,7 +568,7 @@
                 Utility.Configuration.Settings.LastName = lastNameBox.Text;
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
-                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+                Utility.Configuration.Settings.Country = countryBox.GetActiveText();
             }
             catch (Exception err)
             {

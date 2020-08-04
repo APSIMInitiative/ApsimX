@@ -48,6 +48,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourAvailabilityItem()

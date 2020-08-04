@@ -162,10 +162,6 @@ namespace UserInterface.Presenters
         private async Task OnDownloadJobs(object sender, EventArgs args)
         {
             DownloadOptions options = new DownloadOptions();
-            
-            options.DownloadDebugFiles = view.DownloadDebugFiles;
-            options.ExportToCsv = view.ExportCsv;
-            options.ExtractResults = view.ExtractResults;
 
             string basePath = view.DownloadPath;
 
@@ -178,7 +174,7 @@ namespace UserInterface.Presenters
                 {
                     JobDetails job = jobList.Find(j => j.Id == id);
 
-                    options.Path = Path.Combine(basePath, job.DisplayName + "_results");
+                    options.Path = basePath;
                     options.JobID = Guid.Parse(id);
 
                     await cloudInterface.DownloadResultsAsync(options, cancelToken.Token, p => view.DownloadProgress = p);

@@ -2,6 +2,7 @@
 {
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
+    using Extensions;
     using Gtk;
     using Models;
     using System;
@@ -10,10 +11,19 @@
     using System.IO;
     using System.Linq;
 
+#if NETCOREAPP
+    using ExposeEventArgs = Gtk.DrawnArgs;
+    using StateType = Gtk.StateFlags;
+#endif
+
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
+    /// <remarks>
+    /// This code should be reworked to better work in the gtk3 way of thinking.
+    /// Specifically, the way colours are handled seems to be different between gtk 2/3.
+    /// </remarks>
     public class DirectedGraphView : ViewBase
     {
         /// <summary>
@@ -55,7 +65,11 @@
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
+#if NETFRAMEWORK
             drawable.ExposeEvent += OnDrawingAreaExpose;
+#else
+            drawable.Drawn += OnDrawingAreaExpose;
+#endif
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
@@ -65,9 +79,14 @@
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
-            
+
+#if NETFRAMEWORK
             scroller.AddWithViewport(drawable);
-            
+#else
+            // In gtk3, a viewport will automatically be added if required.
+            scroller.Add(drawable);
+#endif
+
             mainWidget = scroller;
             drawable.Realized += OnRealized;
             if (owner == null)
@@ -76,12 +95,13 @@
             }
             else
             {
-                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+                // Needs to be reimplemented for gtk3.
+                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
             }
         }
 
-        /// <summary>The description (nodes & arcs) of the directed graph.</summary>
+        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
         public DirectedGraph DirectedGraph
         {
             get
@@ -101,6 +121,7 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
+#if NETFRAMEWORK
             int width;
             int height;
             MainWidget.GdkWindow.GetSize(out width, out height);
@@ -109,6 +130,9 @@
             MemoryStream stream = new MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
             return bitmap;
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
@@ -118,14 +142,17 @@
             {
                 DrawingArea area = (DrawingArea)sender;
 
+#if NETFRAMEWORK
                 Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
-
+#else
+                Cairo.Context context = args.Cr;
+#endif
                 foreach (DGArc tmpArc in arcs)
                     tmpArc.Paint(context);
                 foreach (DGNode tmpNode in nodes)
                     tmpNode.Paint(context);
 
-                ((IDisposable)context.Target).Dispose();
+                ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
             }
             catch (Exception err)

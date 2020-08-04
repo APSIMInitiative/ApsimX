@@ -12,13 +12,13 @@ namespace Models
 	/// <summary>
 	/// This script must implement the IGraphPanelScript interface.
 	/// </summary>
-    [Serializable]
-	public class Script : Model, IGraphPanelScript
+	[Serializable]
+	public class GraphPanelScriptTemplate : Model, IGraphPanelScript
 	{
 		/// <summary>
         /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.
         /// </summary>
-        /// <param name="storage">Provides access to the datastore.</param>
+        /// <param name="reader">Provides access to the datastore.</param>
         /// <param name="panel">Provides access to the graph panel and the simulations tree.</param>
 		public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)
 		{

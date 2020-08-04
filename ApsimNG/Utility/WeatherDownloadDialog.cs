@@ -12,6 +12,7 @@ namespace Utility
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
+    using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
 
@@ -103,7 +104,7 @@ namespace Utility
                                msg);
             md.Title = title;
             md.Run();
-            md.Destroy();
+            md.Cleanup();
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace Utility
                     var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
-                dialog1.Destroy();
+                dialog1.Cleanup();
             }
         }
 
@@ -270,7 +271,7 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            dialog1.Destroy();
+            dialog1.Cleanup();
         }
 
         /// <summary>
@@ -511,8 +512,14 @@ namespace Utility
                         list.AppendValues(lineInfo);
                     }
                     tree.Model = list;
-                    md.VBox.PackStart(tree, true, true, 5);
-                    md.VBox.ShowAll();
+#if NETFRAMEWORK
+                    Box box = md.VBox;
+#else
+                    Box box = md.ContentArea;
+#endif
+                    box.PackStart(tree, true, true, 5);
+                    box.ShowAll();
+
                     ResponseType result = (ResponseType)md.Run();
                     if (result == ResponseType.Ok)
                     {
@@ -521,7 +528,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Destroy();
+                    md.Cleanup();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -601,9 +608,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

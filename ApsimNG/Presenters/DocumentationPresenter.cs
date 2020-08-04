@@ -1,5 +1,4 @@
 ﻿using APSIM.Shared.Utilities;
-using MarkdownDeep;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -11,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
+using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -20,12 +21,9 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private IModel model;
 
-        private Markdown markdown = new Markdown();
 
         public DocumentationPresenter()
         {
-            markdown.ExtraMode = true;
-            markdown.SafeMode = true;
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
@@ -50,10 +48,10 @@ namespace UserInterface.Presenters
 
             html.AppendLine($"<h1>{model.Name} Description</h1>");
             html.AppendLine("<h2>General Description</h2>");
-            string summary = markdown.Transform(AutoDocumentation.GetSummary(model.GetType()));
+            string summary = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(model.GetType()));
             html.Append($"<p>{summary}</p>");
 
-            string remarks = markdown.Transform(AutoDocumentation.GetRemarks(model.GetType()));
+            string remarks = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(model.GetType()));
             if (!string.IsNullOrEmpty(remarks))
             {
                 html.AppendLine("<h2>Remarks</h2>");
@@ -117,8 +115,8 @@ namespace UserInterface.Presenters
 
                     row[0] = evnt.Name;
                     row[1] = evnt.EventHandlerType.Name;
-                    row[2] = markdown.Transform(AutoDocumentation.GetSummary(evnt));
-                    row[3] = markdown.Transform(AutoDocumentation.GetRemarks(evnt));
+                    row[2] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(evnt));
+                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(evnt));
 
                     table.Rows.Add(row);
                 }
@@ -147,8 +145,8 @@ namespace UserInterface.Presenters
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
                     row[2] = property.PropertyType.Name;
-                    row[3] = markdown.Transform(AutoDocumentation.GetSummary(property));
-                    row[4] = markdown.Transform(AutoDocumentation.GetRemarks(property));
+                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(property));
+                    row[4] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(property));
 
                     table.Rows.Add(row);
                 }
@@ -174,8 +172,8 @@ namespace UserInterface.Presenters
 
                     row[0] = method.Name;
                     row[1] = method.ReturnType.Name;
-                    row[2] = markdown.Transform(AutoDocumentation.GetSummary(method));
-                    row[3] = markdown.Transform(AutoDocumentation.GetRemarks(method));
+                    row[2] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(method));
+                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(method));
 
                     table.Rows.Add(row);
                 }
@@ -217,8 +215,8 @@ namespace UserInterface.Presenters
                     row[3] = link.ByName.ToString();
                     row[4] = link.IsOptional.ToString();
                     row[5] = link.Path;
-                    row[6] = markdown.Transform(AutoDocumentation.GetSummary(member));
-                    row[7] = markdown.Transform(AutoDocumentation.GetRemarks(member));
+                    row[6] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(member));
+                    row[7] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(member));
 
                     result.Rows.Add(row);
                 }

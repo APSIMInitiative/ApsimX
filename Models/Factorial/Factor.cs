@@ -29,7 +29,7 @@
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(CompositeFactor))]
     [ValidParent(ParentType = typeof(Permutation))]
-    public class Factor : Model
+    public class Factor : Model, IReferenceExternalFiles
     {
         /// <summary>A specification for producing a series of factor values.</summary>
         public string Specification { get; set; }
@@ -165,6 +165,18 @@
                     values.Add(new CompositeFactor(this, specification, newModel));
             }
             return values;
+        }
+
+        /// <summary>Return paths to all files referenced by this model.</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return GetCompositeFactors().SelectMany(factor => factor.GetReferencedFileNames());
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

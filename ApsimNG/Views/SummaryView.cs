@@ -1,7 +1,9 @@
 ﻿namespace UserInterface.Views
 {
+    using Interfaces;
     using Gtk;
     using System;
+    using Extensions;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
@@ -23,7 +25,7 @@
         public DropDownView SimulationDropDown { get; private set; }
 
         /// <summary>View which displays the summary data.</summary>
-        public HTMLView HtmlView { get; }
+        public IHTMLView HtmlView { get; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -48,8 +50,10 @@
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
+
             HtmlView = new HTMLView(this);
-            mainControl.PackEnd(HtmlView.MainWidget, true, true, 0);
+            mainControl.PackEnd((HtmlView as ViewBase).MainWidget, true, true, 0);
+
 
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -61,14 +65,14 @@
         {
             try
             {
-                topBox.Destroy();
-                SummaryCheckBox.MainWidget.Destroy();
-                WarningCheckBox.MainWidget.Destroy();
-                ErrorCheckBox.MainWidget.Destroy();
-                middleBox.Destroy();
-                SimulationDropDown.MainWidget.Destroy();
-                mainControl.Destroy();
-                HtmlView.MainWidget.Destroy();
+                topBox.Cleanup();
+                SummaryCheckBox.MainWidget.Cleanup();
+                WarningCheckBox.MainWidget.Cleanup();
+                ErrorCheckBox.MainWidget.Cleanup();
+                middleBox.Cleanup();
+                SimulationDropDown.MainWidget.Cleanup();
+                mainControl.Cleanup();
+                (HtmlView as ViewBase)?.MainWidget?.Cleanup();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }

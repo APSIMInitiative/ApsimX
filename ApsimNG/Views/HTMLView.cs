@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -13,39 +14,10 @@ using System.IO;
 using System.Drawing;
 using Utility;
 using System.Globalization;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    /// <summary>
-    /// An interface for a HTML view.
-    /// </summary>
-    interface IHTMLView
-    {
-        /// <summary>
-        /// Path to find images on.
-        /// </summary>
-        string ImagePath { get; set; }
-
-        /// <summary>
-        /// Set the contents of the control. Can be RTF, HTML or MarkDown. If 
-        /// the contents are markdown and 'allowModification' = true then
-        /// user will be able to edit markdown.
-        /// </summary>
-        void SetContents(string contents, bool allowModification, bool isURI);
-
-        /// <summary>
-        /// Return the edited markdown.
-        /// </summary>
-        /// <returns></returns>
-        string GetMarkdown();
-
-        /// <summary>
-        /// Tells view to use a mono spaced font.
-        /// </summary>
-        void UseMonoSpacedFont();
-
-    }
-
     public interface IBrowserWidget : IDisposable
     {
         void Navigate(string uri);
@@ -121,23 +93,23 @@ namespace UserInterface.Views
             IntPtr window_handle = (IntPtr)WebSocket.Id;
             NativeMethods.SetParent(browser_handle, window_handle);
 
-            /// Another interesting issue is that on Windows, the WebBrowser control by default is
-            /// effectively an IE7 browser, and I don't think you can easily change that without
-            /// changing registry settings. The lack of JSON parsing in IE7 triggers errors in google maps.
-            /// See https://code.google.com/p/gmaps-api-issues/issues/detail?id=9004 for the details.
-            /// Including the meta tag of <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-            /// fixes the problem, but we can't do that in the HTML that we set as InnerHtml in the
-            /// LoadHTML function, as the meta tag triggers a restart of the browser, so it 
-            /// just reloads "about:blank", without the new innerHTML, and we get a blank browser.
-            /// Hence we set the browser type here.
-            /// Another way to get around this problem is to add JSON.Parse support available from
-            /// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
-            /// into the HTML Script added when loading Google Maps
-            /// I am taking the belts-and-braces approach of doing both, primarily because the 
-            /// meta tag, while probably the technically better" solution, sometimes doesn't work.
-            /// 10/8/17 - I've added yet another "fix" for this problem: the installer now writes a 
-            /// registry key requesting that IE 11 be used for ApsimNG.exe (and for ApsimNG.vshost.exe,
-            /// so it also works when run from Visual Studio).
+            // Another interesting issue is that on Windows, the WebBrowser control by default is
+            // effectively an IE7 browser, and I don't think you can easily change that without
+            // changing registry settings. The lack of JSON parsing in IE7 triggers errors in google maps.
+            // See https://code.google.com/p/gmaps-api-issues/issues/detail?id=9004 for the details.
+            // Including the meta tag of <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            // fixes the problem, but we can't do that in the HTML that we set as InnerHtml in the
+            // LoadHTML function, as the meta tag triggers a restart of the browser, so it 
+            // just reloads "about:blank", without the new innerHTML, and we get a blank browser.
+            // Hence we set the browser type here.
+            // Another way to get around this problem is to add JSON.Parse support available from
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
+            // into the HTML Script added when loading Google Maps
+            // I am taking the belts-and-braces approach of doing both, primarily because the 
+            // meta tag, while probably the technically better" solution, sometimes doesn't work.
+            // 10/8/17 - I've added yet another "fix" for this problem: the installer now writes a 
+            // registry key requesting that IE 11 be used for ApsimNG.exe (and for ApsimNG.vshost.exe,
+            // so it also works when run from Visual Studio).
 
             Browser.DocumentText = @"<!DOCTYPE html>
                    <html>
@@ -1043,7 +1015,7 @@ namespace UserInterface.Views
         /// Populate the view given the specified text.
         /// </summary>
         /// <param name="contents"></param>
-        /// <param name="editingEnabled"></param>
+        /// <param name="isURI">Is contents a URI?</param>
         /// <returns></returns>
         private void PopulateView(string contents, bool isURI= false)
         {
@@ -1077,11 +1049,11 @@ namespace UserInterface.Views
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
 
-                /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
-                /// other controls. It's actually a COM object, I guess, and running
-                /// with a different message loop, and probably in a different thread. 
-                /// 
-                /// Well, this hack works, more or less.
+                // UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
+                // other controls. It's actually a COM object, I guess, and running
+                // with a different message loop, and probably in a different thread. 
+                // 
+                // Well, this hack works, more or less.
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                 frame1.Unrealized += Frame1_Unrealized;
@@ -1192,11 +1164,7 @@ namespace UserInterface.Views
         {
             try
             {
-                MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-                markDown.ExtraMode = true;
-                string html = markDown.Transform(memo.MemoText);
-                html = ParseHtmlImages(html);
-                PopulateView(html);
+                PopulateView(MarkdownConverter.ToHtml(memo.MemoText));
             }
             catch (Exception err)
             {
@@ -1226,36 +1194,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Checks the src attribute for all images in the HTML, and attempts to
-        /// find a resource of the same name. If the resource exists, it is
-        /// written to a temporary file and the image's src is changed to point
-        /// to the temp file.
-        /// </summary>
-        /// <param name="html">String containing valid HTML.</param>
-        /// <returns>The modified HTML.</returns>
-        private static string ParseHtmlImages(string html)
-        {
-            var doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(html);
-            // Find images via xpath.
-            var images = doc.DocumentNode.SelectNodes(@"//img");
-            if (images != null)
-            {
-                foreach (HtmlNode image in images)
-                {
-                    string src = image.GetAttributeValue("src", null);
-                    if (!File.Exists(src) && !string.IsNullOrEmpty(src))
-                    {
-                        string tempFileName = HtmlToMigraDoc.GetImagePath(src, Path.GetTempPath());
-                        if (!string.IsNullOrEmpty(tempFileName))
-                            image.SetAttributeValue("src", tempFileName);
-                    }
-                }
-            }
-            return doc.DocumentNode.OuterHtml;
-        }
-
-        /// <summary>
         /// User has clicked the help button. 
         /// Opens a web browser (outside of APSIM) and navigates to a help page on the Next Gen site.
         /// </summary>
@@ -1274,3 +1212,4 @@ namespace UserInterface.Views
         }
     }
 }
+#endif

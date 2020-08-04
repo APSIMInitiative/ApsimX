@@ -7,6 +7,9 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// An arc on a directed graph.
+    /// </summary>
     public class DGArc : DGObject
     {
         private int clickTolerence = 3;

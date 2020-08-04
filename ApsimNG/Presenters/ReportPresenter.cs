@@ -8,6 +8,7 @@
     using Utility;
     using Views;
     using Models;
+    using Interfaces;
 
     /// <summary>
     /// The Report presenter class

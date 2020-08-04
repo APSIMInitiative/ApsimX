@@ -29,10 +29,9 @@
         private List<Exception> errors = new List<Exception>();
 
         /// <summary>Constructor</summary>
-        /// <param name="model">The model the user has selected to run</param>
+        /// <param name="name">Name of the job to be displayed in the UI..</param>
+        /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        /// <param name="multiProcess">Use the multi-process runner?</param>
-        /// <param name="storage">A storage writer where all data should be stored</param>
         public RunCommand(string name, Runner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;

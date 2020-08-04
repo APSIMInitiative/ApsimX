@@ -11,12 +11,29 @@ using APSIM.Shared.Utilities;
 
 namespace UnitTests.ApsimNG.Utilities
 {
+    /// <summary>
+    /// gtk-related utility functions used by the UI tests.
+    /// </summary>
     public static class GtkUtilities
     {
+        /// <summary>
+        /// A type of button press.
+        /// </summary>
         public enum ButtonPressType : uint
         {
+            /// <summary>
+            /// A left click.
+            /// </summary>
             LeftClick = 1,
+
+            /// <summary>
+            /// A middle click.
+            /// </summary>
             MiddleClick = 2,
+
+            /// <summary>
+            /// A Right click.
+            /// </summary>
             RightClick = 3,
         };
 

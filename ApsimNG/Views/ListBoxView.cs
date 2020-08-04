@@ -1,4 +1,8 @@
-﻿namespace UserInterface.Views
+﻿# if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -9,6 +13,7 @@
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
+    using Extensions;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -50,11 +55,13 @@
     {
         public IkonView(TreeModel model) : base(model) { }
 
+#if NETFRAMEWORK
         public int ItemPadding
         {
             get { return (int)GetProperty("item-padding"); }
             set { SetProperty("item-padding", new GLib.Value(value)); }
         }
+#endif
     }
 
     /// <summary>A list view.</summary>
@@ -91,7 +98,11 @@
             Listview.PixbufColumn = 1;
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
+#if NETFRAMEWORK
             Listview.Orientation = Gtk.Orientation.Horizontal;
+#else
+            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+#endif
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;
@@ -109,7 +120,7 @@
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
                 ClearPopup();
-                popup.Destroy();
+                popup.Cleanup();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -174,6 +185,7 @@
         /// Add a list item based on a file name
         /// </summary>
         /// <param name="fileName">The filename.</param>
+        /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
@@ -402,9 +414,7 @@
                 }
                 else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                    imageItem.Image = new Image(null, description.ResourceNameForImage);
-                    item = imageItem;
+                    item = WidgetExtensions.CreateImageMenuItem(description.Name, new Image(null, description.ResourceNameForImage));
                 }
                 else
                 {
@@ -464,7 +474,7 @@
                     }
                 }
                 popup.Remove(w);
-                w.Destroy();
+                w.Cleanup();
             }
         }
     }

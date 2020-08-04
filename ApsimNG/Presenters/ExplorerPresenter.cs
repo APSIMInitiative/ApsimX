@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Commands;
+    using Extensions;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -175,7 +176,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Destroy();
+                (this.view as Views.ExplorerView).MainWidget.Cleanup();
             }
 
             this.ContextMenu = null;
@@ -250,31 +251,34 @@
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
+            // Need to hide the right hand panel because some views may not have saved
+            // their contents until they get a 'Detach' call.
             try
             {
-                // Need to hide the right hand panel because some views may not have saved
-                // their contents until they get a 'Detach' call.
-                this.HideRightHandPanel();
-
-                if (this.ApsimXFile.FileName == null)
-                {
-                    this.SaveAs();
-                }
-
-                if (this.ApsimXFile.FileName != null)
-                {
-                    this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                    return true;
-                }
+                HideRightHandPanel();
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
+                MainPresenter.ShowError(err);
             }
-            finally
+
+            if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                SaveAs();
+
+            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
             {
-                this.ShowRightHandPanel();
+                ApsimXFile.Write(ApsimXFile.FileName);
+                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                return true;
+            }
+
+            try
+            {
+                ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -316,7 +320,7 @@
         }
 
         /// <summary>Select a node in the view.</summary>
-        /// <param name="nodePath">Node to be selected.</param>
+        /// <param name="node">Node to be selected.</param>
         public void SelectNode(IModel node)
         {
             SelectNode(Apsim.FullPath(node));
@@ -443,10 +447,9 @@
         }
 
         /// <summary>
-        /// Adds a model to a parent model.
+        /// Delete a model from the tree.
         /// </summary>
-        /// <param name="child">The string representation (JSON or XML) of a model.</param>
-        /// <param name="parentPath">Path to the parent</param>
+        /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
         public void DeleteFromTree(string pathToNodeToDelete)
         {
             view.Tree.Delete(pathToNodeToDelete);
@@ -509,7 +512,7 @@
         /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>
-        /// <returns>Clipboard text</returns>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
             return ViewBase.MasterView.GetClipboardText(clipboardName);
@@ -519,6 +522,7 @@
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
             ViewBase.MasterView.SetClipboardText(text, clipboardName);
@@ -730,8 +734,8 @@
 
         /// <summary>Show a view in the right hand panel.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="viewName">The view name.</param>
-        /// <param name="presenterName">The presenter name.</param>
+        /// <param name="gladeResourceName">Name of the glade resource file.</param>
+        /// <param name="presenter">The presenter to be used.</param>
         public void ShowInRightHandPanel(object model, string gladeResourceName, IPresenter presenter)
         {
             ShowInRightHandPanel(model,
@@ -867,8 +871,18 @@
         /// <param name="e">Node arguments</param>
         private void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            try
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
+
+            // If an exception is thrown while loding the view, this
+            // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
 
             Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);

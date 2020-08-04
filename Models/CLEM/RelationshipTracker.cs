@@ -24,6 +24,12 @@ namespace Models.CLEM
     public class RelationshipTracker : Relationship, IValidatableObject
     {
         /// <summary>
+        /// Current value
+        /// </summary>
+        [XmlIgnore]
+        public double Value { get; set; }
+
+        /// <summary>
         /// Initial value of Running value that can be modified by this relationship Modify() during the simulation
         /// </summary>
         [Description("Initial running value")]
@@ -82,9 +88,8 @@ namespace Models.CLEM
         /// <returns></returns>
         public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            results = base.Validate(validationContext).ToList();
-            if (Maximum < Minimum)
+            List<ValidationResult> results = base.Validate(validationContext).ToList();
+            if (Maximum <= Minimum)
             {
                 string[] memberNames = new string[] { "Maximum" };
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));

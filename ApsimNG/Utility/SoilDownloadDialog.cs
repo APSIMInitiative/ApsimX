@@ -18,6 +18,7 @@
     using System.Globalization;
     using Models.Core.Apsim710File;
     using Models.WaterModel;
+    using UserInterface.Extensions;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -211,7 +212,7 @@
                             String.Format("No location matching the name '{0}' could be found.", entryPlacename.Text));
                             md.Title = "Location not found";
                             md.Run();
-                            md.Destroy();
+                            md.Cleanup();
                             break;
                         }
                     }
@@ -227,7 +228,7 @@
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            dialog1.Destroy();
+            dialog1.Cleanup();
         }
 
         /// <summary>
@@ -266,7 +267,7 @@
                                    String.Format("The value for {0} should be a number in the range {1:F2} to {2:F2}", contents, minVal, maxVal));
                 md.Title = "Invalid entry";
                 md.Run();
-                md.Destroy();
+                md.Cleanup();
             }
             return result;
         }
@@ -301,7 +302,7 @@
                                    "Unable to obtain data for this site");
                 md.Title = "Data read error";
                 md.Run();
-                md.Destroy();
+                md.Cleanup();
             }
             else
             {
@@ -320,15 +321,15 @@
                                    "Please set sensible values before using this soil in a simulation.");
                 md.Title = "Soil use warning";
                 md.Run();
-                md.Destroy();
-                dialog1.Destroy();
+                md.Cleanup();
+                dialog1.Cleanup();
             }
         }
 
         /// <summary>
         /// Initialises and displays the dialog
         /// </summary>
-        /// <param name="soil">The soil object to be replaced</param>
+        /// <param name="dest">The soil object to be replaced</param>
         /// <param name="view">The ExplorerView displaying the soil object in its tree</param>
         /// <param name="nodePath">The path to the soil object within the view's tree</param>
         /// <param name="explorerPresenter">The ExplorerPresenter that is managing all of this</param>
@@ -571,15 +572,15 @@
             TreePath path;
             soilsView.GetCursor(out path, out col);
             curSel = path.Indices[0];
-            selWindow.Destroy();
+            selWindow.Cleanup();
         }
 
         /// <summary>
         /// (Mouse) button press event handler. If it is a left mouse double click, selects the item and consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
@@ -609,7 +610,7 @@
             else if (e.Event.Key == Gdk.Key.Escape && selWindow.Visible)
             {
                 curSel = -2;
-                selWindow.Destroy();
+                selWindow.Cleanup();
                 e.RetVal = true;
             }
         }
@@ -1046,6 +1047,7 @@
         /// Converts data for 7 input levels to layerCount (up to 10) depth ranges
         /// </summary>
         /// <param name="inputs"></param>
+        /// <param name="layerCount">Number of layers.</param>
         /// <returns></returns>
         private double[] ConvertLayers(double[] inputs, int layerCount)
         {
@@ -1128,9 +1130,9 @@
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

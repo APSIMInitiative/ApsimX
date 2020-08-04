@@ -168,19 +168,6 @@ namespace ApsimNG.Cloud
             if (!Directory.Exists(job.ModelPath))
                 Directory.CreateDirectory(job.ModelPath);
 
-            // Copy weather files to models directory to be compressed.
-            Simulations sims = Apsim.Parent(job.Model, typeof(Simulations)) as Simulations;
-            foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
-            {
-                if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(sims.FileName))
-                    throw new Exception("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);
-
-                string sourceFile = child.FullFileName;
-                string destFile = Path.Combine(job.ModelPath, child.FileName);
-                if (!File.Exists(destFile))
-                    File.Copy(sourceFile, destFile);
-            }
-
             if (ct.IsCancellationRequested)
             {
                 UpdateStatus("Cancelled");
@@ -189,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ });
+            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
@@ -262,11 +249,11 @@ namespace ApsimNG.Cloud
                 if (ct.IsCancellationRequested)
                     return jobs;
 
-                ShowProgress(100.0 * i / cloudJobs.Count);
+                ShowProgress(1.0 * i / cloudJobs.Count);
                 jobs.Add(await GetJobDetails(cloudJobs[i], ct));
             }
 
-            ShowProgress(100);
+            ShowProgress(1);
             return jobs;
         }
 
@@ -317,6 +304,10 @@ namespace ApsimNG.Cloud
             if (!Directory.Exists(options.Path))
                 Directory.CreateDirectory(options.Path);
 
+            var archive = Path.Combine(options.Path, resultsFileName);
+            var resultsDB = Path.ChangeExtension(archive, ".db");
+            resultsDB = DirectoryUtilities.EnsureFileNameIsUnique(resultsDB);
+
             List<CloudBlockBlob> outputs = await GetJobOutputs(options.JobID, ct);
 
             // Build up a list of files to download.
@@ -326,9 +317,6 @@ namespace ApsimNG.Cloud
                 toDownload.Add(results);
             else
                 // Always download debug files if no results archive can be found.
-                options.DownloadDebugFiles = true;
-
-            if (options.DownloadDebugFiles)
                 toDownload.AddRange(outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))));
 
             // Now download the necessary files.
@@ -338,36 +326,30 @@ namespace ApsimNG.Cloud
                 CloudBlockBlob blob = toDownload[i];
 
                 // todo: Download in parallel?
-                await blob.DownloadToFileAsync(Path.Combine(options.Path, blob.Name), FileMode.Create, ct);
+                await blob.DownloadToFileAsync(archive, FileMode.Create, ct);
 
                 if (ct.IsCancellationRequested)
                     return;
             }
             ShowProgress(100);
 
-            if (options.ExtractResults)
+            string resultsDir = Path.Combine(options.Path, "Temp");
+            if (File.Exists(archive))
             {
-                string archive = Path.Combine(options.Path, resultsFileName);
-                string resultsDir = Path.Combine(options.Path, "results");
-                if (File.Exists(archive))
+                // Extract the result files.
+                using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
+                    zip.ExtractToDirectory(resultsDir);
+
+                try
                 {
-                    // Extract the result files.
-                    using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
-                        zip.ExtractToDirectory(resultsDir);
-
-                    try
-                    {
-                        // Merge results into a single .db file.
-                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, "combined.db");
-                    }
-                    catch (Exception err)
-                    {
-                        throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
-                    }
-
-                    // TBI: merge into csv file.
-                    if (options.ExportToCsv)
-                        throw new NotImplementedException();
+                    // Merge results into a single .db file.
+                    DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, resultsDB);
+                    Directory.Delete(resultsDir, true);
+                    File.Delete(archive);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
                 }
             }
         }
@@ -433,6 +415,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="containerName">Name of the container to upload the file to</param>
         /// <param name="filePath">Path to the file on disk</param>
+        /// <param name="ct">Allows for cancellation of the task.</param>
         private async Task<string> UploadFileIfNeededAsync(string containerName, string filePath, CancellationToken ct)
         {
             CloudBlobContainer container = storageClient.GetContainerReference(containerName);

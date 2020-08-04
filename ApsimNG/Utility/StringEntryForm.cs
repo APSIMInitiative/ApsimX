@@ -5,6 +5,7 @@ namespace Utility
     using Gtk;
     using UserInterface.Views;
     using UserInterface.Presenters;
+    using UserInterface.Extensions;
 
     public class StringEntryForm
     {
@@ -28,7 +29,7 @@ namespace Utility
             dialog.ShowAll();
             int response = dialog.Run();
             string text = entryBox.Text;
-            dialog.Destroy();
+            dialog.Cleanup();
 
             if (response == 1)
                 return text;

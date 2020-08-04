@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 96,
+  "Version": 105,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -31,6 +31,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
           "Name": "Single and Mixed Cropping",
           "Children": [
             {
@@ -108,7 +109,6 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
-                  "FindMarket": null,
                   "Name": "Resources",
                   "Children": [
                     {
@@ -1385,6 +1385,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
           "Name": "Rotation cropping",
           "Children": [
             {
@@ -1446,7 +1447,6 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
-                  "FindMarket": null,
                   "Name": "Resources",
                   "Children": [
                     {

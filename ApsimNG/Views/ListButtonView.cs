@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using Classes;
+    using global::UserInterface.Extensions;
     using Gtk;
 
     /// <summary>An interface for a list with a button bar</summary>
@@ -168,11 +169,17 @@
             button.Homogeneous = false;
             Label btnLabel = new Label(text);
 
+#if NETFRAMEWORK
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
-            Pango.FontDescription font = Utility.Configuration.Settings.Font;
-            if (font != null && font != btnLabel.Style.FontDescription)
-                btnLabel.ModifyFont(Utility.Configuration.Settings.Font);
+            // todo - check if this is necessary in gtk3
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                if (font != null && font != btnLabel.Style.FontDescription)
+                    btnLabel.ModifyFont(font);
+            }
+#endif
             btnLabel.LineWrap = true;
             btnLabel.LineWrapMode = Pango.WrapMode.Word;
             btnLabel.Justify = Justification.Center;
@@ -249,7 +256,7 @@
         /// <summary>
         /// Adds a menu item button to a menu button.
         /// </summary>
-        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="parentButtonText">Text on the parent button.</param>
         /// <param name="text">Text on the button.</param>
         /// <param name="image">Image on the button.</param>
         /// <param name="handler">Handler to call when button is clicked.</param>
@@ -263,9 +270,7 @@
             if (toplevel.Menu as Menu == null)
                 toplevel.Menu = new Menu();
             Menu menu = toplevel.Menu as Menu;
-
-            ImageMenuItem menuItem = new ImageMenuItem(text);
-            menuItem.Image = image;
+            MenuItem menuItem = WidgetExtensions.CreateImageMenuItem(text, image);
             menuItem.Activated += handler;
             menu.Append(menuItem);
             menuItem.ShowAll();
@@ -282,12 +287,15 @@
         {
             try
             {
-                ((sender as Label).Parent as VBox).Spacing = 0;
-                Pango.Layout layout = (sender as Label).Layout;
-                Pango.Rectangle ink;
-                Pango.Rectangle logical;
-                layout.GetExtents(out ink, out logical);
-                (sender as Label).Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                if (sender is Label label && label.Parent is Box vbox)
+                {
+                    vbox.Spacing = 0;
+                    Pango.Layout layout = label.Layout;
+                    Pango.Rectangle ink;
+                    Pango.Rectangle logical;
+                    layout.GetExtents(out ink, out logical);
+                    label.Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                }
             }
             catch (Exception err)
             {

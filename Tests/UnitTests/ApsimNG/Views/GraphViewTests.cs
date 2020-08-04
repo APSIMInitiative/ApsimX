@@ -23,6 +23,9 @@ using Utility;
 
 namespace UnitTests.ApsimNG.Views
 {
+    /// <summary>
+    /// Tests for the GraphView UI component.
+    /// </summary>
     [TestFixture]
     public class GraphViewTests
     {

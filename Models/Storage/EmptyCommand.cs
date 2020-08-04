@@ -77,7 +77,14 @@
 
             // If all data tables were emptied then delete all tables.
             if (allTablesEmpty)
+            {
                 tableNamesToDelete = database.GetTableNames();
+                // remove any database Views created if no tables remain
+                foreach (string viewName in database.GetViewNames())
+                {
+                    database.ExecuteNonQuery(string.Format("DROP VIEW IF EXISTS [{0}]", viewName));
+                }
+            }
 
             foreach (string tableName in tableNamesToDelete)
                 database.DropTable(tableName);

@@ -5,6 +5,7 @@
     using System.Drawing;
     using APSIM.Shared.Utilities;
     using EventArguments;
+    using Interfaces;
     using Models;
     using Views;
 
@@ -21,7 +22,7 @@
         /// <summary>
         /// The view object
         /// </summary>
-        private EditorView view;
+        private IEditorView view;
 
         /// <summary>
         /// The explorer presenter
@@ -42,7 +43,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.operations = model as Operations;
-            this.view = view as EditorView;
+            this.view = view as IEditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;

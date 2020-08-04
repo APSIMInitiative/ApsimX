@@ -78,29 +78,29 @@ namespace Models.CLEM
                     {
                         //So lets try to load default value to the property
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
-                        try
+                        if(dv != null)
                         {
-                            object result = property.GetValue(this, null);
-                            if (result is null)
-                            {
-                                //Is it an array?
-                                if (property.PropertyType.IsArray)
-                                {
-                                    property.SetValue(this, dv.Value, null);
-                                }
-                                else
-                                {
-                                    //Use set value for.. not arrays
-                                    property.SetValue(this, dv.Value, null);
-                                }
-                            }
+                            property.SetValue(this, dv.Value, null);
                         }
-                        catch (Exception ex)
-                        {
-                            Summary.WriteWarning(this, ex.Message);
-                        }
+
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Is timing ok for the current model
+        /// </summary>
+        public bool TimingOK
+        {
+            get
+            {
+                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
+                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
+
+                return (res == 0);
             }
         }
 

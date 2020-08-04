@@ -99,8 +99,8 @@ namespace ApsimNG.Presenters.CLEM
         /// <summary>
         /// Overwrites a table in the data store
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnWriteTable(object sender, EventArgs e)
         {
             DataTable data = view.Grid.DataSource;

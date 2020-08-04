@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -26,7 +27,7 @@
         public void Destroy()
         {
             ClearMenu();
-            menu.Destroy();
+            menu.Cleanup();
         }
 
         /// <summary>Populate the main menu tool strip.</summary>
@@ -48,8 +49,7 @@
                     ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
                     if (info != null)
                     {
-                        ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                        imageItem.Image = new Gtk.Image(null, description.ResourceNameForImage);
+                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(description.Name, new Gtk.Image(null, description.ResourceNameForImage));
                         item = imageItem;
                     }
                     else
@@ -129,7 +129,7 @@
                     }
                 }
                 menu.Remove(w);
-                w.Destroy();
+                w.Cleanup();
             }
         }
     }

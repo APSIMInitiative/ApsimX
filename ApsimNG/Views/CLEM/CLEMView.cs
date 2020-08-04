@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 using UserInterface.Presenters;
 using UserInterface.Views;
@@ -218,7 +219,7 @@ namespace UserInterface.Views
             foreach (Widget child in tab.Children)
             {
                 tab.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {

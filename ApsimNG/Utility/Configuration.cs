@@ -124,8 +124,7 @@ namespace Utility
         /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
-        /// <value></value>
-        public Pango.FontDescription Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
 
         public ApsimFileMetadata GetMruFile(string fileName)
         {
@@ -133,7 +132,7 @@ namespace Utility
         }
 
         /// <summary>Add a filename to the list.</summary>
-        /// <param name="filename">File path</param>
+        /// <param name="file">File metadata.</param>
         public void AddMruFile(ApsimFileMetadata file)
         {
             if (file.FileName.Length > 0) // Do we really need this check?

@@ -10,6 +10,7 @@ namespace UserInterface.Views
     using System.IO;
     using System.Drawing.Imaging;
     using System.Collections.Generic;
+    using Extensions;
 
     public interface IActivityLedgerGridView
     {
@@ -157,7 +158,11 @@ namespace UserInterface.Views
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
+#if NETFRAMEWORK
                 foreach (CellRenderer render in col.CellRenderers)
+#else
+                foreach (CellRenderer render in col.Cells)
+#endif
                 {
                     if (render is CellRendererText)
                     {
@@ -169,14 +174,14 @@ namespace UserInterface.Views
                         CellRendererPixbuf pixRender = render as CellRendererPixbuf;
                         col.SetCellDataFunc(pixRender, (CellLayoutDataFunc)null);
                     }
-                    render.Destroy();
+                    render.Dispose();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
             }
             while (Fixedcolview.Columns.Length > 0)
             {
                 TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+                foreach (CellRenderer render in col.GetCells())
                 {
                     if (render is CellRendererText)
                     {
@@ -273,16 +278,18 @@ namespace UserInterface.Views
             }
 
             gridmodel = new ListStore(colTypes);
+#if NETFRAMEWORK
             Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
             Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
             Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+#endif
 
             image1.Visible = false;
             // Now set up the grid columns
             for (int i = 0; i < nCols; i++)
             {
-                /// Design plan: include renderers for text, toggles and combos, but hide all but one of them
+                // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
@@ -394,7 +401,11 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
+#if NETFRAMEWORK
         public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+#else
+        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+#endif
         {
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
@@ -446,7 +457,11 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
+#if NETFRAMEWORK
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+#else
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+#endif
         {
             TreePath path = model.GetPath(iter);
             Gtk.TreeView view = col.TreeView as Gtk.TreeView;
@@ -549,9 +564,9 @@ namespace UserInterface.Views
                 }
                 else if (value < RowCount) // Remove existing rows. But let's check first to be sure they're empty
                 {
-                    /// TBI
+                    // TBI
                 }
-                /// TBI this.Grid.RowCount = value;
+                // TBI this.Grid.RowCount = value;
             }
         }
 
@@ -613,7 +628,7 @@ namespace UserInterface.Views
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
                     {
-                        foreach (CellRenderer render in col.CellRenderers)
+                        foreach (CellRenderer render in col.GetCells())
                         {
                             if (render is CellRendererText)
                             {
@@ -698,11 +713,11 @@ namespace UserInterface.Views
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
                 {
-                    splitter.Position = Math.Min(Fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(Fixedcolview.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
                 }
                 else
                 {
-                    splitter.Position = Fixedcolview.SizeRequest().Width + splitterWidth;
+                    splitter.Position = Fixedcolview.WidthRequest + splitterWidth;
                 }
 
             }
@@ -714,7 +729,7 @@ namespace UserInterface.Views
                 Fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
                 Fixedcolview.Visible = false;
                 splitter.Position = 0;
-                splitter.Child1.HideAll();
+                splitter.Child1.Hide();
             }
             numberLockedCols = number;
         }
@@ -722,6 +737,7 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of grid.</summary>
         public System.Drawing.Image GetScreenshot()
         {
+#if NETFRAMEWORK
             // Create a Bitmap and draw the DataGridView on it.
             int width;
             int height;
@@ -732,6 +748,9 @@ namespace UserInterface.Views
             MemoryStream stream = new MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
             return bitmap;
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         /// <summary>

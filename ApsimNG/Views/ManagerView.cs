@@ -1,5 +1,6 @@
 ﻿using Gtk;
 using System;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -26,7 +27,7 @@ namespace UserInterface.Views
     {
 
         private GridView grid;
-        private EditorView scriptEditor;
+        private IEditorView scriptEditor;
         private Notebook notebook;
 
 
@@ -38,9 +39,15 @@ namespace UserInterface.Views
             notebook = new Notebook();
             mainWidget = notebook;
             grid = new GridView(this);
-            scriptEditor = new EditorView(this);
+            scriptEditor = new EditorView(this)
+            {
+#if NETCOREAPP
+                ShowLineNumbers = true,
+                Language = "c-sharp",
+#endif
+            };
             notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
-            notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
+            notebook.AppendPage((scriptEditor as ViewBase).MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -48,9 +55,9 @@ namespace UserInterface.Views
         {
             try
             {
-                grid.MainWidget.Destroy();
+                grid.MainWidget.Cleanup();
                 grid = null;
-                scriptEditor.MainWidget.Destroy();
+                (scriptEditor as ViewBase)?.MainWidget?.Cleanup();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

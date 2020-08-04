@@ -1,9 +1,11 @@
 ﻿namespace UserInterface
 {
+    using APSIM.Shared.Utilities;
     using Models;
     using Presenters;
     using System;
     using System.IO;
+    using Utility;
     using Views;
 
     static class UserInterface
@@ -14,8 +16,12 @@
         [STAThread]
         public static int Main(string[] args)
         {
+            LoadTheme();
+
             Gtk.Application.Init();
+#if NETFRAMEWORK
             Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
+#endif
             IntellisensePresenter.Init();
             MainView mainForm = new MainView();
             MainPresenter mainPresenter = new MainPresenter();
@@ -33,6 +39,24 @@
                 return 1;
             }
             return 0;
+        }
+
+        private static void LoadTheme()
+        {
+#if NETCOREAPP
+            if (!ProcessUtilities.CurrentOS.IsLinux && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GTK_THEME")))
+            {
+                string themeName;
+                if (Configuration.Settings.DarkTheme)
+                    themeName = "Adwaita:dark";
+                else
+                    themeName = "Adwaita";
+
+                //themeName = "Windows10";
+                //themeName = "Windows10Dark";
+                Environment.SetEnvironmentVariable("GTK_THEME", themeName);
+            }
+#endif
         }
     }
 }

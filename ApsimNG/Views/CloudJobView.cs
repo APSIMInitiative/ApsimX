@@ -5,6 +5,11 @@ using ApsimNG.Cloud;
 using ApsimNG.EventArguments;
 using ApsimNG.Interfaces;
 using Gtk;
+using UserInterface.Extensions;
+
+#if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
 
 namespace UserInterface.Views
 {
@@ -169,19 +174,21 @@ namespace UserInterface.Views
             chkMyJobsOnly.Active = true;
             chkMyJobsOnly.Yalign = 0;
 
-            downloadProgress = new ProgressBar(new Adjustment(0, 0, 1, 0.01, 0.01, 1));
+            downloadProgress = WidgetExtensions.CreateProgressBar();
             downloadProgressContainer = new HBox();
             downloadProgressContainer.PackStart(new Label("Downloading: "), false, false, 0);
             downloadProgressContainer.PackStart(downloadProgress, false, false, 0);
 
-            loadingProgress = new ProgressBar(new Adjustment(0, 0, 100, 0.01, 0.01, 100));
-            loadingProgress.Adjustment.Lower = 0;
-            loadingProgress.Adjustment.Upper = 100;
+            loadingProgress = WidgetExtensions.CreateProgressBar();
 
             btnChangeDownloadDir = new Button("Change Download Directory");
             btnChangeDownloadDir.Clicked += OnChangeDownloadPath;
 
+#if NETFRAMEWORK
             Table tblButtonContainer = new Table(1, 1, false);
+#else
+            Grid tblButtonContainer = new Grid();
+#endif
             tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
 
             btnDownload = new Button("Download");
@@ -222,7 +229,7 @@ namespace UserInterface.Views
 
 
             VBox vboxPrimary = new VBox();
-            vboxPrimary.PackStart(hboxPrimary);
+            vboxPrimary.PackStart(hboxPrimary, true, true, 0);
             vboxPrimary.PackEnd(jobLoadProgressContainer, false, false, 0);
             vboxPrimary.PackEnd(downloadProgressContainer, false, false, 0);
 
@@ -230,7 +237,7 @@ namespace UserInterface.Views
             mainWidget.Destroyed += OnDestroyed;
             vboxPrimary.ShowAll();
 
-            downloadProgressContainer.HideAll();
+            downloadProgressContainer.Hide();
             HideLoadingProgressBar();
         }
 
@@ -239,7 +246,7 @@ namespace UserInterface.Views
         /// </summary>
         public void Destroy()
         {
-            mainWidget.Destroy();
+            mainWidget.Cleanup();
         }
 
         /// <summary>
@@ -274,13 +281,13 @@ namespace UserInterface.Views
         {
             get
             {
-                return loadingProgress.Adjustment.Value;
+                return loadingProgress.GetFractionComplete();
             }
             set
             {
                 Application.Invoke(delegate
                 {
-                    loadingProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), loadingProgress.Adjustment.Upper);
+                    loadingProgress.SetFractionComplete(value);
                 });
             }
         }
@@ -292,12 +299,15 @@ namespace UserInterface.Views
         {
             get
             {
-                return downloadProgress.Adjustment.Value;
+                return downloadProgress.GetFractionComplete();
             }
             set
             {
                 // Set progresss bar to whichever is smaller - the value being passed in, or the maximum value the progress bar can take.
-                Application.Invoke(delegate { downloadProgress.Adjustment.Value = Math.Min(Math.Round(value, 2), downloadProgress.Adjustment.Upper); });
+                Application.Invoke(delegate
+                {
+                    downloadProgress.SetFractionComplete(value);
+                });
             }
         }
 
@@ -317,44 +327,11 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Should results be extracted?
-        /// </summary>
-        public bool ExtractResults
-        {
-            get
-            {
-                return dl.ExtractResults;
-            }
-        }
-
-        /// <summary>
-        /// Should results be exported to .csv format?
-        /// </summary>
-        public bool ExportCsv
-        {
-            get
-            {
-                return dl.ExportCsv;
-            }
-        }
-
-        /// <summary>
-        /// Should debug files be downloaded?
-        /// </summary>
-        public bool DownloadDebugFiles
-        {
-            get
-            {
-                return dl.DownloadDebugFiles;
-            }
-        }
-
-        /// <summary>
         /// Makes the download progress bar invisible.
         /// </summary>
         public void HideDownloadProgressBar()
         {
-            Application.Invoke(delegate { downloadProgressContainer.HideAll(); });
+            Application.Invoke(delegate { downloadProgressContainer.Hide(); });
         }
 
         /// <summary>
@@ -370,7 +347,7 @@ namespace UserInterface.Views
         /// </summary>
         public void HideLoadingProgressBar()
         {
-            Application.Invoke(delegate { jobLoadProgressContainer.HideAll(); });
+            Application.Invoke(delegate { jobLoadProgressContainer.Hide(); });
         }
 
         /// <summary>
@@ -401,12 +378,15 @@ namespace UserInterface.Views
                 store.Clear();
                 foreach (JobDetails job in jobs)
                 {
-                    string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
-                    string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
-                    string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
-                    string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
-                    string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
-                    store.AppendValues(job.DisplayName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr, job.Owner);
+                    if (job != null)
+                    {
+                        string startTimeString = job.StartTime == null ? DateTime.UtcNow.ToLocalTime().ToString() : ((DateTime)job.StartTime).ToLocalTime().ToString();
+                        string endTimeString = job.EndTime == null ? "" : ((DateTime)job.EndTime).ToLocalTime().ToString();
+                        string progressString = job.Progress < 0 ? "Work in progress" : Math.Round(job.Progress, 2).ToString() + "%";
+                        string timeStr = job.CpuTime == TimeSpan.Zero ? "" : job.CpuTime.ToString(TimespanFormat);
+                        string durationStr = job.Duration() == TimeSpan.Zero ? "" : job.Duration().ToString(TimespanFormat);
+                        store.AppendValues(job.DisplayName, job.Id, job.State, job.NumSims.ToString(), progressString, startTimeString, endTimeString, durationStr, timeStr, job.Owner);
+                    }
                 }
             });
         }
@@ -450,7 +430,7 @@ namespace UserInterface.Views
         /// Sets the contents of a cell being display on a grid.
         /// Appends owner to display name if showing other people's jobs.
         /// </summary>
-        /// <param name="col">The column.</param>
+        /// <param name="column">The column.</param>
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
