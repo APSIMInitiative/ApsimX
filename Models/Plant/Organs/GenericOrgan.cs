@@ -513,7 +513,7 @@
         {
             // save current state
             if (parentPlant.IsEmerged)
-                StartLive = ReflectionUtilities.Clone(Live) as Biomass;
+                StartLive.SetTo(Live);
         }
 
         /// <summary>Does the nutrient allocations.</summary>
