@@ -301,11 +301,12 @@
         [EventSubscribe("SetDMDemand")]
         protected virtual void SetDMDemand(object sender, EventArgs e)
         {
-            if (DMConversionEfficiency.Value() > 0.0)
+            double dMCE = DMConversionEfficiency.Value();
+            if (dMCE > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value());
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) ;
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) ;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE) ;
             }
             else
             { // Conversion efficiency is zero!!!!
@@ -356,17 +357,18 @@
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            double dMCE = DMConversionEfficiency.Value();
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
 
             GrowthRespiration = 0.0;
             // allocate structural DM
-            Allocated.StructuralWt = Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural);
+            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dMCE, DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
 
             // allocate non structural DM
-            if ((dryMatter.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
+            if ((dryMatter.Storage * dMCE - DMDemand.Storage) > BiomassToleranceValue)
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
 
@@ -391,9 +393,6 @@
             double senescedFrac = SenescenceRate.Value();
             if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                 senescedFrac = 1.0;  // remaining amount too small, senesce all
-
-            if (senescedFrac > 0 && StartLive.Wt>0 && Name=="Shell")
-            { }
 
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
