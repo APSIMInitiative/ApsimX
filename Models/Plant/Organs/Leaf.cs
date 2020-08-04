@@ -1266,8 +1266,8 @@ namespace Models.PMF.Organs
             CohortParameters.CellDivisionStressValue = CohortParameters.CellDivisionStress.Value();
             CohortParameters.DroughtInducedLagAccelerationValue = CohortParameters.DroughtInducedLagAcceleration.Value();
             CohortParameters.DroughtInducedSenAccelerationValue = CohortParameters.DroughtInducedSenAcceleration.Value();
-            CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
-            CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
+            //CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
+            //CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
 
             bool nextExpandingLeaf = false;
             double thermalTime = ThermalTime.Value();

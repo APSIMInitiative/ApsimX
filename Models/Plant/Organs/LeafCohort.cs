@@ -861,8 +861,8 @@ namespace Models.PMF.Organs
                 //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank,extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
-                ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRateValue;
-                SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSizeValue;
+                ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
+                SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
                 SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
 
                 // Doing leaf mass growth in the cohort
