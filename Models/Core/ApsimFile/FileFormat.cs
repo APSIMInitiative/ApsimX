@@ -20,7 +20,7 @@
     /// * Can WRITE a model in memory to an APSIM Next Generation .json string.
     ///     - Only writes public, settable, properties of a model.
     ///     - If a model implements IDontSerialiseChildren then no child models will be serialised.
-    ///     - Won't serialise any property with JsonIgnore attribute.
+    ///     - Won't serialise any property with LinkAttribute.
     /// * Can READ an APSIM Next Generation JSON or XML string to models in memory.
     ///     - Calls converter on the string before deserialisation.
     ///     - Sets fileName property in all simulation models read in.
@@ -119,7 +119,7 @@
                 var result = base.GetSerializableMembers(objectType);
                 result.RemoveAll(m => m is PropertyInfo &&
                                       !(m as PropertyInfo).CanWrite);
-                result.RemoveAll(m => m.GetCustomAttribute(typeof(JsonIgnoreAttribute)) != null);
+                result.RemoveAll(m => m.GetCustomAttribute(typeof(LinkAttribute)) != null);
                 return result;
             }
 
@@ -149,9 +149,9 @@
                 {
                     property.ShouldSerialize = instance =>
                     {
-                        var JsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
+                        var link = member.GetCustomAttribute<LinkAttribute>();
                         var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-                        if (JsonIgnore != null || jsonIgnore != null)
+                        if (link != null || jsonIgnore != null)
                             return false;
 
                         // If this property has a description attribute, then it's settable
