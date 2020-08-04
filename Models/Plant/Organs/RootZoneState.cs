@@ -2,11 +2,8 @@
 using Models.Core;
 using System;
 using Models.Functions;
-using Models.Interfaces;
 using System.Linq;
 using Models.Soils.Standardiser;
-using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
 using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
@@ -255,6 +252,7 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = soil.LayerIndexOfDepth(Depth);
+            var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -267,9 +265,8 @@ namespace Models.PMF.Organs
             {
                 var soilCrop = soil.Crop(plant.Name);
                 xf = soilCrop.XF;
-                var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-                var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
-                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
+
+                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < soil.Thickness.Length; i++)
@@ -282,7 +279,7 @@ namespace Models.PMF.Organs
             }
             else
             {
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                Depth = Depth + rootfrontvelocity;
                 MaxDepth = soil.Thickness.Sum();
             }
 
@@ -293,7 +290,7 @@ namespace Models.PMF.Organs
             //RootFront - needed by sorghum
             if (root.RootFrontCalcSwitch?.Value() == 1)
             {
-                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
+                var dltRootFront = rootfrontvelocity * rootDepthWaterStress * xf[RootLayer];
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
