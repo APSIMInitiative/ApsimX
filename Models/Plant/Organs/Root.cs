@@ -551,10 +551,12 @@
         {
             if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
             {
-                if (dmConversionEfficiency.Value() > 0.0)
+                double dMCE = dmConversionEfficiency.Value();
+
+                if (dMCE > 0.0)
                 {
-                    DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) ;
+                    DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
                     DMDemand.Metabolic = 0;
                 }
                 else
@@ -656,15 +658,17 @@
             foreach (ZoneState Z in Zones)
                 TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-            Allocated.StructuralWt = dryMatter.Structural * dmConversionEfficiency.Value();
-            Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
+            double dMCE = dmConversionEfficiency.Value();
+
+            Allocated.StructuralWt = dryMatter.Structural * dMCE;
+            Allocated.StorageWt = dryMatter.Storage * dMCE;
+            Allocated.MetabolicWt = dryMatter.Metabolic * dMCE;
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // Allocated CH2O from photosynthesis "1 / dMCE", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
@@ -840,7 +844,6 @@
                     double[] kl = soilCrop.KL;
                     double[] ll = soilCrop.LL;
 
-                    double[] lldep = new double[myZone.soil.Thickness.Length];
                     double[] supply = new double[myZone.soil.Thickness.Length];
 
                     LayerMidPointDepth = myZone.soil.DepthMidPoints;
