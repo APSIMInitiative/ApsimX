@@ -1,15 +1,38 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 108,
+  "Version": 109,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.WaterModel.WaterBalance, Models",
+      "SummerDate": "1-Nov",
+      "SummerU": 6.0,
+      "SummerCona": 3.5,
+      "WinterDate": "1-Apr",
+      "WinterU": 6.0,
+      "WinterCona": 2.5,
+      "DiffusConst": 0.0,
+      "DiffusSlope": 0.0,
+      "Salb": 0.0,
+      "CN2Bare": 0.0,
+      "CNRed": 20.0,
+      "CNCov": 0.8,
+      "Slope": 0.5,
+      "DischargeWidth": 5.0,
+      "CatchmentArea": 10.0,
+      "Thickness": null,
+      "SWCON": null,
+      "KLAT": null,
+      "ResourceName": null,
       "Name": "SoilWater",
       "Children": [
         {
           "$type": "Models.WaterModel.RunoffModel, Models",
+          "TillageCnCumWater": 0.0,
+          "TillageCnRed": 0.0,
+          "CumWaterSinceTillage": 0.0,
           "Name": "RunoffModel",
           "Children": [
             {
@@ -86,6 +109,7 @@
         },
         {
           "$type": "Models.WaterModel.LateralFlowModel, Models",
+          "OutFlow": [],
           "Name": "LateralFlowModel",
           "Children": [],
           "IncludeInDocumentation": true,

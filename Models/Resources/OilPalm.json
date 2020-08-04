@@ -1,21 +1,16 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 108,
+  "Version": 109,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.PMF.OilPalm.OilPalm, Models",
-      "interception": 0.0,
+      "LAI": 0.0,
       "UnderstoryCoverMax": 0.4,
       "UnderstoryLegumeFraction": 1.0,
-      "InterceptionFraction": 0.0,
       "MaximumRootDepth": 5000.0,
-      "RootDepth": 0.0,
-      "DltDM": 0.0,
-      "ReproductiveGrowthFraction": 0.0,
-      "UnderstoryCoverGreen": 0.0,
-      "UnderstoryPotNUptake": null,
       "ResourceName": null,
       "Name": "OilPalm",
       "Children": [
@@ -159,6 +154,7 @@
         },
         {
           "$type": "Models.Functions.HourlyInterpolation, Models",
+          "agregationMethod": 0,
           "Name": "RelativeDevelopmentalRate",
           "Children": [
             {
@@ -183,6 +179,7 @@
             },
             {
               "$type": "Models.Functions.ThreeHourSin, Models",
+              "TempRangeFactors": null,
               "Name": "InterpolationMethod",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -192,8 +189,7 @@
           ],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false,
-          "agregationMethod": "0"
+          "ReadOnly": false
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
