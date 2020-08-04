@@ -49,10 +49,6 @@ namespace Models.PMF
         [Link]
         public Plant Plant = null;
 
-        /// <summary>The soil</summary>
-        [Link]
-        public Soils.Soil Soil = null;
-
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         protected IArbitrationMethod NArbitrator = null;

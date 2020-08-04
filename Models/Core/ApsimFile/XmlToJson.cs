@@ -106,7 +106,7 @@ namespace Models.Core.ApsimFile
             "Models.Functions.ArrayFunction","Models.Functions.WangEngelTempFunction",
             "Models.Functions.BoundFunction","Models.Functions.LinearAfterThresholdFunction",
             "Models.Functions.SoilWaterScale","Models.Functions.MovingAverageFunction",
-            "Models.Functions.HoldFunction","Models.Functions.DeltaFunction",
+            "Models.Functions.HoldFunction","Models.Functions.DeltaFunction","Models.Functions.CalculateOnceFunction",
             "Models.Functions.MovingSumFunction","Models.Functions.QualitativePPEffect",
             "Models.Functions.AccumulateFunction","Models.Functions.AddFunction",
             "Models.Functions.AgeCalculatorFunction","Models.Functions.AirTemperatureFunction",

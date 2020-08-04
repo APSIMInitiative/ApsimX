@@ -270,6 +270,7 @@
     <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
+    <Compile Include="Functions\CalculateOnceFunction.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiEllipse.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircle.cs" />
