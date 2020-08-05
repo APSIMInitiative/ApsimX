@@ -841,14 +841,14 @@
             {
                 var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
                 var soilCrop = myZone.soil.Crop(parentPlant.Name);
-
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-                double[] supply = new double[myZone.soil.Thickness.Length];
-                LayerMidPointDepth = myZone.soil.DepthMidPoints;
-
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
+
+                    double[] supply = new double[myZone.soil.Thickness.Length];
+
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         double available = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer] * myZone.LLModifier[layer];
@@ -856,9 +856,16 @@
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             available * myZone.RootProportions[layer]);
                     }
+
+                    return supply;
                 }
                 else
                 {
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
+
+                    double[] supply = new double[myZone.soil.Thickness.Length];
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                     {
                         if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
@@ -869,10 +876,9 @@
                             available * myZone.RootProportions[layer]);
                         }
                     }
+                    return supply;
                 }
-
-                return supply;
-            }
+            }            
         }
 
         //------------------------------------------------------------------------------------------------
