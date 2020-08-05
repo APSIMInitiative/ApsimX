@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using System.IO;
 using System.Data;
 using System.Linq;
 using Models.PMF.Struct;
 using System.Globalization;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model, ICustomDocumentation
+    public class Phenology : Model, IPhenology, ICustomDocumentation
     {
 
         ///1. Links

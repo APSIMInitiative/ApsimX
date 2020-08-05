@@ -1,7 +1,7 @@
 ﻿using Models.Core;
 using Models.PMF.Phen;
 
-namespace Models.Interfaces
+namespace Models.PMF.Interfaces
 {
     /// <summary>
     /// An interface for a phenology model.
