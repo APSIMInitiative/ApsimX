@@ -40,9 +40,6 @@
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
-        /// <summary>The Canopy</summary>
-        [Link(IsOptional = true)]
-        public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
         public ICanopy Leaf = null;
@@ -297,12 +294,12 @@
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Canopy != null && AboveGround != null)
+            if (sender == this && Leaf != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Canopy != null)
+                if (Leaf != null)
                 {
-                    message += "  LAI = " + Canopy.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);

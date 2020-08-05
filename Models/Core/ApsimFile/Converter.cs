@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 108; } }
+        public static int LatestVersion { get { return 109; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2407,6 +2407,26 @@
             JsonUtilities.RenameVariables(root, changes);
         }
 
+        /// <summary>
+        /// Upgrade to version 109. Lots of breaking changes to class Plant.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion109(JObject root, string fileName)
+        {
+            var changes = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("Plant.Canopy", "Plant.Leaf"),
+                new Tuple<string, string>("[Plant].Canopy", "[Plant].Leaf"),
+                new Tuple<string, string>("plant.Canopy", "plant.Leaf"),
+                new Tuple<string, string>("[plant].Canopy", "[plant].Leaf"),
+                new Tuple<string, string>("Wheat.Canopy", "Wheat.Leaf"),
+                new Tuple<string, string>("[Wheat].Canopy", "[Wheat].Leaf"),
+                new Tuple<string, string>("wheat.Canopy", "wheat.Leaf"),
+                new Tuple<string, string>("[wheat].Canopy", "[wheat].Leaf"),
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
 
         /// <summary>
         /// Add progeny destination phase and mortality function.
