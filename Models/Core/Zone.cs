@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Models.Interfaces;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -16,7 +17,7 @@
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model, ICustomDocumentation
+    public class Zone : Model, IZone, ICustomDocumentation
     {
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]
