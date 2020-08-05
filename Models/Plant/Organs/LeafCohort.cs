@@ -870,7 +870,7 @@ namespace Models.PMF.Organs
 
                 //Set initial leaf status values
                 LeafStartArea = LiveArea;
-                LiveStart = new Biomass(Live);
+                LiveStart.SetTo(Live);
 
                 //If the model allows reallocation of senescent DM do it.
                 if ((DMReallocationFactor > 0) && (SenescedFrac > 0))

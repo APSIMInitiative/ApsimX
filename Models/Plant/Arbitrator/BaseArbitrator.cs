@@ -146,7 +146,7 @@ namespace Models.PMF
                             {
                                 supplies.Add(organSupply);
                                 zones.Add(zone);
-                                waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                                waterSupply += organSupply.Sum() * zone.Zone.Area;
                             }
                         }
 
@@ -189,7 +189,7 @@ namespace Models.PMF
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
-                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+                waterSupply += Z.Water.Sum() * Z.Zone.Area;
             }
 
             // Calculate total plant water demand.
@@ -251,8 +251,8 @@ namespace Models.PMF
                             (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;
-                            NSupply += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * zone.Zone.Area;
+                            N.UptakeSupply[i] += (organNH4Supply.Sum() + organNO3Supply.Sum()) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;
+                            NSupply += (organNH4Supply.Sum() + organNO3Supply.Sum()) * zone.Zone.Area;
                         }
                     zones.Add(UptakeDemands);
                 }
@@ -284,7 +284,7 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
+                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * Z.Zone.Area;
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g/m^2
@@ -484,7 +484,7 @@ namespace Models.PMF
                         double RelativeSupply = BAT.ReallocationSupply[i] / BAT.TotalReallocationSupply;
                         BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
                     }
-                BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
+                BAT.TotalReallocation = BAT.Reallocation.Sum();
             }
         }
 
@@ -521,7 +521,7 @@ namespace Models.PMF
                         double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
                         BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
                     }
-                BAT.TotalRetranslocation = MathUtilities.Sum(BAT.Retranslocation);
+                BAT.TotalRetranslocation = BAT.Retranslocation.Sum();
             }
         }
 
