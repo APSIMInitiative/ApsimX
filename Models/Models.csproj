@@ -289,7 +289,7 @@
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
-    <Compile Include="Interfaces\IPhenology.cs" />
+    <Compile Include="PMF\Interfaces\IPhenology.cs" />
     <Compile Include="Interfaces\IStructure.cs" />
     <Compile Include="PMF\Interfaces\IRoot.cs" />
     <Compile Include="Interfaces\IZone.cs" />
