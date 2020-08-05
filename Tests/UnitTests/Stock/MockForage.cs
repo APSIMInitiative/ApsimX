@@ -56,6 +56,8 @@
         {
             throw new NotImplementedException();
         }
+
+        public bool IsAlive { get; set; } = true;
     }
 
     public class MockOrgan : IOrganDamage
