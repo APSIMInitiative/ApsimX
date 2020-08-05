@@ -98,9 +98,9 @@
             {
                 if (this.aggregationFunction.Equals("sum", StringComparison.CurrentCultureIgnoreCase))
                     if (this.valuesToAggregate[0].GetType() == typeof(double))
-                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<double>());
+                        result = this.valuesToAggregate.Cast<double>().Sum();
                     else if (this.valuesToAggregate[0].GetType() == typeof(int))
-                        result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
+                        result = this.valuesToAggregate.Cast<int>().Sum();
                     else
                         throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
                 else if (this.aggregationFunction.Equals("prod", StringComparison.CurrentCultureIgnoreCase))

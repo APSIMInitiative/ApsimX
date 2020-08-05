@@ -4,6 +4,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Models.PMF.Arbitrator
@@ -67,7 +68,7 @@ namespace Models.PMF.Arbitrator
                         {
                             supplies.Add(organSupply);
                             zones.Add(zone);
-                            waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                            waterSupply += organSupply.Sum() * zone.Zone.Area;
                         }
                     }
 
@@ -104,7 +105,7 @@ namespace Models.PMF.Arbitrator
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
-                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+                waterSupply += Z.Water.Sum() * Z.Zone.Area;
             }
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.

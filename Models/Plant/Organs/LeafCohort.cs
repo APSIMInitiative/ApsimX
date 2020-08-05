@@ -870,7 +870,7 @@ namespace Models.PMF.Organs
 
                 //Set initial leaf status values
                 LeafStartArea = LiveArea;
-                LiveStart.SetTo(Live);
+                LiveStart = new Biomass(Live);                
 
                 //If the model allows reallocation of senescent DM do it.
                 if ((DMReallocationFactor > 0) && (SenescedFrac > 0))
@@ -1140,7 +1140,7 @@ namespace Models.PMF.Organs
                         lsn += ApexCohort.GroupSize[i];
                     }
                 }
-                return lsn * CohortPopulation / MathUtilities.Sum(ApexCohort.GroupSize);
+                return lsn * CohortPopulation / ApexCohort.GroupSize.Sum();
             }
         }
 
