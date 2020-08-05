@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Models.Interfaces;
 
 namespace Models.PMF.Arbitrator
 {
@@ -19,6 +20,10 @@ namespace Models.PMF.Arbitrator
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
+
+        /// <summary>The zone.</summary>
+        [Link(Type = LinkType.Ancestor)]
+        protected IZone zone;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
@@ -172,7 +177,7 @@ namespace Models.PMF.Arbitrator
                     throw new Exception("-ve no3 uptake demand");
                 UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
 
-                N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / plant.Zone.Area;  //g/m2
+                N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / this.zone.Area;  //g/m2
                 if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
                     throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
                 nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
@@ -222,7 +227,7 @@ namespace Models.PMF.Arbitrator
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
-                N.UptakeSupply[i] = NSupply / plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                N.UptakeSupply[i] = NSupply / zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
 
 

@@ -16,15 +16,4 @@ namespace Models.PMF.Interfaces
         void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
     }
-
-    /// <summary>
-    /// Root interface
-    /// </summary>
-    public interface IRoot : IOrgan
-    {
-        /// <summary>
-        /// Root length density
-        /// </summary>
-        double[] LengthDensity { get; }
-    }
 }

@@ -25,27 +25,36 @@
     {
         /// <summary>The summary</summary>
         [Link]
-        ISummary Summary = null;
+        private ISummary summary = null;
 
-        /// <summary> The plant's zone</summary>
+        /// <summary> Clock </summary>
         [Link]
-        public Zone Zone = null;
+        private IClock clock = null;
+
+        /// <summary>The plant mortality rate</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("")]
+        private IFunction mortalityRate = null;
 
         /// <summary>The phenology</summary>
-        [Link]
-        public Phenology Phenology = null;
+        [Link(Type = LinkType.Child)]
+        public IPhenology Phenology = null;
+
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
         public IArbitrator Arbitrator = null;
+
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
-        public Structure Structure = null;
+        public IStructure structure = null;
+
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
         public ICanopy Leaf = null;
+
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
-        public Root Root = null;
+        public IRoot Root = null;
 
         /// <summary>Above ground weight</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -53,10 +62,6 @@
 
         /// <summary>Above ground weight</summary>
         public Biomass AboveGroundHarvestable { get { return AboveGround; } }
-
-        /// <summary> Clock </summary>
-        [Link]
-        public Clock Clock = null;
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string CropType { get; set; }
@@ -76,7 +81,7 @@
         /// <summary>Gets the organs.</summary>
         [JsonIgnore]
         public IOrgan[] Organs { get; private set; }
- 
+
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
         {
@@ -174,10 +179,10 @@
                 else
                 {
                     plantPopulation = value;
-                    if (Structure != null)
+                    if (structure != null)
                     {
-                        Structure.DeltaPlantPopulation = InitialPopn - value;
-                        Structure.ProportionPlantMortality = 1 - (value / InitialPopn);
+                        structure.DeltaPlantPopulation = InitialPopn - value;
+                        structure.ProportionPlantMortality = 1 - (value / InitialPopn);
                     }
                 }
             }
@@ -191,8 +196,8 @@
         {
             get
             {
-                if (Phenology != null)
-                    return Phenology.Emerged;
+                if (Phenology is Phenology phenology)
+                    return phenology.Emerged;
                 return false;
             }
         }
@@ -202,7 +207,7 @@
         {
             get
             {
-                return Phenology.CurrentPhaseName == "ReadyForHarvesting";
+                return Phenology.CurrentPhase.Name == "ReadyForHarvesting";
             }
         }
 
@@ -244,11 +249,6 @@
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
-
-        /// <summary>The plant mortality rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("")]
-        IFunction MortalityRate = null;
 
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
@@ -302,7 +302,7 @@
                     message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
-                Summary.WriteMessage(this, message);
+                summary.WriteMessage(this, message);
                 if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
                     Flowering.Invoke(this, null);
             }
@@ -315,8 +315,8 @@
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             //Reduce plant population in case of mortality
-            if (Population > 0.0 && MortalityRate != null)
-                Population -= Population * MortalityRate.Value();
+            if (Population > 0.0 && mortalityRate != null)
+                Population -= Population * mortalityRate.Value();
         }
 
         /// <summary>Called at the end of the day.</summary>
@@ -343,7 +343,7 @@
         /// <param name="rowConfig">SkipRow configuration.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
         {
-            SowingDate = Clock.Today;
+            SowingDate = clock.Today;
 
             SowingData = new SowPlant2Type();
             SowingData.Plant = this;
@@ -399,7 +399,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -411,7 +411,7 @@
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
 
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
@@ -440,16 +440,16 @@
             }
 
             // Reset the phenology if SetPhenologyStage specified.
-            if (removalData != null && removalData.SetPhenologyStage != 0)
-                Phenology.SetToStage(removalData.SetPhenologyStage);
+            if (removalData != null && removalData.SetPhenologyStage != 0 && Phenology is Phenology phenology)
+                phenology.SetToStage(removalData.SetPhenologyStage);
 
             // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0 && Structure != null)
-                Structure.doThin(removalData.SetThinningProportion);
+            if (removalData != null && removalData.SetThinningProportion != 0 && structure != null)
+                structure.DoThin(removalData.SetThinningProportion);
 
             // Remove nodes from the main-stem
             if (removalData != null && removalData.NodesToRemove > 0)
-                Structure.doNodeRemoval(removalData.NodesToRemove);
+                structure.DoNodeRemoval(removalData.NodesToRemove);
         }
 
         /// <summary>End the crop.</summary>
@@ -457,7 +457,7 @@
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
-            Summary.WriteMessage(this, "Crop ending");
+            summary.WriteMessage(this, "Crop ending");
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
@@ -639,10 +639,10 @@
             else
             {
                 plantPopulation = newPlantPopulation;
-                if (Structure != null)
+                if (structure != null)
                 {
-                    Structure.DeltaPlantPopulation = InitialPopn - newPlantPopulation;
-                    Structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
+                    structure.DeltaPlantPopulation = InitialPopn - newPlantPopulation;
+                    structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
                 }
             }
         }

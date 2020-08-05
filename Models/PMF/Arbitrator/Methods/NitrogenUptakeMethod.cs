@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
@@ -16,6 +17,10 @@ namespace Models.PMF.Arbitrator
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
+
+        /// <summary>The zone.</summary>
+        [Link(Type = LinkType.Ancestor)]
+        protected IZone zone = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
@@ -50,13 +55,13 @@ namespace Models.PMF.Arbitrator
                         (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                         UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                         UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                        N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / plant.Zone.Area;
+                        N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / this.zone.Area;
                         NSupply += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * zone.Zone.Area;
                     }
                 zones.Add(UptakeDemands);
             }
 
-            double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+            double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
             if (NSupply > NDemand)
             {
@@ -83,7 +88,7 @@ namespace Models.PMF.Arbitrator
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
-                N.UptakeSupply[i] = NSupply / plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                N.UptakeSupply[i] = NSupply / zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
         }
     }

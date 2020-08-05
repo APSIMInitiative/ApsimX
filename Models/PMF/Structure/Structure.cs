@@ -46,7 +46,7 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(Plant))]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Structure : Model
+    public class Structure : Model, IStructure
     {
         // 1. Links
         //-------------------------------------------------------------------------------------------
@@ -441,7 +441,7 @@ namespace Models.PMF.Struct
         }
 
         /// <summary>Called when crop recieves a remove biomass event from manager</summary>
-        public void doThin(double ProportionRemoved)
+        public void DoThin(double ProportionRemoved)
         {
             plant.Population *= (1 - ProportionRemoved);
             TotalStemPopn *= (1 - ProportionRemoved);
@@ -449,7 +449,7 @@ namespace Models.PMF.Struct
         }
 
         /// <summary> Removes nodes from main-stem in defoliation event  </summary>
-        public void doNodeRemoval(int NodesToRemove)
+        public void DoNodeRemoval(int NodesToRemove)
         {
             //Remove nodes from Structure properties
             LeafTipsAppeared = Math.Max(LeafTipsAppeared - NodesToRemove, 0);

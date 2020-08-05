@@ -5,6 +5,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Models.Interfaces;
 
 namespace Models.PMF.Arbitrator
 {
@@ -16,6 +17,10 @@ namespace Models.PMF.Arbitrator
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
+
+        /// <summary>The zone.</summary>
+        [Link(Type = LinkType.Ancestor)]
+        private IZone zone = null;
 
         /// <summary>A list of organs or suborgans that have watardemands</summary>
         protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
@@ -75,7 +80,7 @@ namespace Models.PMF.Arbitrator
             double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
             foreach (IHasWaterDemand WD in WaterDemands)
-                waterDemand += WD.CalculateWaterDemand() * plant.Zone.Area;
+                waterDemand += WD.CalculateWaterDemand() * zone.Area;
 
             // Calculate demand / supply ratio.
             double fractionUsed = 0;
@@ -110,7 +115,7 @@ namespace Models.PMF.Arbitrator
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
                 if (o is IHasWaterDemand)
-                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * plant.Zone.Area;
+                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * zone.Area;
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
