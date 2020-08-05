@@ -46,7 +46,7 @@
         }
 
         /// <summary>Gets or sets a value indicating whether the button is visible.</summary>
-        public bool IsVisible
+        public bool Visible
         {
             get { if (button == null) return toolButton.Visible; else return button.Visible; }
             set { if (button == null) toolButton.Visible = value; else button.Visible = value; }

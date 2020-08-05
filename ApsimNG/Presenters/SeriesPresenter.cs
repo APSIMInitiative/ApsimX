@@ -192,7 +192,7 @@
                     if (index >= 0)
                         args.ItemSelected = args.ItemSelected.Substring(args.TriggerWord.Length);
                 }
-                string textBeforeCursor = seriesView.Filter.Value.Substring(0, seriesView.Filter.Offset);
+                string textBeforeCursor = seriesView.Filter.Text.Substring(0, seriesView.Filter.Offset);
                 if (textBeforeCursor.EndsWith(".") && args.ItemSelected.StartsWith("."))
                     args.ItemSelected = args.ItemSelected.TrimStart('.');
 
@@ -455,7 +455,7 @@
         /// <param name="e">Event arguments</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+            this.SetModelProperty("Filter", this.seriesView.Filter.Text);
         }
 
         /// <summary>
@@ -543,7 +543,7 @@
             warnings.AddRange(PopulateFieldNames());
 
             // Populate filter textbox.
-            this.seriesView.Filter.Value = series.Filter;
+            this.seriesView.Filter.Text = series.Filter;
 
             this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 

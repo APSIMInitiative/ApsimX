@@ -127,6 +127,7 @@
     <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
     <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
     <EmbeddedResource Include="Resources\Glade\CloudJobView.glade" />
+    <EmbeddedResource Include="Resources\Glade\RunOnCloudView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -354,7 +355,7 @@
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
-    <Compile Include="Views\EditBoxView.cs" />
+    <Compile Include="Views\EditView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
     <Compile Include="Views\FileConverterView.cs" />
@@ -379,7 +380,6 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\RunOnCloudView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
