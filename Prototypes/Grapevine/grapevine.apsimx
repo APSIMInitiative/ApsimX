@@ -4881,7 +4881,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.9,
+                  "FixedValue": 0.8,
                   "Units": "meter",
                   "Name": "TrunkLength",
                   "Children": [],
@@ -4921,6 +4921,16 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 280.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
@@ -4931,38 +4941,10 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 300.0,
+                      "FixedValue": 200.0,
                       "Units": null,
                       "Name": "Storage",
                       "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].InitialWt.Structural.FixedValue",
-                          "Name": "TrunkWt",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "RootTrunkRatio",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4976,25 +4958,6 @@
                   "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "DMDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Trunk].DMDemand.Structural",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.MaximumFunction, Models",
                       "Name": "Storage",
@@ -5013,7 +4976,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Fibrousroot.Live.StructuralWt",
+                                      "VariableName": "[Grapevine].Trunk.Live.StructuralWt",
                                       "Name": "StructuralWt",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -5037,7 +5000,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Fibrousroot].Live.StorageWt",
+                                  "VariableName": "[Grapevine].Trunk.Live.StorageWt",
                                   "Name": "StorageWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5110,6 +5073,187 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural2",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "RootTrunkRatio",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Trunk].DMDemand.Structural",
+                          "Name": "Trunk",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "2",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 3.1415926,
+                          "Units": null,
+                          "Name": "PI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PowerFunction, Models",
+                          "Exponent": 0.5,
+                          "Name": "Radius",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "RadiusSquare",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].Live.Wt",
+                                  "Name": "Wt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Population",
+                                  "Name": "population",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].TrunkLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 500000.0,
+                                  "Units": "g/m3",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Trunk].TrunkLength",
+                          "Name": "Length",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 500000.0,
+                          "Units": "g/m3",
+                          "Name": "Density",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 8E-06,
+                          "Units": "meter",
+                          "Name": "RadiusGR",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Population",
+                          "Name": "population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "RootTrunkRatio",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5207,9 +5351,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "SenescenceRate",
+                  "FixedValue": 0.07,
+                  "Units": null,
+                  "Name": "DMRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5217,9 +5361,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.07,
+                  "FixedValue": 1.0,
                   "Units": null,
-                  "Name": "DMRetranslocationFactor",
+                  "Name": "DMReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5239,16 +5383,6 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
-                  "Name": "DMReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5257,7 +5391,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.1,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -5357,6 +5491,16 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 3E-05,
+                  "Units": "/d",
+                  "Name": "SenescenceRate",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -19655,7 +19799,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\t            double woodDensity = 0.4; //g/mm2/m\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n\t            zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\t            double woodDensity = 0.4; //g/mm2/m\r\n\t            double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n\t            zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n\t            zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].Fibrousroot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
                               "Key": "BudNumber",
