@@ -437,8 +437,16 @@
         /// </summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
-            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            ActualSOMDecomp = ReflectionUtilities.Clone(PotentialSOMDecomp) as SurfaceOrganicMatterDecompType;
+            SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[PotentialSOMDecomp.Pool.Length];
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            {
+                actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
+                actualSOMDecomp.Pool[i].Name = PotentialSOMDecomp.Pool[i].Name;
+                actualSOMDecomp.Pool[i].OrganicMatterType = PotentialSOMDecomp.Pool[i].OrganicMatterType;
+                actualSOMDecomp.Pool[i].FOM = new FOMType();
+                actualSOMDecomp.Pool[i].FOM.amount = PotentialSOMDecomp.Pool[i].FOM.amount;
+            }
 
             double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
             double FinalResidueC = 0;    // How much is left after decomposition
@@ -452,10 +460,10 @@
             { }
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
-                ActualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
-                ActualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
             }
-            return ActualSOMDecomp;
+            return actualSOMDecomp;
         }
 
         /// <summary>

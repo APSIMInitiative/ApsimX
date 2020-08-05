@@ -125,8 +125,8 @@ namespace Models.PMF.Arbitrator
                     {
                         diffnAvailable[i] = myZone.Diffusion[i] - myZone.MassFlow[i];
                     }
-                    var totalMassFlow = MathUtilities.Sum(myZone.MassFlow); //g/m^2
-                    var totalDiffusion = MathUtilities.Sum(diffnAvailable);//g/m^2
+                    var totalMassFlow = myZone.MassFlow.Sum(); //g/m^2
+                    var totalDiffusion = diffnAvailable.Sum();//g/m^2
 
                     var potentialSupply = totalMassFlow + totalDiffusion;
                     var actualDiffusion = 0.0;
@@ -172,10 +172,10 @@ namespace Models.PMF.Arbitrator
                     throw new Exception("-ve no3 uptake demand");
                 UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
 
-                N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / plant.Zone.Area;  //g/m2
+                N.UptakeSupply[rootIndex] += organNO3Supply.Sum() * kgha2gsm * zone.Zone.Area / plant.Zone.Area;  //g/m2
                 if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
                     throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
-                nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
+                nSupply += organNO3Supply.Sum() * zone.Zone.Area;
                 zones.Add(UptakeDemands);
             }
 
@@ -217,7 +217,7 @@ namespace Models.PMF.Arbitrator
             // Calculate the total no3 and nh4 across all zones.
             double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
-                NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
+                NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * Z.Zone.Area;
 
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             //NUptakeSupply units should be g/m^2
