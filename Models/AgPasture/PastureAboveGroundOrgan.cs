@@ -36,19 +36,15 @@
         //---------------------------- Parameters -----------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        [JsonIgnore]
         public double NConcOptimum { get; set; } = 0.04;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        [JsonIgnore]
         public double NConcMinimum { get; set; } = 0.012;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [JsonIgnore]
         public double NConcMaximum { get; set; } = 0.05;
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        [JsonIgnore]
         public double FractionStanding { get; set; } = 1.0;
 
         //----------------------- States -----------------------
