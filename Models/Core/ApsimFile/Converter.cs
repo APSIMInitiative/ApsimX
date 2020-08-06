@@ -2501,7 +2501,7 @@
                     manager.AddDeclaration(property, memberName, new string[1] { link });
 
                     if (!string.IsNullOrEmpty(plantName))
-                        manager.Replace($"{plantName}.{property}", memberName);
+                        manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
                     manager.Save();
                 }
             }
