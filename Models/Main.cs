@@ -173,12 +173,10 @@
             string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
             {
-                List<Exception> errors;
-                IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
-                if (errors != null && errors.Count > 0)
-                    foreach (Exception error in errors)
-                        Console.Error.WriteLine(error.ToString());
-                File.WriteAllText(file, FileFormat.WriteToString(sims));
+                string contents = File.ReadAllText(file);
+                ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
+                if (converter.DidConvert)
+                    File.WriteAllText(file, converter.Root.ToString());
                 Console.WriteLine("Successfully upgraded " + file);
             }
         }

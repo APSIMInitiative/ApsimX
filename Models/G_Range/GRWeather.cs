@@ -2,6 +2,7 @@
 
 namespace Models
 {
+    using Models.Climate;
     using Models.Core;
     using Models.Interfaces;
     using System.Data;

@@ -30,7 +30,7 @@ namespace UnitTests.Weather
                 Name = "Base",
                 Children = new List<IModel>()
                 {
-                    new Models.Weather()
+                    new Models.Climate.Weather()
                     {
                         Name = "Weather",
                         FullFileName = weatherFilePath,
