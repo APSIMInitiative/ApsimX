@@ -312,6 +312,19 @@ namespace Models.CLEM
             }
         }
 
+
+        /// <summary>
+        /// returns the number of records for a given condition
+        /// Not used in this type
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int RecordsFound(string table, object value)
+        {
+            return 1;
+        }
+
         /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
@@ -494,13 +507,6 @@ namespace Models.CLEM
             if (clock.EndDate == clock.Today)
             {
                 return;
-            }
-
-            //Check if there is any data
-            if ((filtered == null) || (filtered.Count == 0))
-            {
-                throw new ApsimXException(this, errormessageStart
-                    + "Unable to retrieve any data what so ever");
             }
 
             //Check no gaps in the months
