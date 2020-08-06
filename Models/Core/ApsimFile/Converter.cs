@@ -2481,11 +2481,14 @@
             {
                 ConvertPlantPropertyToDirectLink(manager, "Root", "Models.PMF.Organs");
                 ConvertPlantPropertyToDirectLink(manager, "Structure", "Models.PMF.Struct");
+                ConvertPlantPropertyToDirectLink(manager, "Phenology", "Models.PMF.Phen");
             }
 
             void ConvertPlantPropertyToDirectLink(ManagerConverter manager, string property, string nameSpace)
             {
                 string code = manager.ToString();
+                if (code == null)
+                    return;
                 if (code.Contains($".{property}."))
                 {
                     manager.AddUsingStatement(nameSpace);
