@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF
 {

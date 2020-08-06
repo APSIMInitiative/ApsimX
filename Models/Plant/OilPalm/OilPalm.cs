@@ -14,6 +14,7 @@ using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.OilPalm
 {

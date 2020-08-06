@@ -6,6 +6,7 @@
     using Models.PMF;
     using Models.Soils;
     using Models.Soils.Arbitrator;
+    using Models.Soils.Nutrients;
     using System;
     using System.Linq;
     using System.Xml.Serialization;
@@ -27,6 +28,9 @@
 
         /// <summary>Soil nitrogen model.</summary>
         private INutrient SoilNitrogen;
+
+        private double[] dulMM;
+        private double[] ll15MM;
 
         /// <summary>The NO3 solute.</summary>
         public ISolute NO3 = null;
@@ -78,6 +82,8 @@
             myReferenceKSuptake = referenceKSuptake;
             myReferenceRLD = referenceRLD;
             myExponentSoilMoisture = exponentSoilMoisture;
+            dulMM = mySoil.DULmm;
+            ll15MM = mySoil.LL15mm;
 
             // Link to soil and initialise variables
             myZoneName = mySoil.Parent.Name;
@@ -86,6 +92,7 @@
 
             // Initialise root DM, N, depth, and distribution
             Depth = initialDepth;
+            CalculateRootZoneBottomLayer();
             TargetDistribution = RootDistributionTarget();
 
             double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
@@ -181,10 +188,7 @@
         internal double Depth { get; set; }
 
         /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
-        internal int BottomLayer 
-        {
-            get { return RootZoneBottomLayer(); }
-        }
+        internal int BottomLayer { get; private set; }
 
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
@@ -343,14 +347,14 @@
             {
                 double rldFac = Math.Min(1.0, RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
                 else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
@@ -384,14 +388,14 @@
                 double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / myReferenceKSuptake);
                 double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / myReferenceRLD);
                 double swFac;
-                if (mySoil.SoilWater.SWmm[layer] >= mySoil.DULmm[layer])
+                if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
-                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.LL15mm[layer])
+                else if (mySoil.SoilWater.SWmm[layer] <= ll15MM[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (myZone.Water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
@@ -459,6 +463,7 @@
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
+            CalculateRootZoneBottomLayer();
 
             var rootFractions = CurrentRootDistributionTarget();
             var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
@@ -469,6 +474,7 @@
         internal void DoResetOrgan()
         {
             Depth = 0;
+            CalculateRootZoneBottomLayer();
             for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].Reset();
@@ -534,29 +540,39 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
+            var thickness = mySoil.Thickness;
+            var bd = mySoil.BD;
+            var water = myZone.Water;
+            var nh4 = myZone.NH4N;
+            var no3 = myZone.NO3N;
+            double depthOfTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                layerFrac = FractionLayerWithRoots(layer);
-                bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= mySoil.DULmm[layer])
+                layerFrac = (Depth - depthOfTopOfLayer) / thickness[layer];
+                layerFrac = Math.Min(1.0, Math.Max(0.0, layerFrac));
+
+                bdFac = 100.0 / (thickness[layer] * bd[layer]);
+                if (water[layer] >= dulMM[layer])
                     swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.LL15mm[layer])
+                else if (water[layer] <= ll15MM[layer])
                     swFac = 0.0;
                 else
                 {
-                    double waterRatio = (myZone.Water[layer] - mySoil.LL15mm[layer]) /
-                                        (mySoil.DULmm[layer] - mySoil.LL15mm[layer]);
+                    double waterRatio = (water[layer] - ll15MM[layer]) /
+                                        (dulMM[layer] - ll15MM[layer]);
                     waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
                     swFac = 1.0 - Math.Pow(1.0 - waterRatio, myExponentSoilMoisture);
                 }
 
                 // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
+                potAvailableN = nh4[layer] * layerFrac * swFac * bdFac * KNH4;
+                mySoilNH4Available[layer] = Math.Min(nh4[layer] * layerFrac, potAvailableN);
 
                 // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
+                potAvailableN = no3[layer] * layerFrac * swFac * bdFac * KNO3;
+                mySoilNO3Available[layer] = Math.Min(no3[layer] * layerFrac, potAvailableN);
+
+                depthOfTopOfLayer += thickness[layer];
             }
 
             // check for maximum uptake
@@ -596,22 +612,20 @@
 
         /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
         /// <returns>The index of a layer</returns>
-        private int RootZoneBottomLayer()
+        private void CalculateRootZoneBottomLayer()
         {
-            int result = 0;
+            BottomLayer = 0;
             double currentDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
                 if (Depth > currentDepth)
                 {
-                    result = layer;
+                    BottomLayer = layer;
                     currentDepth += mySoil.Thickness[layer];
                 }
                 else
                     layer = nLayers;
             }
-
-            return result;
         }
 
         /// <summary>Computes the target (or ideal) distribution of roots in the soil profile.</summary>
@@ -761,6 +775,7 @@
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 dRootDepth = RootElongationRate * tempFactor;
                 Depth = Math.Min(RootDepthMaximum, Math.Max(RootDepthMinimum, Depth + dRootDepth));
+                CalculateRootZoneBottomLayer();
             }
             else
             {

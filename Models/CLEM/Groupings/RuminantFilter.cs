@@ -18,11 +18,12 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantFilterGroup))]
+    [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
-    [Version(1, 0, 1, "Supports blank entry for Location to represent 'Not specified - general yards'")]
+    [Version(1, 0, 3, "Now uses IsState() terminology for all state filter properties")]
+    [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
     public class RuminantFilter: CLEMModel, IValidatableObject
@@ -220,11 +221,11 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Is male breeding sire
         /// </summary>
-        BreedingSire = 15,
+        IsSire = 15,
         /// <summary>
         /// Is male draught individual
         /// </summary>
-        Draught = 14,
+        IsDraught = 14,
         /// <summary>
         /// Gender of individuals
         /// </summary>
@@ -276,10 +277,18 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Is individual a weaner (weaned, but less than 12 months)
         /// </summary>
-        Weaner = 10,
+        IsWeaner = 10,
         /// <summary>
         /// Weight of individuals
         /// </summary>
         Weight = 5,
+        /// <summary>
+        /// Is individual a calf (not weaned)
+        /// </summary>
+        IsCalf = 18,
+        /// <summary>
+        /// Is individual castrated
+        /// </summary>
+        IsCastrate = 30,
     }
 }

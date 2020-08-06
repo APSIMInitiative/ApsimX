@@ -38,6 +38,12 @@ namespace Models.CLEM.Resources
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Provide the monthly labour availability
         /// </summary>
         /// <param name="month">Month for labour</param>

@@ -20,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 106; } }
+        public static int LatestVersion { get { return 109; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2335,11 +2335,85 @@
         }
 
         /// <summary>
+        /// Change Nutrient.FOMC and Nutrient.FOMN to Nutrient.FOM.C and Nutrient.FOM.N
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion106(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("utrient.FOMC",  "utrient.FOM.C"),
+                new Tuple<string, string>("utrient.FOMN",  "utrient.FOM.N")
+            };
+
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Add Models.Soils.Nutrients namespace to all manager files that
+            // reference Nutrient or Solute.
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var code = manager.ToString();
+                if (code != null && (code.Contains("Nutrient") || code.Contains("Solute")))
+                {
+                    var usingLines = manager.GetUsingStatements().ToList();
+                    usingLines.Add("Models.Soils.Nutrients");
+                    manager.SetUsingStatements(usingLines);
+                    manager.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in LeafAppearancePhase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion107(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                ExpressionFunction expFunction = new ExpressionFunction();
+                expFunction.Name = "LeafNumber";
+                expFunction.Expression = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
+                JsonUtilities.AddModel(LAP, expFunction);
+
+                VariableReference varRef1 = new VariableReference();
+                varRef1.Name = "FullyExpandedLeafNo";
+                varRef1.VariableName = "[Leaf].ExpandedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef1);
+
+                VariableReference varRef2 = new VariableReference();
+                varRef2.Name = "InitialisedLeafNumber";
+                varRef2.VariableName = "[Leaf].InitialisedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef2);
+
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion108(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("Wheat.Structure.HaunStage",          "Wheat.Phenology.HaunStage"),
+                new Tuple<string, string>("[Wheat].Structure.HaunStage",          "[Wheat].Phenology.HaunStage"),
+                new Tuple<string, string>("Wheat.Structure.PTQ",          "Wheat.Phenology.PTQ"),
+                new Tuple<string, string>("[Wheat].Structure.PTQ",          "[Wheat].Phenology.PTQ")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+
+        /// <summary>
         /// Modify manager scripts to use the new generic model locator API.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion106(JObject root, string fileName)
+        private static void UpgradeToVersion109(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {

@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Soils.Nutrients;
     using Soils;
     using System;
     using System.Collections.Generic;
@@ -92,6 +93,11 @@
         [NonSerialized]
         private List<IrrigationApplicationType> irrigations;
 
+        /// <summary>Water content (mm).</summary>
+        private double[] waterMM;
+
+        /// <summary>Water content (mm/mm).</summary>
+        private double[] waterVolumetric;
 
         /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
         [Units("dd-mmm")]
@@ -213,7 +219,27 @@
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [XmlIgnore]
-        public double[] Water { get; set; }
+        public double[] Water 
+        { 
+            get { return waterMM; } 
+            set 
+            { 
+                waterMM = value; 
+                waterVolumetric = MathUtilities.Divide(value, soil.Thickness); 
+            } 
+        }
+
+        /// <summary>Amount of water in the soil (mm/mm).</summary>
+        [XmlIgnore]
+        public double[] SW
+        {
+            get { return waterVolumetric; }
+            set
+            {
+                waterVolumetric = value;
+                waterMM = MathUtilities.Multiply(value, soil.Thickness);
+            }
+        }
 
         /// <summary>Runon (mm).</summary>
         [XmlIgnore]
@@ -289,10 +315,6 @@
         /// <summary>Provides access to the soil properties.</summary>
         [XmlIgnore]
         public Soil Properties { get { return soil; } }
-
-        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
-        [XmlIgnore]
-        public double[] SW { get { return MathUtilities.Divide(Water, soil.Thickness); } set { Water = MathUtilities.Multiply(value, soil.Thickness); ; } }
 
         ///<summary>Gets soil water content (mm)</summary>
         [XmlIgnore]
@@ -494,6 +516,9 @@
             // Set solute state variables.
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
+
+            // Now that we've finished moving water, calculate volumetric water
+            waterVolumetric = MathUtilities.Divide(Water, soil.Thickness);
         }
 
         /// <summary>Move water down the profile</summary>

@@ -24,6 +24,17 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Default constructor.</summary>
+        public Solute() { }
+
+        /// <summary>Default constructor.</summary>
+        public Solute(Soil soilModel, string soluteName, double[] value) 
+        {
+            soil = soilModel;
+            kgha = value;
+            Name = soluteName;
+        }
+
         /// <summary>Solute amount (kg/ha)</summary>
         [XmlIgnore]
         public double[] kgha { get; set; }

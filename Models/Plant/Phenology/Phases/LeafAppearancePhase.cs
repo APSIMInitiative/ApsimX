@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
-using Models.PMF.Organs;
 using System.Xml.Serialization;
-using Models.PMF.Struct;
-using System.IO;
-using APSIM.Shared;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 
@@ -21,11 +17,17 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
-        Leaf leaf = null;
-
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FinalLeafNumber = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction LeafNumber = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction FullyExpandedLeafNo = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction InitialisedLeafNumber = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -37,7 +39,7 @@ namespace Models.PMF.Phen
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -53,8 +55,8 @@ namespace Models.PMF.Phen
             get
             {
                 double F = 0;
-                F = (leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
-                F = MathUtilities.Bound(F,0,1);
+                F = (LeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
+                F = MathUtilities.Bound(F, 0, 1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
         }
@@ -67,25 +69,26 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-                        
+
             if (First)
             {
-                LeafNoAtStart = leaf.ExpandedCohortNo + leaf.NextExpandingLeafProportion;
+                LeafNoAtStart = LeafNumber.Value();
                 TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+            //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+            if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
             }
-            
+
             return proceedToNextPhase;
         }
-                
+
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
@@ -94,7 +97,7 @@ namespace Models.PMF.Phen
             TargetLeafForCompletion = 0;
             First = true;
         }
-        
+
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -124,5 +127,6 @@ namespace Models.PMF.Phen
     }
 }
 
-      
-      
+
+
+

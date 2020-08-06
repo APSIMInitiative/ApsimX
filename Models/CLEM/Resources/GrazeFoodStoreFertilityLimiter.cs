@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("First month of annual pasture yield")]
         [System.ComponentModel.DefaultValue(typeof(MonthsOfYear), "January")]
-        [Required]
+        [Required, Month]
         public MonthsOfYear AnnualYieldStartMonth { get; set; }
 
         /// <summary>
@@ -89,7 +89,6 @@ namespace Models.CLEM.Resources
                 reduction = ((shortfall * (1 - NitrogenReduction)) + (nRequired - shortfall)) / nRequired;
             }
             annualNUsed += (nRequired*reduction);
-            System.Diagnostics.Debug.WriteLine($"{Clock.Today.ToShortDateString()}\t{annualNUsed}\t{nRequired}\t{reduction}");
             return reduction;
         }
 

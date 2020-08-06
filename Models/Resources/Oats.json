@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 105,
+  "Version": 108,
   "Name": "Simulations",
   "Children": [
     {
@@ -786,6 +786,33 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Structure].FinalLeafNumber",
                   "Name": "FinalLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "Name": "LeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "FullyExpandedLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].InitialisedCohortNo",
+                  "Name": "InitialisedLeafNumber",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,

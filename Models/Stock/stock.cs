@@ -5,6 +5,7 @@
     using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using StdUnits;
     using System;
