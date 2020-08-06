@@ -375,13 +375,23 @@ namespace Models.CLEM.Activities
                 // alert user to unfed animals in the month as this should not happen
                 if (unfed > 0)
                 {
-                    string warn = $"{unfed} individual{((unfed>1)?"s":"")} of [r={breed}] {((unfed == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
-                    Summary.WriteWarning(this, warn);
+                    string warn = $"individuals of [r={breed}] not fed";
+                    if (!Warnings.Exists(warn))
+                    {
+                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
+                        Summary.WriteWarning(this, warnfull);
+                        Warnings.Add(warn);
+                    }
                 }
                 if (unfedcalves > 0)
                 {
-                    string warn = $"{unfedcalves} cal{((unfedcalves == 1) ? "ves" : "f")} of [r={breed}] {((unfedcalves == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check calves have food or access to pasture when no milk is available from mother";
-                    Summary.WriteWarning(this, warn);
+                    string warn = $"calves of [r={breed}] not fed";
+                    if (!Warnings.Exists(warn))
+                    {
+                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check calves are are fed, or have access to pasture (mustered with mothers or separately) when no milk is available from mother";
+                        Summary.WriteWarning(this, warnfull);
+                        Warnings.Add(warn);
+                    }
                 }
 
                 if (methaneEmissions != null)
