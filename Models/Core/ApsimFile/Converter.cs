@@ -2494,11 +2494,23 @@
                     manager.AddUsingStatement(nameSpace);
 
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
+                    JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
+
+                    bool isOptional = false;
+                    Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
+                    if (plantLink != null)
+                    {
+                        string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
+                        if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
+                            isOptional = true;
+                    }
+
                     string link;
-                    if (string.IsNullOrEmpty(plantName))
-                        link = "[Link]";
+                    if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 1)
+                        link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
                     else
-                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\")]";
+                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
 
                     string memberName = property[0].ToString().ToLower() + property.Substring(1);
                     manager.AddDeclaration(property, memberName, new string[1] { link });
