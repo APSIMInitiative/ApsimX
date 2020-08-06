@@ -183,6 +183,14 @@ namespace Models.CLEM
         public string TBAColumnName { get; set; }
 
         /// <summary>
+        /// Action to take on missing data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("ReportWarning")]
+        [Description("Missing data action")]
+        public OnMissingResourceActionTypes MissingDataAction { get; set; }
+
+        /// <summary>
         /// APSIMx SQLite class
         /// </summary>
         [NonSerialized]
@@ -530,20 +538,69 @@ namespace Models.CLEM
             {
                 case "StockingRate":
                     valuesToUse = distinctStkRates;
+                    if(valuesToUse.Max() > 100 | valuesToUse.Min() < 0)
+                    {
+                        // add warning
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
+                        if (!Warnings.Exists(warn))
+                        {
+                            string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\nExpecting values between 1 and 100";
+                            Summary.WriteWarning(this, warnfull);
+                            Warnings.Add(warn);
+                        }
+                    }
                     break;
                 case "GrassBasalArea":
                 case "GBA":
                     valuesToUse = distinctGBAs;
+                    if (valuesToUse.Max() > 10 | valuesToUse.Min() < 0)
+                    {
+                        // add warning
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
+                        if (!Warnings.Exists(warn))
+                        {
+                            string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\nExpecting values between 0 and 10";
+                            Summary.WriteWarning(this, warnfull);
+                            Warnings.Add(warn);
+                        }
+                    }
                     break;
                 case "LandCondition":
                     valuesToUse = distinctLandConditions;
+                    if (valuesToUse.Max() > 11 | valuesToUse.Min() <= 0)
+                    {
+                        // add warning
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
+                        if (!Warnings.Exists(warn))
+                        {
+                            string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\nExpecting values between 1 and 11";
+                            Summary.WriteWarning(this, warnfull);
+                            Warnings.Add(warn);
+                        }
+                    }
                     break;
                 default:
-                    throw new ApsimXException(this, $"Unknown Pasture data cetegory [{category}] used in code behind [x={this.Name}]");
+                    throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={this.Name}]");
             }
 
-            // sorting not needed as now done at array creation
+            if (valuesToUse.Count() == 0)
+            {
+                throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={this.Name}]");
+            }
+
             int index = Array.BinarySearch(valuesToUse, value);
+            if(~index >= valuesToUse.Count())
+            {
+                // add warning
+                string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={this.Name}]";
+                if (!Warnings.Exists(warn))
+                {
+                    string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={this.Name}]\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\nUsed: [{valuesToUse.Last()}]\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
+                    Summary.WriteWarning(this, warnfull);
+                    Warnings.Add(warn);
+                }
+                index = valuesToUse.Count() - 1;
+            }
             return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
 
@@ -652,6 +709,20 @@ namespace Models.CLEM
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
             if(results.Rows.Count == 0)
             {
+                switch (MissingDataAction)
+                {
+                    case OnMissingResourceActionTypes.ReportWarning:
+                        // this is no longer an error to allow situations where there is no pasture production reported in a given period
+                        string warn = $"No pasture production for was found for [{startMonth}/{startYear}] by [x={this.Name}]";
+                        if (!Warnings.Exists(warn))
+                        {
+                            Summary.WriteWarning(this, warn + $"\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalAreaCategory}], Land Condition: [{landConditionCategory}] & Stocking Rate: [{stkRateCategory}]");
+                            Warnings.Add(warn);
+                        }
+                        break;
+                    default:
+                        break;
+                }
                 return null;
             }
 
@@ -677,7 +748,6 @@ namespace Models.CLEM
             return pastureDetails;
         }
 
-
         /// <summary>
         /// Do simple error checking to make sure the data retrieved is usable
         /// </summary>
@@ -693,32 +763,53 @@ namespace Models.CLEM
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
             string errormessageStart = "Problem with pasture input file." + System.Environment.NewLine
-                        + "For Region: " + region + ", Soil: " + soil 
-                        + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
+                        + $"For Region: [{region}], Soil: [{soil}], GrassBA: [{grassBasalArea}], LandCon: [{landCondition}], StkRate: [{stockingRate}]\n";
 
             if (clock.EndDate == clock.Today)
             {
                 return;
             }
 
-            //Check if there is any data
-            if ((filtered == null) || (filtered.Count == 0))
-            {
-                throw new ApsimXException(this, errormessageStart
-                    + "Unable to retrieve any data what so ever");
-            }
-
             //Check no gaps in the months
             DateTime tempdate = startDate;
-            foreach (PastureDataType month in filtered)
+            if (filtered.Count() > 0 && MissingDataAction != OnMissingResourceActionTypes.Ignore)
             {
-                if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
+                foreach (PastureDataType month in filtered)
                 {
-                    throw new ApsimXException(this, errormessageStart 
-                        + "Missing entry for Year: " + month.Year + " and Month: " + month.Month);
+                    if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
+                    {
+                        // missing month entry
+                        string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={this.Name}]";
+                        string warnfull = warn + $"\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\nAssume [0] for pasture production and all associated values such as rainfall";
+                        if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
+                        {
+                            if (!Warnings.Exists(warn))
+                            {
+                                Summary.WriteWarning(this, warnfull);
+                                Warnings.Add(warn);
+                            }
+                        }
+                        else if(MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
+                        {
+                            throw new ApsimXException(this, warnfull);
+                        }
+                    }
+                    tempdate = tempdate.AddMonths(1);
                 }
-                tempdate = tempdate.AddMonths(1);
             }
+        }
+
+        /// <summary>
+        /// Returned number of records for given column and value
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int RecordsFound(string table, object value)
+        {
+            string sql = $"SELECT Year FROM {TableName} WHERE {table} = '{value}'";
+            var res = SQLiteReader.ExecuteQuery(sql);
+            return res.Rows.Count;
         }
 
         private PastureDataType DataRow2PastureDataType(DataRowView dr)
@@ -891,6 +982,10 @@ namespace Models.CLEM
                 }
                 html += "\n</div>";
                 html += "\n</div>";
+            }
+            if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
+            {
+                html += "\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting to check the database on setting up your simulation.</div>";
             }
             return html;
         }
