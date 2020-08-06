@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models;
+using Models.Climate;
 using Models.Core;
 using APSIM.Shared.Utilities;
 

@@ -86,7 +86,7 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var w = sims.Children[0].Children[0] as Models.Weather;
+            var w = sims.Children[0].Children[0] as Models.Climate.Weather;
             Assert.AreEqual(w.FileName, @"\Examples\MetFiles\Goond.met");
         }
 

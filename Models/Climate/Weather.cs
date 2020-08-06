@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Models.Climate
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
