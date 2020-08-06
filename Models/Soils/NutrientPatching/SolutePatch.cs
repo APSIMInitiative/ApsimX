@@ -65,7 +65,7 @@ namespace Models.Soils.NutrientPatching
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = soil.Initial.FindByPath(Name + "N").Value as double[];           
+            double[] initialkgha = soil.Initial.FindByPath(Name + "N")?.Value as double[];
             if (initialkgha == null)
                 SetKgHa(SoluteSetterType.Other, new double[soil.Thickness.Length]);  // Urea will fall to here.
             else
