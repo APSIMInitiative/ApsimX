@@ -168,7 +168,7 @@ namespace Models.CLEM.Activities
             if (FilePasture != null)
             {
                 // check that database has region id and land id
-                ZoneCLEM clem = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                ZoneCLEM clem = FindAncestor<ZoneCLEM>();
                 int recs = FilePasture.RecordsFound((FilePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
                 {
