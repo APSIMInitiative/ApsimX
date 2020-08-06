@@ -213,7 +213,7 @@ namespace Models
 
             // The edit file operation should have changed RUE value to 0.4.
             var wheat = sim.Children[2].Children[2] as Plant;
-            var rue = wheat.Children[6].Children[5].Children[0] as Constant;
+            var rue = wheat.Children[6].Children[4].Children[0] as Constant;
             Assert.AreEqual(0.4, rue.FixedValue);
 
             double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
