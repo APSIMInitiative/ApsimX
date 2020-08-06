@@ -985,7 +985,7 @@ namespace Models.CLEM
             }
             if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
             {
-                html += "\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting to check the database on setting up your simulation.</div>";
+                html += "\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>";
             }
             return html;
         }
