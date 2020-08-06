@@ -147,6 +147,17 @@
             }
         }
 
+        /// <summary>
+        /// Add a using statement if it doesn't already exist.
+        /// </summary>
+        /// <param name="statement"></param>
+        public void AddUsingStatement(string statement)
+        {
+            List<string> usings = GetUsingStatements().ToList();
+            usings.Add(statement);
+            SetUsingStatements(usings.Distinct());
+        }
+
         /// <summary>Gets a collection of declarations.</summary>
         public List<Declaration> GetDeclarations()
         {

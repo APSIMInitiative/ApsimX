@@ -2435,19 +2435,29 @@
             // Some more complicated changes to manager code.
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
+                ConvertPlantPropertyToDirectLink(manager, "Root", "Models.PMF.Organs");
+                ConvertPlantPropertyToDirectLink(manager, "Structure", "Models.PMF.Struct");
+            }
+
+            void ConvertPlantPropertyToDirectLink(ManagerConverter manager, string property, string nameSpace)
+            {
                 string code = manager.ToString();
-                if (code.Contains(".Root."))
+                if (code.Contains($".{property}."))
                 {
-                    string plantName = Regex.Match(code, @"(\w+)\.Root\.").Groups[1].Value;
+                    manager.AddUsingStatement(nameSpace);
+
+                    string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
                     string link;
                     if (string.IsNullOrEmpty(plantName))
                         link = "[Link]";
                     else
-                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].Root\")]";
-                    manager.AddDeclaration("Models.PMF.Organs.Root", "root", new string[1] { link });
+                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\")]";
+
+                    string memberName = property[0].ToString().ToLower() + property.Substring(1);
+                    manager.AddDeclaration(property, memberName, new string[1] { link });
 
                     if (!string.IsNullOrEmpty(plantName))
-                        manager.Replace($"{plantName}.Root", "root");
+                        manager.Replace($"{plantName}.{property}", memberName);
                     manager.Save();
                 }
             }
