@@ -7,6 +7,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
+using Models.Climate;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
