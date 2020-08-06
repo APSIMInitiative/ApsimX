@@ -72,6 +72,7 @@ namespace Models.Soils.Nutrients
             }
 
             double[] source = sourceSolute.kgha;
+            int numLayers = source.Length;
             if (Value == null)
                 Value = new double[source.Length];
             if (Natm == null)
@@ -84,7 +85,7 @@ namespace Models.Soils.Nutrients
             if (destinationName !=null)
                 destination = destinationSolute.kgha;
 
-            for (int i= 0; i < source.Length; i++)
+            for (int i= 0; i < numLayers; i++)
             {
                 double nitrogenFlow = 0;
                 if (source[i]>0)

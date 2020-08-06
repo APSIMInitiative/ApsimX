@@ -805,8 +805,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the potential growth.</summary>
         /// <param name="tt">The tt.</param>
+        /// <param name="extinctionCoefficient">The extinctionCoefficient.</param>
         /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
-        public void DoPotentialGrowth(double tt, Leaf.LeafCohortParameters leafCohortParameters)
+        public void DoPotentialGrowth(double tt, double extinctionCoefficient, Leaf.LeafCohortParameters leafCohortParameters)
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
@@ -826,7 +827,7 @@ namespace Models.PMF.Organs
             if (IsNotAppeared)
             {
                 CellDivisionStressDays += 1;
-                CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStress.Value();
+                CellDivisionStressAccumulation += leafCohortParameters.CellDivisionStressValue;
                 CellDivisionStressFactor = Math.Max(CellDivisionStressAccumulation / CellDivisionStressDays, 0.01);
             }
 
@@ -835,9 +836,9 @@ namespace Models.PMF.Organs
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
                 if (IsFullyExpanded && IsNotSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAccelerationValue;
                 else if (IsSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
+                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAccelerationValue;
                 else thermalTime = tt;
 
                 //Modify leaf area using tillering approach
@@ -859,7 +860,7 @@ namespace Models.PMF.Organs
                 DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
 
-                CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
+                CoverAbove = Leaf.CoverAboveCohort(Rank,extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
                 SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
                 SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
