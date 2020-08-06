@@ -43,13 +43,21 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Return the specified pool 
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">index to use</param>
+        /// <param name="getByAge">return where index is age</param>
         /// <returns>GraxeFoodStore pool</returns>
-        public GrazeFoodStorePool Pool(int index)
+        public GrazeFoodStorePool Pool(int index, bool getByAge)
         {
             if (index < Pools.Count())
             {
-                return Pools[index];
+                if(getByAge)
+                {
+                    return Pools.Where(a => a.Age == index).FirstOrDefault();
+                }
+                else
+                {
+                    return Pools[index]; 
+                }
             }
             else
             {

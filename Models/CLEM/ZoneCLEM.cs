@@ -54,7 +54,7 @@ namespace Models.CLEM
         /// <summary>
         /// Index of the simulation Climate Region
         /// </summary>
-        [Description("Climate region index")]
+        [Description("Region id")]
         public int ClimateRegion { get; set; }
 
         /// <summary>
