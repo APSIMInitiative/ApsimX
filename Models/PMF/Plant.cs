@@ -219,6 +219,20 @@
         /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
         public int DaysAfterEnding { get; set; }
 
+        /// <summary>
+        /// Number of days after sowing.
+        /// </summary>
+        public int DaysAfterSowing
+        {
+            get
+            {
+                if (SowingData == null || SowingDate == DateTime.MinValue)
+                    return 0;
+
+                return Convert.ToInt32((clock.Today - SowingDate).TotalDays);
+            }
+        }
+
         /// <summary>A list of organs that can be damaged.</summary>
         List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
 
@@ -474,6 +488,7 @@
             SowingData = new SowPlant2Type();
             plantPopulation = 0.0;
             IsAlive = false;
+            SowingDate = DateTime.MinValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

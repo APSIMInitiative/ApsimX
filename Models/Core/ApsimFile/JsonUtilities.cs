@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Models.Functions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -569,6 +570,20 @@ namespace Models.Core.ApsimFile
                     }
                 }
             }
+
+            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            {
+                foreach (var replacement in changes)
+                {
+                    string variableName = variableRef["VariableName"]?.ToString();
+                    if (variableName.Contains(replacement.Item1))
+                    {
+                        replacementMade = true;
+                        variableRef["VariableName"] = variableName?.Replace(replacement.Item1, replacement.Item2);
+                    }
+                }
+            }
+
             return replacementMade;
         }
     }

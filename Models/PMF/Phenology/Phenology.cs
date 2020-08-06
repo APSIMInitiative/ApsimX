@@ -118,10 +118,6 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>Gets the days after sowing.</summary>
-        [JsonIgnore]
-        public int DaysAfterSowing { get; set; }
-
         /// <summary>A utility property to return the current phase.</summary>
         [JsonIgnore]
         public IPhase CurrentPhase
@@ -456,8 +452,6 @@ namespace Models.PMF.Phen
         {
             stagesPassedToday.Clear();
             //reset StagesPassedToday to zero to restart count for the new day
-            if (PlantIsAlive)
-                DaysAfterSowing += 1;
         }
         
         /// <summary> /// A helper property that checks the parent plant (old or new) to see if it is alive. /// </summary>
@@ -473,7 +467,6 @@ namespace Models.PMF.Phen
         
          private void Clear()
         {
-            DaysAfterSowing = 0;
             Stage = 1;
             AccumulatedTT = 0;
             AccumulatedEmergedTT = 0;

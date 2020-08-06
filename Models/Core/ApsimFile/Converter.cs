@@ -2429,6 +2429,10 @@
                 new Tuple<string, string>("[phenology].CurrentPhaseName", "[phenology].CurrentPhase.Name"),
                 new Tuple<string, string>("Phenology.CurrentPhaseName", "Phenology.CurrentPhase.Name"),
                 new Tuple<string, string>("phenology.CurrentPhaseName", "phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("[Plant].Phenology.DaysAfterSowing", "[Plant].DaysAfterSowing"),
+                new Tuple<string, string>("Plant.Phenology.DaysAfterSowing", "Plant.DaysAfterSowing"),
+                new Tuple<string, string>("Phenology.DaysAfterSowing", "DaysAfterSowing"),
+                new Tuple<string, string>("[Phenology].DaysAfterSowing", "[Plant].DaysAfterSowing"),
             };
             JsonUtilities.RenameVariables(root, changes);
 
