@@ -50,6 +50,10 @@
                     destination.CloseDatabase();
                 }
             }
+            else if(filesToMerge.Length == 1)
+            {
+                File.Copy(filesToMerge[0], outFileName, true);
+            }
         }
 
         /// <summary>

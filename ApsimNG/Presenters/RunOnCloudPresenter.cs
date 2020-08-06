@@ -2,8 +2,11 @@
 using ApsimNG.Cloud;
 using Models.Core;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using UserInterface.Views;
@@ -27,12 +30,16 @@ namespace UserInterface.Presenters
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter presenter;
 
+        /// <summary>List of all APSIM releases.</summary>
+        private Upgrade[] upgrades;
+
         /// <summary>The name of the job edit box.</summary>
         private EditView nameOfJobEdit;
 
         /// <summary>The combobox for number of cpus.</summary>
         private DropDownView numberCPUCombobox;
 
+        /// <summary>The control showing the type of APSIM to run on cloud.</summary>
         private DropDownView apsimTypeToRunCombobox;
 
         /// <summary>The label with text 'Directory'.</summary>
@@ -124,6 +131,15 @@ namespace UserInterface.Presenters
         /// <summary>This instance has been detached.</summary>
         public void Detach()
         {
+            ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = null;
+            ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory = null;
+            ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile = null;
+            if (apsimTypeToRunCombobox.SelectedValue == "A released version")
+                ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = versionCombobox.SelectedValue;
+            else if (apsimTypeToRunCombobox.SelectedValue == "A directory")
+                ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory = directoryEdit.Text;
+            else
+                ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile = directoryEdit.Text;
             ApsimNG.Cloud.Azure.AzureSettings.Default.Save();
             cancellation.Dispose();
             apsimTypeToRunCombobox.Changed -= OnVersionComboboxChanged;
@@ -199,7 +215,7 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowWaitCursor(true);
                     try
                     {
-                        var upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+                        upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
                         var upgradeNames = upgrades.Select(upgrade =>
                         {
                             var name = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber + " " + upgrade.IssueTitle;
@@ -225,16 +241,30 @@ namespace UserInterface.Presenters
         /// <summary>Perform the actual submission of a job to the cloud.</summary>
         private async Task SubmitJob(object sender, EventArgs args)
         {
+            string path;
+            string version;
+            if (versionCombobox.SelectedValue == null)
+            {
+                path = directoryEdit.Text;
+                version = Path.GetFileName(directoryEdit.Text);
+            }
+            else
+            {
+                path = await DownloadReleasedVersion();
+                version = versionCombobox.SelectedValue;
+                if (path == null)
+                    return;
+            }
             JobParameters job = new JobParameters
             {
                 ID = Guid.NewGuid(),
                 DisplayName = nameOfJobEdit.Text,
                 Model = modelToRun,
-                ApsimXPath = directoryEdit.Text,
+                ApsimXPath = path,
                 CpuCount = Convert.ToInt32(numberCPUCombobox.SelectedValue),
                 ModelPath = Path.GetTempPath() + Guid.NewGuid(),
                 CoresPerProcess = 1,
-                ApsimXVersion = Path.GetFileName(directoryEdit.Text),
+                ApsimXVersion = version,
                 JobManagerShouldSubmitTasks = true,
                 AutoScale = true,
                 MaxTasksPerVM = 16,
@@ -270,9 +300,76 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                statusLabel.Text = "Cancelled";
-                presenter.MainPresenter.ShowError(err);
+                view.InvokeOnMainThread(delegate
+                {
+                    statusLabel.Text = "Cancelled";
+                    submitButton.Text = "Cancel submit";
+                    presenter.MainPresenter.ShowError(err);
+                });
             }
+            finally
+            {
+                view.InvokeOnMainThread(delegate
+                {
+                    submitButton.Text = "Submit";
+                });
+            }
+        }
+
+        /// <summary>
+        /// Download a released version of APSIM.
+        /// </summary>
+        /// <returns>The path to the downloads.</returns>
+        private async Task<string> DownloadReleasedVersion()
+        {
+            var apsimReleasesPath = Path.Combine(Path.GetTempPath(), "ApsimReleases");
+            Directory.CreateDirectory(apsimReleasesPath);
+            var versionNumber = versionCombobox.SelectedValue;
+            StringUtilities.SplitOffAfterDelimiter(ref versionNumber, " ");
+            var apsimReleaseDirectory = Path.Combine(apsimReleasesPath, versionNumber);
+            if (!Directory.Exists(apsimReleaseDirectory))
+            {
+                Directory.CreateDirectory(apsimReleaseDirectory);
+
+                var upgrade = upgrades.ToList().Find(u => versionNumber == u.ReleaseDate.ToString("yyyy.MM.dd.") + u.IssueNumber);
+                var releaseFileName = Path.Combine(apsimReleasesPath, versionNumber + ".exe");
+
+                // Download the release.
+                try
+                {
+                    view.InvokeOnMainThread(delegate { statusLabel.Text = "Downloading the APSIM release..."; });
+                    WebClient myWebClient = new WebClient();
+                    await myWebClient.DownloadFileTaskAsync(upgrade.ReleaseURL, releaseFileName);
+
+                    // Unpack the installer's bin directory.
+                    var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    var setupUnpacker = Path.Combine(binDirectory, "tools", "innounp.exe");
+                    var binFileSpecToUnpack = $"*Bin{Path.DirectorySeparatorChar}*";
+
+                    var startInfo = new ProcessStartInfo()
+                    {
+                        FileName = setupUnpacker,
+                        Arguments = $"-x -y {releaseFileName} {binFileSpecToUnpack}",
+                        WorkingDirectory = apsimReleaseDirectory,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    Process p = Process.Start(startInfo);
+                    p.WaitForExit();
+
+                    // Remove the installer.
+                    File.Delete(releaseFileName);
+                }
+                catch (Exception err)
+                {
+                    view.InvokeOnMainThread(delegate
+                    {
+                        presenter.MainPresenter.ShowError(err);
+                    });
+                    return null;
+                }
+            }
+            return Path.Combine(apsimReleaseDirectory, "{app}", "Bin");
         }
     }
 }

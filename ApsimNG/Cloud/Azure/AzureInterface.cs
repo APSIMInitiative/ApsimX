@@ -347,8 +347,11 @@ namespace ApsimNG.Cloud
                     {
                         // Merge results into a single .db file.
                         DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, resultsDB);
-                        Directory.Delete(resultsDir, true);
-                        File.Delete(archive);
+                        if (File.Exists(resultsDB))
+                        {
+                            Directory.Delete(resultsDir, true);
+                            File.Delete(archive);
+                        }
                     }
                     catch (Exception err)
                     {
@@ -633,7 +636,9 @@ namespace ApsimNG.Cloud
         {
             try
             {
-                string bin = Path.Combine(srcPath, "Bin");
+                string bin = srcPath;
+                if (!bin.EndsWith("Bin"))
+                    bin = Path.Combine(srcPath, "Bin");
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
