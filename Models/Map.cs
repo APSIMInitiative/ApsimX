@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
+using Models.Climate;
 
 namespace Models
 {

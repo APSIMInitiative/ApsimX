@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils.SoilTemp
 {
     using APSIM.Shared.Utilities;
+    using Models.Climate;
     using Models.Core;
     using Models.Interfaces;
     using System;

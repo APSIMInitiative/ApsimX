@@ -138,8 +138,11 @@
         /// <summary>Total Mineral N in each soil layer</summary>
         public double[] MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
 
-        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer</summary>
-        public double[] FOMCNR { get { return SumDoubles(patches.Select(patch => patch.Nutrient.FOMCNR)); } }
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
+        public double FOMCNR(int i)
+        {
+            return MathUtilities.Sum(patches.Select(patch => patch.Nutrient.FOMCNR(i)));
+        }
 
         /// <summary>The number of patches.</summary>
         public int NumPatches {  get { return patches.Count; } }

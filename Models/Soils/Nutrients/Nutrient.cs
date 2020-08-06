@@ -137,9 +137,17 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
+<<<<<<< HEAD
 
                 foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                     for (int i = 0; i < P.C.Length; i++)
+=======
+                int numLayers = values.Length;
+                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+
+                foreach (NutrientPool P in Pools)
+                    for (int i = 0; i < numLayers; i++)
+>>>>>>> 42e367c59082a1b4f9f2f2af824c8f8c0c1c41ae
                         values[i] += P.C[i];
                 return values;
             }
@@ -332,39 +340,23 @@
             get
             {
                 double[] values = new double[FOMLignin.N.Length];
+                int numLayers = values.Length;
+                IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
 
-                foreach (NutrientPool P in FindAllChildren<NutrientPool>())
-                    for (int i = 0; i < P.N.Length; i++)
+                foreach (NutrientPool P in Pools)
+                    for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
                 return values;
             }
         }
 
         /// <summary>
-        /// Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer
+        /// Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer
         /// </summary>
-        [Units("-")]
-        public double[] FOMCNR
+        public double FOMCNR(int layer)
         {
-            get
-            {
-                // NOTE: these are included for runtime efficiency
-                double[] nh4 = NH4.kgha;
-                double[] no3 = NO3.kgha;
-                double[] FOMCarbohydrateC = FOMCarbohydrate.C;
-                double[] FOMCelluloseC = FOMCellulose.C;
-                double[] FOMLigninC = FOMLignin.C;
-                double[] FOMCarbohydrateN = FOMCarbohydrate.N;
-                double[] FOMCelluloseN = FOMCellulose.N;
-                double[] FOMLigninN = FOMLignin.N;
-
-                double[] values = new double[FOMLigninN.Length];
-                for (int i = 0; i < FOMLigninN.Length; i++)
-                    values[i] = MathUtilities.Divide(FOMCarbohydrateC[i] + FOMCelluloseC[i] + FOMLigninC[i],
-                               FOMCarbohydrateN[i] + FOMCelluloseN[i] + FOMLigninN[i] + nh4[i] + no3[i], 0.0);
-
-                return values;
-            }
+                return MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
+                               FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0); ;
         }
 
         /// <summary>Invoked at start of simulation.</summary>
@@ -446,8 +438,16 @@
         /// </summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
-            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            ActualSOMDecomp = ReflectionUtilities.Clone(PotentialSOMDecomp) as SurfaceOrganicMatterDecompType;
+            SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[PotentialSOMDecomp.Pool.Length];
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            {
+                actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
+                actualSOMDecomp.Pool[i].Name = PotentialSOMDecomp.Pool[i].Name;
+                actualSOMDecomp.Pool[i].OrganicMatterType = PotentialSOMDecomp.Pool[i].OrganicMatterType;
+                actualSOMDecomp.Pool[i].FOM = new FOMType();
+                actualSOMDecomp.Pool[i].FOM.amount = PotentialSOMDecomp.Pool[i].FOM.amount;
+            }
 
             double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
             double FinalResidueC = 0;    // How much is left after decomposition
@@ -461,10 +461,10 @@
             { }
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
-                ActualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
-                ActualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
             }
-            return ActualSOMDecomp;
+            return actualSOMDecomp;
         }
 
         /// <summary>

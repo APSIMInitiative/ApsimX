@@ -270,6 +270,7 @@
     <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
+    <Compile Include="Functions\CalculateOnceFunction.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiEllipse.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircle.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationModel.cs" />
+    <Compile Include="Functions\SupplyFunctions\StomatalConductanceCO2Modifier.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
@@ -707,9 +709,9 @@
     <Compile Include="Soils\WaterModel\WaterBalance.cs" />
     <Compile Include="Soils\WaterModel\UnsaturatedFlow.cs" />
     <Compile Include="Soils\WaterModel\WaterTable.cs" />
-    <Compile Include="Weather\ControlledEnvironment.cs" />
-    <Compile Include="Weather\SlopeEffectsOnWeather.cs" />
-    <Compile Include="Weather\Weather.cs" />
+    <Compile Include="Climate\ControlledEnvironment.cs" />
+    <Compile Include="Climate\SlopeEffectsOnWeather.cs" />
+    <Compile Include="Climate\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -812,7 +814,7 @@
     <Compile Include="CLEM\Validation.cs" />
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
-    <Compile Include="Weather\WeatherSampler.cs" />
+    <Compile Include="Climate\WeatherSampler.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
     <Compile Include="G_Range\G_Range.cs" />
