@@ -8,6 +8,7 @@
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Views;
 
@@ -628,6 +629,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Red,
@@ -641,6 +643,7 @@
                                                      "Minimum Temperature",
                                                      months,
                                                      monthlyMinT,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,
@@ -714,6 +717,7 @@
                                                  null,
                                                  null,
                                                  null,
+                                                 null,
                                                  Axis.AxisType.Bottom,
                                                  Axis.AxisType.Left,
                                                  Color.Blue,
@@ -746,6 +750,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
                                                      Color.Blue,
@@ -760,6 +765,7 @@
                                                      "Minimum Temperature",
                                                      dates,
                                                      minTemps,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,
@@ -803,6 +809,7 @@
                                                      null,
                                                      null,
                                                      null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Blue,
@@ -816,6 +823,7 @@
                                                      "Maximum Radiation",
                                                      dates,
                                                      maxRadn,
+                                                     null,
                                                      null,
                                                      null,
                                                      null,

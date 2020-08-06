@@ -21,6 +21,7 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
             var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
@@ -42,6 +43,7 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
             var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
@@ -123,6 +125,9 @@
                             {
                                 Children = new List<IModel>()
                                 {
+                                    new MockNutrientPool() { Name = "Inert" },
+                                    new MockNutrientPool() { Name = "Microbial" },
+                                    new MockNutrientPool() { Name = "Humic" },
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
                                     new MockNutrientPool() { Name = "FOMLignin" },

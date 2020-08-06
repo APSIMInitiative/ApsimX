@@ -21,6 +21,7 @@
     using Models.Functions;
     using Models.Soils.Standardiser;
     using Models.GrazPlan;
+    using Models.Climate;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -89,18 +90,9 @@
         {
             try
             {
-                // Run all child model post processors.
-                var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
-                runner.Run();
-
-                if (runner.ExceptionsThrown != null && runner.ExceptionsThrown.Count > 0)
-                {
-                    explorerPresenter.MainPresenter.ShowError(runner.ExceptionsThrown);
-                    return;
-                }
-
-                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
-                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+                Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
+                ICommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                command.Do(null);
             }
             catch (Exception err)
             {

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 102,
+  "Version": 109,
   "Name": "Simulations",
   "Children": [
     {
@@ -26,7 +26,7 @@
           "Name": "Phenology",
           "Children": [
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -50,7 +50,7 @@
                     18.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -192,6 +192,42 @@
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].FinalLeafNumber",
+                  "Name": "FinalLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "Name": "LeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "FullyExpandedLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].InitialisedCohortNo",
+                  "Name": "InitialisedLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1069,7 +1105,7 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                                      "$type": "Models.Functions.HourlyInterpolation, Models",
                                       "Name": "ThermalTime",
                                       "Children": [
                                         {
@@ -1084,7 +1120,7 @@
                                             18.0,
                                             0.0
                                           ],
-                                          "Name": "TemperatureResponse",
+                                          "Name": "Response",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
                                           "Enabled": true,

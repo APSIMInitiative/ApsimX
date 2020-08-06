@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Models.Climate;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Utilities;
 using Models.PMF;
@@ -45,25 +46,25 @@ namespace UnitTests.Core.ApsimFile
             IModel paddock = Apsim.Find(basicFile, typeof(Zone));
 
             // Add a weather component.
-            Models.Weather weather = new Models.Weather();
+            Models.Climate.Weather weather = new Models.Climate.Weather();
             weather.Name = "Weather";
             weather.FileName = "asdf.met";
             Structure.Add(weather, simulation);
 
             // Add a second weather component.
-            Models.Weather weather2 = new Models.Weather();
+            Models.Climate.Weather weather2 = new Models.Climate.Weather();
             weather2.FileName = "asdf.met";
             weather2.Name = "Weather2";
             Structure.Add(weather2, simulation);
 
             // Add a third weather component.
-            Models.Weather weather3 = new Models.Weather();
+            Models.Climate.Weather weather3 = new Models.Climate.Weather();
             weather3.FileName = "asdf.met";
             weather3.Name = "Weather3";
             Structure.Add(weather3, simulation);
 
             // Add a third weather component.
-            Models.Weather weather4 = new Models.Weather();
+            Models.Climate.Weather weather4 = new Models.Climate.Weather();
             weather4.FileName = "asdf.met";
             weather4.Name = "Weather4";
             Structure.Add(weather4, simulation);
@@ -107,12 +108,12 @@ namespace Models
             Simulations test = Utilities.GetRunnableSim();
             IModel sim = Apsim.Find(test, typeof(Simulation));
 
-            Models.Weather w1 = new Models.Weather();
+            Models.Climate.Weather w1 = new Models.Climate.Weather();
             w1.FileName = "w1.met";
             w1.Name = "w1";
             Structure.Add(w1, sim);
 
-            Models.Weather w2 = new Models.Weather();
+            Models.Climate.Weather w2 = new Models.Climate.Weather();
             w2.Name = "w2";
             w2.FileName = "w2.met";
             Structure.Add(w2, sim);
@@ -189,31 +190,31 @@ namespace Models
             Assert.AreEqual(new DateTime(2000, 1, 1), clock.StartDate);
             Assert.AreEqual(new DateTime(2000, 1, 10), clock.EndDate);
 
-            var weather = sim.Children[3] as Models.Weather;
+            var weather = sim.Children[3] as Models.Climate.Weather;
             Assert.NotNull(weather);
             Assert.AreEqual("Weather", weather.Name);
             Assert.AreEqual("fdsa.met", weather.FileName);
 
-            var weather2 = sim.Children[4] as Models.Weather;
+            var weather2 = sim.Children[4] as Models.Climate.Weather;
             Assert.NotNull(weather2);
             Assert.AreEqual("Weather2", weather2.Name);
             Assert.AreEqual(@".\jkl.met", weather2.FileName);
 
             // Weather3 and Weather4 should have been
             // renamed to w1 and w2, respectively.
-            var weather3 = sim.Children[5] as Models.Weather;
+            var weather3 = sim.Children[5] as Models.Climate.Weather;
             Assert.NotNull(weather3);
             Assert.AreEqual("w1", weather3.Name);
             Assert.AreEqual("w1.met", weather3.FileName);
 
-            var weather4 = sim.Children[6] as Models.Weather;
+            var weather4 = sim.Children[6] as Models.Climate.Weather;
             Assert.NotNull(weather4);
             Assert.AreEqual("w2", weather4.Name);
             Assert.AreEqual("w2.met", weather4.FileName);
 
             // The edit file operation should have changed RUE value to 0.4.
             var wheat = sim.Children[2].Children[2] as Plant;
-            var rue = wheat.Children[6].Children[5].Children[0] as Constant;
+            var rue = wheat.Children[6].Children[4].Children[0] as Constant;
             Assert.AreEqual(0.4, rue.FixedValue);
 
             double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");

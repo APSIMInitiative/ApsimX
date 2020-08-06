@@ -81,13 +81,13 @@ namespace Models.CLEM.Activities
         /// Current land condition index
         /// </summary>
         [XmlIgnore]
-        public RelationshipTracker LandConditionIndex { get; set; }
+        public RelationshipRunningValue LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
-        public RelationshipTracker GrassBasalArea { get; set; }
+        public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
         /// Area requested
@@ -134,13 +134,13 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
             if (LandConditionIndex == null)
             {
-                string[] memberNames = new string[] { "LandConditionIndexRelationship" };
-                results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface", memberNames));
+                string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
             }
             if (GrassBasalArea == null)
             {
-                string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
-                results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface", memberNames));
+                string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
             }
             if (FilePasture == null)
             {
@@ -161,9 +161,29 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
-            GrassBasalArea = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
+            LandConditionIndex = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+            GrassBasalArea = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+
+            if (FilePasture != null)
+            {
+                // check that database has region id and land id
+                ZoneCLEM clem = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                int recs = FilePasture.RecordsFound((FilePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
+                if (recs == 0)
+                {
+                    throw new ApsimXException(this, $"No pasture production records were located by [x={(FilePasture as Model).Name}] for [a={this.Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
+                }
+                LandType land = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+                if (land != null)
+                {
+                    recs = FilePasture.RecordsFound((FilePasture as FileSQLitePasture).LandIdColumnName, land.SoilType);
+                    if (recs == 0)
+                    {
+                        throw new ApsimXException(this, $"No pasture production records were located by [x={(FilePasture as Model).Name}] for [a={this.Name}] given [Land id] = [{land.SoilType}] as specified in [{land.Name}] used to manage the pasture");
+                    }
+                }
+            }
 
             if (UseAreaAvailable)
             {
@@ -203,9 +223,15 @@ namespace Models.CLEM.Activities
                 LinkedNativeFoodType.Manager = this as IPastureManager;
 
                 soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
-    
-                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+
+                if (!(LandConditionIndex is null))
+                {
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
+                }
+                if (!(GrassBasalArea is null))
+                {
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+                }
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
                 StockingRateSummed = StartingStockingRate;
 
@@ -243,15 +269,8 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
-                //// method is performed on last day of month but needs to work with next month's details
-                //int year = Clock.Today.AddDays(1).Year;
-                //int month = Clock.Today.AddDays(1).Month;
-
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month;
-
                 //Get this months pasture data from the pasture data list
-                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
+                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.Today.Year && a.Month == Clock.Today.Month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
@@ -272,17 +291,12 @@ namespace Models.CLEM.Activities
                         Age = 0
                     };
                     newPasture.Set(growth * Area);
-                    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
+                    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen;
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-                    newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
+                    newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture,this,"Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, "Growth");
                 }
-            }
-            else
-            {
-                this.Status = ActivityStatus.Critical;
-                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified land id and climate region id etc. ");
             }
 
             // report activity performed.

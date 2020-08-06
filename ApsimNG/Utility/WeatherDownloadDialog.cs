@@ -4,6 +4,7 @@ namespace Utility
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Newtonsoft.Json;

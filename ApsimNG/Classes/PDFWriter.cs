@@ -125,7 +125,14 @@
             xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
-            //tableStyle.Font.Size = 8;
+            tableStyle.Font.Size = 10;
+
+            Style smallStyle = document.Styles.AddStyle("Small", "Normal");
+            smallStyle.Font.Size = 8;
+
+            Style verySmallStyle = document.Styles.AddStyle("VerySmall", "Normal");
+            verySmallStyle.Font.Size = 6;
+
         }
 
         /// <summary>Scans for citations.</summary>
@@ -359,7 +366,20 @@
                 else if (tag is GraphPage)
                     CreateGraphPage(section, tag as GraphPage);
                 else if (tag is AutoDocumentation.NewPage)
+                {
                     section.AddPageBreak();
+                    if ((tag as AutoDocumentation.NewPage).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
+                else if (tag is AutoDocumentation.PageSetup)
+                {
+                    if ((tag as AutoDocumentation.PageSetup).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
                 else if (tag is AutoDocumentation.Table)
                     CreateTable(section, tag as AutoDocumentation.Table);
                 else if (tag is Graph)
@@ -515,7 +535,7 @@
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null, null,
                                      Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
                                      Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, 1, true);
@@ -627,14 +647,15 @@
         private void CreateTable(Section section, AutoDocumentation.Table tableObj)
         {
             var table = section.AddTable();
-            table.Style = "Table";
+            table.Style = tableObj.Style;
             table.Borders.Color = Colors.Blue;
             table.Borders.Width = 0.25;
             table.Borders.Left.Width = 0.5;
             table.Borders.Right.Width = 0.5;
             table.Rows.LeftIndent = 0;
 
-            var gdiFont = new XFont("Arial", 10);
+            var fontSize = section.Document.Styles[tableObj.Style].Font.Size.Value;
+            var gdiFont = new XFont("Arial", fontSize);
             XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
             // Add the required columns to the table.
@@ -698,7 +719,7 @@
                 // The actual column width is whichever of these two values is smaller.
                 // MigraDoc will automatically wrap text to ensure the column respects this width.
                 double maxWidth = graphics.MeasureString(new string('m', tableObj.ColumnWidth), gdiFont).Width;
-                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 10);
+                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 0);
             }
             
             section.AddParagraph();

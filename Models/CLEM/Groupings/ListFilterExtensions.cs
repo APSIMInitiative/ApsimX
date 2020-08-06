@@ -40,6 +40,12 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, IModel filterGroup)
         {
+            double proportionToUse = (filterGroup as IFilterGroup).Proportion;
+            if (proportionToUse <= 0)
+            {
+                proportionToUse = 1;
+            }
+
             bool femaleProperties = false;
             bool maleProperties = false;
             var rules = new List<Rule>();
@@ -50,8 +56,9 @@ namespace Models.CLEM.Groupings
                 string gender = "";
                 switch (filter.Parameter)
                 {
-                    case RuminantFilterParameters.Draught:
-                    case RuminantFilterParameters.BreedingSire:
+                    case RuminantFilterParameters.IsDraught:
+                    case RuminantFilterParameters.IsSire:
+                    case RuminantFilterParameters.IsCastrate:
                         maleProperties = true;
                         gender = "Male";
                         break;
@@ -91,8 +98,16 @@ namespace Models.CLEM.Groupings
                     {
                         (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantFemale>(), rules);
                     }
-                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantFemale, bool>>).ToList<Ruminant>();
-
+                    var result =  GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantFemale, bool>>);
+                    if(proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
                 else if (maleProperties)
                 {
@@ -100,7 +115,16 @@ namespace Models.CLEM.Groupings
                     {
                         (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantMale>(), rules);
                     }
-                    return GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantMale, bool>>).ToList<Ruminant>();
+                    var result = GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantMale, bool>>);
+                    if (proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
                 else
                 {
@@ -108,7 +132,16 @@ namespace Models.CLEM.Groupings
                     {
                         (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<Ruminant>(), rules);
                     }
-                    return GetItemsThatMatchAll<Ruminant>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<Ruminant, bool>>).ToList<Ruminant>();
+                    var result = GetItemsThatMatchAll<Ruminant>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<Ruminant, bool>>);
+                    if (proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
             }
         }

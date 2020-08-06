@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Climate;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
@@ -19,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 102; } }
+        public static int LatestVersion { get { return 109; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2267,6 +2268,183 @@
         {
             foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
                 croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
+        }
+
+        /// <summary>
+        /// Rename TemperatureResponse to Response on Interpolate functions.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion103(JObject root, string fileName)
+        {
+            foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
+            {
+                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                foreach (JObject c in atf["Children"])
+                {
+                    if (c["Name"].ToString() == "TemperatureResponse")
+                    {
+                        c["Name"] = "Response";
+                    }
+                }
+                foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+                {
+                    if (!cultivar["Command"].HasValues)
+                        continue;
+
+                    foreach (JValue command in cultivar["Command"].Children())
+                    {
+                        command.Value = command.Value.ToString().Replace(".TemperatureResponse", ".Response");
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion104(JObject root, string fileName)
+        {
+            foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "NodeNumberPhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "LeafTipNumber";
+                varRef.VariableName = "[Structure].LeafTipsAppeared";
+                JsonUtilities.AddModel(NNP, varRef);
+            }
+        }
+
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in nodenumberphase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion105(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "FinalLeafNumber";
+                varRef.VariableName = "[Structure].FinalLeafNumber";
+                JsonUtilities.AddModel(LAP, varRef);
+            }
+        }
+
+        /// <summary>
+        /// Change Nutrient.FOMC and Nutrient.FOMN to Nutrient.FOM.C and Nutrient.FOM.N
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion106(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("utrient.FOMC",  "utrient.FOM.C"),
+                new Tuple<string, string>("utrient.FOMN",  "utrient.FOM.N")
+            };
+
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Add Models.Soils.Nutrients namespace to all manager files that
+            // reference Nutrient or Solute.
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var code = manager.ToString();
+                if (code != null && (code.Contains("Nutrient") || code.Contains("Solute")))
+                {
+                    var usingLines = manager.GetUsingStatements().ToList();
+                    usingLines.Add("Models.Soils.Nutrients");
+                    manager.SetUsingStatements(usingLines);
+                    manager.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add expression function to replace direct call to structure in LeafAppearancePhase
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion107(JObject root, string fileName)
+        {
+            foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
+            {
+                ExpressionFunction expFunction = new ExpressionFunction();
+                expFunction.Name = "LeafNumber";
+                expFunction.Expression = "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion";
+                JsonUtilities.AddModel(LAP, expFunction);
+
+                VariableReference varRef1 = new VariableReference();
+                varRef1.Name = "FullyExpandedLeafNo";
+                varRef1.VariableName = "[Leaf].ExpandedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef1);
+
+                VariableReference varRef2 = new VariableReference();
+                varRef2.Name = "InitialisedLeafNumber";
+                varRef2.VariableName = "[Leaf].InitialisedCohortNo";
+                JsonUtilities.AddModel(LAP, varRef2);
+
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 108.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion108(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("Wheat.Structure.HaunStage",          "Wheat.Phenology.HaunStage"),
+                new Tuple<string, string>("[Wheat].Structure.HaunStage",          "[Wheat].Phenology.HaunStage"),
+                new Tuple<string, string>("Wheat.Structure.PTQ",          "Wheat.Phenology.PTQ"),
+                new Tuple<string, string>("[Wheat].Structure.PTQ",          "[Wheat].Phenology.PTQ")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+
+        /// <summary>
+        /// Create Models.Climate namespace.
+        /// The following types will be moved into Models.Climate:
+        /// - ControlledEnvironment
+        /// - SlopeEffectsOnWeather
+        /// - Weather
+        /// - WeatherSampler
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion109(JObject root, string fileName)
+        {
+            Type[] typesToMove = new Type[] { typeof(ControlledEnvironment), typeof(SlopeEffectsOnWeather), typeof(Weather), typeof(WeatherSampler) };
+
+            foreach (Type type in typesToMove)
+                foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, type.Name))
+                    if (!instance["$type"].ToString().Contains("Models.Climate"))
+                        instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
+
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                string code = manager.ToString();
+                if (code == null)
+                    continue;
+                foreach (Type type in typesToMove)
+                {
+                    if (code.Contains(type.Name))
+                    {
+                        List<string> usings = manager.GetUsingStatements().ToList();
+                        usings.Add("Models.Climate");
+                        manager.SetUsingStatements(usings);
+                        manager.Save();
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>

@@ -145,7 +145,8 @@
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
-                newSimulation.Descriptors = Descriptors;
+                if (newSimulation.Descriptors == null || Descriptors.Count > 0)
+                    newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
 
                 // Standardise the soil.
@@ -199,7 +200,7 @@
             if (topLevelModel != null)
             {
                 IModel replacements = Apsim.Child(topLevelModel, typeof(Replacements));
-                if (replacements != null)
+                if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
@@ -215,10 +216,10 @@
         public class Descriptor
         {
             /// <summary>The name of the descriptor.</summary>
-            public string Name { get; }
+            public string Name { get; set; }
 
             /// <summary>The value of the descriptor.</summary>
-            public string Value { get; }
+            public string Value { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="name">Name of the descriptor.</param>

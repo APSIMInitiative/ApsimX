@@ -14,6 +14,8 @@
         private IEnumerable<int> simIds;
         private int checkId;
 
+        public string Name { get { return "Delete rows"; } }
+
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>

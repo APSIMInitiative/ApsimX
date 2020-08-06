@@ -15,6 +15,7 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 using Models.Soils.Standardiser;
+using Models.Climate;
 
 namespace Models.Soils
 {

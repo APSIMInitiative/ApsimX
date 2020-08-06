@@ -125,7 +125,7 @@ namespace Utility
         /// Stores the user's preferred font.
         /// </summary>
         /// <value></value>
-        public Pango.FontDescription Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
 
         public ApsimFileMetadata GetMruFile(string fileName)
         {

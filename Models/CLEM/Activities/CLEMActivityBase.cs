@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
-        public virtual bool TimingOK
+        public virtual new bool TimingOK
         {
             get
             {
@@ -785,7 +785,7 @@ namespace Models.CLEM.Activities
 
                 if (item.Resource != null && Apsim.Parent(item.Resource as Model, typeof(Market)).GetType() == typeof(Market))
                 {
-                    ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+                    ActivitiesHolder marketActivities = Apsim.Children(Resources.FoundMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
                     if(marketActivities != null)
                     {
                         marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
