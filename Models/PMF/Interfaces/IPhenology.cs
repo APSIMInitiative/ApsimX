@@ -15,5 +15,10 @@ namespace Models.PMF.Interfaces
         /// The current phenological phase.
         /// </summary>
         IPhase CurrentPhase { get; }
+
+        /// <summary>
+        /// A one based stage number.
+        /// </summary>
+        double Stage { get; set; }
     }
 }

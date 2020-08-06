@@ -11,6 +11,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Xml;
 
     /// <summary>
@@ -2424,8 +2425,32 @@
                 new Tuple<string, string>("[Wheat].Canopy", "[Wheat].Leaf"),
                 new Tuple<string, string>("wheat.Canopy", "wheat.Leaf"),
                 new Tuple<string, string>("[wheat].Canopy", "[wheat].Leaf"),
+                new Tuple<string, string>("[Phenology].CurrentPhaseName", "[Phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("[phenology].CurrentPhaseName", "[phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("Phenology.CurrentPhaseName", "Phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("phenology.CurrentPhaseName", "phenology.CurrentPhase.Name"),
             };
             JsonUtilities.RenameVariables(root, changes);
+
+            // Some more complicated changes to manager code.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                string code = manager.ToString();
+                if (code.Contains(".Root."))
+                {
+                    string plantName = Regex.Match(code, @"(\w+)\.Root\.").Groups[1].Value;
+                    string link;
+                    if (string.IsNullOrEmpty(plantName))
+                        link = "[Link]";
+                    else
+                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].Root\")]";
+                    manager.AddDeclaration("Models.PMF.Organs.Root", "root", new string[1] { link });
+
+                    if (!string.IsNullOrEmpty(plantName))
+                        manager.Replace($"{plantName}.Root", "root");
+                    manager.Save();
+                }
+            }
         }
 
         /// <summary>
