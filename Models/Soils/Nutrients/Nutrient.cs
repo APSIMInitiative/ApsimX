@@ -137,17 +137,11 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-<<<<<<< HEAD
-
-                foreach (NutrientPool P in FindAllChildren<NutrientPool>())
-                    for (int i = 0; i < P.C.Length; i++)
-=======
                 int numLayers = values.Length;
-                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
-                foreach (NutrientPool P in Pools)
+                foreach (NutrientPool P in pools)
                     for (int i = 0; i < numLayers; i++)
->>>>>>> 42e367c59082a1b4f9f2f2af824c8f8c0c1c41ae
                         values[i] += P.C[i];
                 return values;
             }
