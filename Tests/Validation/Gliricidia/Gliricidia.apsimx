@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 102,
+  "Version": 109,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -228,6 +228,7 @@
           "FieldNameUsedForMatch": "Year",
           "FieldName2UsedForMatch": "SimulationID",
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -241,6 +242,7 @@
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObservedSoil",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -254,6 +256,7 @@
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObservedGliricidia",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -349,6 +352,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "HamakuapokoBase",
               "Children": [
                 {
@@ -373,7 +377,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Hamakuapoko.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -1729,6 +1733,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "GuadeloupeBase",
               "Children": [
                 {
@@ -1753,7 +1758,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Guadeloupe.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -3681,6 +3686,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "GuadeloupeGodetBase",
               "Children": [
                 {
@@ -3705,7 +3711,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "GuadeloupeGodet.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -6339,6 +6345,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "MakokaBase",
               "Children": [
                 {
@@ -6363,7 +6370,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -7160,7 +7167,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -9741,6 +9748,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "MakokaStripCrop",
               "Children": [
                 {
@@ -9765,7 +9773,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -9946,7 +9954,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "ResetDate",
@@ -11048,7 +11056,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -11062,7 +11070,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "ResetDate",
@@ -11120,7 +11128,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -11166,7 +11174,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "Season",
@@ -11203,6 +11211,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "MakokaSoleCrop",
               "Children": [
                 {
@@ -11227,7 +11236,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -11832,7 +11841,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -11846,7 +11855,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "ResetDate",
@@ -11890,7 +11899,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -11936,7 +11945,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "Season",
@@ -11973,6 +11982,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
+              "Descriptors": null,
               "Name": "MakokaSoleCropFertilised",
               "Children": [
                 {
@@ -11997,7 +12007,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -12602,7 +12612,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -12616,7 +12626,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "ResetDate",
@@ -12660,7 +12670,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -12706,7 +12716,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n            [Link] Clock Clock;\r\n            [Link] Weather Weather;\r\n\r\n        [Description(\"SeasonID\")]\r\n        public double Season{ get; set; }\r\n\r\n        [Description(\"Season Rainfall (mm)\")]\r\n        public double SeasonRainfall{ get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of season window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n                [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           Season = Clock.Today.Year + 0.1;\r\n\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, StartDate)))\r\n           SeasonRainfall=0.0;\r\n        if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate)))\r\n           SeasonRainfall+=Weather.Rain;\r\n\r\n        }\r\n    \r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "Season",
@@ -12788,7 +12798,7 @@
                               "Name": "15043_-91905",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "15043_-91905.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "15043_-91905",
@@ -14563,7 +14573,7 @@
                               "Name": "15000_-91950",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "15000_-91950.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "15000_-91950",
@@ -16338,7 +16348,7 @@
                               "Name": "14950_-92000",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14950_-92000.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14950_-92000",
@@ -18113,7 +18123,7 @@
                               "Name": "14900_-92050",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14900_-92050.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14900_-92050",
@@ -19888,7 +19898,7 @@
                               "Name": "14850_-92100",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14850_-92100.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14850_-92100",
@@ -21663,7 +21673,7 @@
                               "Name": "14800_-92150",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14800_-92150.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14800_-92150",
@@ -23438,7 +23448,7 @@
                               "Name": "14750_-92200",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14750_-92200.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14750_-92200",
@@ -25213,7 +25223,7 @@
                               "Name": "14700_-92250",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "14700_-92250.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14700_-92250",
@@ -26995,6 +27005,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GuatemalaTransect",
                   "Children": [
                     {
@@ -27019,7 +27030,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "Guadeloupe.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
@@ -28949,7 +28960,7 @@
                               "Name": "-1400_29550",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1400_29550.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1400_29550",
@@ -30749,7 +30760,7 @@
                               "Name": "-1500_29600",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1500_29600.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1500_29600",
@@ -32549,7 +32560,7 @@
                               "Name": "-1600_29700",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1600_29700.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1600_29700",
@@ -34349,7 +34360,7 @@
                               "Name": "-1700_29800",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1700_29800.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1700_29800",
@@ -36149,7 +36160,7 @@
                               "Name": "-1800_29900",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1800_29900.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1800_29900",
@@ -37949,7 +37960,7 @@
                               "Name": "-1900_30000",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-1900_30000.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1900_30000",
@@ -39749,7 +39760,7 @@
                               "Name": "-2000_30100",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-2000_30100.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2000_30100",
@@ -41549,7 +41560,7 @@
                               "Name": "-2100_30200",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-2100_30200.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2100_30200",
@@ -43349,7 +43360,7 @@
                               "Name": "-2200_30300",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-2200_30300.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2200_30300",
@@ -45149,7 +45160,7 @@
                               "Name": "-2300_30400",
                               "Children": [
                                 {
-                                  "$type": "Models.Weather, Models",
+                                  "$type": "Models.Climate.Weather, Models",
                                   "FileName": "-2300_30400.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2300_30400",
@@ -46956,6 +46967,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Rwanda Transect",
                   "Children": [
                     {
@@ -46980,7 +46992,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "Guadeloupe.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
@@ -50110,6 +50122,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "MakokaDugumaBase",
                   "Children": [
                     {
@@ -50134,7 +50147,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "Makoka.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
