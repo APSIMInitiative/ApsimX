@@ -344,7 +344,7 @@
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = uptake + zone.WaterUptake.Sum();
+                    uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
                 return -uptake;
             }
         }
