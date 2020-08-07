@@ -21,10 +21,10 @@ namespace UserInterface.Views
         event EventHandler<NeedContextItemsArgs> IntellisenseItemsNeeded;
 
         /// <summary>Gets or sets the Text</summary>
-        string Value { get; set; }
+        string Text { get; set; }
 
         /// <summary>Return true if dropdown is visible.</summary>
-        bool IsVisible { get; set; }
+        bool Visible { get; set; }
 
         /// <summary>
         /// Gets the offset of the cursor in the textbox.
@@ -127,7 +127,7 @@ namespace UserInterface.Views
         private string lastText = String.Empty;
 
         /// <summary>Gets or sets the Text.</summary>
-        public string Value
+        public string Text
         {
             get
             {
@@ -144,7 +144,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Return true if dropdown is visible.</summary>
-        public bool IsVisible
+        public bool Visible
         {
             get { return textentry1.Visible; }
             set { textentry1.Visible = value; }
