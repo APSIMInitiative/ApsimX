@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 110,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -43,7 +43,6 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
-          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -72,7 +71,6 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
-          "Descriptors": null,
           "Name": "LUDF",
           "Children": [
             {
@@ -95,7 +93,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Climate.Weather, Models",
+              "$type": "Models.Weather, Models",
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -61446,7 +61444,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -62228,7 +62225,6 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
-          "Descriptors": null,
           "Name": "StockSlurp",
           "Children": [
             {
@@ -62251,7 +62247,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Climate.Weather, Models",
+              "$type": "Models.Weather, Models",
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -65098,7 +65094,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -66154,7 +66149,6 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
-          "Descriptors": null,
           "Name": "WheatSheepFeedlot",
           "Children": [
             {
@@ -66179,7 +66173,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Climate.Weather, Models",
+              "$type": "Models.Weather, Models",
               "FileName": "%root%\\Tests\\WeatherFiles\\Ginninderra.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -66333,11 +66327,11 @@
                 },
                 {
                   "Key": "ExpressionToMoveAnimalsToField",
-                  "Value": "Phenology.Zadok > 0 && Phenology.Zadok < 31 && AboveGround.Wt >= 240"
+                  "Value": "Wheat.Phenology.Zadok > 0 && Wheat.Phenology.Zadok < 31 && Wheat.AboveGround.Wt >= 240"
                 },
                 {
                   "Key": "ExpressionToMoveAnimalsToFeedlot",
-                  "Value": "Phenology.Zadok >= 31 || AboveGround.Wt <= 50"
+                  "Value": "Wheat.Phenology.Zadok >= 31 || Wheat.AboveGround.Wt <= 50"
                 },
                 {
                   "Key": "ShearDate",
@@ -66729,7 +66723,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -67044,7 +67037,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -67393,7 +67386,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -67999,7 +67991,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -68314,7 +68305,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -68985,7 +68976,6 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
-          "Descriptors": null,
           "Name": "MassBalanceForage",
           "Children": [
             {
@@ -69019,7 +69009,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Climate.Weather, Models",
+              "$type": "Models.Weather, Models",
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -69247,7 +69237,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n\r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,    // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n\r\n            // balance calculations\r\n            LostWt = PastureRemoved.Wt - Intake.Wt; \r\n            LostN = PastureRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance error: Forage mass removed is not equal to animal intake.\");\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Mass balance error: N balance error.\");\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Surface;\r\nusing Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Interfaces;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n\r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,    // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n\r\n            // balance calculations\r\n            LostWt = PastureRemoved.Wt - Intake.Wt; \r\n            LostN = PastureRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance error: Forage mass removed is not equal to animal intake.\");\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Mass balance error: N balance error.\");\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartOfDayPasture",
@@ -69600,7 +69590,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -69899,7 +69888,6 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
-          "Descriptors": null,
           "Name": "MassBalanceFeedlot",
           "Children": [
             {
@@ -69933,7 +69921,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Climate.Weather, Models",
+              "$type": "Models.Weather, Models",
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -70047,7 +70035,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n       \r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n\r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,   // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n            //  do a balance calc\r\n            LostN = SupplementRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n            LostWt = SupplementRemoved.Wt - animals.IntakeAll.Weight; \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance between supplement and stock has not been maintained: \" + LostWt.ToString());\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Nitrogen mass balance between supplement and stock has not been maintained: \" + LostN.ToString());\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Surface;\r\nusing Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Interfaces;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n       \r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n\r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,   // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n            //  do a balance calc\r\n            LostN = SupplementRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n            LostWt = SupplementRemoved.Wt - animals.IntakeAll.Weight; \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance between supplement and stock has not been maintained: \" + LostWt.ToString());\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Nitrogen mass balance between supplement and stock has not been maintained: \" + LostN.ToString());\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartOfDayPasture",
@@ -70383,7 +70371,6 @@
                         0.08,
                         0.9
                       ],
-                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
