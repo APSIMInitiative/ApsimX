@@ -2495,6 +2495,17 @@
 
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
+                    if (zone == null)
+                    {
+                        JObject replacements = JsonUtilities.Ancestor(manager.Token, typeof(Replacements));
+                        if (replacements != null)
+                        {
+                            JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
+                            if (replacement != null)
+                                zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                        }
+                    }
+
                     int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
 
                     bool isOptional = false;
