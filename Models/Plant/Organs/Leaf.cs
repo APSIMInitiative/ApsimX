@@ -1249,10 +1249,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            Structure.UpdateHeight();
-            Width = WidthFunction.Value();
-            Depth = DepthFunction.Value();
-
+            if (parentPlant.IsAlive)
+            {
+                Structure.UpdateHeight();
+                Width = WidthFunction.Value();
+                Depth = DepthFunction.Value();
+            }
             if (!parentPlant.IsEmerged)
                 return;
 

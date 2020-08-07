@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Soils.Nutrients;
+    using System.Linq;
 
     ///<summary>
     /// # [Name]
@@ -343,7 +344,7 @@
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
+                    uptake = uptake + zone.WaterUptake.Sum();
                 return -uptake;
             }
         }
@@ -356,7 +357,7 @@
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = MathUtilities.Sum(zone.NitUptake);
+                    uptake = zone.NitUptake.Sum();
                 return uptake;
             }
         }
@@ -628,7 +629,7 @@
 
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
             if (TotalRAw == 0 && dryMatter.Structural > 0)
                 throw new Exception("Error trying to partition potential root biomass");
@@ -656,7 +657,7 @@
         {
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
             double dMCE = dmConversionEfficiency.Value();
 
@@ -767,9 +768,9 @@
 
             foreach (ZoneState Z in Zones)
             {
-                totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
-                totalMetabolicDemand += MathUtilities.Sum(Z.MetabolicNDemand);
+                totalStructuralNDemand += Z.StructuralNDemand.Sum();
+                totalStorageNDemand += Z.StorageNDemand.Sum();
+                totalMetabolicDemand += Z.MetabolicNDemand.Sum();
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
