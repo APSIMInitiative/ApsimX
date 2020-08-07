@@ -2495,7 +2495,7 @@
 
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
-                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
 
                     bool isOptional = false;
                     Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
@@ -2507,7 +2507,7 @@
                     }
 
                     string link;
-                    if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 1)
+                    if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
                         link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
                     else
                         link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
