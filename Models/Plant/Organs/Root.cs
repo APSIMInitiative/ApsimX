@@ -562,10 +562,16 @@
                 {
                     DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
                     DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                     DMDemand.Metabolic = 0;
                 }
                 else
-                    throw new Exception("DM Conversion Efficiency must be greater than zero in " + Name);
+                { // Conversion efficiency is zero!!!!
+                    DMDemand.Structural = 0;
+                    DMDemand.Storage = 0;
+                    DMDemand.Metabolic = 0;
+                }
+
 
                 if (dmDemandPriorityFactors != null)
                 {
