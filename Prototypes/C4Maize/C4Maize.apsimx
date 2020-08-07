@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 93,
+  "Version": 107,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -330,7 +330,8 @@
                   "Name": "DltTT",
                   "Children": [
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "agregationMethod": 0,
                       "Name": "ThermalTime",
                       "Children": [
                         {
@@ -349,7 +350,16 @@
                             26.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "Response",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4421,14 +4431,11 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5900,6 +5907,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.01,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5914,7 +5960,6 @@
               "R50": 0.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
-              "FRGR": 0.0,
               "PotentialEP": 0.0,
               "LightProfile": null,
               "DltLAI": 0.0,
@@ -8473,6 +8518,51 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "FRGR",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE_FT",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Others",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
+                          "Name": "RUE_FN",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
+                          "Name": "RUE_FVPD",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8491,16 +8581,6 @@
               "IsAboveGround": true,
               "Name": "Rachis",
               "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
@@ -9631,6 +9711,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9649,34 +9768,6 @@
               "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWtFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
-                      "Units": "g/plant",
-                      "Name": "InitialPlantWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.01,
@@ -11195,6 +11286,63 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "g/plant",
+                          "Name": "InitialPlantWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14654,6 +14802,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo98Base",
                   "Children": [
                     {
@@ -14924,6 +15074,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -21903,6 +22054,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo99Base",
                   "Children": [
                     {
@@ -22173,6 +22326,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -22672,6 +22826,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo00Base",
                   "Children": [
                     {
@@ -22942,6 +23098,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -23418,6 +23575,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "UQGattonBase",
                   "Children": [
                     {
@@ -23700,6 +23859,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -24281,6 +24441,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "DRKBase",
                   "Children": [
                     {
@@ -24563,6 +24725,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -25303,6 +25466,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K841Base",
                   "Children": [
                     {
@@ -25585,6 +25750,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -26307,6 +26473,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K842Base",
                   "Children": [
                     {
@@ -26589,6 +26757,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -27404,6 +27573,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28035,6 +28205,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28657,6 +28828,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -29276,6 +29448,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -29895,6 +30068,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -30475,6 +30649,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31055,6 +31230,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31599,6 +31775,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32137,6 +32314,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32693,6 +32871,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33219,6 +33398,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33760,6 +33940,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34298,6 +34479,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34866,6 +35048,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -35434,6 +35617,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36002,6 +36186,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36567,6 +36752,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37123,6 +37309,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37625,6 +37812,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38124,6 +38312,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38623,6 +38812,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39203,6 +39393,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39783,6 +39974,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -40360,6 +40552,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -40740,6 +40933,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMWBase",
                   "Children": [
                     {
@@ -41064,6 +41259,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -41679,6 +41875,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42211,6 +42408,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42764,6 +42962,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43362,6 +43561,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43882,6 +44082,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -44480,6 +44681,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45090,6 +45292,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45715,6 +45918,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -46286,6 +46490,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -46914,6 +47119,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -47512,6 +47718,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48098,6 +48305,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48693,6 +48901,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49306,6 +49515,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49880,6 +50090,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -50424,6 +50635,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -50765,6 +50977,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMW2Base",
                   "Children": [
                     {
@@ -51011,6 +51225,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51439,6 +51654,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KatumaniBase",
                   "Children": [
                     {
@@ -51721,6 +51938,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -52458,6 +52676,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -53017,6 +53236,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -53354,6 +53574,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KibokoBase",
                   "Children": [
                     {
@@ -53636,6 +53858,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -54106,6 +54329,8 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_89_m1g5n2",
               "Children": [
                 {
@@ -54388,6 +54613,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -55031,6 +55257,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Early_m1g6n2",
               "Children": [
                 {
@@ -55313,6 +55541,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -55992,6 +56221,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Late_m1g7n2",
               "Children": [
                 {
@@ -56274,6 +56505,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -56983,6 +57215,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_91_m1g8n2",
               "Children": [
                 {
@@ -57265,6 +57499,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -58056,6 +58291,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GainsBase",
                   "Children": [
                     {
@@ -58338,6 +58575,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -59117,6 +59355,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -59650,6 +59889,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60163,6 +60403,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60646,6 +60887,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60896,6 +61138,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "QuincyBase",
                   "Children": [
                     {
@@ -61178,6 +61422,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -61848,6 +62093,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GjunctBase",
                   "Children": [
                     {
@@ -62130,6 +62377,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -62641,6 +62889,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Champ83",
               "Children": [
                 {
@@ -62893,6 +63143,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -64080,6 +64331,7 @@
           "FieldNameUsedForMatch": "SimulationID",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [
             {
