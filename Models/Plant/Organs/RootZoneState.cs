@@ -307,14 +307,16 @@ namespace Models.PMF.Organs
         /// </summary>
         public double[] CalculateRootActivityValues()
         {
-            double[] RAw = new double[soil.Thickness.Length];
-            for (int layer = 0; layer < soil.Thickness.Length; layer++)
+            double[] thickness = soil.Thickness; // use local for efficiency reasons
+
+            double[] RAw = new double[thickness.Length];
+            for (int layer = 0; layer < thickness.Length; layer++)
             {
                 if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
-                                   * soil.Thickness[layer]
+                                   * thickness[layer]
                                    * soil.ProportionThroughLayer(layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
