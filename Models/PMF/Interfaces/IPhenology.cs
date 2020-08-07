@@ -20,5 +20,10 @@ namespace Models.PMF.Interfaces
         /// A one based stage number.
         /// </summary>
         double Stage { get; set; }
+
+        /// <summary>
+        /// Gets the current zadok stage number. Used in manager scripts.
+        /// </summary>
+        double Zadok { get; }
     }
 }
