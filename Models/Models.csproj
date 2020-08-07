@@ -408,7 +408,6 @@
     <Compile Include="IConceptionModel.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
-    <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />

@@ -68,7 +68,7 @@
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
-            this.view.GroupByEdit.Value = report.GroupByVariableName;
+            this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
@@ -248,7 +248,7 @@
             try
             {
                 explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Value));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Text));
                 explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
             }
             catch (Exception err)
