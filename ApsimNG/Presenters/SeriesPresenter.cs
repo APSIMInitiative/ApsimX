@@ -192,7 +192,7 @@
                     if (index >= 0)
                         args.ItemSelected = args.ItemSelected.Substring(args.TriggerWord.Length);
                 }
-                string textBeforeCursor = seriesView.Filter.Value.Substring(0, seriesView.Filter.Offset);
+                string textBeforeCursor = seriesView.Filter.Text.Substring(0, seriesView.Filter.Offset);
                 if (textBeforeCursor.EndsWith(".") && args.ItemSelected.StartsWith("."))
                     args.ItemSelected = args.ItemSelected.TrimStart('.');
 
@@ -347,7 +347,7 @@
         private void OnXOnTopChanged(object sender, EventArgs e)
         {
             Axis.AxisType axisType = Axis.AxisType.Bottom;
-            if (this.seriesView.XOnTop.IsChecked)
+            if (this.seriesView.XOnTop.Checked)
             {
                 axisType = Axis.AxisType.Top;
             }
@@ -361,7 +361,7 @@
         private void OnYOnRightChanged(object sender, EventArgs e)
         {
             Axis.AxisType axisType = Axis.AxisType.Left;
-            if (this.seriesView.YOnRight.IsChecked)
+            if (this.seriesView.YOnRight.Checked)
             {
                 axisType = Axis.AxisType.Right;
             }
@@ -390,7 +390,7 @@
         /// <param name="e">Event arguments</param>
         private void OnCumulativeYChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("Cumulative", this.seriesView.YCumulative.IsChecked);
+            this.SetModelProperty("Cumulative", this.seriesView.YCumulative.Checked);
         }
 
         /// <summary>Cumulative X check box has been changed by the user.</summary>
@@ -398,7 +398,7 @@
         /// <param name="e">Event arguments</param>
         private void OnCumulativeXChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("CumulativeX", this.seriesView.XCumulative.IsChecked);
+            this.SetModelProperty("CumulativeX", this.seriesView.XCumulative.Checked);
         }
 
         /// <summary>X2 has been changed by the user.</summary>
@@ -439,7 +439,7 @@
         /// <param name="e">Event arguments</param>
         private void OnShowInLegendChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.IsChecked);
+            this.SetModelProperty("ShowInLegend", this.seriesView.ShowInLegend.Checked);
         }
 
         /// <summary>User has changed the include series name in legend</summary>
@@ -447,7 +447,7 @@
         /// <param name="e">Event arguments</param>
         private void OnIncludeSeriesNameInLegendChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("IncludeSeriesNameInLegend", this.seriesView.IncludeSeriesNameInLegend.IsChecked);
+            this.SetModelProperty("IncludeSeriesNameInLegend", this.seriesView.IncludeSeriesNameInLegend.Checked);
         }
 
         /// <summary>User has changed the filter</summary>
@@ -455,7 +455,7 @@
         /// <param name="e">Event arguments</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            this.SetModelProperty("Filter", this.seriesView.Filter.Value);
+            this.SetModelProperty("Filter", this.seriesView.Filter.Text);
         }
 
         /// <summary>
@@ -521,12 +521,12 @@
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
 
             // Populate checkboxes.
-            this.seriesView.XOnTop.IsChecked = series.XAxis == Axis.AxisType.Top;
-            this.seriesView.YOnRight.IsChecked = series.YAxis == Axis.AxisType.Right;
-            this.seriesView.ShowInLegend.IsChecked = series.ShowInLegend;
-            this.seriesView.IncludeSeriesNameInLegend.IsChecked = series.IncludeSeriesNameInLegend;
-            this.seriesView.XCumulative.IsChecked = series.CumulativeX;
-            this.seriesView.YCumulative.IsChecked = series.Cumulative;
+            this.seriesView.XOnTop.Checked = series.XAxis == Axis.AxisType.Top;
+            this.seriesView.YOnRight.Checked = series.YAxis == Axis.AxisType.Right;
+            this.seriesView.ShowInLegend.Checked = series.ShowInLegend;
+            this.seriesView.IncludeSeriesNameInLegend.Checked = series.IncludeSeriesNameInLegend;
+            this.seriesView.XCumulative.Checked = series.CumulativeX;
+            this.seriesView.YCumulative.Checked = series.Cumulative;
 
             // Populate data source drop down.
             List<string> dataSources = storage.Reader.TableAndViewNames.ToList();
@@ -543,7 +543,7 @@
             warnings.AddRange(PopulateFieldNames());
 
             // Populate filter textbox.
-            this.seriesView.Filter.Value = series.Filter;
+            this.seriesView.Filter.Text = series.Filter;
 
             this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 

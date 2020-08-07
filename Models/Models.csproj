@@ -412,7 +412,6 @@
     <Compile Include="IConceptionModel.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
-    <Compile Include="PMF\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="PMF\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="PMF\Interfaces\IRetranslocateMethod.cs" />
     <Compile Include="PMF\Organs\EnergyBalance.cs" />
