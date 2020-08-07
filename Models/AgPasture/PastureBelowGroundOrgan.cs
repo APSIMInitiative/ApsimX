@@ -540,6 +540,8 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
+            double no3Uptake = 0;
+            double nh4Uptake = 0;
             var thickness = mySoil.Thickness;
             var bd = mySoil.BD;
             var water = myZone.Water;
@@ -565,13 +567,15 @@
                 }
 
                 // get NH4 available
-                potAvailableN = nh4[layer] * layerFrac * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(nh4[layer] * layerFrac, potAvailableN);
+                potAvailableN = nh4[layer] * nh4[layer] * layerFrac * swFac * bdFac * KNH4;
+                mySoilNH4Available[layer] = Math.Min(potAvailableN, myMaximumNUptake - nh4Uptake);
+                nh4Uptake += mySoilNH4Available[layer];
 
                 // get NO3 available
-                potAvailableN = no3[layer] * layerFrac * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(no3[layer] * layerFrac, potAvailableN);
-
+                potAvailableN = no3[layer] * no3[layer] * layerFrac * swFac * bdFac * KNO3;
+                mySoilNO3Available[layer] = Math.Min(potAvailableN, myMaximumNUptake - no3Uptake);
+                no3Uptake += mySoilNO3Available[layer];
+                
                 depthOfTopOfLayer += thickness[layer];
             }
 
