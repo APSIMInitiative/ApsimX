@@ -10,7 +10,7 @@ namespace UserInterface.Views
         event EventHandler Changed;
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
-        bool IsChecked { get; set; }
+        bool Checked { get; set; }
 
         /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
         bool IsSensitive { get; set; }
@@ -54,7 +54,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
-        public bool IsChecked
+        public bool Checked
         {
             get
             {

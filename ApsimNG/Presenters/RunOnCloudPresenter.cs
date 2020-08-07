@@ -63,6 +63,9 @@ namespace UserInterface.Presenters
         /// <summary>The status label.</summary>
         private LabelView statusLabel;
 
+        /// <summary>Low priority checkbox.</summary>
+        private CheckBoxView lowPriorityCheckBox;
+
         /// <summary>The model which we want to run on Azure.</summary>
         private IModel modelToRun;
 
@@ -99,6 +102,7 @@ namespace UserInterface.Presenters
             versionCombobox = view.GetControl<DropDownView>("versionCombobox");
             submitButton = view.GetControl<ButtonView>("submitButton");
             statusLabel = view.GetControl<LabelView>("statusLabel");
+            lowPriorityCheckBox = view.GetControl<CheckBoxView>("lowPriorityCheckBox");
 
             nameOfJobEdit.Text = modelToRun.Name + DateTime.Now.ToString("yyyy-MM-dd HH.mm");
             numberCPUCombobox.Values = new string[] { "16", "32", "48", "64", "80", "96", "112", "128", "256" };
@@ -122,6 +126,7 @@ namespace UserInterface.Presenters
                 directoryEdit.Text = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory;
             else if (!string.IsNullOrEmpty(ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile))
                 directoryEdit.Text = ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile;
+            lowPriorityCheckBox.Checked = ApsimNG.Cloud.Azure.AzureSettings.Default.LowPriority;
 
             apsimTypeToRunCombobox.Changed += OnVersionComboboxChanged;
             browseButton.Clicked += OnBrowseButtonClicked;
@@ -134,6 +139,8 @@ namespace UserInterface.Presenters
             ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = null;
             ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMDirectory = null;
             ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMZipFile = null;
+            ApsimNG.Cloud.Azure.AzureSettings.Default.LowPriority = lowPriorityCheckBox.Checked;
+
             if (apsimTypeToRunCombobox.SelectedValue == "A released version")
                 ApsimNG.Cloud.Azure.AzureSettings.Default.APSIMVersion = versionCombobox.SelectedValue;
             else if (apsimTypeToRunCombobox.SelectedValue == "A directory")
@@ -183,6 +190,7 @@ namespace UserInterface.Presenters
                 {
                     submitButton.Text = "Submit";
                     cancellation.Cancel();
+                    
                 }
 
             }
@@ -268,7 +276,11 @@ namespace UserInterface.Presenters
                 JobManagerShouldSubmitTasks = true,
                 AutoScale = true,
                 MaxTasksPerVM = 16,
+                LowPriority = lowPriorityCheckBox.Checked
             };
+
+            if (cancellation.IsCancellationRequested)
+                view.InvokeOnMainThread(delegate { statusLabel.Text = "Cancelled"; });
 
             if (string.IsNullOrWhiteSpace(job.DisplayName))
                 throw new Exception("A description is required");
@@ -349,7 +361,7 @@ namespace UserInterface.Presenters
                     var startInfo = new ProcessStartInfo()
                     {
                         FileName = setupUnpacker,
-                        Arguments = $"-x -y {releaseFileName} {binFileSpecToUnpack}",
+                        Arguments = $"-x -y -q {releaseFileName} {binFileSpecToUnpack}",
                         WorkingDirectory = apsimReleaseDirectory,
                         UseShellExecute = false,
                         CreateNoWindow = true
@@ -359,6 +371,25 @@ namespace UserInterface.Presenters
 
                     // Remove the installer.
                     File.Delete(releaseFileName);
+
+                    // In earlier releases of APSIM both 32bit and 64bit versions of files were included in the 
+                    // setup.exe file. We only want the 64bit versions. In the bin folder there will be files like:
+                    //    atk-sharp,1.dll
+                    //    atk-sharp,2.dll
+                    //    atk-sharp,3.dll
+                    // It seems that the ,1 and ,3 files are 64bit versions so just keep the ,1 files and delete the
+                    // other two. Rename the ,1 files to get rid of the ',1' e.g.
+                    //    atk-sharp,1.dll becomes atk-sharp.dll
+                    var binFolder = Path.Combine(apsimReleaseDirectory, "{app}", "Bin");
+                    foreach (string fileName in Directory.GetFiles(binFolder, "*,1.*"))
+                    {
+                        var newFileName = fileName.Replace(",1", "");
+                        File.Move(fileName, newFileName);
+                    }
+                    foreach (string fileName in Directory.GetFiles(binFolder, "*,?.*"))
+                        File.Delete(fileName);
+
+
                 }
                 catch (Exception err)
                 {

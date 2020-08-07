@@ -191,6 +191,7 @@ namespace UserInterface.Presenters
 
                         DownloadOptions options = new DownloadOptions()
                         {
+                            Name = jobList[jobListIndex].DisplayName,
                             Path = ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir,
                             JobID = Guid.Parse(jobList[jobListIndex].Id)
                         };
@@ -332,7 +333,7 @@ namespace UserInterface.Presenters
         /// <param name="job">The job to use to populate the row.</param>
         private void AddRowToJobListView(JobDetails job)
         {
-            if (!showMyJobsOnlyCheckbox.IsChecked ||
+            if (!showMyJobsOnlyCheckbox.Checked ||
                        string.Equals(job.Owner, Environment.UserName, StringComparison.InvariantCultureIgnoreCase))
             {
                 filteredJobList.Add(job);
@@ -365,18 +366,6 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         private int ConvertListViewIndexToJobIndex(int listViewRowIndex)
         {
-            jobListView.AddColumn("Name");
-            jobListView.AddColumn("Owner");
-            jobListView.AddColumn("State");
-            jobListView.AddColumn("# Sims");
-            jobListView.AddColumn("Progress");
-            jobListView.AddColumn("Start time");
-            jobListView.AddColumn("End time");
-            jobListView.AddColumn("Duration");
-            jobListView.AddColumn("CPU time");
-
-
-
             var values = jobListView.GetRow(listViewRowIndex);
             return jobList.FindIndex(job => job.DisplayName == (string)values[0] &&
                                             job.Owner == (string)values[1] &&

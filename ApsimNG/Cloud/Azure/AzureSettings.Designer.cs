@@ -94,5 +94,17 @@ namespace ApsimNG.Cloud.Azure {
                 this["APSIMVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LowPriority {
+            get {
+                return ((bool)(this["LowPriority"]));
+            }
+            set {
+                this["LowPriority"] = value;
+            }
+        }
     }
 }
