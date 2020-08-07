@@ -644,9 +644,10 @@
         public int LayerIndexOfDepth(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < Thickness.Length; i++)
+            double[] thickness = Thickness; // use local for efficiency reasons
+            for (int i = 0; i < thickness.Length; i++)
             {
-                CumDepth = CumDepth + Thickness[i];
+                CumDepth = CumDepth + thickness[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
