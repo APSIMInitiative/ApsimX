@@ -7,6 +7,9 @@ namespace ApsimNG.Cloud
     /// </summary>
     public class DownloadOptions
     {
+        /// <summary>Name of the job to be downloaded.</summary>
+        public string Name { get; set; }
+
         /// <summary>ID of the job to be downloaded.</summary>
         public Guid JobID { get; set; }
 

@@ -176,7 +176,7 @@ namespace UnitTests.ApsimNG.Views
             // Next, we want to change the legend position and ensure that the legend actually moves.
 
             // Click on the 'show in legend' checkbox.
-            seriesView.ShowInLegend.IsChecked = true;
+            seriesView.ShowInLegend.Checked = true;
             GtkUtilities.WaitForGtkEvents();
 
             // Double click on the middle of the legend.

@@ -193,8 +193,8 @@
                     object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowInRightHandPanel(model,
-                                                           "UserInterface.Views.RunOnCloudView",
-                                                           "UserInterface.Presenters.RunOnCloudPresenter");
+                                       "ApsimNG.Resources.Glade.RunOnCloudView.glade",
+                                       new RunOnCloudPresenter());
                 }
                 else
                 {

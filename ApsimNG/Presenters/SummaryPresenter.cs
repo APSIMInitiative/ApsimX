@@ -44,11 +44,11 @@
             SetSimulationNamesInView();
             this.SetHtmlInView();
 
-            summaryView.SummaryCheckBox.IsChecked = summaryModel.CaptureSummaryText;
+            summaryView.SummaryCheckBox.Checked = summaryModel.CaptureSummaryText;
             summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
-            summaryView.WarningCheckBox.IsChecked = summaryModel.CaptureWarnings;
+            summaryView.WarningCheckBox.Checked = summaryModel.CaptureWarnings;
             summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
-            summaryView.ErrorCheckBox.IsChecked = summaryModel.CaptureErrors;
+            summaryView.ErrorCheckBox.Checked = summaryModel.CaptureErrors;
             summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
 
             // Subscribe to the simulation name changed event.
@@ -123,19 +123,19 @@
 
         private void OnSummaryCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 
         private void OnWarningCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 
         private void OnErrorCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 

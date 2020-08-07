@@ -56,23 +56,28 @@
         /// <summary>Main worker thread.</summary>
         protected override void WorkerThread()
         {
-            // Start a task to fill our queue of jobs to run.
-            jobQueueFillerTask = Task.Run(() => FillJobQueue());
+            try
+            {
+                // Start a task to fill our queue of jobs to run.
+                jobQueueFillerTask = Task.Run(() => FillJobQueue());
 
-            DeleteRunners();
-            CreateRunners();
+                DeleteRunners();
+                CreateRunners();
 
-            AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
+                AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
-            SpinWait.SpinUntil(() => allStopped);
+                SpinWait.SpinUntil(() => allStopped);
 
-            DeleteRunners();
-            runningJobs.Clear();
+                DeleteRunners();
+                runningJobs.Clear();
 
-            ElapsedTime = DateTime.Now - startTime;
-            InvokeAllCompleted();
-
-            completed = true;
+                ElapsedTime = DateTime.Now - startTime;
+                InvokeAllCompleted();
+            }
+            finally
+            {
+                completed = true;
+            }
         }
 
         /// <summary>Create one job runner process for each CPU</summary>

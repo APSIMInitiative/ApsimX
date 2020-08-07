@@ -241,7 +241,7 @@
         /// <param name="e">Event arguments.</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            string filter = filterEdit.Value;
+            string filter = filterEdit.Text;
             PopulateTree(allowableChildModels
                             .Where(m => m.ModelName.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0));
         }
