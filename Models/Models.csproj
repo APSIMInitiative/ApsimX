@@ -323,6 +323,8 @@
     <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Organs\BasialBuds.cs" />
+    <Compile Include="Plant\Phenology\CAMP\LARPTQmodel.cs" />
+    <Compile Include="Plant\Phenology\CAMP\PTQPhyllochron.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
