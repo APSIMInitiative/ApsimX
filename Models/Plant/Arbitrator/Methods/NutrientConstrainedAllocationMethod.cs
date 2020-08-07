@@ -2,6 +2,7 @@
 using Models.Core;
 using Models.PMF.Interfaces;
 using System;
+using System.Linq;
 
 namespace Models.PMF.Arbitrator
 {
@@ -23,7 +24,7 @@ namespace Models.PMF.Arbitrator
             for (int i = 0; i < Organs.Length; i++)
                 N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.StorageAllocation[i];
 
-            N.Allocated = MathUtilities.Sum(N.TotalAllocation);
+            N.Allocated = N.TotalAllocation.Sum();
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs
