@@ -37,8 +37,16 @@ namespace Models.PMF.Arbitrator
         private IFunction NUptakeCease { get; set; }
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction MaxNUptakeRate = null;
+
+        /// <summary>Maximum Nitrogen Uptake Rate</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction NSupplyFraction = null;
+
+        /// <summary>Used to calc maximim diffusion rate</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction MaxDiffusion = null;
 
         //[Link]
         //private SorghumLeaf leaf = null;
@@ -135,22 +143,17 @@ namespace Models.PMF.Arbitrator
                     var potentialSupply = totalMassFlow + totalDiffusion;
                     var actualDiffusion = 0.0;
                     //var actualMassFlow = DltTT > 0 ? totalMassFlow : 0.0;
-                    var maxDiffusionConst = root.MaxDiffusion.Value();
-
-                    double nUptakeCease = NUptakeCease.Value();
 
                     if (TTFMFromFlowering.Value() > NUptakeCease.Value())
                         totalMassFlow = 0;
                     var actualMassFlow = totalMassFlow;
 
-                    if (totalMassFlow < nDemand && TTFMFromFlowering.Value() < nUptakeCease) // fixme && ttElapsed < nUptakeCease
+                    if (totalMassFlow < nDemand && TTFMFromFlowering.Value() < NUptakeCease.Value()) // fixme && ttElapsed < nUptakeCease
                     {
                         actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
-                        actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
+                        actualDiffusion = MathUtilities.Divide(actualDiffusion, MaxDiffusion.Value(), 0.0);
 
-                        var nsupplyFraction = root.NSupplyFraction.Value();
-
-                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * MaxNUptakeRate.Value();
+                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / NSupplyFraction.Value())) * MaxNUptakeRate.Value();
                         var maxUptake = Math.Max(0, maxUptakeRateFrac * DltTT.Value() - actualMassFlow);
                         actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                     }
