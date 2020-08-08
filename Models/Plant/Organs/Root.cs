@@ -888,10 +888,6 @@
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxNUptakeRate = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction NSupplyFraction = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>

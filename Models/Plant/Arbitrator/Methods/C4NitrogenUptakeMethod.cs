@@ -36,6 +36,10 @@ namespace Models.PMF.Arbitrator
         [Link(Type = LinkType.Path, Path = "[Root].NUptakeCease")]
         private IFunction NUptakeCease { get; set; }
 
+        /// <summary>Maximum Nitrogen Uptake Rate</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        public IFunction MaxNUptakeRate = null;
+
         //[Link]
         //private SorghumLeaf leaf = null;
 
@@ -145,9 +149,8 @@ namespace Models.PMF.Arbitrator
                         actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
 
                         var nsupplyFraction = root.NSupplyFraction.Value();
-                        var maxRate = root.MaxNUptakeRate.Value();
 
-                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
+                        var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * MaxNUptakeRate.Value();
                         var maxUptake = Math.Max(0, maxUptakeRateFrac * DltTT.Value() - actualMassFlow);
                         actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                     }
