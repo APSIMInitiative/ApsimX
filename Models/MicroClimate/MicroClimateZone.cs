@@ -396,8 +396,8 @@
         /// <param name="ReferenceHeight">Height of the weather instruments.</param>
         public void CalculateGa(double ReferenceHeight)
         {
-            double sumDeltaZ = MathUtilities.Sum(DeltaZ);
-            double sumLAI = MathUtilities.Sum(LAItotsum);
+            double sumDeltaZ = DeltaZ.Sum();
+            double sumLAI = LAItotsum.Sum();
             double totalGa = AerodynamicConductanceFAO(Wind, ReferenceHeight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= numLayers - 1; i++)
@@ -448,10 +448,10 @@
 
             for (int j = 0; j <= Canopies.Count - 1; j++)
             {
-                sumRl += MathUtilities.Sum(Canopies[j].Rl);
-                sumRsoil += MathUtilities.Sum(Canopies[j].Rsoil);
-                sumInterception += MathUtilities.Sum(Canopies[j].interception);
-                freeEvapGa += MathUtilities.Sum(Canopies[j].Ga);
+                sumRl += Canopies[j].Rl.Sum();
+                sumRsoil += Canopies[j].Rsoil.Sum();
+                sumInterception += Canopies[j].interception.Sum();
+                freeEvapGa += Canopies[j].Ga.Sum();
             }
 
             double netRadiation = ((1.0 - Albedo) * sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
