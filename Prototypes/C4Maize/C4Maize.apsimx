@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 93,
+  "Version": 109,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -228,6 +228,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.029,
+                      "Units": null,
+                      "Name": "MaxNUptakeRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -330,7 +340,8 @@
                   "Name": "DltTT",
                   "Children": [
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "agregationMethod": 0,
                       "Name": "ThermalTime",
                       "Children": [
                         {
@@ -349,7 +360,16 @@
                             26.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "Response",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4421,14 +4441,11 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5592,16 +5609,6 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.029,
-                  "Units": null,
-                  "Name": "MaxNUptakeRate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 5.0,
                   "Units": null,
                   "Name": "NSupplyFraction",
@@ -5897,6 +5904,45 @@
                   "VariableName": "[Root].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.01,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -8494,16 +8540,6 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "InitialNConcFunction",
                   "Children": [],
@@ -9631,6 +9667,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9649,34 +9724,6 @@
               "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWtFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
-                      "Units": "g/plant",
-                      "Name": "InitialPlantWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.01,
@@ -11195,6 +11242,63 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "g/plant",
+                          "Name": "InitialPlantWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14654,10 +14758,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo98Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 3N Yr1.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -14924,6 +15030,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -21903,10 +22010,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo99Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 3N Yr2.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -22173,6 +22282,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -22672,10 +22782,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo00Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 2ND Yr3.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -22942,6 +23054,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -23418,10 +23531,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "UQGattonBase",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\UQG .met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -23700,6 +23815,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -24281,10 +24397,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "DRKBase",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\DRK.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -24563,6 +24681,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -25303,10 +25422,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K841Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\K841.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -25585,6 +25706,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -26307,10 +26429,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K842Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\K842.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -26589,6 +26713,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -27404,6 +27529,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28035,6 +28161,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28657,6 +28784,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -29276,6 +29404,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -29895,6 +30024,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -30475,6 +30605,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31055,6 +31186,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31599,6 +31731,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32137,6 +32270,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32693,6 +32827,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33219,6 +33354,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33760,6 +33896,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34298,6 +34435,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34866,6 +35004,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -35434,6 +35573,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36002,6 +36142,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36567,6 +36708,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37123,6 +37265,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37625,6 +37768,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38124,6 +38268,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38623,6 +38768,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39203,6 +39349,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39783,6 +39930,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -40360,6 +40508,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -40740,6 +40889,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMWBase",
                   "Children": [
                     {
@@ -40764,7 +40915,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -41064,6 +41215,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -41679,6 +41831,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42211,6 +42364,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42764,6 +42918,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43362,6 +43517,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43882,6 +44038,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -44480,6 +44637,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45090,6 +45248,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45715,6 +45874,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -46286,6 +46446,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -46914,6 +47075,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -47512,6 +47674,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48098,6 +48261,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48693,6 +48857,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49306,6 +49471,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49880,6 +50046,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -50424,6 +50591,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -50765,6 +50933,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMW2Base",
                   "Children": [
                     {
@@ -50789,7 +50959,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -51011,6 +51181,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51439,6 +51610,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KatumaniBase",
                   "Children": [
                     {
@@ -51463,7 +51636,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -51721,6 +51894,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -52458,6 +52632,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -53017,6 +53192,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -53354,6 +53530,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KibokoBase",
                   "Children": [
                     {
@@ -53378,7 +53556,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\KIBOKO.MET",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -53636,6 +53814,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -54106,10 +54285,12 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_89_m1g5n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_89.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -54388,6 +54569,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -55031,10 +55213,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Early_m1g6n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_90_Early.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -55313,6 +55497,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -55992,10 +56177,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Late_m1g7n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_90_Late.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -56274,6 +56461,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -56983,10 +57171,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_91_m1g8n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_91.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -57265,6 +57455,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -58003,7 +58194,7 @@
                           "Name": "Year1982",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gains82IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -58030,7 +58221,7 @@
                           "Name": "Year1983",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gains83IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -58056,6 +58247,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GainsBase",
                   "Children": [
                     {
@@ -58080,7 +58273,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Gains82IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -58338,6 +58531,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -58867,7 +59061,7 @@
                           "Name": "Year1977Population6",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy776IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -59117,6 +59311,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -59400,7 +59595,7 @@
                           "Name": "Year1977Population9",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy779IB.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
@@ -59650,6 +59845,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -59933,7 +60129,7 @@
                           "Name": "Year1978Population6",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\talah78.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -60163,6 +60359,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60416,7 +60613,7 @@
                           "Name": "Year1978Population9",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy789IB.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
@@ -60646,6 +60843,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60896,6 +61094,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "QuincyBase",
                   "Children": [
                     {
@@ -60920,7 +61120,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Quincy776IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -61178,6 +61378,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -61714,7 +61915,7 @@
                           "Name": "Year1982",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct82IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61741,7 +61942,7 @@
                           "Name": "Year1983",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct83IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61768,7 +61969,7 @@
                           "Name": "Year1984",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct84IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61795,7 +61996,7 @@
                           "Name": "Year1985",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct85IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61822,7 +62023,7 @@
                           "Name": "Year1986",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct86IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61848,6 +62049,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GjunctBase",
                   "Children": [
                     {
@@ -61872,7 +62075,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Gjunct82IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -62130,6 +62333,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -62641,6 +62845,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Champ83",
               "Children": [
                 {
@@ -62665,7 +62871,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Champ83IB.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -62893,6 +63099,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -64080,6 +64287,7 @@
           "FieldNameUsedForMatch": "SimulationID",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [
             {
