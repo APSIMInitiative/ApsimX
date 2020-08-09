@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 110; } }
+        public static int LatestVersion { get { return 111; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2449,11 +2449,22 @@
         }
 
         /// <summary>
-        /// Modify manager scripts to use the new generic model locator API.
+        /// Add canopy width Function.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion110(JObject root, string fileName)
+        {
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Root"))
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "RootDepthStressFactor", "1");
+        }
+
+        /// <summary>
+        /// Modify manager scripts to use the new generic model locator API.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion111(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {

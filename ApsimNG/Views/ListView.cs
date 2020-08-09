@@ -407,9 +407,7 @@
         /// <summary>the sort column.</summary>
         private void SetTreeSortModel()
         {
-            if (sortColumn == null)
-                tree.Model = null;
-            else
+            if (sortColumn != null)
             {
                 var sortColumnIndex = columns.FindIndex(c => c.Title == sortColumn);
                 if (sortColumnIndex != -1)

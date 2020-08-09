@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils.Arbitrator
 {
     using System;
+    using System.Linq;
     using APSIM.Shared.Utilities;
     using Core;
     using Models.Interfaces;
@@ -32,10 +33,10 @@
         public double[] NH4N;
 
         /// <summary>Gets the sum of 'Water' (mm)</summary>
-        public double TotalWater { get { return MathUtilities.Sum(Water); } }
+        public double TotalWater { get { return Water.Sum(); } }
 
         /// <summary>Gets the sum of 'NO3N' (mm)</summary>
-        public double TotalNO3N { get { return MathUtilities.Sum(NO3N); } }
+        public double TotalNO3N { get { return NO3N.Sum(); } }
 
         /// <summary>
         /// Constructor

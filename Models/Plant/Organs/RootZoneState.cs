@@ -253,11 +253,7 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = soil.LayerIndexOfDepth(Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-
-            //sorghum calc
-            var rootDepthWaterStress = 1.0;
-            if (root.RootDepthStressFactor != null)
-                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+            var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
