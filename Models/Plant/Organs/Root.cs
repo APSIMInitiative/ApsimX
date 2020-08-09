@@ -888,21 +888,9 @@
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
 
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxNUptakeRate = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction NSupplyFraction = null;
-
         /// <summary>Used to calc maximim diffusion rate</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction DltThermalTime = null;
-
-        /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxDiffusion = null;
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
