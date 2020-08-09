@@ -69,7 +69,7 @@ namespace Models.Soils.Nutrients
 
             for (int i = 0; i < destinationNames.Length; i++)
             {
-                NutrientPool destination = Apsim.Find(this, destinationNames[i]) as NutrientPool;
+                NutrientPool destination = FindInScope<NutrientPool>(destinationNames[i]);
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + destinationNames[i]);
                 destinations[i] = destination;
@@ -177,7 +177,7 @@ namespace Models.Soils.Nutrients
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
@@ -198,7 +198,7 @@ namespace Models.Soils.Nutrients
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 // write remaining children
-                foreach (IModel memo in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel memo in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
             }

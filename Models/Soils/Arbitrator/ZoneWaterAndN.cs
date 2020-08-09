@@ -78,12 +78,12 @@
         /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
-            NO3Solute = Apsim.Find(soilInZone, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(soilInZone, "NH4") as ISolute;
-            var PlantAvailableNO3Solute = Apsim.Find(soilInZone, "PlantAvailableNO3") as ISolute;
+            NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
+            NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
+            var PlantAvailableNO3Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNO3");
             if (PlantAvailableNO3Solute != null)
                 NO3Solute = PlantAvailableNO3Solute;
-            var PlantAvailableNH4Solute = Apsim.Find(soilInZone, "PlantAvailableNH4") as ISolute;
+            var PlantAvailableNH4Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNH4");
             if (PlantAvailableNH4Solute != null)
                 NH4Solute = PlantAvailableNH4Solute;
         }

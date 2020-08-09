@@ -48,7 +48,7 @@ namespace Models.Functions
             double XValue = 0;
             try
             {
-                object v = Apsim.Get(this, XProperty);
+                object v = this.FindByPath(XProperty)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array && arrayIndex > -1)

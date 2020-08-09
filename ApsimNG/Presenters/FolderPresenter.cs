@@ -28,7 +28,7 @@
 
             List<GraphView> views = new List<GraphView>();
 
-            foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
+            foreach (Graph graph in folder.FindAllChildren<Graph>())
             {
                 if (graph.Enabled)
                 {

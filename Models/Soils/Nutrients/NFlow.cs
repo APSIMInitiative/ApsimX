@@ -67,8 +67,8 @@ namespace Models.Soils.Nutrients
         {
             if (sourceSolute == null)
             {
-                sourceSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == Parent.Name) as ISolute;
-                destinationSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == destinationName) as ISolute;
+                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                destinationSolute = FindInScope<ISolute>(destinationName);
             }
 
             double[] source = sourceSolute.kgha;

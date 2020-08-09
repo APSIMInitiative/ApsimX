@@ -174,7 +174,7 @@ namespace Models.PMF.OilPalm
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
                     string name = cultivar.Name;
-                    List<IModel> memos = Apsim.Children(cultivar, typeof(Memo));
+                    IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
                     foreach (IModel memo in memos)
                     {
                         name += '|' + ((Memo)memo).Text;
@@ -198,7 +198,7 @@ namespace Models.PMF.OilPalm
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in Apsim.Children(this, typeof(Cultivar)))
+                foreach (Model model in this.FindAllChildren<Cultivar>())
                 {
                     cultivars.Add(model as Cultivar);
                 }

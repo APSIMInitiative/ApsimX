@@ -5,6 +5,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
     using static Models.LifeCycle.LifeCyclePhase;
 
@@ -48,13 +49,7 @@
         {
             get
             {
-                List<IModel> phases = Apsim.Children(this, typeof(LifeCyclePhase));
-                List<string> names = new List<string>();
-                names.Add("");
-                foreach (IModel p in phases)
-                    names.Add(p.Name);
-
-                return names.ToArray();
+                return FindAllChildren<LifeCyclePhase>().Select(p => p.Name).ToArray();
             }
         }
 
@@ -80,7 +75,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             LifeCyclePhases = new List<LifeCyclePhase>();
-            foreach (LifeCyclePhase stage in Apsim.Children(this, typeof(LifeCyclePhase)))
+            foreach (LifeCyclePhase stage in this.FindAllChildren<LifeCyclePhase>())
             {
                 LifeCyclePhases.Add(stage);
             }
@@ -117,9 +112,9 @@
         /// <param name="InfestationInfo"></param>
         public void Infest(SourceInfo InfestationInfo)
         {
-            LifeCyclePhase InfestingPhase = Apsim.Child(this, InfestationInfo.LifeCyclePhase) as LifeCyclePhase;
+            LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
             InfestingPhase.NewCohort(InfestationInfo);
-            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + Apsim.FullPath(this) + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
         }
     }
 }

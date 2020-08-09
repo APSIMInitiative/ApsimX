@@ -342,7 +342,7 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this.Name
             };
-            grazeFoodStoreFertilityLimiter = Apsim.Children(this, typeof(GrazeFoodStoreFertilityLimiter)).FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
+            grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>

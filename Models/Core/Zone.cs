@@ -36,7 +36,7 @@
 
         /// <summary>Return a list of plant models.</summary>
         [XmlIgnore]
-        public List<IPlant> Plants { get { return Apsim.Children(this, typeof(IPlant)).Cast<IPlant>().ToList(); } }
+        public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
         public int Index {  get { return Parent.Children.IndexOf(this); } }
@@ -76,23 +76,6 @@
             Locator().Set(namePath, this, value);
         }
 
-
-        /// <summary>Gets the locater model for the specified model.</summary>
-        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        public Locater Locator()
-        {
-            var simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            if (simulation == null)
-            {
-                // Simulation can be null if this model is not under a simulation e.g. DataStore.
-                return new Locater();
-            }
-            else
-            {
-                return simulation.Locater;
-            }
-        }
-
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -115,7 +98,7 @@
             Zone[] subPaddocks = Children.OfType<Zone>().ToArray();
             double totalSubzoneArea = subPaddocks.Sum(z => z.Area);
             if (totalSubzoneArea > Area)
-                throw new Exception($"Error in zone {Apsim.FullPath(this)}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
+                throw new Exception($"Error in zone {this.FullPath}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
         }
 
         /// <summary>

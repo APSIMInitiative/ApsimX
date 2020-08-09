@@ -153,11 +153,11 @@ namespace Models.PMF.Organs
             this.remobilisationCost = remobCost;
 
             Clear();
-            Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
+            Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = Apsim.Find(zone, "NO3") as ISolute;
-            NH4 = Apsim.Find(zone, "NH4") as ISolute;
+            NO3 = zone.FindInScope("NO3") as ISolute;
+            NH4 = zone.FindInScope("NH4") as ISolute;
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }

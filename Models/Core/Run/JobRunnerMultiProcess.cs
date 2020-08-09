@@ -239,10 +239,10 @@
                     job.JobSentToClient = Apsim.Clone(m) as IRunnable;
                 if (job.RunnableJob is IModel model)
                 {
-                    IModel replacements = Apsim.Find(model, typeof(Replacements));
+                    IModel replacements = model.FindInScope<Replacements>();
                     if (replacements != null)
                         (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(replacements));
-                    job.DataStore = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                    job.DataStore = model.FindInScope<IDataStore>();
                     if (job.DataStore != null)
                         (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(job.DataStore as IModel));
                 }

@@ -46,7 +46,7 @@ namespace Models.PMF.Phen
         {
             Target = CAMP.VrnSatThreshold;
             ProgressThroughPhase = CAMP.MethVrn1;
-            double HS = (Apsim.Find(phenology, "HaunStage") as IFunction).Value();
+            double HS = (phenology.FindInScope("HaunStage") as IFunction).Value();
             double RelativeBasicVegetative = Math.Max(1, HS / 1.1);
             double RelativeVrn1Expression = Math.Max(1, ProgressThroughPhase / Target);
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);

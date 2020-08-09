@@ -39,7 +39,7 @@ namespace Models.Utilities
             if (values.Count > numberOfDays)
                 values.RemoveAt(0);
 
-            double value = (double) Apsim.Get(parentModel, variableName);
+            double value = (double) parentModel.FindByPath(variableName)?.Value;
 
             values.Add(value);
         }

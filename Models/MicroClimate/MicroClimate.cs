@@ -227,7 +227,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             microClimatesZones = new List<MicroClimateZone>();
-            foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
+            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
                 microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
                 microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
