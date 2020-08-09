@@ -146,6 +146,10 @@
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
 
+        /// <summary>Link to the KNO3 link</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction RootDepthStressFactor = null;
+
         /// <summary>The maximum N concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
@@ -883,9 +887,6 @@
 
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
-        /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction RootDepthStressFactor = null;
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
