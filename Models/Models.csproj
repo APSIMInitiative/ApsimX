@@ -226,7 +226,7 @@
     <Compile Include="CLEM\FileSQLitePasture.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
-    <Compile Include="CLEM\IFileGRASP.cs" />
+    <Compile Include="CLEM\IFilePasture.cs" />
     <Compile Include="CLEM\Reporting\ReportActivitiesPerformed.cs" />
     <Compile Include="CLEM\Reporting\ReportPasturePoolDetails.cs" />
     <Compile Include="CLEM\Reporting\ReportResourceBalances.cs" />
@@ -408,7 +408,6 @@
     <Compile Include="IConceptionModel.cs" />
     <Compile Include="Interfaces\IModelAsTable.cs" />
     <Compile Include="Interfaces\IVisualiseAsDirectedGraph.cs" />
-    <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />

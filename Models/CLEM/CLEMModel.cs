@@ -80,7 +80,14 @@ namespace Models.CLEM
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         if(dv != null)
                         {
-                            property.SetValue(this, dv.Value, null);
+                            if (property.PropertyType.IsEnum)
+                            {
+                                property.SetValue(this, Enum.Parse(property.PropertyType, dv.Value.ToString()));
+                            }
+                            else
+                            {
+                                property.SetValue(this, dv.Value, null);
+                            }
                         }
 
                     }

@@ -95,7 +95,7 @@ namespace Models.CLEM.Reporting
                                 for (int j = 0; j <= 12; j++)
                                 {
 //                                    variableNames.Add(splitName[0] + "-" + j.ToString() + "-" + splitName[1]);
-                                    variableNames.Add("[Resources].GrazeFoodStore."+splitName[0] + ".Pool(" + j.ToString() + ")." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
+                                    variableNames.Add("[Resources].GrazeFoodStore."+splitName[0] + ".Pool(" + j.ToString() + ", true)." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
                                 }
                                 if (splitName[1] == "Amount")
                                 {

@@ -44,7 +44,7 @@ namespace Models.PMF.Arbitrator
                             double Respiration = BiomassFixed * RelativeSupply * Organs[i].NFixationCost;  //Calculalte how much respirtion is associated with fixation
                             DM.Respiration[i] = Respiration; // allocate it to the organ
                         }
-                        DM.TotalRespiration = MathUtilities.Sum(DM.Respiration);
+                        DM.TotalRespiration = DM.Respiration.Sum();
                     }
 
                 // Work out the amount of biomass (if any) lost due to the cost of N fixation
