@@ -73,10 +73,10 @@ namespace Models.PMF.Phen
             CultivarRateParams Params = new CultivarRateParams();
 
             // Get some other parameters from phenology
-            double maxLAR = Convert.ToDouble(Apsim.Get(phenology, "MaxLAR.FixedValue"), CultureInfo.InvariantCulture);
-            double minLAR = Convert.ToDouble(Apsim.Get(phenology, "MinLAR.FixedValue"), CultureInfo.InvariantCulture);
-            double PTQhf = Convert.ToDouble(Apsim.Get(phenology, "PTQhf.FixedValue"), CultureInfo.InvariantCulture);
-            LARPTQmodel LARmodel = Apsim.Find(phenology, "LARPTQmodel") as LARPTQmodel;
+            double maxLAR = Convert.ToDouble(phenology.FindChild<IFunction>("MaxLAR.FixedValue"), CultureInfo.InvariantCulture);
+            double minLAR = Convert.ToDouble(phenology.FindChild<IFunction>("MinLAR.FixedValue"), CultureInfo.InvariantCulture);
+            double PTQhf = Convert.ToDouble(phenology.FindChild<IFunction>("PTQhf.FixedValue"), CultureInfo.InvariantCulture);
+            LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
 
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Haun Stage)

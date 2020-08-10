@@ -56,7 +56,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
-            lARPTQmodel = Apsim.Find(phenology, "LARPTQmodel") as LARPTQmodel;
+            lARPTQmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
         }
     }
 }
