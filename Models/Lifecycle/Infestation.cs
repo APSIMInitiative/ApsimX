@@ -94,10 +94,9 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            InfestingOrganisum = Apsim.Find(this.Parent, InfestingOrganisumName) as LifeCycle;
+            InfestingOrganisum = this.Parent.FindInScope(InfestingOrganisumName) as LifeCycle;
             if (InfestingOrganisum == null)
-                throw new Exception(Apsim.FullPath(this) + " Could not find an infesting organisum called " + InfestingOrganisumName);
-            
+                throw new Exception(FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
         }
 
         /// <summary>Call infest() events at specified time steps</summary>

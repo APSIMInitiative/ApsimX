@@ -52,7 +52,7 @@
             if (!(model is IModel))
                 return result;
 
-            List<IModel> children = Apsim.Children(model as IModel, typeof(OrganBiomassRemovalType));
+            IEnumerable<OrganBiomassRemovalType> children = (model as IModel).FindAllChildren<OrganBiomassRemovalType>();
             if (children == null)
                 return result;
 

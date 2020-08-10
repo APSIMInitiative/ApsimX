@@ -1,6 +1,7 @@
 ﻿namespace UnitTests.Weather
 {
     using Models;
+    using Models.Climate;
     using Models.Core;
     using NUnit.Framework;
     using System;

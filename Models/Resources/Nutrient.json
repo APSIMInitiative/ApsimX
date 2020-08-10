@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 108,
+  "Version": 111,
   "Name": "Simulations",
   "Children": [
     {
@@ -1031,36 +1031,45 @@
                   "Name": "Rate",
                   "Children": [
                     {
-                      "$type": "Models.Functions.StringComparisonFunction, Models",
-                      "PropertyName": "[Soil].SoilType",
-                      "StringValue": "sand",
+                      "$type": "Models.Functions.CalculateOnceFunction, Models",
                       "Name": "PotentialRate",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0324,
-                          "Units": null,
-                          "Name": "TrueValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0081,
-                          "Units": null,
-                          "Name": "FalseValue",
-                          "Children": [],
+                          "$type": "Models.Functions.StringComparisonFunction, Models",
+                          "PropertyName": "[Soil].SoilType",
+                          "StringValue": "sand",
+                          "Name": "ConstantValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0324,
+                              "Units": null,
+                              "Name": "TrueValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0081,
+                              "Units": null,
+                              "Name": "FalseValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false

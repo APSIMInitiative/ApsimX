@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Models.Climate
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -112,12 +112,12 @@
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
                 {
-                    Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                    Simulations simulations = FindAncestor<Simulations>();
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
                     else
@@ -126,7 +126,7 @@
             }
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
                     this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else

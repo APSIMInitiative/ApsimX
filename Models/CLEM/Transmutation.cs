@@ -432,7 +432,7 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // get pricing if available
-            IResourceType parentResource = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
             if (parentResource != null)
             {
                 pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
@@ -467,8 +467,8 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
-            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            var w = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            bool multiPrice = (w as IModel).FindAllChildren<ResourcePricing>().Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price != null)
             {

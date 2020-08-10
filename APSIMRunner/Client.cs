@@ -38,7 +38,7 @@ namespace APSIMRunner
             pipeWrite = writer;
 
             timer = new System.Timers.Timer(1000);
-            timer.AutoReset = true;
+            timer.AutoReset = false;
             timer.Elapsed += UpdateProgress;
         }
 
@@ -52,6 +52,7 @@ namespace APSIMRunner
                     PipeUtilities.SendObjectToPipe(pipeWrite, progress);
                 }
             }
+            timer.Start();
         }
 
         public void Run()
@@ -83,11 +84,11 @@ namespace APSIMRunner
                         // We don't need to recompile any manager scripts and a simulation
                         // should be ready to run at this point following a binary 
                         // deserialisation.
-                        Apsim.ParentAllChildren(sim);
+                        sim.ParentAllDescendants();
                     }
                     else if (runnable is IModel model)
                     {
-                        IDataStore oldStorage = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                        IDataStore oldStorage = model.FindInScope<IDataStore>();
                         if (oldStorage != null)
                             storage = new StorageViaSockets(oldStorage.FileName);
 
@@ -96,7 +97,7 @@ namespace APSIMRunner
                         model.Children.RemoveAll(m => m is DataStore);
                         model.Children.Add(storage);
 
-                        Apsim.ParentAllChildren(model);
+                        model.ParentAllDescendants();
                     }
 
                     // Initiate progress updates.
@@ -116,15 +117,16 @@ namespace APSIMRunner
                 }
 
                 // Signal end of job.
-                PipeUtilities.SendObjectToPipe(pipeWrite, new JobOutput
+                lock (timerLock)
                 {
-                    ErrorMessage = error,
-                    ReportData = storage.reportDataThatNeedsToBeWritten,
-                    DataTables = storage.dataTablesThatNeedToBeWritten
-                });
-
-                pipeWrite.WaitForPipeDrain();
-
+                    PipeUtilities.SendObjectToPipe(pipeWrite, new JobOutput
+                    {
+                        ErrorMessage = error,
+                        ReportData = storage.reportDataThatNeedsToBeWritten,
+                        DataTables = storage.dataTablesThatNeedToBeWritten
+                    });
+                    pipeWrite.WaitForPipeDrain();
+                }
             }
         }
     }

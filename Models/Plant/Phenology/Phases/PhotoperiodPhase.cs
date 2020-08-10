@@ -101,7 +101,7 @@ namespace Models.PMF.Phen
                     "The base model uses a critical photoperiod of "+CricialPhotoperiod.ToString()+ " hours ("+PPDirection.ToString()+").", indent));
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
         }

@@ -19,7 +19,7 @@ namespace UnitTests
         public void TestDisabledSummary()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            Summary summary = Apsim.Find(sims, typeof(Summary)) as Summary;
+            Summary summary = sims.FindInScope<Summary>();
             summary.CaptureErrors = false;
             summary.CaptureWarnings = false;
             summary.CaptureSummaryText = false;

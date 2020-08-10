@@ -77,8 +77,8 @@
         /// <summary>Total N in each soil layer</summary>
         double[] TotalN { get; }
 
-        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer</summary>
-        double[] FOMCNR { get; }
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer</summary>
+        double FOMCNR(int layer);
 
         /// <summary>
         /// Calculate actual decomposition

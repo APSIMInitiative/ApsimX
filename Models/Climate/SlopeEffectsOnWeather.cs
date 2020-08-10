@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace Models.Climate
 {
     using Models.Core;
     using System;
