@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 100,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -68,7 +68,7 @@
             "[Wheat].StemPlusSpike.Wt",
             "[Wheat].StemPlusSpike.N",
             "[Wheat].SowingData.Cultivar",
-            "[Wheat].Structure.HaunStage",
+            "[Wheat].Phenology.HaunStage",
             "[Wheat].Structure.Height",
             "[Wheat].Structure.LeafTipsAppeared",
             "[Wheat].Structure.FinalLeafNumber",
@@ -1435,6 +1435,45 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "TerminalSpikelet",
+                  "ReSetEvent": "never",
+                  "Name": "TerminalSpikeletDAS",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                      "Name": "memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "FlagLeaf",
                   "ReSetEvent": "never",
                   "Name": "FlagLeafDAS",
@@ -1442,6 +1481,45 @@
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                      "Name": "memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "Heading",
+                  "ReSetEvent": "never",
+                  "Name": "HeadingDAS",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nA function is used to provide heading date as days after sowing(DAS).\n",
                       "Name": "memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2249,6 +2327,15 @@
                           "FixedValue": 2.285,
                           "Units": null,
                           "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FT",
+                          "Name": "RUE Temp factor",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -3636,6 +3723,8 @@
               "Gsmax350": 0.011,
               "R50": 150.0,
               "LAI": 0.0,
+              "Depth": 0.0,
+              "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -5260,6 +5349,25 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "WidthFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Height",
+                  "Name": "DepthFunction",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7707,13 +7815,21 @@
                         "[Phenology].MinimumLeafNumber.FixedValue = 6",
                         "[Phenology].VrnSensitivity.FixedValue = 1",
                         "[Phenology].PpSensitivity.FixedValue = 4",
-                        "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                        "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85"
                       ],
                       "Name": "Gregory",
                       "Children": [
                         {
                           "$type": "Models.Core.Alias, Models",
                           "Name": "Lancer",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Suneca",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -7870,14 +7986,6 @@
                         {
                           "$type": "Models.Core.Alias, Models",
                           "Name": "Silverstar",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
-                          "Name": "Suneca",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -8219,6 +8327,21 @@
                         "[Phenology].VrnSensitivity.FixedValue = 0",
                         "[Phenology].PpSensitivity.FixedValue = 4",
                         "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                        "[Structure].Phyllochron.BasePhyllochron.FixedValue = 70"
+                      ],
+                      "Name": "Wills",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                        "[Phenology].VrnSensitivity.FixedValue = 0",
+                        "[Phenology].PpSensitivity.FixedValue = 4",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
                         "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
                       ],
                       "Name": "Mercury",
@@ -8374,16 +8497,36 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
-                          "Name": "Wills",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                        "[Phenology].VrnSensitivity.FixedValue = 0",
+                        "[Phenology].PpSensitivity.FixedValue = 5",
+                        "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                      ],
+                      "Name": "Batavia",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                        "[Phenology].VrnSensitivity.FixedValue = 0",
+                        "[Phenology].PpSensitivity.FixedValue = 5",
+                        "[Structure].Phyllochron.BasePhyllochron.FixedValue =80"
+                      ],
+                      "Name": "Egret",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -8586,6 +8729,174 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Bennett",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Adv08_0008",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW002",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW003",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW005",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW011",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW018",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW021",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW027",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW029",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW077",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW087",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW102",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "CSIROW105",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Emu_Rock",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Kittyhawk",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Nighthawk",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Manning",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Sunbee",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Sunlamb",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Illabo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -8740,6 +9051,20 @@
                         "[Phenology].MinimumLeafNumber.FixedValue = 8",
                         "[Phenology].VrnSensitivity.FixedValue = 0",
                         "[Phenology].PpSensitivity.FixedValue = 4",
+                        "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                      ],
+                      "Name": "Eaglehawk",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                        "[Phenology].VrnSensitivity.FixedValue = 0",
+                        "[Phenology].PpSensitivity.FixedValue = 4",
                         "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                       ],
                       "Name": "Wedgetail",
@@ -8771,14 +9096,6 @@
                         {
                           "$type": "Models.Core.Alias, Models",
                           "Name": "Wylah",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
-                          "Name": "Eaglehawk",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -9229,7 +9546,7 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Sensitivity.CroptimizR, Models",
+      "$type": "Models.Optimisation.CroptimizR, Models",
       "Parameters": [
         {
           "$type": "Models.Sensitivity.Parameter, Models",
@@ -9249,9 +9566,14 @@
       "PredictedTableName": "DailyReport",
       "ObservedTableName": "Observed",
       "VariableName": "Wheat.Leaf.LAI",
-      "NoRepetitions": 3,
-      "Tolerance": 1E-05,
-      "MaxEval": 2,
+      "OutputPath": null,
+      "OptimizationMethod": {
+        "$type": "Models.Optimisation.Simplex, Models",
+        "CriticalFunction": 0,
+        "NoRepetitions": 3,
+        "Tolerance": 1E-05,
+        "MaxEval": 2
+      },
       "Name": "CroptimizR",
       "Children": [
         {
@@ -9390,6 +9712,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "RowSpace",
                   "Children": [
                     {
@@ -9982,7 +10305,7 @@
                             "[Wheat].StemPlusSpike.Wt",
                             "[Wheat].StemPlusSpike.N",
                             "[Wheat].SowingData.Cultivar",
-                            "[Wheat].Structure.HaunStage",
+                            "[Wheat].Phenology.HaunStage",
                             "[Wheat].Structure.Height",
                             "[Wheat].Structure.LeafTipsAppeared",
                             "[Wheat].Structure.FinalLeafNumber",
@@ -10020,7 +10343,7 @@
                             "[Wheat].AboveGround.N",
                             "[Wheat].Grain.Protein",
                             "[Wheat].Grain.Size",
-                            "[Wheat].Structure.HaunStageTerminalSpikelet",
+                            "[Wheat].Phenology.HaunStageTerminalSpikelet",
                             "[Wheat].Structure.FinalLeafNumber",
                             "[Wheat].Structure.MainStemPopn",
                             "[Wheat].SowingData.Cultivar",
@@ -10096,7 +10419,7 @@
                       "LineThickness": 0,
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Structure.HaunStage",
+                      "YFieldName": "Wheat.Phenology.HaunStage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": false,
@@ -10125,7 +10448,7 @@
                       "LineThickness": 0,
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Structure.HaunStage",
+                      "YFieldName": "Wheat.Phenology.HaunStage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10643,6 +10966,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "APS6Base",
                   "Children": [
                     {

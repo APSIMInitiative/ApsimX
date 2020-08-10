@@ -5,6 +5,7 @@ using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -41,9 +42,9 @@ namespace Models.Functions
             get
             {
                 IFunction value;
-                List<IModel> ChildFunctions = Apsim.Children(this, typeof(IFunction));
-                if (ChildFunctions.Count == 1)
-                    value = ChildFunctions[0] as IFunction;
+                IEnumerable<IFunction> ChildFunctions = FindAllChildren<IFunction>();
+                if (ChildFunctions.Count() == 1)
+                    value = ChildFunctions.First();
                 else
                     throw new ApsimXException(this, "Moving average function " + this.Name + " must only have one child node.");
                 return value;
@@ -113,11 +114,11 @@ namespace Models.Functions
                 // add a heading.
                 Name = this.Name;
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                if (Apsim.Children(this, typeof(IFunction)).Count ==1)
+                if (this.FindAllChildren<IFunction>().Count() ==1)
                     tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving average of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

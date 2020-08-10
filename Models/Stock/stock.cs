@@ -5,6 +5,7 @@
     using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using StdUnits;
     using System;
@@ -92,19 +93,6 @@
     /// * To set the tag value of an animal group, use the **Tag** method.
     /// * To determine the tag value of an animal group, use the **TagNo** variable.
     /// 
-    /// **Priority Score**
-    /// 
-    /// Finally, each animal group has a user-assigned *priority score* that takes an integer value.
-    /// Priority scores are used to control the operation of the **Draft** method. Positive values for
-    /// the priority score denote the order in which animals should be moved to the available
-    /// paddocks (with a score of 1 denoting that the animals should be moved to the highest-
-    /// quality pasture). Animal groups with the same priority score are placed in the same
-    /// paddock by a draft event. Animals with a zero or negative priority score are not
-    /// drafted.
-    /// 
-    /// * To set the priority score of an animal group, use the prioritise event.
-    /// * To determine the priority score of an animal group, use the priority variable. 
-    /// 
     ///  **Merging groups of similar animals**
     ///  
     /// Animal groups that become sufficiently similar are merged into a single group.
@@ -121,9 +109,6 @@
     /// * If young exist, their reproductive status must be the same
     /// * Implants (hormone implants)
     /// * Mean age (if the animals are less than one year old )
-    /// 
-    /// 
-    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.HTMLView")]
@@ -200,7 +185,6 @@
 
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
-            this.RandSeed = 0;
         }
 
         #region Initialisation properties ====================================================
@@ -3611,9 +3595,10 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
-            var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
+            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 
@@ -3765,16 +3750,14 @@
         }
 
         /// <summary>
-        /// Remove the specified number of animals (not including unweaned lambs/calves)
-        /// Will iterate through the groups specified, removing as many animals from each
-        /// until the specified number has been reached. If groups is null, will iterate
-        /// through all animal groups.
+        /// Remove the specified number of animals (not including unweaned lambs/calves).
         /// </summary>
         /// <param name="number">The number of animals to remove.</param>
         /// <param name="group">The animal group to remove animals from. Null denotes all groups.</param>
-        public void Sell(int number, AnimalGroup group = null)
+        /// <returns>The number of animals sold.</returns>
+        public int Sell(int number, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, $"Selling {number} animals");
+            int numSold = 0;
             if (group == null)
             {
                 foreach (var g in AnimalGroups)
@@ -3782,10 +3765,39 @@
                     int numToSellFromThisGroup = Math.Min(number, g.NoAnimals);
                     g.NoAnimals -= numToSellFromThisGroup;
                     number -= numToSellFromThisGroup;
+                    numSold += numToSellFromThisGroup;
                 }
             }
             else
-                group.NoAnimals -= Math.Min(number, group.NoAnimals);
+            {
+                numSold = Math.Min(number, group.NoAnimals);
+                group.NoAnimals -= numSold;
+            }
+            outputSummary.WriteMessage(this, $"Sold {number} animals");
+            return numSold;
+        }
+
+        /// <summary>
+        /// Remove the specified number of animals (not including unweaned lambs/calves)
+        /// Will iterate through the groups specified, removing as many animals from each
+        /// until the specified number has been reached. If groups is null, will iterate
+        /// through all animal groups.
+        /// </summary>
+        /// <param name="number">The number of animals to remove.</param>
+        /// <param name="groups">The animal group to remove animals from. Null denotes all groups.</param>
+        /// <returns>The number of animals sold.</returns>
+        public int Sell(int number, IEnumerable<AnimalGroup> groups)
+        {
+            int numSold = 0;
+            foreach (var g in groups)
+            {
+                int numToSellFromThisGroup = Math.Min(number, g.NoAnimals);
+                g.NoAnimals -= numToSellFromThisGroup;
+                number -= numToSellFromThisGroup;
+                numSold += numToSellFromThisGroup;
+            }
+            outputSummary.WriteMessage(this, $"Sold {numSold} animals");
+            return numSold;
         }
 
         /// <summary>
@@ -3947,7 +3959,7 @@
         /// <param name="weight">Weight to split on (kg/animal)</param>
         /// <param name="group">The animal group to split.</param>
         /// <returns>The new animal groups that were created.</returns>
-        public IEnumerable<AnimalGroup> SplitByWeight(int weight, AnimalGroup group = null)
+        public IEnumerable<AnimalGroup> SplitByWeight(double weight, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, "Split animals by weight.");
             if (group == null)

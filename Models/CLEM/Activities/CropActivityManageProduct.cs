@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Crop file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop file required")]
-        [Models.Core.Display(Type = DisplayType.CLEMCropFileName)]
+        [Models.Core.Display(Type = DisplayType.CLEMCropFileReader)]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
         /// Store to put crop growth into
         /// </summary>
         [Description("Store for crop product")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
         [Required]
         public string StoreItemName { get; set; }
 
@@ -175,7 +175,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = Simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
             {
                 throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
+            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
 
             // Retrieve harvest data from the forage file for the entire run. 
             // only get entries where a harvest happened (Amtkg > 0)
@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
         private ActivityCutAndCarryLimiter LocateCutAndCarryLimiter(IModel model)
         {
             // search children
-            ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
+            ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
                 if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
@@ -598,14 +598,14 @@ namespace Models.CLEM.Activities
             // if first child of mixed 
             if(this.Parent.GetType() == typeof(CropActivityManageProduct))
             {
-                if (Apsim.Children(this.Parent, typeof(CropActivityManageProduct)).FirstOrDefault().Name == this.Name)
+                if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
                 {
                     // close off the parent item so it displays
                     html += "\n</div>";
                 }
             }
 
-            bool mixed = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() >= 1;
+            bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
             if (mixed)
             {
                 html += "\n<div class=\"cropmixedlabel\">Mixed crop</div>";

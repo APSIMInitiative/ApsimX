@@ -114,7 +114,7 @@ namespace Models
         /// </summary>
         public override void OnCreated()
         {
-            if (Apsim.Child(this, typeof(Manager)) == null)
+            if (this.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
                 script.Name = "Config";
@@ -197,7 +197,7 @@ namespace Models
         {
             get
             {
-                Manager manager = Apsim.Child(this, typeof(Manager)) as Manager;
+                Manager manager = this.FindChild<Manager>();
                 return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
             }
         }

@@ -18,13 +18,14 @@
     using System.Globalization;
     using Models.Core.Apsim710File;
     using Models.WaterModel;
+    using Models.Climate;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
     /// This needs a bit more polishing to do a better job of guiding the user, and of informing them when
     /// things to wrong.
     /// </summary>
-    class SoilDownloadDialog
+    public sealed class SoilDownloadDialog : IDisposable
     {
 
         // Gtk Widgets
@@ -342,7 +343,7 @@
             dialog1.Parent = view.MainWidget.Toplevel;
             dialog1.WindowPosition = WindowPosition.CenterOnParent;
             // Attempt to find an initial latitude and longitude from a Weather model
-            IModel weather = Apsim.Find(dest, typeof(Models.Interfaces.IWeather));
+            IModel weather = dest.FindInScope<Models.Interfaces.IWeather>() as IModel;
             double latitude, longitude;
             if (weather is Weather)
             {
@@ -857,7 +858,7 @@
                     SoilCrop wheat = new SoilCrop();
                     waterNode.Children.Add(wheat);
                     wheat.Name = "WheatSoil";
-                    Apsim.ParentAllChildren(waterNode);
+                    waterNode.ParentAllDescendants();
 
                     Model nh4 = new SoilNitrogenNH4();
                     nh4.Name = "NH4";
@@ -874,7 +875,7 @@
                     Model plantAvailNO3 = new SoilNitrogenPlantAvailableNO3();
                     plantAvailNO3.Name = "PlantAvailableNO3";
                     soilN.Children.Add(plantAvailNO3);
-                    Apsim.ParentAllChildren(soilN);
+                    soilN.ParentAllDescendants();
 
                     newSoil.Children.Add(waterNode);
                     newSoil.Children.Add(soilWater);
@@ -884,7 +885,7 @@
                     newSoil.Children.Add(initialWater);
                     newSoil.Children.Add(initialNitrogen);
                     newSoil.Children.Add(new CERESSoilTemperature());
-                    Apsim.ParentAllChildren(newSoil);
+                    newSoil.ParentAllDescendants();
                     newSoil.OnCreated();
 
                     newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
@@ -1108,6 +1109,11 @@
             {
                 WaitCursor = false;
             }
+        }
+
+        public void Dispose()
+        {
+            soilsView?.Dispose();
         }
 
         private bool waiting = false;

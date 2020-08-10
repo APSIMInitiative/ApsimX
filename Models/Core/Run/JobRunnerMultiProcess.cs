@@ -56,23 +56,28 @@
         /// <summary>Main worker thread.</summary>
         protected override void WorkerThread()
         {
-            // Start a task to fill our queue of jobs to run.
-            jobQueueFillerTask = Task.Run(() => FillJobQueue());
+            try
+            {
+                // Start a task to fill our queue of jobs to run.
+                jobQueueFillerTask = Task.Run(() => FillJobQueue());
 
-            DeleteRunners();
-            CreateRunners();
+                DeleteRunners();
+                CreateRunners();
 
-            AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
+                AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
-            SpinWait.SpinUntil(() => allStopped);
+                SpinWait.SpinUntil(() => allStopped);
 
-            DeleteRunners();
-            runningJobs.Clear();
+                DeleteRunners();
+                runningJobs.Clear();
 
-            ElapsedTime = DateTime.Now - startTime;
-            InvokeAllCompleted();
-
-            completed = true;
+                ElapsedTime = DateTime.Now - startTime;
+                InvokeAllCompleted();
+            }
+            finally
+            {
+                completed = true;
+            }
         }
 
         /// <summary>Create one job runner process for each CPU</summary>
@@ -234,10 +239,10 @@
                     job.JobSentToClient = Apsim.Clone(m) as IRunnable;
                 if (job.RunnableJob is IModel model)
                 {
-                    IModel replacements = Apsim.Find(model, typeof(Replacements));
+                    IModel replacements = model.FindInScope<Replacements>();
                     if (replacements != null)
                         (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(replacements));
-                    job.DataStore = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                    job.DataStore = model.FindInScope<IDataStore>();
                     if (job.DataStore != null)
                         (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(job.DataStore as IModel));
                 }
@@ -318,6 +323,7 @@
         /// </remarks>
         private class DummyJob : IRunnable
         {
+            public string Name { get { return "Dummy Job"; } }
             public IRunnable ActualJob { get; set; }
             public double Progress { get; set; }
 

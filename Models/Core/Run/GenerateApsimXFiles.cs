@@ -27,8 +27,9 @@
         /// <param name="runner">A runner containing a set of simulations.</param>
         /// <param name="path">Path which the files will be saved to.</param>
         /// <param name="progressCallBack">Invoked when the method needs to indicate progress.</param>
+        /// <param name="collectExternalFiles">Collect all external files and store on path?</param>
         /// <returns>null for success or a list of exceptions.</returns>
-        public static List<Exception> Generate(Runner runner, string path, OnProgress progressCallBack)
+        public static List<Exception> Generate(Runner runner, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
             List<Exception> errors = null;
             Directory.CreateDirectory(path);
@@ -51,6 +52,25 @@
                             simulation
                         }
                     };
+
+                    if (collectExternalFiles)
+                    {
+                        // Find all models that reference external files. For each model, copy all the referenced
+                        // files onto our path and then tell the model to remove the paths. The result will be
+                        // a self contained path that has all files needed to run all simulations. Useful
+                        // for running on clusters.
+                        foreach (IReferenceExternalFiles child in simulation.FindAllDescendants<IReferenceExternalFiles>())
+                        {
+                            foreach (var fileName in child.GetReferencedFileNames())
+                            {
+                                string destFileName = Path.Combine(path, Path.GetFileName(fileName));
+                                if (!File.Exists(destFileName))
+                                    File.Copy(fileName, destFileName);
+                            }
+                            child.RemovePathsFromReferencedFileNames();
+                        }
+                    }
+
                     string st = FileFormat.WriteToString(sims);
                     File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
                 }

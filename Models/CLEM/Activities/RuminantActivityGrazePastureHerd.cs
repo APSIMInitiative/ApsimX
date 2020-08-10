@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(RuminantHerd) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(RuminantHerd) })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
 
                             // assumes animals will stop eating at potential intake if they have been feed before grazing.
                             // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
-                            indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
+                            indAmount = Math.Min(ind.PotentialIntake*1.2 - ind.Intake, indAmount);
                             amount += indAmount;
                         }
                     }

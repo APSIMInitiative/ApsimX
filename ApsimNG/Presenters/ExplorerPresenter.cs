@@ -250,31 +250,34 @@
         /// <returns>True if file was saved.</returns>
         public bool Save()
         {
+            // Need to hide the right hand panel because some views may not have saved
+            // their contents until they get a 'Detach' call.
             try
             {
-                // Need to hide the right hand panel because some views may not have saved
-                // their contents until they get a 'Detach' call.
-                this.HideRightHandPanel();
-
-                if (this.ApsimXFile.FileName == null)
-                {
-                    this.SaveAs();
-                }
-
-                if (this.ApsimXFile.FileName != null)
-                {
-                    this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                    return true;
-                }
+                HideRightHandPanel();
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
+                MainPresenter.ShowError(err);
             }
-            finally
+
+            if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                SaveAs();
+
+            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
             {
-                this.ShowRightHandPanel();
+                ApsimXFile.Write(ApsimXFile.FileName);
+                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                return true;
+            }
+
+            try
+            {
+                ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -319,7 +322,7 @@
         /// <param name="nodePath">Node to be selected.</param>
         public void SelectNode(IModel node)
         {
-            SelectNode(Apsim.FullPath(node));
+            SelectNode(node.FullPath);
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
         }
@@ -356,14 +359,14 @@
             this.HideRightHandPanel();
 
             // Get a complete list of all models in this file.
-            List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
+            List<IModel> allModels = this.ApsimXFile.FindAllDescendants().Where(m => !m.IsHidden).ToList();
             allModels.Insert(0, ApsimXFile);
 
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
             if (string.IsNullOrEmpty(view.Tree.SelectedNode))
             {
-                view.Tree.SelectedNode = Apsim.FullPath(allModels[0]);
+                view.Tree.SelectedNode = allModels[0].FullPath;
                 return true;
             }
 
@@ -371,7 +374,7 @@
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (Apsim.FullPath(allModels[i]) == this.view.Tree.SelectedNode)
+                if (allModels[i].FullPath == this.view.Tree.SelectedNode)
                 {
                     index = i;
                     break;
@@ -390,7 +393,7 @@
             }
 
             // Select the next node.
-            this.view.Tree.SelectedNode = Apsim.FullPath(allModels[index + 1]);
+            this.view.Tree.SelectedNode = (allModels[index + 1]).FullPath;
             return true;
         }
 
@@ -503,7 +506,7 @@
         public void Move(string originalPath, IModel toParent, TreeViewNode nodeDescription)
         {
             view.Tree.Delete(originalPath);
-            view.Tree.AddChild(Apsim.FullPath(toParent), nodeDescription);
+            view.Tree.AddChild((toParent).FullPath, nodeDescription);
         }
 
         /// <summary>
@@ -537,7 +540,7 @@
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
             
             // Get the selected model.
-            object selectedModel = Apsim.Get(this.ApsimXFile, nodePath);
+            object selectedModel = this.ApsimXFile.FindByPath(nodePath)?.Value;
 
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
@@ -681,7 +684,7 @@
         {
             if (this.view.Tree.SelectedNode != string.Empty)
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
+                object model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value;
 
                 if (model != null)
                 {
@@ -707,6 +710,12 @@
 
                     else if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                    else
+                    {
+                        var view = new HTMLView(this.view as ViewBase);
+                        var presenter = new DocumentationPresenter();
+                        ShowInRightHandPanel(model, view, presenter);
+                    }
                 }
             }
         }
@@ -784,7 +793,7 @@
         {
             e.Allow = false;
 
-            Model parentModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+            Model parentModel = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
             if (parentModel != null)
             {
                 DragObject dragObject = e.DragObject as DragObject;
@@ -797,7 +806,7 @@
         /// </summary>
         public void DownloadSoil()
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
             if (model != null)
             { 
                 Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
@@ -810,7 +819,7 @@
         /// </summary>
         public void DownloadWeather()
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
@@ -861,8 +870,18 @@
         /// <param name="e">Node arguments</param>
         private void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            try
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+            }
+
+            // If an exception is thrown while loding the view, this
+            // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
 
             Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
@@ -874,7 +893,7 @@
         /// <param name="e">Drag arguments</param>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model obj = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+            Model obj = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
             if (obj != null)
             {
                 string st = FileFormat.WriteToString(obj);
@@ -896,7 +915,7 @@
             try
             {
                 string toParentPath = e.NodePath;
-                Model toParent = Apsim.Get(this.ApsimXFile, toParentPath) as Model;
+                Model toParent = this.ApsimXFile.FindByPath(toParentPath)?.Value as Model;
 
                 DragObject dragObject = e.DragObject as DragObject;
                 if (dragObject != null && toParent != null)
@@ -916,7 +935,7 @@
                     {
                         if (fromParentPath != toParentPath)
                         {
-                            Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
+                            Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
                             if (fromModel != null)
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
@@ -944,7 +963,7 @@
                 {
                     if (this.IsValidName(e.NewName))
                     {
-                        Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+                        Model model = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
@@ -974,7 +993,7 @@
         {
             try
             {
-                Model model = Apsim.Get(ApsimXFile, view.Tree.SelectedNode) as Model;
+                Model model = ApsimXFile.FindByPath(view.Tree.SelectedNode)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {
@@ -998,7 +1017,7 @@
         {
             try
             {
-                Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
+                Model model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {

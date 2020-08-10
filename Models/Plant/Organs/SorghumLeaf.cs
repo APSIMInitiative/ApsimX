@@ -12,6 +12,7 @@ using Models.PMF.Struct;
 using System.Linq;
 using Models.Functions.DemandFunctions;
 using Models.Functions.SupplyFunctions;
+using System.Text;
 
 namespace Models.PMF.Organs
 {
@@ -121,6 +122,12 @@ namespace Models.PMF.Organs
 
         [Link]
         private Phenology phenology = null;
+
+        /// <summary>
+        /// Linke to weather, used for frost senescence calcs.
+        /// </summary>
+        [Link]
+        private IWeather weather = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -308,9 +315,15 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
-        /// <summary>Temperature threshold for leaf death.</summary>
+        /// <summary>
+        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+        /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frostKill = null;
+
+        /// <summary>Temperature threshold for leaf death.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction frostKillSevere = null;
 
         /// <summary>Delay factor for water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -727,24 +740,58 @@ namespace Models.PMF.Organs
             DltSenescedLai = Math.Min(DltSenescedLai, LAI);
         }
 
+        /// <summary>
+        /// Calculate senescence due to frost.
+        /// </summary>
         private double calcLaiSenescenceFrost()
         {
-            //  calculate senecence due to frost
-            double dltSlaiFrost = 0.0;
-            if (MetData.MinT < FrostKill)
+            if (weather.MinT > FrostKill || !Plant.IsEmerged)
+                return 0;
+
+            if (weather.MinT > frostKillSevere.Value())
             {
-                if(phenology.Between("Germination", "FloralInitiation"))
+                // Temperature is warmer than frostKillSevere, but cooler than frostKill.
+                // So the plant will only die if between floral init - flowering.
+
+                if (phenology.Between("Germination", "FloralInitiation"))
                 {
-                    dltSlaiFrost = Math.Max(0.0, LAI - 0.01);
+                    // The plant will survive but all of the leaf area is removed except a fraction.
+                    // 3 degrees is a default for now - extract to a parameter to customise it.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
+                    return Math.Max(0, LAI - 0.1);
+                }
+                else if (phenology.Between("FloralInitiation", "Flowering"))
+                {
+                    // Plant is between floral init and flowering - time to die.
+                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+                    return LAI; // rip
                 }
                 else
-                {
-                    dltSlaiFrost = LAI;
-                }
-
+                    // After flowering it takes a severe frost to kill the plant
+                    // (which didn't happen today).
+                    return 0;
             }
 
-            return dltSlaiFrost;
+            // Temperature is below frostKillSevere parameter, senesce all LAI.
+            Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+            return LAI;
+        }
+
+        /// <summary>
+        /// Generates a message to be displayed when senescence due to frost
+        /// occurs. Putting this in a method for now so we don't have the same
+        /// code twice, but if frost senescence is tweaked in the future it might
+        /// just be easier to do away with the method and hardcode similar
+        /// messages multiple times.
+        /// </summary>
+        /// <param name="fatal">Was the frost event fatal?</param>
+        private string GetFrostSenescenceMessage(bool fatal)
+        {
+            StringBuilder message = new StringBuilder();
+            message.AppendLine($"Frost Event: ({(fatal ? "Fatal" : "Non Fatal")})");
+            message.AppendLine($"\tMin Temp     = {weather.MinT}");
+            message.AppendLine($"\tSenesced LAI = {LAI - 0.01}");
+            return message.ToString();
         }
 
         private double calcLaiSenescenceWater()
@@ -1521,35 +1568,35 @@ namespace Models.PMF.Organs
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write the memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 //// List the parameters, properties, and processes from this organ that need to be documented:
 
                 // document initial DM weight
-                IModel iniWt = Apsim.Child(this, "initialWtFunction");
+                IModel iniWt = this.FindChild("initialWtFunction");
                 AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 1, indent);
 
                 // document DM demands
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
-                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                IModel DMDemand = this.FindChild("dmDemands");
                 AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
 
                 // document N demands
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
-                IModel NDemand = Apsim.Child(this, "nDemands");
+                IModel NDemand = this.FindChild("nDemands");
                 AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
 
                 // document N concentration thresholds
-                IModel MinN = Apsim.Child(this, "MinimumNConc");
+                IModel MinN = this.FindChild("MinimumNConc");
                 AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
-                IModel CritN = Apsim.Child(this, "CriticalNConc");
+                IModel CritN = this.FindChild("CriticalNConc");
                 AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
-                IModel MaxN = Apsim.Child(this, "MaximumNConc");
+                IModel MaxN = this.FindChild("MaximumNConc");
                 AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
-                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+                IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
                 if (NDemSwitch is Constant)
                 {
                     if ((NDemSwitch as Constant).Value() == 1.0)
@@ -1569,7 +1616,7 @@ namespace Models.PMF.Organs
 
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+                IModel DMReallocFac = this.FindChild("DMReallocationFactor");
                 if (DMReallocFac is Constant)
                 {
                     if ((DMReallocFac as Constant).Value() == 0)
@@ -1582,7 +1629,7 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+                IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
                 if (DMRetransFac is Constant)
                 {
                     if ((DMRetransFac as Constant).Value() == 0)
@@ -1597,12 +1644,12 @@ namespace Models.PMF.Organs
                 }
 
                 // document photosynthesis
-                IModel PhotosynthesisModel = Apsim.Child(this, "Photosynthesis");
+                IModel PhotosynthesisModel = this.FindChild("Photosynthesis");
                 AutoDocumentation.DocumentModel(PhotosynthesisModel, tags, headingLevel + 2, indent);
 
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+                IModel NReallocFac = this.FindChild("NReallocationFactor");
                 if (NReallocFac is Constant)
                 {
                     if ((NReallocFac as Constant).Value() == 0)
@@ -1615,7 +1662,7 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+                IModel NRetransFac = this.FindChild("NRetranslocationFactor");
                 if (NRetransFac is Constant)
                 {
                     if ((NRetransFac as Constant).Value() == 0)
@@ -1631,8 +1678,8 @@ namespace Models.PMF.Organs
 
                 // document canopy
                 tags.Add(new AutoDocumentation.Heading("Canopy Properties", headingLevel + 1));
-                IModel laiF = Apsim.Child(this, "LAIFunction");
-                IModel coverF = Apsim.Child(this, "CoverFunction");
+                IModel laiF = this.FindChild("LAIFunction");
+                IModel coverF = this.FindChild("CoverFunction");
                 if (laiF != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation.", indent));
@@ -1643,14 +1690,14 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation", indent));
                     AutoDocumentation.DocumentModel(coverF, tags, headingLevel + 2, indent);
                 }
-                IModel exctF = Apsim.Child(this, "ExtinctionCoefficientFunction");
+                IModel exctF = this.FindChild("ExtinctionCoefficientFunction");
                 AutoDocumentation.DocumentModel(exctF, tags, headingLevel + 2, indent);
-                IModel heightF = Apsim.Child(this, "HeightFunction");
+                IModel heightF = this.FindChild("HeightFunction");
                 AutoDocumentation.DocumentModel(heightF, tags, headingLevel + 2, indent);
 
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel SenRate = Apsim.Child(this, "SenescenceRate");
+                IModel SenRate = this.FindChild("SenescenceRate");
                 if (SenRate is Constant)
                 {
                     if ((SenRate as Constant).Value() == 0)
@@ -1664,7 +1711,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
                 }
 
-                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                IModel DetRate = this.FindChild("DetachmentRateFunction");
                 if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)

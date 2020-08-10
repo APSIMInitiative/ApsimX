@@ -67,10 +67,24 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Limit cut and carry activities to <span class=\"setvalueextra\">";
-            html += WeightLimitPerDay.ToString();
+            html += "Limit cut and carry activities to ";
+            if(!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += WeightLimitPerDay.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">Not Set";
+            }
             html += "</span> dry kg/day ";
             html += "</div>";
             html += "\n</div>";

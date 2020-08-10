@@ -86,7 +86,7 @@ namespace Models.CLEM.Resources
         /// Link to a AnimalFoodStore or GrazeFoodStore for pasture details
         /// </summary>
         [Description("AnimalFoodStore or GrazeFoodStore type for pasture details")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string PastureLink { get; set; }
 
         [NonSerialized]
@@ -121,7 +121,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(Apsim.Children(this, typeof(Transmutation)).Count() > 0)
+            if(this.FindAllChildren<Transmutation>().Count() > 0)
             {
                 string[] memberNames = new string[] { "Transmutations" };
                 results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));
@@ -408,7 +408,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null)
             {
                 html += "<div class=\"activityentry\">";
-                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current Nitrogen percent";
+                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent";
                 html += "</div>";
             }
             else

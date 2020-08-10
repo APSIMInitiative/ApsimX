@@ -23,13 +23,13 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileCropView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileCropView
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
-    [Version(1, 0, 4, "Problem with pasture Nitrogen allocation resulting in very poor pasture quality now fixed")]
+    [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
     [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
     [Version(1, 0, 1, "")]
@@ -162,7 +162,7 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                    Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
                     {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
@@ -318,7 +318,26 @@ namespace Models.CLEM
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
-            string filter = $"({SoilTypeColumnName} = '" + landId + $"') AND ({CropNameColumnName} = " + "'" + cropName + "'" + ")"
+            string soiltypeparenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
+            string cropnameparenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
+
+            // check that entry is in correct type
+            if(forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.Single))
+            {
+                if(!System.Single.TryParse(landId, out Single val))
+                {
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                }
+            }
+            if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.Single))
+            {
+                if (!System.Single.TryParse(cropName, out Single val))
+                {
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                }
+            }
+
+            string filter = $"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth})"
                 + " AND ("
                 + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
                 + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"

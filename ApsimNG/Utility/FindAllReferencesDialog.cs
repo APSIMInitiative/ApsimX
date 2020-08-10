@@ -11,7 +11,7 @@ namespace Utility
     /// Class for displaying results from a "Find All References" operation.
     /// Displays results a Gtk.TreeView in a popup window.
     /// </summary>
-    public class FindAllReferencesDialog
+    public sealed class FindAllReferencesDialog : IDisposable
     {
         /// <summary>
         /// Window in which the data will be displayed.
@@ -76,11 +76,11 @@ namespace Utility
 
             window.Title = string.Format("'{0}' references", references[0].Target.Name);
 
-            string commonWordsString = GetCommonPathElements(references.Select(r => Apsim.FullPath(r.Model)).ToArray());
-            data.AppendValues(Apsim.FullPath(target), "", Apsim.FullPath(target));
+            string commonWordsString = GetCommonPathElements(references.Select(r => r.Model.FullPath).ToArray());
+            data.AppendValues(target.FullPath, "", target.FullPath);
             foreach (Reference reference in references)
             {
-                string path = Apsim.FullPath(reference.Model);
+                string path = reference.Model.FullPath;
                 string cutDownPath = path.Replace(commonWordsString, "");
                 data.AppendValues(cutDownPath, reference.Member.DeclaringType.Name, path);
             }
@@ -229,6 +229,12 @@ namespace Utility
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        public void Dispose()
+        {
+            data?.Dispose();
+            tree?.Dispose();
         }
     }
 }

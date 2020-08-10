@@ -44,7 +44,7 @@ namespace Models.PMF.Arbitrator
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            foreach (Model Can in Apsim.FindAll(plant, typeof(IHasWaterDemand)))
+            foreach (Model Can in plant.FindAllInScope<IHasWaterDemand>())
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;
@@ -92,8 +92,6 @@ namespace Models.PMF.Arbitrator
                 uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
-                uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
-                uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
                 ZWNs.Add(uptake);
             }
             return ZWNs;

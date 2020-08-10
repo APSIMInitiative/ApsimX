@@ -301,11 +301,12 @@
         [EventSubscribe("SetDMDemand")]
         protected virtual void SetDMDemand(object sender, EventArgs e)
         {
-            if (DMConversionEfficiency.Value() > 0.0)
+            double dMCE = DMConversionEfficiency.Value();
+            if (dMCE > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value());
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) ;
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) ;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE) ;
             }
             else
             { // Conversion efficiency is zero!!!!
@@ -356,11 +357,12 @@
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            double dMCE = DMConversionEfficiency.Value();
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
 
             GrowthRespiration = 0.0;
             // allocate structural DM
-            Allocated.StructuralWt = Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural);
+            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dMCE, DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
@@ -378,7 +380,7 @@
 
 
             // allocate non structural DM
-            if ((dryMatter.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
+            if ((dryMatter.Storage * dMCE - DMDemand.Storage) > BiomassToleranceValue)
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
 
@@ -522,7 +524,7 @@
         {
             // save current state
             if (parentPlant.IsEmerged)
-                StartLive = ReflectionUtilities.Clone(Live) as Biomass;
+                StartLive.SetTo(Live);
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -586,7 +588,7 @@
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write the memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 //// List the parameters, properties, and processes from this organ that need to be documented:
@@ -594,23 +596,23 @@
                 // document DM demands
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
-                IModel DMDemand = Apsim.Child(this, "dmDemands");
+                IModel DMDemand = this.FindChild("dmDemands");
                 AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
 
                 // document N demands
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
                 tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
-                IModel NDemand = Apsim.Child(this, "nDemands");
+                IModel NDemand = this.FindChild("nDemands");
                 AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
 
                 // document N concentration thresholds
-                IModel MinN = Apsim.Child(this, "MinimumNConc");
+                IModel MinN = this.FindChild("MinimumNConc");
                 AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
-                IModel CritN = Apsim.Child(this, "CriticalNConc");
+                IModel CritN = this.FindChild("CriticalNConc");
                 AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
-                IModel MaxN = Apsim.Child(this, "MaximumNConc");
+                IModel MaxN = this.FindChild("MaximumNConc");
                 AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
-                IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+                IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
                 if (NDemSwitch is Constant)
                 {
                     if ((NDemSwitch as Constant).Value() == 1.0)
@@ -630,7 +632,7 @@
 
                 // document DM supplies
                 tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+                IModel DMReallocFac = this.FindChild("DMReallocationFactor");
                 if (DMReallocFac is Constant)
                 {
                     if ((DMReallocFac as Constant).Value() == 0)
@@ -643,7 +645,7 @@
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+                IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
                 if (DMRetransFac is Constant)
                 {
                     if ((DMRetransFac as Constant).Value() == 0)
@@ -659,7 +661,7 @@
 
                 // document N supplies
                 tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-                IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+                IModel NReallocFac = this.FindChild("NReallocationFactor");
                 if (NReallocFac is Constant)
                 {
                     if ((NReallocFac as Constant).Value() == 0)
@@ -672,7 +674,7 @@
                     tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
                     AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
                 }
-                IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+                IModel NRetransFac = this.FindChild("NRetranslocationFactor");
                 if (NRetransFac is Constant)
                 {
                     if ((NRetransFac as Constant).Value() == 0)
@@ -688,7 +690,7 @@
 
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel SenRate = Apsim.Child(this, "SenescenceRate");
+                IModel SenRate = this.FindChild("SenescenceRate");
                 if (SenRate is Constant)
                 {
                     if ((SenRate as Constant).Value() == 0)
@@ -702,7 +704,7 @@
                     AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
                 }
 
-                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                IModel DetRate = this.FindChild("DetachmentRateFunction");
                 if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)

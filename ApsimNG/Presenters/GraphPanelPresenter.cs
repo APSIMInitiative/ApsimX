@@ -14,7 +14,7 @@ using ApsimNG.EventArguments;
 
 namespace UserInterface.Presenters
 {
-    public class GraphPanelPresenter : IPresenter
+    public sealed class GraphPanelPresenter : IPresenter, IDisposable
     {
         /// <summary>
         /// The view.
@@ -112,7 +112,7 @@ namespace UserInterface.Presenters
                 status.IsWorking = true;
 
             ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -198,7 +198,7 @@ namespace UserInterface.Presenters
             {
                 Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
                 graph.Parent = panel;
-                Apsim.ParentAllChildren(graph);
+                graph.ParentAllDescendants();
 
                 if (panel.LegendOutsideGraph)
                     graph.LegendOutsideGraph = true;
@@ -305,7 +305,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
+            return (panel.FindInScope<IDataStore>()).Reader;
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
+            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
                 Refresh();
         }
 
@@ -331,6 +331,12 @@ namespace UserInterface.Presenters
                 args.Data.FormatTitle(null);
             args.Data.FontSize = panel.FontSize;
             args.Data.MarkerSize = panel.MarkerSize;
+        }
+
+        public void Dispose()
+        {
+            if (processingThread != null)
+                processingThread.Dispose();
         }
 
         private class WorkerStatus

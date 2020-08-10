@@ -92,7 +92,7 @@ namespace UnitTests.ApsimNG.Views
             Simulations sims = CreateTemplate();
             sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
 
-            DataStore storage = Apsim.Find(sims, typeof(DataStore)) as DataStore;
+            DataStore storage = sims.FindInScope<DataStore>();
             storage.FileName = Path.ChangeExtension(sims.FileName, ".db");
 
             // Run the file to populate the datastore.
@@ -107,11 +107,11 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.WaitForGtkEvents();
 
             // Create a graphs folder under the zone.
-            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            IModel paddock = sims.FindInScope<Zone>();
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
 
-            var command = new AddModelCommand(Apsim.FullPath(paddock),
+            var command = new AddModelCommand(paddock.FullPath,
                                               graphs,
                                               explorer);
             explorer.CommandHistory.Add(command, true);
@@ -119,7 +119,7 @@ namespace UnitTests.ApsimNG.Views
             // Add an empty graph to the folder.
             Models.Graph graph = new Models.Graph();
             graph.Name = "Graph";
-            command = new AddModelCommand(Apsim.FullPath(graphs),
+            command = new AddModelCommand(graphs.FullPath,
                                           graph,
                                           explorer);
             explorer.CommandHistory.Add(command, true);
@@ -127,13 +127,13 @@ namespace UnitTests.ApsimNG.Views
             // Add an empty series to the graph.
             Models.Series series = new Models.Series();
             series.Name = "Series";
-            command = new AddModelCommand(Apsim.FullPath(graph),
+            command = new AddModelCommand(graph.FullPath,
                                           series,
                                           explorer);
             explorer.CommandHistory.Add(command, true);
 
             // click on the series node.
-            explorer.SelectNode(Apsim.FullPath(series));
+            explorer.SelectNode(series.FullPath);
             GtkUtilities.WaitForGtkEvents();
 
             // Get a reference to the OxyPlot PlotView via reflection.
@@ -176,7 +176,7 @@ namespace UnitTests.ApsimNG.Views
             // Next, we want to change the legend position and ensure that the legend actually moves.
 
             // Click on the 'show in legend' checkbox.
-            seriesView.ShowInLegend.IsChecked = true;
+            seriesView.ShowInLegend.Checked = true;
             GtkUtilities.WaitForGtkEvents();
 
             // Double click on the middle of the legend.

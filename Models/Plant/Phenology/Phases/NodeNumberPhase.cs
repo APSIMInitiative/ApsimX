@@ -21,8 +21,8 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
-        Structure structure = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction LeafTipNumber = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction CompletionNodeNumber = null;
@@ -55,7 +55,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (structure.LeafTipsAppeared - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
+                double F = (LeafTipNumber.Value() - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
@@ -71,13 +71,13 @@ namespace Models.PMF.Phen
             
             if (First)
             {
-                NodeNoAtStart = structure.LeafTipsAppeared;
+                NodeNoAtStart = LeafTipNumber.Value();
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
+            if (LeafTipNumber.Value() >= CompletionNodeNumber.Value())
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
@@ -114,14 +114,14 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // get description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }

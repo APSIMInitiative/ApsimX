@@ -26,7 +26,7 @@ namespace Models.PMF
 
             foreach (string PropertyName in Propertys)
             {
-                object v = Apsim.Get(this, PropertyName);
+                object v = this.FindByPath(PropertyName)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find: " + PropertyName + " in composite biomass: " + this.Name);
 
@@ -167,7 +167,7 @@ namespace Models.PMF
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));

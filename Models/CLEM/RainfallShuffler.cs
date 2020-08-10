@@ -11,14 +11,14 @@ using System.Xml.Serialization;
 namespace Models.CLEM
 {
     ///<summary>
-    /// SQLite database reader for access to GRASP data for other models.
+    /// Randomises the years of grown provided in pasture reader.
     ///</summary>
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
-    [ValidParent(ParentType = typeof(FileSQLiteGRASP))]
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ValidParent(ParentType = typeof(FileSQLitePasture))]
     [Description("This component shuffles rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
@@ -99,7 +99,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">";
                 html += StartSeasonMonth.ToString();
             }
-            html += "</class>";
+            html += "</span>";
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\">";

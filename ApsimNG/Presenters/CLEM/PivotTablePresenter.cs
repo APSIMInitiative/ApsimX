@@ -80,7 +80,7 @@ namespace ApsimNG.Presenters.CLEM
             }
 
             // Look for the data source
-            var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
+            var store = table.FindInScope<IDataStore>();
             DataTable input = store.Reader.GetData(view.LedgerName);
 
             // Don't try to update if data source isn't found            
@@ -344,7 +344,7 @@ namespace ApsimNG.Presenters.CLEM
             }
 
             // Store the data
-            var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
+            var store = table.FindInScope<IDataStore>();
             store.Writer.WriteTable(data);
         }
 

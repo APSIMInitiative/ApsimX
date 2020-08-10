@@ -10,6 +10,7 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Soils.Standardiser;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -2325,7 +2326,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
+                SwimSoluteParameters soluteParam = this.FindByPath(solute_names[i],true)?.Value as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, double.NaN);

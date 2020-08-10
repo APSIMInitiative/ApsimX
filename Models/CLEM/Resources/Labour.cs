@@ -69,10 +69,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate resources
-            availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
-
-            // locate AE relationship
-            adultEquivalentRelationship = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name.ToUpper().Contains("AE")).Cast<Relationship>().FirstOrDefault();
+            availabilityList = this.FindAllChildren<LabourAvailabilityList>().Cast<LabourAvailabilityList>().FirstOrDefault();
 
             if (Clock.Today.Day != 1)
             {
@@ -124,7 +121,7 @@ namespace Models.CLEM.Resources
             var results = new List<ValidationResult>();
 
             // Add warning if no individuals defined
-            if (Apsim.Children(this, typeof(LabourType)).Count > 0 && Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().Sum(a => a.Individuals) == 0)
+            if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
                 string warningString = "No individuals have been set in any [r=LabourType]\nAdd individuals or consider removing or disabling [r=Labour]";
                 if (!WarningsNotFound.Contains(warningString))
@@ -142,8 +139,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // locate AE relationship
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
+
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {
                 for (int i = 0; i < labourChildModel.Individuals; i++)
                 {
@@ -165,9 +165,9 @@ namespace Models.CLEM.Resources
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Apsim.Children(this, typeof(LabourPricing)).Count() > 0)
+            if (this.FindAllChildren<LabourPricing>().Count() > 0)
             {
-                PayList = Apsim.Clone(Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault()) as LabourPricing;
+                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault()) as LabourPricing;
             }
         }
 
@@ -177,7 +177,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (LabourType childModel in Apsim.Children(this, typeof(LabourType)))
+            foreach (LabourType childModel in this.FindAllChildren<LabourType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (LabourPriceGroup item in Apsim.Children(PayList, typeof(LabourPriceGroup)).Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1)
                     {
@@ -358,7 +358,7 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (LabourPriceGroup item in Apsim.Children(PayList, typeof(LabourPriceGroup)).Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
@@ -366,7 +366,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(LabourFilter)).Cast<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<LabourFilter>().Cast<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -473,7 +473,7 @@ namespace Models.CLEM.Resources
             html += "\n<div class=\"clearfix resourcebannerlight\">Labour types</div>";
             html += "\n<div class=\"resourcecontentlight\">";
             html += "<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>";
-            foreach (LabourType labourType in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
+            foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {
                 html += "<tr>";
                 html += "<td>" + labourType.Name + "</td>";

@@ -265,7 +265,7 @@
 
                     // Find child
                     string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = Apsim.Get(model, childName) as IModel;
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
                     if (child == null)
                         paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                     else
@@ -281,7 +281,7 @@
                     // Find children
                     string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
                     Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in Apsim.Children(model, childType))
+                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                     {
                         DocumentModel(child, tags, targetHeadingLevel + 1, indent);
                         childrenDocumented.Add(child);
@@ -300,7 +300,7 @@
             if (documentAllChildren)
             {
                 // write children.
-                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
+                foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
                         DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
@@ -321,7 +321,7 @@
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = Apsim.Get(model, macro, true);
+                        object value = model.FindByPath(macro, true)?.Value;
                         if (value != null)
                         {
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
@@ -510,17 +510,22 @@
             /// <summary>Max width of each column (in terms of number of characters).</summary>
             public int ColumnWidth { get; private set; }
 
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public string Style { get; private set; } = "Table";
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Table"/> class.
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
             /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            public Table(DataTable data, int indent, int width = 50)
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataTable data, int indent, int width = 50, string style = "Table")
             {
                 this.data = new DataView(data);
                 this.indent = indent;
                 this.ColumnWidth = width;
+                Style = style;
             }
 
             /// <summary>
@@ -529,11 +534,13 @@
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
             /// <param name="width">Max width of each column (in terms of number of characters).</param>
-            public Table(DataView data, int indent, int width = 50)
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataView data, int indent, int width = 50, string style = "Table")
             {
                 this.data = data;
                 this.indent = indent;
                 this.ColumnWidth = width;
+                Style = style;
             }
         }
 
@@ -550,7 +557,15 @@
         /// <summary>Describes a new page for the tags system.</summary>
         public class NewPage : ITag
         {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
+        }
 
+        /// <summary>Page setup tag.</summary>
+        public class PageSetup : ITag
+        {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
         }
 
         /// <summary>Describes a model view for the tags system.</summary>

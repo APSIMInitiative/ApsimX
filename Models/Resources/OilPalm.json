@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 101,
+  "Version": 111,
   "Name": "Simulations",
   "Children": [
     {
@@ -158,7 +158,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.AirTemperatureFunction, Models",
+          "$type": "Models.Functions.HourlyInterpolation, Models",
           "Name": "RelativeDevelopmentalRate",
           "Children": [
             {
@@ -175,7 +175,7 @@
                 1.0,
                 0.0
               ],
-              "Name": "TemperatureResponse",
+              "Name": "Response",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

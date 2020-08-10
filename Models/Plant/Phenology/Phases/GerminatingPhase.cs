@@ -76,18 +76,13 @@ namespace Models.PMF.Phen
             {
                 if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
                 {
-                    proceedToNextPhase = true;
-                    propOfDayToUse = 1;
+                    doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }
             }
 
             else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
-                // Invoke an AboutToSow event.
-                if (SeedImbibed != null)
-                    SeedImbibed.Invoke(this, new EventArgs());
-                proceedToNextPhase = true;
-                propOfDayToUse = 1;
+                doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }
 
             return proceedToNextPhase;
@@ -98,6 +93,14 @@ namespace Models.PMF.Phen
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
+
+        private void doGermination(ref bool proceedToNextPhase, ref double propOfDayToUse)
+        {
+            if (SeedImbibed != null)
+                SeedImbibed.Invoke(this, new EventArgs());
+            proceedToNextPhase = true;
+            propOfDayToUse = 1;
+        }
 
         /// <summary>Called when crop is ending.</summary>
         [EventSubscribe("PlantSowing")]
@@ -122,11 +125,11 @@ namespace Models.PMF.Phen
                     + "provided that the extractable soil water is greater than zero.", indent));
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write children
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }

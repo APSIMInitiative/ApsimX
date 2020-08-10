@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 101,
+  "Version": 111,
   "Name": "Simulations",
   "Children": [
     {
@@ -35,7 +35,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -59,7 +59,7 @@
                     22.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -8712,6 +8712,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -9091,8 +9096,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.TemperatureResponse.X = 2.5,25,37.5",
-                "[Phenology].ThermalTime.TemperatureResponse.X = 0,22.5,0",
+                "[Phenology].ThermalTime.Response.X = 2.5,25,37.5",
+                "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].Tallness.XYPairs.Y = 20,75,110,140,150",
@@ -9122,8 +9127,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.TemperatureResponse.X = 0,21,32",
-                "[Phenology].ThermalTime.TemperatureResponse.X = 0,21,0",
+                "[Phenology].ThermalTime.Response.X = 0,21,32",
+                "[Phenology].ThermalTime.Response.X = 0,21,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = -1,0,5,12.5,15.5,24.5,32.5,35",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
                 "[Leaf].Tallness.XYPairs.Y = 20,50,75,97.5,104",
@@ -9152,8 +9157,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.TemperatureResponse.X = 2.5,25,37.5",
-                "[Phenology].ThermalTime.TemperatureResponse.X = 0,22.5,0",
+                "[Phenology].ThermalTime.Response.X = 2.5,25,37.5",
+                "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].Tallness.XYPairs.Y = 20,65,100,130,135",

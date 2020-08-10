@@ -2,11 +2,9 @@
 using Models.Core;
 using System;
 using Models.Functions;
-using Models.Interfaces;
 using System.Linq;
 using Models.Soils.Standardiser;
-using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
+using Models.Soils.Nutrients;
 
 namespace Models.PMF.Organs
 {
@@ -155,11 +153,11 @@ namespace Models.PMF.Organs
             this.remobilisationCost = remobCost;
 
             Clear();
-            Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
+            Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = Apsim.Find(zone, "NO3") as ISolute;
-            NH4 = Apsim.Find(zone, "NH4") as ISolute;
+            NO3 = zone.FindInScope("NO3") as ISolute;
+            NH4 = zone.FindInScope("NH4") as ISolute;
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
@@ -254,11 +252,8 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = soil.LayerIndexOfDepth(Depth);
-
-            //sorghum calc
-            var rootDepthWaterStress = 1.0;
-            if (root.RootDepthStressFactor != null)
-                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+            var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
+            var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
@@ -266,9 +261,8 @@ namespace Models.PMF.Organs
             {
                 var soilCrop = soil.Crop(plant.Name);
                 xf = soilCrop.XF;
-                var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-                var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
-                Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
+
+                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < soil.Thickness.Length; i++)
@@ -281,7 +275,7 @@ namespace Models.PMF.Organs
             }
             else
             {
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                Depth = Depth + rootfrontvelocity;
                 MaxDepth = soil.Thickness.Sum();
             }
 
@@ -292,7 +286,7 @@ namespace Models.PMF.Organs
             //RootFront - needed by sorghum
             if (root.RootFrontCalcSwitch?.Value() == 1)
             {
-                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
+                var dltRootFront = rootfrontvelocity * rootDepthWaterStress * xf[RootLayer];
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);

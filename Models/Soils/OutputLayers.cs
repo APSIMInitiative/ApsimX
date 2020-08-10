@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
     using Models.Soils.Standardiser;
     using System;
     using System.Xml.Serialization;
@@ -26,9 +27,9 @@
         /// <summary>Constructor</summary>
         public OutputLayers()
         {
-            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
-            UreaSolute = Apsim.Find(this, "Urea") as ISolute;
+            NO3Solute = this.FindInScope("NO3") as ISolute;
+            NH4Solute = this.FindInScope("NH4") as ISolute;
+            UreaSolute = this.FindInScope("Urea") as ISolute;
         }
 
         /// <summary>Gets or sets the thickness of each layer.</summary>

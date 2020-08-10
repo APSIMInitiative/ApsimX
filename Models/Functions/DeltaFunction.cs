@@ -85,7 +85,7 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
 
                 // write a description of the child it is returning the differential of.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

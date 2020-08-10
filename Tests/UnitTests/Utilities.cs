@@ -5,6 +5,7 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.GrazPlan;
     using Models.Storage;
     using System;
@@ -15,6 +16,18 @@ namespace UnitTests
 
     public class Utilities
     {
+        /// <summary>
+        /// Parent all children of 'model' and call 'OnCreated' in each child.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void InitialiseModel(IModel model)
+        {
+            model.ParentAllDescendants();
+            model.OnCreated();
+            foreach (var child in model.FindAllDescendants())
+                child.OnCreated();
+        }
+
         /// <summary>
         /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
         /// Asserts that the job ran successfully.
@@ -43,13 +56,14 @@ namespace UnitTests
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
         {
             CallEvent(model, eventName, arguments);
-            Apsim.ChildrenRecursively(model).ForEach(child => CallEvent(child, eventName, arguments));
+            foreach (IModel descendant in model.FindAllDescendants())
+                CallEvent(descendant, eventName, arguments);
         }
 
         /// <summary>ResolveLinks in a model</summary>
         public static void ResolveLinks(IModel model)
         {
-            Apsim.ParentAllChildren(model);
+            model.ParentAllDescendants();
             var links = new Links();
             links.Resolve(model, true, true);
         }
@@ -189,9 +203,24 @@ namespace UnitTests
                     }
                 }
             };
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        public static Simulations GetSimpleExperiment()
+        {
+            Simulations result = ReadFromResource<Simulations>("UnitTests.Resources.SimpleExperiment.apsimx", out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            return result;
+        }
+
+        public static T ReadFromResource<T>(string resourceName, out List<Exception> creationExceptions) where T : IModel
+        {
+            string json = ReflectionUtilities.GetResourceAsString(resourceName);
+            return FileFormat.ReadFromString<T>(json, out creationExceptions);
         }
 
         /// <summary>

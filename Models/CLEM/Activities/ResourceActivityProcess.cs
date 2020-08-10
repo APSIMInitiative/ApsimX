@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// Resource type to process
         /// </summary>
         [Description("Resource to process")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type to process required")]
         public string ResourceTypeProcessedName { get; set; }
 
@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Resource type created
         /// </summary>
         [Description("Resource created")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type created required")]
         public string ResourceTypeCreatedName { get; set; }
 
@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
             }
 
             // get finances required.
-            foreach (ResourceActivityFee item in Apsim.Children(this, typeof(ResourceActivityFee)))
+            foreach (ResourceActivityFee item in this.FindAllChildren<ResourceActivityFee>())
             {
                 if (ResourceRequestList == null)
                 {

@@ -107,18 +107,29 @@
         /// </remarks>
         public string Status { get; private set; }
 
+        /// <summary>
+        /// List all simulation names beneath a given model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="simulationNamesToRun"></param>
+        /// <returns></returns>
+        public List<string> FindAllSimulationNames(IModel model, IEnumerable<string> simulationNamesToRun)
+        {
+            return FindListOfSimulationsToRun(model, simulationNamesToRun).Select(j => j.Name).ToList();
+        }
+
         /// <summary>Find and return a list of duplicate simulation names.</summary>
         private List<string> FindDuplicateSimulationNames()
         {
             if (rootModel == null)
                 return new List<string>();
 
-            List<IModel> allSims = Apsim.ChildrenRecursively(rootModel, typeof(ISimulationDescriptionGenerator));
+            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
 
             List<string> dupes = new List<string>();
             foreach (var simType in allSims.GroupBy(s => s.GetType()))
             {
-                dupes.AddRange(simType.Select(s => s.Name)
+                dupes.AddRange(simType.Select(s => (s as IModel).Name)
                     .GroupBy(i => i)
                     .Where(g => g.Count() > 1)
                     .Select(g => g.Key));
@@ -183,10 +194,11 @@
                     if (!hasBeenDeserialised)
                     {
                         // Parent all models.
-                        Apsim.ParentAllChildren(relativeTo);
+                        relativeTo.ParentAllDescendants();
 
                         // Call OnCreated in all models.
-                        Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                        foreach (IModel model in relativeTo.FindAllDescendants().ToList())
+                            model.OnCreated();
                     }
 
                     // Find the root model.
@@ -210,14 +222,15 @@
 
                     // Find simulations to run.
                     if (runSimulations)
-                        FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
+                        foreach (IRunnable job in FindListOfSimulationsToRun(relativeTo, simulationNamesToRun))
+                            Add(job);
 
                     
                     if (numJobsToRun == 0)
                        Add(new EmptyJob());
 
                     // Find a storage model.
-                    storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
+                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)
@@ -233,27 +246,28 @@
         /// <summary>Determine the list of jobs to run</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
-        private void FindListOfSimulationsToRun(IModel relativeTo, IEnumerable<string> simulationNamesToRun)
+        private IEnumerable<IRunnable> FindListOfSimulationsToRun(IModel relativeTo, IEnumerable<string> simulationNamesToRun)
         {
             if (relativeTo is Simulation)
             {
                 if (SimulationNameIsMatched(relativeTo.Name))
-                    Add(new SimulationDescription(relativeTo as Simulation));
+                    yield return new SimulationDescription(relativeTo as Simulation);
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (SimulationNameIsMatched(description.Name))
-                        Add(description);
+                        yield return description;
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)
-                    FindListOfSimulationsToRun(child, simulationNamesToRun);
+                    foreach (IRunnable job in FindListOfSimulationsToRun(child, simulationNamesToRun))
+                        yield return job;
             }
             else if (relativeTo is IRunnable runnable)
-                Add(runnable);
+                yield return runnable;
         }
 
         /// <summary>Return true if simulation name is a match.</summary>
@@ -272,7 +286,7 @@
         {
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
-            foreach (IPostSimulationTool tool in Apsim.ChildrenRecursively(rootModel, typeof(IPostSimulationTool)))
+            foreach (IPostSimulationTool tool in rootModel.FindAllDescendants<IPostSimulationTool>())
             {
                 storage?.Writer.WaitForIdle();
                 storage?.Reader.Refresh();
@@ -308,7 +322,7 @@
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = Apsim.Find(relativeTo, typeof(Simulations)) as Simulations;
+                Simulations sims = relativeTo.FindInScope<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)
@@ -322,7 +336,7 @@
             }
 
             var links = new Links(services);
-            foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
+            foreach (ITest test in rootModel.FindAllDescendants<ITest>())
             {
                 DateTime startTime = DateTime.Now;
 

@@ -154,25 +154,25 @@
         /// <summary>Find our children.</summary>
         public void FindChildren()
         {
-            waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
+            waterNode = this.FindChild<Physical>();
 
-            Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
-            SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
+            Weirdo = this.FindChild<WEIRDO>();
+            SoilWater = this.FindChild<ISoilWater>();
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
             if (Weirdo == null && waterNode == null)
                 throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
 
-            SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
+            SoilOrganicMatter = this.FindChild<Organic>();
             if (SoilOrganicMatter == null)
                 throw new Exception($"{Name}: Unable to find Organic child model");
 
-            temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            temperatureModel = this.FindChild<ISoilTemperature>();
             if (temperatureModel == null)
                 throw new Exception($"{Name}: Unable to find soil temperature child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
-            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+            structure = this.FindChild<LayerStructure>();
         }
 
         /// <summary>
@@ -269,7 +269,7 @@
         {
             get
             {
-                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                var sample = this.FindChild<Sample>();
                 return sample?.SW;
             }
         }
@@ -295,13 +295,13 @@
         {
             get
             {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+                InitialWater initialWater = this.FindChild<InitialWater>();
 
                 if (initialWater != null)
                     return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    foreach (Sample Sample in this.FindAllChildren<Sample>())
                     {
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {
@@ -490,9 +490,30 @@
             }
         }
 
+        /// <summary>Plant unavailable water.</summary>
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Unavailablemm
+        {
+            get
+            {
+                return MathUtilities.Multiply(LL15, Thickness);
+            }
+        }
 
+        /// <summary>Drainable water (SAT-DUL).</summary>
+        [Description("Drainable\r\nPAWC SAT-DUL")]
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] Drainablemm
+        {
+            get
+            {
+                return MathUtilities.Multiply(MathUtilities.Subtract(SAT, DUL), Thickness);
+            }
+        }
 
-        /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAWC
         {
@@ -505,38 +526,7 @@
             }
         }
 
-        /// <summary>Gets unavailable water at standard thickness. Units:mm</summary>
-        [Description("Unavailable LL15")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Unavailablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(LL15, Thickness);
-            }
-        }
-
-        /// <summary>Gets available water at standard thickness (SW-LL15). Units:mm</summary>
-        [Description("Available SW-LL15")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWmmInitial
-        {
-            get
-            {
-                return MathUtilities.Multiply(CalcPAWC(Thickness,
-                                                      LL15,
-                                                      InitialWaterVolumetric,
-                                                      null),
-                                             Thickness);
-            }
-        }
-
-        /// <summary>
-        /// Gets the maximum plant available water CAPACITY at standard thickness (DUL-LL15). Units: mm
-        /// </summary>
-        [Description("Max. available\r\nPAWC DUL-LL15")]
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         public double[] PAWCmm
@@ -547,19 +537,7 @@
             }
         }
 
-        /// <summary>Gets the drainable water at standard thickness (SAT-DUL). Units: mm</summary>
-        [Description("Drainable\r\nPAWC SAT-DUL")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Drainablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(MathUtilities.Subtract(SAT, DUL), Thickness);
-            }
-        }
-
-        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        /// <summary>Plant available water (SW-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAW
         {
@@ -572,49 +550,13 @@
             }
         }
 
-        /// <summary>Plant available water at standard thickness. Units:mm</summary>
+        /// <summary>Plant available water (SW-LL15).</summary>
         [Units("mm")]
         public double[] PAWmm
         {
             get
             {
                 return MathUtilities.Multiply(PAW, Thickness);
-            }
-        }
-
-        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWInitial
-        {
-            get
-            {
-                return CalcPAWC(Thickness,
-                                LL15,
-                                InitialWaterVolumetric,
-                                null);
-            }
-        }
-
-        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWCAtWaterThickness
-        {
-            get
-            {
-                return CalcPAWC(waterNode.Thickness,
-                                waterNode.LL15,
-                                waterNode.DUL,
-                                null);
-            }
-        }
-
-        /// <summary>Return the plant available water CAPACITY at water node thickenss. Units: mm</summary>
-        [Units("mm")]
-        public double[] PAWCmmAtWaterThickness
-        {
-            get
-            {
-                return MathUtilities.Multiply(PAWCAtWaterThickness, waterNode.Thickness);
             }
         }
 
@@ -702,9 +644,10 @@
         public int LayerIndexOfDepth(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < Thickness.Length; i++)
+            double[] thickness = Thickness; // use local for efficiency reasons
+            for (int i = 0; i < thickness.Length; i++)
             {
-                CumDepth = CumDepth + Thickness[i];
+                CumDepth = CumDepth + thickness[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");

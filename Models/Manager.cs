@@ -23,7 +23,7 @@
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
-    public class Manager : Model, IOptionallySerialiseChildren
+    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
     {
         [NonSerialized]
         [Link]
@@ -57,7 +57,7 @@
         {
             if (scriptCompiler == null)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
                 scriptCompiler = simulations.ScriptCompiler;
@@ -178,9 +178,9 @@
                             {
                                 object value;
                                 if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
-                                    value = Apsim.Get(this, parameter.Value);
+                                    value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = Apsim.Find(this, parameter.Value);
+                                    value = this.FindInScope(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(script, value, null);
@@ -228,6 +228,20 @@
                                              ReflectionUtilities.ObjectToString(value)));
                     }
                 }
+            }
+        }
+
+        /// <summary>Ovewrite default auto-doc.</summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // document children
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

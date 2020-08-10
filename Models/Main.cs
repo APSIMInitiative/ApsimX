@@ -30,6 +30,7 @@
         private static bool csv { get { return arguments.Contains("/Csv"); } }
         private static bool mergeDBFiles { get { return arguments.Contains("/MergeDBFiles"); } }
         private static bool edit { get { return arguments.Contains("/Edit"); } }
+        private static bool listSimulationNames { get { return arguments.Contains("/ListSimulations"); } }
 
         private static Runner.RunTypeEnum runType
         {
@@ -90,6 +91,8 @@
                     WriteVersion();
                 else if (upgrade)
                     UpgradeFile(fileName, recurse);
+                else if (listSimulationNames)
+                    ListSimulationNames();
                 else if (edit)
                     ModifyFile(fileName, recurse);
                 else if (mergeDBFiles)
@@ -126,7 +129,7 @@
         /// </summary>
         private static void WriteUsageMessage()
         {
-            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/m] [/?]";
+            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/MultiProcess] [/NumberOfProcessors:xx] [/SimulationNameRegexPattern:xx] [/MergeDBFiles] [/Edit <PathToConfigFile>] [/ListSimulations] [/?]";
             string detailedHelpInfo = usageMessage;
             detailedHelpInfo += Environment.NewLine + Environment.NewLine;
             detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
@@ -143,6 +146,7 @@
             detailedHelpInfo += "    /SimulationNameRegexPattern:xx  Use to filter simulation names to run." + Environment.NewLine;
             detailedHelpInfo += "    /MergeDBFiles                   Merges .db files into a single .db file." + Environment.NewLine;
             detailedHelpInfo += "    /Edit <PathToConfigFile>        Edits the .apsimx file. Path to a config file must be specified which contains lines of parameters to change in the form 'path = value'" + Environment.NewLine;
+            detailedHelpInfo += "    /ListSimulations                List all simulation names in the file, without running the file." + Environment.NewLine;
 
             detailedHelpInfo += "    /?                              Show detailed help information.";
             Console.WriteLine(detailedHelpInfo);
@@ -169,14 +173,23 @@
             string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
             {
-                List<Exception> errors;
-                IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
-                if (errors != null && errors.Count > 0)
-                    foreach (Exception error in errors)
-                        Console.Error.WriteLine(error.ToString());
-                File.WriteAllText(file, FileFormat.WriteToString(sims));
+                string contents = File.ReadAllText(file);
+                ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
+                if (converter.DidConvert)
+                    File.WriteAllText(file, converter.Root.ToString());
                 Console.WriteLine("Successfully upgraded " + file);
             }
+        }
+
+        private static void ListSimulationNames()
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+
         }
 
         /// <summary>

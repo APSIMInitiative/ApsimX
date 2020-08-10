@@ -94,7 +94,7 @@
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
                     string name = cultivar.Name;
-                    List<IModel> memos = Apsim.Children(cultivar, typeof(Memo));
+                    IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
                     foreach (IModel memo in memos)
                     {
                         name += '|' + ((Memo)memo).Text;
@@ -140,7 +140,7 @@
             get
             {
                 List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in Apsim.ChildrenRecursively(this, typeof(Cultivar)))
+                foreach (Model model in this.FindAllDescendants<Cultivar>())
                     cultivars.Add(model as Cultivar);
                 return cultivars;
             }
@@ -157,7 +157,7 @@
             SowingData = new SowPlant2Type();
             IsAlive = false;
 
-            string photosyntheticPathway = (string) Apsim.Get(this, "Leaf.Photosynthesis.FCO2.PhotosyntheticPathway");
+            string photosyntheticPathway = (string) this.FindByPath("Leaf.Photosynthesis.FCO2.PhotosyntheticPathway")?.Value;
             IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
         }
@@ -291,7 +291,7 @@
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IOrgan> organs = new List<IOrgan>();          
-            foreach (IOrgan organ in Apsim.Children(this, typeof(IOrgan)))
+            foreach (IOrgan organ in this.FindAllChildren<IOrgan>())
                 organs.Add(organ);
 
             Organs = organs.ToArray();
@@ -512,7 +512,7 @@
                 tableData.Columns.Add("Component Name", typeof(string));
                 tableData.Columns.Add("Component Type", typeof(string));
 
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                 {
                     if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
                     {
@@ -524,7 +524,7 @@
                 }
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
         }
@@ -628,7 +628,7 @@
         /// </summary>
         public void SetEmergenceDate(string emergencedate)
         {
-            foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
+            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
                 {
                     ep.EmergenceDate=emergencedate;
                 }
@@ -641,7 +641,7 @@
         public void SetGerminationDate(string germinationdate)
         {
             {
-                foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+                foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
                 {
                     gp.GerminationDate = germinationdate;
                 }

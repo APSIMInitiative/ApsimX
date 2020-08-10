@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Groupings;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -123,13 +124,16 @@ namespace Models.CLEM.Activities
                     }
 
                     int cnt = 0;
-                    foreach (var ind in herd)
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        ind.SaleFlag = HerdChangeReason.MarkedSale;
-                        cnt++;
-                        if (cnt > numberToTag)
+                        foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
                         {
-                            break;
+                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            cnt++;
+                            if (cnt > numberToTag)
+                            {
+                                break;
+                            }
                         }
                     }
                 }

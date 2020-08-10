@@ -97,5 +97,49 @@
             // Check that clock ticked.
             Assert.AreEqual((simulation.Children[0] as Clock).Today, new DateTime(1980, 01, 02));
         }
+
+        [Serializable]
+        class ModelThatDeletesAModel : Model
+        {
+            private string modelNameToRemove;
+
+            public ModelThatDeletesAModel(string modelNameToDelete)
+            {
+                modelNameToRemove = modelNameToDelete;
+            }
+
+            public override void OnPreLink()
+            {
+                IModel modelToRemove = FindInScope(modelNameToRemove);
+                modelToRemove.Parent.Children.Remove(modelToRemove);
+            }
+        }
+
+        /// <summary>Ensures models receive a pre link call.</summary>
+        [Test]
+        public void EnsureOnPreLinkWorks()
+        {
+            var simulation = new Simulation()
+            {
+                Name = "Sim",
+                FileName = Path.GetTempFileName(),
+                Children = new List<IModel>()
+                    {
+                        new Clock()
+                        {
+                            StartDate = new DateTime(1980, 1, 1),
+                            EndDate = new DateTime(1980, 1, 2)
+                        },
+                        new MockSummary(),
+                        new MockModelThatThrows(),
+                        new ModelThatDeletesAModel("MockModelThatThrows")
+                    }
+            };
+
+            simulation.Run();
+
+            // Should get to here and NOT throw in the call to Run above.
+            Assert.IsTrue(true);
+        }
     }
 }

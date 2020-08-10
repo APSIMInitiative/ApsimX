@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 101,
+  "Version": 111,
   "Name": "Simulations",
   "Children": [
     {
@@ -233,7 +233,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
+              "agregationMethod": 0,
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -248,7 +249,7 @@
                     26.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -265,6 +266,7 @@
                 },
                 {
                   "$type": "Models.Functions.ThreeHourSin, Models",
+                  "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -274,8 +276,7 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false,
-              "agregationMethod": "0"
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -300,7 +301,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "agregationMethod": 0,
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -355,7 +357,7 @@
                         0.0,
                         -0.5
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -363,6 +365,7 @@
                     },
                     {
                       "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -372,8 +375,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "agregationMethod": "0"
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -629,7 +631,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].Phyllochron",
+                              "VariableName": "[Phenology].Phyllochron",
                               "Name": "Phyllochron",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -653,6 +655,114 @@
                 }
               ],
               "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Phyllochron",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7",
+                  "Name": "Rational",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "LeafStageFactor",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        2.0,
+                        3.0,
+                        7.0,
+                        8.0,
+                        11.0,
+                        12.0
+                      ],
+                      "Y": [
+                        0.75,
+                        0.75,
+                        1.0,
+                        1.0,
+                        1.4,
+                        1.4,
+                        1.4
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].AppearedCohortNo",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 120.0,
+                  "Units": "oC.d",
+                  "Name": "BasePhyllochron",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "PhotoPeriodEffect",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        8.0,
+                        12.0,
+                        14.0
+                      ],
+                      "Y": [
+                        1.6,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Photoperiod",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -957,6 +1067,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].LeafTipsAppeared",
+                  "Name": "LeafTipNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1016,6 +1135,42 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].FinalLeafNumber",
+                  "Name": "FinalLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "Name": "LeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "FullyExpandedLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].InitialisedCohortNo",
+                  "Name": "InitialisedLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1043,7 +1198,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.BasePhyllochron",
+                      "VariableName": "[Phenology].Phyllochron.BasePhyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1541,6 +1696,70 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "PTQ",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Radn_mol_per_m2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].Radn",
+                      "Name": "SolarRadiation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.285,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE Temp factor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": true
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -1558,114 +1777,6 @@
               "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "Phyllochron",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7",
-                  "Name": "Rational",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "LeafStageFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        2.0,
-                        3.0,
-                        7.0,
-                        8.0,
-                        11.0,
-                        12.0
-                      ],
-                      "Y": [
-                        0.75,
-                        0.75,
-                        1.0,
-                        1.0,
-                        1.4,
-                        1.4,
-                        1.4
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].AppearedCohortNo",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 120.0,
-                  "Units": "oC.d",
-                  "Name": "BasePhyllochron",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "PhotoPeriodEffect",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        8.0,
-                        12.0,
-                        14.0
-                      ],
-                      "Y": [
-                        1.6,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -2131,35 +2242,8 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].Phyllochron",
+                  "VariableName": "[Phenology].Phyllochron",
                   "Name": "Phyllochron",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.AddFunction, Models",
-              "Name": "HaunStage",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].ExpandedCohortNo",
-                  "Name": "AppearedLeaves",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].NextExpandingLeafProportion",
-                  "Name": "ProportionOfExpandingLeaf",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2176,70 +2260,6 @@
               "Units": null,
               "Name": "StemSenescenceAge",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "PTQ",
-              "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Radn_mol_per_m2",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[IWeather].Radn",
-                      "Name": "SolarRadiation",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.285,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT",
-                      "Name": "RUE Temp factor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": true
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime",
-                  "Name": "ThermalTime",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -2262,6 +2282,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Phenology].Phyllochron",
+              "Name": "Phyllochron",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -2273,6 +2302,7 @@
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "DMSupply": null,
           "NSupply": null,
@@ -2816,17 +2846,20 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
-          "RootAngle": 45.0,
           "Name": "Root",
           "Children": [
             {
               "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
-              "Children": []
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -3547,15 +3580,33 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3574,12 +3625,15 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "Albedo": 0.25,
           "Gsmax350": 0.011,
           "R50": 150.0,
           "LAI": 0.0,
+          "Depth": 0.0,
+          "Width": 0.0,
           "FRGR": 0.0,
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
@@ -3592,31 +3646,13 @@
           "Name": "Leaf",
           "Children": [
             {
-              "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
-              "Name": "CO2internal",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
+              "$type": "Models.Functions.SupplyFunctions.StomatalConductanceCO2Modifier, Models",
               "Name": "StomatalConductanceCO2Modifier",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Leaf].Photosynthesis.FCO2",
-                  "Name": "FCO2",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
-                  "Name": "RelativeCO2Gradient",
+                  "Name": "PhotosynthesisCO2Modifier",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4029,7 +4065,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron",
+                      "VariableName": "[Phenology].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4183,7 +4219,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron",
+                      "VariableName": "[Phenology].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5211,8 +5247,13 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
               "Name": "WidthFunction",
-              "FixedValue": "0"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
@@ -5234,6 +5275,7 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "IsAboveGround": true,
@@ -5964,15 +6006,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -5985,6 +6040,7 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "IsAboveGround": true,
@@ -6770,15 +6826,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -6968,7 +7037,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 10",
                     "[Phenology].PpSensitivity.FixedValue = 6",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Amarok",
                   "Children": [],
@@ -6996,7 +7065,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 8",
                     "[Phenology].PpSensitivity.FixedValue = 5",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
@@ -7013,7 +7082,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
@@ -7043,7 +7112,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 8",
                     "[Phenology].PpSensitivity.FixedValue = 8",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Claire",
                   "Children": [],
@@ -7057,7 +7126,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Conquest",
                   "Children": [],
@@ -7084,7 +7153,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 0",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.051",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35",
@@ -7172,7 +7241,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Otane",
                   "Children": [],
@@ -7239,7 +7308,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 2",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Rongotea",
                   "Children": [],
@@ -7345,12 +7414,12 @@
                     "[Phenology].VrnSensitivity.FixedValue = 10",
                     "[Phenology].PpSensitivity.FixedValue = 0",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.X = 0,1,8",
-                    "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.Y = 0,1.204,0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].DailyVernalisation.TempResponseProfile.Response.X = 0,1,8",
+                    "[Phenology].DailyVernalisation.TempResponseProfile.Response.Y = 0,1.204,0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.035",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000"
                   ],
                   "Name": "Wakanui",
@@ -7388,7 +7457,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Axe",
                   "Children": [],
@@ -7402,7 +7471,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Bolac",
                   "Children": [],
@@ -7416,7 +7485,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Cunningham",
                   "Children": [
@@ -7615,7 +7684,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Derrimut",
                   "Children": [],
@@ -7629,7 +7698,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85"
                   ],
                   "Name": "Gregory",
                   "Children": [
@@ -7652,7 +7721,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue"
                   ],
@@ -7668,7 +7737,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Gauntlet",
                   "Children": [
@@ -7787,7 +7856,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Gladius",
                   "Children": [],
@@ -7801,7 +7870,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17"
                   ],
@@ -7817,7 +7886,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20"
                   ],
                   "Name": "H45",
@@ -7873,7 +7942,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "H46",
                   "Children": [],
@@ -7887,7 +7956,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041"
                   ],
                   "Name": "Hartog",
@@ -8040,7 +8109,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 70"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 70"
                   ],
                   "Name": "Wills",
                   "Children": [],
@@ -8055,7 +8124,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Mercury",
                   "Children": [
@@ -8182,7 +8251,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Batavia",
                   "Children": [],
@@ -8196,7 +8265,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue =80"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue =80"
                   ],
                   "Name": "Egret",
                   "Children": [],
@@ -8210,7 +8279,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Janz",
                   "Children": [],
@@ -8224,7 +8293,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Kellalac",
                   "Children": [
@@ -8263,7 +8332,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Kennedy",
                   "Children": [],
@@ -8277,7 +8346,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Lang",
                   "Children": [],
@@ -8291,7 +8360,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Livingston",
                   "Children": [],
@@ -8305,7 +8374,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Lincoln",
                   "Children": [],
@@ -8319,7 +8388,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Mace",
                   "Children": [],
@@ -8334,7 +8403,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 5",
                     "[Phenology].PpSensitivity.FixedValue = 5",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5 ",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "MacKellar",
                   "Children": [
@@ -8373,7 +8442,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Matong",
@@ -8388,7 +8457,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90"
                   ],
                   "Name": "McCubbin",
                   "Children": [],
@@ -8402,7 +8471,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Ruby",
                   "Children": [],
@@ -8416,7 +8485,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
                   ],
                   "Name": "Spear",
@@ -8431,7 +8500,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Sunbri",
                   "Children": [],
@@ -8446,7 +8515,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Sunco",
                   "Children": [
@@ -8485,7 +8554,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Ventura",
                   "Children": [],
@@ -8499,7 +8568,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90"
                   ],
                   "Name": "Eaglehawk",
                   "Children": [],
@@ -8513,7 +8582,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Wedgetail",
                   "Children": [
@@ -8544,7 +8613,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Westonia",
                   "Children": [],
@@ -8558,7 +8627,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
                   ],
@@ -8574,7 +8643,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Wyalkatchem",
                   "Children": [],
@@ -8590,7 +8659,7 @@
                     "[Phenology].PpSensitivity.FixedValue = 5",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 2.5",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Yitpi",
                   "Children": [],
@@ -8604,7 +8673,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Young",
                   "Children": [],
@@ -8705,7 +8774,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 4",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 16",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.050",
                     "[Grain].MaximumNConc.FixedValue = 0.026",
@@ -8735,7 +8804,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 5",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Keyu13",
                   "Children": [],
@@ -8758,7 +8827,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000"
                   ],
                   "Name": "Yecora",
@@ -8843,7 +8912,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],
                   "Name": "Dekan",
@@ -8859,7 +8928,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],
                   "Name": "Rosario",
@@ -8875,7 +8944,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],
                   "Name": "Ararat",
@@ -8890,7 +8959,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 0",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90"
                   ],
                   "Name": "Tybalt",
                   "Children": [],
@@ -8913,7 +8982,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].GrainFilling.Target.FixedValue = 350"
                   ],
@@ -8938,7 +9007,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Gorgan",
                   "Children": [],
@@ -8958,474 +9027,665 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100.4",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.4",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.7",
                     "[Phenology].VrnSensitivity.FixedValue = 5.0"
                   ],
-                  "Name": "Adv08_0008"
+                  "Name": "Adv08_0008",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 95.1",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95.1",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.3",
                     "[Phenology].PpSensitivity.FixedValue = 0.7",
                     "[Phenology].VrnSensitivity.FixedValue = 5.7"
                   ],
-                  "Name": "Bennett"
+                  "Name": "Bennett",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 84.4",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 84.4",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 2.0",
                     "[Phenology].VrnSensitivity.FixedValue = 5.7"
                   ],
-                  "Name": "Scythe"
+                  "Name": "Scythe",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 9.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 6.3"
                   ],
-                  "Name": "Beaufort"
+                  "Name": "Beaufort",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.5",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.5",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
                     "[Phenology].PpSensitivity.FixedValue = 3.7",
                     "[Phenology].VrnSensitivity.FixedValue = 1.3"
                   ],
-                  "Name": "Braewood"
+                  "Name": "Braewood",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.7",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 3.7"
                   ],
-                  "Name": "Calingiri"
+                  "Name": "Calingiri",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.3",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "Catalina"
+                  "Name": "Catalina",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 73.6",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 73.6",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.7",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Condo"
+                  "Name": "Condo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 76.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 76.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.0",
                     "[Phenology].VrnSensitivity.FixedValue = 6.7"
                   ],
-                  "Name": "Crusader"
+                  "Name": "Crusader",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 88.9",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 88.9",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 3.7"
                   ],
-                  "Name": "CSIROW002"
+                  "Name": "CSIROW002",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90.1",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90.1",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 0.7",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "CSIROW003"
+                  "Name": "CSIROW003",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 81.3",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 81.3",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 0.7",
                     "[Phenology].VrnSensitivity.FixedValue = 5.0"
                   ],
-                  "Name": "CSIROW005"
+                  "Name": "CSIROW005",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 93.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 93.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 0.0"
                   ],
-                  "Name": "CSIROW011"
+                  "Name": "CSIROW011",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 89.2",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 89.2",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 3.7"
                   ],
-                  "Name": "CSIROW018"
+                  "Name": "CSIROW018",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85.1",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85.1",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 5.3"
                   ],
-                  "Name": "CSIROW021"
+                  "Name": "CSIROW021",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 89.2",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 89.2",
                     "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 0.3"
                   ],
-                  "Name": "CSIROW027"
+                  "Name": "CSIROW027",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 96.6",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.6",
                     "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
                     "[Phenology].PpSensitivity.FixedValue = 0.3",
                     "[Phenology].VrnSensitivity.FixedValue = 0.3"
                   ],
-                  "Name": "CSIROW029"
+                  "Name": "CSIROW029",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 93.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 93.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 5.3",
                     "[Phenology].PpSensitivity.FixedValue = 0.7",
                     "[Phenology].VrnSensitivity.FixedValue = 0.7"
                   ],
-                  "Name": "CSIROW077"
+                  "Name": "CSIROW077",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.5",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.5",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 0.0"
                   ],
-                  "Name": "CSIROW087"
+                  "Name": "CSIROW087",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92.9",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 92.9",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 2.0"
                   ],
-                  "Name": "CSIROW102"
+                  "Name": "CSIROW102",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 94.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 94.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 5.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "CSIROW105"
+                  "Name": "CSIROW105",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 97.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.7",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "Hume"
+                  "Name": "Hume",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 103.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 103.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 4.0",
                     "[Phenology].VrnSensitivity.FixedValue = 4.7"
                   ],
-                  "Name": "Ellison"
+                  "Name": "Ellison",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 95.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 0.0"
                   ],
-                  "Name": "Emu_Rock"
+                  "Name": "Emu_Rock",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 88.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 88.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 5.0",
                     "[Phenology].VrnSensitivity.FixedValue = 1.3"
                   ],
-                  "Name": "Forrest"
+                  "Name": "Forrest",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 97.5",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.5",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.7",
                     "[Phenology].VrnSensitivity.FixedValue = 1.3"
                   ],
-                  "Name": "Grenade"
+                  "Name": "Grenade",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 82.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 82.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                     "[Phenology].PpSensitivity.FixedValue = 3.0",
                     "[Phenology].VrnSensitivity.FixedValue = 9.0"
                   ],
-                  "Name": "Kittyhawk"
+                  "Name": "Kittyhawk",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92.3",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 92.3",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 3.7",
                     "[Phenology].VrnSensitivity.FixedValue = 0.7"
                   ],
-                  "Name": "Lancer"
+                  "Name": "Lancer",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.7",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Nighthawk"
+                  "Name": "Nighthawk",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 99.4",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 99.4",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 1.7",
                     "[Phenology].VrnSensitivity.FixedValue = 5.7"
                   ],
-                  "Name": "Magenta"
+                  "Name": "Magenta",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 109.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 109.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 9.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.3",
                     "[Phenology].VrnSensitivity.FixedValue = 5.0"
                   ],
-                  "Name": "Manning"
+                  "Name": "Manning",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 94.9",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 94.9",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 0.0"
                   ],
-                  "Name": "Merinda"
+                  "Name": "Merinda",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 76.6",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 76.6",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.0",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Mitch"
+                  "Name": "Mitch",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 81.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 81.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 3.3",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "Ouyen"
+                  "Name": "Ouyen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 79.3",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 79.3",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 2.3",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "Peake"
+                  "Name": "Peake",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 109.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 109.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 9.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.5",
                     "[Phenology].VrnSensitivity.FixedValue = 7.5"
                   ],
-                  "Name": "Revenue"
+                  "Name": "Revenue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85.4",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85.4",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.7",
                     "[Phenology].PpSensitivity.FixedValue = 2.7",
                     "[Phenology].VrnSensitivity.FixedValue = 8.8"
                   ],
-                  "Name": "Rosella"
+                  "Name": "Rosella",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 75.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 75.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 5.3"
                   ],
-                  "Name": "Scout"
+                  "Name": "Scout",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 84.4",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 84.4",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Spitfire"
+                  "Name": "Spitfire",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 82.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 82.7",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
                     "[Phenology].PpSensitivity.FixedValue = 1.7",
                     "[Phenology].VrnSensitivity.FixedValue = 5.3"
                   ],
-                  "Name": "Strzelecki"
+                  "Name": "Strzelecki",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.3",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.3",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Sunbee"
+                  "Name": "Sunbee",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 93.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 93.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
                     "[Phenology].PpSensitivity.FixedValue = 3.7",
                     "[Phenology].VrnSensitivity.FixedValue = 6.7"
                   ],
-                  "Name": "Sunlamb"
+                  "Name": "Sunlamb",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 84.1",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 84.1",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 3.3"
                   ],
-                  "Name": "Sunstate"
+                  "Name": "Sunstate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92.2",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 92.2",
                     "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.3",
                     "[Phenology].VrnSensitivity.FixedValue = 1.0"
                   ],
-                  "Name": "Suntop"
+                  "Name": "Suntop",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85.8",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85.8",
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
                     "[Phenology].PpSensitivity.FixedValue = 3.3",
                     "[Phenology].VrnSensitivity.FixedValue = 4.0"
                   ],
-                  "Name": "Trojan"
+                  "Name": "Trojan",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 92.0",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                     "[Phenology].PpSensitivity.FixedValue = 1.0",
                     "[Phenology].VrnSensitivity.FixedValue = 6.7"
                   ],
-                  "Name": "Illabo"
+                  "Name": "Illabo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91.5",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 91.5",
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.3",
                     "[Phenology].PpSensitivity.FixedValue = 2.0",
                     "[Phenology].VrnSensitivity.FixedValue = 6.2"
                   ],
-                  "Name": "Whistler"
+                  "Name": "Whistler",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,

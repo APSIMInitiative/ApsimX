@@ -92,7 +92,7 @@
                 Paddocks.Add(newPadd);
 
                 // find all the child crop, pasture components that have removable biomass
-                foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
+                foreach (IPlantDamage crop in zone.FindAllInScope<IPlantDamage>())
                     ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
             }
         }
@@ -1630,8 +1630,8 @@
                 if (numMales + numFemales > 0)
                 {
                     var newGroup = group.Split(numMales + numFemales, true, group.NODIFF, group.NODIFF);
-                    newGroups.Add(newGroup);
                     Add(newGroup, group.PaddOccupied, group.Tag);
+                    newGroups.Add(stock.Last()); // Can't add newGroup because it is cloned inside of Add method.
                 }
             }
             return newGroups;
@@ -1696,9 +1696,9 @@
 
                     // Now we have computed Diffs, we split up the animals.
                     var newGroup = srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF);
-                    newGroups.Add(newGroup);
                     Add(newGroup, srcGroup.PaddOccupied, srcGroup.Tag);
-                } 
+                    newGroups.Add(stock.Last()); // Can't add newGroup because it is cloned inside of Add method.
+                }
             }
 
             return newGroups;
@@ -1716,9 +1716,11 @@
             {
                 if (srcGroup != null)
                 {
+                    int numGroupsBeforeAdd = stock.Length;
                     var newGroups = srcGroup.SplitYoung();
                     Add(newGroups, srcGroup.PaddOccupied, srcGroup.Tag);
-                    allNewGroups.AddRange(newGroups);
+                    for (int i = numGroupsBeforeAdd; i < stock.Length; i++)
+                        allNewGroups.Add(stock[i]);
                 }
             }
             return allNewGroups;
