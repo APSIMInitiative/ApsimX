@@ -75,11 +75,18 @@ namespace Models.PMF.Phen
 
         /// <summary> The k factor controls the shape of the exponential decline of vernalisation with temperature </summary>
         [Description("The exponential shape function")]
-        public double k { get; set; }
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction k = null;
 
         /// <summary> The temperature above which Vrn1 is down regulated </summary>
         [Description("The temperature above which Vrn1 is down regulated")]
-        public double DeVernalisationTemp { get; set; }
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DeVernalisationTemp = null;
+
+        /// <summary> The rate (/d) that Vrn1 is down regulated when temp is over DVernalisationTemp </summary>
+        [Description("The temperature above which Vrn1 is down regulated")]
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DeVernalisationRate = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -97,11 +104,11 @@ namespace Models.PMF.Phen
             if (camp.Params != null)
             {
                 double dHS = camp.dHS / 24;  //divide by 24 to make hourly
-                double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k * dX);
-                if (dX < DeVernalisationTemp)
+                double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k.Value() * dX);
+                if (dX < DeVernalisationTemp.Value())
                     return UdVrn1 * dHS;
                 else
-                    return -5;
+                    return DeVernalisationRate.Value();
             }
             else return 0.0;
         }

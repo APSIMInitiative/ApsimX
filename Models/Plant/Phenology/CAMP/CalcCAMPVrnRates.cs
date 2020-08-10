@@ -73,8 +73,8 @@ namespace Models.PMF.Phen
             CultivarRateParams Params = new CultivarRateParams();
 
             // Get some other parameters from phenology
-            double maxLAR = Convert.ToDouble(Apsim.Get(phenology, "maxLAR"), CultureInfo.InvariantCulture);
-            double minLAR = Convert.ToDouble(Apsim.Get(phenology, "minLAR"), CultureInfo.InvariantCulture);
+            double maxLAR = Convert.ToDouble(Apsim.Get(phenology, "MaxLAR.FixedValue"), CultureInfo.InvariantCulture);
+            double minLAR = Convert.ToDouble(Apsim.Get(phenology, "MinLAR.FixedValue"), CultureInfo.InvariantCulture);
             double PTQhf = Convert.ToDouble(Apsim.Get(phenology, "PTQhf.FixedValue"), CultureInfo.InvariantCulture);
             LARPTQmodel LARmodel = Apsim.Find(phenology, "LARPTQmodel") as LARPTQmodel;
 
