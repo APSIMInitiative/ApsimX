@@ -48,6 +48,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourAvailabilityItem()
@@ -119,7 +125,7 @@ namespace Models.CLEM.Resources
             if (formatForParentControl)
             {
                 html += "<tr><td>";
-                if ((Apsim.Children(this, typeof(LabourFilter)).Count() == 0))
+                if ((this.FindAllChildren<LabourFilter>().Count() == 0))
                 {
                     html += "<div class=\"filter\">Any labour</div>";
                 }
@@ -127,7 +133,7 @@ namespace Models.CLEM.Resources
             else
             {
                 html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">Any labour</div>";
                 }

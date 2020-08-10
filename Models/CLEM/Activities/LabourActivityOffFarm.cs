@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         {
             // locate resources
             bankType = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
-            labourRequired = Apsim.Children(this, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+            labourRequired = this.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
         }
 
         /// <summary>

@@ -52,6 +52,12 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected AnimalPriceGroup()
@@ -153,7 +159,7 @@ namespace Models.CLEM.Groupings
             if (formatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }
@@ -161,7 +167,7 @@ namespace Models.CLEM.Groupings
             else
             {
                 html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }

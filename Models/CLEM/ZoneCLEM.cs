@@ -54,7 +54,7 @@ namespace Models.CLEM
         /// <summary>
         /// Index of the simulation Climate Region
         /// </summary>
-        [Description("Climate region index")]
+        [Description("Region id")]
         public int ClimateRegion { get; set; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [XmlIgnore]
+        [XmlIgnore, GreaterThanValue(0)]
         public int EcologicalIndicatorsCalculationInterval { get; set; }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Models.CLEM
         [System.ComponentModel.DefaultValueAttribute(7)]
         [Description("End of month to calculate ecological indicators")]
         [Required, Month]
-        public int EcologicalIndicatorsCalculationMonth { get; set; }
+        public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
 
         /// <summary>
         /// Month this overhead is next due.
@@ -167,7 +167,7 @@ namespace Models.CLEM
                 string error = "@i:Invalid parameters in model";
 
                 // find IStorageReader of simulation
-                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
                 if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
@@ -183,10 +183,10 @@ namespace Models.CLEM
 
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
-                if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+                if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
                 {
                     // go back from start month in intervals until
-                    DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
                     {
                         trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
@@ -195,7 +195,7 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
                     {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
@@ -324,10 +324,10 @@ namespace Models.CLEM
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             // get clock
-            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            IModel parentSim = FindAncestor<Simulation>();
 
             // find random number generator
-            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
             if(rnd != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -348,7 +348,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+            Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
             if (clk != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -379,7 +379,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

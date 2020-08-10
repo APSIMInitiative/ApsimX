@@ -148,19 +148,19 @@
             else
             {
                 // Find the model that we are to replace.
-                var experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
+                var experiment = FindAncestor<Experiment>();
+                var baseSimulation = experiment.FindChild<Simulation>();
+                var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
 
                 if (modelToReplace == null)
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
-                var possibleMatches = Apsim.Children(this, modelToReplace.GetType());
-                if (possibleMatches.Count > 1)
-                    value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
+                IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
+                if (possibleMatches.Count() > 1)
+                    value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
                 else
-                    value = possibleMatches[0];
+                    value = possibleMatches.First();
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);
@@ -172,9 +172,15 @@
         {
             ParseAllSpecifications(out List<string> paths, out List<object> values);
 
-            Simulations sims = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulations sims = FindAncestor<Simulations>();
             IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(sims.FileName, str)));
             return result;
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

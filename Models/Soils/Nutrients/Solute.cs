@@ -56,7 +56,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            double[] initialkgha = soil.Initial.FindByPath(Name + "N")?.Value as double[];           
             if (initialkgha == null)
                 kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
             else

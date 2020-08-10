@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using APSIM.Shared;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
@@ -25,7 +22,15 @@ namespace Models.Functions
 
         /// <summary>The variable name</summary>
         [Description("Specify an internal Plant variable")]
-        public string VariableName { get; set; }
+        public string VariableName
+        {
+            get
+            { return trimmedVariableName; }
+            set
+            { trimmedVariableName = value.Trim(); }
+        }
+
+        private string trimmedVariableName = "";
 
 
         /// <summary>Gets the value.</summary>
@@ -35,17 +40,17 @@ namespace Models.Functions
             object o;
             try
             {
-                o = locator.Get(VariableName.Trim());
+                o = locator.Get(trimmedVariableName);
             }
             catch (Exception err)
             {
-                throw new Exception($"Error while locating variable '{VariableName}' in variable reference '{Apsim.FullPath(this)}'", err);
+                throw new Exception($"Error while locating variable '{VariableName}' in variable reference '{this.FullPath}'", err);
             }
 
             // This should never happen: the locator is supposed to throw
             // if the variable cannot be found.
             if (o == null)
-                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + Apsim.FullPath(this));
+                throw new Exception("Unable to locate " + trimmedVariableName + " called from the variable reference function " + FullPath);
 
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
@@ -70,7 +75,7 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

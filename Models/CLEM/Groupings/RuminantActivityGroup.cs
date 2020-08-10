@@ -1,18 +1,17 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
-using Models.CLEM.Reporting;
+﻿using Models.CLEM.Activities;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Models.Core.Attributes;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants
+    /// Defines a group of individual ruminants for whcih all activities below the implimentation consider
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -21,12 +20,10 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
-    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
+    [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantFilterGroup : CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
+    public class RuminantActivityGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -35,13 +32,20 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
+            string html = "<div class=\"filtername\">";
+            html += "This filter is applied to this activity and all activities within this branch</div>";
             return html;
         }
 
@@ -81,8 +85,8 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            html += "\n<div class=\"filterborder filteractivityborder clearfix\">";
+            if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

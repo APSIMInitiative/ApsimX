@@ -57,11 +57,11 @@
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
-                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+                throw new Exception($"No start date provided in clock {this.FullPath} and no weather file could be found.");
             }
             set
             {
@@ -87,11 +87,11 @@
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 
-                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+                throw new Exception($"No end date provided in {this.FullPath}: and no weather file could be found.");
             }
             set
             {
@@ -285,11 +285,11 @@
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
 
-            if (CLEMValidate != null)
-                CLEMValidate.Invoke(this, args);
-
             if (FinalInitialise != null)
                 FinalInitialise.Invoke(this, args);
+
+            if (CLEMValidate != null)
+                CLEMValidate.Invoke(this, args);
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {

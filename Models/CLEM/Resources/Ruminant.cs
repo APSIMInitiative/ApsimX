@@ -85,8 +85,19 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                normalisedWeight = StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                normalisedWeight = CalculateNormalisedWeight(age);
+                    //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
+        }
+
+        /// <summary>
+        /// Calculate normalised weight from age
+        /// </summary>
+        /// <param name="age">Age in months</param>
+        /// <returns></returns>
+        public double CalculateNormalisedWeight(double age)
+        {
+            return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
 
         /// <summary>
@@ -196,25 +207,81 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
-                    (Gender == Sex.Female &
-                    (Age >= BreedParams.MinimumAge1stMating &
-                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
-                    Age <= BreedParams.MaximumAgeMating)
-                    );
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
 
         /// <summary>
+        /// Determine the category of this individual
+        /// </summary>
+        public string Category
+        {
+            get
+            {
+                if(this.IsCalf)
+                {
+                    return "Calf";
+                }
+                else if(this.IsWeaner)
+                {
+                    return "Weaner";
+                }
+                else
+                {
+                    if(this is RuminantFemale)
+                    {
+                        if ((this as RuminantFemale).IsHeifer)
+                        {
+                            return "Heifer";
+                        }
+                        else
+                        {
+                            return "Breeder";
+                        }
+                    }
+                    else
+                    {
+                        if((this as RuminantMale).IsSire)
+                        {
+                            return "Sire";
+                        }
+                        else if((this as RuminantMale).IsCastrated)
+                        {
+                            return "Castraded";
+                        }
+                        else
+                        {
+                            return "Steer";
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
-        public bool Weaner
+        public bool IsWeaner
         {
             get
             {
                 return (Weaned && Age<12);
             }
         }
+
+        /// <summary>
+        /// Determine if weaned and less that 12 months old. Weaner
+        /// </summary>
+        public bool IsCalf
+        {
+            get
+            {
+                return (!Weaned);
+            }
+        }
+
 
         /// <summary>
         /// The current weight as a proportion of Standard Reference Weight
@@ -488,7 +555,7 @@ namespace Models.CLEM.Resources
                 // determine the adjusted DMD of all intake
                 this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DMD * intake.Amount)) / (this.Intake + intake.Amount);
                 // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount); ;
+                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount);
                 this.Intake += intake.Amount;
             }
         }

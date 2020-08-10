@@ -176,8 +176,17 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        string[] memberNames = new string[] { "ResourceTypeName" };
-                        results.Add(new ValidationResult("Could not find resource " + ResourceTypeName.Split('.').First() + " in transmutation cost", memberNames));
+                        string[] memberNames = new string[] { "ResourceGroup" };
+                        results.Add(new ValidationResult("Could not find resource [r=" + ResourceTypeName.Split('.').First() + "] in transmutation cost", memberNames));
+                    }
+                    else
+                    {
+                        object resultType = Resources.GetResourceItem(this, ResourceTypeName,OnMissingResourceActionTypes.Ignore,OnMissingResourceActionTypes.Ignore);
+                        if (resultType is null)
+                        {
+                            string[] memberNames = new string[] { "ResourceType" };
+                            results.Add(new ValidationResult($"Could not find resource [r={ResourceTypeName.Split('.').First()}][r={ResourceTypeName.Split('.').Last()}] in transmutation cost", memberNames));
+                        }
                     }
                 }
             }
@@ -423,7 +432,7 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // get pricing if available
-            IResourceType parentResource = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
             if (parentResource != null)
             {
                 pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
@@ -458,8 +467,8 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
-            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            var w = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            bool multiPrice = (w as IModel).FindAllChildren<ResourcePricing>().Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price != null)
             {

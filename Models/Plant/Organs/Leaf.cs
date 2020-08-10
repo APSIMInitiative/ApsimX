@@ -421,7 +421,18 @@ namespace Models.PMF.Organs
 
             /// <summary>The expansion stress</summary>
             public double ExpansionStressValue { get; set; }
+            /// <summary>The CellDivisionStressValue</summary>
+            public double CellDivisionStressValue { get; set; }
+            /// <summary>The DroughtInducedLagAccelerationValue</summary>
+            public double DroughtInducedLagAccelerationValue { get; set; }
+            /// <summary>The DroughtInducedSenAccelerationValue</summary>
+            public double DroughtInducedSenAccelerationValue { get; set; }
+            /// <summary>The ShadeInducedSenescenceRateValue</summary>
+            public double ShadeInducedSenescenceRateValue { get; set; }
+            /// <summary>The SenessingLeafRelativeSizeValue</summary>
+            public double SenessingLeafRelativeSizeValue { get; set; }
 
+            
             /// <summary>The critical n conc</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction CriticalNConc = null;
@@ -1245,18 +1256,27 @@ namespace Models.PMF.Organs
             if (!parentPlant.IsEmerged)
                 return;
 
-            if (FrostFraction.Value() > 0)
+            double frostfraction = FrostFraction.Value();
+            if (frostfraction > 0)
                 foreach (LeafCohort l in Leaves)
-                    l.DoFrost(FrostFraction.Value());
+                    l.DoFrost(frostfraction);
 
+            // Store values prior to looping through all leaves
             CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
+            CohortParameters.CellDivisionStressValue = CohortParameters.CellDivisionStress.Value();
+            CohortParameters.DroughtInducedLagAccelerationValue = CohortParameters.DroughtInducedLagAcceleration.Value();
+            CohortParameters.DroughtInducedSenAccelerationValue = CohortParameters.DroughtInducedSenAcceleration.Value();
+            //CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
+            //CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
+
             bool nextExpandingLeaf = false;
             double thermalTime = ThermalTime.Value();
+            double extinctionCoefficient = ExtinctionCoeff.Value();
 
             foreach (LeafCohort L in Leaves)
             {
                 CurrentRank = L.Rank;
-                L.DoPotentialGrowth(thermalTime, CohortParameters);
+                L.DoPotentialGrowth(thermalTime, extinctionCoefficient, CohortParameters);
                 needToRecalculateLiveDead = true;
                 if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                 {
@@ -1385,14 +1405,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Fractional interception "above" a given node position</summary>
         /// <param name="cohortno">cohort position</param>
+        /// <param name="extinctionoeff">extinction coefficient</param>
         /// <returns>fractional interception (0-1)</returns>
-        public double CoverAboveCohort(double cohortno)
+        public double CoverAboveCohort(double cohortno, double extinctionoeff)
         {
             int MM2ToM2 = 1000000; // Conversion of mm2 to m2
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea / MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value() * LAIabove);
+            return 1 - Math.Exp(-extinctionoeff * LAIabove);
         }
 
         /// <summary>
@@ -2029,7 +2050,7 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
-            foreach (LeafCohort initialLeaf in Apsim.Children(this, typeof(LeafCohort)))
+            foreach (LeafCohort initialLeaf in this.FindAllChildren<LeafCohort>())
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }

@@ -62,7 +62,7 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
             IModel file = FileFormat.ReadFromString<IModel>(json, out List<Exception> errors);
-            Simulation sim = Apsim.Find(file, typeof(Simulation)) as Simulation;
+            Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
 

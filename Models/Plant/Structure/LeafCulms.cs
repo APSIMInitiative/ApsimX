@@ -568,7 +568,7 @@ namespace Models.PMF.Struct
 		private double GetTTFi()
 		{
 			// fixme
-			return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
+			return (double)this.FindByPath("[Phenology].TTEmergToFloralInit.Value()")?.Value;
 		}
 
 		/// <summary>

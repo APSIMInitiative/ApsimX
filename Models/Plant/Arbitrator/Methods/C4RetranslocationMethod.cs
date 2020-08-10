@@ -35,7 +35,7 @@ namespace Models.PMF.Arbitrator
                     double BiomassRetranslocated = 0;
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
-                        var phenology = Apsim.Find(this, typeof(Phenology)) as Phenology;
+                        var phenology = this.FindInScope<Phenology>();
                         if (phenology.Beyond("EndGrainFill"))
                             return;
                         arbitrationMethod.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);

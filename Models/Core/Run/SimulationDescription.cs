@@ -130,7 +130,8 @@
                     // recompile their scripts. This is to work around an issue
                     // where scripts will change during deserialization. See issue
                     // #4463 and the TestMultipleChildren test inside ReportTests.
-                    Apsim.ChildrenRecursively(newSimulation, typeof(Manager)).ForEach(m => m.OnCreated());
+                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
+                        script.OnCreated();
                 }
                 else
                     newSimulation = baseSimulation;
@@ -141,15 +142,16 @@
                     newSimulation.Name = Name;
 
                 newSimulation.Parent = null;
-                Apsim.ParentAllChildren(newSimulation);
+                newSimulation.ParentAllDescendants();
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
-                newSimulation.Descriptors = Descriptors;
+                if (newSimulation.Descriptors == null || Descriptors.Count > 0)
+                    newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
 
                 // Standardise the soil.
-                var soils = Apsim.ChildrenRecursively(newSimulation, typeof(Soils.Soil));
+                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
                 foreach (Soils.Soil soil in soils)
                     SoilStandardiser.Standardise(soil);
 
@@ -177,7 +179,7 @@
             }
             else
             {
-                IModel storage = Apsim.Find(topLevelModel, typeof(IDataStore));
+                IModel storage = topLevelModel.FindInScope<DataStore>();
                 services.Add(storage);
             }
 
@@ -198,7 +200,7 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = Apsim.Child(topLevelModel, typeof(Replacements));
+                IModel replacements = topLevelModel.FindChild<Replacements>();
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)
@@ -215,10 +217,10 @@
         public class Descriptor
         {
             /// <summary>The name of the descriptor.</summary>
-            public string Name { get; }
+            public string Name { get; set; }
 
             /// <summary>The value of the descriptor.</summary>
-            public string Value { get; }
+            public string Value { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="name">Name of the descriptor.</param>

@@ -118,7 +118,7 @@
                             statsData.Columns.Add($"{ column.ColumnName}Percentile20", typeof(double));
                             statsData.Columns.Add($"{ column.ColumnName}Percentile30", typeof(double));
                             statsData.Columns.Add($"{ column.ColumnName}Percentile40", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile50", typeof(double));
+                            statsData.Columns.Add($"{ column.ColumnName}Percentile60", typeof(double));
                             statsData.Columns.Add($"{ column.ColumnName}Percentile70", typeof(double));
                             statsData.Columns.Add($"{ column.ColumnName}Percentile80", typeof(double));
                             statsData.Columns.Add($"{ column.ColumnName}Percentile90", typeof(double));
@@ -239,7 +239,7 @@
                 if (CalcStdDev)
                     row[$"{ columnName}StdDev"] = MathUtilities.SampleStandardDeviation(values);
                 if (CalcMedian)
-                    row[$"{ columnName}Percentile50"] = MathUtilities.Percentile(values, 0.5);
+                    row[$"{ columnName}Median"] = MathUtilities.Percentile(values, 0.5);
                 if (CalcPercentiles)
                 {
                     row[$"{ columnName}Percentile10"] = MathUtilities.Percentile(values, 0.1);

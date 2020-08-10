@@ -3,8 +3,6 @@
     using Models.Core;
     using Functions;
     using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
     /// <summary>
     /// # [Name]
     /// [DocumentType Memo]
@@ -30,9 +28,6 @@
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialNitrogen = null;
-
-        /// <summary>Initial carbon/nitrogen ratio</summary>
-        public double[] CNRatio { get { return MathUtilities.Divide(C, N, 0); } }
 
         /// <summary>Amount of carbon (kg/ha)</summary>
         public double[] C { get; set; }

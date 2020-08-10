@@ -23,7 +23,7 @@ namespace Models.Factorial
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in Apsim.Children(this, typeof(Factor)))
+                foreach (Factor factor in this.FindAllChildren<Factor>())
                     f.Add(factor);
                 return f;
             }

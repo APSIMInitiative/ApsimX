@@ -32,6 +32,12 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [XmlIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
@@ -83,7 +89,7 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";
             }
