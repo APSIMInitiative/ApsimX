@@ -1227,31 +1227,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
-                  "Name": "CO2internal",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.DivideFunction, Models",
+                  "$type": "Models.Functions.SupplyFunctions.StomatalConductanceCO2Modifier, Models",
                   "Name": "StomatalConductanceCO2Modifier",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].Photosynthesis.FCO2",
-                      "Name": "FCO2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
-                      "Name": "RelativeCO2Gradient",
+                      "Name": "PhotosynthesisCO2Modifier",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
