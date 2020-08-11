@@ -64,6 +64,8 @@
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
+        private DateTime summerDate;
+        private DateTime winterDate;
 
         /// <summary>cumulative soil evaporation in stage 1 (mm)</summary>
         private double sumes1;
@@ -71,6 +73,12 @@
         /// <summary>cumulative soil evaporation in stage 2 (mm)</summary>
         private double sumes2;
 
+        /// <summary>CONA that was used.</summary>
+        private double cona;
+
+        /// <summary>U that was used.</summary>
+        private double u;
+        
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
         public double t;
 
@@ -86,27 +94,30 @@
         [XmlIgnore]
         public double Es { get; private set; }
 
-        /// <summary>CONA that was used.</summary>
-        public double CONA
+        /// <summary>Called on start of day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            get
+            // At beginning of the year reget the summer and winter dates
+            // so that leap years are taken into accoun.
+            if (clock.Today.DayOfYear == 1)
             {
-                if (IsSummer)
-                    return waterBalance.SummerCona;
-                else
-                    return waterBalance.WinterCona;
+                summerDate = DateUtilities.GetDate(waterBalance.SummerDate, clock.Today);
+                winterDate = DateUtilities.GetDate(waterBalance.WinterDate, clock.Today);
             }
-        }
 
-        /// <summary>U that was used.</summary>
-        public double U
-        {
-            get
+            // Check for start of summer or winter to update CONA and U
+            if (clock.Today.DayOfYear == summerDate.DayOfYear)
             {
-                if (IsSummer)
-                    return waterBalance.SummerU;
-                else
-                    return waterBalance.WinterU;
+                u = waterBalance.SummerU;
+                cona = waterBalance.SummerCona;
+            }
+            else if(clock.Today.DayOfYear == winterDate.DayOfYear)
+            {
+                u = waterBalance.WinterU;
+                cona = waterBalance.WinterCona;
             }
         }
 
@@ -116,12 +127,18 @@
             double sw_top_crit = 0.9;
             double sumes1_max = 100;
             double sumes2_max = 25;
-            double u = waterBalance.WinterU;
-            double cona = waterBalance.WinterCona;
-            if (IsSummer)
+            summerDate = DateUtilities.GetDate(waterBalance.SummerDate, clock.Today);
+            winterDate = DateUtilities.GetDate(waterBalance.WinterDate, clock.Today);
+            bool isSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
+            if (isSummer)
             {
                 u = waterBalance.SummerU;
                 cona = waterBalance.SummerCona;
+            }
+            else
+            {
+                u = waterBalance.WinterU;
+                cona = waterBalance.WinterCona;
             }
 
             //! set up evaporation stage
@@ -155,15 +172,6 @@
             CalcEoReducedDueToShading();
             CalcEs();
             return Es;
-        }
-
-        /// <summary>Return true if simulation is in summer.</summary>
-        private bool IsSummer
-        {
-            get
-            {
-                return !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
-            }
         }
 
         /// <summary>Calculate the Eo (atmospheric potential)</summary>
@@ -241,7 +249,8 @@
             // BUT taking into account that residue can be a mix of
             // residues from various crop types <dms june 95>
 
-            if (surfaceOrganicMatter.Cover >= 1.0)
+            double surfaceCover = surfaceOrganicMatter.Cover;
+            if (surfaceCover >= 1.0)
             {
                 // We test for 100% to avoid log function failure.
                 // The algorithm applied here approaches 0 as cover approaches
@@ -258,7 +267,7 @@
                 //    [DM. Silburn unpublished data, June 95 ]
                 //    <temporary value - will reproduce Adams et al 75 effect>
                 //     c%A_to_evap_fact = 0.00022 / 0.0005 = 0.44
-                eos_residue_fract = Math.Pow((1.0 - surfaceOrganicMatter.Cover), A_to_evap_fact);
+                eos_residue_fract = Math.Pow((1.0 - surfaceCover), A_to_evap_fact);
             }
 
             // Reduce potential soil evap under canopy to that under residue (mulch)
@@ -304,7 +313,7 @@
                 sumes1 = Math.Max(0.0, sumes1 - waterBalance.Infiltration);
 
                 // update t (incase sumes2 changed)
-                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, CONA, 0.0));
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
             }
             else
             {
@@ -312,11 +321,11 @@
             }
 
             // are we in stage1 ?
-            if (sumes1 < U)
+            if (sumes1 < u)
             {
                 // we are in stage1
                 // set esoil1 = potential, or limited by u.
-                esoil1 = Math.Min(Eos, U - sumes1);
+                esoil1 = Math.Min(Eos, u - sumes1);
 
                 if ((Eos > esoil1) && (esoil1 < avail_sw_top))
                 {
@@ -327,7 +336,7 @@
                     if (sumes2 > 0.0)
                     {
                         t = t + 1.0;
-                        esoil2 = Math.Min((Eos - esoil1), (CONA * Math.Pow(t, 0.5) - sumes2));
+                        esoil2 = Math.Min((Eos - esoil1), (cona * Math.Pow(t, 0.5) - sumes2));
                     }
                     else
                         esoil2 = 0.6 * (Eos - esoil1);
@@ -345,7 +354,7 @@
                 // update 1st and 2nd stage soil evaporation.     
                 sumes1 = sumes1 + esoil1;
                 sumes2 = sumes2 + esoil2;
-                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, CONA, 0.0));
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
             }
             else
             {
@@ -353,7 +362,7 @@
                 esoil1 = 0.0;
 
                 t = t + 1.0;
-                esoil2 = Math.Min(Eos, (CONA * Math.Pow(t, 0.5) - sumes2));
+                esoil2 = Math.Min(Eos, (cona * Math.Pow(t, 0.5) - sumes2));
 
                 // check with lower limit of evaporative sw.
                 esoil2 = Math.Min(esoil2, avail_sw_top);
