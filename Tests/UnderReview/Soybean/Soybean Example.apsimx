@@ -6662,7 +6662,7 @@
         },
         {
           "$type": "Models.Climate.Weather, Models",
-          "FileName": "C:\\ApsimX\\Examples\\WeatherFiles\\Dalby.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
