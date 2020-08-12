@@ -60,9 +60,6 @@ namespace APSIM.Shared.Utilities
         /// <summary>The name of the excel worksheet (where applicable)</summary>
         private string _SheetName;
 
-        /// <summary>Delimiters to split a line in to words</summary>
-        private static char[] wordDelimiters = new char[] { ' ', '\t' };
-
         /// <summary>The headings</summary>
         public StringCollection Headings;
 
@@ -621,11 +618,7 @@ namespace APSIM.Shared.Utilities
                 words.AddRange(Line.Split(",".ToCharArray()));
             }
             else
-            {
-                var wordsOnLine = Line.Split(wordDelimiters, StringSplitOptions.RemoveEmptyEntries);
-                words.Clear();
-                words.AddRange(wordsOnLine);
-            }
+                words = StringUtilities.SplitStringHonouringQuotes(Line, " \t");
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
