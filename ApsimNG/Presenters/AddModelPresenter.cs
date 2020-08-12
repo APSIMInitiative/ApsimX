@@ -180,7 +180,7 @@
                             resource.ResourceName = selectedModelType.ResourceString;
                     }
 
-                    var command = new AddModelCommand(Apsim.FullPath(this.model), child, explorerPresenter);
+                    var command = new AddModelCommand(this.model.FullPath, child, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
             }

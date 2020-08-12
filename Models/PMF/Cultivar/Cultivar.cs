@@ -44,7 +44,7 @@
             get
             {
                 List<string> names = new List<string>();
-                Apsim.Children(this, typeof(Alias)).ForEach(a => names.Add(a.Name));
+                names.AddRange(FindAllChildren<Alias>().Select(a => a.Name));
                 return names.ToArray();
             }
         }
@@ -96,7 +96,7 @@
 
                         if (propertyName != string.Empty && propertyValue != string.Empty)
                         {
-                            IVariable property = Apsim.GetVariableObject(model, propertyName) as IVariable;
+                            IVariable property = model.FindByPath(propertyName) as IVariable;
                             if (property == null)
                                 throw new Exception(string.Format("Invalid command in cultivar {0}: {1}", Name, propertyName));
                             if (property.GetType() != null)

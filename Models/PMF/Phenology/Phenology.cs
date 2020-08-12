@@ -334,10 +334,9 @@ namespace Models.PMF.Phen
         /// <param name="overRideFLNParams"></param>
         public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
         {
-            CAMP camp = Apsim.Child(this,"CAMP") as CAMP;
+            CAMP camp = this.FindChild("CAMP") as CAMP;
             camp.ResetVernParams(overRideFLNParams);
         }
-
 
         // 7. Private methods
         // -----------------------------------------------------------------------------------------------------------
@@ -353,7 +352,7 @@ namespace Models.PMF.Phen
             else
                 phases.Clear();
 
-            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+            foreach (IPhase phase in this.FindAllChildren<IPhase>())
                 phases.Add(phase);
         }
         /// <summary>Called when model has been created.</summary>
@@ -489,7 +488,7 @@ namespace Models.PMF.Phen
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
@@ -502,7 +501,7 @@ namespace Models.PMF.Phen
                 tableData.Columns.Add("Final Stage", typeof(string));
 
                 int N = 1;
-                foreach (IModel child in Apsim.Children(this, typeof(IPhase)))
+                foreach (IModel child in this.FindAllChildren<IPhase>())
                 {
                     DataRow row;
                     row = tableData.NewRow();
@@ -521,11 +520,11 @@ namespace Models.PMF.Phen
 
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
-                foreach (IModel child in Apsim.Children(this, typeof(IPhase)))
+                foreach (IModel child in this.FindAllChildren<IPhase>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     if (child.GetType() != typeof(Memo) && !typeof(IPhase).IsAssignableFrom(child.GetType()))
                         AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }

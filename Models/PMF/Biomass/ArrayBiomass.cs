@@ -176,7 +176,7 @@ namespace Models.PMF
             int i = 0;
             foreach (string PropertyName in Propertys)
             {
-                object Obj = Apsim.Get(this, PropertyName + SubPropertyName);
+                object Obj = this.FindByPath(PropertyName + SubPropertyName)?.Value;
                 if (Obj == null)
                     throw new Exception("Cannot find: " + PropertyName + " in ArrayBiomass: " + this.Name);
 

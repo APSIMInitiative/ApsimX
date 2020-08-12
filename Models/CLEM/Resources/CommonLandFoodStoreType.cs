@@ -121,7 +121,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(Apsim.Children(this, typeof(Transmutation)).Count() > 0)
+            if(this.FindAllChildren<Transmutation>().Count() > 0)
             {
                 string[] memberNames = new string[] { "Transmutations" };
                 results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));

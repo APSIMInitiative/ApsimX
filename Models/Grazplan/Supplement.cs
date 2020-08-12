@@ -1115,7 +1115,7 @@ namespace Models.GrazPlan
             {
                 theModel.AddPaddock(-1, string.Empty);
                 int paddId = 0;
-                foreach (Zone zone in Apsim.FindAll(simulation, typeof(Zone)))
+                foreach (Zone zone in simulation.FindAllInScope<Zone>())
                     if (zone.Area > 0.0)
                         theModel.AddPaddock(paddId++, zone.Name);
             }

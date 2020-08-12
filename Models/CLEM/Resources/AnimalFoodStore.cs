@@ -28,11 +28,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
+            foreach (AnimalFoodStoreType childModel in this.FindAllChildren<AnimalFoodStoreType>())
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
             }
-            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
             }
@@ -44,11 +44,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (AnimalFoodStoreType childModel in Apsim.Children(this, typeof(AnimalFoodStoreType)))
+            foreach (AnimalFoodStoreType childModel in this.FindAllChildren<AnimalFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }

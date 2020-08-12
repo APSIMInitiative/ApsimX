@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
             }
 
             // get finances required.
-            foreach (ResourceActivityFee item in Apsim.Children(this, typeof(ResourceActivityFee)))
+            foreach (ResourceActivityFee item in this.FindAllChildren<ResourceActivityFee>())
             {
                 if (ResourceRequestList == null)
                 {

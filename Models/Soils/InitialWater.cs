@@ -25,7 +25,7 @@
         {
             get
             {
-                return Apsim.Parent(this, typeof(Soil)) as Soil;
+                return FindAncestor<Soil>();
             }
         }
 

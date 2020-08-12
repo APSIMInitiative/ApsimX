@@ -154,25 +154,25 @@
         /// <summary>Find our children.</summary>
         public void FindChildren()
         {
-            waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
+            waterNode = this.FindChild<Physical>();
 
-            Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
-            SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
+            Weirdo = this.FindChild<WEIRDO>();
+            SoilWater = this.FindChild<ISoilWater>();
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
             if (Weirdo == null && waterNode == null)
                 throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
 
-            SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
+            SoilOrganicMatter = this.FindChild<Organic>();
             if (SoilOrganicMatter == null)
                 throw new Exception($"{Name}: Unable to find Organic child model");
 
-            temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            temperatureModel = this.FindChild<ISoilTemperature>();
             if (temperatureModel == null)
                 throw new Exception($"{Name}: Unable to find soil temperature child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
-            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+            structure = this.FindChild<LayerStructure>();
         }
 
         /// <summary>
@@ -269,7 +269,7 @@
         {
             get
             {
-                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                var sample = this.FindChild<Sample>();
                 return sample?.SW;
             }
         }
@@ -295,13 +295,13 @@
         {
             get
             {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+                InitialWater initialWater = this.FindChild<InitialWater>();
 
                 if (initialWater != null)
                     return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    foreach (Sample Sample in this.FindAllChildren<Sample>())
                     {
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {

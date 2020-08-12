@@ -51,7 +51,7 @@
             intellisense = new IntellisensePresenter(seriesView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
+            Graph parentGraph = series.FindAncestor<Graph>();
             if (parentGraph != null)
             {
                 try
@@ -163,7 +163,7 @@
         {
             try
             {
-                foreach (var s in Apsim.Children(series.Parent, typeof(Series)))
+                foreach (var s in series.Parent.FindAllChildren<Series>())
                 {
                     ChangeProperty command = new ChangeProperty(s, name, value);
                     explorerPresenter.CommandHistory.Add(command);
@@ -493,7 +493,7 @@
             {
                 // This should never happen...if one of these values is ever removed, a converter should be written.
                 thicknesses.Add(series.LineThickness.ToString());
-                warnings.Add(string.Format("WARNING: {0}: Selected line thickness '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.LineThickness.ToString()));
+                warnings.Add(string.Format("WARNING: {0}: Selected line thickness '{1}' is invalid. This could be a relic from an older version of APSIM.", series.FullPath, series.LineThickness.ToString()));
             }
             this.seriesView.LineThickness.Values = thicknesses.ToArray();
             this.seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
@@ -504,7 +504,7 @@
             {
                 // This should never happen...if one of these values is ever removed, a converter should be written.
                 sizes.Add(series.MarkerSize.ToString());
-                warnings.Add(string.Format("WARNING: {0}: Selected marker size '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.MarkerSize));
+                warnings.Add(string.Format("WARNING: {0}: Selected marker size '{1}' is invalid. This could be a relic from an older version of APSIM.", series.FullPath, series.MarkerSize));
             }
             this.seriesView.MarkerSize.Values = sizes.ToArray();
             this.seriesView.MarkerSize.SelectedValue = series.MarkerSize.ToString();
@@ -515,7 +515,7 @@
             {
                 // This should never happen...if one of these values is ever removed, a converter should be written.
                 seriesTypes.Add(series.Type.ToString());
-                warnings.Add(string.Format("WARNING: {0}: Selected series type '{1}' is invalid. This could be a relic from an older version of APSIM.", Apsim.FullPath(series), series.Type));
+                warnings.Add(string.Format("WARNING: {0}: Selected series type '{1}' is invalid. This could be a relic from an older version of APSIM.", series.FullPath, series.Type));
             }
             this.seriesView.SeriesType.Values = seriesTypes.ToArray();
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
@@ -533,7 +533,7 @@
             if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
-                warnings.Add(string.Format("WARNING: {0}: Selected Data Source '{1}' does not exist in the datastore. Have the simulations been run?", Apsim.FullPath(series), series.TableName));
+                warnings.Add(string.Format("WARNING: {0}: Selected Data Source '{1}' does not exist in the datastore. Have the simulations been run?", series.FullPath, series.TableName));
             }
             dataSources.Sort();
             this.seriesView.DataSource.Values = dataSources.ToArray();
@@ -585,7 +585,7 @@
             if (!values.Contains(selectedValue) && !string.IsNullOrEmpty(selectedValue))
             {
                 values.Add(selectedValue);
-                warnings.Add(string.Format("WARNING: {0}: Selected line type '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
+                warnings.Add(string.Format("WARNING: {0}: Selected line type '{1}' is invalid.", series.FullPath, selectedValue));
             }
             this.seriesView.LineType.Values = values.ToArray();
             this.seriesView.LineType.SelectedValue = selectedValue;
@@ -612,7 +612,7 @@
             if (!values.Contains(selectedValue) && !string.IsNullOrEmpty(selectedValue))
             {
                 values.Add(selectedValue);
-                warnings.Add(string.Format("WARNING: {0}: Selected marker type '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
+                warnings.Add(string.Format("WARNING: {0}: Selected marker type '{1}' is invalid.", series.FullPath, selectedValue));
             }
 
             this.seriesView.MarkerType.Values = values.ToArray();
@@ -647,7 +647,7 @@
                 // If selectedValue is not a string, then it is probably a custom colour.
                 // In such a scenario, we don't show a warning, as we can display it with no problems.
                 if (selectedValue is string)
-                    warnings.Add(string.Format("WARNING: {0}: Selected colour '{1}' is invalid.", Apsim.FullPath(series), selectedValue));
+                    warnings.Add(string.Format("WARNING: {0}: Selected colour '{1}' is invalid.", series.FullPath, selectedValue));
             }
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
@@ -686,28 +686,28 @@
             if (!this.seriesView.X.Values.Contains(series.XFieldName) && !string.IsNullOrEmpty(series.XFieldName))
             {
                 this.seriesView.X.Values = this.seriesView.X.Values.Concat(new string[] { series.XFieldName }).ToArray();
-                warnings.Add(string.Format("WARNING: {0}: Selected X field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.XFieldName, series.TableName));
+                warnings.Add(string.Format("WARNING: {0}: Selected X field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", series.FullPath, series.XFieldName, series.TableName));
             }
             this.seriesView.X.SelectedValue = series.XFieldName;
 
             if (!this.seriesView.Y.Values.Contains(series.YFieldName) && !string.IsNullOrEmpty(series.YFieldName))
             {
                 this.seriesView.Y.Values = this.seriesView.Y.Values.Concat(new string[] { series.YFieldName }).ToArray();
-                warnings.Add(string.Format("WARNING: {0}: Selected Y field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.YFieldName, series.TableName));
+                warnings.Add(string.Format("WARNING: {0}: Selected Y field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", series.FullPath, series.YFieldName, series.TableName));
             }
             this.seriesView.Y.SelectedValue = series.YFieldName;
 
             if (!this.seriesView.X2.Values.Contains(series.X2FieldName) && !string.IsNullOrEmpty(series.X2FieldName))
             {
                 this.seriesView.X2.Values = this.seriesView.X2.Values.Concat(new string[] { series.X2FieldName }).ToArray();
-                warnings.Add(string.Format("WARNING: {0}: Selected X2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.X2FieldName, series.TableName));
+                warnings.Add(string.Format("WARNING: {0}: Selected X2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", series.FullPath, series.X2FieldName, series.TableName));
             }
             this.seriesView.X2.SelectedValue = series.X2FieldName;
 
             if (!this.seriesView.Y2.Values.Contains(series.Y2FieldName) && !string.IsNullOrEmpty(series.Y2FieldName))
             {
                 this.seriesView.Y2.Values = this.seriesView.Y2.Values.Concat(new string[] { series.Y2FieldName }).ToArray();
-                warnings.Add(string.Format("WARNING: {0}: Selected Y2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", Apsim.FullPath(series), series.Y2FieldName, series.TableName));
+                warnings.Add(string.Format("WARNING: {0}: Selected Y2 field name '{1}' does not exist in the datastore table '{2}'. Have the simulations been run?", series.FullPath, series.Y2FieldName, series.TableName));
             }
             this.seriesView.Y2.SelectedValue = series.Y2FieldName;
 

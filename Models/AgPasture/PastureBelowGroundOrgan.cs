@@ -57,18 +57,18 @@
                                double kuNH4, double kuNO3, double referenceKSuptake,
                                double referenceRLD, double exponentSoilMoisture)
         {
-            mySoil = Apsim.Find(zone, typeof(Soil)) as Soil;
+            mySoil = zone.FindInScope<Soil>();
             if (mySoil == null)
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
 
-            SoilNitrogen = Apsim.Find(zone, typeof(INutrient)) as INutrient;
+            SoilNitrogen = zone.FindInScope<INutrient>();
             if (SoilNitrogen == null)
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
 
-            NO3 = Apsim.Find(zone, "NO3") as ISolute;
+            NO3 = zone.FindInScope("NO3") as ISolute;
             if (NO3 == null)
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
-            NH4 = Apsim.Find(zone, "NH4") as ISolute;
+            NH4 = zone.FindInScope("NH4") as ISolute;
             if (NH4 == null)
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 

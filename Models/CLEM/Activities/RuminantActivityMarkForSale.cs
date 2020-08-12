@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                     }
 
                     int cnt = 0;
-                    foreach (RuminantGroup item in Apsim.Children(this, typeof(RuminantGroup)))
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
                         {

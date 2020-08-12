@@ -50,7 +50,7 @@ namespace Models
             if (filenames != null)
                 filenames.Clear();
 
-            foreach (Weather weather in Apsim.FindAll(this, typeof(Weather)))
+            foreach (Weather weather in this.FindAllInScope<Weather>())
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;

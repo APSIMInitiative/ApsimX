@@ -232,7 +232,7 @@ namespace Models.PMF.Library
                 data.Columns.Add("% Live To Residue", typeof(int));
                 data.Columns.Add("% Dead To Residue", typeof(int));
 
-                foreach (OrganBiomassRemovalType removal in Apsim.Children(this, typeof(OrganBiomassRemovalType)))
+                foreach (OrganBiomassRemovalType removal in this.FindAllChildren<OrganBiomassRemovalType>())
                 {
                     DataRow row = data.NewRow();
                     data.Rows.Add(row);
@@ -243,7 +243,7 @@ namespace Models.PMF.Library
                     row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
                 }
 
-                foreach (Memo childMemo in Apsim.Children(this, typeof(Memo)))
+                foreach (Memo childMemo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(childMemo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Table(data, indent));

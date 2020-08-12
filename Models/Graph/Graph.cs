@@ -1,4 +1,4 @@
-namespace Models
+﻿namespace Models
 {
     using Factorial;
     using Models.Core;
@@ -128,8 +128,8 @@ namespace Models
         /// <summary>
         /// Gets or sets a list of all series
         /// </summary>
-        [JsonIgnore]
-        public List<IModel> Series { get { return Apsim.Children(this, typeof(Series)); } }
+        [XmlIgnore]
+        public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
 
         /// <summary>
         /// Gets or sets the location of the legend
@@ -160,7 +160,7 @@ namespace Models
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
+            foreach (IGraphable series in this.FindAllChildren<IGraphable>().Where(g => g is IModel m && m.Enabled))
                 series.GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
 
             return definitions;
@@ -171,7 +171,7 @@ namespace Models
         public List<Annotation> GetAnnotationsToGraph()
         {
             List<Annotation> annotations = new List<Annotation>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
+            foreach (IGraphable series in this.FindAllChildren<IGraphable>().Where(g => g is IModel m && m.Enabled))
                 series.GetAnnotationsToPutOnGraph(annotations);
 
             return annotations;

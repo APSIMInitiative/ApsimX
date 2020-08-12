@@ -26,7 +26,7 @@ namespace Models.PMF.Struct
         private double Height = 0;
         
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         /// <summary>Gets or sets the height of the delta.</summary>
         [JsonIgnore]
@@ -36,7 +36,7 @@ namespace Models.PMF.Struct
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>();
 
             double PotentialHeightIncrement = PotentialHeight.Value(arrayIndex) - PotentialHeightYesterday;
             double StressValue = 1.0;

@@ -60,9 +60,9 @@ namespace Models.CLEM.Resources
             PurchaseIndividuals = new List<Ruminant>();
 
             // for each Ruminant type 
-            foreach (RuminantType rType in Apsim.Children(this, typeof(RuminantType)))
+            foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
             {
-                foreach (RuminantInitialCohorts ruminantCohorts in Apsim.Children(rType, typeof(RuminantInitialCohorts)))
+                foreach (RuminantInitialCohorts ruminantCohorts in rType.FindAllChildren<RuminantInitialCohorts>())
                 {
                     foreach (var ind in ruminantCohorts.CreateIndividuals())
                     {

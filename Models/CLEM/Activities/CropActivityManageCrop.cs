@@ -289,12 +289,12 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
-            IModel clemParent = Apsim.Parent(this, typeof(ZoneCLEM));
+            IModel clemParent = FindAncestor<ZoneCLEM>();
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 if (clemParent != null && clemParent.Enabled)
                 {
-                    parentLand = Apsim.Find(clemParent, LandItemNameToUse.Split('.')[0]) as Land;
+                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
                 }
             }
 
@@ -332,7 +332,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 0)
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
             {
                 html += "\n</div>";
             }
@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
 
-            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() == 0)
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
             {
                 html += "\n<div class=\"errorbanner clearfix\">";
                 html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
@@ -355,7 +355,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+                bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
                 if (rotation)
                 {
                     html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";

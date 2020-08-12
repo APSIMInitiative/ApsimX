@@ -86,7 +86,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(f);
+            f.ParentAllDescendants();
 
 
             var links = new Links();

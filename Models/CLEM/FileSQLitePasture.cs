@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -227,7 +227,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = Apsim.Children(this, typeof(RainfallShuffler)).FirstOrDefault() as RainfallShuffler;
+            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault() as RainfallShuffler;
         }
 
         /// <summary>
@@ -399,9 +399,10 @@ namespace Models.CLEM
         {
             get
             {
-                if (Apsim.Parent(this, typeof(Simulation)) is Simulation simulation && this.FileName != null)
+                Simulation sim = FindAncestor<Simulation>();
+                if (sim?.FileName != null)
                 {
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);
                 }
                 else
                 {

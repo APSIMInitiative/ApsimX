@@ -41,7 +41,7 @@ namespace Models.LifeCycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            parent = Apsim.Parent(this, typeof(LifeCyclePhase)) as LifeCyclePhase;
+            parent = FindAncestor<LifeCyclePhase>();
         }
 
         /// <summary>When core LifeCycle processes are complete, calculate additional cohort specific expression</summary>

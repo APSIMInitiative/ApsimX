@@ -59,7 +59,7 @@
                         // files onto our path and then tell the model to remove the paths. The result will be
                         // a self contained path that has all files needed to run all simulations. Useful
                         // for running on clusters.
-                        foreach (IReferenceExternalFiles child in Apsim.ChildrenRecursively(simulation, typeof(IReferenceExternalFiles)))
+                        foreach (IReferenceExternalFiles child in simulation.FindAllDescendants<IReferenceExternalFiles>())
                         {
                             foreach (var fileName in child.GetReferencedFileNames())
                             {

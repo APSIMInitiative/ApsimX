@@ -28,7 +28,7 @@
             // Get a list of all models that need to have event subscriptions resolved in.
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
 
             // Get a list of models in scope that publish events.
             var modelsToInspectForPublishers = scope.FindAll(relativeTo).ToList();
@@ -49,7 +49,7 @@
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            allModels.AddRange(relativeTo.FindAllDescendants());
             List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -69,9 +69,9 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);
@@ -97,9 +97,9 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);
@@ -133,7 +133,7 @@
         {
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
 
             var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
 
@@ -320,7 +320,7 @@
             /// <summary>Find all event publishers in the specified models.</summary>
             /// <param name="models">The models to scan for event publishers</param>
             /// <returns>The list of event publishers</returns>
-            public static List<Publisher> FindAll(List<IModel> models)
+            public static List<Publisher> FindAll(IEnumerable<IModel> models)
             {
                 List<Publisher> publishers = new List<Publisher>();
                 foreach (IModel modelNode in models)

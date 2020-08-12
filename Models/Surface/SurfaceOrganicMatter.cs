@@ -461,8 +461,8 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
+            NO3Solute = this.FindInScope("NO3") as ISolute;
+            NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
         }
 

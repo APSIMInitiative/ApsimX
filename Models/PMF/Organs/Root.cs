@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using Models.Soils.Nutrients;
+    using System.Linq;
 
     ///<summary>
     /// # [Name]
@@ -144,6 +145,10 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
+
+        /// <summary>Link to the KNO3 link</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction RootDepthStressFactor = null;
 
         /// <summary>The maximum N concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -556,15 +561,11 @@
                 if (dMCE > 0.0)
                 {
                     DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                     DMDemand.Metabolic = 0;
                 }
                 else
-                { // Conversion efficiency is zero!!!!
-                    DMDemand.Structural = 0;
-                    DMDemand.Storage = 0;
-                    DMDemand.Metabolic = 0;
-                }
+                    throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
 
                 if (dmDemandPriorityFactors != null)
                 {
@@ -628,7 +629,7 @@
 
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
             if (TotalRAw == 0 && dryMatter.Structural > 0)
                 throw new Exception("Error trying to partition potential root biomass");
@@ -656,7 +657,7 @@
         {
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
             double dMCE = dmConversionEfficiency.Value();
 
@@ -767,9 +768,9 @@
 
             foreach (ZoneState Z in Zones)
             {
-                totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
-                totalMetabolicDemand += MathUtilities.Sum(Z.MetabolicNDemand);
+                totalStructuralNDemand += Z.StructuralNDemand.Sum();
+                totalStorageNDemand += Z.StorageNDemand.Sum();
+                totalMetabolicDemand += Z.MetabolicNDemand.Sum();
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
@@ -882,25 +883,10 @@
 
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
-        /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction RootDepthStressFactor = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxNUptakeRate = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction NSupplyFraction = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction DltThermalTime = null;
-
-        /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxDiffusion = null;
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
@@ -930,10 +916,10 @@
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
                 if (zone != null)
                 {
-                    Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
+                    Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     if (soil.Crop(parentPlant.Name) == null)
@@ -1103,7 +1089,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
+            Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)

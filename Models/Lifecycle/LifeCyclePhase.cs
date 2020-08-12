@@ -170,10 +170,10 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ProgenyDestinations = new List<ProgenyDestinationPhase>();
-            foreach (ProgenyDestinationPhase pdest in Apsim.Children(this, typeof(ProgenyDestinationPhase)))
+            foreach (ProgenyDestinationPhase pdest in this.FindAllChildren<ProgenyDestinationPhase>())
                 ProgenyDestinations.Add(pdest);
             MigrantDestinations = new List<MigrantDestinationPhase>();
-            foreach (MigrantDestinationPhase mdest in Apsim.Children(this, typeof(MigrantDestinationPhase)))
+            foreach (MigrantDestinationPhase mdest in this.FindAllChildren<MigrantDestinationPhase>())
                 MigrantDestinations.Add(mdest);
         }
 
@@ -181,7 +181,7 @@
         public void Process()
         {
             if (Cohorts?.Count > 13000)  //Check cohort number are not becomming silly
-                throw new Exception(Apsim.FullPath(this) + " has over 1500 cohorts which is to many really.  This is why your simulation is slow and the data store is about to chuck it in.  Check your " + this.Parent.Name.ToString() + " model to ensure development and mortality are sufficient.");
+                throw new Exception(FullPath + " has over 1500 cohorts which is to many really.  This is why your simulation is slow and the data store is about to chuck it in.  Check your " + this.Parent.Name.ToString() + " model to ensure development and mortality are sufficient.");
 
             ZeorDeltas(); //Zero reporting properties for daily summing
 
@@ -224,22 +224,22 @@
                     double MeanMigrantAge = SumMigrantAge / Emigrants;
                     double MeanMigrantPAge = SumMigrantPAge / Emigrants;
                     if (MigrantDestinations.Count == 0)
-                        throw new Exception(Apsim.FullPath(this) + " is predicting values for migration but has no MigrationDestinationPhase specified");
+                        throw new Exception(FullPath + " is predicting values for migration but has no MigrationDestinationPhase specified");
                     double MtotalProportion = 0;
                     foreach (MigrantDestinationPhase mdest in MigrantDestinations)
                     {
                         double destEmigrants = Emigrants * mdest.ProportionOfMigrants;
                         if ((MigrantDestinations.Count == 0) && (destEmigrants > 0))
-                            throw new Exception(Apsim.FullPath(this) + " is predicting values for migration but has not MigrantDestinationPhase specified");
+                            throw new Exception(FullPath + " is predicting values for migration but has not MigrantDestinationPhase specified");
                         if (destEmigrants > 0)
                         {
-                            IModel zone = Apsim.Parent(this.Parent, typeof(Zone));
-                            LifeCycle mDestinationCycle = Apsim.Find(zone, mdest.NameOfLifeCycleForMigrants) as LifeCycle;
+                            IModel zone = Parent.FindAncestor<Zone>();
+                            LifeCycle mDestinationCycle = zone.FindInScope<LifeCycle>(mdest.NameOfLifeCycleForMigrants);
                             if (mDestinationCycle == null)
-                                throw new Exception(Apsim.FullPath(this) + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
-                            LifeCyclePhase mDestinationPhase = Apsim.Child(mDestinationCycle, mdest.NameOfPhaseForMigrants) as LifeCyclePhase;
+                                throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
+                            LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants);
                             if (mDestinationPhase == null)
-                                throw new Exception(Apsim.FullPath(this) + " could not find a destination LifeCyclePhase for migrants called " + mdest.NameOfPhaseForMigrants);
+                                throw new Exception(FullPath + " could not find a destination LifeCyclePhase for migrants called " + mdest.NameOfPhaseForMigrants);
 
                             SourceInfo ImigrantInfo = new SourceInfo();
                             ImigrantInfo.LifeCycle = Parent.Name;
@@ -253,14 +253,14 @@
                         }
                     }
                     if ((MtotalProportion > 1.001) && (Emigrants > 0))
-                        throw new Exception("The sum of ProportionOfMigrants values in " + Apsim.FullPath(this) + " ProgenyDestinationPhases is greater than 1.0");
+                        throw new Exception("The sum of ProportionOfMigrants values in " + FullPath + " ProgenyDestinationPhases is greater than 1.0");
                 }
                 
                 // Add progeny into destination phases
                 if (Progeny > 0)
                 {
                     if ((ProgenyDestinations.Count == 0) && (Progeny > 0))
-                        throw new Exception(Apsim.FullPath(this) + " is predicting values for reproduction but has no ProgenyDestinationPhase specified");
+                        throw new Exception(FullPath + " is predicting values for reproduction but has no ProgenyDestinationPhase specified");
                     double PtotalProportion = 0;
                     foreach (ProgenyDestinationPhase pdest in ProgenyDestinations)
                     {
@@ -268,13 +268,13 @@
 
                         if (arrivals > 0)
                         {
-                            IModel zone = Apsim.Parent(this.Parent, typeof(Zone));
-                            LifeCycle pDestinationCylce = Apsim.Find(zone, pdest.NameOfLifeCycleForProgeny) as LifeCycle;
+                            IModel zone = Parent.FindAncestor<Zone>();
+                            LifeCycle pDestinationCylce = zone.FindInScope<LifeCycle>(pdest.NameOfLifeCycleForProgeny);
                             if (pDestinationCylce == null)
-                                throw new Exception(Apsim.FullPath(this) + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
-                            LifeCyclePhase pDestinationPhase = Apsim.Child(pDestinationCylce, pdest.NameOfPhaseForProgeny) as LifeCyclePhase;
+                                throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
+                            LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny);
                             if (pDestinationPhase == null)
-                                throw new Exception(Apsim.FullPath(this) + " could not find a destination LifeCyclePhase for progeny called " + pdest.NameOfPhaseForProgeny);
+                                throw new Exception(FullPath + " could not find a destination LifeCyclePhase for progeny called " + pdest.NameOfPhaseForProgeny);
 
                             SourceInfo ArivalsInfo = new SourceInfo();
                             ArivalsInfo.LifeCycle = Parent.Name;
@@ -288,7 +288,7 @@
                         }
                     }
                     if (((PtotalProportion < 0.999) || (PtotalProportion > 1.001)) && (Progeny > 0))
-                        throw new Exception("The sum of ProportionOfProgeny values in " + Apsim.FullPath(this) + " ProgenyDestinationPhases does not equal 1.0");
+                        throw new Exception("The sum of ProportionOfProgeny values in " + FullPath + " ProgenyDestinationPhases does not equal 1.0");
                 }
 
                 // Move garduates to destination phase

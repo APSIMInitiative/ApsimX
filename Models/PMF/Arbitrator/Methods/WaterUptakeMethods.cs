@@ -49,7 +49,7 @@ namespace Models.PMF.Arbitrator
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            foreach (Model Can in Apsim.FindAll(plant, typeof(IHasWaterDemand)))
+            foreach (Model Can in plant.FindAllInScope<IHasWaterDemand>())
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;

@@ -3598,7 +3598,7 @@
             randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
-            var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
+            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

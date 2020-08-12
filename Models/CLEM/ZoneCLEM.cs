@@ -167,7 +167,7 @@ namespace Models.CLEM
                 string error = "@i:Invalid parameters in model";
 
                 // find IStorageReader of simulation
-                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
                 if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
@@ -324,10 +324,10 @@ namespace Models.CLEM
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             // get clock
-            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            IModel parentSim = FindAncestor<Simulation>();
 
             // find random number generator
-            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
             if(rnd != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -348,7 +348,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
+            Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
             if (clk != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
@@ -379,7 +379,7 @@ namespace Models.CLEM
                 html += "\n</div>";
             }
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

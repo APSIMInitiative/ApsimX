@@ -121,12 +121,10 @@
         /// </summary> 
         public void Reset()
         {
-            List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
-            foreach (NutrientPool P in Pools)
+            foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                 P.Reset();
 
-            List<IModel> Solutes = Apsim.Children(this, typeof(ISolute));
-            foreach (Solute S in Solutes)
+            foreach (Solute S in FindAllChildren<ISolute>())
                 S.Reset();
         }
 
@@ -140,9 +138,9 @@
             {
                 double[] values = new double[FOMLignin.C.Length];
                 int numLayers = values.Length;
-                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
-                foreach (NutrientPool P in Pools)
+                foreach (NutrientPool P in pools)
                     for (int i = 0; i < numLayers; i++)
                         values[i] += P.C[i];
                 return values;
@@ -158,9 +156,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
 
-                foreach (CarbonFlow f in Flows)
+                foreach (CarbonFlow f in FindAllChildren<CarbonFlow>())
                     values = MathUtilities.Add(values, f.Catm);
                 return values;
             }
@@ -175,9 +172,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
 
-                foreach (NFlow f in Flows)
+                foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.Natm);
                 return values;
             }
@@ -192,9 +188,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
 
-                foreach (NFlow f in Flows)
+                foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
                 return values;
             }
@@ -212,7 +207,7 @@
 
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
-                List<IModel> Flows = Apsim.ChildrenRecursively(this, typeof(CarbonFlow));
+                List<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>().ToList();
                 Flows.RemoveAll(flow => flow.Parent == SurfaceResidue);
 
                 // Add all flows.
@@ -230,7 +225,7 @@
         {
             get
             {
-                var decomposition = Apsim.Child(SurfaceResidue as IModel, "Decomposition") as CarbonFlow;
+                var decomposition = (SurfaceResidue as IModel).FindChild<CarbonFlow>("Decomposition");
                 return decomposition.MineralisedN;
             }
         }
@@ -242,7 +237,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var no3NFlow = Apsim.Child(NO3 as IModel, "Denitrification") as NFlow;
+                var no3NFlow = (NO3 as IModel).FindChild<NFlow>("Denitrification");
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < values.Length; i++)
@@ -259,7 +254,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var nh4NFlow = Apsim.Child(NH4 as IModel, "Nitrification") as NFlow;
+                var nh4NFlow = (NH4 as IModel).FindChild<NFlow>("Nitrification");
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < values.Length; i++)
@@ -276,7 +271,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var hydrolysis = Apsim.Child(Urea as IModel, "Hydrolysis") as NFlow;
+                var hydrolysis = (Urea as IModel).FindChild<NFlow>("Hydrolysis");
 
                 return hydrolysis.Value;
             }
@@ -310,7 +305,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var pools = Apsim.ChildrenRecursively(this, typeof(NutrientPool)).Cast<INutrientPool>().ToList();
+                var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
                 pools.Remove(Inert);
                 pools.Remove(SurfaceResidue);
 
@@ -340,7 +335,7 @@
             {
                 double[] values = new double[FOMLignin.N.Length];
                 int numLayers = values.Length;
-                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+                IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in Pools)
                     for (int i = 0; i < numLayers; i++)
@@ -499,11 +494,11 @@
 
             bool needAtmosphereNode = false;
 
-            foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
+            foreach (NutrientPool pool in this.FindAllChildren<NutrientPool>())
             {
                 directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black);
 
-                foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
+                foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
                 {
                     foreach (string destinationName in cFlow.destinationNames)
                     {
@@ -519,10 +514,10 @@
                 }
             }
 
-            foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
+            foreach (Solute solute in this.FindAllChildren<Solute>())
             {
                 directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black);
-                foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
+                foreach (NFlow nitrogenFlow in solute.FindAllChildren<NFlow>())
                 {
                     string destName = nitrogenFlow.destinationName;
                     if (destName == null)

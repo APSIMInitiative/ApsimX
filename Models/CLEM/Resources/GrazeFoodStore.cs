@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         {
             Items = new List<GrazeFoodStoreType>();
 
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+            IEnumerable<IModel> childNodes = FindAllChildren<IModel>();
 
             foreach (IModel childModel in childNodes)
             {
@@ -67,12 +67,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (GrazeFoodStoreType childModel in Apsim.Children(this, typeof(GrazeFoodStoreType)))
+            foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
             }
-            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
