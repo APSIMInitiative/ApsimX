@@ -36,7 +36,7 @@
         public double Altitude { get; set; } = 50;
 
         /// <summary>Return a list of plant models.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>

@@ -128,7 +128,7 @@
         /// <summary>
         /// Gets or sets a list of all series
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
 
         /// <summary>

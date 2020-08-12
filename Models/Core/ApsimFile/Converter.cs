@@ -2448,6 +2448,7 @@
             }
         }
 
+        /// <summary>
         /// Add canopy width Function.
         /// </summary>
         /// <param name="root">Root node.</param>
