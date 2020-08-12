@@ -90,7 +90,7 @@ namespace UserInterface.Presenters
         /// Attach the view to this presenter.
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="view"></param>
+        /// <param name="viewBase"></param>
         /// <param name="explorerPresenter"></param>
         public void Attach(object model, object viewBase, ExplorerPresenter explorerPresenter)
         {
@@ -314,7 +314,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Update the list of jobs shown to user.
         /// </summary>
-        /// <param name="jobs">The list of jobs to put into view.</param>
+        /// <param name="job">The job to added to the view.</param>
         private void AddJobToView(JobDetails job)
         {
             if (job != null)

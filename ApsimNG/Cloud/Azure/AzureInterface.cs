@@ -227,6 +227,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
+        /// <param name="AddJobHandler">Callback which will be run each time a job is loaded.</param>
         public async void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJobHandler)
         {
             try

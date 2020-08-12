@@ -25,6 +25,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function which reports progress to the user.</param>
+        /// <param name="AddJob">Callback which will be invoked after each job is loaded.</param>
         void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJob);
 
         /// <summary>
