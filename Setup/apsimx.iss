@@ -39,7 +39,7 @@ var
   ErrorCode: Integer;
 begin
     //check for the .net runtime. If it is not found then show a message.
-    if not IsDotNetInstalled(net462, 0) then 
+    if not IsDotNetInstalled(net472, 0) then 
     begin
         answer := MsgBox('The Microsoft .NET Framework 4.6 or above is required.' + #13#10 + #13#10 +
         'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
