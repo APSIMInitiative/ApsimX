@@ -46,7 +46,7 @@ begin
         result := false;
         if (answer = MROK) then
         begin
-          ShellExecAsOriginalUser('open', 'http://www.microsoft.com/en-au/download/details.aspx?id=48130', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+          ShellExecAsOriginalUser('open', 'https://go.microsoft.com/fwlink/?LinkID=863265', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         end;
     end
     else
