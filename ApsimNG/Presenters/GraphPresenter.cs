@@ -94,7 +94,7 @@
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
 
             // Get a list of series definitions.
             try
@@ -118,7 +118,7 @@
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
 
@@ -181,7 +181,7 @@
 
             graphView.Export(ref img, r, true);
 
-            string path = Apsim.FullPath(graph).Replace(".Simulations.", string.Empty);
+            string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
@@ -431,7 +431,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || Apsim.ChildrenRecursively(graph).Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model))
                 DrawGraph();
         }
 

@@ -25,7 +25,7 @@
                 Models.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph>(graphXmL, out errors);
                 if (errors != null && errors.Any())
                     throw errors.First();
-                Apsim.ParentAllChildren(graph);
+                graph.ParentAllDescendants();
                 return graph;
             }
             return null;

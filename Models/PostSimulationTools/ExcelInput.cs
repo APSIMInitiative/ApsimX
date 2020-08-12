@@ -44,7 +44,7 @@
             }
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null && simulations.FileName != null)
                     this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else

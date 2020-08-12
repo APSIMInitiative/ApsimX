@@ -135,9 +135,9 @@ namespace UserInterface.Presenters
                     // bets are off. Otherwise, we find an ancestor which is a simulation
                     // generator (experiment, simulation, morris, etc.) and search for
                     // a physical node somewhere under the simulation generator.
-                    IModel parent = Apsim.Parent(model, typeof(ISimulationDescriptionGenerator));
+                    IModel parent = model.FindAncestor<ISimulationDescriptionGenerator>() as IModel;
                     if (parent != null)
-                        water = Apsim.ChildrenRecursively(parent, typeof(Physical)).FirstOrDefault() as Physical;
+                        water = parent.FindAllDescendants<Physical>().FirstOrDefault() as Physical;
                 }
                 if (water != null)
                 {
@@ -155,7 +155,7 @@ namespace UserInterface.Presenters
             }
 
             // Get properties of all child models of type SoilCrop.
-            foreach (SoilCrop crop in Apsim.Children(model, typeof(SoilCrop)))
+            foreach (SoilCrop crop in model.FindAllChildren<SoilCrop>())
                 properties.AddRange(FindAllProperties(crop));
 
             return properties;
@@ -252,7 +252,7 @@ namespace UserInterface.Presenters
                     continue;
 
                 SoilCrop crop = property.Object as SoilCrop;
-                int index = Apsim.Children(crop.Parent, typeof(SoilCrop)).IndexOf(crop);
+                int index = crop.Parent.FindAllChildren<SoilCrop>().ToList().IndexOf(crop);
                 Color foreground = ColourUtilities.ChooseColour(index);
                 if (property.IsReadOnly)
                     foreground = Color.Red;

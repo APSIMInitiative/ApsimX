@@ -110,7 +110,7 @@
 
             public override void OnPreLink()
             {
-                var modelToRemove = Apsim.Find(this, modelNameToRemove);
+                IModel modelToRemove = FindInScope(modelNameToRemove);
                 modelToRemove.Parent.Children.Remove(modelToRemove);
             }
         }

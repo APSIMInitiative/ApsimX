@@ -263,12 +263,12 @@ namespace Models.CLEM.Activities
                 {
                     int numberAdded = 0;
                     RuminantType breedParams = rumHerd.FirstOrDefault().BreedParams;
-                    RuminantInitialCohorts cohorts = Apsim.Children(rumHerd.FirstOrDefault().BreedParams, typeof(RuminantInitialCohorts)).FirstOrDefault() as RuminantInitialCohorts;
+                    RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault() as RuminantInitialCohorts;
 
                     if (cohorts != null)
                     {
-                        int heifers = Convert.ToInt32(Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
+                        int heifers = Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
+                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         if (initialBreeders < (this.MinimumBreedersKept-heifers))
                         {
@@ -396,8 +396,8 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if breeders placed in yards.
             if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if(Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if(ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Breeders purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
@@ -414,8 +414,8 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if sires placed in yards.
             if (grazeStoreBreeders == "" && this.SiresKept > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Sires purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
@@ -632,7 +632,7 @@ namespace Models.CLEM.Activities
                     // this allows the user to sell old females over young breeders and heifers if required. 
                     // must be female (check that males not included in validation)
                     // remove individuals to sale as specified by destock groups
-                    foreach (RuminantGroup item in Apsim.Children(this, typeof(RuminantGroup)))
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
                         List<Ruminant> herdToSell = herd.Filter(item);
@@ -969,7 +969,7 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            if (Apsim.Children(this, typeof(RuminantGroup)).Count() > 0)
+            if (FindAllChildren<RuminantGroup>().Any())
             {
                 html += "\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">";
                 html += "<div class=\"labournote\">Any Ruminant Filter Group below will determine which breeders (and in which order) will be sold prior to selling heifers in order to reduce the breeder herd size. Note: You are responsible for ensuring these filter groups can be applied to a list of breeders.</div>";

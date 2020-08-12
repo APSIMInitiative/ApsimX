@@ -229,12 +229,12 @@
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
+            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = Apsim.Get(replacementModel, objectName) as IModel;
+                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) {  }
             }
@@ -243,7 +243,7 @@
             {
                 try
                 {
-                    o = Apsim.Get(relativeTo, objectName);
+                    o = relativeTo.FindByPath(objectName)?.Value;
                 }
                 catch (Exception) { }
             }
@@ -251,10 +251,10 @@
             if (o == null && relativeTo.Parent is Replacements)
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
+                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
-                    o = Apsim.Get(simulation, objectName) as IModel;
+                    o = simulation.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) { }
             }
@@ -314,7 +314,7 @@
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
                     textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = Apsim.Find(relativeTo, textBeforeFirstDot);
+                node = relativeTo.FindInScope(textBeforeFirstDot);
             }
             else
             {
@@ -322,13 +322,13 @@
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = Apsim.Find(relativeTo, modelName);
+                node = relativeTo.FindInScope(modelName);
 
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
-                if (node == null && Apsim.Parent(relativeTo, typeof(Replacements)) != null)
-                    node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
+                if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
             }
 
             // If the object name string does not contain any children/properties 

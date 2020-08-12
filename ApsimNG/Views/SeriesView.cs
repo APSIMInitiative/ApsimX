@@ -216,8 +216,8 @@
         {
             label4.Visible = show;
             label5.Visible = show;
-            X2.IsVisible = show;
-            Y2.IsVisible = show;
+            X2.Visible = show;
+            Y2.Visible = show;
         }
 
         /// <summary>Show the filter help.</summary>

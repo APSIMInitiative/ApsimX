@@ -124,12 +124,12 @@
             if (rootModel == null)
                 return new List<string>();
 
-            List<IModel> allSims = Apsim.ChildrenRecursively(rootModel, typeof(ISimulationDescriptionGenerator));
+            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
 
             List<string> dupes = new List<string>();
             foreach (var simType in allSims.GroupBy(s => s.GetType()))
             {
-                dupes.AddRange(simType.Select(s => s.Name)
+                dupes.AddRange(simType.Select(s => (s as IModel).Name)
                     .GroupBy(i => i)
                     .Where(g => g.Count() > 1)
                     .Select(g => g.Key));
@@ -193,10 +193,11 @@
                     if (!hasBeenDeserialised)
                     {
                         // Parent all models.
-                        Apsim.ParentAllChildren(relativeTo);
+                        relativeTo.ParentAllDescendants();
 
                         // Call OnCreated in all models.
-                        Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());
+                        foreach (IModel model in relativeTo.FindAllDescendants().ToList())
+                            model.OnCreated();
                     }
 
                     // Find the root model.
@@ -228,7 +229,7 @@
                        Add(new EmptyJob());
 
                     // Find a storage model.
-                    storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
+                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)
@@ -284,7 +285,7 @@
         {
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
-            foreach (IPostSimulationTool tool in Apsim.ChildrenRecursively(rootModel, typeof(IPostSimulationTool)))
+            foreach (IPostSimulationTool tool in rootModel.FindAllDescendants<IPostSimulationTool>())
             {
                 storage?.Writer.WaitForIdle();
                 storage?.Reader.Refresh();
@@ -320,7 +321,7 @@
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = Apsim.Find(relativeTo, typeof(Simulations)) as Simulations;
+                Simulations sims = relativeTo.FindInScope<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)
@@ -334,7 +335,7 @@
             }
 
             var links = new Links(services);
-            foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
+            foreach (ITest test in rootModel.FindAllDescendants<ITest>())
             {
                 DateTime startTime = DateTime.Now;
 

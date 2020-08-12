@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (HumanFoodStoreType childModel in Apsim.Children(this, typeof(HumanFoodStoreType)))
+            foreach (HumanFoodStoreType childModel in this.FindAllChildren<HumanFoodStoreType>())
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
             }
@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (HumanFoodStoreType childModel in Apsim.Children(this, typeof(HumanFoodStoreType)))
+            foreach (HumanFoodStoreType childModel in this.FindAllChildren<HumanFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }

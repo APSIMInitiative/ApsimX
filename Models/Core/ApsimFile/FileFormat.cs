@@ -68,7 +68,8 @@
             // Set the filename
             if (newModel is Simulations)
                 (newModel as Simulations).FileName = fileName;
-            Apsim.ChildrenRecursively(newModel, typeof(Simulation)).ForEach(m => (m as Simulation).FileName = fileName);
+            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                sim.FileName = fileName;
             return newModel;
         }
 
@@ -94,11 +95,11 @@
 
             // Parent all models.
             newModel.Parent = null;
-            Apsim.ParentAllChildren(newModel);
+            newModel.ParentAllDescendants();
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in Apsim.ChildrenRecursively(newModel))
+            foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
                 {
@@ -163,7 +164,7 @@
 
                         // If the model is under a replacements node, then serialize everything.
                         ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (Apsim.Ancestor<Replacements>(resource) != null)
+                        if (resource.FindAncestor<Replacements>() != null)
                             return true;
 
                         // Otherwise, only serialize if the property is inherited from
@@ -186,7 +187,7 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is ModelCollectionFromResource m && Apsim.Ancestor<Replacements>(m) == null)
+                    if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
                         return m.ChildrenToSerialize;
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);

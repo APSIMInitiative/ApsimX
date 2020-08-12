@@ -355,7 +355,7 @@
                 }
 
                 // 2. Get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                Zone parentZone = FindAncestor<Zone>();
                 double waterDemand = myWaterDemand * parentZone.Area;
 
                 // 3. Estimate fraction of water used up
@@ -2692,7 +2692,7 @@
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
                 // find the zone and get its soil
-                Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
+                Zone zone = this.FindInScope(rootZone.ZoneName) as Zone;
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
 

@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Models.Soils.Nutrients;
+    using System.Linq;
 
     ///<summary>
     /// # [Name]
@@ -64,7 +65,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -144,6 +145,10 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
+
+        /// <summary>Link to the KNO3 link</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction RootDepthStressFactor = null;
 
         /// <summary>The maximum N concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -551,18 +556,16 @@
         {
             if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
             {
-                if (dmConversionEfficiency.Value() > 0.0)
+                double dMCE = dmConversionEfficiency.Value();
+
+                if (dMCE > 0.0)
                 {
-                    DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) ;
+                    DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                     DMDemand.Metabolic = 0;
                 }
                 else
-                { // Conversion efficiency is zero!!!!
-                    DMDemand.Structural = 0;
-                    DMDemand.Storage = 0;
-                    DMDemand.Metabolic = 0;
-                }
+                    throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
 
                 if (dmDemandPriorityFactors != null)
                 {
@@ -626,7 +629,7 @@
 
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
             if (TotalRAw == 0 && dryMatter.Structural > 0)
                 throw new Exception("Error trying to partition potential root biomass");
@@ -654,17 +657,19 @@
         {
             double TotalRAw = 0;
             foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
 
-            Allocated.StructuralWt = dryMatter.Structural * dmConversionEfficiency.Value();
-            Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
+            double dMCE = dmConversionEfficiency.Value();
+
+            Allocated.StructuralWt = dryMatter.Structural * dMCE;
+            Allocated.StorageWt = dryMatter.Storage * dMCE;
+            Allocated.MetabolicWt = dryMatter.Metabolic * dMCE;
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // Allocated CH2O from photosynthesis "1 / dMCE", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
@@ -728,6 +733,7 @@
                 }
                 else
                 {
+                    double maxNUptake = maxDailyNUptake.Value();
                     for (int layer = 0; layer < thickness.Length; layer++)
                     {
                         accuDepth += thickness[layer];
@@ -740,12 +746,12 @@
 
                             double kno3 = this.kno3.Value(layer);
                             double NO3ppm = zone.NO3N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NO3Uptake));
+                            NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, (maxNUptake - NO3Uptake));
                             NO3Uptake += NO3Supply[layer];
 
                             double knh4 = this.knh4.Value(layer);
                             double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
-                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxDailyNUptake.Value() - NH4Uptake));
+                            NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, (maxNUptake - NH4Uptake));
                             NH4Uptake += NH4Supply[layer];
                         }
                     }
@@ -762,9 +768,9 @@
 
             foreach (ZoneState Z in Zones)
             {
-                totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
-                totalMetabolicDemand += MathUtilities.Sum(Z.MetabolicNDemand);
+                totalStructuralNDemand += Z.StructuralNDemand.Sum();
+                totalStorageNDemand += Z.StorageNDemand.Sum();
+                totalMetabolicDemand += Z.MetabolicNDemand.Sum();
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
@@ -840,7 +846,6 @@
                     double[] kl = soilCrop.KL;
                     double[] ll = soilCrop.LL;
 
-                    double[] lldep = new double[myZone.soil.Thickness.Length];
                     double[] supply = new double[myZone.soil.Thickness.Length];
 
                     LayerMidPointDepth = myZone.soil.DepthMidPoints;
@@ -878,25 +883,10 @@
 
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
-        /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction RootDepthStressFactor = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxNUptakeRate = null;
-
-        /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction NSupplyFraction = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction DltThermalTime = null;
-
-        /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction MaxDiffusion = null;
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
@@ -926,10 +916,10 @@
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = Apsim.Find(this, ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
                 if (zone != null)
                 {
-                    Soil soil = Apsim.Find(zone, typeof(Soil)) as Soil;
+                    Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     if (soil.Crop(parentPlant.Name) == null)
@@ -1099,7 +1089,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
+            Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
@@ -1199,5 +1189,7 @@
 
             Clear();
         }
+
+
     }
 }

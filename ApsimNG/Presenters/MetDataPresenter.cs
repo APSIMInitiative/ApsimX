@@ -8,6 +8,7 @@
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Views;
 

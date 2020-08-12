@@ -224,7 +224,7 @@
 
             foreach (var parameterName in parameterNames)
             {
-                var parameter = Apsim.GetVariableObject(objectToDocument as IModel, parameterName);
+                var parameter = (objectToDocument as IModel).FindByPath(parameterName);
                 if (parameter != null)
                     parameters.Add(parameter);
             }

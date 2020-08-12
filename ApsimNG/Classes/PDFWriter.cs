@@ -633,7 +633,7 @@
                     }
                 }
 
-                string basePngFileName = Apsim.FullPath(graphPage.graphs[0].Parent) + "." +
+                string basePngFileName = graphPage.graphs[0].Parent.FullPath + "." +
                                                         graphPage.name + ".png";
                 basePngFileName = basePngFileName.TrimStart('.');
                 string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);

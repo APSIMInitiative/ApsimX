@@ -30,12 +30,12 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos
-                foreach (IModel childFolder in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel childFolder in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(childFolder, tags, headingLevel + 1, indent);
 
                 // write a sorted list of cultivar names.
                 List<string> cultivarNames = new List<string>();
-                foreach (Cultivar cultivar in Apsim.Children(this, typeof(Cultivar)))
+                foreach (Cultivar cultivar in this.FindAllChildren<Cultivar>())
                 {
                     cultivarNames.Add(cultivar.Name);
                     cultivarNames.AddRange(cultivar.Alias);
@@ -47,11 +47,11 @@ namespace Models.PMF
                     tags.Add(new AutoDocumentation.Paragraph(text, indent));
 
                 // write child cultivars.
-                foreach (IModel childCultivar in Apsim.Children(this, typeof(Cultivar)))
+                foreach (IModel childCultivar in this.FindAllChildren<Cultivar>())
                     AutoDocumentation.DocumentModel(childCultivar, tags, headingLevel + 1, indent);
 
                 // write child folders.
-                foreach (IModel childFolder in Apsim.Children(this, typeof(CultivarFolder)))
+                foreach (IModel childFolder in this.FindAllChildren<CultivarFolder>())
                     AutoDocumentation.DocumentModel(childFolder, tags, headingLevel + 1, indent);
             }
         }
