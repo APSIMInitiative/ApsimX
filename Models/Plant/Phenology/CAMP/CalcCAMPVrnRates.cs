@@ -73,9 +73,9 @@ namespace Models.PMF.Phen
             CultivarRateParams Params = new CultivarRateParams();
 
             // Get some other parameters from phenology
-            double maxLAR = Convert.ToDouble(phenology.FindChild<IFunction>("MaxLAR.FixedValue"), CultureInfo.InvariantCulture);
-            double minLAR = Convert.ToDouble(phenology.FindChild<IFunction>("MinLAR.FixedValue"), CultureInfo.InvariantCulture);
-            double PTQhf = Convert.ToDouble(phenology.FindChild<IFunction>("PTQhf.FixedValue"), CultureInfo.InvariantCulture);
+            double maxLAR = phenology.FindChild<IFunction>("MaxLAR").Value();
+            double minLAR = phenology.FindChild<IFunction>("MinLAR").Value();
+            double PTQhf = phenology.FindChild<IFunction>("PTQhf").Value();
             LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
 
             //////////////////////////////////////////////////////////////////////////////////////
