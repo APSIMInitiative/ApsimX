@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Models.GrazPlan;
     using Models.Soils;

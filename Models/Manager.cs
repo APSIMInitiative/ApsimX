@@ -57,7 +57,7 @@
         {
             if (scriptCompiler == null)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     return false;
                 scriptCompiler = simulations.ScriptCompiler;
@@ -178,9 +178,9 @@
                             {
                                 object value;
                                 if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
-                                    value = Apsim.Get(this, parameter.Value);
+                                    value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = Apsim.Find(this, parameter.Value);
+                                    value = this.FindInScope(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(script, value, null);

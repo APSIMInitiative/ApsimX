@@ -21,19 +21,19 @@ namespace Models.PMF
         public double[] StructuralDemand { get; set; }
         /// <summary>Gets or sets the total structural demand.</summary>
         /// <value>Demand for structural biomass from the crop</value>
-        public double TotalStructuralDemand { get { return MathUtilities.Sum(StructuralDemand); } }
+        public double TotalStructuralDemand { get { return StructuralDemand.Sum(); } }
         /// <summary>Gets or sets the metabolic demand.</summary>
         /// <value>Demand for metabolic biomass from each organ</value>
         public double[] MetabolicDemand { get; set; }
         /// <summary>Gets or sets the total metabolic demand.</summary>
         /// <value>Demand for metabolic biomass from the crop</value>
-        public double TotalMetabolicDemand { get { return MathUtilities.Sum(MetabolicDemand); } }
+        public double TotalMetabolicDemand { get { return MetabolicDemand.Sum(); } }
         /// <summary>Gets or sets the non structural demand.</summary>
         /// <value>Demand for non-structural biomass from each organ</value>
         public double[] StorageDemand { get; set; }
         /// <summary>Gets or sets the total non structural demand.</summary>
         /// <value>Demand for non-structural biomass from the crop</value>
-        public double TotalStorageDemand { get { return MathUtilities.Sum(StorageDemand); } }
+        public double TotalStorageDemand { get { return StorageDemand.Sum(); } }
         /// <summary>Gets or sets the total crop demand.</summary>
         /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
         public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalStorageDemand; } }
@@ -43,7 +43,7 @@ namespace Models.PMF
         public double[] ReallocationSupply { get; set; }
         /// <summary>Gets or sets the total reallocation supply.</summary>
         /// <value>Biomass available for reallocation from the entire crop</value>
-        public double TotalReallocationSupply { get { return MathUtilities.Sum(ReallocationSupply); } }
+        public double TotalReallocationSupply { get { return ReallocationSupply.Sum(); } }
         /// <summary>Gets or sets the uptake supply.</summary>
         /// <value>Biomass available for uptake from each absorbing organ, generally limited to ntrient uptake in roots</value>
         public double[] UptakeSupply { get; set; }
@@ -55,13 +55,13 @@ namespace Models.PMF
         public double[] FixationSupply { get; set; }
         /// <summary>Gets or sets the total fixation supply.</summary>
         /// <value>Total fixation by the crop</value>
-        public double TotalFixationSupply { get { return MathUtilities.Sum(FixationSupply); } }
+        public double TotalFixationSupply { get { return FixationSupply.Sum(); } }
         /// <summary>Gets or sets the retranslocation supply.</summary>
         /// <value>Supply of labile biomass that can be retranslocated from each oragn</value>
         public double[] RetranslocationSupply { get; set; }
         /// <summary>Gets or sets the total retranslocation supply.</summary>
         /// <value>The total supply of labile biomass in the crop</value>
-        public double TotalRetranslocationSupply { get { return MathUtilities.Sum(RetranslocationSupply); } }
+        public double TotalRetranslocationSupply { get { return RetranslocationSupply.Sum(); } }
         /// <summary>Gets or sets the total crop supply.</summary>
         /// <value>crop supply from uptake, fixation, reallocation and remobilisation</value>
         public double TotalPlantSupply { get { return TotalReallocationSupply + TotalUptakeSupply + TotalFixationSupply + TotalRetranslocationSupply; } }
@@ -102,19 +102,19 @@ namespace Models.PMF
         public double[] StructuralAllocation { get; set; }
         /// <summary>Gets or sets the total structural allocation.</summary>
         /// <value>The total structural biomass allocation to the whole crop</value>
-        public double TotalStructuralAllocation { get { return MathUtilities.Sum(StructuralAllocation); } }
+        public double TotalStructuralAllocation { get { return StructuralAllocation.Sum(); } }
         /// <summary>Gets or sets the metabolic allocation.</summary>
         /// <value>The actual meatabilic biomass allocation to each organ</value>
         public double[] MetabolicAllocation { get; set; }
         /// <summary>Gets or sets the total metabolic allocation.</summary>
         /// <value>The metabolic biomass allocation to each organ</value>
-        public double TotalMetabolicAllocation { get { return MathUtilities.Sum(MetabolicAllocation); } }
+        public double TotalMetabolicAllocation { get { return MetabolicAllocation.Sum(); } }
         /// <summary>Gets or sets the non structural allocation.</summary>
         /// <value>The actual non-structural biomass allocation to each organ</value>
         public double[] StorageAllocation { get; set; }
         /// <summary>Gets or sets the total non structural allocation.</summary>
         /// <value>The total non-structural allocationed to the crop</value>
-        public double TotalStorageAllocation { get { return MathUtilities.Sum(StorageAllocation); } }
+        public double TotalStorageAllocation { get { return StorageAllocation.Sum(); } }
         /// <summary>Gets or sets the total allocation.</summary>
         /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
         public double[] TotalAllocation { get; set; }

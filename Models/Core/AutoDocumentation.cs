@@ -265,7 +265,7 @@
 
                     // Find child
                     string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = Apsim.Get(model, childName) as IModel;
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
                     if (child == null)
                         paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                     else
@@ -281,7 +281,7 @@
                     // Find children
                     string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
                     Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in Apsim.Children(model, childType))
+                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                     {
                         DocumentModel(child, tags, targetHeadingLevel + 1, indent);
                         childrenDocumented.Add(child);
@@ -300,7 +300,7 @@
             if (documentAllChildren)
             {
                 // write children.
-                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
+                foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
                         DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
@@ -321,7 +321,7 @@
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = Apsim.Get(model, macro, true);
+                        object value = model.FindByPath(macro, true)?.Value;
                         if (value != null)
                         {
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);

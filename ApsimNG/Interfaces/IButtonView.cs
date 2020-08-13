@@ -11,11 +11,11 @@
         /// <summary>
         /// Gets or sets a value of the text of the button.
         /// </summary>
-        string Value { get; set; }
+        string Text { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the dropdown is visible.
         /// </summary>
-        bool IsVisible { get; set; }
+        bool Visible { get; set; }
     }
 }

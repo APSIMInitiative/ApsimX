@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
 using System.IO;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -22,7 +23,7 @@ namespace Models.Functions
         Phenology Phenology = null;
 
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         private int startStageIndex;
 
@@ -46,16 +47,16 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (Start == "")
                 throw new Exception("Phase start name not set:" + Name);
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology != null && Phenology.Between(startStageIndex, endStageIndex) && ChildFunctions.Count > 0)
+            if (Phenology != null && Phenology.Between(startStageIndex, endStageIndex) && ChildFunctions.Count() > 0)
             {
-                IFunction Lookup = ChildFunctions[0] as IFunction;
+                IFunction Lookup = ChildFunctions.First() as IFunction;
                 return Lookup.Value(arrayIndex);
             }
             else
@@ -84,14 +85,14 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 if (Parent is PhaseLookup)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("The value of " + Parent.Name + " from " + Start + " to " + End + " is calculated as follows:", indent));
                     // write children.
-                    foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    foreach (IModel child in this.FindAllChildren<IFunction>())
                         AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
                 }
                 else

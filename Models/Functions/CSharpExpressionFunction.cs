@@ -49,7 +49,7 @@ namespace Models.Functions
         {
             if (scriptCompiler == null)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations == null)
                     throw new Exception("Cannot find a script compiler in manager.");
                 scriptCompiler = simulations.ScriptCompiler;
@@ -68,13 +68,13 @@ namespace Models.Functions
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 string st = Expression?.Replace(".Value()", "");
                 tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
 
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
@@ -90,7 +90,7 @@ namespace Models.Functions
             // and namespace lines e.g.
             //    using Models.Clock;
             //    using Models;
-            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && 
+            var models = Parent.FindAllInScope().ToList().Where(model => !model.IsHidden && 
                                                               model.GetType() != typeof(Graph) &&
                                                               model.GetType() != typeof(Series) &&
                                                               model.GetType().Name != "StorageViaSockets");

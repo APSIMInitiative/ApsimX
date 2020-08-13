@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +22,16 @@ namespace Models.CLEM
         /// <param name="stockingRate"></param>
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
-        /// <returns></returns>
+        /// <returns>List of pasture data types</returns>
         List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval);
 
+        /// <summary>
+        /// Check that records exist in database
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        int RecordsFound(string table, object value);
     }
 }

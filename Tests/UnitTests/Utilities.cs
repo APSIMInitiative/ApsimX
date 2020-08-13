@@ -17,7 +17,19 @@ namespace UnitTests
     public class Utilities
     {
         /// <summary>
-        /// Event handler for a job runner's AllJobsCompleted event.
+        /// Parent all children of 'model' and call 'OnCreated' in each child.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void InitialiseModel(IModel model)
+        {
+            model.ParentAllDescendants();
+            model.OnCreated();
+            foreach (var child in model.FindAllDescendants())
+                child.OnCreated();
+        }
+
+        /// <summary>
+        /// Event handler for a job runner's <see cref="JobRunner.AllCompleted"/> event.
         /// Asserts that the job ran successfully.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -44,13 +56,14 @@ namespace UnitTests
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
         {
             CallEvent(model, eventName, arguments);
-            Apsim.ChildrenRecursively(model).ForEach(child => CallEvent(child, eventName, arguments));
+            foreach (IModel descendant in model.FindAllDescendants())
+                CallEvent(descendant, eventName, arguments);
         }
 
         /// <summary>ResolveLinks in a model</summary>
         public static void ResolveLinks(IModel model)
         {
-            Apsim.ParentAllChildren(model);
+            model.ParentAllDescendants();
             var links = new Links();
             links.Resolve(model, true, true);
         }
@@ -190,7 +203,7 @@ namespace UnitTests
                     }
                 }
             };
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
             sims.Write(sims.FileName);
             return sims;
         }

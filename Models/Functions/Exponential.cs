@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -33,7 +34,7 @@ namespace Models.Functions
         [Description("C")]
         public double C { get; set; }
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
 
         /// <summary>Gets the value.</summary>
@@ -42,11 +43,11 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
-            if (ChildFunctions.Count == 1)
+            if (ChildFunctions.Count() == 1)
             {
-                IFunction F = ChildFunctions[0] as IFunction;
+                IFunction F = ChildFunctions.First() as IFunction;
 
                 return A + B * Math.Exp(C * F.Value(arrayIndex));
             }

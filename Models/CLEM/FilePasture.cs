@@ -213,7 +213,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
@@ -310,6 +310,19 @@ namespace Models.CLEM
                 ErrorMessage = err.Message;
                 return null;
             }
+        }
+
+
+        /// <summary>
+        /// returns the number of records for a given condition
+        /// Not used in this type
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int RecordsFound(string table, object value)
+        {
+            return 1;
         }
 
         /// <summary>
@@ -494,13 +507,6 @@ namespace Models.CLEM
             if (clock.EndDate == clock.Today)
             {
                 return;
-            }
-
-            //Check if there is any data
-            if ((filtered == null) || (filtered.Count == 0))
-            {
-                throw new ApsimXException(this, errormessageStart
-                    + "Unable to retrieve any data what so ever");
             }
 
             //Check no gaps in the months

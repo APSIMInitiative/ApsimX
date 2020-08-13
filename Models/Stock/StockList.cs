@@ -92,7 +92,7 @@
                 Paddocks.Add(newPadd);
 
                 // find all the child crop, pasture components that have removable biomass
-                foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
+                foreach (IPlantDamage crop in zone.FindAllInScope<IPlantDamage>())
                     ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
             }
         }

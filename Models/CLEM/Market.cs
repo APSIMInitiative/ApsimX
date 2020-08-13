@@ -106,7 +106,7 @@ namespace Models.CLEM
                 string error = "@i:Invalid parameters in model";
 
                 // find IStorageReader of simulation
-                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
                 if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
@@ -148,7 +148,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            holderCount = FindAncestor<Zone>().FindAllChildren<Market>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
@@ -170,7 +170,7 @@ namespace Models.CLEM
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

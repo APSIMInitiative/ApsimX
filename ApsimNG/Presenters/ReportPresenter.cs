@@ -69,7 +69,7 @@
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
-            this.view.GroupByEdit.Value = report.GroupByVariableName;
+            this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
@@ -81,18 +81,18 @@
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.TabChanged += OnChangeTab;
 
-            Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
+            Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
+                dataStore = simulations.FindChild<IDataStore>();
             }
             
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();
-            Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
-            Experiment experiment = Apsim.Parent(report, typeof(Experiment)) as Experiment;
-            Zone paddock = Apsim.Parent(report, typeof(Zone)) as Zone;
+            Simulation simulation = report.FindAncestor<Simulation>();
+            Experiment experiment = report.FindAncestor<Experiment>();
+            Zone paddock = report.FindAncestor<Zone>();
 
             // Only show data which is in scope of this report.
             // E.g. data from this zone and either experiment (if applicable) or simulation.
@@ -249,7 +249,7 @@
             try
             {
                 explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Value));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Text));
                 explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
             }
             catch (Exception err)

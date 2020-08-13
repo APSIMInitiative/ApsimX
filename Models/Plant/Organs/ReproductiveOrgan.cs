@@ -377,11 +377,12 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            double dMCE = DMConversionEfficiency.Value();
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (value.Structural) * growthRespFactor;
 
-            Live.StructuralWt += value.Structural * DMConversionEfficiency.Value();
-            Allocated.StructuralWt = value.Structural * DMConversionEfficiency.Value();
+            Live.StructuralWt += value.Structural * dMCE;
+            Allocated.StructuralWt = value.Structural * dMCE;
         }
         /// <summary>Sets the n allocation.</summary>
         public void SetNitrogenAllocation(BiomassAllocationType nitrogen)

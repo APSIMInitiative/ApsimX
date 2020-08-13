@@ -40,7 +40,7 @@ namespace Models.CLEM.Resources
         public List<Ruminant> CreateIndividuals()
         {
             List<Ruminant> individuals = new List<Ruminant>();
-            foreach (RuminantTypeCohort cohort in Apsim.Children(this, typeof(RuminantTypeCohort)))
+            foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
             {
                 individuals.AddRange(cohort.CreateIndividuals());
             }

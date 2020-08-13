@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Models.Core;
@@ -14,14 +15,14 @@ namespace Models.Functions
     public class MaximumFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             double ReturnValue = -999999999;
             foreach (IFunction F in ChildFunctions)
@@ -43,12 +44,12 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // create a string to display 'child1 - child2 - child3...'
                 string msg = "";
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                 {
                     if (msg != string.Empty)
                         msg += ", ";
@@ -58,7 +59,7 @@ namespace Models.Functions
 
                 // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

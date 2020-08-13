@@ -67,11 +67,12 @@ namespace Models.Soils.Nutrients
         {
             if (sourceSolute == null)
             {
-                sourceSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == Parent.Name) as ISolute;
-                destinationSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == destinationName) as ISolute;
+                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                destinationSolute = FindInScope<ISolute>(destinationName);
             }
 
             double[] source = sourceSolute.kgha;
+            int numLayers = source.Length;
             if (Value == null)
                 Value = new double[source.Length];
             if (Natm == null)
@@ -84,7 +85,7 @@ namespace Models.Soils.Nutrients
             if (destinationName !=null)
                 destination = destinationSolute.kgha;
 
-            for (int i= 0; i < source.Length; i++)
+            for (int i= 0; i < numLayers; i++)
             {
                 double nitrogenFlow = 0;
                 if (source[i]>0)

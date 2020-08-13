@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Climate;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
@@ -11,6 +12,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Xml;
 
     /// <summary>
@@ -19,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 107; } }
+        public static int LatestVersion { get { return 111; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2391,7 +2393,479 @@
             }
         }
 
+        /// <summary>
+        /// Upgrade to version 108.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion108(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>("Wheat.Structure.HaunStage",          "Wheat.Phenology.HaunStage"),
+                new Tuple<string, string>("[Wheat].Structure.HaunStage",          "[Wheat].Phenology.HaunStage"),
+                new Tuple<string, string>("Wheat.Structure.PTQ",          "Wheat.Phenology.PTQ"),
+                new Tuple<string, string>("[Wheat].Structure.PTQ",          "[Wheat].Phenology.PTQ")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
 
+        /// <summary>
+        /// Create Models.Climate namespace.
+        /// The following types will be moved into Models.Climate:
+        /// - ControlledEnvironment
+        /// - SlopeEffectsOnWeather
+        /// - Weather
+        /// - WeatherSampler
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion109(JObject root, string fileName)
+        {
+            Type[] typesToMove = new Type[] { typeof(ControlledEnvironment), typeof(SlopeEffectsOnWeather), typeof(Weather), typeof(WeatherSampler) };
+
+            foreach (Type type in typesToMove)
+                foreach (JObject instance in JsonUtilities.ChildrenRecursively(root, type.Name))
+                    if (!instance["$type"].ToString().Contains("Models.Climate"))
+                        instance["$type"] = instance["$type"].ToString().Replace("Models.", "Models.Climate.");
+
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                string code = manager.ToString();
+                if (code == null)
+                    continue;
+                foreach (Type type in typesToMove)
+                {
+                    if (code.Contains(type.Name))
+                    {
+                        List<string> usings = manager.GetUsingStatements().ToList();
+                        usings.Add("Models.Climate");
+                        manager.SetUsingStatements(usings);
+                        manager.Save();
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion110(JObject root, string fileName)
+        {
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Root"))
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "RootDepthStressFactor", "1");
+        }
+
+        /// <summary>
+        /// Modify manager scripts to use the new generic model locator API.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion111(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                // Apsim.Get(model, path) -> model.FindByPath(path)?.Value
+                FixApsimGet(manager);
+
+                // Apsim.FullPath(model) -> model.FullPath
+                FixFullPath(manager);
+
+                // Apsim.GetVariableObject(model, path) -> model.FindByPath(path)
+                FixGetVariableObject(manager);
+
+                // Apsim.Ancestor<T>(model) -> model.FindAncestor<T>()
+                FixAncestor(manager);
+
+                // Apsim.Siblings(model) -> model.FindAllSiblings()
+                FixSiblings(manager);
+
+                // Apsim.ParentAllChildren(model) -> model.ParentAllDescendants()
+                FixParentAllChildren(manager);
+
+                // This one will fail if using a runtime type.
+                // Apsim.Parent(model, type) -> model.FindAncestor<Type>()
+                FixParent(manager);
+
+                // Apsim.Set(model, path, value) -> model.FindByPath(path).Value = value
+                FixSet(manager);
+
+                // Apsim.Find(model, x) -> model.FindInScope(x)
+                // Apsim.Find(model, typeof(Y)) -> model.FindInScope<Y>()
+                // This one will fail if the second argument is a runtime type which doesn't
+                // use the typeof() syntax. E.g. if it's a variable of type Type.
+                // Will probably fail in other cases too. It's really not ideal.
+                FixFind(manager);
+
+                // Apsim.FindAll(model) -> model.FindAllInScope().ToList()
+                // Apsim.FindAll(model, typeof(X)) -> model.FindAllInScope<X>().ToList()
+                FixFindAll(manager);
+
+                // Apsim.Child(model, "Wheat") -> model.FindChild("Wheat")
+                // Apsim.Child(model, typeof(IOrgan)) -> model.FindChild<IOrgan>()
+                FixChild(manager);
+
+                // Apsim.Children(model, typeof(IFunction)) -> model.FindAllChildren<IFunction>().ToList<IModel>()
+                // Apsim.Children(model, obj.GetType()) -> model.FindAllChildren().Where(c => obj.GetType().IsAssignableFrom(c.GetType())).ToList<IModel>()
+                // This will add "using System.Linq;" if necessary.
+                FixChildren(manager);
+
+                // Apsim.ChildrenRecursively(model) -> model.FindAllDescendants().ToList()
+                // Apsim.ChildrenRecursively(model, typeof(IOrgan)) -> model.FindAllDescendants<IOrgan>().OfType<IModel>().ToList()
+                // Apsim.ChildrenRecursively(model, GetType()) -> model.FindAllDescendants().Where(d => GetType().IsAssignableFrom(d.GetType())).ToList()
+                FixChildrenRecursively(manager);
+
+                // Apsim.ChildrenRecursivelyVisible(model) -> model.FindAllDescendants().Where(m => !m.IsHidden).ToList()
+                FixChildrenRecursivelyVisible(manager);
+
+                manager.Save();
+            }
+
+            void FixApsimGet(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Get\(([^,]+),\s*((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$1.FindByPath($2).Value";
+                    if (match.Groups[1].Value.Contains(" "))
+                        replace = replace.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+            void FixFullPath(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.FullPath\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                string replacement = "$1.FullPath";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    if (match.Groups[1].Value.Contains(" "))
+                        replacement = replacement.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replacement);
+                });
+            }
+
+            void FixGetVariableObject(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.GetVariableObject\(([^,]+),\s*((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$1.FindByPath($2)";
+                    if (match.Groups[1].Value.Contains(" "))
+                        replace = replace.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+
+            void FixAncestor(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Ancestor<([^>]+)>\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$2.FindAncestor<$1>($3)";
+                    if (match.Groups[2].Value.Contains(" "))
+                        replace = replace.Replace("$2", "($2)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+            void FixSiblings(ManagerConverter manager)
+            {
+                bool replaced = false;
+                string pattern = @"Apsim\.Siblings\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    replaced = true;
+
+                    string replace = @"$1.FindAllSiblings().ToList<IModel>()";
+                    if (match.Groups[1].Value.Contains(" "))
+                        replace = replace.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+
+                if (replaced)
+                {
+                    List<string> usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("System.Linq"))
+                        usings.Add("System.Linq");
+                    manager.SetUsingStatements(usings);
+                }
+            }
+
+            void FixParentAllChildren(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.ParentAllChildren\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$1.ParentAllDescendants()";
+                    if (match.Groups[1].Value.Contains(" "))
+                        replace = replace.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+            void FixParent(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Parent\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Parent()");
+
+                    string modelName = args[0].Value;
+                    if (modelName.Contains(" "))
+                        modelName = $"({modelName})";
+
+                    string type = args[1].Value.Replace("typeof(", "").TrimEnd(')').Trim();
+
+                    return $"{modelName}.FindAncestor<{type}>()";
+                });
+            }
+
+            void FixSet(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Set\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 3)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Set()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string path = args[1].Value.Trim();
+                    string value = args[2].Value.Trim();
+
+                    return $"{model}.FindByPath({path}).Value = {value}";
+                });
+            }
+
+            void FixFind(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Find\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Find()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string pathOrType = args[1].Value.Trim();
+                    if (pathOrType.Contains("typeof("))
+                    {
+                        string type = pathOrType.Replace("typeof(", "").TrimEnd(')');
+                        return $"{model}.FindInScope<{type}>()";
+                    }
+                    else
+                        return $"{model}.FindInScope({pathOrType})";
+                });
+            }
+
+            void FixFindAll(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.FindAll\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                bool replaced = manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllInScope().ToList()";
+                    }
+                    else if (args.Count == 2)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        string type = args[1].Value.Trim().Replace("typeof(", "").TrimEnd(')');
+
+                        // See comment in the FixChildren() method. This really isn't ideal.
+                        return $"{model}.FindAllInScope<{type}>().OfType<IModel>().ToList()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.FindAll()");
+                });
+
+                if (replaced)
+                    AddLinqIfNotExist(manager);
+            }
+
+            void FixChild(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Child\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Find()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string pathOrType = args[1].Value.Trim();
+                    if (pathOrType.Contains("typeof("))
+                    {
+                        string type = pathOrType.Replace("typeof(", "").TrimEnd(')');
+                        return $"{model}.FindChild<{type}>()";
+                    }
+                    else
+                        return $"{model}.FindChild({pathOrType})";
+                });
+
+                pattern = @"(FindChild<([^>]+)>\(\)) as \2";
+                manager.ReplaceRegex(pattern, "$1");
+            }
+
+            void FixChildren(ManagerConverter manager)
+            {
+
+                string pattern = @"Apsim\.Children\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                bool replaced = manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count != 2)
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.Children()");
+
+                    string model = args[0].Value.Trim();
+                    if (model.Contains(" "))
+                        model = $"({model})";
+
+                    string type = args[1].Value.Trim();
+
+                    Match simplify = Regex.Match(type, @"typeof\(([^\)]+)\)");
+                    if (simplify.Groups.Count == 2)
+                    {
+                        type = simplify.Groups[1].Value;
+
+                        // Unfortunately we need some sort of cast here, in case the type
+                        // being searched for is an interface such as IPlant which doesn't
+                        // implement IModel, even though realistically the only results
+                        // which FindAllChildren() will return are guaranteed to be IModels.
+                        // In an ideal world, the user wouldn't access any members of IModel,
+                        // and we could just happily return an IEnumerable<IPlant> or
+                        // List<IPlant>, but that's obviously not a guarantee we can make.
+                        return $"{model}.FindAllChildren<{type}>().OfType<IModel>().ToList()";
+                    }
+                    else
+                    {
+                        // Need to ensure that we're using System.Linq;
+                        return $"{model}.FindAllChildren().Where(c => {type}.IsAssignableFrom(c.GetType())).ToList()";
+                    }
+                });
+
+                if (replaced)
+                    AddLinqIfNotExist(manager);
+            }
+
+            void FixChildrenRecursively(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.ChildrenRecursively\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                bool replaced = manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllDescendants().ToList()";
+                    }
+                    else if (args.Count == 2)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        string type = args[1].Value.Trim();
+
+                        Match simplify = Regex.Match(type, @"typeof\(([^\)]+)\)");
+                        if (simplify.Groups.Count == 2)
+                        {
+                            // Code uses a simple typeof(X) to reference the type. This can be converted to the generic usage.
+                            type = simplify.Groups[1].Value;
+                            return $"{model}.FindAllDescendants<{type}>().OfType<IModel>().ToList()";
+                        }
+                        else
+                            // This is a bit uglier and we need to use a qnd linq query to fix it up.
+                            return $"{model}.FindAllDescendants().Where(d => {type}.IsAssignableFrom(d.GetType())).ToList()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursively()");
+                });
+
+                if (replaced)
+                    AddLinqIfNotExist(manager);
+            }
+
+            void AddLinqIfNotExist(ManagerConverter manager)
+            {
+                List<string> usings = manager.GetUsingStatements().ToList();
+                if (!usings.Contains("System.Linq"))
+                    usings.Add("System.Linq");
+                manager.SetUsingStatements(usings);
+            }
+
+            void FixChildrenRecursivelyVisible(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.ChildrenRecursivelyVisible\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                bool replaced = manager.ReplaceRegex(pattern, match =>
+                {
+                    string argsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<c>)|\)(?<-c>))*\)))*)+";
+                    var args = Regex.Matches(match.Groups[1].Value, argsRegex);
+
+                    if (args.Count == 1)
+                    {
+                        string model = args[0].Value.Trim();
+                        if (model.Contains(" "))
+                            model = $"({model})";
+
+                        return $"{model}.FindAllDescendants().Where(m => !m.IsHidden).ToList()";
+                    }
+                    else
+                        throw new Exception($"Incorrect number of arguments passed to Apsim.ChildrenRecursivelyVisible()");
+                });
+
+                if (replaced)
+                    AddLinqIfNotExist(manager);
+            }
+        }
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

@@ -47,15 +47,15 @@
             Nutrient.IsHidden = true;
 
             // Find all solutes.
-            foreach (ISolute solute in Apsim.Children(Nutrient, typeof(ISolute)))
+            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
-            lignin = Apsim.Find(Nutrient, "FOMLignin") as NutrientPool;
+            lignin = Nutrient.FindInScope<NutrientPool>("FOMLignin");
             if (lignin == null)
                 throw new Exception("Cannot find lignin pool in the nutrient model.");
-            cellulose = Apsim.Find(Nutrient, "FOMCellulose") as NutrientPool;
+            cellulose = Nutrient.FindInScope<NutrientPool>("FOMCellulose");
             if (cellulose == null)
                 throw new Exception("Cannot find cellulose pool in the nutrient model.");
-            carbohydrate = Apsim.Find(Nutrient, "FOMCarbohydrate") as NutrientPool;
+            carbohydrate = Nutrient.FindInScope<NutrientPool>("FOMCarbohydrate");
             if (carbohydrate == null)
                 throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }
@@ -69,7 +69,7 @@
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
-            foreach (ISolute solute in Apsim.Children(Nutrient, typeof(ISolute)))
+            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;

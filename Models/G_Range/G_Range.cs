@@ -1451,7 +1451,7 @@ namespace Models
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.DatabaseName, simulation.FileName);
                 else
@@ -1459,7 +1459,7 @@ namespace Models
             }
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null)
                     this.DatabaseName = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else

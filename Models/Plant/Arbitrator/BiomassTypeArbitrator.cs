@@ -3,6 +3,7 @@ using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF
 {
@@ -58,29 +59,29 @@ namespace Models.PMF
         {
             //read list of models into lists
 
-            var folders = Apsim.Children(this, typeof(Folder));
+            var folders = this.FindAllChildren<Folder>();
 
             potentialPartitioningMethods = new List<IPartitionMethod>();
-            var folder = folders.Find(f => f.Name == "PotentialPartitioningMethods");
+            var folder = folders.FirstOrDefault(f => f.Name == "PotentialPartitioningMethods");
             if (folder != null)
             {
-                var methods = Apsim.Children(folder, typeof(IPartitionMethod));
+                var methods = folder.FindAllChildren<IPartitionMethod>();
                 foreach (var method in methods) { potentialPartitioningMethods.Add(method as IPartitionMethod); }
             }
 
             actualPartitioningMethods = new List<IPartitionMethod>();
-            folder = folders.Find(f => f.Name == "ActualPartitioningMethods");
+            folder = folders.FirstOrDefault(f => f.Name == "ActualPartitioningMethods");
             if(folder != null)
             {
-                var methods = Apsim.Children(folder, typeof(IPartitionMethod));
+                var methods = folder.FindAllChildren<IPartitionMethod>();
                 foreach (var method in methods) { actualPartitioningMethods.Add(method as IPartitionMethod); }
             }
 
             allocationMethods = new List<IAllocationMethod>();
-            folder = folders.Find(f => f.Name == "AllocationMethods");
+            folder = folders.FirstOrDefault(f => f.Name == "AllocationMethods");
             if (folder != null)
             {
-                var methods = Apsim.Children(folder, typeof(IAllocationMethod));
+                var methods = folder.FindAllChildren<IAllocationMethod>();
                 foreach (var method in methods) { allocationMethods.Add(method as IAllocationMethod); }
             }
         }
