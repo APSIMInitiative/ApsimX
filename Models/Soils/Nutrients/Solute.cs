@@ -6,7 +6,7 @@ namespace Models.Soils.Nutrients
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -36,7 +36,7 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>

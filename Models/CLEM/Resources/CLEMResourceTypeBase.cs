@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -27,13 +27,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
 
         /// <summary>
         /// Has a market store been found
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool MarketStoreExists 
         { 
             get 
@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool TransmutationDefined 
         {
             get

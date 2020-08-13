@@ -1,14 +1,14 @@
 ﻿namespace APSIM.Shared.APSoil
 {
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>A soil crop parameterisation    /// </summary>
     [Serializable]
     public class SoilCrop
     {
         /// <summary>Name of the crop.</summary>
-        [XmlAttribute("name")]
+        [System.Xml.Serialization.XmlAttribute("name")]
         public string Name { get; set; }
         
         /// <summary>The thickness.</summary>

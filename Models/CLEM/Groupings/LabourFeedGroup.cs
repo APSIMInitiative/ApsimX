@@ -7,7 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -33,13 +33,13 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Proportion { get; set; }
 
         /// <summary>

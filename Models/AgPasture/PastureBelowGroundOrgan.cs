@@ -9,7 +9,7 @@
     using Models.Soils.Nutrients;
     using System;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -109,49 +109,39 @@
         internal string myZoneName { get; private set; }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcOptimum { get; set; } = 0.02;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMinimum { get; set; } = 0.006;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMaximum { get; set; } = 0.025;
 
         /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
-        [XmlIgnore]
         [Units("mm")]
         public double RootDistributionDepthParam { get; set; } = 90.0;
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        [XmlIgnore]
         [Units("-")]
         public double RootDistributionExponent { get; set; } = 3.2;
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        [XmlIgnore]
         public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        [XmlIgnore]
         public double SpecificRootLength { get; set; } = 100.0;
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        [XmlIgnore]
         public double RootDepthMinimum { get; set; } = 50.0;
 
         /// <summary>Maximum rooting depth (mm).</summary>
-        [XmlIgnore]
         public double RootDepthMaximum { get; set; } = 750.0;
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
-        [XmlIgnore]
         public double RootElongationRate { get; set; } = 25.0;
 
         /// <summary>Flag which method for computing soil available water will be used.</summary>

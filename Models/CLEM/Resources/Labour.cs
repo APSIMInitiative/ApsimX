@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Labour types currently available.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LabourType> Items { get; set; }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current pay rate value of individuals
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LabourPricing PayList;
 
         /// <summary>

@@ -16,7 +16,11 @@
     public class ManagerConverter
     {
         private List<string> lines = new List<string>();
-        private JObject manager;
+
+        /// <summary>
+        /// The Json token.
+        /// </summary>
+        public JObject Token { get; private set; }
 
         /// <summary>Default constructor.</summary>
         public ManagerConverter() { }
@@ -29,10 +33,10 @@
             get
             {
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
-                if (manager["Parameters"] == null)
+                if (Token["Parameters"] == null)
                     return parameters;
 
-                foreach (var parameter in manager["Parameters"])
+                foreach (var parameter in Token["Parameters"])
                     parameters.Add(parameter["Key"].ToString(), parameter["Value"].ToString());
                 return parameters;
             }
@@ -44,7 +48,7 @@
         /// <param name="manager">The JSON manager object.</param>
         public ManagerConverter(JObject manager)
         {
-            this.manager = manager;
+            this.Token = manager;
             if (manager["Code"] != null)
                 Read(manager["Code"].ToString());
         }
@@ -90,7 +94,7 @@
         /// </summary>
         public void Save()
         {
-            manager["Code"] = ToString();
+            Token["Code"] = ToString();
         }
 
         /// <summary>Write script</summary>
@@ -147,6 +151,17 @@
             }
         }
 
+        /// <summary>
+        /// Add a using statement if it doesn't already exist.
+        /// </summary>
+        /// <param name="statement"></param>
+        public void AddUsingStatement(string statement)
+        {
+            List<string> usings = GetUsingStatements().ToList();
+            usings.Add(statement);
+            SetUsingStatements(usings.Distinct());
+        }
+
         /// <summary>Gets a collection of declarations.</summary>
         public List<Declaration> GetDeclarations()
         {
@@ -158,7 +173,10 @@
                 Match match = Regex.Match(lines[i], pattern);
                 if (match.Groups["TypeName"].Value != string.Empty &&
                     match.Groups["TypeName"].Value != "as" &&
+                    match.Groups["TypeName"].Value != "return" &&
                     match.Groups["InstanceName"].Value != string.Empty &&
+                    match.Groups["InstanceName"].Value != "get" &&
+                    match.Groups["InstanceName"].Value != "set" &&
                     match.Groups["TypeName"].Value != "using")
                 {
                     Declaration decl = new Declaration();
@@ -518,7 +536,7 @@
         /// <param name="newParam">New value of the parameter.</param>
         public void UpdateParameter(string key, string newParam)
         {
-            foreach (var parameter in manager["Parameters"].Children())
+            foreach (var parameter in Token["Parameters"].Children())
                 if (parameter["Key"].ToString() == key)
                     parameter["Value"] = newParam;
                     //return;

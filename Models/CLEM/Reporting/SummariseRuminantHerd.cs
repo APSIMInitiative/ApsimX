@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
@@ -37,7 +37,7 @@ namespace Models.CLEM
         /// <summary>
         /// The details of the summary group for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public HerdReportItemGeneratedEventArgs ReportDetails { get; set; }
 
         /// <summary>
