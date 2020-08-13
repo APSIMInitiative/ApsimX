@@ -545,6 +545,51 @@
             return functionReturnValue;
 
         }
+         
+        /// <summary>
+        /// This routine calculates the distance between two points (given the
+        /// latitude/longitude of those points). 
+        /// </summary>
+        /// <remarks>
+        /// South latitudes are negative, east longitudes are positive 
+        /// </remarks>
+        /// <param name="lat1">First latitude.</param>
+        /// <param name="lon1">First longitude.</param>
+        /// <param name="lat2">Second latitude.</param>
+        /// <param name="lon2">Second longitude.</param>
+        /// <param name="km">Return distance in km? Alternative is miles.</param>
+        public static double Distance(double lat1, double lon1, double lat2, double lon2, bool km = true)
+        {
+            double theta = lon1 - lon2;
+            double dist = Math.Sin(DegreesToRadians(lat1)) * Math.Sin(DegreesToRadians(lat2)) + Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) * Math.Cos(DegreesToRadians(theta));
+            dist = Math.Acos(dist);
+            dist = RadiansToDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (km)
+                dist = dist * 1.609344;
+            else
+                dist = dist * 0.8684;
+            return dist;
+        }
+
+        /// <summary>
+        /// This function converts decimal degrees to radians
+        /// </summary>
+        /// <param name="degrees">Degrees to convert.</param>
+        private static double DegreesToRadians(double degrees)
+        {
+            return (degrees * Math.PI / 180.0);
+        }
+
+        /// <summary>
+        /// This function converts radians to decimal degrees
+        /// </summary>
+        /// <param name="radians">Radians to convert.</param>
+        private static double RadiansToDegrees(double radians)
+        {
+            return (radians / Math.PI * 180.0);
+        }
+
     }
 
 }
