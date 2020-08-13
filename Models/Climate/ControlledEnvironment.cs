@@ -126,6 +126,10 @@ namespace Models.Climate
         [Description("Latitude (deg)")]        
         public double Latitude{ get; set; }
 
+        /// <summary>Gets the longitude</summary>
+        [Description("Latitude (deg)")]
+        public double Longitude { get; set; }
+
         /// <summary>
         /// Gets the average temperature
         /// </summary>
