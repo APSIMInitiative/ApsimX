@@ -228,7 +228,7 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name) >= oldPhaseIndex)
+                    if ((IndexFromPhaseName(phase.Name) >= oldPhaseIndex) && (IndexFromPhaseName(phase.Name) < currentPhaseIndex))
                         phasesToFastForward.Add(phase);
                 }
                 foreach (IPhase phase in phasesToFastForward)
@@ -237,6 +237,12 @@ namespace Models.PMF.Phen
                     {
                         stagesPassedToday.Add(phase.Start); //Fixme.  This is a pretty ordinary bit of programming to get around the fact we use a phenological stage to match observed values. We should change this so plant has a harvest tag to match on.
                     }
+                    if ((phase is EmergingPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                    {
+                        Emerged = true;
+                        PlantEmerged?.Invoke(this, new EventArgs());
+                    }
+
                     stagesPassedToday.Add(phase.End);
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
@@ -398,7 +404,7 @@ namespace Models.PMF.Phen
                 {
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
-                         Emerged = true;
+                        Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
