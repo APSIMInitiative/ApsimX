@@ -774,11 +774,20 @@
             {
                 if (this.reader == null)
                 {
+                    if (ExcelUtilities.IsExcelFile(FullFileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
+                        throw new Exception($"Unable to open excel file {FullFileName}: no sheet name is specified");
+
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
 
                     if (this.reader.Headings == null)
-                        throw new Exception("Cannot find the expected header in weather file: " + this.FullFileName);
+                    {
+                        string message = "Cannot find the expected header in ";
+                        if (ExcelUtilities.IsExcelFile(FullFileName))
+                            message += $"sheet '{ExcelWorkSheetName}' of ";
+                        message += $"weather file: {FullFileName}";
+                        throw new Exception(message);
+                    }
 
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
