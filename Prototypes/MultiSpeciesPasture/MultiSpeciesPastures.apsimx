@@ -11113,44 +11113,6 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.22,
-                                    0.219,
-                                    0.177,
-                                    0.139,
-                                    0.125,
-                                    0.102,
-                                    0.083
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.05,
-                                    0.035,
-                                    0.025,
-                                    0.015,
-                                    0.01,
-                                    0.01
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "AGPLucerneSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
@@ -22777,44 +22739,6 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.22,
-                                    0.219,
-                                    0.177,
-                                    0.139,
-                                    0.125,
-                                    0.102,
-                                    0.083
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.05,
-                                    0.035,
-                                    0.025,
-                                    0.015,
-                                    0.01,
-                                    0.01
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "AGPLucerneSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
@@ -23106,8 +23030,8 @@
                           "InitialRootDM": 250.0,
                           "InitialRootDepth": 750.0,
                           "ResourceName": "AGPLucerne",
-                          "Name": "AGPLucerne",
-                          "IncludeInDocumentation": true,
+                          "Name": "Lucerne",
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
