@@ -40,8 +40,6 @@ namespace Models.PMF.Phen
         {
             if (lARPTQmodel != null)
             {
-                if (PTQ.Value() <= 0)
-                    throw new Exception(this.Name + " needs a positive value for PTQ, currently zero");
                 double LAR = lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
                 if (LAR > 0)
                     return 1 / LAR;
