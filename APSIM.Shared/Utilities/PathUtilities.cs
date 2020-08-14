@@ -70,7 +70,7 @@
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))
-                return path;
+                return ConvertSlashes(path);
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
@@ -81,11 +81,7 @@
             }
 
             // Convert slashes.
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                path = path.Replace("/", @"\");
-            else
-                path = path.Replace(@"\", "/");
+            path = ConvertSlashes(path);
 
             return Path.GetFullPath(path);
         }
@@ -127,6 +123,17 @@
         private static string ReducePath(string path)
         {
             return path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1, path.Length - path.IndexOf(Path.DirectorySeparatorChar) - 1);
+        }
+
+        /// <summary>
+        /// Convert all slashes to the correct directory separator character.
+        /// </summary>
+        private static string ConvertSlashes(string path)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                return path.Replace("/", @"\");
+
+            return path.Replace(@"\", "/");
         }
     }
 }
