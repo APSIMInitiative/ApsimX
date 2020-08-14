@@ -335,7 +335,7 @@
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(species.Name);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                double rldFac = Math.Min(1.0, RootLengthDensity[layer] / myReferenceRLD);
+                double rldFac = Math.Min(1.0, LengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
@@ -376,7 +376,7 @@
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / myReferenceKSuptake);
-                double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / myReferenceRLD);
+                double rldFac = 1.0 - Math.Pow(10.0, -LengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
@@ -400,7 +400,7 @@
         }
 
         /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
-        public double[] RootLengthDensity
+        public double[] LengthDensity
         {
             get
             {
@@ -433,12 +433,12 @@
             var threshold = 0.01;
             if (!IsKLModiferDueToDamageActive)
                 return 1;
-            else if (RootLengthDensity[layerIndex] < 0)
+            else if (LengthDensity[layerIndex] < 0)
                 return 0;
-            else if (RootLengthDensity[layerIndex] >= threshold)
+            else if (LengthDensity[layerIndex] >= threshold)
                 return 1;
             else
-                return (1 / threshold) * RootLengthDensity[layerIndex];
+                return (1 / threshold) * LengthDensity[layerIndex];
         }
         #endregion ---------------------------------------------------------------------------------------------------------
 
