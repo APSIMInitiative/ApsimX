@@ -2910,8 +2910,6 @@
                     return;
                 if (code.Contains($".{property}."))
                 {
-                    manager.AddUsingStatement(nameSpace);
-
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
                     if (zone == null)
@@ -2926,28 +2924,32 @@
                     }
 
                     int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
-
-                    bool isOptional = false;
-                    Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
-                    if (plantLink != null)
+                    if (numPlantsInZone > 0)
                     {
-                        string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
-                        if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
-                            isOptional = true;
+                        manager.AddUsingStatement(nameSpace);
+
+                        bool isOptional = false;
+                        Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
+                        if (plantLink != null)
+                        {
+                            string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
+                            if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
+                                isOptional = true;
+                        }
+
+                        string link;
+                        if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
+                            link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
+                        else
+                            link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
+
+                        string memberName = property[0].ToString().ToLower() + property.Substring(1);
+                        manager.AddDeclaration(property, memberName, new string[1] { link });
+
+                        if (!string.IsNullOrEmpty(plantName))
+                            manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
+                        manager.Save();
                     }
-
-                    string link;
-                    if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
-                        link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
-                    else
-                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
-
-                    string memberName = property[0].ToString().ToLower() + property.Substring(1);
-                    manager.AddDeclaration(property, memberName, new string[1] { link });
-
-                    if (!string.IsNullOrEmpty(plantName))
-                        manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
-                    manager.Save();
                 }
             }
         }
