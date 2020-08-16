@@ -76,6 +76,7 @@
                 physical.ParticleSizeClayMetadata = GetCodeValues(table, "ParticleSizeClayCode", row, numLayers);
 
                 var soilWater = new WaterBalance();
+                soilWater.ResourceName = "WaterBalance";
                 soil.Children.Add(soilWater);
                 soilWater.Thickness = physical.Thickness;
                 soilWater.SummerU = GetDoubleValue(table, row, "SummerU");
@@ -115,8 +116,14 @@
                 chemical.ESP = GetDoubleValues(table, "ESP (%)", row, numLayers);
                 chemical.ESPMetadata = GetCodeValues(table, "ESPCode", row, numLayers);
 
+                // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
                 soil.Children.Add(soilTemp);
+                var nutrient = new Nutrients.Nutrient();
+                nutrient.ResourceName = "Nutrient";
+                soil.Children.Add(nutrient);
+                var initialWater = new InitialWater();
+                soil.Children.Add(initialWater);
 
                 // crops
                 foreach (DataColumn Col in table.Columns)
@@ -128,7 +135,7 @@
                         {
                             string cropName = nameBits[0];
                             SoilCrop crop = new SoilCrop();
-                            crop.Name = cropName;
+                            crop.Name = cropName + "Soil";
                             crop.LL = GetDoubleValues(table, cropName + " ll (mm/mm)", row, numLayers);
                             crop.LLMetadata = GetCodeValues(table, cropName + " llCode", row, numLayers);
                             crop.KL = GetDoubleValues(table, cropName + " kl (/day)", row, numLayers);
