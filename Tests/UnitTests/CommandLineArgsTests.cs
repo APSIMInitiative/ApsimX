@@ -170,7 +170,12 @@ namespace UnitTests
             sims.Write(apsimxFileName);
 
             // Need to quote the regex on unix systems.
-            string args = $@"{apsimxFileName} /Verbose '/SimulationNameRegexPattern:sim\d'";
+            string args;
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            else
+                args = $@"{apsimxFileName} /Verbose '/SimulationNameRegexPattern:sim\d'";
+
             ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Start(models, args, Directory.GetCurrentDirectory(), true);
             proc.WaitForExit();
