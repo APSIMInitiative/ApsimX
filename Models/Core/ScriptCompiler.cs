@@ -241,6 +241,12 @@
                                 previousCompilations.Add(compilation);
                             }
 
+                            // Write the assembly to disk
+                            ms.Seek(0, SeekOrigin.Begin);
+                            string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                ms.WriteTo(file);
+
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);
                             compilation.Code = code;
@@ -318,7 +324,6 @@
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
             var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
-
             bool VB = code.IndexOf("Imports System") != -1;
             Compilation compilation;
             if (VB)
@@ -335,9 +340,8 @@
                     Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
                     new[] { syntaxTree },
                     referencedAssemblies,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             }
-
             return compilation;
         }
 #endif
