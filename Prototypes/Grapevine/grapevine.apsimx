@@ -174,7 +174,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 49.5,
+                          "FixedValue": 52.6419,
                           "Units": "hours",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -234,7 +234,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 12.59,
+                              "FixedValue": 12.42,
                               "Units": null,
                               "Name": "Xo",
                               "Children": [],
@@ -244,7 +244,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": -3.57143,
+                              "FixedValue": -3.865181,
                               "Units": null,
                               "Name": "b",
                               "Children": [],
@@ -275,7 +275,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1046.3,
+                      "FixedValue": 1011.2944,
                       "Units": "thermaltime",
                       "Name": "Target",
                       "Children": [],
@@ -5685,7 +5685,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Note that this organs is parameterised to represents all the fine roots of the plant.  The root organ is reponsible for uptake but can also supply both N and DM from its non-structural biomass.  The taproot organ is used for simulating biomass storage and remobilisation because the current root class can not handle the biomass retranslocation.\n\nFine roots represent about 20% to 30% of the total biomass and is assumed to u[take all the water and nutrient in current model. ",
+                  "Text": "Note that this organs is parameterised to represents all the fine roots of the plant.  The root organ is reponsible for uptake but can also supply both N and DM from its non-structural biomass.  The Fibrous root organ is used for simulating biomass storage and remobilisation because the current root class can not handle the biomass retranslocation.\n\nThe dynamics of root biomass was based on the root length dynamics measurement done on mature concord vines in UC Davis by comos et al., 2005. both root growth rate and mortality rate have annual cycles.Maintenance was set to zero as it was parameterized insided the senescence rate. \nthe maximum root biomass during the season is around 60 g per plant, estimated by lakso et al., 2008. \n\nthe initial weight of the root was increased as we start the simulation in February with no leaves.the start of simulation in February was for correctly simulating the budburst in the first year. the initial weight was given to ensure that the peak of the biomass can cycle around 30 g/m2. ",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5698,7 +5698,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 60.0,
+                      "FixedValue": 100.0,
                       "Units": "g/plant",
                       "Name": "Structural",
                       "Children": [],
@@ -5749,24 +5749,32 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.003,
-                          "Units": "gDMgDM-1d-1",
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "GrowthRate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "WtFactor",
                           "Children": [
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 65.0,
-                              "Units": null,
-                              "Name": "TargetWt",
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                61.0,
+                                122.0,
+                                153.0,
+                                192.0,
+                                275.0,
+                                310.0,
+                                366.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                0.0030125,
+                                0.013545,
+                                0.02102184,
+                                0.0035542,
+                                0.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5774,14 +5782,24 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Live.StructuralWt",
-                              "Name": "wt",
+                              "VariableName": "[Weather].DaysSinceWinterSolstice",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.3,
+                          "Units": null,
+                          "Name": "GrowthCostScale",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5822,7 +5840,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 2.24,
                       "Units": null,
                       "Name": "Structural",
                       "Children": [],
@@ -5856,26 +5874,42 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "SenescenceRate",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Ecodormancy",
-                      "End": "LeafFall",
-                      "Name": "Reproductive",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0015,
-                          "Units": null,
-                          "Name": "Constant",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        61.0,
+                        122.0,
+                        153.0,
+                        192.0,
+                        275.0,
+                        310.0,
+                        366.0
                       ],
+                      "Y": [
+                        0.001484,
+                        0.001484,
+                        0.001973,
+                        0.005178,
+                        0.01264,
+                        0.013,
+                        0.003,
+                        0.001484
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "XValue",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5887,7 +5921,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.9,
+                  "FixedValue": 0.83,
                   "Units": null,
                   "Name": "DMConversionEfficiency",
                   "Children": [],
@@ -5905,7 +5939,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.002,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [],
