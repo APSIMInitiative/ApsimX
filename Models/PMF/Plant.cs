@@ -70,10 +70,6 @@
         [JsonIgnore]
         public double Legumosity { get; }
 
-        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        [JsonIgnore]
-        public bool IsC4 { get; }
-
         /// <summary>The sowing data</summary>
         [JsonIgnore]
         public SowPlant2Type SowingData { get; set; }
@@ -150,9 +146,6 @@
         {
             SowingData = new SowPlant2Type();
             IsAlive = false;
-
-            string photosyntheticPathway = (string) this.FindByPath("Leaf.Photosynthesis.FCO2.PhotosyntheticPathway")?.Value;
-            IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
         }
 
