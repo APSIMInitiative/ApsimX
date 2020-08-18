@@ -2944,7 +2944,7 @@
 
                         string link;
                         int numPlantsWithCorrectName = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
-                        if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
+                        if (string.IsNullOrEmpty(plantName) || numPlantsWithCorrectName == 0)
                             link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
                         else
                             link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
