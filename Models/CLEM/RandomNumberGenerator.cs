@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -45,7 +45,7 @@ namespace Models.CLEM
         /// <summary>
         /// Access the random number generator
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Random number generator")]
         public static Random Generator 
         { 

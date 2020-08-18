@@ -5,7 +5,6 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// This class specifies which life cycle and which phase the progeny of the parent 

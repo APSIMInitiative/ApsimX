@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
@@ -60,42 +60,42 @@ namespace Models.Agroforestry
         /// <summary>
         /// Distance from zone in tree heights
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("TreeHeights")]
         public double H { get; set; }
 
         /// <summary>
         /// Height of the tree.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m")]
         public double heightToday { get { return GetHeightToday();}}
 
         /// <summary>
         /// Leaf Area
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m2")]
         public double ShadeModiferToday { get { return GetShadeModifierToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] WaterUptake { get; set; }
 
         /// <summary>
         /// The trees N uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m2")]
         public double[] NUptake { get; set; }
 
         /// <summary>
         /// The trees water demand across all zones.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("L")]
         public double SWDemand {get; set; }  // Tree water demand (L)
 
@@ -135,14 +135,14 @@ namespace Models.Agroforestry
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double WaterStress { get; set; }
 
         /// <summary>
         /// N stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double NStress { get; set; }
 
@@ -150,13 +150,13 @@ namespace Models.Agroforestry
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IEnumerable<Zone> ZoneList;
 
         /// <summary>
         /// Return an array of shade values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Summary]
         [Units("%")]
         public double[] Shade { get { return shade.Values.ToArray(); } }
@@ -350,7 +350,7 @@ namespace Models.Agroforestry
         /// Calculate water use from each zone (mm)
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] TreeWaterUptake { get; private set; }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace Models.Agroforestry
         /// Calculate water use on a per tree basis (L)
         /// </summary>
         [Units("L")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double IndividualTreeWaterDemand
         {
             get;

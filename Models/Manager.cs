@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Reflection;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -90,14 +90,14 @@
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
         /// way to store both the caret position and scrolling information.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
@@ -216,7 +216,7 @@
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
-                        ReflectionUtilities.GetAttribute(property, typeof(XmlIgnoreAttribute), false) == null)
+                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null)
                     {
                         object value = property.GetValue(script, null);
                         if (value == null)

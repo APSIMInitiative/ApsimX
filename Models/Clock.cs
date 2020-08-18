@@ -7,7 +7,6 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using System.Data;
     using APSIM.Shared.Utilities;
 
@@ -231,13 +230,13 @@
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
         /// <value>The today.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime Today { get; private set; }
 
         /// <summary>
         /// Returns the current fraction of the overall simulation which has been completed
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get
