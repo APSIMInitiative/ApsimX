@@ -169,7 +169,13 @@ namespace UnitTests
             string apsimxFileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             sims.Write(apsimxFileName);
 
-            string args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            // Need to quote the regex on unix systems.
+            string args;
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            else
+                args = $@"{apsimxFileName} /Verbose '/SimulationNameRegexPattern:sim\d'";
+
             ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Start(models, args, Directory.GetCurrentDirectory(), true);
             proc.WaitForExit();
