@@ -2920,6 +2920,11 @@
                             JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
                             if (replacement != null)
                                 zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                            else
+                                // This manager script is under replacements, but is not replacing any models.
+                                // It is also likely to contain compilation errors due to API changes. Therefore
+                                // we will disable it to suppress these errors.
+                                manager.Token["Enabled"] = false;
                         }
                     }
 
