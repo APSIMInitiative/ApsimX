@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 112; } }
+        public static int LatestVersion { get { return 113; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2950,6 +2950,18 @@
                     manager.Save();
                 }
             }
+        }
+
+        /// <summary>
+        /// Upgrade to version 112. Lots of breaking changes to class Plant.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion113(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
+                    manager.Save();
         }
 
         /// <summary>
