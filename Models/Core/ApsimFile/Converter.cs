@@ -2928,7 +2928,7 @@
                         }
                     }
 
-                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
                     if (numPlantsInZone > 0)
                     {
                         manager.AddUsingStatement(nameSpace);
@@ -2943,6 +2943,7 @@
                         }
 
                         string link;
+                        int numPlantsWithCorrectName = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
                         if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
                             link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
                         else
