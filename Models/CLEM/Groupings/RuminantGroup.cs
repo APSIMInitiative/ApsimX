@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,7 +33,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Models.CLEM.Groupings
                 }
                 html += "</div>";
             }
-            if (Apsim.Children(this, typeof(RuminantFilter)).Count() < 1)
+            if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

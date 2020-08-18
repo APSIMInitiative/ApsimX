@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Models.Functions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -569,7 +570,41 @@ namespace Models.Core.ApsimFile
                     }
                 }
             }
+
+            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            {
+                foreach (var replacement in changes)
+                {
+                    string variableName = variableRef["VariableName"]?.ToString();
+                    if (variableName.Contains(replacement.Item1))
+                    {
+                        replacementMade = true;
+                        variableRef["VariableName"] = variableName?.Replace(replacement.Item1, replacement.Item2);
+                    }
+                }
+            }
+
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="type">Type of ancestor to search for.</param>
+        public static JObject Ancestor(JObject token, Type type)
+        {
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                Type parentType = System.Type.GetType(Type(parent, true));
+                if (type.IsAssignableFrom(parentType))
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
         }
     }
 }

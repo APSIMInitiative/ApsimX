@@ -1,4 +1,4 @@
-namespace Models
+﻿namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.CLEM;
@@ -11,7 +11,7 @@ namespace Models
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -43,7 +43,7 @@ namespace Models
         public int ColourArgb { get; set; }
 
         /// <summary>Gets or sets the color</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Color Colour
         {
             get
@@ -198,7 +198,7 @@ namespace Models
             definitions.AddRange(seriesDefinitions);
 
             // We might have child models that want to add to our series definitions e.g. regression.
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in this.FindAllChildren<IGraphable>())
                 series.GetSeriesToPutOnGraph(reader, definitions);
         }
 
@@ -207,7 +207,7 @@ namespace Models
         public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
         {
             // We might have child models that wan't to add to the annotations e.g. regression.
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in this.FindAllChildren<IGraphable>())
                 series.GetAnnotationsToPutOnGraph(annotations);
         }
 

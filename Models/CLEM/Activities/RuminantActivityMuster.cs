@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NotNeeded;
             // allow multiple filter groups for mustering.. 
-            var filterGroups = Apsim.Children(this, typeof(RuminantGroup));
+            var filterGroups = FindAllChildren<RuminantGroup>().ToList();
             if(filterGroups.Count() == 0)
             {
                 filterGroups.Add(new RuminantGroup());

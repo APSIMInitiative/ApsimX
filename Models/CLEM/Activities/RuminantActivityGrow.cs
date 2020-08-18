@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural");
                     if (ind.Mother != null)
                     {
-                        // report conception status changed when last multiple birth dies.
+                        // report conception status changed when offspring weans.
                         ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
                     }
                 }
@@ -375,13 +375,23 @@ namespace Models.CLEM.Activities
                 // alert user to unfed animals in the month as this should not happen
                 if (unfed > 0)
                 {
-                    string warn = $"{unfed} individual{((unfed>1)?"s":"")} of [r={breed}] {((unfed == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
-                    Summary.WriteWarning(this, warn);
+                    string warn = $"individuals of [r={breed}] not fed";
+                    if (!Warnings.Exists(warn))
+                    {
+                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check feeding strategy and ensure animals are mustered to pasture or fed in yards";
+                        Summary.WriteWarning(this, warnfull);
+                        Warnings.Add(warn);
+                    }
                 }
                 if (unfedcalves > 0)
                 {
-                    string warn = $"{unfedcalves} cal{((unfedcalves == 1) ? "ves" : "f")} of [r={breed}] {((unfedcalves == 1) ? "was" : "were")} not fed in {Clock.Today.Month}/{Clock.Today.Year}. Check calves have food or access to pasture when no milk is available from mother";
-                    Summary.WriteWarning(this, warn);
+                    string warn = $"calves of [r={breed}] not fed";
+                    if (!Warnings.Exists(warn))
+                    {
+                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check calves are are fed, or have access to pasture (mustered with mothers or separately) when no milk is available from mother";
+                        Summary.WriteWarning(this, warnfull);
+                        Warnings.Add(warn);
+                    }
                 }
 
                 if (methaneEmissions != null)
@@ -564,10 +574,6 @@ namespace Models.CLEM.Activities
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
             ind.PreviousWeight = ind.Weight;
-            if(ind.Gender == Sex.Female && (ind as RuminantFemale).BirthDue)
-            {
-                ind.Weight -= (ind as RuminantFemale).WeightLossDueToCalf;
-            }
             ind.Weight += energyPredictedBodyMassChange;
             ind.Weight = Math.Max(0.0, ind.Weight);
             ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);

@@ -138,14 +138,14 @@
                     }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    Model foundModel = Apsim.Find(relativeToModel, modelName) as Model;
+                    Model foundModel = relativeToModel.FindInScope(modelName) as Model;
                     if (foundModel == null)
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = Apsim.Find(relativeToModel, modelTypes[0]) as Model;
+                            foundModel = relativeToModel.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
                     if (foundModel == null)
                         return null;

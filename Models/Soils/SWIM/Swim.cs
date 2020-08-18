@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Models.Core;
 using Models;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
@@ -595,11 +595,11 @@ namespace Models.Soils
         }
 
         ///<summary>Get volumetric water content (mm/mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SW { get { return th; } set { th = value; } }
 
         ///<summary>Get water content (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SWmm { get { return MathUtilities.Multiply(th, soil.Thickness); } }
 
         [Units("cm^3/cm^3")]
@@ -613,7 +613,7 @@ namespace Models.Soils
         }
 
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] ESW
         {
@@ -684,7 +684,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the amount of water runoff (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Runoff
         {
@@ -722,7 +722,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Es
         {
@@ -733,7 +733,7 @@ namespace Models.Soils
         }
 
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Eos
         {
@@ -744,7 +744,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Drainage
         {
@@ -755,7 +755,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Eo { get; set; }
 
@@ -769,7 +769,7 @@ namespace Models.Soils
         }
 
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] Flow
         {
@@ -2326,7 +2326,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
+                SwimSoluteParameters soluteParam = this.FindByPath(solute_names[i],true)?.Value as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, double.NaN);
@@ -2350,7 +2350,7 @@ namespace Models.Soils
         }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialInfiltration { get; set; }
 
         private void GetRainVariables()
@@ -5867,44 +5867,44 @@ namespace Models.Soils
         }
 
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Thickness { get { return soil.Thickness; } }
 
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNO3 property"); } }
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNH4 property"); } }
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement a LeachUrea property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNO3 property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNH4 property"); } }
 
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowUrea { get { throw new NotImplementedException("SWIM doesn't implement a FlowUrea property"); } }
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
 
         /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResidueInterception
         {
             get { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
@@ -5912,11 +5912,11 @@ namespace Models.Soils
         }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>Sets the water table.</summary>

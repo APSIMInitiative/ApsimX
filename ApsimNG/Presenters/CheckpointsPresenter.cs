@@ -48,7 +48,7 @@
             this.view = view as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            storage = Apsim.Find(this.model, typeof(DataStore)) as DataStore;
+            storage = this.model.FindInScope<DataStore>();
 
             checkpointList = this.view.GetControl<TreeView>("CheckpointList");
             addButton = this.view.GetControl<ButtonView>("AddButton");

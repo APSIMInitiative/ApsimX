@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -208,12 +208,12 @@ namespace Models.CLEM
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
@@ -310,6 +310,19 @@ namespace Models.CLEM
                 ErrorMessage = err.Message;
                 return null;
             }
+        }
+
+
+        /// <summary>
+        /// returns the number of records for a given condition
+        /// Not used in this type
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int RecordsFound(string table, object value)
+        {
+            return 1;
         }
 
         /// <summary>
@@ -494,13 +507,6 @@ namespace Models.CLEM
             if (clock.EndDate == clock.Today)
             {
                 return;
-            }
-
-            //Check if there is any data
-            if ((filtered == null) || (filtered.Count == 0))
-            {
-                throw new ApsimXException(this, errormessageStart
-                    + "Unable to retrieve any data what so ever");
             }
 
             //Check no gaps in the months

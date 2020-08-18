@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return ((Age >= BreedParams.MinimumAge1stMating)&(Weight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) &(Age <= BreedParams.MaximumAgeMating) );
+                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
             }
         }
 

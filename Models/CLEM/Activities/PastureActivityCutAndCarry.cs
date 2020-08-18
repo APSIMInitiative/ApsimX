@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -62,13 +62,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Amount harvested this timestep after limiter accounted for
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountHarvested { get; set; }
 
         /// <summary>
         /// Amount available for harvest from crop file
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
         private GrazeFoodStoreType pasture { get; set; }
@@ -349,7 +349,7 @@ namespace Models.CLEM.Activities
         private ActivityCutAndCarryLimiter LocateCutAndCarryLimiter(IModel model)
         {
             // search children
-            ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
+            ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
                 if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))

@@ -13,7 +13,7 @@
         public static void Convert(Soil soil)
         {
             // Convert all samples.
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
             {
                 // Convert sw units to volumetric.

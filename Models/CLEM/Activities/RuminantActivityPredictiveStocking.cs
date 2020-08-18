@@ -219,7 +219,7 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (RuminantGroup item in Apsim.Children(this, typeof(RuminantDestockGroup)))
+            foreach (IModel item in FindAllChildren<RuminantDestockGroup>())
             {
                 // works with current filtered herd to obey filtering.
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
@@ -401,7 +401,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
-            if(Apsim.Children(this, typeof(RuminantGroup)).Count() == 0)
+            if(FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }

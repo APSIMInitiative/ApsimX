@@ -8,7 +8,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -33,7 +33,7 @@
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
         /// 
-        [XmlIgnore]
+        [JsonIgnore]
         public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
@@ -124,16 +124,16 @@
         public string Comments { get; set; }
 
         /// <summary>Gets the soil water.</summary>
-        [XmlIgnore] public ISoilWater SoilWater { get; private set; }
+        [JsonIgnore] public ISoilWater SoilWater { get; private set; }
 
         /// <summary>Gets the soil organic matter.</summary>
-        [XmlIgnore] public Organic SoilOrganicMatter { get; private set; }
+        [JsonIgnore] public Organic SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
         /// <summary>Gets the initial conditions node.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public Sample Initial { get; private set; }
 
         /// <summary>Called when model has been created.</summary>
@@ -154,25 +154,25 @@
         /// <summary>Find our children.</summary>
         public void FindChildren()
         {
-            waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
+            waterNode = this.FindChild<Physical>();
 
-            Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
-            SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
+            Weirdo = this.FindChild<WEIRDO>();
+            SoilWater = this.FindChild<ISoilWater>();
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
             if (Weirdo == null && waterNode == null)
                 throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
 
-            SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
+            SoilOrganicMatter = this.FindChild<Organic>();
             if (SoilOrganicMatter == null)
                 throw new Exception($"{Name}: Unable to find Organic child model");
 
-            temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            temperatureModel = this.FindChild<ISoilTemperature>();
             if (temperatureModel == null)
                 throw new Exception($"{Name}: Unable to find soil temperature child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
-            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+            structure = this.FindChild<LayerStructure>();
         }
 
         /// <summary>
@@ -193,7 +193,7 @@
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Thickness 
         {
             get
@@ -240,7 +240,7 @@
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] BD
         {
             get
@@ -269,14 +269,14 @@
         {
             get
             {
-                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                var sample = this.FindChild<Sample>();
                 return sample?.SW;
             }
         }
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Water
         {
             get
@@ -290,18 +290,18 @@
         /// Although there are no references in C# code to this property, it is
         /// used in the initial water chart in the GUI.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SWAtWaterThickness
         {
             get
             {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+                InitialWater initialWater = this.FindChild<InitialWater>();
 
                 if (initialWater != null)
                     return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
                 else
                 {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    foreach (Sample Sample in this.FindAllChildren<Sample>())
                     {
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {
@@ -318,7 +318,7 @@
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] AirDry
         {
             get
@@ -338,7 +338,7 @@
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LL15
         {
             get
@@ -373,7 +373,7 @@
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] DUL
         {
             get
@@ -408,7 +408,7 @@
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SAT
         {
             get
@@ -443,7 +443,7 @@
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] KS
         {
             get
@@ -644,9 +644,10 @@
         public int LayerIndexOfDepth(double depth)
         {
             double CumDepth = 0;
-            for (int i = 0; i < Thickness.Length; i++)
+            double[] thickness = Thickness; // use local for efficiency reasons
+            for (int i = 0; i < thickness.Length; i++)
             {
-                CumDepth = CumDepth + Thickness[i];
+                CumDepth = CumDepth + thickness[i];
                 if (CumDepth >= depth) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");

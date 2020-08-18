@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Globalization;
 
 namespace Models.CLEM.Activities
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Calculated sires kept
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int SiresKept { get; set; }
 
         /// <summary>
@@ -263,12 +263,12 @@ namespace Models.CLEM.Activities
                 {
                     int numberAdded = 0;
                     RuminantType breedParams = rumHerd.FirstOrDefault().BreedParams;
-                    RuminantInitialCohorts cohorts = Apsim.Children(rumHerd.FirstOrDefault().BreedParams, typeof(RuminantInitialCohorts)).FirstOrDefault() as RuminantInitialCohorts;
+                    RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault() as RuminantInitialCohorts;
 
                     if (cohorts != null)
                     {
-                        int heifers = Convert.ToInt32(Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
+                        int heifers = Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
+                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         if (initialBreeders < (this.MinimumBreedersKept-heifers))
                         {
@@ -396,8 +396,8 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if breeders placed in yards.
             if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if(Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if(ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Breeders purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
@@ -414,8 +414,8 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if sires placed in yards.
             if (grazeStoreBreeders == "" && this.SiresKept > 0)
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Sires purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
@@ -503,17 +503,18 @@ namespace Models.CLEM.Activities
 
                 // MALES
                 // check for sires after sale of old individuals and buy/sell
-                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
+                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
 
                 // Number of females
-                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating && a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
 
-                // these are females that will exceed max age and be sold in next 12 months
-                int numberFemaleOldInHerd = herd.Where(a => a.Gender == Sex.Female && (a.Age + 12 >= MaximumBreederAge) && a.SaleFlag == HerdChangeReason.None).Count();
+                // these are the breeders already marked for sale
+                int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
-                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && a.Weaned && ((a.Age - a.BreedParams.MinimumAge1stMating < 0) && (a.Age - a.BreedParams.MinimumAge1stMating > -12)) && a.SaleFlag == HerdChangeReason.None).Count();
+                // we should not include those individuals > 12 months before reaching breeder age
+                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.None & !a.Tags.Contains("GrowHeifer")).Count();
 
                 if (numberMaleSiresInHerd > SiresKept)
                 {
@@ -602,23 +603,26 @@ namespace Models.CLEM.Activities
 
                 // shortfall between actual and desired numbers of breeders (-ve for shortfall)
                 excessBreeders = numberFemaleBreedingInHerd - maxBreeders;
+                
                 // IAT-NABSA removes adjusts to account for the old animals that will be sold in the next year
                 // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
                 // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
                 // Account for whole individuals only.
-                int numberDyingInNextYear = Convert.ToInt32(Math.Floor(numberFemaleBreedingInHerd * mortalityRate), CultureInfo.InvariantCulture);
-                // adjust for future mortality
-                excessBreeders -= numberDyingInNextYear;
+
+                excessBreeders -= numberFemaleMarkedForSale;
+
+                // calculate the mortality of the remaining + purchases
+                int numberDyingInNextYear = 0;
+                numberDyingInNextYear +=  Convert.ToInt32(Math.Floor((numberFemaleBreedingInHerd + excessBreeders) * mortalityRate), CultureInfo.InvariantCulture);
+                //  include mortality of heifers added
+                numberDyingInNextYear += Convert.ToInt32(Math.Floor(Math.Max(0,numberFemaleHeifersInHerd - ((excessBreeders>0)?-excessBreeders:0)) * mortalityRate), CultureInfo.InvariantCulture);
 
                 // account for heifers already in the herd
                 // These are the next cohort that will become breeders in the next 12 months (before this method is called again)
                 excessBreeders += numberFemaleHeifersInHerd;
 
-                // if negative - i.e. purchases needed limit to min breeders kept not max breeders kept
-                if(excessBreeders < 0)
-                {
-                    excessBreeders = Math.Min(0, numberFemaleBreedingInHerd - MinimumBreedersKept - numberDyingInNextYear + numberFemaleHeifersInHerd);
-                }
+                // adjust for future mortality over 1 year
+                excessBreeders -= numberDyingInNextYear;
 
                 if (excessBreeders > 0) // surplus heifers to sell
                 {
@@ -628,39 +632,40 @@ namespace Models.CLEM.Activities
                     // this allows the user to sell old females over young breeders and heifers if required. 
                     // must be female (check that males not included in validation)
                     // remove individuals to sale as specified by destock groups
-                    foreach (RuminantGroup item in Apsim.Children(this, typeof(RuminantGroup)))
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
                         List<Ruminant> herdToSell = herd.Filter(item);
                         int cnt = 0;
                         while (cnt < herdToSell.Count() && excessBreeders > 0)
                         {
-                            if(herd[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
+                            if (herd[cnt] is RuminantFemale)
                             {
-                                herd[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
-                                excessBreeders--;
+                                if (herd[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
+                                {
+                                    herd[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                    excessBreeders--;
+                                }
                             }
                             cnt++;
                         }
                     }
 
                     // now need to manage heifers to herd size or make for sale like males. 
-                    foreach (var female in herd.Where(a => a.Gender == Sex.Female &&  (a as RuminantFemale).IsHeifer).Take(excessBreeders))
+                    foreach (var female in herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & !a.Tags.Contains("GrowHeifer")).Take(excessBreeders))
                     {
                         // if sell like males tag for grow out otherwise mark for sale
                         if (SellFemalesLikeMales)
                         {
-                            if (!female.Tags.Contains("GrowHeifer"))
-                            {
-                                female.Tags.Add("GrowHeifer");
-                            }
+                            female.Tags.Add("GrowHeifer");
+                            excessBreeders--;
                         }
                         else
                         {
                             // tag for sale.
                             female.SaleFlag = HerdChangeReason.ExcessHeiferSale;
+                            excessBreeders--;
                         }
-                        excessBreeders--;
                         if (excessBreeders == 0)
                         {
                             break;
@@ -688,19 +693,32 @@ namespace Models.CLEM.Activities
                         }
 
                         // remove young females from sale herd to replace breeders (not those sold because too old)
-                        foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.ExcessHeiferSale)).OrderByDescending(a => a.Age))
+                        foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.SaleFlag != HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Age))
                         {
-                            female.SaleFlag = HerdChangeReason.None;
-                            excessBreeders--;
-                            if (excessBreeders == 0)
+                            if (female.SaleFlag != HerdChangeReason.None)
                             {
-                                break;
+                                female.SaleFlag = HerdChangeReason.None;
+                                excessBreeders--;
+                                if (excessBreeders == 0)
+                                {
+                                    break;
+                                }
                             }
                         }
 
                         // if still insufficient buy breeders.
                         if (excessBreeders > 0 && (MaximumProportionBreedersPerPurchase > 0))
                         {
+                            // recalculate based on minbreeders kept for purchases
+                            // this limit is only applied to purchases, not herd replacement to max breeders kept
+                            int limitedExcessBreeders = Math.Max(0, excessBreeders - (maxBreeders - MinimumBreedersKept));
+                            // adjust mortality for new level
+                            if(limitedExcessBreeders < excessBreeders)
+                            {
+                                int notDead = Convert.ToInt32(Math.Floor((excessBreeders-limitedExcessBreeders) * mortalityRate), CultureInfo.InvariantCulture);
+                                excessBreeders = Math.Max(0,limitedExcessBreeders - notDead);
+                            }
+
                             int ageOfBreeder = 0;
 
                             // IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
@@ -735,10 +753,12 @@ namespace Models.CLEM.Activities
                                 // add to purchase request list and await purchase in Buy/Sell
                                 ruminantHerd.PurchaseIndividuals.Add(newBreeder);
                                 numberBought++;
+                                excessBreeders--;
                             }
                         }
                     }
                 }
+
                 // Breeders themselves don't get sold unless specified in destocking groups below this activity. Sales is with Heifers
                 // Breeders can be sold in seasonal and ENSO destocking.
                 // sell breeders
@@ -949,7 +969,7 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            if (Apsim.Children(this, typeof(RuminantGroup)).Count() > 0)
+            if (FindAllChildren<RuminantGroup>().Any())
             {
                 html += "\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">";
                 html += "<div class=\"labournote\">Any Ruminant Filter Group below will determine which breeders (and in which order) will be sold prior to selling heifers in order to reduce the breeder herd size. Note: You are responsible for ensuring these filter groups can be applied to a list of breeders.</div>";

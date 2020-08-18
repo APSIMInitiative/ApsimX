@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -207,12 +207,8 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
-                    (Gender == Sex.Female &
-                    (Age >= BreedParams.MinimumAge1stMating &
-                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
-                    Age <= BreedParams.MaximumAgeMating)
-                    );
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
 

@@ -1,4 +1,4 @@
-
+﻿
 namespace UserInterface.Presenters
 {
     using System;
@@ -194,7 +194,7 @@ namespace UserInterface.Presenters
                 IModel firstChild = model.Children.FirstOrDefault();
                 if (firstChild != null)
                 {
-                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    List<IModel> sameTypeChildren = model.FindAllChildren().Where(c => firstChild.GetType().IsAssignableFrom(c.GetType())).ToList();
                     return sameTypeChildren;
                 }
             }
@@ -345,7 +345,7 @@ namespace UserInterface.Presenters
                 }
                 else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
                 {
-                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
                         cell.DropDownStrings = this.GetLifeCycleNames(zone);
@@ -459,7 +459,7 @@ namespace UserInterface.Presenters
                 else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                    Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
                         cell.DropDownStrings = this.GetLifeCycleNames(zone);
@@ -535,7 +535,7 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
+                        foreach (Model crop in this.model.FindAllInScope<IPlant>())
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -544,7 +544,7 @@ namespace UserInterface.Presenters
                     }
                     else if (this.properties[propListIndex][i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
+                        List<string> plantNames = this.model.FindAllInScope<IPlant>().OfType<IModel>().Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
@@ -570,11 +570,11 @@ namespace UserInterface.Presenters
         {
             if (crop.CultivarNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+                    IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
                     if (replacementCrop != null)
                     {
                         return replacementCrop.CultivarNames;
@@ -594,19 +594,7 @@ namespace UserInterface.Presenters
         /// <returns>A list of life cycles.</returns>
         private string[] GetLifeCycleNames(Zone zone)
         {
-            List<IModel> LifeCycles = Apsim.Children(zone, typeof(LifeCycle));
-            if (LifeCycles.Count > 0)
-            {
-                string[] Namelist = new string[LifeCycles.Count];
-                int i = 0;
-                foreach (IModel LC in LifeCycles)
-                {
-                    Namelist[i] = LC.Name;
-                    i++;
-                }
-                return Namelist;
-            }
-            return new string[0];
+            return zone.FindAllChildren<LifeCycle>().Select(lc => lc.Name).ToArray();
         }
 
         /// <summary>Get a list of Phase Names for life Cycle</summary>
@@ -616,11 +604,11 @@ namespace UserInterface.Presenters
         {
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
                     if (replacementLifeCycle != null)
                     {
                         return replacementLifeCycle.LifeCyclePhaseNames;
@@ -680,7 +668,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+            return this.model.FindInScope<IPlant>();
         }
 
         /// <summary>
@@ -704,7 +692,7 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(LifeCycle)) as LifeCycle;
+            return this.model.FindInScope<LifeCycle>();
         }
 
         private string[] GetResidueNames()
@@ -734,12 +722,14 @@ namespace UserInterface.Presenters
         private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
         {
             List<string> result = new List<string>();
-            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ZoneCLEM zoneCLEM = model as ZoneCLEM;
+            if (zoneCLEM == null)
+                zoneCLEM = model.FindAncestor<ZoneCLEM>();
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
 
             foreach (Type resGroupType in resourceNameResourceGroups)
             {
-                IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                IModel resGroup = resHolder.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
                 if (resGroup != null)  //see if this group type is included in this particular simulation.
                 {
                     foreach (IModel item in resGroup.Children)
@@ -792,10 +782,10 @@ namespace UserInterface.Presenters
         private object GetNewCellValue(IVariable property, string newValue)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, newValue);
+                return (property.Object as IModel).FindInScope(newValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, newValue);
+                return (property.Object as IModel).FindByPath(newValue)?.Value;
 
             try
             {

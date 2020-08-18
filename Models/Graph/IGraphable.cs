@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// An interface for a model that can graph itself.

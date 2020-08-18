@@ -33,9 +33,14 @@ Each excel file can contain multiple worksheets, and they don’t all need to co
 ![Usage](/images/Usage.ExcelWeather6.png) 
 
 * Edit the ‘tav’ and ‘amp’ rows so that the measurement is displayed with the title (name), and that the commenting, including the exclamation (!) is in column 3.  Column 2 should only contain the values.
+* Note that tav and amp are optional - if not specified, APSIM will calculate them internally.
 
 ![Usage](/images/Usage.ExcelWeather7.png) 
 
 The worksheet should now be complete.
 
 ![Usage](/images/Usage.ExcelWeather8.png) 
+
+Note: when using the excel file in APSIM, the sheet name must be specified:
+
+![Usage](/images/Usage.ExcelWeather9.png)

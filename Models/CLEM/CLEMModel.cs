@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -31,13 +31,13 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
         /// Warning log for this CLEM model
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public WarningLog Warnings = WarningLog.GetInstance(50);
 
         /// <summary>
@@ -52,14 +52,14 @@ namespace Models.CLEM
         /// <summary>
         /// Model identifier
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string UniqueID { get { return id.ToString(); } }
 
         /// <summary>
         /// Parent CLEM Zone
         /// Stored here so rapidly retrieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public String CLEMParentName { get; set; }
 
         /// <summary>
@@ -80,7 +80,14 @@ namespace Models.CLEM
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         if(dv != null)
                         {
-                            property.SetValue(this, dv.Value, null);
+                            if (property.PropertyType.IsEnum)
+                            {
+                                property.SetValue(this, Enum.Parse(property.PropertyType, dv.Value.ToString()));
+                            }
+                            else
+                            {
+                                property.SetValue(this, dv.Value, null);
+                            }
                         }
 
                     }
@@ -164,7 +171,7 @@ namespace Models.CLEM
         /// <summary>
         /// Styling to use for HTML summary
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <summary>
