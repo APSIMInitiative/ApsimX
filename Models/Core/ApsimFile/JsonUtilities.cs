@@ -584,6 +584,42 @@ namespace Models.Core.ApsimFile
                 }
             }
 
+            foreach (JObject series in ChildrenOfType(node, nameof(Series)))
+            {
+                foreach (var change in changes)
+                {
+                    if (series["XFieldName"]?.ToString() != null && series["XFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["XFieldName"] = series["XFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["YFieldName"]?.ToString() != null && series["YFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["YFieldName"] = series["YFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["X2FieldName"]?.ToString() != null && series["X2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["X2FieldName"] = series["X2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Y2FieldName"]?.ToString() != null && series["Y2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Y2FieldName"] = series["Y2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Filter"]?.ToString() != null && series["Filter"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Filter"] = series["Filter"].ToString().Replace(change.Item1, change.Item2);
+                    }
+                }
+            }
+
             return replacementMade;
         }
 
