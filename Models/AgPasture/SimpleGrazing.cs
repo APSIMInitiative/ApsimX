@@ -405,7 +405,7 @@
             foreach (var forage in forages)
             {
                 PreGrazeDM += forage.AboveGround.Wt;
-                PreGrazeHarvestableDM += forage.AboveGroundHarvestable.Wt;
+                PreGrazeHarvestableDM += forage.AboveGround.Wt;
             }
 
             // Convert to kg/ha
