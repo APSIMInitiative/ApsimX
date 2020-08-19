@@ -13,6 +13,7 @@
     using System.Data;
     using Newtonsoft.Json;
     using APSIM.Shared.Utilities;
+    using System.Globalization;
 
     ///<summary>
     /// # [Name]
@@ -88,7 +89,7 @@
             get
             {
                 SortedSet<string> cultivarNames = new SortedSet<string>();
-                foreach (Cultivar cultivar in this.Cultivars)
+                foreach (Cultivar cultivar in FindAllDescendants<Cultivar>())
                 {
                     string name = cultivar.Name;
                     IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
@@ -106,40 +107,6 @@
                 }
 
                 return new List<string>(cultivarNames).ToArray();
-            }
-        }
-
-        /// <summary>Gets a list of cultivar names</summary>
-        public string[] CultivarList
-        {
-            get
-            {
-                List<string> cultivarNames = new List<string>();
-                foreach (Cultivar cultivar in this.Cultivars)
-                {
-                    string name = cultivar.Name;
-                    cultivarNames.Add(name);
-                    if (cultivar.Alias != null)
-                    {
-                        foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias);
-                    }
-                }
-                cultivarNames.Sort();
-                return cultivarNames.ToArray();
-            }
-        }
-
-
-        /// <summary>A property to return all cultivar definitions.</summary>
-        private List<Cultivar> Cultivars
-        {
-            get
-            {
-                List<Cultivar> cultivars = new List<Cultivar>();
-                foreach (Model model in this.FindAllDescendants<Cultivar>())
-                    cultivars.Add(model as Cultivar);
-                return cultivars;
             }
         }
 
@@ -297,7 +264,7 @@
             IsEnding = false;
             DaysAfterEnding = 0;
             Clear();
-            IEnumerable<string> duplicates = CultivarList.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
                 throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
         }
@@ -402,7 +369,10 @@
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
+            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
+
             cultivarDefinition.Apply(this);
 
             // Invoke an AboutToSow event.
