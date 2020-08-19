@@ -167,7 +167,7 @@ namespace Models.PMF.Phen
             if (Pp <= 8.0)
                 return baseUR * dHS;
             else if ((Pp > 8.0) && (Pp < 16.0))
-                return (baseUR + (maxUR * (Pp - 8) / (16 - 8))) * dHS;
+                return (baseUR + (maxUR - baseUR) * (Pp - 8) / (16 - 8)) * dHS;
             else // (Pp >= 16.0)
                 return maxUR * dHS;
         }
