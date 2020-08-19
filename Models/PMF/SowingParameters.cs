@@ -1,4 +1,5 @@
 using System;
+using Models.Core;
 
 namespace Models.PMF
 {
@@ -15,19 +16,22 @@ namespace Models.PMF
         public string Cultivar { get; set; }
 
         /// <summary>The population.</summary>
-        public double Population { get; set; }
+        [Units("/m2")]
+        public double Population { get; set; } = 100;
 
         /// <summary>The depth</summary>
-        public double Depth { get; set; }
+        [Units("mm")]
+        public double Depth { get; set; } = 100;
 
         /// <summary>The row spacing</summary>
-        public double RowSpacing { get; set; }
+        [Units("mm")]
+        public double RowSpacing { get; set; } = 150;
 
         /// <summary>The maximum cover</summary>
-        public double MaxCover { get; set; }
+        public double MaxCover { get; set; } = 1;
 
         /// <summary>The bud number</summary>
-        public double BudNumber { get; set; }
+        public double BudNumber { get; set; } = 1;
 
         /// <summary>The skip type</summary>
         public double SkipType { get; set; }
@@ -36,26 +40,9 @@ namespace Models.PMF
         public double SkipRow { get; set; }
 
         /// <summary>The skip plant</summary>
-        public double SkipPlant { get; set; }
+        public double SkipPlant { get; set; } = 1;
 
         /// <summary>The skip plant seed density adjustment</summary>
-        public double SkipDensityScale { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SowingParameters"/> class.
-        /// </summary>
-        public SowingParameters()
-        {
-            Cultivar = "";
-            Population = 100;
-            Depth = 100;
-            RowSpacing = 150;
-            MaxCover = 1;
-            BudNumber = 1;
-            SkipType = 0;
-            SkipRow = 0;
-            SkipPlant = 1;
-            SkipDensityScale = 1;
-        }
+        public double SkipDensityScale { get; set; } = 1;
     }
 }
