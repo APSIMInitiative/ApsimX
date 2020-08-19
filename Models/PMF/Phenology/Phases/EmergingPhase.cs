@@ -134,7 +134,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             Target = ShootLag + data.Depth * ShootRate;
         }

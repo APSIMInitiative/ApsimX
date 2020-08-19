@@ -78,55 +78,7 @@
     /// </summary>
     /// <param name="Data">The data.</param>
     public delegate void BiomassRemovedDelegate(BiomassRemovedType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class SowPlant2Type : EventArgs
-    {
-        /// <summary>The parent plant</summary>
-        public Plant Plant = null;
 
-        /// <summary>The cultivar</summary>
-        public String Cultivar { get; set; }
-        /// <summary>The population</summary>
-        public Double Population { get; set; }
-        /// <summary>The depth</summary>
-        public Double Depth { get; set; }
-        /// <summary>The row spacing</summary>
-        public Double RowSpacing { get; set; }
-        /// <summary>The maximum cover</summary>
-        public Double MaxCover { get; set; }
-        /// <summary>The bud number</summary>
-        public Double BudNumber { get; set; }
-        /// <summary>The skip type</summary>
-        public Double SkipType { get; set; }
-        /// <summary>The skip row</summary>
-        public Double SkipRow { get; set; }
-        /// <summary>The skip plant</summary>
-        public Double SkipPlant { get; set; }
-        /// <summary>The skip plant seed density adjustment</summary>
-        public Double SkipDensityScale { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SowPlant2Type"/> class.
-        /// </summary>
-        public SowPlant2Type()
-        {
-            Cultivar = "";
-            Population = 100;
-            Depth = 100;
-            RowSpacing = 150;
-            MaxCover = 1;
-            BudNumber = 1;
-            SkipType = 0;
-            SkipRow = 0;
-            SkipPlant = 1;
-            SkipDensityScale = 1;
-        }
-
-
-    }
     /// <summary>
     /// 
     /// </summary>

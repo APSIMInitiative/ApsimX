@@ -152,7 +152,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
+        virtual protected void OnPlantSowing(object sender, SowingParameters data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
 
