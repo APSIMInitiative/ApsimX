@@ -667,6 +667,7 @@
     <Compile Include="PMF\Phenology\Phases\LeafDeathPhase.cs" />
     <Compile Include="PMF\Phenology\Phenology.cs" />
     <Compile Include="PMF\Plant.cs" />
+    <Compile Include="PMF\SowingParameters.cs" />
     <Compile Include="PMF\Structure\Structure.cs" />
     <Compile Include="Irrigation\IrrigationApplicationType.cs" />
     <Compile Include="Soils\Chemical.cs" />

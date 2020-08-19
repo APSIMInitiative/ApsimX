@@ -77,7 +77,7 @@
 
         /// <summary>The sowing data</summary>
         [JsonIgnore]
-        public SowPlant2Type SowingData { get; set; }
+        public SowingParameters SowingData { get; set; }
 
         /// <summary>Gets the organs.</summary>
         [JsonIgnore]
@@ -115,7 +115,7 @@
         /// </summary>
         public Plant()
         {
-            SowingData = new SowPlant2Type();
+            SowingData = new SowingParameters();
             IsAlive = false;
 
             string photosyntheticPathway = (string) this.FindByPath("Leaf.Photosynthesis.FCO2.PhotosyntheticPathway")?.Value;
@@ -234,7 +234,7 @@
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
-        public event EventHandler<SowPlant2Type> PlantSowing;
+        public event EventHandler<SowingParameters> PlantSowing;
         /// <summary>Occurs when a plant is about to be harvested.</summary>
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
@@ -326,7 +326,7 @@
         {
             SowingDate = clock.Today;
 
-            SowingData = new SowPlant2Type();
+            SowingData = new SowingParameters();
             SowingData.Plant = this;
             SowingData.Population = population;
             SowingData.Depth = depth;
@@ -455,7 +455,7 @@
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-            SowingData = new SowPlant2Type();
+            SowingData = new SowingParameters();
             plantPopulation = 0.0;
             IsAlive = false;
             SowingDate = DateTime.MinValue;

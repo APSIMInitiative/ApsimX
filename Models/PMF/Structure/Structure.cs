@@ -428,7 +428,7 @@ namespace Models.PMF.Struct
 
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type Sow)
+        private void OnPlantSowing(object sender, SowingParameters Sow)
         {
             if (Sow.Plant == plant)
             {

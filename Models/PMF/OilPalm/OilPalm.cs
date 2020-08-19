@@ -351,7 +351,7 @@ namespace Models.PMF.OilPalm
 
         /// <summary>The sowing data</summary>
         [JsonIgnore]
-        public SowPlant2Type SowingData = new SowPlant2Type();
+        public SowingParameters SowingData = new SowingParameters();
 
         /// <summary>Potential daily nitrogen uptake from each soil layer by palms</summary>
         [Units("kg/ha")]
@@ -795,7 +795,7 @@ namespace Models.PMF.OilPalm
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
-            SowingData = new SowPlant2Type();
+            SowingData = new SowingParameters();
             SowingData.Population = population;
             this.Population = population;
             SowingData.Depth = depth;

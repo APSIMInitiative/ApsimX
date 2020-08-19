@@ -483,7 +483,7 @@
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowPlant2Type data)
+        protected void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == parentPlant)
             {
