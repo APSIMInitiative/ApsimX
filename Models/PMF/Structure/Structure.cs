@@ -271,7 +271,7 @@ namespace Models.PMF.Struct
 
                     if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        NextLeafProportion = 1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value());
+                        NextLeafProportion = Math.Max(0.001,1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
                     }
                     else
                     {
