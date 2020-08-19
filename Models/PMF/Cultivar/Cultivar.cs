@@ -39,15 +39,7 @@
         /// <summary>
         /// Gets or sets a collection of names this cultivar is known as.
         /// </summary>
-        public string[] Alias
-        {
-            get
-            {
-                List<string> names = new List<string>();
-                names.AddRange(FindAllChildren<Alias>().Select(a => a.Name));
-                return names.ToArray();
-            }
-        }
+        public string[] Alias { get => FindAllChildren<Alias>().Select(a => a.Name).ToArray(); }
 
         /// <summary>
         /// Gets or sets a collection of commands that must be executed when applying this cultivar.
@@ -55,25 +47,16 @@
         public string[] Command { get; set; }
 
         /// <summary>
-        /// Find a cultivar in a list of cultivars and return it. Will throw if not found
+        /// Return true iff this cultivar has the same name as, or is an
+        /// alias for, the givem name.
         /// </summary>
-        /// <param name="cultivars">The list of cultivars to look through</param>
-        /// <param name="cultivarName">The cultivar name to look for</param>
-        /// <returns>The found cultivar. Never returns null</returns>
-        public static Cultivar Find(List<Cultivar> cultivars, string cultivarName)
+        /// <param name="name">The name.</param>
+        public bool IsKnownAs(string name)
         {
-            // Look for cultivar and return it.
-            foreach (Cultivar cultivar in cultivars)
-            {
-                if (cultivar.Name.Equals(cultivarName, StringComparison.CurrentCultureIgnoreCase) ||
-                    (cultivar.Alias != null && StringUtilities.Contains(cultivar.Alias, cultivarName)))
-                {
-                    return cultivar;
-                }
-            }
-
-            // If we get this far then we didn't find the cultivar - throw.
-            throw new ApsimXException(cultivars[0].Parent, "Cannot find a cultivar definition for '" + cultivarName + "'");
+            if (string.Equals(Name, name, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+            
+            return Alias.Any(a => string.Equals(a, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>

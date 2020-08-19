@@ -810,7 +810,9 @@ namespace Models.PMF.OilPalm
                 throw new Exception("Cultivar not specified on sow line.");
 
             // Find cultivar and apply cultivar overrides.
-            cultivarDefinition = Cultivar.Find(Cultivars, SowingData.Cultivar);
+            cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
             cultivarDefinition.Apply(this);
 
             // Invoke a sowing event.
