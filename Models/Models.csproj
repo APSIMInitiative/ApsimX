@@ -329,6 +329,8 @@
     <Compile Include="PMF\Arbitrator\Methods\WaterUptakeMethods.cs" />
     <Compile Include="PMF\Interfaces\IPlantDamage.cs" />
     <Compile Include="PMF\Organs\BasialBuds.cs" />
+    <Compile Include="PMF\Phenology\CAMP\LARPTQmodel.cs" />
+    <Compile Include="PMF\Phenology\CAMP\PTQPhyllochron.cs" />
     <Compile Include="PMF\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="PMF\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="PMF\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
