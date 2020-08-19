@@ -261,7 +261,7 @@
         /// <param name="sender">sender of the event.</param>
         /// <param name="Sow">Sowing data to initialise from.</param>
         [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowPlant2Type Sow)
+        protected void OnPlantSowing(object sender, SowingParameters Sow)
         {
             if (Sow.Plant == plant)
             {

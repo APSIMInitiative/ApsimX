@@ -10,7 +10,7 @@ namespace Models.PMF.Phen
         string Name { get; }
         
         /// <summary> Fraction of progress through the phase</summary>
-        double MethVrn1 { get;}
+        double MethColdVrn1 { get;}
 
         /// <summary>The target for phase completion</summary>
         double VrnSatThreshold { get; }

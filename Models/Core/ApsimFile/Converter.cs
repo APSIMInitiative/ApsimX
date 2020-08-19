@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 113; } }
+        public static int LatestVersion { get { return 114; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2910,8 +2910,6 @@
                     return;
                 if (code.Contains($".{property}."))
                 {
-                    manager.AddUsingStatement(nameSpace);
-
                     string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
                     if (zone == null)
@@ -2922,42 +2920,64 @@
                             JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
                             if (replacement != null)
                                 zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                            else
+                                // This manager script is under replacements, but is not replacing any models.
+                                // It is also likely to contain compilation errors due to API changes. Therefore
+                                // we will disable it to suppress these errors.
+                                manager.Token["Enabled"] = false;
                         }
                     }
 
-                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
-
-                    bool isOptional = false;
-                    Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
-                    if (plantLink != null)
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
+                    if (numPlantsInZone > 0)
                     {
-                        string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
-                        if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
-                            isOptional = true;
+                        manager.AddUsingStatement(nameSpace);
+
+                        bool isOptional = false;
+                        Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
+                        if (plantLink != null)
+                        {
+                            string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
+                            if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
+                                isOptional = true;
+                        }
+
+                        string link;
+                        int numPlantsWithCorrectName = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
+                        if (string.IsNullOrEmpty(plantName) || numPlantsWithCorrectName == 0)
+                            link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
+                        else
+                            link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
+
+                        string memberName = property[0].ToString().ToLower() + property.Substring(1);
+                        manager.AddDeclaration(property, memberName, new string[1] { link });
+
+                        if (!string.IsNullOrEmpty(plantName))
+                            manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
+                        manager.Save();
                     }
-
-                    string link;
-                    if (string.IsNullOrEmpty(plantName) || numPlantsInZone == 0)
-                        link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
-                    else
-                        link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
-
-                    string memberName = property[0].ToString().ToLower() + property.Substring(1);
-                    manager.AddDeclaration(property, memberName, new string[1] { link });
-
-                    if (!string.IsNullOrEmpty(plantName))
-                        manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
-                    manager.Save();
                 }
             }
         }
 
         /// <summary>
-        /// Upgrade to version 112. Lots of breaking changes to class Plant.
+        /// Upgrade to version 113. Rename SowPlant2Type to SowingParameters.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion113(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.Replace("SowPlant2Type", "SowingParameters"))
+                    manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 114. Remove references to Plant.IsC4.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion114(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))

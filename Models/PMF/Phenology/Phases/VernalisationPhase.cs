@@ -45,8 +45,8 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             Target = CAMP.VrnSatThreshold;
-            ProgressThroughPhase = CAMP.MethVrn1;
-            double HS = (phenology.FindInScope("HaunStage") as IFunction).Value();
+            ProgressThroughPhase = CAMP.MethColdVrn1;
+            double HS = phenology.FindChild<IFunction>("HaunStage").Value();
             double RelativeBasicVegetative = Math.Max(1, HS / 1.1);
             double RelativeVrn1Expression = Math.Max(1, ProgressThroughPhase / Target);
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
