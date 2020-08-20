@@ -2773,7 +2773,7 @@
         {
             leaf.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
                                 developingWt: MinimumGreenWt * emergenceDMFractions[1],
-                                matureWt: MinimumGreenWt * emergenceDMFractions[1],
+                                matureWt: MinimumGreenWt * emergenceDMFractions[2],
                                 deadWt: MinimumGreenWt * emergenceDMFractions[3]);
             stem.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
                                 developingWt: MinimumGreenWt * emergenceDMFractions[5],

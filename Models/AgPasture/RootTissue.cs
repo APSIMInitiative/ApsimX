@@ -188,7 +188,7 @@
             UpdateDM();
 
             if (sendToSurfaceOrganicMatter)
-                surfaceOrganicMatter.Add(removed.Wt.Sum(), removed.N.Sum(), 0.0, species.Name, species.Name);
+                surfaceOrganicMatter.Add(removed.Wt.Sum(), removed.N.Sum(), 0.0, "grass", species.Name);
 
             return removed;
         }

@@ -777,7 +777,8 @@
         /// <summary>User is ending the pasture.</summary>
         public void DoEndCrop()
         {
-            Tissue[0].DetachBiomass(DMTotal, NTotal);
+            Tissue[0].RemoveBiomass(1, true);
+            Tissue[1].RemoveBiomass(1, true);
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------
