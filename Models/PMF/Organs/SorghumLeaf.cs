@@ -84,9 +84,9 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Width { get; set; }
 
-        /// <summary>Gets or sets the FRGR.</summary>
+        /// <summary>The Fractional Growth Rate (FRGR) function.</summary>
         [Units("mm")]
-        public double FRGR { get; set; }
+        public double FRGR => frgr.Value();
 
         private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
@@ -153,6 +153,9 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
         private IFunction DltTT { get; set; }
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction frgr = null;
 
         #region Canopy interface
 
