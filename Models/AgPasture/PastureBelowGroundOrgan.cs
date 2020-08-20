@@ -494,13 +494,13 @@
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSurfaceOrganicMatter: false);
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSurfaceOrganicMatter: true);
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSoil: false);
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSoil: true);
             }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSurfaceOrganicMatter: false);
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSurfaceOrganicMatter:true);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil:true);
 
             if (biomassRemoveType != "Harvest")
                 IsKLModiferDueToDamageActive = true;
