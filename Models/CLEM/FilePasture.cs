@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -208,12 +208,12 @@ namespace Models.CLEM
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);

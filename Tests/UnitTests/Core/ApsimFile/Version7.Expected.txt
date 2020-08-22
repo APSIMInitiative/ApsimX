@@ -1,0 +1,25 @@
+<Simulation Version="7"><Manager><Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Link] Clock Clock;
+        [Link] Fertiliser Fertiliser;
+        [Link] Summary Summary;
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            accumulatedRain.Update();
+            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
+                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
+                accumulatedRain.Sum > MinRain)
+            {
+                Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
+            }
+        }
+    }
+}
+]]></Code></Manager><Report><Name>Report</Name><VariableNames><string>[Clock].Today</string><string>sum([MySoil].SoilWater.ESW)</string></VariableNames></Report></Simulation>

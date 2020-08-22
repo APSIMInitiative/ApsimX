@@ -90,17 +90,18 @@
             {
                 if (ExcelUtilities.IsExcelFile(fileName))
                 {
-                    //// Extend height of Browse Panel to show Drop Down for Sheet names
+                    // Extend height of Browse Panel to show Drop Down for Sheet names
                     this.weatherDataView.ShowExcelSheets(true);
                     this.sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(this.sheetNames);
 
-                    // the following is not required here as it happens when the sheet name is changed
-                    // this.WriteTableAndSummary(fileName);
+                    // We want to attempt to update the table/summary now. This may fail if the
+                    // sheet name is incorrect/not set.
+                    this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
-                    //// Shrink Browse Panel so that the sheet name dropdown doesn't show
+                    // Shrink Browse Panel so that the sheet name dropdown doesn't show
                     this.weatherDataView.ShowExcelSheets(false);
 
                     // as a precaution, set this to nothing

@@ -127,6 +127,11 @@ namespace Utility
         /// <value></value>
         public string FontName { get; set; } = "Segoe UI 11";
 
+        /// <summary>
+        /// Country name used in the download soil view.
+        /// </summary>
+        public string DownloadFromDataSourceCountry { get; set; }
+
         public ApsimFileMetadata GetMruFile(string fileName)
         {
             return MruList.Find(f => f.FileName == fileName);

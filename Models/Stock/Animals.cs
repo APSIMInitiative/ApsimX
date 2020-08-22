@@ -154,7 +154,7 @@
         /// <summary>Get the names of all fields.</summary>
         public IEnumerable<string> GetFieldNames()
         {
-            return Apsim.FindAll(this, typeof(Zone)).Select(zone => zone.Name);
+            return this.FindAllInScope<Zone>().Select(zone => zone.Name);
         }
 
         // ------------------ Events subscribed to ------------------

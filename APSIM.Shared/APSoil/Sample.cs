@@ -1,14 +1,14 @@
 ﻿namespace APSIM.Shared.APSoil
 {
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>Represents a soil sample.</summary>
     [Serializable]
     public class Sample
     {
         /// <summary>Gets or sets the name.</summary>
-        [XmlAttribute("name")]
+        [System.Xml.Serialization.XmlAttribute("name")]
         public string Name { get; set; }
 
         /// <summary>Gets or sets the sample date.</summary>

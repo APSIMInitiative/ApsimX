@@ -30,11 +30,12 @@
                 destination.OpenDatabase(outFileName, readOnly: false);
                 try
                 {
-
                     foreach (var sourceFileName in filesToMerge.Where(file => file != filesToMerge[0]))
                     {
                         var source = new SQLite();
-                        source.OpenDatabase(sourceFileName, readOnly: true);
+                        // If readOnly is true then .db-shm files are not removed on close. Bug in SqLite.
+                        // http://sqlite.1065341.n5.nabble.com/journal-files-not-always-removed-td83700.html
+                        source.OpenDatabase(sourceFileName, readOnly: false); 
                         try
                         {
                             Merge(source, destination);
@@ -49,6 +50,10 @@
                 {
                     destination.CloseDatabase();
                 }
+            }
+            else if(filesToMerge.Length == 1)
+            {
+                File.Copy(filesToMerge[0], outFileName, true);
             }
         }
 

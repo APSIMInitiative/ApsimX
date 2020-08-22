@@ -676,16 +676,7 @@ namespace APSIM.Shared.Utilities
                     if (i > startColumnIndex)
                         writer.Write(delimiter);
                     if (excelFriendly)
-                    {
-                        if (data.Columns[i].DataType == typeof(string))
-                        {
-                            // Put a backslash in front of all double quotes.
-                            string sanitised = ((string)row[i]).Replace("\"", "\\\"");
-                            writer.Write("\"" + sanitised + "\"");
-                        }
-                        else
-                            writer.Write(row[i]);
-                    }
+                        writer.Write(row[i]);
                     else
                         writer.Write("{0," + columnWidths[i] + "}", row[i]);
                 }

@@ -9,7 +9,7 @@
     using Models.Soils.Nutrients;
     using System;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -57,18 +57,18 @@
                                double kuNH4, double kuNO3, double referenceKSuptake,
                                double referenceRLD, double exponentSoilMoisture)
         {
-            mySoil = Apsim.Find(zone, typeof(Soil)) as Soil;
+            mySoil = zone.FindInScope<Soil>();
             if (mySoil == null)
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
 
-            SoilNitrogen = Apsim.Find(zone, typeof(INutrient)) as INutrient;
+            SoilNitrogen = zone.FindInScope<INutrient>();
             if (SoilNitrogen == null)
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
 
-            NO3 = Apsim.Find(zone, "NO3") as ISolute;
+            NO3 = zone.FindInScope("NO3") as ISolute;
             if (NO3 == null)
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
-            NH4 = Apsim.Find(zone, "NH4") as ISolute;
+            NH4 = zone.FindInScope("NH4") as ISolute;
             if (NH4 == null)
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 
@@ -109,49 +109,39 @@
         internal string myZoneName { get; private set; }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcOptimum { get; set; } = 0.02;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMinimum { get; set; } = 0.006;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMaximum { get; set; } = 0.025;
 
         /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
-        [XmlIgnore]
         [Units("mm")]
         public double RootDistributionDepthParam { get; set; } = 90.0;
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        [XmlIgnore]
         [Units("-")]
         public double RootDistributionExponent { get; set; } = 3.2;
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        [XmlIgnore]
         public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        [XmlIgnore]
         public double SpecificRootLength { get; set; } = 100.0;
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        [XmlIgnore]
         public double RootDepthMinimum { get; set; } = 50.0;
 
         /// <summary>Maximum rooting depth (mm).</summary>
-        [XmlIgnore]
         public double RootDepthMaximum { get; set; } = 750.0;
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
-        [XmlIgnore]
         public double RootElongationRate { get; set; } = 25.0;
 
         /// <summary>Flag which method for computing soil available water will be used.</summary>
@@ -345,7 +335,7 @@
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(species.Name);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                double rldFac = Math.Min(1.0, RootLengthDensity[layer] / myReferenceRLD);
+                double rldFac = Math.Min(1.0, LengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
@@ -386,7 +376,7 @@
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / myReferenceKSuptake);
-                double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / myReferenceRLD);
+                double rldFac = 1.0 - Math.Pow(10.0, -LengthDensity[layer] / myReferenceRLD);
                 double swFac;
                 if (mySoil.SoilWater.SWmm[layer] >= dulMM[layer])
                     swFac = 1.0;
@@ -410,7 +400,7 @@
         }
 
         /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
-        public double[] RootLengthDensity
+        public double[] LengthDensity
         {
             get
             {
@@ -443,12 +433,12 @@
             var threshold = 0.01;
             if (!IsKLModiferDueToDamageActive)
                 return 1;
-            else if (RootLengthDensity[layerIndex] < 0)
+            else if (LengthDensity[layerIndex] < 0)
                 return 0;
-            else if (RootLengthDensity[layerIndex] >= threshold)
+            else if (LengthDensity[layerIndex] >= threshold)
                 return 1;
             else
-                return (1 / threshold) * RootLengthDensity[layerIndex];
+                return (1 / threshold) * LengthDensity[layerIndex];
         }
         #endregion ---------------------------------------------------------------------------------------------------------
 
@@ -504,13 +494,13 @@
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSurfaceOrganicMatter: false);
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSurfaceOrganicMatter: true);
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSoil: false);
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSoil: true);
             }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSurfaceOrganicMatter: false);
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSurfaceOrganicMatter:true);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil:true);
 
             if (biomassRemoveType != "Harvest")
                 IsKLModiferDueToDamageActive = true;
@@ -787,7 +777,8 @@
         /// <summary>User is ending the pasture.</summary>
         public void DoEndCrop()
         {
-            Tissue[0].DetachBiomass(DMTotal, NTotal);
+            Tissue[0].RemoveBiomass(1, true);
+            Tissue[1].RemoveBiomass(1, true);
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------

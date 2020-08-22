@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 109,
+  "Version": 113,
   "Name": "Simulations",
   "Children": [
     {
@@ -575,7 +575,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -614,7 +614,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2443,6 +2443,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,

@@ -45,6 +45,9 @@
         /// <summary>Gets the latitude</summary>
         double Latitude { get; }
 
+        /// <summary>Gets the longitude</summary>
+        double Longitude { get; }
+
         /// <summary>Gets the average temperature</summary>
         double Tav { get; }
 

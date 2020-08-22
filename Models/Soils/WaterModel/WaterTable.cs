@@ -4,7 +4,7 @@
     using Core;
     using Functions;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
@@ -18,7 +18,7 @@
         private WaterBalance soil = null;
 
         /// <summary>Depth of water table (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; private set; }
 
         /// <summary>Calculate water table depth.</summary>

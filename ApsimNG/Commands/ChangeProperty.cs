@@ -133,7 +133,7 @@
             public Property(object obj, string name, object value)
             {
                 if (obj is IModel model && model.ReadOnly && name != nameof(model.ReadOnly) && name != nameof(model.Enabled))
-                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", Apsim.FullPath(model)));
+                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", model.FullPath));
                 this.Obj = obj;
                 this.Name = name;
                 this.NewValue = value;

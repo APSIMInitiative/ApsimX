@@ -42,8 +42,8 @@ namespace UnitTests.Core.ApsimFile
         {
             Simulations basicFile = Utilities.GetRunnableSim();
 
-            IModel simulation = Apsim.Find(basicFile, typeof(Simulation));
-            IModel paddock = Apsim.Find(basicFile, typeof(Zone));
+            IModel simulation = basicFile.FindInScope<Simulation>();
+            IModel paddock = basicFile.FindInScope<Zone>();
 
             // Add a weather component.
             Models.Climate.Weather weather = new Models.Climate.Weather();
@@ -106,7 +106,7 @@ namespace Models
 
             // Create a new .apsimx file containing two weather nodes.
             Simulations test = Utilities.GetRunnableSim();
-            IModel sim = Apsim.Find(test, typeof(Simulation));
+            IModel sim = test.FindInScope<Simulation>();
 
             Models.Climate.Weather w1 = new Models.Climate.Weather();
             w1.FileName = "w1.met";
@@ -138,7 +138,7 @@ namespace Models
 
                 // Modify a string
                 "[Weather].FileName = fdsa.met",
-                @"[Weather2].FullFileName = .\jkl.met",
+                @"[Weather2].FullFileName = jkl.met",
 
                 // Replace a model with a model from another file.
                 $"[Weather3] = {extFile}",
@@ -176,11 +176,11 @@ namespace Models
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            var report = Apsim.Find(file, typeof(Models.Report)) as Models.Report;
+            var report = file.FindInScope<Models.Report>();
             string[] variableNames = new[] { "x", "y", "z" };
             Assert.AreEqual(variableNames, report.VariableNames);
 
-            IModel sim = Apsim.Child(file, typeof(Simulation));
+            IModel sim = file.FindChild<Simulation>();
 
             // Use an index-based lookup to locate child models.
             // When we replace an entire model, we want to ensure
@@ -198,7 +198,7 @@ namespace Models
             var weather2 = sim.Children[4] as Models.Climate.Weather;
             Assert.NotNull(weather2);
             Assert.AreEqual("Weather2", weather2.Name);
-            Assert.AreEqual(@".\jkl.met", weather2.FileName);
+            Assert.AreEqual(@"jkl.met", weather2.FileName);
 
             // Weather3 and Weather4 should have been
             // renamed to w1 and w2, respectively.
@@ -217,7 +217,7 @@ namespace Models
             var rue = wheat.Children[6].Children[4].Children[0] as Constant;
             Assert.AreEqual(0.4, rue.FixedValue);
 
-            double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
+            double amount = (double)sim.FindByPath("[Manager].Script.Amount")?.Value;
             Assert.AreEqual(1234, amount);
 
             Physical physical = sim.Children[2].Children[4] as Physical;

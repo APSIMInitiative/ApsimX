@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
@@ -44,13 +44,13 @@ namespace Models
         }
 
         /// <summary>List of coordinates to show on map</summary>
-        public List<Coordinate> GetCoordinates(List<string> filenames = null)
+        public List<Coordinate> GetCoordinates(List<string> names = null)
         {
             List<Coordinate> coordinates = new List<Coordinate>();
-            if (filenames != null)
-                filenames.Clear();
+            if (names != null)
+                names.Clear();
 
-            foreach (Weather weather in Apsim.FindAll(this, typeof(Weather)))
+            foreach (Weather weather in this.FindAllInScope<Weather>())
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;
@@ -60,8 +60,23 @@ namespace Models
                 {
                     Coordinate coordinate = new Coordinate(latitude, longitude);
                     coordinates.Add(coordinate);
-                    if (filenames != null)
-                        filenames.Add(System.IO.Path.GetFileName(weather.FileName));
+                    if (names != null)
+                        names.Add(System.IO.Path.GetFileName(weather.FileName));
+                }
+            }
+
+            if (coordinates.Count == 0)
+            {
+                foreach (var soil in this.FindAllInScope<Models.Soils.Soil>())
+                {
+                    double latitude = soil.Latitude;
+                    double longitude = soil.Longitude;
+                    if (latitude != 0 && longitude != 0)
+                    {
+                        Coordinate coordinate = new Coordinate(latitude, longitude);
+                        coordinates.Add(coordinate);
+                        names.Add(soil.Name);
+                    }
                 }
             }
 

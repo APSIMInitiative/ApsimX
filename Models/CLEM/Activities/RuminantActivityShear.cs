@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ProductStoreType StoreType { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

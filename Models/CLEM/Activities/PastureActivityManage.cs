@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -74,19 +74,19 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of pasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Current land condition index
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RelationshipRunningValue LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
@@ -105,13 +105,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         // private properties
@@ -161,14 +161,14 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
-            GrassBasalArea = Apsim.ChildrenRecursively(this, typeof(RelationshipRunningValue)).Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
-            FilePasture = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+            GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+            FilePasture = ZoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (FilePasture != null)
             {
                 // check that database has region id and land id
-                ZoneCLEM clem = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                ZoneCLEM clem = FindAncestor<ZoneCLEM>();
                 int recs = FilePasture.RecordsFound((FilePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
                 {
@@ -617,7 +617,7 @@ namespace Models.CLEM.Activities
             Land parentLand = null;
             if (LandTypeNameToUse != null && LandTypeNameToUse != "")
             {
-                parentLand = Apsim.Find(this, LandTypeNameToUse.Split('.')[0]) as Land;
+                parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
             }
 
             if (UseAreaAvailable)

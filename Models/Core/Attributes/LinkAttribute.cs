@@ -36,7 +36,7 @@
     /// exception will be thrown. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class LinkAttribute : XmlIgnoreAttribute
+    public class LinkAttribute : Attribute
     {
         /// <summary>Iff true, an exception will not be thrown if an object cannot be found.</summary>
         public bool IsOptional { get; set; }

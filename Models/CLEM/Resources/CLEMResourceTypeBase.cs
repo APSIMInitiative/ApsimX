@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -27,13 +27,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
 
         /// <summary>
         /// Has a market store been found
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool MarketStoreExists 
         { 
             get 
@@ -54,12 +54,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool TransmutationDefined 
         {
             get
             {
-                return Apsim.Children(this, typeof(Transmutation)).Where(a => a.Enabled).Count() > 0;
+                return this.FindAllChildren<Transmutation>().Where(a => a.Enabled).Count() > 0;
             }
         }
 
@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
+            return this.FindAllChildren<ResourcePricing>().Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
@@ -83,17 +83,17 @@ namespace Models.CLEM.Resources
             // if market exists look for market pricing to override local pricing as all transactions will be through the market
             if (!((this.Parent.Parent as ResourcesHolder).FoundMarket is null) && this.MarketStoreExists)
             {
-                price = Apsim.Children(this.EquivalentMarketStore, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+                price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
             }
             else
             {
-                price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
             }
 
             if (price == null)
             {
                 // does simulation have finance
-                ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+                ResourcesHolder resources = FindAncestor<ResourcesHolder>();
                 if (resources.FinanceResource() != null)
                 {
                     string market = "";
@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
                         }
                     }
                     string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
-                    if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
+                    if (Clock != null && FindAllChildren<ResourcePricing>().Any())
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
@@ -165,7 +165,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
+                ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
                     double result = amount;
@@ -204,7 +204,7 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public double ConversionFactor(string converterName)
         {
-            ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+            ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
             if (converter is null)
             {
                 return 0;
@@ -241,7 +241,7 @@ namespace Models.CLEM.Resources
                 // haven't already found a market store
                 if(EquivalentMarketStore is null)
                 {
-                    ResourcesHolder holder = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+                    ResourcesHolder holder = FindAncestor<ResourcesHolder>();
                     // is there a market
                     if (holder != null && holder.FoundMarket != null)
                     {

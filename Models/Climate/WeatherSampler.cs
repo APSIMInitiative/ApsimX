@@ -171,6 +171,10 @@
         [JsonIgnore]
         public double Latitude { get; set; }
 
+        /// <summary>Gets the longitude</summary>
+        [JsonIgnore]
+        public double Longitude { get; set; }
+
         /// <summary>Average temperature.</summary>
         [Units("°C")]
         [JsonIgnore]
