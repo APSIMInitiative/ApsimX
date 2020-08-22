@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 109,
+  "Version": 113,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -138,7 +138,7 @@
             "[Maize].Leaf.Fn",
             "[Maize].Root.Depth",
             "[Maize].Grain.Live.Wt as GrainWt",
-            "[Maize].Phenology.DaysAfterSowing",
+            "[Maize].DaysAfterSowing",
             "[Maize].Phenology.LeafAppearance.FractionComplete",
             "[Maize].Leaf.ExpandedCohortNo",
             "[Maize].Leaf.Height"
@@ -461,6 +461,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.4,
                             1.3,
@@ -508,6 +509,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -691,6 +696,8 @@
                             16.632542734899669,
                             13.516543416690684
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -742,6 +749,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1012,7 +1023,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -1842,6 +1853,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -1889,6 +1901,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -2043,6 +2059,8 @@
                             93.515258454223726,
                             9.85643572577751
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2084,6 +2102,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2359,7 +2381,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -3791,6 +3813,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -3828,6 +3851,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -3974,6 +4001,8 @@
                             62.84006408036489,
                             14.02151356198941
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4015,6 +4044,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4398,7 +4431,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -5610,7 +5643,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Amount",
@@ -5632,7 +5665,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Amount",
@@ -5654,7 +5687,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Amount",
@@ -6466,6 +6499,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -6543,6 +6577,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -6777,6 +6815,8 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -6848,6 +6888,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -7080,7 +7124,7 @@
                         "[Soil].SoilNitrogen.MicrobialN[1] as MicrobialN1",
                         "[Soil].SoilNitrogen.MicrobialN[2] as MicrobialN2",
                         "[Soil].SoilNitrogen.MicrobialN[3] as MicrobialN3",
-                        "[Maize].Phenology.DaysAfterSowing",
+                        "[Maize].DaysAfterSowing",
                         "[Maize].Phenology.Photoperiod.Value",
                         "[Maize].Phenology.Photosensitive.Target.Value",
                         "[Maize].Phenology.LeafAppearance.FractionComplete",
@@ -7221,7 +7265,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "Amount",
@@ -7243,7 +7287,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n                    \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Maize;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Maize].Phenology\")]\r\n        private Phenology phenology;\r\n                    \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [],
                       "Name": "Harvesting",
                       "IncludeInDocumentation": false,
@@ -7303,7 +7347,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -9801,7 +9845,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Surface;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link(ByName = true)] SurfaceOrganicMatter MaizeZoneSurfaceOrganicMatter;\r\n        [Link(ByName = true)] Zone MaizeZone;\r\n        [Link(ByName = true)] Zone GliricidiaZone;\r\n        [Link] Clock Clock;\r\n\r\n\r\n        [Description(\"First Harvest (d-mmm)\")]\r\n        public string Harvest1Date { get; set; }\r\n        [Description(\"Second Harvest (d-mmm)\")]\r\n        public string Harvest2Date { get; set; }\r\n        [Description(\"Third Harvest (d-mmm)\")]\r\n        public string Harvest3Date { get; set; }\r\n\r\n        [Description(\"Add gliricidia residues to mazie zone\")]\r\n        public bool AddGliricidiaResidues { get; set; }\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n        [Description(\"Leaf Removal N\")]\r\n        public double LeafRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n        [Description(\"Stem Removal N\")]\r\n        public double StemRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n        [Description(\"Total Removal N\")]\r\n        public double TotalRemovalN {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        LeafRemovalN = 0;\r\n        StemRemovalN = 0;\r\n\r\n            if (DateUtilities.WithinDates(Harvest1Date, Clock.Today, Harvest1Date) ||\r\n                DateUtilities.WithinDates(Harvest2Date, Clock.Today, Harvest2Date) ||\r\n                DateUtilities.WithinDates(Harvest3Date, Clock.Today, Harvest3Date))\r\n            {\r\n                DoCut(10,25);   \r\n            }\r\n\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double Lwt = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double Ln = (double)Apsim.Get(Gliricidia, \"Leaf.Live.N\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (Lwt > 0)\r\n                LeafRemovalFraction = (Lwt - LeafResidue) / Lwt;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = (Lwt - LeafResidue);\r\n            LeafRemovalN = Ln * LeafRemovalFraction;\r\n                               \r\n            double Swt = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double Sn = (double)Apsim.Get(Gliricidia, \"Stem.Live.N\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (Swt > 0)\r\n                StemRemovalFraction = (Swt - StemResidue) / Swt;             \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = (Swt - StemResidue);  \r\n            StemRemovalN = Sn * StemRemovalFraction;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (AddGliricidiaResidues)\r\n            {\r\n            double FOMadded = (LeafRemovalWt)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n            double FONadded = (LeafRemovalN)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n\r\n            MaizeZoneSurfaceOrganicMatter.Add(FOMadded, FONadded,0.0,\"gliricidia\",\"gliricidia\");\r\n            }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Surface;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link(ByName = true)] SurfaceOrganicMatter MaizeZoneSurfaceOrganicMatter;\r\n        [Link(ByName = true)] Zone MaizeZone;\r\n        [Link(ByName = true)] Zone GliricidiaZone;\r\n        [Link] Clock Clock;\r\n\r\n\r\n        [Description(\"First Harvest (d-mmm)\")]\r\n        public string Harvest1Date { get; set; }\r\n        [Description(\"Second Harvest (d-mmm)\")]\r\n        public string Harvest2Date { get; set; }\r\n        [Description(\"Third Harvest (d-mmm)\")]\r\n        public string Harvest3Date { get; set; }\r\n\r\n        [Description(\"Add gliricidia residues to mazie zone\")]\r\n        public bool AddGliricidiaResidues { get; set; }\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n        [Description(\"Leaf Removal N\")]\r\n        public double LeafRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n        [Description(\"Stem Removal N\")]\r\n        public double StemRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n        [Description(\"Total Removal N\")]\r\n        public double TotalRemovalN {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        LeafRemovalN = 0;\r\n        StemRemovalN = 0;\r\n\r\n            if (DateUtilities.WithinDates(Harvest1Date, Clock.Today, Harvest1Date) ||\r\n                DateUtilities.WithinDates(Harvest2Date, Clock.Today, Harvest2Date) ||\r\n                DateUtilities.WithinDates(Harvest3Date, Clock.Today, Harvest3Date))\r\n            {\r\n                DoCut(10,25);   \r\n            }\r\n\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double Lwt = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double Ln = (double)Gliricidia.FindByPath(\"Leaf.Live.N\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (Lwt > 0)\r\n                LeafRemovalFraction = (Lwt - LeafResidue) / Lwt;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = (Lwt - LeafResidue);\r\n            LeafRemovalN = Ln * LeafRemovalFraction;\r\n                               \r\n            double Swt = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double Sn = (double)Gliricidia.FindByPath(\"Stem.Live.N\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (Swt > 0)\r\n                StemRemovalFraction = (Swt - StemResidue) / Swt;             \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = (Swt - StemResidue);  \r\n            StemRemovalN = Sn * StemRemovalFraction;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (AddGliricidiaResidues)\r\n            {\r\n            double FOMadded = (LeafRemovalWt)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n            double FONadded = (LeafRemovalN)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n\r\n            MaizeZoneSurfaceOrganicMatter.Add(FOMadded, FONadded,0.0,\"gliricidia\",\"gliricidia\");\r\n            }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Harvest1Date",
@@ -9916,7 +9960,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Gliricidia.Root.ZoneNamesToGrowRootsIn.Add(\"MaizeZone\");\r\n            Gliricidia.Root.ZoneRootDepths.Add(50);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Gliricidia.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
+                      "Code": "using Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Functions;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Gliricidia;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Gliricidia].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"MaizeZone\");\r\n            root.ZoneRootDepths.Add(50);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -10121,6 +10165,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -10198,6 +10243,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -10398,6 +10447,8 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10469,6 +10520,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10695,6 +10750,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -10772,6 +10828,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -10972,6 +11032,8 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11043,6 +11105,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11056,7 +11122,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Maize;\r\n        [Link] private Zone zone;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Clock clock;\r\n        [Link(Type = LinkType.Path, Path = \"[Maize].Phenology\")]\r\n        private Phenology phenology;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -11480,6 +11546,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -11557,6 +11624,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -11757,6 +11828,8 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11828,6 +11901,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11841,7 +11918,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Maize;\r\n        [Link] private Zone zone;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Clock clock;\r\n        [Link(Type = LinkType.Path, Path = \"[Maize].Phenology\")]\r\n        private Phenology phenology;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -12251,6 +12328,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -12328,6 +12406,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -12528,6 +12610,8 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -12599,6 +12683,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -12612,7 +12700,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Surface;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Maize;\r\n        [Link] Zone zone;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        [Link] Clock clock;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Maize;\r\n        [Link] private Zone zone;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Clock clock;\r\n        [Link(Type = LinkType.Path, Path = \"[Maize].Phenology\")]\r\n        private Phenology phenology;\r\n        [Link] Models.Report report;\r\n\r\n        [Description(\"Fraction of resiudes to remove at harvest (0-1)\")]\r\n        public double RemoveFraction { get; set; }\r\n\r\n    \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Maize.Harvest();\r\n                Maize.EndCrop();\r\n                if (RemoveFraction > 0)\r\n                    SOM.Incorporate(RemoveFraction, 0.0);         \r\n\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "RemoveFraction",
@@ -12945,6 +13033,7 @@
                                         25.4,
                                         25.1
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         0.968,
                                         1.049,
@@ -13023,6 +13112,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -14481,6 +14574,8 @@
                                         2.3719915644983973,
                                         1.512448596933551
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -14530,6 +14625,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -14720,6 +14819,7 @@
                                         28.6,
                                         28.8
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         0.972,
                                         1.069,
@@ -14798,6 +14898,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -16256,6 +16360,8 @@
                                         7.1159746934951924,
                                         4.5373457908006536
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -16305,6 +16411,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -16495,6 +16605,7 @@
                                         23.0,
                                         23.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -16573,6 +16684,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -18031,6 +18146,8 @@
                                         13.045953604741186,
                                         8.318467283134531
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -18080,6 +18197,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -18270,6 +18391,7 @@
                                         23.0,
                                         23.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -18348,6 +18470,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -19806,6 +19932,8 @@
                                         13.045953604741186,
                                         8.318467283134531
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -19855,6 +19983,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -20045,6 +20177,7 @@
                                         23.0,
                                         23.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -20123,6 +20256,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -21581,6 +21718,8 @@
                                         13.045953604741186,
                                         8.318467283134531
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -21630,6 +21769,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -21820,6 +21963,7 @@
                                         23.0,
                                         23.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -21898,6 +22042,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -23356,6 +23504,8 @@
                                         13.045953604741186,
                                         8.318467283134531
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -23405,6 +23555,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -23595,6 +23749,7 @@
                                         23.0,
                                         23.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -23673,6 +23828,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -25131,6 +25290,8 @@
                                         13.045953604741186,
                                         8.318467283134531
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -25180,6 +25341,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -25370,6 +25535,7 @@
                                         30.0,
                                         30.0
                                       ],
+                                      "Rocks": null,
                                       "BD": [
                                         1.194,
                                         1.235,
@@ -25448,6 +25614,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -26906,6 +27076,8 @@
                                         14.231949386990385,
                                         9.0746915816013072
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -26955,6 +27127,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -27130,7 +27306,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafRemovalWt",
@@ -27284,6 +27460,7 @@
                               ],
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 0.868,
                                 0.954,
@@ -27362,6 +27539,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -28820,6 +29001,8 @@
                                 3.5579873467475962,
                                 2.2686728954003268
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -28869,6 +29052,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -29085,6 +29272,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         0.868,
                                         0.954,
@@ -29163,6 +29351,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -30668,6 +30860,8 @@
                                         3.5579873467475962,
                                         2.2686728954003268
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -30717,6 +30911,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -30885,6 +31083,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.098,
                                         1.188,
@@ -30963,6 +31162,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -32468,6 +32671,8 @@
                                         5.9299789112459935,
                                         3.7811214923338778
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -32517,6 +32722,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -32685,6 +32894,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.098,
                                         1.188,
@@ -32763,6 +32973,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -34268,6 +34482,8 @@
                                         5.9299789112459935,
                                         3.7811214923338778
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -34317,6 +34533,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -34485,6 +34705,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         0.957,
                                         1.033,
@@ -34563,6 +34784,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -36068,6 +36293,8 @@
                                         5.9299789112459935,
                                         3.7811214923338778
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -36117,6 +36344,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -36285,6 +36516,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.219,
                                         1.29,
@@ -36363,6 +36595,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -37868,6 +38104,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -37917,6 +38155,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -38085,6 +38327,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.219,
                                         1.29,
@@ -38163,6 +38406,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -39668,6 +39915,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -39717,6 +39966,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -39885,6 +40138,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.303,
                                         1.356,
@@ -39963,6 +40217,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -41468,6 +41726,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -41517,6 +41777,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -41685,6 +41949,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.303,
                                         1.356,
@@ -41763,6 +42028,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -43268,6 +43537,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -43317,6 +43588,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -43485,6 +43760,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.328,
                                         1.373,
@@ -43563,6 +43839,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -45068,6 +45348,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -45117,6 +45399,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -45285,6 +45571,7 @@
                                       ],
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.148,
                                         1.258,
@@ -45363,6 +45650,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -46868,6 +47159,8 @@
                                         8.30197047574439,
                                         5.2935700892674289
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -46917,6 +47210,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -47092,7 +47389,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafRemovalWt",
@@ -47246,6 +47543,7 @@
                               ],
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 0.868,
                                 0.954,
@@ -47324,6 +47622,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -48782,6 +49084,8 @@
                                 3.5579873467475962,
                                 2.2686728954003268
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -48831,6 +49135,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -50226,6 +50534,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.42,
                                 1.45,
@@ -50303,6 +50612,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -50537,6 +50850,8 @@
                                 2.4744391248471564,
                                 1.833109589654498
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -50608,6 +50923,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -50868,7 +51187,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                          "Code": "\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [Description(\"Start Accumulation Date\")]\r\n        public DateTime StartAccumulationDate { get; set; }\r\n\r\n        [Description(\"Cumulative Total Removal Wt\")]\r\n        public double CumulativeTotalRemovalWt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            CumulativeTotalRemovalWt = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Gliricidia.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = L * LeafRemovalFraction;\r\n               \r\n            double S = (double)Gliricidia.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = S * StemRemovalFraction;              \r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n            if (Clock.Today>=StartAccumulationDate)\r\n               CumulativeTotalRemovalWt += TotalRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafRemovalWt",
