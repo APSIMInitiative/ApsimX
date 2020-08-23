@@ -38,7 +38,7 @@ namespace Models.PMF.Arbitrator
         protected IFunction TTFMFromFlowering = null;
 
         /// <summary>ThermalTime after Flowering to stop N Uptake</summary>
-        [Link(Type = LinkType.Path, Path = "[Root].NUptakeCease")]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction NUptakeCease { get; set; }
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
