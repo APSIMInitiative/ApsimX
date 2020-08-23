@@ -49,10 +49,6 @@
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
-        [Link(IsOptional = true)]
-        private SoilArbitrator soilArbitrator = null;
-
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating surface OM.</summary>
@@ -446,9 +442,7 @@
                 if (myRoot != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
-
-                    if (mySoilWaterUptake.Sum() > Epsilon)
-                        myRoot.mySoil.SoilWater.RemoveWater(zone.Water);
+                    myRoot.PerformWaterUptake(zone.Water);
                 }
             }
         }
@@ -466,8 +460,7 @@
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
                 if (myRoot != null)
                 {
-                    myRoot.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(myRoot.NO3.kgha, zone.NO3N));
-                    myRoot.NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(myRoot.NH4.kgha, zone.NH4N));
+                    myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
 
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
@@ -1055,48 +1048,14 @@
 
         ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Flag which module will perform the water uptake process.</summary>
-        internal string MyWaterUptakeSource = "species";
-
-        /// <summary>Choose the method to calculate soil available water.</summary>
-        [Units("-")]
-        public PlantAvailableWaterMethod WaterAvailableMethod { get; set; } = PlantAvailableWaterMethod.DefaultAPSIM;
-
-        /// <summary>Flag which module will perform the nitrogen uptake process.</summary>
-        internal string MyNitrogenUptakeSource = "species";
-
         /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
         /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
         [Units("0-1")]
         public double MaximumFractionAvailable { get; set; } = 0.999;
 
-        /// <summary>Reference value for root length density for Water and N availability.</summary>
-        [Units("mm/mm^3")]
-        public double ReferenceRLD { get; set; } = 5.0;
-
-        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        [Units("-")]
-        public double ExponentSoilMoisture { get; set; } = 1.50;
-
-        /// <summary>Reference value of Ksat for water availability function.</summary>
-        [Units("mm/day")]
-        public double ReferenceKSuptake { get; set; } = 15.0;
-
         /// <summary>Exponent of function determining soil extractable N.</summary>
         [Units("-")]
         public double NuptakeSWFactor { get; set; } = 0.25;
-
-        /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double MaximumNUptake { get; set; } = 10.0;
-
-        /// <summary>Availability factor for NH4.</summary>
-        [Units("-")]
-        public double kuNH4 { get; set; } = 0.50;
-
-        /// <summary>Availability factor for NO3.</summary>
-        [Units("-")]
-        public double kuNO3 { get; set; } = 0.95;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2660,10 +2619,7 @@
 
             // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
             roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
-                               MinimumGreenWt * MinimumGreenRootProp, 
-                               WaterAvailableMethod, 
-                               MaximumNUptake, kuNH4, kuNO3,
-                               ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
+                               MinimumGreenWt * MinimumGreenRootProp);
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2677,10 +2633,7 @@
                 // add the zone to the list
                 newRootOrgan.Initialise(zone, 
                                         rootZone.RootDM, rootZone.RootDepth,
-                                        MinimumGreenWt * MinimumGreenRootProp,
-                                        WaterAvailableMethod, 
-                                        MaximumNUptake, kuNH4, kuNO3,
-                                        ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
+                                        MinimumGreenWt * MinimumGreenRootProp);
                 roots.Add(newRootOrgan);
             }
 
@@ -2697,13 +2650,6 @@
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
-
-            // check whether there is a resource arbitrator, it will control the uptake
-            if (soilArbitrator != null)
-            {
-                MyWaterUptakeSource = "SoilArbitrator";
-                MyNitrogenUptakeSource = "SoilArbitrator";
-            }
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -3538,22 +3484,8 @@
         /// <summary>Performs the nitrogen uptake calculations.</summary>
         internal void DoNitrogenCalculations()
         {
-            if (MyNitrogenUptakeSource == "species")
-            {
-                throw new NotImplementedException();
-            }
-            else if (MyNitrogenUptakeSource == "SoilArbitrator")
-            {
-                // Nitrogen uptake was computed by the resource arbitrator
-
-                // Evaluate whether remobilisation of luxury N is needed
-                EvaluateLuxuryNRemobilisation();
-            }
-            else
-            {
-                // N uptake is computed by another module (e.g. SWIM) and supplied by OnNitrogenUptakesCalculated
-                throw new NotImplementedException();
-            }
+            // Evaluate whether remobilisation of luxury N is needed
+            EvaluateLuxuryNRemobilisation();
         }
 
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
