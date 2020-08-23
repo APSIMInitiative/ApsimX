@@ -361,7 +361,7 @@
             {
                 double uptake = 0;
                 foreach (ZoneState zone in Zones)
-                    uptake = MathUtilities.Sum(zone.NitUptake);
+                    uptake += MathUtilities.Sum(zone.NitUptake);
                 return uptake;
             }
         }
