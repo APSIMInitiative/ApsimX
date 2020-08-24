@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 114; } }
+        public static int LatestVersion { get { return 115; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2982,6 +2982,28 @@
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
                     manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add mortality rate constant of 0 to any plants
+        /// which do not already have a mortality rate.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        /// <remarks>
+        /// This is part of the change to make mortality rate non-optional.
+        /// </remarks>
+        private static void UpgradeToVersion115(JObject root, string fileName)
+        {
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
+            {
+                if (JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
+                {
+                    Constant mortalityRate = new Constant();
+                    mortalityRate.FixedValue = 0;
+                    JsonUtilities.AddModel(plant, mortalityRate);
+                }
+            }
         }
 
         /// <summary>
