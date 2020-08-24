@@ -24,7 +24,7 @@
         private Soil soil = null;
 
         [Link]
-        private Weather weather = null;
+        private IWeather weather = null;
 
         [Link]
         private Clock clock = null;
