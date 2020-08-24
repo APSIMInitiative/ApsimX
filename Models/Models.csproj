@@ -453,6 +453,7 @@
     <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
+    <Compile Include="Graph\ICachableGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
     <Compile Include="Graph\EventNamesOnGraph.cs" />
