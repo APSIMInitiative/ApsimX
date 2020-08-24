@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 114,
+  "Version": 115,
   "Name": "Simulations",
   "Children": [
     {
@@ -6026,6 +6026,16 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "Constant",
+          "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
