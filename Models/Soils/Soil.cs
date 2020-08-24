@@ -113,6 +113,11 @@
         [Description("Location accuracy")]
         public string LocationAccuracy { get; set; }
 
+        /// <summary>Gets or sets the year of sampling.</summary>
+        [Summary]
+        [Description("Year of sampling")]
+        public string YearOfSampling { get; set; }
+
         /// <summary>Gets or sets the data source.</summary>
         [Summary]
         [Description("Data source")]
