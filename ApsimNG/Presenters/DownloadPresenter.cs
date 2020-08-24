@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
 using System;
@@ -147,13 +148,14 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                if (string.IsNullOrEmpty(latitudeEditBox.Text) && string.IsNullOrEmpty(longitudeEditBox.Text))
+                if (!string.IsNullOrEmpty(placeNameEditBox.Text) && !string.IsNullOrEmpty(countryDropDown.SelectedValue))
                 {
-                    if (string.IsNullOrEmpty(placeNameEditBox.Text) || string.IsNullOrEmpty(countryDropDown.SelectedValue))
-                        throw new Exception("No latitude/longitude or place name specified");
                     if (!GetLatLongFromPlaceName())
                         throw new Exception("Cannot find a latitude/longitude from the specified place name.");
                 }
+
+                if (string.IsNullOrEmpty(latitudeEditBox.Text) || string.IsNullOrEmpty(longitudeEditBox.Text))
+                    throw new Exception("Must specifiy either a place name or a latitude/longitude.");
 
                 var apsoilTask = Task.Run(() => GetApsoilSoils());
                 var gridTask = Task.Run(() => GetGridSoils());
@@ -166,7 +168,10 @@ namespace UserInterface.Presenters
                 soilData.Columns.Add("Data source", typeof(string));
                 soilData.Columns.Add("Soil type", typeof(string));
                 soilData.Columns.Add("Distance (km)", typeof(string));
-                soilData.Columns.Add("PAWC", typeof(string));
+                soilData.Columns.Add("PAWC for profile", typeof(string));
+                soilData.Columns.Add("PAWC to 300mm", typeof(string));
+                soilData.Columns.Add("PAWC to 600mm", typeof(string));
+                soilData.Columns.Add("PAWC to 1500mm", typeof(string));
 
                 Task.WaitAll(apsoilTask, gridTask, worldModellersTask, placeNameTask /*, isricTask*/);
 
@@ -174,6 +179,9 @@ namespace UserInterface.Presenters
                 placeNameEditBox.Text = placeNameTask.Result;
 
                 allSoils = apsoilTask.Result.Concat(gridTask.Result).Concat(worldModellersTask.Result);
+
+                double[] pawcmappingLayerStructure = { 300, 300, 900 };
+
                 foreach (var soilInfo in allSoils)
                 {
                     var row = soilData.NewRow();
@@ -185,7 +193,16 @@ namespace UserInterface.Presenters
                                                                  soilInfo.Soil.Latitude,
                                                                  soilInfo.Soil.Longitude).ToString("F1");
 
-                    row["PAWC"] = soilInfo.Soil.PAWCmm.Sum().ToString("F1");
+                    var pawc = soilInfo.Soil.PAWCmm;
+                    row["PAWC for profile"] = pawc.Sum().ToString("F1");
+
+                    var pawcConcentration = MathUtilities.Divide(pawc, soilInfo.Soil.Thickness);
+                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilInfo.Soil.Thickness, pawcmappingLayerStructure, 0);
+                    var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
+                    row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
+                    row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
+                    row["PAWC to 1500mm"] = mappedPawc.Sum().ToString("F1");
+
                     soilData.Rows.Add(row);
                 }
                 dataView.DataSource = soilData;
@@ -233,7 +250,6 @@ namespace UserInterface.Presenters
         {
             Process.Start("https://www.isric.org/explore/soilgrids");
         }
-
 
         /// <summary>Return zero or more APSOIL soils.</summary>
         private IEnumerable<SoilFromDataSource> GetApsoilSoils()
