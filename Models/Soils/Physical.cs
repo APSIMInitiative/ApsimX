@@ -55,6 +55,9 @@
         [Units("%")]
         public double[] Rocks { get; set; }
 
+        /// <summary>Texture.</summary>
+        public string[] Texture { get; set; }
+
         /// <summary>Gets or sets the bd.</summary>
         [Summary]
         [Description("BD")]
@@ -117,6 +120,9 @@
 
         /// <summary>Gets or sets the rocks metadata.</summary>
         public string[] RocksMetadata { get; set; }
+
+        /// <summary>Gets or sets the texture metadata.</summary>
+        public string[] TextureMetadata { get; set; }
 
         /// <summary>Particle size sand metadata.</summary>
         public string[] ParticleSizeSandMetadata { get; set; }

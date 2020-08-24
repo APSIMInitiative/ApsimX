@@ -37,7 +37,7 @@
                 soil.State = GetStringValue(table, row, "State");
                 soil.Region = GetStringValue(table, row, "Region");
                 soil.NearestTown = GetStringValue(table, row, "NearestTown");
-                soil.Site = GetStringValue(table, row, "Site");
+                //soil.Site = GetStringValue(table, row, "Site");
                 soil.ApsoilNumber = GetStringValue(table, row, "APSoilNumber");
                 soil.SoilType = GetStringValue(table, row, "Texture");
                 soil.LocalName = GetStringValue(table, row, "LocalName");
@@ -46,6 +46,7 @@
                 soil.Latitude = GetDoubleValue(table, row, "Latitude");
                 soil.Longitude = GetDoubleValue(table, row, "Longitude");
                 soil.LocationAccuracy = GetStringValue(table, row, "LocationAccuracy");
+                soil.YearOfSampling = GetStringValue(table, row, "YearOfSampling");
                 soil.DataSource = GetStringValue(table, row, "DataSource");
                 soil.Comments = GetStringValue(table, row, "Comments");
                 soil.NaturalVegetation = GetStringValue(table, row, "NaturalVegetation");
@@ -68,6 +69,8 @@
                 physical.KSMetadata = GetCodeValues(table, "KSCode", row, numLayers);
                 physical.Rocks = GetDoubleValues(table, "Rocks (%)", row, numLayers);
                 physical.RocksMetadata = GetCodeValues(table, "RocksCode", row, numLayers);
+                physical.Texture = GetStringValues(table, "Texture", row, numLayers);
+                physical.TextureMetadata = GetCodeValues(table, "TextureCode", row, numLayers);
                 physical.ParticleSizeSand = GetDoubleValues(table, "ParticleSizeSand (%)", row, numLayers);
                 physical.ParticleSizeSandMetadata = GetCodeValues(table, "ParticleSizeSandCode", row, numLayers);
                 physical.ParticleSizeSilt = GetDoubleValues(table, "ParticleSizeSilt (%)", row, numLayers);
@@ -188,7 +191,7 @@
                 SetStringValue(table, "State", soil.State, startRow, numValues);
                 SetStringValue(table, "Region", soil.Region, startRow, numValues);
                 SetStringValue(table, "NearestTown", soil.NearestTown, startRow, numValues);
-                SetStringValue(table, "Site", soil.Site, startRow, numValues);
+                //SetStringValue(table, "Site", soil.Site, startRow, numValues);
                 SetStringValue(table, "APSoilNumber", soil.ApsoilNumber, startRow, numValues);
                 SetStringValue(table, "Soil type texture or other descriptor", soil.SoilType, startRow, numValues);
                 SetStringValue(table, "Local name", soil.LocalName, startRow, numValues);
@@ -197,15 +200,20 @@
                 SetDoubleValue(table, "Latitude", soil.Latitude, startRow, numValues);
                 SetDoubleValue(table, "Longitude", soil.Longitude, startRow, numValues);
                 SetStringValue(table, "LocationAccuracy", soil.LocationAccuracy, startRow, numValues);
+                SetStringValue(table, "YearOfSampling", soil.YearOfSampling, startRow, numValues);
                 SetStringValue(table, "DataSource", StringUtilities.DQuote(soil.DataSource), startRow, numValues);
                 SetStringValue(table, "Comments", StringUtilities.DQuote(soil.Comments), startRow, numValues);
                 SetStringValue(table, "NaturalVegetation", soil.NaturalVegetation, startRow, numValues);
-                SetDoubleValues(table, "LayerNo", layerNo, startRow);
+                SetStringValue(table, "MunsellColour", null, startRow, numValues);
+                SetStringValue(table, "MunsellColourCode", null, startRow, numValues);
+                //SetDoubleValues(table, "LayerNo", layerNo, startRow);
                 SetDoubleValues(table, "Thickness (mm)", physical.Thickness, startRow);
                 SetDoubleValues(table, "BD (g/cc)", physical.BD, startRow);
                 SetCodeValues(table, "BDCode", physical.BDMetadata, startRow);
                 SetDoubleValues(table, "Rocks (%)", physical.Rocks, startRow);
                 SetCodeValues(table, "RocksCode", physical.RocksMetadata, startRow);
+                SetStringValues(table, "Texture", physical.Texture, startRow);
+                SetStringValues(table, "TextureCode", physical.TextureMetadata, startRow);
                 SetDoubleValues(table, "SAT (mm/mm)", physical.SAT, startRow);
                 SetCodeValues(table, "SATCode", physical.SATMetadata, startRow);
                 SetDoubleValues(table, "DUL (mm/mm)", physical.DUL, startRow);
@@ -229,13 +237,14 @@
                 SetDoubleValue(table, "CNCov", waterBalance.CNCov, startRow, numValues);
                 SetDoubleValue(table, "RootCN", organic.FOMCNRatio, startRow, numValues);
                 SetDoubleValues(table, "RootWT", organic.FOM, startRow);
-                SetCodeValues(table, "RootWtCode", organic.FOMMetadata, startRow);
                 SetDoubleValues(table, "SoilCN", organic.SoilCNRatio, startRow);
+                SetDoubleValues(table, "EnrACoeff", null, startRow);
+                SetDoubleValues(table, "EnrBCoeff", null, startRow);
                 SetDoubleValues(table, "SWCON (0-1)", waterBalance.SWCON, startRow);
+                SetDoubleValues(table, "MWCON (0-1)", null, startRow);
                 SetDoubleValues(table, "FBIOM (0-1)", organic.FBiom, startRow);
                 SetDoubleValues(table, "FINERT (0-1)", organic.FInert, startRow);
                 SetDoubleValues(table, "KS (mm/day)", physical.KS, startRow);
-                SetCodeValues(table, "KSCode", physical.KSMetadata, startRow);
 
                 SetDoubleValues(table, "ThicknessChem (mm)", organic.Thickness, startRow);
                 SetDoubleValues(table, "OC", organic.Carbon, startRow);
@@ -246,8 +255,28 @@
                 SetCodeValues(table, "PHCode", chemical.PHMetadata, startRow);
                 SetDoubleValues(table, "CL (mg/kg)", chemical.CL, startRow);
                 SetCodeValues(table, "CLCode", chemical.CLMetadata, startRow);
+
+                SetDoubleValues(table, "Boron (Hot water mg/kg)", null, startRow);
+                SetCodeValues(table, "BoronCode", null, startRow);
+                SetDoubleValues(table, "CEC (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "CECCode", null, startRow);
+                SetDoubleValues(table, "Ca (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "CaCode", null, startRow);
+                SetDoubleValues(table, "Mg (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "MgCode", null, startRow);
+                SetDoubleValues(table, "Na (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "NaCCode", null, startRow);
+                SetDoubleValues(table, "K (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "KCode", null, startRow);
+
                 SetDoubleValues(table, "ESP (%)", chemical.ESP, startRow);
                 SetCodeValues(table, "ESPCode", chemical.ESPMetadata, startRow);
+
+                SetDoubleValues(table, "Mn (mg/kg)", null, startRow);
+                SetCodeValues(table, "MnCode", null, startRow);
+                SetDoubleValues(table, "Al (cmol+/kg)", null, startRow);
+                SetCodeValues(table, "AlCode", null, startRow);
+
                 SetDoubleValues(table, "ParticleSizeSand (%)", physical.ParticleSizeSand, startRow);
                 SetCodeValues(table, "ParticleSizeSandCode", physical.ParticleSizeSandMetadata, startRow);
                 SetDoubleValues(table, "ParticleSizeSilt (%)", physical.ParticleSizeSilt, startRow);
@@ -346,6 +375,20 @@
         {
             string[] values = StringUtilities.CreateStringArray(value, numValues);
             SetStringValues(table, columnName, values, startRow);
+        }
+
+        /// <summary>
+        /// Return an array of values for the specified column.
+        /// </summary>
+        private static string[] GetStringValues(DataTable table, string variableName, int startRow, int numRows)
+        {
+            if (table.Columns.Contains(variableName))
+            {
+                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow);
+                if (MathUtilities.ValuesInArray(Values))
+                    return Values;
+            }
+            return null;
         }
 
         /// <summary>Set the crop values in the table for the specified crop name.</summary>
