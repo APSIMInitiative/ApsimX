@@ -374,7 +374,20 @@
                             return null;
 
                         // Try to set node to the value of the property.
-                        node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        try
+                        {
+                            node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        }
+                        catch (TargetInvocationException err)
+                        {
+                            if (err.InnerException is NullReferenceException)
+                                // Some properties depend on links being resolved which is not
+                                // always the case (ie in an intellisense context).
+                                node = null;
+                            else
+                                throw;
+                        }
+
                         if (node == null)
                         {
                             // This property has the correct name. If the property's type provides a parameterless constructor, we can use 

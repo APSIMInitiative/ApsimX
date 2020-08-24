@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;

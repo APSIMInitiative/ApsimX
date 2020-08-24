@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.Storage
 {
@@ -147,7 +147,7 @@ namespace Models.Storage
                     bool ignore = false;
                     foreach (object attr in attrs)
                     {
-                        if (attr is XmlIgnoreAttribute)
+                        if (attr is JsonIgnoreAttribute)
                         {
                             ignore = true;
                             continue;

@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
@@ -30,13 +30,13 @@ namespace Models.Agroforestry
         /// The reduction in wind as a fraction.
         /// </summary>
         [Units("0-1")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Urel { get; set; }
 
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IEnumerable<IModel> ZoneList;
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public override double Area
         {
             get
@@ -72,7 +72,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// A pointer to the tree model.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public TreeProxy tree = null;
 
         /// <summary>Called when [simulation commencing].</summary>

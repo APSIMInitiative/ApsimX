@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Models.Interfaces;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -16,7 +17,7 @@
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model, ICustomDocumentation
+    public class Zone : Model, IZone, ICustomDocumentation
     {
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]
@@ -35,7 +36,7 @@
         public double Altitude { get; set; } = 50;
 
         /// <summary>Return a list of plant models.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>

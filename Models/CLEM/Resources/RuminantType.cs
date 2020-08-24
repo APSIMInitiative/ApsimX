@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current value of individuals in the herd
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public AnimalPricing PriceList;
 
         private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
@@ -291,7 +291,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Returns the most recent conception status
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
 
         /// <summary>
@@ -675,7 +675,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Advanced conception parameters if present
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -45,7 +45,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current store nitrogen (%)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount currently available (kg dry)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount { get { return amount; } set { return; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
@@ -204,7 +204,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion

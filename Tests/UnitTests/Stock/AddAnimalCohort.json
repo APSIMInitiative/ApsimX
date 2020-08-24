@@ -882,7 +882,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -1279,7 +1278,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -6386,7 +6384,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -6783,7 +6780,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -11890,7 +11886,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -12287,7 +12282,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -17394,7 +17388,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -17791,7 +17784,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -22898,7 +22890,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -23295,7 +23286,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -28402,7 +28392,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
@@ -28799,7 +28788,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IsHidden": false,
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,

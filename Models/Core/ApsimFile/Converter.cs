@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 111; } }
+        public static int LatestVersion { get { return 113; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2865,6 +2865,111 @@
                 if (replaced)
                     AddLinqIfNotExist(manager);
             }
+        }
+
+        /// <summary>
+        /// Upgrade to version 112. Lots of breaking changes to class Plant.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion112(JObject root, string fileName)
+        {
+            var changes = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("Plant.Canopy", "Plant.Leaf"),
+                new Tuple<string, string>("[Plant].Canopy", "[Plant].Leaf"),
+                new Tuple<string, string>("plant.Canopy", "plant.Leaf"),
+                new Tuple<string, string>("[plant].Canopy", "[plant].Leaf"),
+                new Tuple<string, string>("Wheat.Canopy", "Wheat.Leaf"),
+                new Tuple<string, string>("[Wheat].Canopy", "[Wheat].Leaf"),
+                new Tuple<string, string>("wheat.Canopy", "wheat.Leaf"),
+                new Tuple<string, string>("[wheat].Canopy", "[wheat].Leaf"),
+                new Tuple<string, string>("[Phenology].CurrentPhaseName", "[Phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("[phenology].CurrentPhaseName", "[phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("Phenology.CurrentPhaseName", "Phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("phenology.CurrentPhaseName", "phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("[Plant].Phenology.DaysAfterSowing", "[Plant].DaysAfterSowing"),
+                new Tuple<string, string>("Plant.Phenology.DaysAfterSowing", "Plant.DaysAfterSowing"),
+                new Tuple<string, string>("Phenology.DaysAfterSowing", "DaysAfterSowing"),
+                new Tuple<string, string>("[Phenology].DaysAfterSowing", "[Plant].DaysAfterSowing"),
+            };
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Some more complicated changes to manager code.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                ConvertPlantPropertyToDirectLink(manager, "Root", "Models.PMF.Organs");
+                ConvertPlantPropertyToDirectLink(manager, "Structure", "Models.PMF.Struct");
+                ConvertPlantPropertyToDirectLink(manager, "Phenology", "Models.PMF.Phen");
+            }
+
+            void ConvertPlantPropertyToDirectLink(ManagerConverter manager, string property, string nameSpace)
+            {
+                string code = manager.ToString();
+                if (code == null)
+                    return;
+                if (code.Contains($".{property}."))
+                {
+                    string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
+                    JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
+                    if (zone == null)
+                    {
+                        JObject replacements = JsonUtilities.Ancestor(manager.Token, typeof(Replacements));
+                        if (replacements != null)
+                        {
+                            JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
+                            if (replacement != null)
+                                zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                            else
+                                // This manager script is under replacements, but is not replacing any models.
+                                // It is also likely to contain compilation errors due to API changes. Therefore
+                                // we will disable it to suppress these errors.
+                                manager.Token["Enabled"] = false;
+                        }
+                    }
+
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
+                    if (numPlantsInZone > 0)
+                    {
+                        manager.AddUsingStatement(nameSpace);
+
+                        bool isOptional = false;
+                        Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
+                        if (plantLink != null)
+                        {
+                            string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
+                            if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
+                                isOptional = true;
+                        }
+
+                        string link;
+                        int numPlantsWithCorrectName = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
+                        if (string.IsNullOrEmpty(plantName) || numPlantsWithCorrectName == 0)
+                            link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
+                        else
+                            link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
+
+                        string memberName = property[0].ToString().ToLower() + property.Substring(1);
+                        manager.AddDeclaration(property, memberName, new string[1] { link });
+
+                        if (!string.IsNullOrEmpty(plantName))
+                            manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
+                        manager.Save();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 113. Rename SowPlant2Type to SowingParameters.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion113(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.Replace("SowPlant2Type", "SowingParameters"))
+                    manager.Save();
         }
 
         /// <summary>

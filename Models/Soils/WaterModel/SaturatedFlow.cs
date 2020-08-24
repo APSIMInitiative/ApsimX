@@ -4,7 +4,7 @@ namespace Models.WaterModel
     using APSIM.Shared.Utilities;
     using Core;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// When water content in any layer is below SAT but above DUL, a fraction of the water drains to the next 
@@ -26,7 +26,7 @@ namespace Models.WaterModel
         private WaterBalance soil = null;
 
         /// <summary>Amount of water (mm) backed up.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double backedUpSurface { get; private set; }
 
         /// <summary>Perform the movement of water.</summary>
