@@ -327,7 +327,7 @@
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     // Find the zone in our root zones.
-                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
+                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                     if (myRoot != null)
                     {
                         double[] organSupply = myRoot.EvaluateSoilWaterAvailable(zone);
@@ -381,7 +381,7 @@
 
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
-                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
+                    PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                     if (myRoot != null)
                     {
                         ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
@@ -438,7 +438,7 @@
             foreach (ZoneWaterAndN zone in zones)
             {
                 // Find the zone in our root zones.
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
+                PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
@@ -457,7 +457,7 @@
 
             foreach (ZoneWaterAndN zone in zones)
             {
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.myZoneName == zone.Zone.Name);
+                PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
                     myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
@@ -2730,7 +2730,7 @@
                                   matureWt: MinimumGreenWt * emergenceDMFractions[10],
                                   deadWt: 0.0);
 
-            roots[0].Reset(roots[0].MinimumLiveDM, roots[0].RootDepthMinimum);
+            roots[0].Reset();
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -2902,7 +2902,7 @@
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    roots[0].Tissue[0].DetachBiomass(detachedRootDM, detachedRootN);
+                    roots[0].DetachRoots(detachedRootDM, detachedRootN);
                     //foreach (PastureBelowGroundOrgan root in rootZones)
                     //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -3190,14 +3190,7 @@
             }
 
             // Check minimum DM for roots too
-            if (roots[0].DMLive * (1.0 - gamaR) < roots[0].MinimumLiveDM)
-            {
-                if (roots[0].DMLive <= roots[0].MinimumLiveDM)
-                    gamaR = 0.0;
-                else
-                    gamaR = MathUtilities.Divide(roots[0].DMLive - roots[0].MinimumLiveDM, roots[0].DMLive, 0.0);
-                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
-            }
+            gamaR = roots[0].EvaluateTissueTurnover(gamaR);
 
             // Make sure rates are within bounds
             gama = MathUtilities.Bound(gama, 0.0, 1.0);
@@ -3314,7 +3307,7 @@
                         throw new ApsimXException(this, "Allocation of new growth could not be completed");
                     }
                 }
-                var rootGrowth = roots[0].Tissue[0].SetNewGrowthAllocation(dmToRoot, nToRoot);
+                var rootGrowth = roots[0].SetNewGrowthAllocation(dmToRoot, nToRoot);
 
                 // Update N variables
                 dGrowthShootN = leaf.Tissue[0].NTransferedIn + stem.Tissue[0].NTransferedIn + stolon.Tissue[0].NTransferedIn;
@@ -3592,7 +3585,7 @@
                 leaf.DeadTissue.NRemobilised = leaf.DeadTissue.NRemobilisable * fracRemobilised;
                 stem.DeadTissue.NRemobilised = stem.DeadTissue.NRemobilisable * fracRemobilised;
                 stolon.DeadTissue.NRemobilised = stolon.DeadTissue.NRemobilisable * fracRemobilised;
-                roots[0].Tissue[roots[0].Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                roots[0].RemobiliseDeadN(fracRemobilised);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    root.Tissue[root.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3624,7 +3617,7 @@
                             stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable;
                             if (tissue == 0)
                             {
-                                roots[0].Tissue[tissue].DoRemobiliseN(1.0);
+                                roots[0].RemobiliseLiveN(1.0);
                                 //foreach (PastureBelowGroundOrgan root in roots)
                                 //    root.Tissue[tissue].DoRemobiliseN(1.0);
                                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3643,7 +3636,7 @@
                         Nluxury = leaf.Tissue[tissue].NRemobilisable + stem.Tissue[tissue].NRemobilisable + stolon.Tissue[tissue].NRemobilisable;
                         if (tissue == 0)
                         {
-                            Nluxury += roots[0].Tissue[tissue].NRemobilisable;
+                            Nluxury += roots[0].NLiveRemobilisable;
                             //foreach (PastureBelowGroundOrgan root in roots)
                             //    Nluxury += root.Tissue[tissue].NRemobilisable;
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3655,7 +3648,7 @@
                         stolon.Tissue[tissue].NRemobilised = stolon.Tissue[tissue].NRemobilisable * fracRemobilised;
                         if (tissue == 0)
                         {
-                            roots[0].Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                            roots[0].RemobiliseLiveN(fracRemobilised);
                             //foreach (PastureBelowGroundOrgan root in roots)
                             //    root.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too

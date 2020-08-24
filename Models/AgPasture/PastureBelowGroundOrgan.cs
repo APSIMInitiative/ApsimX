@@ -13,16 +13,13 @@
     [Serializable]
     public class PastureBelowGroundOrgan : Model
     {
-        /// <summary>Minimum significant difference between two values.</summary>
-        private const double Epsilon = 0.000000001;
-
         /// <summary>Nutrient model.</summary>
         [Link(Type=LinkType.Ancestor)]
         private PastureSpecies species = null;
 
         /// <summary>The collection of tissues for this organ.</summary>
         [Link(Type=LinkType.Child)]
-        internal RootTissue[] Tissue = null;
+        private RootTissue[] tissue = null;
 
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
@@ -38,6 +35,15 @@
 
         /// <summary>The NH4 solute.</summary>
         private ISolute nh4 = null;
+
+        /// <summary>Name of zone where roots are growing.</summary>
+        private string zoneName;
+
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        private double minimumLiveDM = 0.0;
+
+        /// <summary>Number of layers in the soil.</summary>
+        private int nLayers;
 
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
@@ -64,12 +70,14 @@
 
             // save the parameters for this organ
             nLayers = soil.Thickness.Length;
-            MinimumLiveDM = minLiveDM;
+            minimumLiveDM = minLiveDM;
             dulMM = soil.DULmm;
             ll15MM = soil.LL15mm;
+            Live = tissue[0];
+            Dead = tissue[1];
 
             // Link to soil and initialise variables
-            myZoneName = soil.Parent.Name;
+            zoneName = soil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
 
@@ -82,12 +90,9 @@
             double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
 
             // Initialise the live tissue.
-            Tissue[0].Initialise(initialDMByLayer, initialNByLayer);
-            Tissue[1].Initialise(null, null);
+            Live.Initialise(initialDMByLayer, initialNByLayer);
+            Dead.Initialise(null, null);
         }
-
-        /// <summary>Name of root zone.</summary>
-        internal string myZoneName { get; private set; }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
         public double NConcOptimum { get; set; } = 0.02;
@@ -108,9 +113,6 @@
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
         public double RootBottomDistributionFactor { get; set; } = 1.05;
-
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
         public double SpecificRootLength { get; set; } = 100.0;
@@ -143,11 +145,8 @@
         /// <summary>Reference value of Ksat for water availability function.</summary>
         public double ReferenceKSuptake { get; set; } = 15.0;
 
-        /// <summary>Number of layers in the soil.</summary>
-        private int nLayers;
-
         /// <summary>Gets or sets the rooting depth (mm).</summary>
-        internal double Depth { get; set; }
+        public double Depth { get; set; }
 
         /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
         internal int BottomLayer { get; private set; }
@@ -161,12 +160,18 @@
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].DM.Wt;
+                for (int t = 0; t < tissue.Length; t++)
+                    result += tissue[t].DM.Wt;
 
                 return result;
             }
         }
+
+        /// <summary>Returns the root live tissue.</summary>
+        public RootTissue Live { get; private set; }
+
+        /// <summary>Returns the root live tissue.</summary>
+        public RootTissue Dead { get; private set; }
 
         /// <summary>Gets the dry matter in the live (green) tissues (kg/ha).</summary>
         internal double DMLive
@@ -174,8 +179,8 @@
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].DM.Wt;
+                for (int t = 0; t < tissue.Length - 1; t++)
+                    result += tissue[t].DM.Wt;
 
                 return result;
             }
@@ -185,7 +190,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DMDead
         {
-            get { return Tissue[Tissue.Length - 1].DM.Wt; }
+            get { return tissue[tissue.Length - 1].DM.Wt; }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
@@ -194,8 +199,8 @@
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].DM.N;
+                for (int t = 0; t < tissue.Length; t++)
+                    result += tissue[t].DM.N;
 
                 return result;
             }
@@ -207,8 +212,8 @@
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].DM.N;
+                for (int t = 0; t < tissue.Length - 1; t++)
+                    result += tissue[t].DM.N;
 
                 return result;
             }
@@ -218,7 +223,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
-            get { return Tissue[Tissue.Length - 1].DM.N; }
+            get { return tissue[tissue.Length - 1].DM.N; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -242,7 +247,7 @@
         /// <summary>Gets the amount of senesced N available for remobilisation (kg/ha).</summary>
         internal double NSenescedRemobilisable
         {
-            get { return Tissue[Tissue.Length - 1].NRemobilisable; }
+            get { return tissue[tissue.Length - 1].NRemobilisable; }
         }
 
         /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
@@ -251,8 +256,8 @@
             get
             {
                 double result = 0.0;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].NRemobilisable;
+                for (int t = 0; t < tissue.Length - 1; t++)
+                    result += tissue[t].NRemobilisable;
 
                 return result;
             }
@@ -279,15 +284,18 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
+                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = Tissue[0].FractionWt[layer] * totalRootLength / soil.Thickness[layer];
+                    result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soil.Thickness[layer];
                 }
                 return result;
             }
         }
+
+        /// <summary>N remobilsed from live tissue.</summary>
+        public double NLiveRemobilisable {  get { return tissue[0].NRemobilisable; } }
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         internal double[] mySoilWaterAvailable { get; private set; }
@@ -328,7 +336,13 @@
 
             var rootFractions = CurrentRootDistributionTarget();
             var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
-            Tissue[0].ResetTo(rootBiomass);
+            Live.ResetTo(rootBiomass);
+        }
+
+        /// <summary>Reset this root organ's state to the inital state.</summary>
+        public void Reset()
+        {
+            Reset(minimumLiveDM, RootDepthMinimum);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
@@ -336,9 +350,9 @@
         {
             Depth = 0;
             CalculateRootZoneBottomLayer();
-            for (int t = 0; t < Tissue.Length; t++)
+            for (int t = 0; t < tissue.Length; t++)
             {
-                Tissue[t].Reset();
+                tissue[t].Reset();
                 DoCleanTransferAmounts();
             }
         }
@@ -346,15 +360,15 @@
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void DoCleanTransferAmounts()
         {
-            for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].DailyReset();
+            for (int t = 0; t < tissue.Length; t++)
+                tissue[t].DailyReset();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         internal void DoKillOrgan(double fractionToRemove = 1.0)
         {
-            Tissue[0].MoveFractionToTissue(fractionToRemove, Tissue[1]);
+            Live.MoveFractionToTissue(fractionToRemove, Dead);
         }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
@@ -363,15 +377,12 @@
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
             // Live removal
-            for (int t = 0; t < Tissue.Length - 1; t++)
-            {
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSoil: false);
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSoil: true);
-            }
+            Live.RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSoil: false);
+            Live.RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSoil: true);
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil:true);
+            Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
+            Dead.RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil:true);
 
             if (biomassRemoveType != "Harvest")
                 IsKLModiferDueToDamageActive = true;
@@ -382,14 +393,14 @@
         /// <returns>The DM and N amount detached from this organ</returns>
         internal BiomassAndN DoTissueTurnover(double[] turnoverRate)
         {
-            Tissue[0].DoTissueTurnover(turnoverRate[0], BottomLayer, Tissue[1], NconcLive - NConcOptimum);
-            return Tissue[1].DoTissueTurnover(turnoverRate[1], BottomLayer, null, NconcLive - NConcMinimum);
+            Live.DoTissueTurnover(turnoverRate[0], BottomLayer, Dead, NconcLive - NConcOptimum);
+            return Dead.DoTissueTurnover(turnoverRate[1], BottomLayer, null, NconcLive - NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
         internal void DoOrganUpdate()
         {
-            RootTissue.UpdateTissues(Tissue[0], Tissue[1]);
+            RootTissue.UpdateTissues(Live, Dead);
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
@@ -568,7 +579,7 @@
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // Normalise the weights to be a fraction, adds up to one
-            if (cumProportion > Epsilon)
+            if (MathUtilities.IsGreaterThan(cumProportion, 0))
             {
                 for (int layer = 0; layer < BottomLayer; layer++)
                     result[layer] = TargetDistribution[layer] / cumProportion;
@@ -588,22 +599,22 @@
         /// <param name="dGrowthRootN">Root growth nitrogen (kg/ha).</param>
         public void DoRootGrowthAllocation(double dGrowthRootDM, double dGrowthRootN)
         {
-            if (dGrowthRootDM > Epsilon)
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM, 0))
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] growthRootFraction;
                 double[] currentRootTarget = CurrentRootDistributionTarget();
-                if (MathUtilities.AreEqual(Tissue[0].FractionWt, currentRootTarget))
+                if (MathUtilities.AreEqual(Live.FractionWt, currentRootTarget))
                 {
                     // no need to change the distribution
-                    growthRootFraction = Tissue[0].FractionWt;
+                    growthRootFraction = Live.FractionWt;
                 }
                 else
                 {
                     // root distribution should change, get preliminary distribution (average of current and target)
                     growthRootFraction = new double[nLayers];
                     for (int layer = 0; layer <= BottomLayer; layer++)
-                        growthRootFraction[layer] = 0.5 * (Tissue[0].FractionWt[layer] + currentRootTarget[layer]);
+                        growthRootFraction[layer] = 0.5 * (Live.FractionWt[layer] + currentRootTarget[layer]);
 
                     // normalise distribution of allocation
                     double layersTotal = growthRootFraction.Sum();
@@ -611,8 +622,8 @@
                         growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
                 }
 
-                Tissue[0].SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootDM),
-                                                n: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootN));
+                Live.SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootDM),
+                                           n: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootN));
             }
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }
@@ -631,7 +642,7 @@
         {
             // Check changes in root depth
             var dRootDepth = 0.0;
-            if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (Depth < RootDepthMaximum))
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0) && (Depth < RootDepthMaximum))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 dRootDepth = RootElongationRate * tempFactor;
@@ -648,8 +659,48 @@
         /// <summary>User is ending the pasture.</summary>
         public void DoEndCrop()
         {
-            Tissue[0].RemoveBiomass(1, true);
-            Tissue[1].RemoveBiomass(1, true);
+            Live.RemoveBiomass(1, true);
+            Dead.RemoveBiomass(1, true);
+        }
+
+
+        /// <summary>
+        /// Set new growth to root.
+        /// </summary>
+        /// <param name="dmToRoot">Dry matter growth.</param>
+        /// <param name="nToRoot">Nitrogen growth.</param>
+        /// <returns></returns>
+        public BiomassAndN SetNewGrowthAllocation(double dmToRoot, double nToRoot)
+        {
+            return Live.SetNewGrowthAllocation(dmToRoot, nToRoot);
+        }
+
+        /// <summary>
+        /// Detach roots.
+        /// </summary>
+        /// <param name="dryMatter">Dry matter to detach.</param>
+        /// <param name="nitrogen">Nitrogen to detach.</param>
+        public void DetachRoots(double dryMatter, double nitrogen)
+        {
+            Live.DetachBiomass(dryMatter, nitrogen);
+        }
+
+        /// <summary>
+        /// Remobilse N.
+        /// </summary>
+        /// <param name="fracRemobilised">Fraction remobilised.</param>
+        public void RemobiliseLiveN(double fracRemobilised)
+        {
+            Live.DoRemobiliseN(fracRemobilised);
+        }
+
+        /// <summary>
+        /// Remobilse Dead N.
+        /// </summary>
+        /// <param name="fracRemobilised">Fraction remobilised.</param>
+        public void RemobiliseDeadN(double fracRemobilised)
+        {
+            tissue[1].DoRemobiliseN(fracRemobilised);
         }
 
         /// <summary>
@@ -671,6 +722,34 @@
         {
             no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
             nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
+        }
+
+        /// <summary>
+        /// Return true if roots in this organ are in the specified zone.
+        /// </summary>
+        /// <param name="zoneName">The zone name.</param>
+        public bool IsInZone(string zoneName)
+        {
+            return this.zoneName == zoneName;
+        }
+
+        /// <summary>
+        /// Computes the turnover rate.
+        /// </summary>
+        /// <param name="gamaR">Daily DM turnover rate for root tissue.</param>
+        /// <returns></returns>
+        public double EvaluateTissueTurnover(double gamaR)
+        {
+            // Check minimum DM for roots too
+            if (DMLive * (1.0 - gamaR) < minimumLiveDM)
+            {
+                if (DMLive <= minimumLiveDM)
+                    gamaR = 0.0;
+                else
+                    gamaR = MathUtilities.Divide(DMLive - minimumLiveDM, DMLive, 0.0);
+                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
+            }
+            return gamaR;
         }
     }
 }
