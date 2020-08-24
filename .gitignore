@@ -49,3 +49,6 @@ Documentation/errors.txt
 *.db-journal
 *.db-shm
 *.db-wal
+Docs/docfx/api/*.yml
+Docs/docfx/api/.manifest
+Docs/api
