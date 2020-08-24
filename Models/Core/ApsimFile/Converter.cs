@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 113; } }
+        public static int LatestVersion { get { return 114; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2969,6 +2969,18 @@
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.Replace("SowPlant2Type", "SowingParameters"))
+                    manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 114. Remove references to Plant.IsC4.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion114(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
                     manager.Save();
         }
 
