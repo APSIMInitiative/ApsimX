@@ -42,7 +42,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\Users\\holzworthdp\\Repos\\ApsimX\\Prototypes\\SoilTemperature\\SoilTemperature-AnalyticalSolution.xlsx"
+            "SoilTemperature-AnalyticalSolution.xlsx"
           ],
           "SheetNames": [
             "AnalyticalDataForAPSIM"
