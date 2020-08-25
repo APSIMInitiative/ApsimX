@@ -157,7 +157,7 @@
             waterNode = this.FindChild<Physical>();
 
             Weirdo = this.FindChild<WEIRDO>();
-            SoilWater = this.FindChild<ISoilWater>();
+            SoilWater = this.FindInScope<ISoilWater>();
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
             if (Weirdo == null && waterNode == null)
