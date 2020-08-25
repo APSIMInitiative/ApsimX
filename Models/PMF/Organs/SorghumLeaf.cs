@@ -1155,6 +1155,10 @@ namespace Models.PMF.Organs
         public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+
+            // Reduce LAI
+            double fractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
+            LAI *= (1 - fractionToRemove);
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>

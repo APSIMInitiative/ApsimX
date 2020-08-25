@@ -528,27 +528,16 @@
             if (organ == null)
                 throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
             organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
-
-            // Also need to reduce LAI if canopy.
-            if (organ is ICanopy)
-            {
-                var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
-                var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-                var lai = leaf.LAI;
-                ReduceCanopy(lai * totalFractionToRemove);
-            }
         }
 
-        /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
+        /// <summary>Set the plant leaf area index.</summary>
         /// <param name="deltaLAI">Delta LAI.</param>
+        /// <remarks>This seems redundant, but it's part of the ICanopy interface.</remarks>
         public void ReduceCanopy(double deltaLAI)
         {
-            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-            var lai = leaf.LAI;
+            var lai = Leaf.LAI;
             if (lai > 0)
-                leaf.LAI = lai - deltaLAI;
+                Leaf.LAI = lai - deltaLAI;
         }
 
         /// <summary>

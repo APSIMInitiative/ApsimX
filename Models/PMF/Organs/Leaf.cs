@@ -1439,6 +1439,10 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = true;
             }
 
+            // Reduce LAI
+            double fractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
+            LAI *= (1 - fractionToRemove);
+
             if (amountToRemove != null && totalBiomass != 0.0)
             {
                 double totalFractionToRemove = (Removed.Wt + Detached.Wt) * 100.0 / totalBiomass;

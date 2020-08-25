@@ -844,6 +844,10 @@ namespace Models.PMF.Organs
 
             ReduceLeavesUniformly(remainingLiveFraction);
             ReduceDeadLeavesUniformly(remainingDeadFraction);
+
+            // Reduce LAI.
+            double fractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue;
+            LAI *= (1 - fractionToRemove);
         }
     }
 }
