@@ -51,4 +51,4 @@ Documentation/errors.txt
 *.db-wal
 Docs/docfx/api/*.yml
 Docs/docfx/api/.manifest
-Docs/api
+Docs/apsimx-docs/

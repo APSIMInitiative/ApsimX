@@ -50,7 +50,7 @@
         ]
       }
     ],
-    "dest": "../api",
+    "dest": "../apsimx-docs",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
