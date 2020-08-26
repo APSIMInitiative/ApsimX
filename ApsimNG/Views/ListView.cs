@@ -286,8 +286,6 @@ namespace UserInterface.Views
             // Populate with rows.
             foreach (DataRow row in table.Rows)
                 AddRow(row.ItemArray);
-
-            SetTreeSortModel();
         }
 
         /// <summary>
@@ -442,9 +440,11 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
         {
-            string s1 = (string)model.GetValue(a, i);
-            string s2 = (string)model.GetValue(b, i);
-            return string.Compare(s1, s2);
+            object o1 = model.GetValue(a, i);
+            object o2 = model.GetValue(b, i);
+            if (o1 != null && o2 != null)
+                return string.Compare(o1.ToString(), o2.ToString());
+            return 0;
         }
     }
 }

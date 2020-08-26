@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Models.Functions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -569,7 +570,77 @@ namespace Models.Core.ApsimFile
                     }
                 }
             }
+
+            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            {
+                foreach (var replacement in changes)
+                {
+                    string variableName = variableRef["VariableName"]?.ToString();
+                    if (variableName.Contains(replacement.Item1))
+                    {
+                        replacementMade = true;
+                        variableRef["VariableName"] = variableName?.Replace(replacement.Item1, replacement.Item2);
+                    }
+                }
+            }
+
+            foreach (JObject series in ChildrenOfType(node, nameof(Series)))
+            {
+                foreach (var change in changes)
+                {
+                    if (series["XFieldName"]?.ToString() != null && series["XFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["XFieldName"] = series["XFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["YFieldName"]?.ToString() != null && series["YFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["YFieldName"] = series["YFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["X2FieldName"]?.ToString() != null && series["X2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["X2FieldName"] = series["X2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Y2FieldName"]?.ToString() != null && series["Y2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Y2FieldName"] = series["Y2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Filter"]?.ToString() != null && series["Filter"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Filter"] = series["Filter"].ToString().Replace(change.Item1, change.Item2);
+                    }
+                }
+            }
+
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="type">Type of ancestor to search for.</param>
+        public static JObject Ancestor(JObject token, Type type)
+        {
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                Type parentType = System.Type.GetType(Type(parent, true));
+                if (type.IsAssignableFrom(parentType))
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
         }
     }
 }

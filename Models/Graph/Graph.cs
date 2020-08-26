@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Represents a graph
@@ -128,7 +128,7 @@
         /// <summary>
         /// Gets or sets a list of all series
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
 
         /// <summary>
@@ -155,26 +155,22 @@
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationFilter">(Optional) Simulation name filter.</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage, List<string> simulationFilter = null)
         {
             EnsureAllAxesExist();
 
-            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            foreach (IGraphable series in this.FindAllChildren<IGraphable>().Where(g => g is IModel m && m.Enabled))
-                series.GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
-
-            return definitions;
+            return FindAllChildren<IGraphable>()
+                        .Where(g => g.Enabled)
+                        .SelectMany(g => g.GetSeriesDefinitions(storage, simulationFilter));
         }
 
         /// <summary>Gets the annotations to graph.</summary>
         /// <returns>A list of series annotations.</returns>
-        public List<Annotation> GetAnnotationsToGraph()
+        public IEnumerable<IAnnotation> GetAnnotationsToGraph()
         {
-            List<Annotation> annotations = new List<Annotation>();
-            foreach (IGraphable series in this.FindAllChildren<IGraphable>().Where(g => g is IModel m && m.Enabled))
-                series.GetAnnotationsToPutOnGraph(annotations);
-
-            return annotations;
+            return FindAllChildren<IGraphable>()
+                        .Where(g => g.Enabled)
+                        .SelectMany(g => g.GetAnnotations());
         }
 
         /// <summary>

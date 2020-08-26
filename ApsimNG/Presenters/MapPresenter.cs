@@ -122,8 +122,8 @@
         /// </summary>
         private void PopulateView()
         {
-            List<string> files = new List<string>();
-            this.view.ShowMap(this.map.GetCoordinates(files), files, this.map.Zoom, this.map.Center);
+            List<string> names = new List<string>();
+            this.view.ShowMap(this.map.GetCoordinates(names), names, this.map.Zoom, this.map.Center);
         }
 
         /// <summary>
