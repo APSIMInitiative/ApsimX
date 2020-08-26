@@ -23,6 +23,7 @@
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
+    [ValidParent(ParentType = typeof(Soils.Soil))]
     public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
     {
         [NonSerialized]

@@ -73,7 +73,7 @@
 
         /// <summary>The sowing data</summary>
         [JsonIgnore]
-        public SowingParameters SowingData { get; set; }
+        public SowingParameters SowingData { get; set; } = new SowingParameters();
 
         /// <summary>Gets the organs.</summary>
         [JsonIgnore]
@@ -104,16 +104,6 @@
 
                 return new List<string>(cultivarNames).ToArray();
             }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Plant()
-        {
-            SowingData = new SowingParameters();
-            IsAlive = false;
-            Legumosity = 0;
         }
 
         /// <summary>Holds the number of plants.</summary>
