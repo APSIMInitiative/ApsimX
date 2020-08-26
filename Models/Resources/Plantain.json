@@ -6034,7 +6034,7 @@
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
           "Units": null,
-          "Name": "Constant",
+          "Name": "MortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

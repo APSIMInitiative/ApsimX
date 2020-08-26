@@ -3000,6 +3000,7 @@
                 if (JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
                 {
                     Constant mortalityRate = new Constant();
+                    mortalityRate.Name = "MortalityRate";
                     mortalityRate.FixedValue = 0;
                     JsonUtilities.AddModel(plant, mortalityRate);
                 }
