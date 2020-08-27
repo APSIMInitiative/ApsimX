@@ -2985,7 +2985,7 @@
         }
 
         /// <summary>
-        /// Upgrade to version 114. Remove references to Plant.IsC4.
+        /// Upgrade to version 115. Add PlantType to IPlants.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -2993,7 +2993,7 @@
         {
             foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
             {
-                string plantType = pasture["ResourceName"]?.ToString()?.Substring("AGP".Length);
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
                 if (string.IsNullOrEmpty(plantType))
                     plantType = pasture["Name"]?.ToString();
                 pasture["PlantType"] = plantType;
