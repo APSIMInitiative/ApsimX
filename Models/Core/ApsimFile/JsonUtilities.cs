@@ -122,10 +122,12 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="name">The type of children to return.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
         /// <returns>The found child or null if not found.</returns>
-        public static JObject ChildWithName(JObject node, string name)
+        public static JObject ChildWithName(JObject node, string name, bool ignoreCase = false)
         {
-            return Children(node).Find(child => Name(child) == name);
+            StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+            return Children(node).Find(child => string.Equals(Name(child), name, comparisonType));
         }
 
         /// <summary>

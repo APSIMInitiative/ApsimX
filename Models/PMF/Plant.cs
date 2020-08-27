@@ -33,7 +33,7 @@
         private IClock clock = null;
 
         /// <summary>The plant mortality rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("")]
         private IFunction mortalityRate = null;
 
@@ -279,7 +279,7 @@
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             //Reduce plant population in case of mortality
-            if (Population > 0.0 && mortalityRate != null)
+            if (Population > 0.0)
                 Population -= Population * mortalityRate.Value();
         }
 

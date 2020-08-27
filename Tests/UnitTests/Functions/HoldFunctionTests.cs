@@ -81,6 +81,10 @@
                                         End = "C"
                                     }
                                 }
+                            },
+                            new Constant()
+                            {
+                                Name = "MortalityRate",
                             }
                         }
                     }
