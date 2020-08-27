@@ -2992,7 +2992,12 @@
         private static void UpgradeToVersion115(JObject root, string fileName)
         {
             foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
-                pasture["PlantType"] = pasture["Name"].ToString();
+            {
+                string plantType = pasture["ResourceName"]?.ToString()?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
             
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
                 plant["PlantType"] = plant["CropType"]?.ToString();
