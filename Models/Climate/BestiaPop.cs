@@ -254,6 +254,7 @@ namespace Models.Climate
 
             Weather result = CreateWeatherComponent(Directory.GetFiles(output, "*.met").FirstOrDefault());
             
+            Status = null;
 
             return result;
         }
