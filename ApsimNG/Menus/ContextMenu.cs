@@ -860,7 +860,8 @@
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    Process.Start(fileNameWritten);
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)
