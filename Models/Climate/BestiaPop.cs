@@ -8,6 +8,7 @@ using System.Threading;
 using MathNet.Numerics;
 using Models;
 using Models.Core;
+using Models.Core.Run;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using static APSIM.Shared.Utilities.ProcessUtilities;
@@ -24,7 +25,7 @@ namespace Models.Climate
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
     [Serializable]
-    public class BestiaPop : Model, IWeather
+    public class BestiaPop : Model, IWeather, IReportsStatus
     {
         /// <summary>
         /// Summary file, used for logging purposes.
@@ -56,38 +57,44 @@ namespace Models.Climate
         /// <summary>
         /// Output path (directory name). Leave blank to delete files after use.
         /// </summary>
-        [Description("Output path. Leave blank to delete files after use.")]
+        [Description("Output path")]
+        [Tooltip("Leave blank to delete files after use")]
         [Display(Type = DisplayType.DirectoryName)]
         public string OutputPath { get; set; }
 
         /// <summary>
         /// Controls whether bestiapop is run in multi-process mode.
         /// </summary>
-        [Description("Controls whether bestiapop is run in multi-process mode")]
+        [Description("Multi-process mode")]
+        [Tooltip("Controls whether bestiapop is run in multi-process mode")]
         public bool MultiProcess { get; set; }
 
         /// <summary>
         /// Latitude.
         /// </summary>
         [Description("Latitude")]
+        [Tooltip("Latitude")]
         public double Latitude { get; set; }
 
         /// <summary>
         /// Longitude.
         /// </summary>
         [Description("Longitude")]
+        [Tooltip("Longitude")]
         public double Longitude { get; set; }
 
         /// <summary>
         /// Start date of the weather.
         /// </summary>
-        [Description("Start date of the weather file")]
+        [Description("Start date")]
+        [Tooltip("Start date of the weather file")]
         public DateTime StartDate { get; set; }
 
         /// <summary>
         /// End date of the weather file.
         /// </summary>
-        [Description("End date of the weather file")]
+        [Description("End date")]
+        [Tooltip("End date of the weather file")]
         public DateTime EndDate { get; set; }
 
         // IWeather implementation.
@@ -184,6 +191,9 @@ namespace Models.Climate
         /// </summary>
         public DailyMetDataFromFile YesterdaysMetData => weather.YesterdaysMetData;
 
+        /// <summary>Status message.</summary>
+        public string Status { get; private set; }
+
         /// <summary>
         /// Called at start of simulation. Generates the weather file for
         /// use during the simulation.
@@ -203,7 +213,10 @@ namespace Models.Climate
         public IWeather GenerateWeatherFile(CancellationToken cancelToken = default(CancellationToken))
         {
             if (!Directory.Exists(bestiapopPath))
+            {
+                Status = "Installing Bestiapop";
                 InstallBestiapop(bestiapopPath);
+            }
 
             string output = OutputPath;
             if (string.IsNullOrEmpty(output))
@@ -217,7 +230,7 @@ namespace Models.Climate
                 Directory.CreateDirectory(output);
 
             string bestiapop = Path.Combine(bestiapopPath, "bestiapop", "bestiapop.py");
-            StringBuilder args = new StringBuilder($"{bestiapop} -a generate-met-file -y {StartDate.Year}-{EndDate.Year} -lat {Latitude} -lon {Longitude} ");
+            StringBuilder args = new StringBuilder($"{bestiapop} -a generate-climate-file -s silo -y {StartDate.Year}-{EndDate.Year} -lat {Latitude} -lon {Longitude} ");
 
             // todo: check that these are correct variables
             args.Append("-c \"daily_rain max_temp min_temp vp vp_deficit evap_pan radiation et_short_crop\" ");
@@ -228,17 +241,51 @@ namespace Models.Climate
             if (summary != null)
                 summary.WriteMessage(this, $"Running bestiapop with command: 'python {args}' from directory {output}");
 
+            Status = "Running bestiapop";
             try
             {
-                RunCommand("python", args.ToString(), output);
+                string stdout = RunCommand("python", args.ToString(), output);
+                summary.WriteMessage(this, $"Ran command 'python {args}' from directory '{output}'. Output from bestiapop:{Environment.NewLine}{stdout}");
             }
             catch (Exception err)
             {
                 throw new Exception("Encountered an error while running bestiapop", err);
             }
 
+            Weather result = CreateWeatherComponent(Directory.GetFiles(output, "*.met").FirstOrDefault());
+            
+
+            return result;
+        }
+
+        /// <summary>
+        /// Create a weather component for the specified file name and connect
+        /// events/links if the simulation is already running.
+        /// </summary>
+        /// <param name="fileName">Path to the .met file.</param>
+        private Weather CreateWeatherComponent(string fileName)
+        {
             Weather result = new Weather();
-            result.FullFileName = Directory.GetFiles(output, "*.met").FirstOrDefault();
+            result.FullFileName = fileName;
+
+            Simulation sim = FindAncestor<Simulation>();
+            if (sim.IsRunning)
+            {
+                // Connect links.
+                // We need to briefly hook the model up to the simulations tree for this to work.
+                result.Parent = this;
+                Links links = new Links(sim.Services);
+                links.Resolve(result, true);
+                result.Parent = null;
+
+                // Connect events.
+                Events events = new Events(result);
+                events.ConnectEvents();
+
+                object[] args = new object[] { this, EventArgs.Empty };
+                events.Publish("Commencing", args);
+                events.Publish("StartOfSimulation", args);
+            }
             return result;
         }
 
@@ -264,7 +311,7 @@ namespace Models.Climate
                 try
                 {
                     if (Directory.Exists(bestiapopPath))
-                        Directory.Delete(bestiapopPath);
+                        Directory.Delete(bestiapopPath, true);
                 }
                 catch { /* Don't trap this error - we want to give the more informative error on what exactly went wrong. */ }
 
@@ -284,7 +331,7 @@ namespace Models.Climate
             }
             catch (Exception err)
             {
-                throw new Exception("Unable to install bestiapop requirements", err);
+                throw new Exception("Unable to install bestiapop requirements - is pip installed and on PATH?", err);
             }
         }
 
@@ -321,7 +368,14 @@ namespace Models.Climate
         /// </summary>
         public double CalculateSunSet() => weather.CalculateSunSet();
 
-        private static void RunCommand(string fileName, string arguments, string workingDirectory)
+        /// <summary>
+        /// Run a shell command and return the output.
+        /// Will throw if the command exits with non-0 exit code.
+        /// </summary>
+        /// <param name="fileName">Command to execute.</param>
+        /// <param name="arguments">Command-line arguments to be passed.</param>
+        /// <param name="workingDirectory">Working directory from which the command is to be run.</param>
+        private static string RunCommand(string fileName, string arguments, string workingDirectory)
         {
             Process process = new Process();
             process.StartInfo.FileName = fileName;
@@ -347,6 +401,8 @@ namespace Models.Climate
             process.WaitForExit();
             if (process.ExitCode != 0)
                 throw new Exception($"Error while running command '{fileName} {arguments}'. Process output: {output}");
+            
+            return output.ToString();
         }
     }
 }
