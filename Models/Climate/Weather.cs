@@ -589,8 +589,11 @@
             { // Move everything forward a day
                 YesterdaysMetData = TodaysMetData;
                 TodaysMetData = TomorrowsMetData;
-                try { TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); }
-                catch { } // Keep tomorrows met data as todays if last day of file
+                
+                if (clock.Today == clock.EndDate && clock.EndDate == reader.LastDate)
+                    TomorrowsMetData = TodaysMetData;
+                else
+                    TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
             }
 
             this.Radn = TodaysMetData.Radn;
