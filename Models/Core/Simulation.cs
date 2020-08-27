@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace Models.Core
 {
@@ -154,7 +153,7 @@ namespace Models.Core
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FileName { get; set; }
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>

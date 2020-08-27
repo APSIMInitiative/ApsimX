@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -208,7 +208,7 @@ namespace Models.CLEM
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get

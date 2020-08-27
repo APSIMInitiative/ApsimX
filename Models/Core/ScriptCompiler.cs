@@ -146,6 +146,7 @@
                 Assembly.GetEntryAssembly()?.Location,             // Not sure why this can be null in unit tests.
                 typeof(MathNet.Numerics.Fit).Assembly.Location,
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
+                typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location,
             };
 
             if (previousCompilations != null)
@@ -241,6 +242,12 @@
                                 previousCompilations.Add(compilation);
                             }
 
+                            // Write the assembly to disk
+                            ms.Seek(0, SeekOrigin.Begin);
+                            string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                ms.WriteTo(file);
+
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);
                             compilation.Code = code;
@@ -318,7 +325,6 @@
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
             var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
-
             bool VB = code.IndexOf("Imports System") != -1;
             Compilation compilation;
             if (VB)
@@ -335,9 +341,8 @@
                     Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
                     new[] { syntaxTree },
                     referencedAssemblies,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             }
-
             return compilation;
         }
 #endif

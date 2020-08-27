@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Reporting;
@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current state of this resource.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<GrazeFoodStoreType> Items;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last ecological indicators received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
         #endregion

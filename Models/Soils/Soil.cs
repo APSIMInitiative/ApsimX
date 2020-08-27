@@ -8,7 +8,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -33,7 +33,7 @@
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
         /// 
-        [XmlIgnore]
+        [JsonIgnore]
         public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
@@ -113,6 +113,11 @@
         [Description("Location accuracy")]
         public string LocationAccuracy { get; set; }
 
+        /// <summary>Gets or sets the year of sampling.</summary>
+        [Summary]
+        [Description("Year of sampling")]
+        public string YearOfSampling { get; set; }
+
         /// <summary>Gets or sets the data source.</summary>
         [Summary]
         [Description("Data source")]
@@ -124,16 +129,16 @@
         public string Comments { get; set; }
 
         /// <summary>Gets the soil water.</summary>
-        [XmlIgnore] public ISoilWater SoilWater { get; private set; }
+        [JsonIgnore] public ISoilWater SoilWater { get; private set; }
 
         /// <summary>Gets the soil organic matter.</summary>
-        [XmlIgnore] public Organic SoilOrganicMatter { get; private set; }
+        [JsonIgnore] public Organic SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
         /// <summary>Gets the initial conditions node.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public Sample Initial { get; private set; }
 
         /// <summary>Called when model has been created.</summary>
@@ -157,7 +162,7 @@
             waterNode = this.FindChild<Physical>();
 
             Weirdo = this.FindChild<WEIRDO>();
-            SoilWater = this.FindChild<ISoilWater>();
+            SoilWater = this.FindInScope<ISoilWater>();
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
             if (Weirdo == null && waterNode == null)
@@ -193,7 +198,7 @@
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Thickness 
         {
             get
@@ -240,7 +245,7 @@
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] BD
         {
             get
@@ -276,7 +281,7 @@
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Water
         {
             get
@@ -290,7 +295,7 @@
         /// Although there are no references in C# code to this property, it is
         /// used in the initial water chart in the GUI.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SWAtWaterThickness
         {
             get
@@ -318,7 +323,7 @@
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] AirDry
         {
             get
@@ -338,7 +343,7 @@
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LL15
         {
             get
@@ -373,7 +378,7 @@
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] DUL
         {
             get
@@ -408,7 +413,7 @@
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SAT
         {
             get
@@ -443,7 +448,7 @@
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] KS
         {
             get

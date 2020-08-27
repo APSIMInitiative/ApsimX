@@ -11,6 +11,7 @@ using System.Threading;
 using ApsimNG.Interfaces;
 using Models.Core;
 using System.Data;
+using UserInterface.Extensions;
 
 namespace UserInterface.Presenters
 {
@@ -139,7 +140,7 @@ namespace UserInterface.Presenters
             credentialsButton.Clicked -= OnCredentialsClicked;
             showMyJobsOnlyCheckbox.Changed -= OnShowMyJobsChanged;
 
-            view.MainWidget.Destroy();
+            view.MainWidget.Cleanup();
         }
 
         /// <summary>Dispose of object.</summary>

@@ -803,19 +803,6 @@
         }
 
         /// <summary>
-        /// Open a dialog for downloading a new soil description
-        /// </summary>
-        public void DownloadSoil()
-        {
-            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
-            if (model != null)
-            { 
-                Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
-                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
-            }
-        }
-
-        /// <summary>
         /// Open a dialog for downloading a new weather file
         /// </summary>
         public void DownloadWeather()

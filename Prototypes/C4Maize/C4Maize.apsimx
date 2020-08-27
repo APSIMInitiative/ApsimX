@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 109,
+  "Version": 113,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -221,8 +221,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 570.0,
-                      "Units": null,
+                      "FixedValue": 523.0,
+                      "Units": "",
                       "Name": "NUptakeCease",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -892,7 +892,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -931,7 +931,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5960,7 +5960,6 @@
               "R50": 0.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
-              "FRGR": 0.0,
               "PotentialEP": 0.0,
               "LightProfile": null,
               "DltLAI": 0.0,
@@ -8516,6 +8515,51 @@
                   "VariableName": "[LeafCulms].noSeed",
                   "Name": "LeafNumSeed",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "FRGR",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE_FT",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Others",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
+                          "Name": "RUE_FN",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
+                          "Name": "RUE_FVPD",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -12937,7 +12981,7 @@
                     "[Root].RootFrontVelocity.EndGrainFill.Function.FixedValue = 0",
                     "[Root].RootFrontVelocity.EndGrainFill.Function.FixedValue = 0",
                     "",
-                    "[Root].NUptakeCease.FixedValue = 683",
+                    "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 683",
                     "[Grain].GNMaxCoeff.FixedValue = 210",
                     "[Grain].PotKernelWt.FixedValue = 320"
                   ],
@@ -13142,7 +13186,7 @@
             "// Primary outputs",
             "// ---------------------------------------------",
             "",
-            "[C4Maize].Phenology.DaysAfterSowing as Das",
+            "[C4Maize].DaysAfterSowing as Das",
             "[C4Maize].Phenology.Stage as Stage",
             "[C4Maize].Phenology.CurrentStageName as StageName",
             "[C4Maize].AboveGround.Wt as BiomassWt",
@@ -13207,7 +13251,7 @@
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
-            "[C4Maize].Phenology.DaysAfterSowing as Das",
+            "[C4Maize].DaysAfterSowing as Das",
             "[C4Maize].Phenology.CurrentStageName as Stage",
             "[C4Maize].AboveGround.Wt as BiomassWt",
             "[C4Maize].AboveGround.N as biomass_n",
@@ -14857,6 +14901,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -14909,6 +14954,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -15144,6 +15193,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -15200,6 +15251,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22109,6 +22164,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -22161,6 +22217,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -22396,6 +22456,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22452,6 +22514,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22881,6 +22947,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -22933,6 +23000,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -23168,6 +23239,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -23224,6 +23297,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -23622,6 +23699,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -23684,6 +23762,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -23943,6 +24025,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24009,6 +24093,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24488,6 +24576,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -24550,6 +24639,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -24809,6 +24902,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24875,6 +24970,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -25513,6 +25612,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -25575,6 +25675,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -25834,6 +25938,8 @@
                                 54.6792291715739,
                                 33.164628942012989
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -25900,6 +26006,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26520,6 +26630,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -26582,6 +26693,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -26841,6 +26956,8 @@
                                 54.6792291715739,
                                 33.164628942012989
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26907,6 +27024,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -27336,6 +27457,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -27398,6 +27520,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -27657,6 +27783,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -27723,6 +27851,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -27958,6 +28090,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -28025,6 +28158,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -28296,6 +28433,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28367,6 +28506,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28591,6 +28734,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -28653,6 +28797,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -28912,6 +29060,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28978,6 +29128,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29211,6 +29365,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29273,6 +29428,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -29532,6 +29691,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29598,6 +29759,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29821,6 +29986,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29888,6 +30054,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -30159,6 +30329,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30230,6 +30402,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30402,6 +30578,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -30469,6 +30646,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -30740,6 +30921,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30811,6 +30994,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30983,6 +31170,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -31050,6 +31238,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -31321,6 +31513,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31392,6 +31586,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31548,6 +31746,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -31605,6 +31804,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -31852,6 +32055,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31913,6 +32118,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32067,6 +32276,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -32134,6 +32344,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -32405,6 +32619,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32476,6 +32692,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32644,6 +32864,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -32701,6 +32922,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -32948,6 +33173,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33009,6 +33236,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33161,6 +33392,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33223,6 +33455,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -33482,6 +33718,8 @@
                                     27.338953846061745,
                                     15.577266347597392
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33548,6 +33786,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33713,6 +33955,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33770,6 +34013,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -34017,6 +34264,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34078,6 +34327,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34232,6 +34485,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34299,6 +34553,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -34570,6 +34828,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34641,6 +34901,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34801,6 +35065,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34868,6 +35133,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -35139,6 +35408,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35210,6 +35481,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35370,6 +35645,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -35437,6 +35713,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -35708,6 +35988,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35779,6 +36061,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35949,6 +36235,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36011,6 +36298,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -36270,6 +36561,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36336,6 +36629,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36505,6 +36802,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36572,6 +36870,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -36843,6 +37145,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36914,6 +37218,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37082,6 +37390,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37139,6 +37448,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -37386,6 +37699,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37447,6 +37762,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37595,6 +37914,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37647,6 +37967,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -37882,6 +38206,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37938,6 +38264,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38095,6 +38425,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -38147,6 +38478,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -38382,6 +38717,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38438,6 +38775,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38585,6 +38926,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -38642,6 +38984,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -38889,6 +39235,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38950,6 +39298,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39166,6 +39518,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -39223,6 +39576,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -39470,6 +39827,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39531,6 +39890,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39757,6 +40120,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -39809,6 +40173,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -40044,6 +40412,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40100,6 +40470,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40315,6 +40689,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -40377,6 +40752,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -40636,6 +41015,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40702,6 +41083,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -41022,6 +41407,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -41084,6 +41470,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -41343,6 +41733,8 @@
                                 24.33203633136019,
                                 16.310251713778211
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -41409,6 +41801,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -41668,6 +42064,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -41715,6 +42112,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -41938,6 +42339,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -41989,6 +42392,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42211,6 +42618,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42253,6 +42661,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -42464,6 +42876,8 @@
                                     77.215605578518364,
                                     32.768206270024812
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42510,6 +42924,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42735,6 +43153,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42792,6 +43211,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -43039,6 +43462,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43100,6 +43525,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43334,6 +43763,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -43391,6 +43821,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -43638,6 +44072,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43699,6 +44135,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43855,6 +44295,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -43912,6 +44353,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -44159,6 +44604,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44220,6 +44667,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44454,6 +44905,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -44511,6 +44963,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -44758,6 +45214,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44819,6 +45277,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45055,6 +45517,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -45117,6 +45580,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -45376,6 +45843,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45442,6 +45911,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45681,6 +46154,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -45743,6 +46217,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -46002,6 +46480,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46068,6 +46548,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46243,6 +46727,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46310,6 +46795,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -46581,6 +47070,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46652,6 +47143,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46892,6 +47387,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46949,6 +47445,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -47196,6 +47696,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47257,6 +47759,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47491,6 +47997,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -47548,6 +48055,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -47795,6 +48306,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47856,6 +48369,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48088,6 +48605,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -48140,6 +48658,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -48375,6 +48897,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48431,6 +48955,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48664,6 +49192,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -48726,6 +49255,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -48985,6 +49518,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49051,6 +49586,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49288,6 +49827,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49345,6 +49885,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -49592,6 +50136,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49653,6 +50199,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49883,6 +50433,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49930,6 +50481,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -50153,6 +50708,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50204,6 +50761,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50428,6 +50989,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -50475,6 +51037,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -50698,6 +51264,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50749,6 +51317,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -51018,6 +51590,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -51065,6 +51638,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -51288,6 +51865,8 @@
                                 50.154563313485653,
                                 25.750211402747539
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51339,6 +51918,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51701,6 +52284,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -51763,6 +52347,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -52022,6 +52610,8 @@
                                 30.25986365658261,
                                 14.938471267620042
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -52088,6 +52678,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -52439,6 +53033,7 @@
                                       "ParticleSizeClay": null,
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -52501,6 +53096,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -52760,6 +53359,8 @@
                                         24.33203633136019,
                                         16.310251713778211
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -52826,6 +53427,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -52999,6 +53604,7 @@
                                       "ParticleSizeClay": null,
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -53061,6 +53667,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -53320,6 +53930,8 @@
                                         24.33203633136019,
                                         16.310251713778211
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -53386,6 +53998,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -53621,6 +54237,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -53683,6 +54300,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -53942,6 +54563,8 @@
                                 24.33203633136019,
                                 16.310251713778211
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -54008,6 +54631,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -54376,6 +55003,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -54438,6 +55066,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -54697,6 +55329,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -54763,6 +55397,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -55304,6 +55942,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -55366,6 +56005,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -55625,6 +56268,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -55691,6 +56336,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -56268,6 +56917,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -56330,6 +56980,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -56589,6 +57243,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -56655,6 +57311,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57262,6 +57922,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -57324,6 +57985,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -57583,6 +58248,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57649,6 +58316,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -58338,6 +59009,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -58400,6 +59072,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -58659,6 +59335,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -58725,6 +59403,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -59118,6 +59800,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.2,
                                     1.2,
@@ -59180,6 +59863,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -59439,6 +60126,8 @@
                                     27.339614585786951,
                                     16.582314471006494
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59505,6 +60194,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59652,6 +60345,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.2,
                                     1.2,
@@ -59714,6 +60408,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -59973,6 +60671,8 @@
                                     27.339614585786951,
                                     16.582314471006494
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60039,6 +60739,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60182,6 +60886,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.54,
@@ -60234,6 +60939,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -60473,6 +61182,8 @@
                                     36.587130828674873,
                                     22.1912165985086
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60529,6 +61240,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60666,6 +61381,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.28,
                                     1.26,
@@ -60718,6 +61434,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -60957,6 +61677,8 @@
                                     36.587130828674873,
                                     22.1912165985086
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -61013,6 +61735,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -61185,6 +61911,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -61247,6 +61974,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -61506,6 +62237,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -61572,6 +62305,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -62140,6 +62877,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -62202,6 +62940,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -62461,6 +63203,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -62527,6 +63271,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -62930,6 +63678,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -62977,6 +63726,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -63206,6 +63959,8 @@
                             62.612803670569953,
                             23.033963224506504
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -63257,6 +64012,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,

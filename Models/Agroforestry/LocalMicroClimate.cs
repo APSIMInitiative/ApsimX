@@ -99,6 +99,10 @@ namespace Models.Agroforestry
         [JsonIgnore]
         public double Latitude { get { return weather.Latitude; } }
 
+        /// <summary>Gets the longitude</summary>
+        [JsonIgnore]
+        public double Longitude { get { return weather.Longitude; } }
+
         /// <summary>Gets the average temperature</summary>
         [JsonIgnore]
         public double Tav { get { return weather.Tav; } }
