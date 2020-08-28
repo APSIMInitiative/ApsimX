@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         public int Interval { get; set; }
 
         /// <summary>
-        /// First month to pay overhead
+        /// First month to start interval
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("First month to start interval")]
