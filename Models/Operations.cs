@@ -214,7 +214,7 @@ namespace Models
                     parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                 }
                 else if (parameters[argumentIndex].ParameterType == typeof(DateTime))
-                    parameterValues[argumentIndex] = DateTime.Parse(value);
+                    parameterValues[argumentIndex] = DateTime.Parse(value.Trim('"'));
             }
 
             //if there were missing named arguments in the method call then use the default values for them.
