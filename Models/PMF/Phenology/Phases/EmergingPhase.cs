@@ -76,7 +76,7 @@ namespace Models.PMF.Phen
         /// Date for emergence to occur.  null by default so model is used
         /// </summary>
         [JsonIgnore]
-        public string EmergenceDate { get; set; }
+        public DateTime? EmergenceDate { get; set; }
 
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -89,9 +89,10 @@ namespace Models.PMF.Phen
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
             if (EmergenceDate != null)
             {
-                Target = (DateUtilities.GetDate(EmergenceDate, clock.Today) - plant.SowingDate).TotalDays;
+                DateTime emergenceDate = (DateTime)EmergenceDate;
+                Target = (new DateTime(clock.Today.Year, emergenceDate.Month, emergenceDate.Day) - plant.SowingDate).TotalDays;
                 ProgressThroughPhase += 1;
-                if (DateUtilities.DatesEqual(EmergenceDate, clock.Today))
+                if (emergenceDate.Date == clock.Today.Date)
                 {
                     proceedToNextPhase = true;
                 }

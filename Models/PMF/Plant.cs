@@ -573,7 +573,7 @@
         /// <summary>
         /// Force emergence on the date called if emergence has not occured already
         /// </summary>
-        public void SetEmergenceDate(string emergencedate)
+        public void SetEmergenceDate(DateTime emergencedate)
         {
             foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
                 {
