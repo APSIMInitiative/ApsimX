@@ -213,6 +213,8 @@ namespace Models
                         value = value.Substring(posLastPeriod + 1);
                     parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
                 }
+                else if (parameters[argumentIndex].ParameterType == typeof(DateTime))
+                    parameterValues[argumentIndex] = DateTime.Parse(value);
             }
 
             //if there were missing named arguments in the method call then use the default values for them.
