@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 108,
+  "Version": 115,
   "Name": "Simulations",
   "Children": [
     {
@@ -1490,7 +1490,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1529,7 +1529,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1568,7 +1568,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1607,7 +1607,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1646,7 +1646,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1685,7 +1685,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3602,6 +3602,11 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3641,31 +3646,13 @@
           "Name": "Leaf",
           "Children": [
             {
-              "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
-              "Name": "CO2internal",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
+              "$type": "Models.Functions.SupplyFunctions.StomatalConductanceCO2Modifier, Models",
               "Name": "StomatalConductanceCO2Modifier",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Leaf].Photosynthesis.FCO2",
-                  "Name": "FCO2",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
-                  "Name": "RelativeCO2Gradient",
+                  "Name": "PhotosynthesisCO2Modifier",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -9701,6 +9688,16 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false

@@ -121,12 +121,10 @@
         /// </summary> 
         public void Reset()
         {
-            List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
-            foreach (NutrientPool P in Pools)
+            foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                 P.Reset();
 
-            List<IModel> Solutes = Apsim.Children(this, typeof(ISolute));
-            foreach (Solute S in Solutes)
+            foreach (Solute S in FindAllChildren<ISolute>())
                 S.Reset();
         }
 
@@ -139,10 +137,11 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+                int numLayers = values.Length;
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
-                foreach (NutrientPool P in Pools)
-                    for (int i = 0; i < P.C.Length; i++)
+                foreach (NutrientPool P in pools)
+                    for (int i = 0; i < numLayers; i++)
                         values[i] += P.C[i];
                 return values;
             }
@@ -157,9 +156,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(CarbonFlow));
 
-                foreach (CarbonFlow f in Flows)
+                foreach (CarbonFlow f in FindAllChildren<CarbonFlow>())
                     values = MathUtilities.Add(values, f.Catm);
                 return values;
             }
@@ -174,9 +172,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
 
-                foreach (NFlow f in Flows)
+                foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.Natm);
                 return values;
             }
@@ -191,9 +188,8 @@
             get
             {
                 double[] values = new double[FOMLignin.C.Length];
-                List<IModel> Flows = Apsim.Children(this, typeof(NFlow));
 
-                foreach (NFlow f in Flows)
+                foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
                 return values;
             }
@@ -211,7 +207,7 @@
 
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
-                List<IModel> Flows = Apsim.ChildrenRecursively(this, typeof(CarbonFlow));
+                List<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>().ToList();
                 Flows.RemoveAll(flow => flow.Parent == SurfaceResidue);
 
                 // Add all flows.
@@ -229,7 +225,7 @@
         {
             get
             {
-                var decomposition = Apsim.Child(SurfaceResidue as IModel, "Decomposition") as CarbonFlow;
+                var decomposition = (SurfaceResidue as IModel).FindChild<CarbonFlow>("Decomposition");
                 return decomposition.MineralisedN;
             }
         }
@@ -241,7 +237,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var no3NFlow = Apsim.Child(NO3 as IModel, "Denitrification") as NFlow;
+                var no3NFlow = (NO3 as IModel).FindChild<NFlow>("Denitrification");
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < values.Length; i++)
@@ -258,7 +254,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var nh4NFlow = Apsim.Child(NH4 as IModel, "Nitrification") as NFlow;
+                var nh4NFlow = (NH4 as IModel).FindChild<NFlow>("Nitrification");
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < values.Length; i++)
@@ -275,7 +271,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var hydrolysis = Apsim.Child(Urea as IModel, "Hydrolysis") as NFlow;
+                var hydrolysis = (Urea as IModel).FindChild<NFlow>("Hydrolysis");
 
                 return hydrolysis.Value;
             }
@@ -309,7 +305,7 @@
             get
             {
                 // Get the denitrification N flow under NO3.
-                var pools = Apsim.ChildrenRecursively(this, typeof(NutrientPool)).Cast<INutrientPool>().ToList();
+                var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
                 pools.Remove(Inert);
                 pools.Remove(SurfaceResidue);
 
@@ -338,40 +334,23 @@
             get
             {
                 double[] values = new double[FOMLignin.N.Length];
-                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+                int numLayers = values.Length;
+                IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in Pools)
-                    for (int i = 0; i < P.N.Length; i++)
+                    for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
                 return values;
             }
         }
 
         /// <summary>
-        /// Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer
+        /// Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer
         /// </summary>
-        [Units("-")]
-        public double[] FOMCNR
+        public double FOMCNR(int layer)
         {
-            get
-            {
-                // NOTE: these are included for runtime efficiency
-                double[] nh4 = NH4.kgha;
-                double[] no3 = NO3.kgha;
-                double[] FOMCarbohydrateC = FOMCarbohydrate.C;
-                double[] FOMCelluloseC = FOMCellulose.C;
-                double[] FOMLigninC = FOMLignin.C;
-                double[] FOMCarbohydrateN = FOMCarbohydrate.N;
-                double[] FOMCelluloseN = FOMCellulose.N;
-                double[] FOMLigninN = FOMLignin.N;
-
-                double[] values = new double[FOMLigninN.Length];
-                for (int i = 0; i < FOMLigninN.Length; i++)
-                    values[i] = MathUtilities.Divide(FOMCarbohydrateC[i] + FOMCelluloseC[i] + FOMLigninC[i],
-                               FOMCarbohydrateN[i] + FOMCelluloseN[i] + FOMLigninN[i] + nh4[i] + no3[i], 0.0);
-
-                return values;
-            }
+                return MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
+                               FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0); ;
         }
 
         /// <summary>Invoked at start of simulation.</summary>
@@ -453,8 +432,16 @@
         /// </summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
-            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            ActualSOMDecomp = ReflectionUtilities.Clone(PotentialSOMDecomp) as SurfaceOrganicMatterDecompType;
+            SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[PotentialSOMDecomp.Pool.Length];
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            {
+                actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
+                actualSOMDecomp.Pool[i].Name = PotentialSOMDecomp.Pool[i].Name;
+                actualSOMDecomp.Pool[i].OrganicMatterType = PotentialSOMDecomp.Pool[i].OrganicMatterType;
+                actualSOMDecomp.Pool[i].FOM = new FOMType();
+                actualSOMDecomp.Pool[i].FOM.amount = PotentialSOMDecomp.Pool[i].FOM.amount;
+            }
 
             double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
             double FinalResidueC = 0;    // How much is left after decomposition
@@ -468,10 +455,10 @@
             { }
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
-                ActualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
-                ActualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
             }
-            return ActualSOMDecomp;
+            return actualSOMDecomp;
         }
 
         /// <summary>
@@ -507,11 +494,11 @@
 
             bool needAtmosphereNode = false;
 
-            foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
+            foreach (NutrientPool pool in this.FindAllChildren<NutrientPool>())
             {
                 directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black);
 
-                foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
+                foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
                 {
                     foreach (string destinationName in cFlow.destinationNames)
                     {
@@ -527,10 +514,10 @@
                 }
             }
 
-            foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
+            foreach (Solute solute in this.FindAllChildren<Solute>())
             {
                 directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black);
-                foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
+                foreach (NFlow nitrogenFlow in solute.FindAllChildren<NFlow>())
                 {
                     string destName = nitrogenFlow.destinationName;
                     if (destName == null)

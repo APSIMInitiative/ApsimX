@@ -97,7 +97,7 @@
         /// <returns>The filename string</returns>
         public string ExportToPNG(string folder)
         {
-            string path = Apsim.FullPath(this.map).Replace(".Simulations.", string.Empty);
+            string path = this.map.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
 
             Image rawImage = this.view.Export();
@@ -111,8 +111,8 @@
         /// </summary>
         private void PopulateView()
         {
-            List<string> files = new List<string>();
-            this.view.ShowMap(this.map.GetCoordinates(files), files, this.map.Zoom, this.map.Center);
+            List<string> names = new List<string>();
+            this.view.ShowMap(this.map.GetCoordinates(names), names, this.map.Zoom, this.map.Center);
         }
 
         /// <summary>

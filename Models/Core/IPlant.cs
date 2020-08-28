@@ -10,9 +10,6 @@
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
         double Legumosity { get; }
 
-        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        bool IsC4 { get; }
-
         /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }
 

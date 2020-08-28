@@ -68,11 +68,11 @@ namespace Models.CLEM.Activities
         {
             // if first step of parent rotation
             // and timer failed because of harvest data
-            int start = (Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct).FirstTimeStepOfRotation;
+            int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
             if (Clock.Today.Year*100+Clock.Today.Month == start)
             {
                 // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = Apsim.Children(this, typeof(ActivityTimerCropHarvest)).FirstOrDefault() as ActivityTimerCropHarvest;
+                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault() as ActivityTimerCropHarvest;
                 if (chtimer != null)
                 {
                     if (chtimer.ActivityPast)
@@ -103,8 +103,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    CropActivityManageCrop cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
-                    CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
+                    CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
                     numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -114,8 +114,8 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perTree:
-                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
-                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    cropParent = FindAncestor<CropActivityManageCrop>();
+                    productParent = FindAncestor<CropActivityManageProduct>();
                     numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -125,7 +125,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    productParent = FindAncestor<CropActivityManageProduct>();
                     numberUnits = productParent.AmountHarvested;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                    productParent = FindAncestor<CropActivityManageProduct>();
                     numberUnits = productParent.AmountHarvested / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -211,7 +211,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(Apsim.Children(this, typeof(CropActivityFee)).Count() + Apsim.Children(this, typeof(LabourRequirement)).Count() == 0)
+            if(this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
             {
                 html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
             }

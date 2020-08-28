@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -35,28 +35,28 @@ namespace Models.CLEM
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Slope { get; set; }
 
         /// <summary>
         /// not used in CLEM
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         private ResourcesHolder resources;
@@ -106,7 +106,7 @@ namespace Models.CLEM
                 string error = "@i:Invalid parameters in model";
 
                 // find IStorageReader of simulation
-                IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
+                IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
                 if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
@@ -148,7 +148,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            holderCount = FindAncestor<Zone>().FindAllChildren<Market>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
@@ -170,7 +170,7 @@ namespace Models.CLEM
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

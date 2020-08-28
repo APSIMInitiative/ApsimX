@@ -96,5 +96,11 @@ namespace ApsimNG.Cloud
         /// It's always set to true but I'm not brave enough to remove it.
         /// </summary>
         public bool AutoScale { get; set; }
+
+
+        /// <summary>
+        /// Use low priority VMs?
+        /// </summary>
+        public bool LowPriority { get; set; }
     }
 }

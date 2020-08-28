@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -24,19 +24,19 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Size of unit
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double UnitSize { get; set; }
 
         /// <summary>
         /// Days labour required per unit or fixed (days)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double LabourPerUnit { get; set; }
 
         /// <summary>
         /// Labour unit type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new LabourUnitType UnitType { get; set; }
 
     }

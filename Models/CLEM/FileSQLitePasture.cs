@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
@@ -45,11 +45,11 @@ namespace Models.CLEM
         /// <summary>
         /// All the distinct Stocking Rates that were found in the database
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctStkRates;
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctGBAs;
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctLandConditions;
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Models.CLEM
         /// Provides an error message to display if something is wrong.
         /// The message is displayed in the warning label of the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = Apsim.Children(this, typeof(RainfallShuffler)).FirstOrDefault() as RainfallShuffler;
+            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault() as RainfallShuffler;
         }
 
         /// <summary>
@@ -394,14 +394,15 @@ namespace Models.CLEM
         /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
         /// ChangeProperty does not work on fields.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
             {
-                if (Apsim.Parent(this, typeof(Simulation)) is Simulation simulation && this.FileName != null)
+                Simulation sim = FindAncestor<Simulation>();
+                if (sim?.FileName != null)
                 {
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);
                 }
                 else
                 {

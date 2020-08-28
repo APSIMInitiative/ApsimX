@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -31,13 +31,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<OtherAnimalsTypeCohort> Cohorts;
 
         /// <summary>
         /// The last group of individuals to be added or removed (for reporting)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public OtherAnimalsTypeCohort LastCohortChanged { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>

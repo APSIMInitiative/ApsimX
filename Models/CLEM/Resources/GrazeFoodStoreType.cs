@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of pools available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IPastureManager Manager
         {
             get
@@ -264,7 +264,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// DecayOfPasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool PastureDecays
         {
             get
@@ -276,7 +276,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount {
             get
             {
@@ -287,7 +287,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (tonnes per ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TonnesPerHectare
         {
             get
@@ -349,7 +349,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (tonnes per ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TonnesPerHectareStartOfTimeStep { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -362,7 +362,7 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this.Name
             };
-            grazeFoodStoreFertilityLimiter = Apsim.Children(this, typeof(GrazeFoodStoreFertilityLimiter)).FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
+            grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -709,7 +709,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -730,7 +730,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Ecological indicators of this pasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
         /// <summary>

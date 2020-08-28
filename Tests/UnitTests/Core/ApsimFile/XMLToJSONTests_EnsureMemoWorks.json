@@ -6,7 +6,7 @@
     {
       "$type": "Models.Memo, Models",
       "Name": "TitlePage",
-      "Text": "# The APSIM Wheat Model\r\n\r\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._"
+      "Text": "# The APSIM Wheat Model"
     }
   ]
 }

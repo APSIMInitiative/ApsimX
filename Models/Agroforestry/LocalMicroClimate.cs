@@ -1,5 +1,6 @@
 ﻿using System;
 using Models.Core;
+using Models.Climate;
 using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -97,6 +98,10 @@ namespace Models.Agroforestry
         /// <summary>Gets the latitude</summary>
         [JsonIgnore]
         public double Latitude { get { return weather.Latitude; } }
+
+        /// <summary>Gets the longitude</summary>
+        [JsonIgnore]
+        public double Longitude { get { return weather.Longitude; } }
 
         /// <summary>Gets the average temperature</summary>
         [JsonIgnore]

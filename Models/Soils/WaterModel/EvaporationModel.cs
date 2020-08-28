@@ -6,7 +6,7 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Soils;
 
     /// <summary>
@@ -75,15 +75,15 @@
         public double t;
 
         /// <summary>Atmospheric potential evaporation (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eo { get; set; }
 
         /// <summary>Eo reduced due to shading (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eos { get; private set; }
 
         /// <summary>Es - actual evaporation (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Es { get; private set; }
 
         /// <summary>CONA that was used.</summary>

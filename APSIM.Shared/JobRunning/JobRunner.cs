@@ -114,41 +114,47 @@
         /// <summary>Main DoWork method for the scheduler thread. NB this does NOT run on the UI thread.        /// </summary>
         protected virtual void WorkerThread()
         {
-            bool multiThreaded = numberOfProcessors > 1;
             try
             {
-                foreach (var jobManager in jobManagers)
+                bool multiThreaded = numberOfProcessors > 1;
+                try
                 {
-                    var jobs = jobManager.GetJobs();
-                    foreach (var job in jobs)
+                    foreach (var jobManager in jobManagers)
                     {
-                        if (cancelToken.IsCancellationRequested)
-                            return;
+                        var jobs = jobManager.GetJobs();
+                        foreach (var job in jobs)
+                        {
+                            if (cancelToken.IsCancellationRequested)
+                                return;
 
-                        // Wait until we have a spare processor to run a job.
-                        if (multiThreaded)
-                            SpinWait.SpinUntil(() => numberJobsRunning <= numberOfProcessors);
+                            // Wait until we have a spare processor to run a job.
+                            if (multiThreaded)
+                                SpinWait.SpinUntil(() => numberJobsRunning <= numberOfProcessors);
 
-                        // Run the job.
-                        Interlocked.Increment(ref numberJobsRunning);
+                            // Run the job.
+                            Interlocked.Increment(ref numberJobsRunning);
 
-                        if (multiThreaded)
-                            Task.Run(() => { RunActualJob(job, jobManager); });
-                        else
-                            RunActualJob(job, jobManager);
+                            if (multiThreaded)
+                                Task.Run(() => { RunActualJob(job, jobManager); });
+                            else
+                                RunActualJob(job, jobManager);
+                        }
                     }
                 }
-            }
-            catch (Exception err)
-            {
-                ExceptionThrownByRunner = err;
-            }
+                catch (Exception err)
+                {
+                    ExceptionThrownByRunner = err;
+                }
 
-            // Wait for all jobs to complete and then signal completion.
-            SpinWait.SpinUntil(() => numberJobsRunning == 0);
-            ElapsedTime = DateTime.Now - startTime;
-            InvokeAllCompleted();
-            completed = true;
+                // Wait for all jobs to complete and then signal completion.
+                SpinWait.SpinUntil(() => numberJobsRunning == 0);
+                ElapsedTime = DateTime.Now - startTime;
+                InvokeAllCompleted();
+            }
+            finally
+            {
+                completed = true;
+            }
         }
 
         /// <summary>Run the specified job.</summary>

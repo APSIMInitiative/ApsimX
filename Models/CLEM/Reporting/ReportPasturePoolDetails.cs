@@ -69,7 +69,7 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            IModel zone = Apsim.Parent(this, typeof(Zone));
+            IModel zone = FindAncestor<Zone>();
             List<string> variableNames = new List<string>();
             if (VariableNames != null)
             {
