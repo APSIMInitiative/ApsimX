@@ -3024,6 +3024,9 @@
                 string pattern = @"SetEmergenceDate\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
                 if (manager.ReplaceRegex(pattern, "SetEmergenceDate(DateTime.Parse($1))"))
                     manager.Save();
+                pattern = @"SetGerminationDate\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                if (manager.ReplaceRegex(pattern, "SetGerminationDate(DateTime.Parse($1))"))
+                    manager.Save();
             }
         }
 

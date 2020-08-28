@@ -61,7 +61,7 @@ namespace Models.PMF.Phen
         /// Date for germination to occur.  null by default so model is used
         /// </summary>
         [JsonIgnore]
-        public string GerminationDate { get; set; }
+        public DateTime? GerminationDate { get; set; }
 
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -74,7 +74,8 @@ namespace Models.PMF.Phen
 
             if (GerminationDate != null)
             {
-                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                DateTime germinationDate = (DateTime)GerminationDate;
+                if (germinationDate.DayOfYear == clock.Today.DayOfYear)
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }

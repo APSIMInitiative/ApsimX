@@ -579,13 +579,13 @@
                 {
                     ep.EmergenceDate=emergencedate;
                 }
-            SetGerminationDate(SowingDate.ToString("d-MMM"));
+            SetGerminationDate(SowingDate);
         }
 
         /// <summary>
         /// Force germination on the date called if germination has not occured already
         /// </summary>
-        public void SetGerminationDate(string germinationdate)
+        public void SetGerminationDate(DateTime germinationdate)
         {
             {
                 foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())

@@ -92,7 +92,7 @@ namespace Models.PMF.Phen
                 DateTime emergenceDate = (DateTime)EmergenceDate;
                 Target = (new DateTime(clock.Today.Year, emergenceDate.Month, emergenceDate.Day) - plant.SowingDate).TotalDays;
                 ProgressThroughPhase += 1;
-                if (emergenceDate.Date == clock.Today.Date)
+                if (emergenceDate.DayOfYear == clock.Today.DayOfYear)
                 {
                     proceedToNextPhase = true;
                 }
