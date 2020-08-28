@@ -34,7 +34,7 @@
         },
         {
           "$type": "Models.Climate.BestiaPop, Models",
-          "OutputPath": "/home/drew/code/ApsimX/Prototypes/Bestiapop",
+          "OutputPath": null,
           "MultiProcess": true,
           "Latitude": -27.0,
           "Longitude": 150.0,
