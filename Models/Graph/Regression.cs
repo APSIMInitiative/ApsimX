@@ -93,8 +93,12 @@ namespace Models
                     {
                         if (definition.X is double[] && definition.Y is double[])
                         {
-                            regressionLines.Add(PutRegressionLineOnGraph(definition.X, definition.Y, definition.Colour, null));
-                            equationColours.Add(definition.Colour);
+                            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(definition.X, definition.Y, definition.Colour, null);
+                            if (regressionSeries != null)
+                            {
+                                regressionLines.Add(regressionSeries);
+                                equationColours.Add(definition.Colour);
+                            }
                         }
                     }
                 }
@@ -105,8 +109,12 @@ namespace Models
                         regresionLineName = "Regression line (" + checkpointName + ")";
 
                     // Display a single regression line for all data.
-                    regressionLines.Add(PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName));
-                    equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                    SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
+                    if (regressionSeries != null)
+                    {
+                        regressionLines.Add(regressionSeries);
+                        equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                    }
                 }
 
                 if (showOneToOne)
@@ -150,7 +158,7 @@ namespace Models
                      new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept });
                 return regressionDefinition;
             }
-            throw new Exception($"Unable to generate regression stats for {title}");
+            throw new Exception($"Unable to generate regression line for series {title} - there is no data");
         }
 
         /// <summary>Puts the 1:1 line on graph.</summary>
