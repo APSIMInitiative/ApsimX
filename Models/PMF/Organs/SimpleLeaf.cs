@@ -559,7 +559,7 @@
         {
             get
             {
-                return plant.CropType;
+                return plant.PlantType;
             }
         }
 
@@ -917,7 +917,7 @@
                 if (detaching.Wt > 0.0)
                 {
                     Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, plant.CropType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, plant.PlantType, Name);
                 }
 
                 // Do maintenance respiration
@@ -942,7 +942,7 @@
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.CropType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
             }
 
             Clear();

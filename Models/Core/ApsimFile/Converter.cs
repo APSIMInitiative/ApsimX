@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 115; } }
+        public static int LatestVersion { get { return 116; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3005,6 +3005,27 @@
                     JsonUtilities.AddModel(plant, mortalityRate);
                 }
             }
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion116(JObject root, string fileName)
+        {
+            foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
+            
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+                plant["PlantType"] = plant["CropType"]?.ToString();
+
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
         }
 
         /// <summary>

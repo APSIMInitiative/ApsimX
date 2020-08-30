@@ -71,13 +71,8 @@ namespace Models.PMF
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
         #endregion
 
-        /// <summary>
-        /// Gets or sets the type of the crop.
-        /// </summary>
-        public string CropType { get; set; }
-
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity { get { return 0; } }
+        /// <summary>The plant type.</summary>
+        public string PlantType { get => "SimpleTree"; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return false; } }
