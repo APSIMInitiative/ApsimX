@@ -54,7 +54,7 @@ namespace UnitTests.ApsimNG.Presenters
             Assert.AreEqual(typeof(Plant), paddock.Children[2].GetType());
             Plant wheat = paddock.Children[2] as Plant;
             Assert.AreEqual("Wheat", wheat.ResourceName);
-            Assert.AreEqual("Wheat", wheat.CropType);
+            Assert.AreEqual("Wheat", wheat.PlantType);
         }
 
         /// <summary>

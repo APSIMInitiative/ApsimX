@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 116; } }
+        public static int LatestVersion { get { return 117; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3008,7 +3008,28 @@
         }
 
         /// <summary>
-        /// Upgrade to version 116. Fix manager script references to
+        /// Upgrade to version 116. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion116(JObject root, string fileName)
+        {
+            foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
+            
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+                plant["PlantType"] = plant["CropType"]?.ToString();
+
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
+        }
+
+        /// <summary>
+        /// Upgrade to version 117. Fix manager script references to
         /// Plant.SetEmergenceDate(), since the date parameter's type
         /// was changed from string to DateTime.
         /// </summary>
@@ -3017,7 +3038,7 @@
         /// <remarks>
         /// This is part of the change to make mortality rate non-optional.
         /// </remarks>
-        private static void UpgradeToVersion116(JObject root, string fileName)
+        private static void UpgradeToVersion117(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {

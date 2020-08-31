@@ -720,6 +720,7 @@
     <Compile Include="Climate\ControlledEnvironment.cs" />
     <Compile Include="Climate\SlopeEffectsOnWeather.cs" />
     <Compile Include="Climate\Weather.cs" />
+    <Compile Include="Climate\BestiaPop.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -65,11 +65,7 @@
         public Biomass AboveGroundHarvestable { get { return AboveGround; } }
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
-        public string CropType { get; set; }
-
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        [JsonIgnore]
-        public double Legumosity { get; }
+        public string PlantType { get; set; }
 
         /// <summary>The sowing data</summary>
         [JsonIgnore]
@@ -366,7 +362,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>
