@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("First month of annual pasture yield")]
         [System.ComponentModel.DefaultValue(typeof(MonthsOfYear), "January")]
-        [Required]
+        [Required, Month]
         public MonthsOfYear AnnualYieldStartMonth { get; set; }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentPasture = this.Parent as GrazeFoodStoreType;
-            timingPresent = Apsim.Children(this, typeof(ActivityTimerMonthRange)).Count() >= 1;
+            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Count() >= 1;
         }
 
         /// <summary>
@@ -89,7 +89,6 @@ namespace Models.CLEM.Resources
                 reduction = ((shortfall * (1 - NitrogenReduction)) + (nRequired - shortfall)) / nRequired;
             }
             annualNUsed += (nRequired*reduction);
-            System.Diagnostics.Debug.WriteLine($"{Clock.Today.ToShortDateString()}\t{annualNUsed}\t{nRequired}\t{reduction}");
             return reduction;
         }
 
@@ -112,7 +111,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            bool timerpresent = (Apsim.Children(this, typeof(ActivityTimerMonthRange)).Count() > 0);
+            bool timerpresent = FindAllChildren<ActivityTimerMonthRange>().Count() > 0;
             parentPasture = this.Parent as GrazeFoodStoreType;
 
             string html = "";

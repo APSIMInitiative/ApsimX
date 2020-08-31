@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -43,7 +43,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
                 childModel.TransactionOccurred -= OtherAnimals_TransactionOccurred;
             }

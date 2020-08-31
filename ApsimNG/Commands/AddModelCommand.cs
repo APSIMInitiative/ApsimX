@@ -60,7 +60,7 @@
         {
             try
             {
-                parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
+                parent = presenter.ApsimXFile.FindByPath(parentPath)?.Value as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
 
@@ -86,7 +86,7 @@
             if (modelAdded && modelToAdd != null)
             {
                 parent.Children.Remove(modelToAdd as Model);
-                presenter.DeleteFromTree(Apsim.FullPath(modelToAdd));
+                presenter.DeleteFromTree(modelToAdd.FullPath);
             }
         }
     }

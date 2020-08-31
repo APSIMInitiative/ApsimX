@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Reporting
@@ -35,7 +35,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// The details of the summary group for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RuminantReportItemEventArgs ReportDetails { get; set; }
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace Models.CLEM.Reporting
         {
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
-            if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
+            if (this.Children.Where(a => a.GetType() == typeof(RuminantGroup)).Count() > 0)
             {
                 // get all filter groups below.
-                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
                 {
                     foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
                     {

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
-using APSIM.Shared.Utilities;
-using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -18,7 +14,7 @@ namespace Models.Functions
     {
 
         [Link]
-        Soil soil = null;
+        ISoilTemperature soiltemperature = null;
 
    
         /// <summary>Gets the value.</summary>
@@ -29,8 +25,10 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES mineralisation temperature factor Model");
 
             double TF = 0;
-            if (soil.Temperature[arrayIndex] > 0)
-                    TF= Math.Pow(soil.Temperature[arrayIndex],2) / Math.Pow(32,2);
+            double ST = soiltemperature.Value[arrayIndex];
+
+            if (ST > 0)
+                TF = (ST * ST) / (32 * 32);
             if (TF > 1) TF = 1;
 
             return TF;
@@ -48,7 +46,7 @@ namespace Models.Functions
 
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in this.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

@@ -89,7 +89,7 @@ namespace UserInterface.Presenters
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
-                    maxNumRecordsEditBox.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                    maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
             }
 
@@ -165,8 +165,8 @@ namespace UserInterface.Presenters
                             i--;
                         }
                         else if (i >= numFrozenColumns &&
-                                 columnFilterEditBox.Value != string.Empty &&
-                                 !columnFilterEditBox.Value.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
+                                 columnFilterEditBox.Text != string.Empty &&
+                                 !columnFilterEditBox.Text.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
                         {
                             data.Columns.RemoveAt(i);
                             i--;
@@ -240,7 +240,7 @@ namespace UserInterface.Presenters
 
         private string GetFilter()
         {
-            string filter = rowFilterEditBox.Value;
+            string filter = rowFilterEditBox.Text;
 
             if (ExperimentFilter != null)
             {
@@ -325,7 +325,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
         {
-            if (maxNumRecordsEditBox.Value == string.Empty)
+            if (maxNumRecordsEditBox.Text == string.Empty)
             {
                 Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
             }
@@ -333,7 +333,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(maxNumRecordsEditBox.Value, CultureInfo.InvariantCulture);
+                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(maxNumRecordsEditBox.Text, CultureInfo.InvariantCulture);
                 }
                 catch (FormatException)
                 {

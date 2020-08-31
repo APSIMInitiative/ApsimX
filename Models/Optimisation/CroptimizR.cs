@@ -239,6 +239,10 @@ namespace Models.Optimisation
             string apsimxFileName = GenerateApsimXFile();
 
             contents.AppendLine($"variable_names <- c('{VariableName}')");
+
+            // If we're reading from the PredictedObserved table, need to fix
+            // Predicted./Observed. suffix for the observed variables.
+            contents.AppendLine($"observed_variable_names <- c('{GetObservedVariableName()}', 'Clock.Today')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
             contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
@@ -260,6 +264,13 @@ namespace Models.Optimisation
             File.WriteAllText(fileName, contents.ToString());
         }
 
+        private string GetObservedVariableName()
+        {
+            if (PredictedTableName == ObservedTableName)
+                return VariableName.Replace("Predicted.", "Observed.");
+            return VariableName;
+        }
+
         /// <summary>
         /// Generates an .apsimx file containing replacements model (if it
         /// exists), a datastore, and all children of this model. Saves the
@@ -267,32 +278,34 @@ namespace Models.Optimisation
         /// </summary>
         private string GenerateApsimXFile()
         {
-            Simulations rootNode = (Apsim.Parent(this, typeof(Simulations)) as Simulations);
+            Simulations rootNode = FindAncestor<Simulations>();
             string apsimxFileName = GetTempFileName($"apsimx_file_{id}", ".apsimx");
 
             Simulations sims = new Simulations();
             sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
             sims.Children.RemoveAll(c => c is IDataStore);
 
-            IModel replacements = Apsim.Find(this, typeof(Replacements));
+            IModel replacements = this.FindInScope<Replacements>();
             if (replacements != null && !sims.Children.Any(c => c is Replacements))
                 sims.Children.Add(Apsim.Clone(replacements));
 
-            IModel storage = Apsim.Find(this, typeof(IDataStore));
+            // Search for IDataStore, not DataStore - to allow for StorageViaSockets.
+            IDataStore storage = this.FindInScope<IDataStore>();
             IModel newDataStore = new DataStore();
-            if (storage != null)
-                newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
+            if (storage != null && storage is IModel m)
+                newDataStore.Children.AddRange(m.Children.Select(c => Apsim.Clone(c)));
 
             sims.Children.Add(newDataStore);
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
 
             sims.Write(apsimxFileName);
 
             string originalFile = rootNode?.FileName;
             if (string.IsNullOrEmpty(originalFile))
-                originalFile = (storage as IDataStore)?.FileName;
+                originalFile = storage?.FileName;
+
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in Apsim.ChildrenRecursively(sims, typeof(IReferenceExternalFiles)).Cast<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in sims.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
                     string absoluteFileName = PathUtilities.GetAbsolutePath(file, originalFile);
@@ -311,12 +324,12 @@ namespace Models.Optimisation
         /// <param name="message">Message to be written.</param>
         private void WriteMessage(string message)
         {
-            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = this.FindInScope<IDataStore>();
             if (storage == null)
                 throw new ApsimXException(this, "No datastore is available!");
 
-            string modelPath = Apsim.FullPath(this);
-            string relativeModelPath = modelPath.Replace(Apsim.FullPath(this) + ".", string.Empty);
+            string modelPath = this.FullPath;
+            string relativeModelPath = modelPath.Replace(this.FullPath + ".", string.Empty);
 
             DataTable messages = new DataTable("_Messages");
             messages.Columns.Add("SimulationName", typeof(string));
@@ -357,7 +370,7 @@ namespace Models.Optimisation
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in Apsim.ChildrenRecursively(this, typeof(ISimulationDescriptionGenerator)))
+            foreach (ISimulationDescriptionGenerator generator in this.FindAllDescendants<ISimulationDescriptionGenerator>())
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 

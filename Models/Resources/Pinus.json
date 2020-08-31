@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 107,
+  "Version": 116,
   "Name": "Simulations",
   "Children": [
     {
@@ -4070,6 +4070,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -4467,11 +4472,22 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Pinus"
     }
   ],
   "IncludeInDocumentation": true,

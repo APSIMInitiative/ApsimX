@@ -185,7 +185,7 @@
             try
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
-                scriptModel = Apsim.Child(manager, "Script") as Model;
+                scriptModel = manager.FindChild("Script") as Model;
                 if (scriptModel != null)
                     propertyPresenter.Refresh();
             }

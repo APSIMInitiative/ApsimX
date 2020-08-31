@@ -1,0 +1,30 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "nuget",
+			"type": "shell",
+			"command": "nuget",
+			"args": [
+				"restore",
+				"${workspaceRoot}/ApsimX.sln"
+			]
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "msbuild",
+			"args": [
+				"/v:m",
+				//"/p:Configuration=Release",
+				"${workspaceRoot}/ApsimX.sln"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": "nuget"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 382,
+  "ExplorerWidth": 300,
   "Version": 105,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -710,8 +710,9 @@
                           "Name": "Muster to pasture",
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Groupings.RuminantDestockGroup, Models",
-                              "Name": "MusterAll",
+                              "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                              "Proportion": 1.0,
+                              "Name": "All",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,

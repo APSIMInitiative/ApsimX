@@ -5,7 +5,6 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// This class specifies which life cycle and which phase the progeny of the parent 
@@ -44,8 +43,5 @@
                 else return 1.0;
             }
         }
-
-        /// <summary> the number of projeny added to the destination by this phase</summary>
-        public double ProgenyToDestination { get; set; }
     }
 }

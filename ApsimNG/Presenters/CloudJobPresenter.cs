@@ -10,15 +10,41 @@ using System.Threading.Tasks;
 using System.Threading;
 using ApsimNG.Interfaces;
 using Models.Core;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
     public sealed class CloudJobPresenter : IPresenter, IDisposable
     {
-        /// <summary>
-        /// The view displaying the list of cloud jobs.
-        /// </summary>
-        private ICloudJobView view;
+        private const string timespanFormat = @"dddd\d\ hh\h\ mm\m\ ss\s";
+        private const string dateFormat = "yyyy-MM-dd HH.mm";
+
+        /// <summary>The view.</summary>
+        private ViewBase view;
+
+        /// <summary>The list view control.</summary>
+        private ListView jobListView;
+
+        /// <summary>The refresh button.</summary>
+        private ButtonView refreshButton;
+
+        /// <summary>The download button.</summary>
+        private ButtonView downloadButton;
+
+        /// <summary>The stop button.</summary>
+        private ButtonView stopButton;
+
+        /// <summary>The delete button.</summary>
+        private ButtonView deleteButton;
+
+        /// <summary>The credentials button.</summary>
+        private ButtonView credentialsButton;
+
+        /// <summary>The show my jobs only checkbox.</summary>
+        private CheckBoxView showMyJobsOnlyCheckbox;
+
+        /// <summary>Progress bar.</summary>
+        private ProgressBarView progressBar;
 
         /// <summary>
         /// This object will handle the cloud platform-specific tasks
@@ -27,14 +53,14 @@ namespace UserInterface.Presenters
         private ICloudInterface cloudInterface;
 
         /// <summary>
-        /// This worker repeatedly fetches information about all Azure jobs on the batch account.
-        /// </summary>
-        private BackgroundWorker fetchJobs;
-
-        /// <summary>
         /// List of all Azure jobs.
         /// </summary>
-        private List<JobDetails> jobList;
+        private List<JobDetails> jobList = new List<JobDetails>();
+
+        /// <summary>
+        /// Filtered job list that the view works from.
+        /// </summary>
+        private List<JobDetails> filteredJobList = new List<JobDetails>();
 
         /// <summary>
         /// The parent presenter.
@@ -58,12 +84,6 @@ namespace UserInterface.Presenters
 
             presenter = primaryPresenter;
             jobList = new List<JobDetails>();
-
-            fetchJobs = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true
-            };
-            fetchJobs.DoWork += ListJobs;
         }
 
         /// <summary>
@@ -72,20 +92,37 @@ namespace UserInterface.Presenters
         /// <param name="model"></param>
         /// <param name="view"></param>
         /// <param name="explorerPresenter"></param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object viewBase, ExplorerPresenter explorerPresenter)
         {
-            this.view = (CloudJobView)view;
+            view = (ViewBase)viewBase;
+            jobListView = view.GetControl<ListView>("jobListView");
+            refreshButton = view.GetControl<ButtonView>("refreshButton");
+            downloadButton = view.GetControl<ButtonView>("downloadButton");
+            stopButton = view.GetControl<ButtonView>("stopButton");
+            deleteButton = view.GetControl<ButtonView>("deleteButton");
+            credentialsButton = view.GetControl<ButtonView>("credentialsButton");
+            showMyJobsOnlyCheckbox = view.GetControl<CheckBoxView>("showMyJobsCheckbox");
+            progressBar = view.GetControl<ProgressBarView>("progressBar");
 
-            // fixme
-            this.view.DownloadPath = ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir;
+            jobListView.SortColumn = "Start time";
+            jobListView.SortAscending = false;
 
-            this.view.ChangeOutputPath += OnChangeOutputPath;
-            this.view.SetupClicked += OnSetup;
-            this.view.StopJobs += OnStopJobs;
-            this.view.DeleteJobs += OnDeleteJobs;
-            this.view.DownloadJobs += OnDownloadJobs;
+            jobListView.AddColumn("Name");
+            jobListView.AddColumn("Owner");
+            jobListView.AddColumn("State");
+            jobListView.AddColumn("# Sims");
+            jobListView.AddColumn("Progress");
+            jobListView.AddColumn("Start time");
+            jobListView.AddColumn("End time");
+            jobListView.AddColumn("Duration");
+            jobListView.AddColumn("CPU time");
 
-            fetchJobs.RunWorkerAsync();
+            refreshButton.Clicked += OnRefreshClicked;
+            downloadButton.Clicked += OnDownloadClicked;
+            stopButton.Clicked += OnStopClicked;
+            deleteButton.Clicked += OnDeleteClicked;
+            credentialsButton.Clicked += OnCredentialsClicked;
+            showMyJobsOnlyCheckbox.Changed += OnShowMyJobsChanged;
         }
 
         /// <summary>
@@ -93,195 +130,249 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            view.ChangeOutputPath -= OnChangeOutputPath;
-            view.SetupClicked -= OnSetup;
-            view.StopJobs -= OnStopJobs;
-            view.DeleteJobs -= OnDeleteJobs;
-            view.DownloadJobs -= OnDownloadJobs;
-
             cancelToken.Cancel();
-            fetchJobs.CancelAsync();
 
-            view.Destroy();
+            refreshButton.Clicked -= OnRefreshClicked;
+            downloadButton.Clicked -= OnDownloadClicked;
+            stopButton.Clicked -= OnStopClicked;
+            deleteButton.Clicked -= OnDeleteClicked;
+            credentialsButton.Clicked -= OnCredentialsClicked;
+            showMyJobsOnlyCheckbox.Changed -= OnShowMyJobsChanged;
+
+            view.MainWidget.Destroy();
         }
 
-        /// <summary>
-        /// Called when the user wants to halt the execution of a job.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private async Task OnStopJobs(object sender, EventArgs args)
-        {
-            string[] jobIDs = view.GetSelectedJobIDs();
-            if (jobIDs.Length < 1)
-                throw new Exception("Unable to stop jobs: no jobs are selected");
-
-            // Get the grammar right when asking for confirmation.
-            string msg = "Are you sure you want to stop " + (jobIDs.Length > 1 ? "these " + jobIDs.Length + " jobs" : "this job") + "? There is no way to resume execution!";
-            if (presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
-                return;
-
-            foreach (string id in jobIDs)
-                await cloudInterface.StopJobAsync(id, cancelToken.Token);
-        }
-
-        /// <summary>
-        /// Called when the user wants to delete a job.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private async Task OnDeleteJobs(object sender, EventArgs args)
-        {
-            string[] jobIDs = view.GetSelectedJobIDs();
-            if (jobIDs.Length < 1)
-                throw new Exception("Unable to delete jobs: no jobs are selected");
-
-            // Get the grammar right when asking for confirmation.
-            string msg = "Are you sure you want to delete " + (jobIDs.Length > 1 ? "these " + jobIDs.Length + " jobs?" : "this job?");
-            if (presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
-                return;
-
-            foreach (string id in jobIDs)
-            {
-                await cloudInterface.DeleteJobAsync(id, cancelToken.Token);
-
-                // Remove the job from the locally stored list of jobs.
-                jobList.RemoveAll(j => j.Id == id);
-            }
-
-            // Refresh the view.
-            view.UpdateJobTable(jobList);
-        }
-
-        /// <summary>
-        /// Called when the user wants to download results of a job.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        /// <returns></returns>
-        private async Task OnDownloadJobs(object sender, EventArgs args)
-        {
-            DownloadOptions options = new DownloadOptions();
-            
-            options.DownloadDebugFiles = view.DownloadDebugFiles;
-            options.ExportToCsv = view.ExportCsv;
-            options.ExtractResults = view.ExtractResults;
-
-            string basePath = view.DownloadPath;
-
-            view.DownloadProgress = 0;
-            view.ShowDownloadProgressBar();
-
-            try
-            {
-                foreach (string id in view.GetSelectedJobIDs())
-                {
-                    JobDetails job = jobList.Find(j => j.Id == id);
-
-                    options.Path = Path.Combine(basePath, job.DisplayName + "_results");
-                    options.JobID = Guid.Parse(id);
-
-                    await cloudInterface.DownloadResultsAsync(options, cancelToken.Token, p => view.DownloadProgress = p);
-
-                    if (cancelToken.IsCancellationRequested)
-                        return;
-                }
-                presenter.ShowMessage($"Results were successfully downloaded to {options.Path}", Simulation.MessageType.Information);
-            }
-            finally
-            {
-                view.HideDownloadProgressBar();
-                view.DownloadProgress = 0;
-            }
-        }
-
-        /// <summary>
-        /// Called from a background worker thread. Updates the list of cloud jobs
-        /// by interrogating the cloud platform.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private async void ListJobs(object sender, DoWorkEventArgs args)
-        {
-            try
-            {
-                while (!fetchJobs.CancellationPending) // fixme
-                {
-                    // Update the list of jobs. This will take some time.
-                    view.JobLoadProgress = 0;
-                    view.ShowLoadingProgressBar();
-                    var newJobs = await cloudInterface.ListJobsAsync(cancelToken.Token, p => view.JobLoadProgress = p);
-
-                    if (fetchJobs.CancellationPending)
-                        return;
-
-                    if (Different(newJobs, jobList))
-                        view.UpdateJobTable(newJobs);
-
-                    jobList = newJobs;
-
-                    view.HideLoadingProgressBar();
-
-                    // Refresh job list every 10 seconds
-                    Thread.Sleep(10000);
-                }
-            }
-            catch (Exception err)
-            {
-                presenter.ShowError(err);
-            }
-            finally
-            {
-                view?.HideLoadingProgressBar();
-            }
-        }
-
-        /// <summary>
-        /// Called when the user wants to input credentials/API key.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnSetup(object sender, EventArgs e)
-        {
-            // fixme - should probably move this functionality into ICloudInterface
-            new ApsimNG.Cloud.Azure.AzureCredentialsSetup();
-        }
-
-        private void OnChangeOutputPath(object sender, EventArgs e)
-        {
-            // fixme - should probably move this functionality into ICloudInterface
-            string path = ViewBase.AskUserForFileName("Choose a folder", Utility.FileDialog.FileActionType.SelectFolder, "");
-            ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir = path;
-            ApsimNG.Cloud.Azure.AzureSettings.Default.Save();
-            view.DownloadPath = path;
-        }
-
-        /// <summary>
-        /// Checks if two lists of JobDetails objects are different.
-        /// </summary>
-        /// <param name="list1">The first list.</param>
-        /// <param name="list2">The second list.</param>
-        private bool Different(List<JobDetails> list1, List<JobDetails> list2)
-        {
-            if (list1 == null && list2 == null)
-                return false;
-
-            if (list1 == null || list2 == null)
-                return true;
-
-            if (list1.Count != list2.Count)
-                return true;
-
-            for (int i = 0; i < list1.Count; i++)
-                if (!list1[i].IsEqualTo(list2[i]))
-                    return true;
-
-            return false;
-        }
-
+        /// <summary>Dispose of object.</summary>
         public void Dispose()
         {
             cancelToken.Dispose();
+        }
+
+        /// <summary>
+        /// Refresh button has been clicked.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnRefreshClicked(object sender, EventArgs e)
+        {
+            refreshButton.IsEnabled = false;
+            jobList.Clear();
+            jobListView.ClearRows();
+
+            Task.Run(() => cloudInterface.ListJobsAsync(cancelToken.Token,
+                                                        p => UpdateProgressBar(p),
+                                                        job => AddJobToView(job)));
+        }
+                
+        /// <summary>
+        /// User has clicked download.
+        /// </summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event arguments.</param>
+        private async void OnDownloadClicked(object sender, EventArgs e)
+        {
+            // Ask user for download path.
+            string path = ViewBase.AskUserForFileName("Choose a download folder",
+                                                      Utility.FileDialog.FileActionType.SelectFolder,
+                                                      "",
+                                                      ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir);
+            if (!string.IsNullOrEmpty(path))
+            {
+                ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir = path;
+                ApsimNG.Cloud.Azure.AzureSettings.Default.Save();
+
+                presenter.ShowWaitCursor(true);
+
+                try
+                {
+                    foreach (int listViewIndex in jobListView.SelectedIndicies)
+                    {
+                        var jobListIndex = ConvertListViewIndexToJobIndex(listViewIndex);
+
+                        DownloadOptions options = new DownloadOptions()
+                        {
+                            Name = jobList[jobListIndex].DisplayName,
+                            Path = ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir,
+                            JobID = Guid.Parse(jobList[jobListIndex].Id)
+                        };
+
+                        await cloudInterface.DownloadResultsAsync(options, cancelToken.Token, p => { });
+
+                        if (cancelToken.IsCancellationRequested)
+                            return;
+                    }
+                    presenter.ShowMessage($"Results were successfully downloaded to {ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir}", Simulation.MessageType.Information);
+                }
+                catch (Exception err)
+                {
+                    presenter.ShowError(err);
+                }
+                finally
+                {
+                    presenter.ShowWaitCursor(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// User has clicked the stop button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event argument.</param>
+        private async void OnStopClicked(object sender, EventArgs e)
+        {
+            int numJobs = jobListView.SelectedIndicies.Length;
+            if (numJobs < 1)
+                throw new Exception("Unable to stop jobs: no jobs are selected");
+
+            // Get the grammar right when asking for confirmation.
+            string msg = "Are you sure you want to stop " + (numJobs > 1 ? "these " + numJobs + " jobs" : "this job") + "? There is no way to resume execution!";
+            if (presenter.AskQuestion(msg) == QuestionResponseEnum.Yes)
+            {
+                foreach (int listViewIndex in jobListView.SelectedIndicies)
+                {
+                    var jobListIndex = ConvertListViewIndexToJobIndex(listViewIndex);
+                    await cloudInterface.StopJobAsync(jobList[jobListIndex].Id, cancelToken.Token);
+                }
+            }
+        }
+
+        /// <summary>
+        /// User has clicked the delete button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event argument.</param>
+        private async void OnDeleteClicked(object sender, EventArgs e)
+        {
+            int numJobs = jobListView.SelectedIndicies.Length;
+            if (numJobs < 1)
+                throw new Exception("Unable to delete jobs: no jobs are selected");
+
+            // Get the grammar right when asking for confirmation.
+            string msg = "Are you sure you want to delete " + (numJobs > 1 ? "these " + numJobs + " jobs?" : "this job?");
+            if (presenter.AskQuestion(msg) == QuestionResponseEnum.Yes)
+            {
+                var selectedIndicies = jobListView.SelectedIndicies;
+
+                // Delete the jobs from 'bottom up' so that the indicies remain valid.
+                Array.Sort(selectedIndicies);
+                Array.Reverse(selectedIndicies);
+                foreach (int listViewIndex in selectedIndicies)
+                {
+                    var jobListIndex = ConvertListViewIndexToJobIndex(listViewIndex);
+                    await cloudInterface.DeleteJobAsync(jobList[jobListIndex].Id, cancelToken.Token);
+
+                    // Remove the job from the locally stored list of jobs.
+                    jobList.RemoveAll(j => j.Id == jobList[jobListIndex].Id);
+
+                    // Update the view.
+                    jobListView.RemoveRow(listViewIndex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// User has clicked the credentials button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnCredentialsClicked(object sender, EventArgs e)
+        {
+            // fixme - should probably move this functionality into ICloudInterface
+            using (var dialog = new ApsimNG.Cloud.Azure.AzureCredentialsSetup())
+            {
+            }
+        }
+
+        /// <summary>
+        /// User has clicked show my jobs only.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnShowMyJobsChanged(object sender, EventArgs e)
+        {
+            jobListView.ClearRows();
+            filteredJobList.Clear();
+            foreach (var job in jobList)
+                AddRowToJobListView(job);
+        }
+
+        /// <summary>
+        /// Update view's progress bar.
+        /// </summary>
+        /// <param name="progress">The progress 0-100.</param>
+        private void UpdateProgressBar(double progress)
+        {
+            view.InvokeOnMainThread(delegate { progressBar.Position = progress; });
+            if (progress == 100)
+            {
+                refreshButton.IsEnabled = true;
+                view.InvokeOnMainThread(delegate { progressBar.Visible = false; });
+            }
+        }
+
+        /// <summary>
+        /// Update the list of jobs shown to user.
+        /// </summary>
+        /// <param name="jobs">The list of jobs to put into view.</param>
+        private void AddJobToView(JobDetails job)
+        {
+            if (job != null)
+            {
+                // Because this method is called on a worker thead we need to update the 
+                // view on the main thread.
+                view.InvokeOnMainThread(delegate
+                {
+                    jobList.Add(job);
+                    AddRowToJobListView(job);
+                });
+            }
+        }
+
+        /// <summary>Add a row to the ListView.</summary>
+        /// <param name="job">The job to use to populate the row.</param>
+        private void AddRowToJobListView(JobDetails job)
+        {
+            if (!showMyJobsOnlyCheckbox.Checked ||
+                       string.Equals(job.Owner, Environment.UserName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                filteredJobList.Add(job);
+                string startTime = null;
+                string endTime = null;
+                if (job.StartTime != null)
+                    startTime = ((DateTime)job.StartTime).ToLocalTime().ToString(dateFormat);
+                if (job.EndTime != null)
+                    endTime = ((DateTime)job.EndTime).ToLocalTime().ToString(dateFormat);
+
+                jobListView.AddRow(new object[]
+                {
+                    job.DisplayName,
+                    job.Owner,
+                    job.State,
+                    job.NumSims.ToString(),
+                    job.Progress.ToString("F0"),
+                    startTime,
+                    endTime,
+                    job.Duration().ToString(timespanFormat),
+                    job.CpuTime.ToString(timespanFormat)
+                });
+            }
+        }
+
+        /// <summary>
+        /// Convert an ListView row index to an index into our JobList.
+        /// </summary>
+        /// <param name="listViewRowIndex">ListView row index</param>
+        /// <returns></returns>
+        private int ConvertListViewIndexToJobIndex(int listViewRowIndex)
+        {
+            var values = jobListView.GetRow(listViewRowIndex);
+            return jobList.FindIndex(job => job.DisplayName == (string)values[0] &&
+                                            job.Owner == (string)values[1] &&
+                                            job.State == (string)values[2] &&
+                                            job.NumSims.ToString() == (string)values[3] &&
+                                            ((DateTime)job.StartTime).ToLocalTime().ToString(dateFormat) == (string)values[5] &&
+                                            ((DateTime)job.EndTime).ToLocalTime().ToString(dateFormat) == (string)values[6]);
         }
     }
 }

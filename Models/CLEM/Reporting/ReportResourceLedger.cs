@@ -69,7 +69,7 @@ namespace Models.CLEM.Reporting
         private void OnCommencing(object sender, EventArgs e)
         {
             // check if running from a CLEM.Market
-            bool market = (Apsim.Ancestor<Zone>(this).GetType() == typeof(Market));
+            bool market = (FindAncestor<Zone>().GetType() == typeof(Market));
 
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
@@ -101,7 +101,7 @@ namespace Models.CLEM.Reporting
                             bool pricingIncluded = false;
                             if (model.GetType() == typeof(RuminantHerd))
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Where(a => a.Enabled).Count() > 0;
+                                pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
@@ -118,12 +118,12 @@ namespace Models.CLEM.Reporting
                             }
                             else
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Where(a => a.Enabled).Count() > 0;
+                                pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
                                 // get all converters for this type of resource
-                                var converterList = Apsim.ChildrenRecursively(model, typeof(ResourceUnitsConverter)).Select(a => a.Name).Distinct();
+                                var converterList = model.FindAllDescendants<ResourceUnitsConverter>().Select(a => a.Name).Distinct();
                                 if (converterList!=null)
                                 {
                                     foreach (var item in converterList)
@@ -142,7 +142,7 @@ namespace Models.CLEM.Reporting
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
                                 // if this is a multi CLEM model simulation then add a new column with the parent Zone name
-                                if(Apsim.Child(Apsim.Ancestor<Simulation>(this), typeof(Market))!=null)
+                                if(FindAncestor<Simulation>().FindChild<Market>()!=null)
                                 {
                                     variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.CLEMParentName as Source");
                                 }

@@ -125,7 +125,12 @@ namespace Utility
         /// Stores the user's preferred font.
         /// </summary>
         /// <value></value>
-        public Pango.FontDescription Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
+
+        /// <summary>
+        /// Country name used in the download soil view.
+        /// </summary>
+        public string DownloadFromDataSourceCountry { get; set; }
 
         public ApsimFileMetadata GetMruFile(string fileName)
         {

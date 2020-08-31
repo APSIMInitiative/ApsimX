@@ -5,6 +5,7 @@
     using Models.Functions;
     using System;
     using System.Collections.Generic;
+    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// Sets and infestation event for Lifecycle model.  
@@ -77,11 +78,14 @@
         /// <summary>Method to send infestation event to LifeCycle</summary>
         public void Infest()
         {
-            Cohort Immigrants = new Cohort(InfestingPhase);
-            Immigrants.Population = NumberOfImmigrants.Value();
-            Immigrants.ChronologicalAge = ChronoAgeOfImmigrants;
-            Immigrants.PhysiologicalAge = PhysAgeOfImmigrants;
-            InfestingOrganisum.Infest(Immigrants);
+            SourceInfo InfestationInfo = new SourceInfo();
+            InfestationInfo.LifeCycle = InfestingOrganisumName;
+            InfestationInfo.LifeCyclePhase = InfestingPhaseName;
+            InfestationInfo.Type = SourceInfo.TypeOptions.Infestation;
+            InfestationInfo.Population = NumberOfImmigrants.Value();
+            InfestationInfo.ChronologicalAge = ChronoAgeOfImmigrants;
+            InfestationInfo.PhysiologicalAge = PhysAgeOfImmigrants;
+            InfestingOrganisum.Infest(InfestationInfo);
         }
 
         /// <summary>At the start of the simulation find the infesting lifecycle and phase</summary>
@@ -90,10 +94,9 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            InfestingOrganisum = Apsim.Find(this.Parent, InfestingOrganisumName) as LifeCycle;
+            InfestingOrganisum = this.Parent.FindInScope(InfestingOrganisumName) as LifeCycle;
             if (InfestingOrganisum == null)
-                throw new Exception(Apsim.FullPath(this) + " Could not find an infesting organisum called " + InfestingOrganisumName);
-            InfestingPhase = Apsim.Child(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;
+                throw new Exception(FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
         }
 
         /// <summary>Call infest() events at specified time steps</summary>

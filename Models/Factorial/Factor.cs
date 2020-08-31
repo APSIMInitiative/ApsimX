@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = Apsim.Children(this, typeof(CompositeFactor)).Where(f => f.Enabled).Cast<CompositeFactor>();
+            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -68,7 +68,7 @@
         /// <returns></returns>
         public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
         {
-            var childCompositeFactors = Apsim.Children(compositeFactor, typeof(CompositeFactor)).Cast<CompositeFactor>();
+            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>();
             if (childCompositeFactors.Count() > 0)
             {
                 var newFactorValues = new List<CompositeFactor>();
@@ -154,11 +154,11 @@
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+            Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                IModel modelToReplace = Apsim.Get(baseSimulation, specification) as IModel;
+                var baseSimulation = experiment.FindChild<Simulation>();
+                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children.Where(c => c.Enabled))
@@ -171,6 +171,12 @@
         public IEnumerable<string> GetReferencedFileNames()
         {
             return GetCompositeFactors().SelectMany(factor => factor.GetReferencedFileNames());
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

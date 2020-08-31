@@ -126,6 +126,13 @@
     <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
     <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
     <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CloudJobView.glade" />
+    <EmbeddedResource Include="Resources\Glade\RunOnCloudView.glade" />
+    <EmbeddedResource Include="Resources\Glade\DownloadSoilView.glade" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -139,6 +146,23 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Resources\Test.xshd" />
+    <None Include="Web References\ApsoilWeb\PAWCByCrop.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\ApsoilWeb\Service.wsdl" />
+    <None Include="Web References\ApsoilWeb\SoilAnalysisInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\SoilBasicInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\SoilInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Models\Properties\AssemblyVersion.cs">
@@ -186,8 +210,14 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\DownloadPresenter.cs" />
     <Compile Include="Presenters\DocumentationPresenter.cs" />
-    <Compile Include="Views\CloudDownloadView.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressBarView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
@@ -345,16 +375,14 @@
     <Compile Include="Utility\FindAndReplaceForm.cs" />
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
-    <Compile Include="Utility\SoilDownloadDialog.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
-    <Compile Include="Views\EditBoxView.cs" />
+    <Compile Include="Views\EditView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
     <Compile Include="Views\FileConverterView.cs" />
@@ -379,7 +407,6 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\RunOnCloudView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
@@ -392,6 +419,11 @@
     <Compile Include="Views\WindowView.cs" />
     <Compile Include="Views\XYPairsView.cs" />
     <Compile Include="Utility\MacUtilities.cs" />
+    <Compile Include="Web References\ApsoilWeb\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Apsim.png" />
@@ -469,6 +501,12 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chloride.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimWaterTable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimSubsurfaceDrain.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperature.png" />   
+    <None Include="Web References\ApsoilWeb\Service.disco" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TableExpression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SolutePatch.png" />
@@ -563,7 +601,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceLedger.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityBuy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantDestockGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroupMonthly.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
@@ -647,7 +684,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityWean.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilter.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantHerd.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantInitialCohorts.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantType.png" />
@@ -1013,6 +1050,9 @@
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ISO3166, Version=1.0.3.0, Culture=neutral, PublicKeyToken=8d672889792f7833, processorArchitecture=MSIL">
+      <HintPath>..\packages\ISO3166.1.0.3\lib\net20\ISO3166.dll</HintPath>
+    </Reference>
     <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
       <Private>True</Private>
@@ -1147,6 +1187,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.107.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -1160,10 +1201,12 @@
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.4\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
@@ -1174,7 +1217,25 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="https://apsimdev.apsim.info/ApsoilWebService/Service.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ApsoilWeb\</RelPath>
+      <UpdateFromURL>https://apsimdev.apsim.info/ApsoilWebService/Service.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>ApsimNG_ApsoilWeb_Service</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.107.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.107.0\build\net451\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

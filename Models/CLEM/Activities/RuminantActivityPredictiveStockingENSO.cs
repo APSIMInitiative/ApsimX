@@ -41,9 +41,9 @@ namespace Models.CLEM.Activities
         /// Month for assessing dry season feed requirements
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(5)]
-        [Description("Month for assessing dry season feed requirements (1-12)")]
+        [Description("Month for assessing dry season feed requirements")]
         [Required, Month]
-        public int AssessmentMonth { get; set; }
+        public MonthsOfYear AssessmentMonth { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) before restocking
@@ -145,7 +145,7 @@ namespace Models.CLEM.Activities
             ForecastSequence = new Dictionary<DateTime, double>();
             // load ENSO file into memory
 
-            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
             {
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySIOFile, simulation.FileName);
@@ -227,7 +227,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == AssessmentMonth)
+            if (Clock.Today.Month == (int)AssessmentMonth)
             {
                 // Get ENSO forcase for current time
                 ENSOState forecastEnsoState = GetENSOMeasure();

@@ -146,6 +146,7 @@
     <Compile Include="APSIMShared\MockJob.cs" />
     <Compile Include="CommandLineArgsTests.cs" />
     <Compile Include="Core\ApsimFile\EditFileTests.cs" />
+    <Compile Include="Core\ModelTests.cs" />
     <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
     <Compile Include="Core\Run\RunnerTests.cs" />
     <Compile Include="Core\Run\SimulationTests.cs" />
@@ -278,6 +279,7 @@
     <EmbeddedResource Include="Resources\WheatModel.apsimx" />
     <EmbeddedResource Include="Stock\AddAnimalCohort.json" />
     <EmbeddedResource Include="Resources\SimpleExperiment.apsimx" />
+    <EmbeddedResource Include="**\*.Expected.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">

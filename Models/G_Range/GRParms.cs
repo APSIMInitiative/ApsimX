@@ -8,6 +8,7 @@ namespace Models
     using Models.Core;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
+    using Models.Climate;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {

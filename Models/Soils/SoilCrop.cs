@@ -47,7 +47,7 @@
         {
             get
             {
-                Soil soil = Apsim.Parent(this, typeof(Soil)) as Soil;
+                Soil soil = FindAncestor<Soil>();
                 if (soil == null)
                     return null;
                 return Soil.CalcPAWC(soil.Thickness, LL, soil.DUL, XF);

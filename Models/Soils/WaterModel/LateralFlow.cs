@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Core;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Lateral movement of water is calculated from a user specified lateral inflow ('InFlow'). 
@@ -36,7 +36,7 @@
         private WaterBalance soil = null;
 
         /// <summary>The amount of incoming water (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] InFlow { get; set; }
 
         /// <summary>The amount of outgoing water (mm).</summary>

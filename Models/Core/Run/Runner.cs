@@ -80,12 +80,12 @@
                 // If progress is at 100% (ie all jobs have finished running), and the job manager supports
                 // status reporting, allow the job manager to provide a status message. This lets the user
                 // know why the job is still running even though progress is at 100%.
-                if (MathUtilities.FloatsAreEqual(Progress, 1) && jobs.Count == 1 && jobs[0] is IReportsStatus jobManager)
+                if (MathUtilities.FloatsAreEqual(Progress, 1) && jobs.Count == 1 && jobs[0] is IReportsStatus jobManager && !string.IsNullOrEmpty(jobManager.Status))
                     return jobManager.Status;
 
                 // If there's only one job to be run, and that job is specifically designed
                 // to provide status reports, return that job's status message.
-                if (numJobs == 1 && jobRunner.SimsRunning.Count == 1 && jobRunner.SimsRunning[0] is IReportsStatus statusReporter)
+                if (numJobs == 1 && jobRunner.SimsRunning.Count == 1 && jobRunner.SimsRunning[0] is IReportsStatus statusReporter && !string.IsNullOrEmpty(statusReporter.Status))
                     return statusReporter.Status;
 
                 // Otherwise, return the generic "x of y completed" message.

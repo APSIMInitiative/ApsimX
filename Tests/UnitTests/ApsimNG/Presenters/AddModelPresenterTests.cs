@@ -32,7 +32,7 @@ namespace UnitTests.ApsimNG.Presenters
             ExplorerPresenter explorerPresenter = UITestUtilities.OpenBasicFileInGui();
             GtkUtilities.WaitForGtkEvents();
 
-            IModel paddock = Apsim.Find(explorerPresenter.ApsimXFile, typeof(Zone));
+            IModel paddock = explorerPresenter.ApsimXFile.FindInScope<Zone>();
 
             explorerPresenter.SelectNode(paddock);
             explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);
@@ -54,7 +54,7 @@ namespace UnitTests.ApsimNG.Presenters
             Assert.AreEqual(typeof(Plant), paddock.Children[2].GetType());
             Plant wheat = paddock.Children[2] as Plant;
             Assert.AreEqual("Wheat", wheat.ResourceName);
-            Assert.AreEqual("Wheat", wheat.CropType);
+            Assert.AreEqual("Wheat", wheat.PlantType);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace UnitTests.ApsimNG.Presenters
             var explorerPresenter = UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
             GtkUtilities.WaitForGtkEvents();
 
-            var stock = Apsim.Find(explorerPresenter.ApsimXFile, typeof(Models.GrazPlan.Stock));
+            var stock = explorerPresenter.ApsimXFile.FindInScope<Models.GrazPlan.Stock>();
 
             explorerPresenter.SelectNode(stock);
             explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);

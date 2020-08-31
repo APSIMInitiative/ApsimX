@@ -44,7 +44,7 @@
             }
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulations simulations = FindAncestor<Simulations>();
                 if (simulations != null && simulations.FileName != null)
                     this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
@@ -91,6 +91,13 @@
         public IEnumerable<string> GetReferencedFileNames()
         {
             return FileNames;
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
         }
 
         /// <summary>
@@ -163,5 +170,6 @@
                             row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
+
     }
 }
