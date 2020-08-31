@@ -159,6 +159,9 @@
         /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
         private static string GetSummary(string path, char typeLetter)
         {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
             if (doc == null)
             {
                 string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
@@ -183,6 +186,9 @@
         /// <returns></returns>
         private static string GetRemarks(string path, char typeLetter)
         {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
             if (doc == null)
             {
                 string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
