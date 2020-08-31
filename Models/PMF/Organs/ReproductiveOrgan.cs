@@ -17,7 +17,6 @@ namespace Models.PMF.Organs
     [ValidParent(ParentType = typeof(Plant))]
     public class ReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
-        #region Parameter Input Classes
         /// <summary>The surface organic matter model</summary>
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -82,12 +81,7 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         [Description("Water content used to calculate a fresh weight.")]
         IFunction WaterContent = null;
-        
-        /// <summary>The Maximum potential size of individual grains</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/grain")]
-        IFunction MaximumPotentialGrainSize = null;
-        
+           
         /// <summary>The number function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/m2")]
@@ -130,9 +124,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction RemobilisationCost = null;
 
-        #endregion
-
-        #region Class Fields
         /// <summary>The ripe stage</summary>
         [Description("Stage at which this organ becomes ripe")]
         public string RipeStage { get; set; }
@@ -141,9 +132,6 @@ namespace Models.PMF.Organs
         
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
-        #endregion
-
-        #region Class Properties
 
         /// <summary>The live biomass</summary>
         public Biomass Live { get; set; }
@@ -158,11 +146,6 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         [Units("/m^2")]
         public double Number { get; set; }
-
-        /// <summary>The maximum potential size of grains</summary>
-        [JsonIgnore]
-        [Units("/m^2")]
-        public double MaximumSize { get; set; }
 
         /// <summary>Gets the live fresh weight of grains.</summary>
         [Units("g/m^2")]
@@ -219,9 +202,6 @@ namespace Models.PMF.Organs
                     return 0;
             }
         }
-        #endregion
-
-        #region Functions
 
         /// <summary>Initializes a new instance of the <see cref="ReproductiveOrgan"/> class.</summary>
         public ReproductiveOrgan()
@@ -237,10 +217,7 @@ namespace Models.PMF.Organs
         protected void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)
-            {
                 Number = NumberFunction.Value();
-                MaximumSize = MaximumPotentialGrainSize.Value();
-            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -255,10 +232,6 @@ namespace Models.PMF.Organs
                 ClearBiomassFlows();
             }
         }
-
-        #endregion
-
-        #region Event handlers
 
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
@@ -294,14 +267,11 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();
         }
-        #endregion
-
-        #region Arbitrator methods
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
@@ -432,8 +402,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        #endregion
-        
         /// <summary>Remove maintenance respiration from live component of organs.</summary>
         /// <param name="respiration">The respiration to remove</param>
         public virtual void RemoveMaintenanceRespiration(double respiration)

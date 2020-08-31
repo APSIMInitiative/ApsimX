@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 109,
+  "Version": 116,
   "Name": "Simulations",
   "Children": [
     {
@@ -13,6 +13,26 @@
       "ResourceName": null,
       "Name": "Gliricidia",
       "Children": [
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": "/d",
+          "Name": "MortalityRate",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This model does not consider plant mortality.",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": true
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": true
+        },
         {
           "$type": "Models.Functions.AccumulateFunction, Models",
           "StartStageName": "Emergence",
@@ -1886,6 +1906,11 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -2923,7 +2948,8 @@
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Gliricidia"
     }
   ],
   "IncludeInDocumentation": true,

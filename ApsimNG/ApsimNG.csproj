@@ -501,6 +501,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Chloride.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimWaterTable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimSubsurfaceDrain.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperature.png" />   
     <None Include="Web References\ApsoilWeb\Service.disco" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />

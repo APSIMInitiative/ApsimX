@@ -43,6 +43,12 @@ namespace Models.Soils
         [Link]
         private List<ICanopy> canopies = null;
 
+        [Link(IsOptional = true)]
+        private SwimSubsurfaceDrain subsurfaceDrain = null;
+
+        [Link(IsOptional = true)]
+        private SwimWaterTable waterTable = null;
+
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
@@ -322,29 +328,6 @@ namespace Models.Soils
         double[] x;
         double[] dx;
 
-        string subsurfaceDrain;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e6, Name = "draindepth")]
-        [Units("mm")]
-        double drain_depth = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e5, Name = "drainspacing")]
-        [Units("mm")]
-        double drain_spacing = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 10000.0)]
-        [Units("mm/d")]
-        double Klat = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1000.0, Name = "drainradius")]
-        [Units("mm")]
-        double drain_radius = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e6, Name = "impermdepth")]
-        double imperm_depth = Double.NaN;
-
-
-
         //Has the soilwat_init() been done? If so, let the fractional soil arrays (eg. sw, sat, dul etc) check the profile
         //layers when a "set" occurs. If not, save reset values so they can be applied if a reset event is sent.
         bool initDone = false;
@@ -561,12 +544,6 @@ namespace Models.Soils
         ///// 
         ///// </summary>
         //private double ureaseinhibitorslos = 0.61;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private double watertabledepth = Double.NaN;
 
         // [Param]
         private bool vapour_conductivity
@@ -1314,16 +1291,16 @@ namespace Models.Soils
 
             summary.WriteMessage(this, "     Evaporation Source        = " + evap_source + Environment.NewLine);
 
-            if (!Double.IsNaN(drain_depth))
+            if (subsurfaceDrain != null)
             {
                 summary.WriteMessage(this, " Subsurface Drain Model");
                 summary.WriteMessage(this, " ======================" + Environment.NewLine);
 
-                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", drain_depth));
-                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", drain_spacing));
-                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", drain_radius));
-                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", imperm_depth));
-                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", Klat));
+                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", subsurfaceDrain.DrainDepth));
+                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", subsurfaceDrain.DrainSpacing));
+                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius));
+                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth));
+                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat));
             }
 
         }
@@ -1827,10 +1804,10 @@ namespace Models.Soils
                 th = soil.InitialWaterVolumetric.Clone() as double[]; 
             }
 
-            if (!Double.IsNaN(watertabledepth))
+            if (waterTable != null && !Double.IsNaN(waterTable.WaterTableDepth))
             {
                 ibbc = 1;
-                bbc_value = watertabledepth;
+                bbc_value = waterTable.WaterTableDepth;
             }
             else
             {
@@ -1878,23 +1855,19 @@ namespace Models.Soils
                     throw new Exception("No value provided for precipitation_constant");
                 _grc = precipitation_constant;
             }
-            if (!Double.IsNaN(drain_depth))
+
+            if (subsurfaceDrain != null)
             {
-                subsurfaceDrain = "on";
-                if (Double.IsNaN(drain_spacing))
+                if (Double.IsNaN(subsurfaceDrain.DrainSpacing))
                     throw new Exception("No value provided for drainspacing");
-                if (Double.IsNaN(drain_radius))
+                if (Double.IsNaN(subsurfaceDrain.DrainRadius))
                     throw new Exception("No value provided for drainradius");
-                if (Double.IsNaN(imperm_depth))
+                if (Double.IsNaN(subsurfaceDrain.ImpermDepth))
                     throw new Exception("No value provided for impermdepth");
-                if (imperm_depth < drain_depth)
+                if (subsurfaceDrain.ImpermDepth < subsurfaceDrain.DrainDepth)
                     throw new Exception("Impermdepth must exceed draindepth");
-                if (Double.IsNaN(Klat))
+                if (Double.IsNaN(subsurfaceDrain.Klat))
                     throw new Exception("No value provided for Klat");
-            }
-            else
-            {
-                subsurfaceDrain = "off";
             }
         }
 
@@ -5670,17 +5643,17 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null && subsurfaceDrain.Trim() == "on")
+            if (subsurfaceDrain != null)
             {
-                int drain_node = FindLayerNo(drain_depth);
+                int drain_node = FindLayerNo(subsurfaceDrain.DrainDepth);
 
-                double d = imperm_depth - drain_depth;
+                double d = subsurfaceDrain.ImpermDepth - subsurfaceDrain.DrainDepth;
                 if (_psi[drain_node] > 0)
                     wt_above_drain = _psi[drain_node] * 10.0;
                 else
                     wt_above_drain = 0.0;
 
-                double q = Hooghoudt(d, wt_above_drain, drain_spacing, drain_radius, Klat);
+                double q = Hooghoudt(d, wt_above_drain, subsurfaceDrain.DrainSpacing, subsurfaceDrain.DrainRadius, subsurfaceDrain.Klat);
 
                 qdrain[drain_node] = q / 10.0 / 24.0;
 
@@ -5689,7 +5662,7 @@ namespace Models.Soils
                 else
                     wt_above_drain2 = 0.0;
 
-                double q2 = Hooghoudt(d, wt_above_drain2, drain_spacing, drain_radius, Klat);
+                double q2 = Hooghoudt(d, wt_above_drain2, subsurfaceDrain.DrainSpacing, subsurfaceDrain.DrainRadius, subsurfaceDrain.Klat);
 
                 qdrain2[drain_node] = q2 / 10.0 / 24.0;
 

@@ -43,8 +43,7 @@
             var reader = new TextStorageReader(data);
 
             var series = sim.Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].XFieldName, "Col1");
@@ -108,8 +107,7 @@
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 2);
             foreach (var definition in definitions)
@@ -190,8 +188,7 @@
             Assert.AreEqual(descriptors[0], "Irr");
             Assert.AreEqual(descriptors[1], "Fert");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 4);
             foreach (var definition in definitions)
@@ -298,8 +295,7 @@
             Assert.AreEqual(descriptors[1], "Fert");
             Assert.AreEqual(descriptors[2], "Cultivar");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 8);
 
@@ -434,8 +430,7 @@
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "ABC");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 12);
 
@@ -543,8 +538,7 @@
             var reader = new TextStorageReader(data);
 
             var series = sim.Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 3);
             Assert.AreEqual(definitions[0].Title, "Series");
@@ -619,9 +613,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1, 2, 2 });
@@ -629,8 +621,7 @@
 
 
             var series2 = folder.Children[1].Children[1] as Series;
-            var definitions2 = new List<SeriesDefinition>();
-            series2.GetSeriesToPutOnGraph(reader, definitions2);
+            List<SeriesDefinition> definitions2 = series2.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions2[0].Colour, ColourUtilities.Colours[1]);
             Assert.AreEqual(definitions2[0].Title, "Series2");
             Assert.AreEqual(definitions2[0].X as double[], new double[] { 1, 1, 2, 2 });
@@ -680,9 +671,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Sim1");
@@ -744,9 +733,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 4);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -818,9 +805,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Exp1");
@@ -887,9 +872,7 @@
             var descriptorNames = series1.GetDescriptorNames(reader).ToArray();
             //Assert.AreEqual(descriptorNames, new string[] { "SimulationName", "Graph series", "ABC" });
 
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 4);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -957,8 +940,7 @@
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
 
@@ -1005,8 +987,7 @@
 
             var series = folder.Children[1] as Series;
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
 
@@ -1085,9 +1066,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Sim1");
@@ -1165,9 +1144,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
@@ -1238,9 +1215,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Title, "a");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
@@ -1293,9 +1268,8 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
 
-            series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -1355,9 +1329,8 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
 
-            series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -1412,9 +1385,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);

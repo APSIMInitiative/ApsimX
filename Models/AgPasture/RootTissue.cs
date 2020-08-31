@@ -11,7 +11,7 @@
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
-    internal class RootTissue: Model
+    public class RootTissue: Model
     {
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
@@ -315,7 +315,8 @@
             nRemobilised = NRemobilisable * fraction;
         }
 
-        public void UpdateDM()
+        /// <summary>Update dry matter.</summary>
+        private void UpdateDM()
         {
             biomass.Wt = dmLayer.Sum();
             biomass.N = nLayer.Sum();
@@ -333,6 +334,7 @@
             UpdateDM();
         }
 
+        /// <summary>Reset root tissue to initial state.</summary>
         public void Reset()
         {
             for (int layer = 0; layer < dmLayer.Length; layer++)

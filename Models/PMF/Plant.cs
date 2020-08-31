@@ -33,7 +33,7 @@
         private IClock clock = null;
 
         /// <summary>The plant mortality rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("")]
         private IFunction mortalityRate = null;
 
@@ -65,19 +65,11 @@
         public Biomass AboveGroundHarvestable { get { return AboveGround; } }
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
-        public string CropType { get; set; }
-
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        [JsonIgnore]
-        public double Legumosity { get; }
-
-        /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        [JsonIgnore]
-        public bool IsC4 { get; }
+        public string PlantType { get; set; }
 
         /// <summary>The sowing data</summary>
         [JsonIgnore]
-        public SowingParameters SowingData { get; set; }
+        public SowingParameters SowingData { get; set; } = new SowingParameters();
 
         /// <summary>Gets the organs.</summary>
         [JsonIgnore]
@@ -108,19 +100,6 @@
 
                 return new List<string>(cultivarNames).ToArray();
             }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Plant()
-        {
-            SowingData = new SowingParameters();
-            IsAlive = false;
-
-            string photosyntheticPathway = (string) this.FindByPath("Leaf.Photosynthesis.FCO2.PhotosyntheticPathway")?.Value;
-            IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
-            Legumosity = 0;
         }
 
         /// <summary>Holds the number of plants.</summary>
@@ -296,7 +275,7 @@
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             //Reduce plant population in case of mortality
-            if (Population > 0.0 && mortalityRate != null)
+            if (Population > 0.0)
                 Population -= Population * mortalityRate.Value();
         }
 
@@ -383,7 +362,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }
 
         /// <summary>Harvest the crop.</summary>

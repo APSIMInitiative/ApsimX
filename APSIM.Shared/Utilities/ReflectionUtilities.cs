@@ -114,7 +114,7 @@
             }
             else
             {
-                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase;
+                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 FieldInfo F = obj.GetType().GetField(name, Flags);
                 if (F != null)
                 {

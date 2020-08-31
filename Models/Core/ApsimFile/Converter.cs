@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 113; } }
+        public static int LatestVersion { get { return 116; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2970,6 +2970,62 @@
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.Replace("SowPlant2Type", "SowingParameters"))
                     manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 114. Remove references to Plant.IsC4.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion114(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
+                    manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add mortality rate constant of 0 to any plants
+        /// which do not already have a mortality rate.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        /// <remarks>
+        /// This is part of the change to make mortality rate non-optional.
+        /// </remarks>
+        private static void UpgradeToVersion115(JObject root, string fileName)
+        {
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
+            {
+                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, typeof(Replacements)) != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
+                {
+                    Constant mortalityRate = new Constant();
+                    mortalityRate.Name = "MortalityRate";
+                    mortalityRate.FixedValue = 0;
+                    JsonUtilities.AddModel(plant, mortalityRate);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion116(JObject root, string fileName)
+        {
+            foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
+            
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+                plant["PlantType"] = plant["CropType"]?.ToString();
+
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
         }
 
         /// <summary>

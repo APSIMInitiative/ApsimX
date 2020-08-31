@@ -21,10 +21,7 @@
     public class SoilTemperature : Model, ISoilTemperature
     {
         [Link]
-        private Soil soil = null;
-
-        [Link]
-        private Weather weather = null;
+        private IWeather weather = null;
 
         [Link]
         private Clock clock = null;
@@ -34,6 +31,9 @@
 
         [Link]
         private Physical physical = null;
+
+        [Link]
+        ISoilWater waterBalance = null;
 
         // ------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
@@ -466,11 +466,11 @@
         {
             const double CONSTANT_TEMPdepth = 10.0;    // Metres. Depth to constant temperature zone
                                                        // re-dimension dlayer, bd. These will now be treated as '1-based' so 0th element will not be used
-            numLayers = soil.Thickness.Length;
+            numLayers = physical.Thickness.Length;
             numNodes = numLayers + 1;
 
             thickness = new double[numLayers + 1 + 1];     // Dlayer dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            soil.Thickness.CopyTo(thickness, 1);
+            physical.Thickness.CopyTo(thickness, 1);
             BoundCheckArray(thickness, 0.0, 1000.0, "thickness");
 
             // mapping of layers to nodes -
@@ -495,12 +495,12 @@
                 depth[node + 1] = (SumOfRange(thickness, 1, node - 1) + 0.5 * thickness[node]) * MM2M;
 
             // BD
-            BoundCheck(soil.BD.Length, numLayers, numLayers, "bd layers");
+            BoundCheck(physical.BD.Length, numLayers, numLayers, "bd layers");
             var oldBulkDensity = bulkDensity;
             bulkDensity = new double[numLayers + 1 + 1];
             if (oldBulkDensity != null)
                 Array.Copy(oldBulkDensity, bulkDensity, Math.Min(numLayers + 1 + 1, oldBulkDensity.Length));     // Rhob dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
-            soil.BD.CopyTo(bulkDensity, 1);
+            physical.BD.CopyTo(bulkDensity, 1);
             BoundCheckArray(bulkDensity, 0.0, 2.65, "bulkDensity");
             // if bd (rhob) has more or less elements than the number of layers, throw exception
 
@@ -508,13 +508,13 @@
             // Debug test: multiplyArray(gRhob, 2.0)
 
             // SW
-            BoundCheck(soil.SoilWater.SWmm.Length, numLayers, numLayers, "sw layers");
+            BoundCheck(waterBalance.SWmm.Length, numLayers, numLayers, "sw layers");
             var oldSoilWater = soilWater;
             soilWater = new double[numLayers + 1 + 1];
             if (oldSoilWater != null)
                 Array.Copy(oldSoilWater, soilWater, Math.Min(numLayers + 1 + 1, oldSoilWater.Length));     // SW dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
             for (int layer = 1; layer <= numLayers; layer++)
-                soilWater[layer] = MathUtilities.Divide(soil.SoilWater.SWmm[layer - 1], thickness[layer], 0);
+                soilWater[layer] = MathUtilities.Divide(waterBalance.SWmm[layer - 1], thickness[layer], 0);
             soilWater[numNodes] = soilWater[numLayers];
             var oldMaxSoilTemp = maxSoilTemp;
             maxSoilTemp = new double[numLayers + 1 + 1];
@@ -679,18 +679,18 @@
             maxAirTemp = weather.MaxT;
             minAirTemp = weather.MinT;
             tempStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
-            soil.SoilWater.SW.CopyTo(soilWater, 1);
+            waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
             // Debug(test): multiplyArray(gSW, 0.1)
 
-            BoundCheck(soil.SoilWater.Eo, -30.0, 40.0, "eo");
-            potEvapotrans = soil.SoilWater.Eo;
+            BoundCheck(waterBalance.Eo, -30.0, 40.0, "eo");
+            potEvapotrans = waterBalance.Eo;
 
-            BoundCheck(soil.SoilWater.Eos, -30.0, 40.0, "eos");
-            potSoilEvap = soil.SoilWater.Eos;
+            BoundCheck(waterBalance.Eos, -30.0, 40.0, "eos");
+            potSoilEvap = waterBalance.Eos;
 
-            BoundCheck(soil.SoilWater.Es, -30.0, 40.0, "es");
-            actualSoilEvap = soil.SoilWater.Es;
+            BoundCheck(waterBalance.Es, -30.0, 40.0, "es");
+            actualSoilEvap = waterBalance.Es;
             // BoundCheck(cover_tot, 0.0, 1.0, "cover_tot")
 
             //if ((weather.Wind > 0.0))
@@ -1421,7 +1421,7 @@
         private double SurfaceTemperatureInit()
         {
             double ave_temp = (maxAirTemp + minAirTemp) * 0.5;
-            double surfaceT = (1.0 - soil.SoilWater.Salb) * (ave_temp + (maxAirTemp - ave_temp) * Math.Sqrt(Math.Max(weather.Radn, 0.1) * 23.8846 / 800.0)) + soil.SoilWater.Salb * ave_temp;
+            double surfaceT = (1.0 - waterBalance.Salb) * (ave_temp + (maxAirTemp - ave_temp) * Math.Sqrt(Math.Max(weather.Radn, 0.1) * 23.8846 / 800.0)) + waterBalance.Salb * ave_temp;
             BoundCheck(surfaceT, -100.0, 100.0, "Initial surfaceT");
             return surfaceT;
         }
@@ -1490,8 +1490,9 @@
             // calculate amount of soil water, using lower limit as the
             // reference point.
 
-            ll_tot = SumOfRange(soil.LL15mm, 0, numLayers - 1);
-            sw_dep_tot = SumOfRange(soil.SoilWater.SWmm, 0, numLayers - 1);
+            var ll15mm = MathUtilities.Multiply(physical.LL15, physical.Thickness);
+            ll_tot = SumOfRange(ll15mm, 0, numLayers - 1);
+            sw_dep_tot = SumOfRange(waterBalance.SWmm, 0, numLayers - 1);
             sw_avail_tot = sw_dep_tot - ll_tot;
             sw_avail_tot = Math.Max(sw_avail_tot, SW_AVAIL_TOT_MIN);
 
@@ -1594,7 +1595,7 @@
             double lwRnetSoil = lwRinSoil - lwRoutSoil;
 
             double swRin = solarRadn;
-            double swRout = soil.SoilWater.Salb * solarRadn;
+            double swRout = waterBalance.Salb * solarRadn;
             // Dim swRout As Double = (salb + (1.0 - salb) * (1.0 - sunAngleAdjust())) * solarRadn   'FIXME temp test
             double swRnetSoil = (swRin - swRout) * PenetrationConstant;
             return swRnetSoil + lwRnetSoil;
