@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 116; } }
+        public static int LatestVersion { get { return 117; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3026,6 +3026,22 @@
                 plant["PlantType"] = plant["CropType"]?.ToString();
 
             JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion117(JObject root, string fileName)
+        {
+            foreach (JObject croptimizr in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+            {
+                string variableName = croptimizr["VariableName"]?.ToString();
+                JArray variableNames = new JArray(new object[1] { variableName });
+                croptimizr.Remove("VariableName");
+                croptimizr["VariableNames"] = variableNames;
+            }
         }
 
         /// <summary>
