@@ -419,7 +419,11 @@ namespace APSIM.Shared.Utilities
 
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
+            {
+                if (dXCoordinate.Length > 1 && dXCoordinate[0] > dXCoordinate[1])
+                    throw new Exception("Linear interp x-series out of order (must be in ascending order)");
                 return dYCoordinate[0];  // off the bottom
+            }
             else if (pos >= 0)
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)
@@ -429,8 +433,6 @@ namespace APSIM.Shared.Utilities
                 return dYCoordinate[dXCoordinate.Length - 1];  // off the top
             
             // pos should now point to the next largest value - interpolate
-            if (dXCoordinate[pos] < dXCoordinate[pos - 1])
-                throw new Exception("Linear interp x-series out of order (must be in ascending order)");
             return (dYCoordinate[pos] - dYCoordinate[pos - 1]) / (dXCoordinate[pos] - dXCoordinate[pos - 1]) * (dX - dXCoordinate[pos - 1]) + dYCoordinate[pos - 1];
         }
 
