@@ -90,7 +90,7 @@
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return FileNames;
+            return FileNames.Select(f => f.Trim());
         }
 
         /// <summary>Remove all paths from referenced filenames.</summary>
