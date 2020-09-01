@@ -417,13 +417,6 @@ namespace APSIM.Shared.Utilities
             if (dXCoordinate.Length == 0 || dYCoordinate.Length == 0 || dXCoordinate.Length != dYCoordinate.Length)
                 throw new Exception("MathUtilities.LinearInterpReal: Lengths of passed in arrays are incorrect");
 
-            List<Pair> xyPairs = new List<Pair>();
-            for (int i = 0; i < dXCoordinate.Length; i++)
-                xyPairs.Add(new Pair(dXCoordinate[i], dYCoordinate[i]));
-            xyPairs = xyPairs.OrderBy(pair => pair.X).ToList();
-            dXCoordinate = xyPairs.Select(p => p.X).ToArray();
-            dYCoordinate = xyPairs.Select(p => p.Y).ToArray();
-
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
                 return dYCoordinate[0];  // off the bottom
@@ -436,18 +429,9 @@ namespace APSIM.Shared.Utilities
                 return dYCoordinate[dXCoordinate.Length - 1];  // off the top
             
             // pos should now point to the next largest value - interpolate
+            if (dXCoordinate[pos] < dXCoordinate[pos - 1])
+                throw new Exception("Linear interp x-series out of order (must be in ascending order)");
             return (dYCoordinate[pos] - dYCoordinate[pos - 1]) / (dXCoordinate[pos] - dXCoordinate[pos - 1]) * (dX - dXCoordinate[pos - 1]) + dYCoordinate[pos - 1];
-        }
-
-        private class Pair
-        {
-            public double X { get; private set; }
-            public double Y { get; private set; }
-            public Pair(double x, double y)
-            {
-                X = x;
-                Y = y;
-            }
         }
 
         /// <summary>
