@@ -1,17 +1,15 @@
 ---
-title: "4. Path Specification"
+title: "Path Specification"
 draft: false
 ---
 
-Paths are structured similarly to directory paths in Windows and Unix, using a ‘.’ character instead of slashes.
+Paths are used throughout APSIM e.g. in REPORT. Paths are structured similarly to directory paths in Windows and Unix, using a ‘.’ character instead of slashes.
  
 ## Relative paths
 
-Relative paths are relative to the model that is using the path e.g.
+Relative paths are not used much in APSIM. They are relative to the model that is using the path e.g.
 
-*Report* - relative path - refers to the child model called Report
-
-*Soil.Water* - relative path - refers to the child Water model of the child Soil model.
+If the soil model does a get for *Water* the a child model of that name will be returned.
 
 ## Absolute paths
 
