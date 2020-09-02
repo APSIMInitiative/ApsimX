@@ -984,12 +984,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-            //{
-            //    html += "\n</div>";
-            //}
-            return html;
+            return "";
         }
 
         /// <summary>
@@ -998,13 +993,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-            //{
-            //    html += "\n<div class=\"activitygroupsborder\">";
-            //    html += "<div class=\"labournote\">The following breeders will be sold prior to heifers</div>";
-            //}
-            return html;
+            return "";
         }
 
     }

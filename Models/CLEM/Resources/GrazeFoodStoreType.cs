@@ -524,7 +524,11 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                biomassAddedThisYear += pool.Amount;
+                if(!reason.StartsWith("Initialise"))
+                {
+                    // do not update if this is ian initialisation pool
+                    biomassAddedThisYear += pool.Amount;
+                }
 
                 ResourceTransaction details = new ResourceTransaction
                 {
