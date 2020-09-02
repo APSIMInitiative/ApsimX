@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 115,
+  "Version": 117,
   "Name": "Simulations",
   "Children": [
     {
@@ -1531,7 +1531,8 @@
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Slurp"
     }
   ],
   "IncludeInDocumentation": true,

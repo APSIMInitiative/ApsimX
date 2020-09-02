@@ -1020,7 +1020,7 @@ namespace Models.PMF.Organs
                 Dead.MetabolicN *= 1 - DetachedFrac;
 
                 if (detachedWt > 0)
-                    SurfaceOrganicMatter.Add(detachedWt*10, detachedN*10, 0, Plant.CropType, "Leaf");
+                    SurfaceOrganicMatter.Add(detachedWt*10, detachedN*10, 0, Plant.PlantType, "Leaf");
             }
         }
 

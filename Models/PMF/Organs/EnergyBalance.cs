@@ -69,7 +69,7 @@
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.CropType+ "_" + parentOrgan.Name; } }
+        public string CanopyType { get { return Plant.PlantType+ "_" + parentOrgan.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]

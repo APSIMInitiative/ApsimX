@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 115,
+  "Version": 117,
   "Name": "Simulations",
   "Children": [
     {
@@ -4486,7 +4486,8 @@
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Pinus"
     }
   ],
   "IncludeInDocumentation": true,

@@ -111,7 +111,7 @@ namespace Models.PMF.Organs
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.CropType; } }
+        public string CanopyType { get { return Plant.PlantType; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -798,7 +798,7 @@ namespace Models.PMF.Organs
                 Detached = DetachLeaves();
                 
                 if (Detached.Wt > 0.0)
-                    SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.CropType, Name);
+                    SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.PlantType, Name);
 
                 MaintenanceRespiration = 0;
                 //Do Maintenance respiration
@@ -824,7 +824,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.PlantType, Name);
             }
 
             Clear();

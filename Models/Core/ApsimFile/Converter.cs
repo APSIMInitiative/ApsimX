@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 115; } }
+        public static int LatestVersion { get { return 117; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3004,6 +3004,43 @@
                     mortalityRate.FixedValue = 0;
                     JsonUtilities.AddModel(plant, mortalityRate);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion116(JObject root, string fileName)
+        {
+            foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
+            
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+                plant["PlantType"] = plant["CropType"]?.ToString();
+
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion117(JObject root, string fileName)
+        {
+            foreach (JObject croptimizr in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+            {
+                string variableName = croptimizr["VariableName"]?.ToString();
+                JArray variableNames = new JArray(new object[1] { variableName });
+                croptimizr.Remove("VariableName");
+                croptimizr["VariableNames"] = variableNames;
             }
         }
 
