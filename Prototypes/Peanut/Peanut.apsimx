@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 105,
+  "Version": 116,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -78,7 +78,7 @@
             "[Clock].Today as Date",
             "[Clock].Today.DayOfYear",
             "[Peanut].SowingData.RowSpacing",
-            "[Peanut].Phenology.DaysAfterSowing",
+            "[Peanut].DaysAfterSowing",
             "[Peanut].Phenology.DaysAfterEmergence",
             "[Peanut].Phenology.CurrentStageName",
             "[Weather].MeanT",
@@ -94,6 +94,7 @@
             "[Peanut].AboveGround.Wt",
             "[Peanut].AboveGround.N",
             "[Peanut].Leaf.NodeNumber",
+            "[Peanut].Leaf.BranchNumber",
             "[Peanut].Leaf.Fw",
             "[Peanut].Leaf.Fn",
             "[Peanut].Leaf.Photosynthesis.FT",
@@ -179,7 +180,7 @@
         },
         {
           "$type": "Models.PMF.Plant, Models",
-          "CropType": "Peanut",
+          "PlantType": "Peanut",
           "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
@@ -1108,7 +1109,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1147,7 +1148,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1186,7 +1187,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1698,6 +1699,223 @@
                   ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "BranchNumber",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "Emergence",
+                      "EndStageName": "EndCanopyDevelopment",
+                      "ResetStageName": null,
+                      "FractionRemovedOnCut": 1.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 1.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "CumulativeBranching",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DeltaBranch",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].NodeNumber.DeltaNode",
+                              "Name": "DeltaNode",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "BranchingRate",
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "From Hammer Paper\n",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    2.0,
+                                    3.0,
+                                    6.0,
+                                    7.0,
+                                    15.0,
+                                    16.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    1.0,
+                                    1.0,
+                                    1.5,
+                                    1.5,
+                                    0.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].NodeNumber",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "CoverFactor",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Expression": "1 - 2*[Leaf].CoverTotal",
+                                  "Name": "Factor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Zero",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateAtEvent, Models",
+                  "StartStageName": "Emergence",
+                  "EndStageName": "EndCanopyDevelopment",
+                  "AccumulateEventName": "DoUpdate",
+                  "Name": "BranchNumberNew",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DeltaBranch",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].NodeNumber.DeltaNode",
+                          "Name": "DeltaNode",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "BranchingRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "From Hammer Paper\n",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                2.0,
+                                3.0,
+                                6.0,
+                                7.0,
+                                15.0,
+                                16.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0,
+                                1.5,
+                                1.5,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].NodeNumber",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2465,46 +2683,10 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "Branches",
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "This approach is based upon the that outlined in [robertson_simulation_2002].",
-                                  "Name": "Memo",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    2.0,
-                                    15.0
-                                  ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    19.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].BranchNumber",
+                              "Name": "BranchNumber",
+                              "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -3796,6 +3978,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "RootDepthStressFactor",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6147,6 +6339,16 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -6233,7 +6435,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "DailyReport",
-              "XFieldName": "Peanut.Phenology.DaysAfterSowing",
+              "XFieldName": "Peanut.DaysAfterSowing",
               "YFieldName": "Weather.MeanT",
               "X2FieldName": "",
               "Y2FieldName": "",
@@ -6241,7 +6443,7 @@
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
-              "Filter": "[Peanut.Phenology.DaysAfterSowing] > 0",
+              "Filter": "[Peanut.DaysAfterSowing] > 0",
               "Name": "Series",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6300,7 +6502,7 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "DailyReport",
-              "XFieldName": "Peanut.Phenology.DaysAfterSowing",
+              "XFieldName": "Peanut.DaysAfterSowing",
               "YFieldName": "Peanut.Phenology.Photoperiod",
               "X2FieldName": "",
               "Y2FieldName": "",
@@ -6308,7 +6510,7 @@
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
-              "Filter": "[Peanut.Phenology.DaysAfterSowing] > 0",
+              "Filter": "[Peanut.DaysAfterSowing] > 0",
               "Name": "Series",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -6886,6 +7088,73 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Graph",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Peanut.Leaf.NodeNumber",
+                  "YFieldName": "Peanut.Leaf.BranchNumber",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -6986,6 +7255,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Kingaroy8485Base",
                       "Children": [
                         {
@@ -7010,7 +7280,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Kingaroy.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -7062,7 +7332,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",
@@ -7179,7 +7449,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -7296,6 +7566,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -7333,6 +7604,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.2,
                                     1.23,
@@ -7380,6 +7653,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -7521,6 +7799,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -7572,6 +7852,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -7636,7 +7920,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": true,
@@ -8552,6 +8836,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Kunnunura8182Base",
                       "Children": [
                         {
@@ -8576,7 +8861,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Kunnunura.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -8628,7 +8913,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",
@@ -8745,7 +9030,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -8832,6 +9117,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -8875,6 +9161,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.56,
                                     1.52,
@@ -8937,6 +9225,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -9108,6 +9401,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -9159,6 +9454,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -9223,7 +9522,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": true,
@@ -10107,6 +10406,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Kunnunura8283Base",
                       "Children": [
                         {
@@ -10131,7 +10431,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Kunnunura.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -10183,7 +10483,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",
@@ -10300,7 +10600,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -10417,6 +10717,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -10460,6 +10761,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.56,
                                     1.52,
@@ -10522,6 +10825,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -10693,6 +11001,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -10744,6 +11054,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -10808,7 +11122,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": true,
@@ -12206,6 +12520,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "RainOutBase",
                       "Children": [
                         {
@@ -12230,7 +12545,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "King8990.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -12369,7 +12684,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -12486,6 +12801,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -12523,6 +12839,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.2,
                                     1.23,
@@ -12570,6 +12888,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -12711,6 +13034,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -12762,6 +13087,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -12826,7 +13155,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": true,
@@ -13360,6 +13689,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Bundaberg8990Base",
                       "Children": [
                         {
@@ -13384,7 +13714,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Bundaberg.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -13523,7 +13853,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -13640,6 +13970,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -13677,6 +14008,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.2,
                                     1.23,
@@ -13724,6 +14057,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -13865,6 +14203,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -13916,6 +14256,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -13980,7 +14324,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": true,
@@ -13989,7 +14333,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",
@@ -14927,6 +15271,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Loxton9697Base",
                       "Children": [
                         {
@@ -14951,7 +15296,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Kingaroy.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -15090,7 +15435,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -15207,6 +15552,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -15244,6 +15590,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.2,
                                     1.23,
@@ -15291,6 +15639,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -15432,6 +15785,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -15483,6 +15838,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -15547,7 +15906,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",
@@ -15577,7 +15936,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Harvest Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date > HarvestDate && Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        }        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Harvest Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date > HarvestDate && Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        }        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "HarvestDate",
@@ -16134,6 +16493,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "Roseworthy9798Base",
                       "Children": [
                         {
@@ -16158,7 +16518,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Kingaroy.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -16297,7 +16657,7 @@
                                 "[DiagnosticsVariables].Script.DltNMinTot",
                                 "[Peanut].Leaf.Fw",
                                 "[Peanut].Leaf.Fn",
-                                "[Peanut].Phenology.CurrentPhaseName",
+                                "[Peanut].Phenology.CurrentPhase.Name",
                                 "[Peanut].Phenology.Stage",
                                 "[Peanut].Pod.Wt",
                                 "[Peanut].Pod.N",
@@ -16414,6 +16774,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Soil",
@@ -16451,6 +16812,8 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.2,
                                     1.23,
@@ -16498,6 +16861,11 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -16639,6 +17007,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -16690,6 +17060,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -16754,7 +17128,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Harvest Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date > HarvestDate && Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        }        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Harvest Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date > HarvestDate && Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        }        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "HarvestDate",
@@ -16768,7 +17142,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "FASW",

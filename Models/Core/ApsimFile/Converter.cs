@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 117; } }
+        public static int LatestVersion { get { return 118; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3029,6 +3029,22 @@
         }
 
         /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion117(JObject root, string fileName)
+        {
+            foreach (JObject croptimizr in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+            {
+                string variableName = croptimizr["VariableName"]?.ToString();
+                JArray variableNames = new JArray(new object[1] { variableName });
+                croptimizr.Remove("VariableName");
+                croptimizr["VariableNames"] = variableNames;
+            }
+        }
+
+        /// <summary>
         /// Upgrade to version 117. Fix manager script references to
         /// Plant.SetEmergenceDate(), since the date parameter's type
         /// was changed from string to DateTime.
@@ -3038,7 +3054,7 @@
         /// <remarks>
         /// This is part of the change to make mortality rate non-optional.
         /// </remarks>
-        private static void UpgradeToVersion117(JObject root, string fileName)
+        private static void UpgradeToVersion118(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
