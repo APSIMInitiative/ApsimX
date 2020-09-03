@@ -220,12 +220,9 @@ namespace Models.CLEM.Resources
             {
                 if (biomassAddedThisYear == 0)
                 {
-                    if (biomassConsumed > 0)
-                    {
-                        return 100;
-                    }
+                    return (biomassConsumed > 0) ? 100: 0;
                 }
-                return biomassConsumed == 0 ? 0 : biomassConsumed / biomassAddedThisYear * 100;
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
             }
         }
 
