@@ -54,8 +54,8 @@ An example of a good test is in FertiliserTests.cs:
             simulation.Run();
 
             var soil = simulation.Children[2] as MockSoil;
-            Assert.AreEqual(soil.NO3, new double[] { 1, 2, 103 });
-            Assert.AreEqual(MockSummary.messages[0], "100 kg/ha of NO3N added at depth 300 layer 3");
+            Assert.AreEqual(new double[] { 1, 2, 103 }, soil.NO3);
+            Assert.AreEqual("100 kg/ha of NO3N added at depth 300 layer 3", MockSummary.messages[0]);
         }
 ```
 This test creates a simulation using code, runs it and then uses *Assert* to determine the outputs are as expected. The preference is to create the simulation using code (rather than reading from a resource) as the test is self contained with no need to consult other files. A lot of tests need to create complex simulations and so using a resource file is necessary.
