@@ -188,7 +188,7 @@ namespace Models.CLEM.Activities
                         {
                             // treat sucklings separate
                             // they eat what was previously assigned in RuminantGrow minus what's been fed
-                            amount += ind.PotentialIntake - ind.Intake;
+                            amount += ind.PotentialIntake - ind.MilkIntake - ind.Intake;
                         }
                         else
                         {
