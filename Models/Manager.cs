@@ -143,16 +143,13 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
-                    if (Children.Count == 0 || results.WasCompiled)
+                    if (Children.Count != 0)
+                        Children.Clear();
+                    var newModel = results.Instance as IModel;
+                    if (newModel != null)
                     {
-                        if (Children.Count != 0)
-                            Children.Clear();
-                        var newModel = results.Instance as IModel;
-                        if (newModel != null)
-                        {
-                            newModel.IsHidden = true;
-                            Structure.Add(newModel, this);
-                        }
+                        newModel.IsHidden = true;
+                        Structure.Add(newModel, this);
                     }
                 }
                 else
