@@ -48,20 +48,40 @@ namespace Models.CLEM.Resources
         /// <returns>GraxeFoodStore pool</returns>
         public GrazeFoodStorePool Pool(int index, bool getByAge)
         {
-            if (index < Pools.Count())
+            if(getByAge)
             {
-                if(getByAge)
+                var res = Pools.Where(a => a.Age == index);
+                if (res.Count() > 1)
                 {
-                    return Pools.Where(a => a.Age == index).FirstOrDefault();
+                    // return an average pool for N and DMD
+                    GrazeFoodStorePool average = new GrazeFoodStorePool()
+                    {
+                        Age = index,
+                        Consumed = res.Sum(a => a.Consumed),
+                        Detached = res.Sum(a => a.Detached),
+                        Growth = res.Sum(a => a.Growth),
+                        DMD = res.Sum(a => a.DMD * a.Amount) / res.Sum(a => a.Amount),
+                        Nitrogen = res.Sum(a => a.Nitrogen * a.Amount) / res.Sum(a => a.Amount)
+                    };
+                    average.Set(res.Sum(a => a.Amount));
+                    return average;
                 }
                 else
                 {
-                    return Pools[index]; 
+                    return res.FirstOrDefault();
                 }
             }
             else
             {
-                return null;
+                if (index < Pools.Count())
+                {
+                    return Pools[index];
+                }
+                else
+                {
+                    return null;
+                }
+
             }
         } 
 
@@ -200,12 +220,9 @@ namespace Models.CLEM.Resources
             {
                 if (biomassAddedThisYear == 0)
                 {
-                    if (biomassConsumed > 0)
-                    {
-                        return 100;
-                    }
+                    return (biomassConsumed > 0) ? 100: 0;
                 }
-                return biomassConsumed == 0 ? 0 : biomassConsumed / biomassAddedThisYear * 100;
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
             }
         }
 
@@ -495,7 +512,7 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available
-                if(PastureDecays || Pools.Count() == 0)
+                if (PastureDecays || Pools.Count() == 0)
                 {
                     Pools.Insert(0, pool);
                 }
@@ -504,7 +521,11 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                biomassAddedThisYear += pool.Amount;
+                if(!reason.StartsWith("Initialise"))
+                {
+                    // do not update if this is ian initialisation pool
+                    biomassAddedThisYear += pool.Amount;
+                }
 
                 ResourceTransaction details = new ResourceTransaction
                 {
