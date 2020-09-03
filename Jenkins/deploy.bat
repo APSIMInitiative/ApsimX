@@ -1,4 +1,5 @@
 @echo off
+setlocal enableDelayedExpansion
 set "usage=Usage: %0 ^<pull request ID^> ^<Password^>"
 if "%1"=="" (
 	echo %usage%

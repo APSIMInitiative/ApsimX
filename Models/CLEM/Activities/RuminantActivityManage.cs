@@ -492,7 +492,7 @@ namespace Models.CLEM.Activities
                     // ensure females are not pregnant and add warning if pregnant old females found.
                     if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)
                     {
-                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is less than or equal to the MaximumBreederAge to avoid selling pregnant individuals.";
+                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is Gestation length less than the MaximumBreederAge to avoid selling pregnant individuals.";
                         if(!Warnings.Exists(warning))
                         {
                             Warnings.Add(warning);
@@ -984,12 +984,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-            //{
-            //    html += "\n</div>";
-            //}
-            return html;
+            return "";
         }
 
         /// <summary>
@@ -998,13 +993,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            //if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
-            //{
-            //    html += "\n<div class=\"activitygroupsborder\">";
-            //    html += "<div class=\"labournote\">The following breeders will be sold prior to heifers</div>";
-            //}
-            return html;
+            return "";
         }
 
     }
