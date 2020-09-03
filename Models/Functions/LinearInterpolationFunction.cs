@@ -76,10 +76,17 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             // Shortcut exit when the Y values are all the same. Runs quicker.
-            if (YsAreAllTheSame)
-                return XYPairs.Y[0];
-            else
-                return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
+            try
+            {
+                if (YsAreAllTheSame)
+                    return XYPairs.Y[0];
+                else
+                    return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
+            }
         }
 
         /// <summary>Values for x.</summary>
