@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
 
             if (GerminationDate != null)
             {
-                DateTime germinationDate = (DateTime)GerminationDate;
+                DateTime germinationDate = new DateTime(clock.Today.Year, ((DateTime)GerminationDate).Month, ((DateTime)GerminationDate).Day);
                 if (germinationDate.DayOfYear == clock.Today.DayOfYear)
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);

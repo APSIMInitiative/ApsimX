@@ -89,7 +89,7 @@ namespace Models.PMF.Phen
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
             if (EmergenceDate != null)
             {
-                DateTime emergenceDate = (DateTime)EmergenceDate;
+                DateTime emergenceDate = new DateTime(clock.Today.Year, ((DateTime)EmergenceDate).Month, ((DateTime)EmergenceDate).Day);
                 Target = (new DateTime(clock.Today.Year, emergenceDate.Month, emergenceDate.Day) - plant.SowingDate).TotalDays;
                 ProgressThroughPhase += 1;
                 if (emergenceDate.DayOfYear == clock.Today.DayOfYear)
