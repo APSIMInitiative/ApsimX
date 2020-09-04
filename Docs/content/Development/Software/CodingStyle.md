@@ -1,5 +1,5 @@
 ---
-title: "2. Coding Style"
+title: "Coding Style"
 draft: false
 ---
 
