@@ -11507,7 +11507,7 @@
         },
         {
           "$type": "Models.Climate.Weather, Models",
-          "FileName": "/home/drew/code/ApsimX/Examples/WeatherFiles/Gatton.met",
+          "FileName": "%root%/Examples/WeatherFiles/Gatton.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
@@ -12902,7 +12902,7 @@
         },
         {
           "$type": "Models.Climate.Weather, Models",
-          "FileName": "/home/drew/code/ApsimX/Examples/WeatherFiles/Gatton.met",
+          "FileName": "%root%/Examples/WeatherFiles/Gatton.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
@@ -14255,7 +14255,7 @@
             },
             {
               "$type": "Models.Climate.Weather, Models",
-              "FileName": "/home/drew/code/ApsimX/Examples/WeatherFiles/Dalby.met",
+              "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
