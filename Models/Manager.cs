@@ -134,7 +134,7 @@
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         public void RebuildScriptModel()
         {
-            if (afterCreation && !string.IsNullOrEmpty(Code))
+            if (Enabled && afterCreation && !string.IsNullOrEmpty(Code))
             {
                 // If the script child model exists. Then get its parameter values.
                 if (Children.Count != 0)
@@ -152,7 +152,7 @@
                         Structure.Add(newModel, this);
                     }
                 }
-                else if (Enabled) // Only report errors if the manager is enabled.
+                else
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
                 SetParametersInScriptModel();
             }
@@ -161,7 +161,7 @@
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            if (Children.Count > 0)
+            if (Enabled && Children.Count > 0)
             {
                 var script = Children[0];
                 if (Parameters != null)
