@@ -1,12 +1,11 @@
 @echo off
 setlocal enableDelayedExpansion
-set "usage=Usage: %0 ^<pull request ID^> ^<Password^>"
-if "%1"=="" (
-	echo %usage%
+if "%PULL_ID%"=="" (
+	echo Environment variable PULL_ID not set
 	exit /b 1
 )
-if "%2"=="" (
-	echo %usage%
+if "!CHANGE_DB_CREDS_PSW!"=="" (
+	echo Environment variable CHANGE_DB_CREDS_PSW not set
 	exit /b 1
 )
 if "%apsimx%"=="" set "apsimx=%~dp0.."
@@ -33,8 +32,8 @@ cd "%apsimx%\Docs"
 rem rsync -arz apsimx-docs/ admin@apsimdev.apsim.info:/cygdrive/d/Websites/APSIM/apsimx-docs/
 
 rem Add build to builds database
-@curl -f "https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/AddBuild?pullRequestNumber=%1&ChangeDBPassword=%2"
-if errorlevel 1 exit /b 1
+@curl "https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/AddBuild?pullRequestNumber=%PULL_ID%&ChangeDBPassword=!CHANGE_DB_CREDS_PSW!"
+rem if errorlevel 1 exit /b 1
 
 rem Trigger a netlify build
 if "%NETLIFY_BUILD_HOOK%"=="" (
