@@ -413,6 +413,7 @@
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             irrigations.Clear();
+            Runon = 0;
         }
 
         /// <summary>Called when an irrigation occurs.</summary>
@@ -441,7 +442,7 @@
             // Calculate infiltration.
             Infiltration = PotentialInfiltration - Runoff;
 
-            Water[0] = Water[0] + Infiltration;
+            Water[0] = Water[0] + Infiltration + Runon;
 
             // Allow irrigation to infiltrate.
             foreach (var irrigation in irrigations)

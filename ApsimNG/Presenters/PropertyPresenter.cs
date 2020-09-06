@@ -341,6 +341,9 @@
                             }
                         }
 
+                        if (ScalarsOnly && property.DataType.IsArray)
+                            includeProperty = false;
+
                         if (property.Display != null && property.Display.Type == DisplayType.SubModel && property.Value != null)
                         {
                             includeProperty = false;

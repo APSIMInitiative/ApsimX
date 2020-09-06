@@ -99,7 +99,7 @@
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter);
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter).ToArray();
             }
             catch (SQLiteException e)
             {

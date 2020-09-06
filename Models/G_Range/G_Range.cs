@@ -57,8 +57,8 @@ namespace Models
 
         #region IPlant interface
 
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity { get { return parms.maxSymbioticNFixationRatio * 100.0; } }  // Very ad hod.
+        /// <summary>The plant type.</summary>
+        public string PlantType { get => "NativePasture"; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return Math.Abs(Latitude) < 30.0 ; } } // Treat low latitudes as C4
@@ -1244,11 +1244,6 @@ namespace Models
         [Units("kg/ha")]
         [JsonIgnore]
         public double aboveGroundTreeNPP { get; private set; }
-
-        /// <summary>
-        /// Indicate what we are. Dummied for use with CLEM for DARPA project
-        /// </summary>
-        public string CropType { get; private set; } = "NativePasture";
 
         /// <summary>Echos the parameter value for fall_rate_of_standing_dead
         /// Requested by Cecile to assist in evaluating usage with CLEM</summary>

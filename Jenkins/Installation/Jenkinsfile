@@ -109,6 +109,7 @@ pipeline {
 				label "installation"
 			}
 			environment {
+				APSIM_SITE_CREDS = credentials('apsim-site-creds')
 				CHANGE_DB_CREDS = credentials('change-db-creds')
 				NETLIFY_BUILD_HOOK = credentials('netlify-build-hook')
 			}

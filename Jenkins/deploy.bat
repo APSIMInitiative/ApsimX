@@ -1,4 +1,5 @@
 @echo off
+setlocal enableDelayedExpansion
 set "usage=Usage: %0 ^<pull request ID^> ^<Password^>"
 if "%1"=="" (
 	echo %usage%
@@ -28,7 +29,7 @@ rem the server to magically unzip it.
 
 cd "%apsimx%\Docs"
 7z a apsimx-docs.zip apsimx-docs
-@curl -s -u !APSIM_SITE_CREDS! -T apsimx-docs.zip ftp://apsimdev.apsim.info/APSIM/
+@curl -s -u !APSIM_SITE_CREDS! -T apsimx-docs.zip ftp://apsimdev.apsim.info/APSIM/apsimx-docs.zip
 rem rsync -arz apsimx-docs/ admin@apsimdev.apsim.info:/cygdrive/d/Websites/APSIM/apsimx-docs/
 
 rem Add build to builds database
