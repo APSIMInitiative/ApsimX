@@ -173,7 +173,7 @@
             ParseAllSpecifications(out List<string> paths, out List<object> values);
 
             Simulations sims = FindAncestor<Simulations>();
-            IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(sims.FileName, str)));
+            IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(str, sims.FileName)));
             return result;
         }
 

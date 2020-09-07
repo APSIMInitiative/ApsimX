@@ -83,8 +83,9 @@
         /// </summary>
         public override void OnCreated()
         {
+            // If the model is not under replacements and a resource name is provided,
             // lookup the resource get the xml and then deserialise to a model.
-            if (!string.IsNullOrEmpty(ResourceName))
+            if (!string.IsNullOrEmpty(ResourceName) && (Children.Count == 0 || FindAncestor<Replacements>() == null))
             {
                 var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)

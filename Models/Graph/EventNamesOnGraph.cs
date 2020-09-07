@@ -16,7 +16,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class EventNamesOnGraph : Model, IGraphable
+    public class EventNamesOnGraph : Model, ICachableGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -86,13 +86,14 @@
                 throw new Exception("EventNamesOnGraph model must be a descendant of a series");
             IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationFilter);
 
-            return GetSeriesToPutOnGraph(definitions, simulationFilter);
+            return GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
         }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
+        /// <param name="storage">Storage service (unused but required by interface).</param>
         /// <param name="definitions">Series definitions to be used (allows for caching of data).</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesToPutOnGraph(IEnumerable<SeriesDefinition> definitions, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesToPutOnGraph(IStorageReader storage, IEnumerable<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
             data = null;
             if (definitions != null && definitions.Count() > 0)

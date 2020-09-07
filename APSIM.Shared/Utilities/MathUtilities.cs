@@ -419,7 +419,11 @@ namespace APSIM.Shared.Utilities
 
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
+            {
+                if (dXCoordinate.Length > 1 && dXCoordinate[0] > dXCoordinate[1])
+                    throw new Exception("Linear interp x-series out of order (must be in ascending order)");
                 return dYCoordinate[0];  // off the bottom
+            }
             else if (pos >= 0)
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)

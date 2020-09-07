@@ -267,7 +267,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.CropType, Name);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
             Clear();

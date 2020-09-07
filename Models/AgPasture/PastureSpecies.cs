@@ -221,16 +221,7 @@
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity
-        {
-            get
-            {
-                if (SpeciesFamily == PastureSpecies.PlantFamilyType.Legume)
-                    return 1;
-                else
-                    return 0;
-            }
-        }
+        public string PlantType { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return PhotosyntheticPathway == PastureSpecies.PhotosynthesisPathwayType.C4; } }

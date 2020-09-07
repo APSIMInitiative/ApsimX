@@ -7,8 +7,9 @@
     /// </summary>
     public interface IPlant
     {
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        double Legumosity { get; }
+        /// <summary>The plant type.</summary>
+        /// <remarks>A substitute for the old Leguminosity.</remarks>
+        string PlantType{ get; }
 
         /// <summary> Is the plant alive?</summary>
         bool IsAlive { get; }

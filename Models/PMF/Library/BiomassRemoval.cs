@@ -73,7 +73,7 @@ namespace Models.PMF.Library
 
                     // Pass the detaching biomass to surface organic matter model.
                     //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
-                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.CropType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.PlantType, Name);
 
                     if (writeToSummary)
                     {
@@ -142,7 +142,7 @@ namespace Models.PMF.Library
                     FOMLayers[layer] = Layer;
                 }
                 FOMLayerType FomLayer = new FOMLayerType();
-                FomLayer.Type = plant.CropType;
+                FomLayer.Type = plant.PlantType;
                 FomLayer.Layer = FOMLayers;
                 IncorpFOM.Invoke(FomLayer);
             }

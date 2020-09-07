@@ -1,5 +1,5 @@
 ---
-title: "1. Overview"
+title: "Model design"
 draft: false
 ---
 
@@ -7,8 +7,8 @@ All models are written as normal .NET classes but must be derived from Model
 
 ## Properties initialised at startup
 
-Models must be binary and XML serializable. Serialization is the process where models (objects) are created at startup and their properties / fields are given values from the serialization file (.apsimx). Normally this doesn’t require any extra work by the model developer so long as the data types used are serializable (most .NET types are).
-For XML serialzation to work, fields and properties that are to be given values at startup need to be public. APSIM, though, assumes that only public properties are serialized. Public fields are considered poor programming practice. There should be no public fields in any model. There are two ways to declare properties:
+Models must be binary and JSON serializable. Serialization is the process where models (objects) are created at startup and their properties / fields are given values from the serialization file (.apsimx). Normally this doesn’t require any extra work by the model developer so long as the data types used are serializable (most .NET types are).
+For JSON serialzation to work, fields and properties that are to be given values at startup need to be public. APSIM, though, assumes that only public properties are serialized. Public fields are considered poor programming practice. There should be no public fields in any model. There are two ways to declare properties:
 
 ```c#
 // Option 1 - auto-generated property
@@ -46,6 +46,30 @@ private void OnStartOfDay(object sender, EventArgs e)
 ```
 
 In order to decouple models from other models, it may be necessary to create interfaces (e.g. IClock) that specify what the public interface for the type of model. This would then allow a different model to be swapped in. This would be particularly important for models where we have different implementations e.g. SoilWater.
+
+Even though there is the ability to have optional links, they should be avoided. It is better to be explicit and say the there is always a dependency on another model. Optional links lead to users not knowing when they need to satisfy a model dependency or not.
+
+There are also other types of links that are useful. 
+
+```c#
+[Link(Type = LinkType.Child, ByName = true)] 
+private IFunction mortalityRate = null; // Link will be resolved by a child model with a name of 'mortalityRate'
+```
+
+```c#
+[Link(Type = LinkType.Child)]   
+public GenericTissue[] Tissue; // All child models of type 'GenericTissue' will be stored in the 'Tissue' array
+```
+
+```c#
+[Link(Type=LinkType.Ancestor)]    // Link will be resolved by looking for a parent model of type 'PastureSpecies'
+private PastureSpecies species = null;
+```
+
+```c#
+[Link(Type = LinkType.Path, Path = "[Phenology].DltTT")] 
+protected IFunction DltTT = null;   // Link will be resolved by the model on path '[Phenology].DltTT'
+```		
 
 ## Published events and subscribing to events
 
@@ -136,4 +160,86 @@ foreach (ICrop crop in Apsim.FindAll(this, typeof(ICrop)))
 Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
 ```
 
- 
+## Attributes 
+
+```c#
+[Bounds(Lower = 0.0, Upper = 10.0)]  // Specifies lower and upper bound of 'a_interception'
+public double a_interception { get; set; }
+```		
+```c#
+[Description("Frequency of grazing")]   // Specifies the text displayed to the user in the GUI for a model
+public string SimpleGrazingFrequencyString { get; set; }
+```
+```c#
+[ViewName("UserInterface.Views.GridView")]  // Use this view and presenter when user clicks on model.
+[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
+```
+```c#
+[Separator("Grazing parameters")] // Show a separator description to user
+```
+```c#
+[Summary]  // Write 'Thickness' to summary file
+public double[] Thickness { get; set; }
+```
+```c#
+[Tooltip("Name of the predicted table in the datastore")] // Show tool tip to user
+public string PredictedTableName { get; set; }
+```
+```c#
+[Units("kg/ha")] // Specify units that are shown on graphs.
+public double Wt { get; set; }
+```
+```c#
+[ValidParent(ParentType=typeof(Simulation))] // Specify models that 'weather' can be dropped in.
+[ValidParent(ParentType = typeof(Zone))]
+public class Weather : Model, IWeather, IReferenceExternalFiles
+```
+
+## Display attributes
+
+```c#
+[Display]  // Show this property to user.
+public bool CalcStdDev { get; set; } = true;
+```
+
+```c#
+[Display(Type = DisplayType.DirectoryName)] // Allows the user to click on a button to choose a directory name
+public string OutputPath { get; set; }  
+```
+```c#
+[Display(EnabledCallback = "IsSpecifyYearsEnabled")] 
+public double[] Years { get; set; } // Will call c# property 'IsSpecifyYearsEnabled' to enable/disable option.
+
+public bool IsSpecifyYearsEnabled { get { return TypeOfSampling == RandomiserTypeEnum.SpecifyYears; } }
+```
+```c#
+[Display(Values = "GetValues")] // Show a drop down to user. Call 'GetValues' method to get dropdown values.
+public string ColumnName { get; set; }
+
+public string[] GetVales() { return new string[] {"A", "B" };
+```		
+```c#
+[Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
+public IPlantDamage HostPlant { get; set; } // Show a drop down to user with matching model names.
+```
+```c#
+[Display(Type = DisplayType.TableName)] // Show a drop down to user containing table names from datastore
+public string PredictedTableName { get; set; }
+```
+```c#
+[Display(Type = DisplayType.FieldName)] // Show a drop down to user with field names from a table.
+public string FieldNameUsedForMatch { get; set; }
+```
+```c#
+[Display(Format = "N2")] // Show 2 decimals to user.
+public double[] LL15 { get; set; }
+```
+```c#
+[Display(Type = DisplayType.ResidueName)] // Show a drop down containing surface residue types.
+public string InitialResidueType { get; set; }
+```
+
+
+
+
