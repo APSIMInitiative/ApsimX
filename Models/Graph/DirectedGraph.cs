@@ -34,6 +34,34 @@
             Colour = Color.Beige;
             OutlineColour = Color.Black;
         }
+
+        /// <summary>
+        /// Copy all properties of a node into this node.
+        /// </summary>
+        /// <param name="x">The node to be copied.</param>
+        public void CopyFrom(Node x)
+        {
+            Colour = x.Colour;
+            OutlineColour = x.OutlineColour;
+            Location = x.Location;
+            Name = x.Name;
+            Transparent = x.Transparent;
+        }
+
+        /// <summary>
+        /// Constructor - creates a copy of x.
+        /// </summary>
+        /// <param name="x">The node to be copied.</param>
+        public Node(Node x)
+        {
+            if (x != null)
+                CopyFrom(x);
+            else
+            {
+                Colour = Color.Beige;
+                OutlineColour = Color.Black;
+            }
+        }
     }
 
     /// <summary>Encapsulates an arc on a directed graph</summary>
@@ -53,7 +81,37 @@
         public Color Colour { get; set; }
 
         /// <summary>Text to show on arc</summary>
-        public string Text { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Arc()
+        {
+        }
+
+        /// <summary>
+        /// Create a copy of the given arc.
+        /// </summary>
+        /// <param name="x">An arc to be copied.</param>
+        public Arc(Arc x)
+        {
+            if (x != null)
+                CopyFrom(x);
+        }
+
+        /// <summary>
+        /// Copy all properties from a given arc.
+        /// </summary>
+        /// <param name="x">An <see cref="Arc" />.</param>
+        public void CopyFrom(Arc x)
+        {
+            SourceName = x.SourceName;
+            DestinationName = x.DestinationName;
+            Location = x.Location;
+            Colour = x.Colour;
+            Name = x.Name;
+        }
     }
 
     /// <summary>Encapsulates a directed graph</summary>
@@ -115,7 +173,7 @@
         }
 
         /// <summary>Add a new node to the graph</summary>
-        public void AddNode(string name, Color colour, Color outlineColour)
+        public void AddNode(string name, Color colour, Color outlineColour, Point location = new Point())
         {
             Node newNode = Nodes.Find(node => node.Name == name);
             if (newNode == null)
@@ -132,26 +190,87 @@
             }
             newNode.Name = name;
             newNode.Colour = colour;
+            newNode.Location = location;
             newNode.OutlineColour = outlineColour;
             nodesToKeep.Add(newNode);
         }
 
-        /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(string text, string source, string destination, Color colour)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        public void AddNode(Node node)
         {
-            Arc newArc = Arcs.Find(arc => arc.SourceName == source && arc.DestinationName == destination && arc.Text == text);
+            AddNode(node.Name, node.Colour, node.OutlineColour, node.Location);
+        }
+
+        /// <summary>Remove a node from the graph</summary>
+        public void DelNode(string name)
+        {
+            Node nodeToDelete = Nodes.Find(node => node.Name == name);
+            if (nodeToDelete != null)
+            {
+                nodesToKeep.Remove(nodeToDelete);
+                Nodes.Remove(nodeToDelete);
+            }
+        }
+
+        /// <summary>Add a new arc to the graph</summary>
+        public void AddArc(Arc arc)
+        {
+            AddArc(arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
+        }
+
+        /// <summary>Add a new arc to the graph</summary>
+        public void AddArc(string text, string source, string destination, Color colour, Point location = new Point())
+        {
+            Arc newArc = Arcs.Find(arc => arc.SourceName == source && arc.DestinationName == destination && arc.Name == text);
             if (newArc == null)
             {
                 newArc = new Arc();
-                newArc.Text = text;
+                newArc.Name = text;
                 newArc.SourceName = source;
                 newArc.DestinationName = destination;
                 Arcs.Add(newArc);
             }
             newArc.Colour = colour;
+            newArc.Location = location;
             arcsToKeep.Add(newArc);
         }
+
+        /// <summary>Remove a node from the graph</summary>
+        public void DelArc(string name)
+        {
+            Arc arcToDelete = Arcs.Find(arc => arc.Name == name);
+            if (arcToDelete != null)
+            {
+                arcsToKeep.Remove(arcToDelete);
+                Arcs.Remove(arcToDelete);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string nextArcID()
+        {
+            int i = 1;
+            while (Arcs.FindIndex(a => a.Name == ("Arc " + i).ToString()) >= 0)
+                i++;
+            return (("Arc " + i).ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string nextNodeID()
+        {
+            int i = 1;
+            while (Nodes.FindIndex(a => a.Name == ("Node " + i).ToString()) >= 0)
+                i++;
+            return (("Node " + i).ToString());
+        }
     }
-
-
 }

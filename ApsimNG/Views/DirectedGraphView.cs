@@ -2,6 +2,7 @@
 {
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
+    using EventArguments;
     using Gtk;
     using Models;
     using System;
@@ -17,14 +18,19 @@
     public class DirectedGraphView : ViewBase
     {
         /// <summary>
-        /// The currently selected node/object.
+        /// The currently selected node.
         /// </summary>
-        private DGObject selectedObject;
+        public DGObject selectedObject { get; private set; }
+
+        /// <summary>
+        /// The currently second selected node/object. (button 3)
+        /// </summary>
+        public DGObject selected2Object { get; private set; }
 
         /// <summary>
         /// Keeps track of whether the mouse button is currently down.
         /// </summary>
-        private bool mouseDown = false;
+        private bool isDragging = false;
 
         /// <summary>
         /// Drawing area upon which the graph is rendered.
@@ -45,6 +51,11 @@
         /// List of arcs which connect the nodes.
         /// </summary>
         private List<DGArc> arcs = new List<DGArc>();
+
+        /// <summary>
+        /// When a single object is selected
+        /// </summary>
+        public event EventHandler<GraphObjectSelectedArgs> OnGraphObjectSelected;
 
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
@@ -157,7 +168,7 @@
                 if (selectedObject != null)
                 {
                     selectedObject.Selected = true;
-                    mouseDown = true;
+                    isDragging = true;
                     lastPos = clickPoint;
                 }
 
@@ -179,7 +190,7 @@
                 PointD movePoint = new PointD(args.Event.X, args.Event.Y);
 
                 // If an object is under the mouse then move it
-                if (mouseDown && selectedObject != null)
+                if (isDragging && selectedObject != null)
                 {
                     lastPos.X = movePoint.X;
                     lastPos.Y = movePoint.Y;
@@ -199,13 +210,47 @@
         {
             try
             {
-                mouseDown = false;
+                isDragging = false;
+                args.RetVal = true;
+#if false
+                DGObject clickedObject = null;
+                if (!isDragging)
+                {
+                    PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+                    // Look through nodes for the click point
+                    clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                    // If not found, look through arcs for the click point
+                    if (clickedObject == null)
+                        clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                    //if (clickedObject == null)
+                    //    UnSelect();
+            }
+#endif
+                if (args.Event.Button == 1)
+                {
+                    OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(selectedObject, selected2Object)); 
+                }
+                isDragging = false;
                 CheckSizing();
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
+        }
+
+        public void UnSelect()
+        {
+            //Console.WriteLine("Unselected");
+            nodes.ForEach(node => {  node.Selected = false; });
+            arcs.ForEach(arc => { arc.Selected = false; });
+            selectedObject = null;
+            selected2Object = null;
+
+            // Redraw area.
+            drawable.QueueDraw();
         }
 
         /// <summary>

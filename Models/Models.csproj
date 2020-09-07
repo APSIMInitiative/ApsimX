@@ -304,7 +304,9 @@
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
     <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Management\RotationManager.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Interfaces\IBubbleChart.cs" />
     <Compile Include="PMF\Arbitrator\BiomassTypeArbitrator.cs" />
     <Compile Include="Interfaces\IRootShape.cs" />
     <Compile Include="PMF\Arbitrator\IArbitrationMethod.cs" />

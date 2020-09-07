@@ -439,7 +439,7 @@
             {
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
