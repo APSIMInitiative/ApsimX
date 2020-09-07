@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presenter for the rotation bubble chart component
     /// </summary>
-    public class RotBubbleChartPresenter : IPresenter 
+    public class BubbleChartPresenter : IPresenter 
     {
         /// <summary>
         /// The view for the manager

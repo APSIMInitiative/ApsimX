@@ -88,7 +88,7 @@ namespace UserInterface.Views
             (RuleList as ViewBase).MainWidget.HeightRequest = 75;
             (RuleList as ViewBase).MainWidget.WidthRequest = 350;
             RuleList.TextHasChangedByUser += OnRuleChanged;
-            //RuleList. ScriptMode = false;
+            //RuleList.ScriptMode = false;
 
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
@@ -440,14 +440,13 @@ namespace UserInterface.Views
         {
             get
             {
-                TreeIter tree;
-                combobox1.GetActiveIter(out tree);
-                return (string)combobox1.Model.GetValue(tree, 0);
+                if (combobox1.GetActiveIter(out TreeIter iter))
+                    return (string)combobox1.Model.GetValue(iter, 0);
+                return null;
             }
             set
             {
-                TreeIter iter;
-                combobox1.Model.GetIterFirst(out iter);
+                if (combobox1.Model.GetIterFirst(out TreeIter iter))
                 do
                 {
                     GLib.Value thisRow = new GLib.Value();
@@ -464,10 +463,11 @@ namespace UserInterface.Views
         // The combobox has told us a new initial state has been chosen
         private void OnComboBox1SelectedValueChanged(object sender, EventArgs e)
         {
-            TreeIter tree;
-            combobox1.GetActiveIter(out tree);
-            string selectedText = (string)combobox1.Model.GetValue(tree, 0);
-            OnInitialStateChanged?.Invoke(sender, new InitialStateEventArgs() { initialState = selectedText } );
+            if (combobox1.GetActiveIter(out TreeIter iter))
+            {
+                string selectedText = (string)combobox1.Model.GetValue(iter, 0);
+                OnInitialStateChanged?.Invoke(sender, new InitialStateEventArgs() { initialState = selectedText } );
+            }
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace UserInterface.Views
                     na.action = Actions[na.Name];
                     arcs.Add(na);
                 }
-                return Arcs;
+                return arcs;
             }
         }
         /*

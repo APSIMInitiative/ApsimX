@@ -58,19 +58,34 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void Widget_PopupMenu(object o, PopupMenuArgs args)
         {
-            args.RetVal = true;
-            RaiseContextMenuEvent(args, (Widget)o, -1, -1);
+            try
+            {
+                args.RetVal = true;
+                RaiseContextMenuEvent(args, (Widget)o, -1, -1);
+            }
+            catch (Exception err)
+            {
+                // fixme
+                Console.WriteLine(err.ToString());
+            }
         }
 
         [GLib.ConnectBefore]
         private void Widget_ButtonPressEvent(object o, ButtonPressEventArgs args)
         {
-            if (args.Event.Button == 3 && args.Event.Type == EventType.ButtonPress)
+            try
             {
-                args.RetVal = true;
-                //Console.WriteLine("e = " + args.Event.X + ",", args.Event.Y);
+                if (args.Event.Button == 3 && args.Event.Type == EventType.ButtonPress)
+                {
+                    args.RetVal = true;
+                    //Console.WriteLine("e = " + args.Event.X + ",", args.Event.Y);
 
-                RaiseContextMenuEvent(args, (Widget)o, args.Event.X , args.Event.Y);
+                    RaiseContextMenuEvent(args, (Widget)o, args.Event.X , args.Event.Y);
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.ToString());
             }
         }
 
