@@ -3,6 +3,7 @@
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using EventArguments;
+    using global::UserInterface.EventArguments.DirectedGraph;
     using Gtk;
     using Models;
     using System;
@@ -32,6 +33,8 @@
         /// </summary>
         private bool isDragging = false;
 
+        private bool mouseDown = false;
+
         /// <summary>
         /// Drawing area upon which the graph is rendered.
         /// </summary>
@@ -56,6 +59,12 @@
         /// When a single object is selected
         /// </summary>
         public event EventHandler<GraphObjectSelectedArgs> OnGraphObjectSelected;
+
+        /// <summary>
+        /// When an object is moved. Called after the user has finished
+        /// moving the object (e.g. on mouse up).
+        /// </summary>
+        public event EventHandler<ObjectMovedArgs> OnGraphObjectMoved;
 
         /// <summary>Initializes a new instance of the <see cref="DirectedGraphView" /> class.</summary>
         public DirectedGraphView(ViewBase owner = null) : base(owner)
@@ -104,8 +113,20 @@
             }
             set
             {
+                string selectedObjectName = selectedObject?.Name;
+                selectedObject = null;
+                nodes.Clear();
+                arcs.Clear();
                 value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
                 value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
+                if (!string.IsNullOrEmpty(selectedObjectName))
+                {
+                    selectedObject = nodes?.Find(n => n.Name == selectedObjectName);
+                    if (selectedObject == null)
+                        selectedObject = arcs?.Find(a => a.Name == selectedObjectName);
+                    if (selectedObject != null)
+                        selectedObject.Selected = true;
+                }
             }
         }
 
@@ -153,27 +174,44 @@
                 // Get the point clicked by the mouse.
                 PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
 
-                // Delselect existing object
-                if (selectedObject != null)
-                    selectedObject.Selected = false;
-
-                // Look through nodes for the click point
-                selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-                // If not found, look through arcs for the click point
-                if (selectedObject == null)
-                    selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-                // If found object, select it.
-                if (selectedObject != null)
+                if (args.Event.Button == 1)
                 {
-                    selectedObject.Selected = true;
-                    isDragging = true;
-                    lastPos = clickPoint;
-                }
+                    mouseDown = true;
 
-                // Redraw area.
-                (o as DrawingArea).QueueDraw();
+                    // Delselect existing object
+                    if (selectedObject != null)
+                        selectedObject.Selected = false;
+
+                    // Look through nodes for the click point
+                    selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                    // If not found, look through arcs for the click point
+                    if (selectedObject == null)
+                        selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                    // If found object, select it.
+                    if (selectedObject != null)
+                    {
+                        selectedObject.Selected = true;
+                        lastPos = clickPoint;
+                    }
+
+                    // Redraw area.
+                    (o as DrawingArea).QueueDraw();
+                }
+                else
+                {
+                    if (selected2Object != null)
+                        selected2Object.Selected = false;
+                    
+                    selected2Object = nodes.FindLast(node => node.HitTest(clickPoint));
+                    if (selected2Object == null)
+                        selected2Object = arcs.FindLast(arc => arc.HitTest(clickPoint));
+                    
+                    // If the user has right-clicked in the middle of nowhere, unselect everything.
+                    if (selected2Object == null)
+                        UnSelect();
+                }
             }
             catch (Exception err)
             {
@@ -190,11 +228,12 @@
                 PointD movePoint = new PointD(args.Event.X, args.Event.Y);
 
                 // If an object is under the mouse then move it
-                if (isDragging && selectedObject != null)
+                if (mouseDown && selectedObject != null)
                 {
                     lastPos.X = movePoint.X;
                     lastPos.Y = movePoint.Y;
                     selectedObject.Location = movePoint;
+                    isDragging = true;
                     // Redraw area.
                     (o as DrawingArea).QueueDraw();
                 }
@@ -210,27 +249,31 @@
         {
             try
             {
-                isDragging = false;
                 args.RetVal = true;
-#if false
-                DGObject clickedObject = null;
-                if (!isDragging)
-                {
-                    PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-                    // Look through nodes for the click point
-                    clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+                mouseDown = false;
 
-                    // If not found, look through arcs for the click point
-                    if (clickedObject == null)
-                        clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-                    //if (clickedObject == null)
-                    //    UnSelect();
-            }
-#endif
                 if (args.Event.Button == 1)
                 {
-                    OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(selectedObject, selected2Object)); 
+                    if (isDragging)
+                        OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(selectedObject));
+                    else
+                    {
+                        PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+                        // Look through nodes for the click point
+                        DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                        // If not found, look through arcs for the click point
+                        if (clickedObject == null)
+                            clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                        if (clickedObject == null)
+                            UnSelect();
+                        else
+                        {
+                            clickedObject.Selected = true;
+                            OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(clickedObject, null)); 
+                        }
+                    }
                 }
                 isDragging = false;
                 CheckSizing();
@@ -248,9 +291,11 @@
             arcs.ForEach(arc => { arc.Selected = false; });
             selectedObject = null;
             selected2Object = null;
-
+            mouseDown = false;
+            isDragging = false;
             // Redraw area.
             drawable.QueueDraw();
+            OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(null));
         }
 
         /// <summary>

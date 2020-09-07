@@ -11,6 +11,7 @@ namespace UserInterface.Views
     using Interfaces;
     using EventArguments;
     using ApsimNG.Classes.DirectedGraph;
+    using EventArguments.DirectedGraph;
     using Gtk;
     using Models.Management;
     using Models;
@@ -165,6 +166,7 @@ namespace UserInterface.Views
             vpaned1.Show();
 
             graphView.OnGraphObjectSelected += OnGraphObjectSelected;
+            graphView.OnGraphObjectMoved += OnGraphObjectMoved;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
 
             // Ensure the menu is populated
@@ -223,7 +225,11 @@ namespace UserInterface.Views
             OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
         }
 
-        // A graph object has been selected. Make the (middle part of) UI relevant to it
+        /// <summary>
+        /// A graph object has been selected. Make the (middle part of) UI relevant to it
+        /// </summary>
+        /// <param name="mode">Selection mode</param>
+        /// <param name="ObjectName">Object name</param>
         public void OnSelect(selectMode mode, string ObjectName)
         {
             ctxBox.Foreach(c => c.Hide()); 
@@ -267,6 +273,8 @@ namespace UserInterface.Views
                         ctxBox.PackStart(infoWdgt, false, false, 0);
                         break;
                     }
+                default:
+                    throw new Exception($"Unknown selection mode {mode}");
             }
             ctxBox.Show();
         }
@@ -406,6 +414,11 @@ namespace UserInterface.Views
                 ContextMenu.Append(item);
             }
             ContextMenu.ShowAll();  // This packs the menu objects, but doesn't post it.
+        }
+
+        private void OnGraphObjectMoved(object sender, ObjectMovedArgs args)
+        {
+            OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(){ Arcs = Arcs, Nodes = Nodes });
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ namespace UserInterface.Interfaces
     using Views;
     using Models.Management;
     using System.Collections.Generic;
+    using EventArguments.DirectedGraph;
 
     /// <summary>
     /// This interface defines the API for talking to an bubble chart view.
@@ -18,32 +19,32 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user changes the initial state list box.
         /// </summary>
-        event EventHandler<EventArguments.InitialStateEventArgs> OnInitialStateChanged;
+        event EventHandler<InitialStateEventArgs> OnInitialStateChanged;
 
         /// <summary>
         /// 
         /// </summary>
-        event EventHandler<EventArguments.GraphChangedEventArgs> OnGraphChanged;
+        event EventHandler<GraphChangedEventArgs> OnGraphChanged;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.AddNodeEventArgs> AddNode;
+        event EventHandler<AddNodeEventArgs> AddNode;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.DelNodeEventArgs> DelNode;
+        event EventHandler<DelNodeEventArgs> DelNode;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.AddArcEventArgs> AddArc;
+        event EventHandler<AddArcEventArgs> AddArc;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.DelArcEventArgs> DelArc;
+        event EventHandler<DelArcEventArgs> DelArc;
 
         /// <summary>
         /// Editor for inputting rules.

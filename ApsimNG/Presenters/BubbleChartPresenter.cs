@@ -14,6 +14,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
+    using EventArguments.DirectedGraph;
     using Models;
     using Models.Core;
     using Models.Interfaces;
@@ -120,8 +121,8 @@ namespace UserInterface.Presenters
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             // fixme - nameof()
-            changes.Add(new ChangeProperty.Property(model, "Arcs", view.Arcs));
-            changes.Add(new ChangeProperty.Property(model, "Nodes", view.Nodes));
+            changes.Add(new ChangeProperty.Property(model, "Arcs", e.Arcs));
+            changes.Add(new ChangeProperty.Property(model, "Nodes", e.Nodes));
             ChangeProperty command = new ChangeProperty(changes);
             this.presenter.CommandHistory.Add(command);
             RefreshView();
