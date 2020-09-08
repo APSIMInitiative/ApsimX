@@ -32,7 +32,12 @@ namespace Models.Management
         /// <summary>For logging</summary>
         [Link] public Summary Summary;
 
-        [NonSerialized] [Link]
+        /// <summary>
+        /// Events service. Used to publish events when transitioning
+        /// between stages/nodes.
+        /// </summary>
+        [NonSerialized]
+        [Link]
         private Events eventService = null;
 
         /// <summary>
@@ -75,6 +80,7 @@ namespace Models.Management
         {
             Nodes.RemoveAll(delegate (StateNode n) { return (n.Name == nodeName); });
         }
+
         /// <summary>
         /// add a transition between two nodes
         /// </summary>
@@ -89,6 +95,7 @@ namespace Models.Management
             else
                 myArc.CopyFrom(value);
         }
+
         /// <summary>
         /// delete an arc
         /// </summary>
@@ -105,6 +112,11 @@ namespace Models.Management
         [Description("Current State of DG")]
         public string currentState { get; private set; }
 
+        /// <summary>
+        /// Called when a simulation commences. Performs one-time initialisation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
         [EventSubscribe("Commencing")]
         private void OnCommence(object sender, EventArgs e)
         {
@@ -113,6 +125,11 @@ namespace Models.Management
             Summary.WriteMessage(this, "Initialised, state=" + currentState + "(of " + Nodes.Count + " total)");
         }
 
+        /// <summary>
+        /// Called once per day during the simulation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
@@ -122,18 +139,15 @@ namespace Models.Management
                 more = false;
                 double bestScore = -1.0;
                 RuleAction bestArc = null;
-                //Console.WriteLine("process 0: state=" + currentState);
                 foreach (var arc in Arcs.FindAll(arc => arc.SourceName == currentState))
                 {
                     double score = 1;
-                    foreach (string testCondition in arc.testCondition)
+                    foreach (string testCondition in arc.Conditions)
                     {
                         object value = FindByPath(testCondition)?.Value;
                         if (value == null)
                             throw new Exception($"Test condition '{testCondition}' returned nothing");
-                        //Console.WriteLine("process 1: test=" + testCondition + " value=" + v);
-                        double c = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                        score *= c;
+                        score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
                     }
                     if (score > bestScore)
                     {
@@ -143,92 +157,118 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
-                    if (currentState != "")
-                    {
-                        eventService.Publish("transition_from_" + currentState, null);
-                        eventService.Publish("transition", null);
-                        currentState = bestArc.DestinationName;
-                    }
-                    try
-                    {
-                        foreach (string action in bestArc.action)
-                        {
-                            string thisAction = action;
-                            int commentPosition = thisAction.IndexOf("//");
-                            if (commentPosition >= 0)
-                                thisAction = thisAction.Substring(0, commentPosition);
-
-                            if ((thisAction = thisAction.Trim()) == string.Empty)
-                                continue;
-
-                            //Console.WriteLine( ">>process 2: action = '" + thisAction + "'");
-                            if (!thisAction.Contains("("))
-                            {
-                                // Publish as an event
-                                eventService.Publish(thisAction, null /*new object[] { null, new EventArgs() }*/);
-                            }
-                            else
-                            {
-                                // Call method directly - copied from operations module
-                                string argumentsString = StringUtilities.SplitOffBracketedValue(ref thisAction, '(', ')');
-                                string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                                int posPeriod = thisAction.LastIndexOf('.');
-                                if (posPeriod == -1)
-                                    throw new ApsimXException(this, "No module given for method call: \"" + thisAction + "\"");
-                                string modelName = thisAction.Substring(0, posPeriod);
-                                string methodName = thisAction.Substring(posPeriod + 1).Replace(";", "").Trim();
-
-                                IModel model = FindByPath(modelName)?.Value as IModel;
-                                if (model == null)
-                                    throw new ApsimXException(this, $"Cannot find model: {modelName}");
-
-                                MethodInfo[] methods = model.GetType().GetMethods();
-                                if (methods == null)
-                                    throw new ApsimXException(this, "Cannot find any methods in model: " + modelName);
-
-                                object[] parameterValues = null;
-                                foreach (MethodInfo method in methods)
-                                {
-                                    if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
-                                    {
-                                        parameterValues = GetArgumentsForMethod(arguments, method);
-                                        
-                                        // invoke method.
-                                        if (parameterValues != null)
-                                        {
-                                            method.Invoke(model, parameterValues);
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (parameterValues == null)
-                                    throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
-                            }
-                        }
-                        eventService.Publish("transition_to_" + currentState, null);
-                        more = true;
-                    }
-                    catch (Exception err)
-                    {
-                        throw new Exception($"Unable to transition to state {currentState}", err);
-                    }
+                    TransitionTo(bestArc);
+                    more = true;
                 }
             }
         }
+
+        /// <summary>
+        /// Transition along an arc to another stage/node.
+        /// </summary>
+        /// <param name="transition">The arc to be followed.</param>
+        private void TransitionTo(RuleAction transition)
+        {
+            try
+            {
+                currentState = transition.DestinationName;
+
+                // We can now move to another stage.
+                if (currentState != "")
+                {
+                    // Publish pre-transition events.
+                    eventService.Publish("transition_from_" + currentState, null);
+                    eventService.Publish("transition", null);
+                }
+
+                foreach (string action in transition.Actions)
+                {
+                    string thisAction = action;
+
+                    // Treat '//' as a single-line comment - ignore everything after it.
+                    int commentPosition = thisAction.IndexOf("//");
+                    if (commentPosition >= 0)
+                        thisAction = thisAction.Substring(0, commentPosition);
+
+                    if (string.IsNullOrEmpty(thisAction))
+                        continue;
+
+                    // If the action doesn't contain an opening parenthesis,
+                    // treat it as an event name and publish the event.
+                    if (!thisAction.Contains("("))
+                        eventService.Publish(thisAction, null /*new object[] { null, new EventArgs() }*/);
+                    else
+                        CallMethod(thisAction);
+                }
+                eventService.Publish("transition_to_" + currentState, null);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to transition to state {currentState}", err);
+            }
+        }
+
+        /// <summary>
+        /// Call a method specified by the user. Method must be public.
+        /// </summary>
+        /// <param name="invocation">
+        /// Method specification from user. e.g.
+        /// [Wheat].Harvest()
+        /// [Manager].SomeMethod("Blargle", -1)
+        /// </param>
+        /// <remarks>
+        /// May need work, was largely copied from operations code.
+        /// It's pretty crude and will probably fail for nested anything
+        /// even remotely complicated (e.g. nested method calls).
+        /// </remarks>
+        private void CallMethod(string invocation)
+        {
+            // Need to separate method name from arguments.
+            string argumentsString = StringUtilities.SplitOffBracketedValue(ref invocation, '(', ')');
+            string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            int posPeriod = invocation.LastIndexOf('.');
+            if (posPeriod == -1)
+                throw new ApsimXException(this, $"No module given for method call: '{invocation}'");
+
+            string modelName = invocation.Substring(0, posPeriod);
+            string methodName = invocation.Substring(posPeriod + 1).Replace(";", "").Trim();
+
+            // Find the model to which the method belongs.
+            IModel model = FindByPath(modelName)?.Value as IModel;
+            if (model == null)
+                throw new ApsimXException(this, $"Cannot find model: {modelName}");
+
+            // Ensure the model contains a public method with the correct name.
+            MethodInfo method = model.GetType().GetMethod(methodName);
+            if (method == null)
+                throw new ApsimXException(this, $"Cannot find method in model: {modelName}");
+
+            // Parse arguments provided by user.
+            object[] parameterValues = GetArgumentsForMethod(arguments, method);
+            
+            // Call the method.
+            method.Invoke(model, parameterValues);
+        }
+
+        /// <summary>
+        /// Parse user-inputted arguments to be provided to a method call.
+        /// </summary>
+        /// <param name="arguments">Arguments inputted by the user.</param>
+        /// <param name="method">Method which is to be called.</param>
         private object[] GetArgumentsForMethod(string[] arguments, MethodInfo method)
         {
             ParameterInfo[] expectedParameters = method.GetParameters();
             if (expectedParameters.Length != arguments.Length)
                 throw new Exception($"Unable to call method {method.Name}: expected {expectedParameters.Length} arguments but {arguments?.Length ?? 0} were given");
 
-            // convert arguments to an object array.
+            // Convert arguments to an object array.
             object[] parameterValues = new object[expectedParameters.Length];
             if (arguments.Length > expectedParameters.Length)
                 return null;
 
-            //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)
+            // Retrieve the values for the named arguments that were provided.
+            // Not all the named arguments for the method may have been provided.
             for (int i = 0; i < arguments.Length; i++)
             {
                 string value = arguments[i];
@@ -239,7 +279,8 @@ namespace Models.Management
                 else
                 {
                     string argumentName = arguments[i].Substring(0, posColon).Trim();
-                    // find parameter with this name.
+
+                    // Find parameter with this name.
                     for (argumentIndex = 0; argumentIndex < expectedParameters.Length; argumentIndex++)
                     {
                         if (expectedParameters[argumentIndex].Name == argumentName)
@@ -268,17 +309,20 @@ namespace Models.Management
         /// <summary>
         /// Contructor
         /// </summary>
-        public RuleAction(Arc a) : base(a) { testCondition = new List<string>(); action = new List<string>(); }
+        public RuleAction(Arc a) : base(a) { Conditions = new List<string>(); Actions = new List<string>(); }
+
         /// <summary>Test conditions that need to be satisfied for this transition</summary>
-        public List<string> testCondition { get; set; }
+        public List<string> Conditions { get; set; }
+
         /// <summary>Actions undertaken when making this transition</summary>
-        public List<string> action { get; set; }
+        public List<string> Actions { get; set; }
+
         /// <param name="other"></param>
         public void copyFrom(RuleAction other)
         {
             base.CopyFrom(other);
-            this.testCondition = new List<string>(other.testCondition);
-            this.action = new List<string>(other.action);
+            this.Conditions = new List<string>(other.Conditions);
+            this.Actions = new List<string>(other.Actions);
         }
     }
 

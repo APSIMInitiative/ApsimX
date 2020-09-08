@@ -65,7 +65,6 @@ namespace UserInterface.Views
             }
             catch (Exception err)
             {
-                // fixme
                 Console.WriteLine(err.ToString());
             }
         }
@@ -80,7 +79,7 @@ namespace UserInterface.Views
                     args.RetVal = true;
                     //Console.WriteLine("e = " + args.Event.X + ",", args.Event.Y);
 
-                    RaiseContextMenuEvent(args, (Widget)o, args.Event.X , args.Event.Y);
+                    RaiseContextMenuEvent(args, o as Widget, args.Event.X , args.Event.Y);
                 }
             }
             catch (Exception err)

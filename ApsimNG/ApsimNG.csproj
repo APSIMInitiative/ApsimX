@@ -897,6 +897,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RotationManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />

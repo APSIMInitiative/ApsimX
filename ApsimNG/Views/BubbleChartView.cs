@@ -74,6 +74,7 @@ namespace UserInterface.Views
             VBox vbox1 = new VBox(false, 0);
             ctxBox = new VBox(false, 0);
             ctxLabel = new Label("Information");
+            ctxBox.PackStart(ctxLabel, false, false, 0);
 
             // Arc selection: rules & actions
             VBox arcSelBox = new VBox();
@@ -89,7 +90,7 @@ namespace UserInterface.Views
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-            rules.Add((RuleList as ViewBase).MainWidget);
+            rules.AddWithViewport((RuleList as ViewBase).MainWidget);
             (RuleList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(rules, false, false, 0); rules.Show();
 
@@ -104,7 +105,7 @@ namespace UserInterface.Views
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-            actions.Add((ActionList as ViewBase).MainWidget);
+            actions.AddWithViewport((ActionList as ViewBase).MainWidget);
             (ActionList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(actions, false, false, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
@@ -204,8 +205,8 @@ namespace UserInterface.Views
                 {
                     Arc ga = graphView.DirectedGraph.Arcs.Find(x => x.Name == a.Name);
                     var na = new RuleAction(ga);
-                    na.testCondition = Rules[na.Name];
-                    na.action = Actions[na.Name];
+                    na.Conditions = Rules[na.Name];
+                    na.Actions = Actions[na.Name];
                     arcs.Add(na);
                 }
                 return arcs;
@@ -264,8 +265,8 @@ namespace UserInterface.Views
             });
             arcs.ForEach(arc =>
             {
-                Rules[arc.Name] = arc.testCondition;
-                Actions[arc.Name] = arc.action;
+                Rules[arc.Name] = arc.Conditions;
+                Actions[arc.Name] = arc.Actions;
                 graph.AddArc(arc);
             });
             graphView.DirectedGraph = graph;
@@ -281,7 +282,7 @@ namespace UserInterface.Views
         {
             ctxBox.Foreach(c => c.Hide()); 
             ctxLabel.Show();
-            ctxBox.PackStart(ctxLabel, false, false, 0);
+            //ctxBox.PackStart(ctxLabel, false, false, 0);
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
             Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
@@ -303,7 +304,7 @@ namespace UserInterface.Views
                 colourChooser.ColorSet += OnColourChanged;
 
                 nodeSelWdgt.ShowAll();
-                ctxBox.PackStart(nodeSelWdgt, false, false, 0);
+                //ctxBox.PackStart(nodeSelWdgt, false, false, 0);
             }
             else if (arc != null)
             {
@@ -311,13 +312,13 @@ namespace UserInterface.Views
                 RuleList.Text = String.Join(Environment.NewLine, Rules[arc.Name].ToArray()) ;
                 ActionList.Text = String.Join(Environment.NewLine, Actions[arc.Name].ToArray());
                 arcSelWdgt.ShowAll();
-                ctxBox.PackStart(arcSelWdgt, false, false, 0);
+                //ctxBox.PackStart(arcSelWdgt, false, false, 0);
             }
             else
             {
                 ctxLabel.Text = "Information";
                 infoWdgt.ShowAll();
-                ctxBox.PackStart(infoWdgt, false, false, 0);
+                //ctxBox.PackStart(infoWdgt, false, false, 0);
             }
             ctxBox.Show();
         }
@@ -389,7 +390,6 @@ namespace UserInterface.Views
                 item = new MenuItem("Delete " + graphView.SelectedObject.Name);
                 handler = delegate (object s, EventArgs x)
                 {
-                    Console.WriteLine("delete node selected");
                     DelNode?.Invoke(this, new DelNodeEventArgs { nodeNameToDelete = graphView.SelectedObject.Name });
                 };
                 item.Activated += handler;
@@ -428,7 +428,6 @@ namespace UserInterface.Views
                 item = new MenuItem("Delete Arc from " + (graphView.SelectedObject as DGArc).Source.Name + " to " + (graphView.SelectedObject as DGArc).Target.Name);
                 handler = delegate (object s, EventArgs x)
                 {
-                    Console.WriteLine("del arc selected");
                     DelArc?.Invoke(this, new DelArcEventArgs { arcNameToDelete = (graphView.SelectedObject as DGArc).Name });
                 };
                 item.Activated += handler;
