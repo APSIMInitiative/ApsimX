@@ -128,10 +128,11 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.testCondition)
                     {
-                        var v = FindByPath(testCondition);
-                        if (v == null) throw new Exception("Test condition \"" + testCondition + "\" returned nothing");
+                        object value = FindByPath(testCondition)?.Value;
+                        if (value == null)
+                            throw new Exception($"Test condition '{testCondition}' returned nothing");
                         //Console.WriteLine("process 1: test=" + testCondition + " value=" + v);
-                        double c = System.Convert.ToDouble(v, CultureInfo.InvariantCulture);
+                        double c = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                         score *= c;
                     }
                     if (score > bestScore)
@@ -148,80 +149,83 @@ namespace Models.Management
                         eventService.Publish("transition", null);
                         currentState = bestArc.DestinationName;
                     }
-                    foreach (string action in bestArc.action)
+                    try
                     {
-                        string thisAction = action;
-                        int commentPosition = thisAction.IndexOf("//");
-                        if (commentPosition >= 0)
-                            thisAction = thisAction.Substring(0, commentPosition);
-
-                        if ((thisAction = thisAction.Trim()) == string.Empty)
-                            continue;
-
-                        //Console.WriteLine( ">>process 2: action = '" + thisAction + "'");
-                        if (!thisAction.Contains("("))
+                        foreach (string action in bestArc.action)
                         {
-                            // Publish as an event
-                            eventService.Publish(thisAction, null /*new object[] { null, new EventArgs() }*/);
-                        }
-                        else
-                        {
-                            // Call method directly - copied from operations module
-                            string argumentsString = StringUtilities.SplitOffBracketedValue(ref thisAction, '(', ')');
-                            string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string thisAction = action;
+                            int commentPosition = thisAction.IndexOf("//");
+                            if (commentPosition >= 0)
+                                thisAction = thisAction.Substring(0, commentPosition);
 
-                            int posPeriod = thisAction.LastIndexOf('.');
-                            if (posPeriod == -1)
-                                throw new ApsimXException(this, "No module given for method call: \"" + thisAction + "\"");
-                            string modelName = thisAction.Substring(0, posPeriod);
-                            string methodName = thisAction.Substring(posPeriod + 1).Replace(";", "").Trim();
+                            if ((thisAction = thisAction.Trim()) == string.Empty)
+                                continue;
 
-                            IModel model = FindByPath(modelName)?.Value as IModel;
-                            if (model == null)
-                                throw new ApsimXException(this, $"Cannot find model: {modelName}");
-
-                            MethodInfo[] methods = model.GetType().GetMethods();
-                            if (methods == null)
-                                throw new ApsimXException(this, "Cannot find any methods in model: " + modelName);
-
-                            object[] parameterValues = null;
-                            foreach (MethodInfo method in methods)
+                            //Console.WriteLine( ">>process 2: action = '" + thisAction + "'");
+                            if (!thisAction.Contains("("))
                             {
-                                if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
-                                {
-                                    parameterValues = GetArgumentsForMethod(arguments, method);
+                                // Publish as an event
+                                eventService.Publish(thisAction, null /*new object[] { null, new EventArgs() }*/);
+                            }
+                            else
+                            {
+                                // Call method directly - copied from operations module
+                                string argumentsString = StringUtilities.SplitOffBracketedValue(ref thisAction, '(', ')');
+                                string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                                    // invoke method.
-                                    if (parameterValues != null)
+                                int posPeriod = thisAction.LastIndexOf('.');
+                                if (posPeriod == -1)
+                                    throw new ApsimXException(this, "No module given for method call: \"" + thisAction + "\"");
+                                string modelName = thisAction.Substring(0, posPeriod);
+                                string methodName = thisAction.Substring(posPeriod + 1).Replace(";", "").Trim();
+
+                                IModel model = FindByPath(modelName)?.Value as IModel;
+                                if (model == null)
+                                    throw new ApsimXException(this, $"Cannot find model: {modelName}");
+
+                                MethodInfo[] methods = model.GetType().GetMethods();
+                                if (methods == null)
+                                    throw new ApsimXException(this, "Cannot find any methods in model: " + modelName);
+
+                                object[] parameterValues = null;
+                                foreach (MethodInfo method in methods)
+                                {
+                                    if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
                                     {
-                                        try
+                                        parameterValues = GetArgumentsForMethod(arguments, method);
+                                        
+                                        // invoke method.
+                                        if (parameterValues != null)
                                         {
                                             method.Invoke(model, parameterValues);
+                                            break;
                                         }
-                                        catch (Exception err)
-                                        {
-                                            throw err.InnerException;
-                                        }
-                                        break;
                                     }
                                 }
-                            }
 
-                            if (parameterValues == null)
-                                throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+                                if (parameterValues == null)
+                                    throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+                            }
                         }
+                        eventService.Publish("transition_to_" + currentState, null);
+                        more = true;
                     }
-                    eventService.Publish("transition_to_" + currentState, null);
-                    more = true;
+                    catch (Exception err)
+                    {
+                        throw new Exception($"Unable to transition to state {currentState}", err);
+                    }
                 }
             }
         }
         private object[] GetArgumentsForMethod(string[] arguments, MethodInfo method)
         {
+            ParameterInfo[] expectedParameters = method.GetParameters();
+            if (expectedParameters.Length != arguments.Length)
+                throw new Exception($"Unable to call method {method.Name}: expected {expectedParameters.Length} arguments but {arguments?.Length ?? 0} were given");
+
             // convert arguments to an object array.
-            ParameterInfo[] parameters = method.GetParameters();
-            object[] parameterValues = new object[parameters.Length];
-            if (arguments.Length > parameters.Length)
+            object[] parameterValues = new object[expectedParameters.Length];
+            if (arguments.Length > expectedParameters.Length)
                 return null;
 
             //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)
@@ -236,12 +240,12 @@ namespace Models.Management
                 {
                     string argumentName = arguments[i].Substring(0, posColon).Trim();
                     // find parameter with this name.
-                    for (argumentIndex = 0; argumentIndex < parameters.Length; argumentIndex++)
+                    for (argumentIndex = 0; argumentIndex < expectedParameters.Length; argumentIndex++)
                     {
-                        if (parameters[argumentIndex].Name == argumentName)
+                        if (expectedParameters[argumentIndex].Name == argumentName)
                             break;
                     }
-                    if (argumentIndex == parameters.Length)
+                    if (argumentIndex == expectedParameters.Length)
                         return null;
                     value = value.Substring(posColon + 1);
                 }
@@ -249,34 +253,8 @@ namespace Models.Management
                 if (argumentIndex >= parameterValues.Length)
                     return null;
 
-                // convert value to correct type.
-                if (parameters[argumentIndex].ParameterType == typeof(double))
-                    parameterValues[argumentIndex] = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                else if (parameters[argumentIndex].ParameterType == typeof(float))
-                    parameterValues[argumentIndex] = Convert.ToSingle(value, CultureInfo.InvariantCulture);
-                else if (parameters[argumentIndex].ParameterType == typeof(int))
-                    parameterValues[argumentIndex] = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                else if (parameters[argumentIndex].ParameterType == typeof(bool))
-                    parameterValues[argumentIndex] = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-                else if (parameters[argumentIndex].ParameterType == typeof(string))
-                    parameterValues[argumentIndex] = value.Replace("\"", "").Trim();
-                else if (parameters[argumentIndex].ParameterType.IsEnum)
-                {
-                    value = value.Trim();
-                    int posLastPeriod = value.LastIndexOf('.');
-                    if (posLastPeriod != -1)
-                        value = value.Substring(posLastPeriod + 1);
-                    parameterValues[argumentIndex] = Enum.Parse(parameters[argumentIndex].ParameterType, value);
-                }
-            }
-
-            //if there were missing named arguments in the method call then use the default values for them.
-            for (int i = 0; i < parameterValues.Length; i++)
-            {
-                if (parameterValues[i] == null)
-                {
-                    parameterValues[i] = parameters[i].DefaultValue;
-                }
+                // Convert value to correct type.
+                parameterValues[argumentIndex] = ReflectionUtilities.StringToObject(expectedParameters[argumentIndex].ParameterType, value);
             }
 
             return parameterValues;
