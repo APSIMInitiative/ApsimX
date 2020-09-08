@@ -25,11 +25,5 @@ namespace Models.Interfaces
         /// </summary>
         /// <value></value>
         string InitialState { get; set; }
-
-        /// <summary>
-        /// fixme - can/should this be refactored out?
-        /// </summary>
-        /// <param name="value"></param>
-        void AddRuleAction(RuleAction value);
     }
 }

@@ -20,10 +20,6 @@ namespace UserInterface.Presenters
     using Models.Interfaces;
     using Models.Management;
     using Views;
-    using System.IO;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using ICSharpCode.NRefactory.CSharp;
     using Interfaces;
 
     /// <summary>
@@ -66,7 +62,7 @@ namespace UserInterface.Presenters
             this.presenter = presenter;
             this.model = model as IBubbleChart;
 
-            this.view.OnGraphChanged += OnModelChanged;
+            this.view.OnGraphChanged += OnViewChanged;
             this.view.OnInitialStateChanged += OnInitialStateChanged;
             this.view.AddNode += OnAddNode;
             this.view.DelNode += OnDelNode;
@@ -78,111 +74,155 @@ namespace UserInterface.Presenters
             this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
             //view.ActionList.TextHasChangedByUser += OnEventNamesChanged;
 
-            // Tell the view to populate the axis.
-            this.view.SetGraph(this.model.Nodes, this.model.Arcs);
-            this.view.InitialState = this.model.InitialState;
-
             intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            // fixme - we can replace most/all calls to RefreshViews() by trapping
-            // the ModelChanged event of the explorer presenter's command history.
-            // Then we just call RefreshView() once, inside the callback to this event.
-            //presenter.CommandHistory.ModelChanged += CommandHistory_ModelChanged;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+            RefreshView();
         }
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public void Detach()
         {
-            view.OnGraphChanged -= OnModelChanged;
+            view.OnGraphChanged -= OnViewChanged;
             view.OnInitialStateChanged -= OnInitialStateChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
             view.AddArc -= OnAddArc;
             view.DelArc -= OnDelArc;
-            //presenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
             view.RuleList.ContextItemsNeeded -= OnNeedVariableNames;
             view.ActionList.ContextItemsNeeded -= OnNeedEventNames;
 
-            model.Arcs = view.Arcs;
-            model.Nodes = view.Nodes;
-
-            model.InitialState = view.InitialState;
+            // Shouldn't need to manually update the model at this point.
+            // All changes are applied immediately upon user input.
+            //OnViewChanged(this, new GraphChangedEventArgs() { Nodes = view.Nodes, Arcs = view.Arcs});
         }
+
         /// <summary>
-        /// The view has changed the model (associated rules/actions)
+        /// The model has been changed. Refresh the view.
         /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnModelChanged(object sender, GraphChangedEventArgs e)
+        /// <param name="changedModel"></param>
+        private void OnModelChanged(object changedModel)
         {
-            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
-            // fixme - nameof()
-            changes.Add(new ChangeProperty.Property(model, "Arcs", e.Arcs));
-            changes.Add(new ChangeProperty.Property(model, "Nodes", e.Nodes));
-            ChangeProperty command = new ChangeProperty(changes);
-            this.presenter.CommandHistory.Add(command);
-            RefreshView();
+            if (changedModel == model)
+                RefreshView();
         }
 
+        /// <summary>
+        /// Refresh the view with the model's current state.
+        /// </summary>
         private void RefreshView()
         {
             view.SetGraph(model.Nodes, model.Arcs);
+            view.InitialState = this.model.InitialState;
         }
 
         /// <summary>
-        /// A new node has been added
+        /// The user has made changes in the view.
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
+        private void OnViewChanged(object sender, GraphChangedEventArgs e)
+        {
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), e.Arcs));
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), e.Nodes));
+            // todo - update InitialState as well? This function is currently
+            // not used a a callback for initial state being changed, but it
+            // might make sense to update it anyway...
+
+            // Check for multiple nodes with the same name.
+            IEnumerable<IGrouping<string, StateNode>> duplicates = e.Nodes.GroupBy(n => n.Name).Where(g => g.Count() > 1);
+            if (duplicates.Any())
+                throw new Exception($"Unable to apply changes - duplicate node name found: {duplicates.First().Key}");
+
+            ChangeProperty command = new ChangeProperty(changes);
+            presenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>
+        /// A new node has been added. Propagate this change to the model.
+        /// </summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnAddNode(object sender, AddNodeEventArgs e)
         {
-            // fixme - need to use a ChangeProperty command, otherwise this won't be undoable.
-            model.Nodes.Add(e.Node);
-            RefreshView();
+            List<StateNode> newNodes = new List<StateNode>();
+            newNodes.AddRange(model.Nodes);
+            newNodes.Add(e.Node);
+            ICommand addNode = new ChangeProperty(model, nameof(model.Nodes), newNodes);
+            presenter.CommandHistory.Add(addNode);
         }
 
+        /// <summary>
+        /// A node has been deleted. Propagate this change to the model.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
         private void OnDelNode(object sender, DelNodeEventArgs e)
         {
-            try
-            {
-//                AddNodeCommand command = new AddNodeCommand("AddNode", view, presenter);
-//                presenter.CommandHistory.Add(command);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            
+            List<StateNode> newNodes = new List<StateNode>();
+            newNodes.AddRange(model.Nodes);
+            newNodes.RemoveAll(n => n.Name == e.nodeNameToDelete);
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
 
-            model.Nodes.RemoveAll(n => n.Name == e.nodeNameToDelete);
-            RefreshView();
+            // Need to also delete any arcs going to/from this node.
+            List<RuleAction> newArcs = new List<RuleAction>();
+            newArcs.AddRange(model.Arcs);
+            newArcs.RemoveAll(a => a.DestinationName == e.nodeNameToDelete || a.SourceName == e.nodeNameToDelete);
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
+
+            ICommand removeNode = new ChangeProperty(changes);
+            presenter.CommandHistory.Add(removeNode);
         }
 
+        /// <summary>
+        /// An arc has been added. Propagate this change to the model.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
         private void OnAddArc(object sender, AddArcEventArgs e)
         {
-            try
-            {
-//                AddNodeCommand command = new AddNodeCommand("AddNode", view, presenter);
-//                presenter.CommandHistory.Add(command);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
-            RuleAction v = new RuleAction(e.Arc);
-            model.AddRuleAction(v);
-            RefreshView();
+            // Ensure that existing source/dest nodes exist.
+            // todo - does this belong inside RotationManager??
+            if (model.Nodes.Find(n => n.Name == e.Arc.SourceName) == null ||
+                model.Nodes.Find(n => n.Name == e.Arc.DestinationName) == null)
+                throw new Exception("Target empty in arc");
+
+            List<RuleAction> newArcs = new List<RuleAction>();
+            newArcs.AddRange(model.Arcs);
+            RuleAction existingArc = newArcs.Find(a => a.Name == e.Arc.Name);
+            if (existingArc == null)
+                newArcs.Add(new RuleAction(e.Arc));
+            else
+                existingArc.CopyFrom(new RuleAction(e.Arc));
+
+            ICommand addArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
+            presenter.CommandHistory.Add(addArc);
         }
 
+        /// <summary>
+        /// An arc has been deleted. Propagate this change to the model.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
         private void OnDelArc(object sender, DelArcEventArgs e)
         {
             // fixme - not undoable
-            model.Arcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
-            RefreshView();
+            List<RuleAction> newArcs = new List<RuleAction>();
+            newArcs.AddRange(model.Arcs);
+            newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
+            ICommand deleteArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
+            presenter.CommandHistory.Add(deleteArc);
         }
+
         /// <summary>
         /// The view has changed the initial state
         /// </summary>
@@ -194,23 +234,6 @@ namespace UserInterface.Presenters
             presenter.CommandHistory.Add(changeProperty);
         }
 
-        /// <summary>
-        /// The model has changed so update our view.
-        /// </summary>
-        /// <param name="changedModel">The changed manager model</param>
-        public void CommandHistory_ModelChanged(object changedModel)
-        {
-#if false
-            if (changedModel == manager)
-            {
-                managerView.Editor.Text = manager.Code;
-            }
-            else if (changedModel == scriptModel)
-            {
-                propertyPresenter.UpdateModel(scriptModel);
-            }
-#endif
-        }
         /// <summary>
         /// The view is asking for variable names.
         /// </summary>
