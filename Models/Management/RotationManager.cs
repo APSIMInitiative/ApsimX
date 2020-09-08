@@ -311,13 +311,14 @@ namespace Models.Management
         /// <summary>
         /// Constructor
         /// </summary>
-        public StateNode(Node n) : base(n) { }
+        /// <param name="n">Node from which properties will be copied.</param>
+        /// <param name="description">Description of the node.</param>
+        public StateNode(Node n, string description = null) : base(n) => Description = description;
 
         /// <summary>
-        /// The name the user calls this node. "Name" is a unique id. Should be unique
+        /// Description of the node.
         /// </summary>
-        /// <returns></returns>
-        public string NodeName { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Copy all properties of another node into this one.
@@ -325,7 +326,7 @@ namespace Models.Management
         /// <param name="other">A node whose properties will be copied.</param>
         public void CopyFrom(StateNode other)
         {
-            this.NodeName = other.NodeName;
+            Description = other.Description;
             base.CopyFrom(other);
         }
     }

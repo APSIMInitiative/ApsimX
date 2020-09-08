@@ -194,6 +194,7 @@
                     {
                         selectedObject.Selected = true;
                         lastPos = clickPoint;
+                        OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(selectedObject));
                     }
 
                     // Redraw area.

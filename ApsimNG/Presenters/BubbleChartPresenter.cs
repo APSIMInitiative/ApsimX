@@ -190,7 +190,8 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnInitialStateChanged(object sender, InitialStateEventArgs e)
         {
-            model.InitialState = e.initialState;
+            ICommand changeProperty = new ChangeProperty(model, nameof(model.InitialState), e.initialState);
+            presenter.CommandHistory.Add(changeProperty);
         }
 
         /// <summary>

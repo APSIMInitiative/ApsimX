@@ -55,7 +55,7 @@ namespace UserInterface.Views
         private Widget nodeSelWdgt = null;
         private Entry nameEntry = null;
         private Entry descEntry = null;
-        private Entry colEntry = null;
+        private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
 
         private Box ctxBox = null;
@@ -66,7 +66,7 @@ namespace UserInterface.Views
 
         private Dictionary<string, List<string>> Rules = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> Actions = new Dictionary<string, List<string>>();
-        private Dictionary<string, string> NodeNames = new Dictionary<string, string>();
+        private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
@@ -117,24 +117,26 @@ namespace UserInterface.Views
             // Node selection: 
             Table t1 = new Table(3, 2, true);
             Label l3 = new Label("Name");
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0); l3.Show();
+            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
             Label l4 = new Label("Description");
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0); l4.Show();
+            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
             Label l5 = new Label("Colour");
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0); l5.Show();
+            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+
             nameEntry = new Entry();
             nameEntry.WidthRequest = 350;
             nameEntry.Changed += OnNameChanged;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0); nameEntry.Show();
+            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             descEntry = new Entry();
             descEntry.WidthRequest = 350;
-            //descEntry.Changed += OnDescChanged;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0); descEntry.Show();
-            colEntry = new Entry();
-            t1.Attach(colEntry, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0); colEntry.Show();
-            t1.HeightRequest = 75;
-
-            nodeSelWdgt = t1 as Widget;
+            descEntry.Changed += OnDescriptionChanged;
+            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            colourChooser = new ColorButton();
+            colourChooser.ColorSet += OnColourChanged;
+            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            //t1.HeightRequest = 75;
+            t1.ShowAll();
+            nodeSelWdgt = t1;
 
             // Info
             Label l6 = new Label();
@@ -181,7 +183,7 @@ namespace UserInterface.Views
             ContextMenu.SelectionDone += ContextMenu_Deactivated;
             (ContextMenu as MenuShell).Mapped+= RotBubbleChartView_ActivateCurrent;
 
-            OnSelect(selectMode.info, null);
+            Select(null);
         }
 #if false
         // I don't think this is being used...
@@ -195,86 +197,141 @@ namespace UserInterface.Views
             owner = null;
         }
 #endif
-        // Context sensitive controls for editing arcs / node on the graph
-        public enum selectMode { arc, node, info };
-        private string selectedObjectName = "";
-
-        // User has changed a node property
+        /// <summary>User has changed a node name.</summary>
         public void OnNameChanged(object o, EventArgs args)
         {
-            // Console.WriteLine("OnNmaeChanged: s=" + selectedObjectName + ", t=" + (o as Entry).Text);
-            if (selectedObjectName != "")
-                NodeNames[selectedObjectName] = (o as Entry).Text;
+            try
+            {
+                if (!string.IsNullOrEmpty(nameEntry.Text))
+                {
+                    // Need to add the node's description to the dictionary under a different name.
+                    nodeDescriptions[nameEntry.Text] = nodeDescriptions[graphView.selectedObject.Name];
+                    nodeDescriptions.Remove(graphView.selectedObject.Name);
+                    graphView.selectedObject.Name = nameEntry.Text;
+                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Nodes = Nodes, Arcs = Arcs });
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
 
-            OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Nodes = Nodes, Arcs = Arcs });
+        /// <summary>
+        /// Called when the user has changed a node's description.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnDescriptionChanged(object sender, EventArgs args)
+        {
+            try
+            {
+                if (graphView.selectedObject != null)
+                {
+                    nodeDescriptions[graphView.selectedObject.Name] = descEntry.Text;
+                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes});
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        private void OnColourChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (graphView.selectedObject != null)
+                {
+                    graphView.selectedObject.Colour = Utility.Colour.GtkToOxyColor(colourChooser.Color);
+                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes});
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         // User has changed a arc property
         public void OnRuleChanged(object o, EventArgs args)
         {
-            if (selectedObjectName != "")
-                Rules[selectedObjectName] = RuleList.Text.Split('\n').ToList();
-            OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+            try
+            {
+                if (graphView.selectedObject != null)
+                {
+                    Rules[graphView.selectedObject.Name] = RuleList.Text.Split('\n').ToList();
+                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         // User has changed a arc property
         public void OnActionChanged(object o, EventArgs args)
         {
-            if (selectedObjectName != "")
-                Actions[selectedObjectName] = ActionList.Text.Split('\n').ToList();
-            OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+            try
+            {
+                if (graphView.selectedObject != null)
+                {
+                    Actions[graphView.selectedObject.Name] = ActionList.Text.Split('\n').ToList();
+                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// A graph object has been selected. Make the (middle part of) UI relevant to it
         /// </summary>
-        /// <param name="mode">Selection mode</param>
-        /// <param name="ObjectName">Object name</param>
-        public void OnSelect(selectMode mode, string ObjectName)
+        /// <param name="objectName">Object name</param>
+        public void Select(string objectName)
         {
             ctxBox.Foreach(c => c.Hide()); 
             ctxLabel.Show();
             ctxBox.PackStart(ctxLabel, false, false, 0);
-            selectedObjectName = ObjectName;
-            switch (mode)
+
+            Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
+            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
+            if (node != null)
             {
-                case selectMode.arc:
-                    {
-                        graphView.DirectedGraph.Arcs.ForEach(arc => {
-                            if (arc.Name == ObjectName)
-                            {
-                                ctxLabel.Text = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
-                                RuleList.Text = String.Join("\n", Rules[arc.Name].ToArray()) ;
-                                ActionList.Text = String.Join("\n", Actions[arc.Name].ToArray());
-                            }
-                        });
+                ctxLabel.Text = "State";
+                nameEntry.Changed -= OnNameChanged;
+                nameEntry.Text = objectName;
+                nameEntry.Changed += OnNameChanged;
+                if (nodeDescriptions.ContainsKey(objectName))
+                {
+                    descEntry.Changed -= OnDescriptionChanged;
+                    descEntry.Text = nodeDescriptions[objectName];
+                    descEntry.Changed += OnDescriptionChanged;
+                }
+                colourChooser.ColorSet -= OnColourChanged;
+                colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
+                colourChooser.ColorSet += OnColourChanged;
 
-                        arcSelWdgt.Show();
-                        ctxBox.PackStart(arcSelWdgt, false, false, 0);
-                        break;
-                    }
-                case selectMode.node:
-                    {
-                        ctxLabel.Text = "State";
-                        if (ObjectName != "")
-                            nameEntry.Text = NodeNames[ObjectName];
-                        else
-                            nameEntry.Text = "";
-                        //descEntry.Text = selectedObject.???;
-
-                        nodeSelWdgt.Show();
-                        ctxBox.PackStart(nodeSelWdgt, false, false, 0);
-                        break;
-                    }
-                case selectMode.info:
-                    {
-                        ctxLabel.Text = "Information";
-                        infoWdgt.Show();
-                        ctxBox.PackStart(infoWdgt, false, false, 0);
-                        break;
-                    }
-                default:
-                    throw new Exception($"Unknown selection mode {mode}");
+                nodeSelWdgt.ShowAll();
+                ctxBox.PackStart(nodeSelWdgt, false, false, 0);
+            }
+            else if (arc != null)
+            {
+                ctxLabel.Text = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
+                RuleList.Text = String.Join(Environment.NewLine, Rules[arc.Name].ToArray()) ;
+                ActionList.Text = String.Join(Environment.NewLine, Actions[arc.Name].ToArray());
+                arcSelWdgt.ShowAll();
+                ctxBox.PackStart(arcSelWdgt, false, false, 0);
+            }
+            else
+            {
+                ctxLabel.Text = "Information";
+                infoWdgt.ShowAll();
+                ctxBox.PackStart(infoWdgt, false, false, 0);
             }
             ctxBox.Show();
         }
@@ -318,8 +375,8 @@ namespace UserInterface.Views
                 handler = delegate (object s, EventArgs x)
                 {
                     Node n = new Node { Name = graphView.DirectedGraph.nextNodeID() }; // blecchh
-                    StateNode newNode = new StateNode(n) { NodeName = n.Name };/* fixme set location to x,y of menu posting location, use IDs not names  */
-                    AddNode?.Invoke(this, new AddNodeEventArgs { Node = newNode });
+                    StateNode newNode = new StateNode(n) /*{ NodeName = n.Name }*/;/* fixme set location to x,y of menu posting location, use IDs not names  */
+                    AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
                 };
                 item.Activated += handler;
                 ContextMenu.Append(item);
@@ -332,7 +389,7 @@ namespace UserInterface.Views
                     string newName = "Copy of " + graphView.selectedObject.Name;
                     Node n = new Node { Name = graphView.DirectedGraph.nextNodeID() }; // blecchh
                     /* fixme set location nearby to old node, use IDs not names */
-                    AddNode?.Invoke(this, new AddNodeEventArgs { Node = new StateNode(n) { NodeName = newName } });
+                    AddNode?.Invoke(this, new AddNodeEventArgs(new StateNode(n)));
                     foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.SourceName == graphView.selectedObject.Name))
                     {
                             Arc newArc = new Arc(arc);
@@ -428,21 +485,22 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnGraphObjectSelected(object o, GraphObjectSelectedArgs args)
         {
+            Select(args.Object1?.Name);
+            /*
             if (args.Object1 == null)
-                OnSelect(selectMode.info, "");
+                Select("");
 
-            if (args.Object1?.GetType() == typeof(DGNode))
+            if (args.Object1 is DGNode node)
             {
-                AddNode(o, new AddNodeEventArgs { Node = new StateNode((args.Object1 as DGNode).ToNode()) { NodeName = NodeNames[(args.Object1 as DGNode).Name] } }); 
-                OnSelect(selectMode.node, (args.Object1 as DGNode).Name);
-                OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+                AddNode(o, new AddNodeEventArgs(new StateNode(node.ToNode()))); 
+                Select(node.Name);
             }
-            if (args.Object1?.GetType() == typeof(DGArc))
+            if (args.Object1 is DGArc arc)
             {
-                AddArc(o, new AddArcEventArgs { Arc = new RuleAction((args.Object1 as DGArc).ToArc()) });
-                OnSelect(selectMode.arc, (args.Object1 as DGArc).Name);
-                OnGraphChanged?.Invoke(this, new GraphChangedEventArgs { Arcs = Arcs, Nodes = Nodes });
+                AddArc(o, new AddArcEventArgs { Arc = new RuleAction(arc.ToArc()) });
+                Select(arc.Name);
             }
+            */
         }
 
         // ^^^^^ REFACTOR THIS        
@@ -488,18 +546,20 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
-        public void SetGraph(List<Models.Management.StateNode> nodes, List<Models.Management.RuleAction> arcs)
+        public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
         {
             Rules.Clear();
             Actions.Clear();
+            nodeDescriptions.Clear();
             string lastSelected = InitialState; 
             comboModel.Clear();
             var graph = new Models.DirectedGraph();
 
             nodes.ForEach(node => {
                 graph.AddNode(node);
-                NodeNames[node.Name] = node.NodeName;
+                //NodeNames[node.Name] = node.NodeName;
                 comboModel.AppendValues (node.Name);
+                nodeDescriptions[node.Name] = node.Description;
             });
             arcs.ForEach(arc =>
             {
@@ -509,16 +569,18 @@ namespace UserInterface.Views
             });
             graphView.DirectedGraph = graph;
             InitialState = lastSelected;
+            graphView.MainWidget.QueueDraw();
         }
 
         public List<StateNode> Nodes
         {
             get
             {
-                List<StateNode> nodes = new List<StateNode>();
+                return graphView.DirectedGraph.Nodes.Select(n => new StateNode(n, nodeDescriptions[n.Name])).ToList();
+                /*List<StateNode> nodes = new List<StateNode>();
                 foreach (var node in graphView.DirectedGraph.Nodes)
                     nodes.Add(new StateNode(node) { NodeName = NodeNames[node.Name] });
-                return nodes;
+                return nodes;*/
             }
         }
 
