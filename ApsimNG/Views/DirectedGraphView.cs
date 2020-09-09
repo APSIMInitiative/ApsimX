@@ -3,7 +3,7 @@
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using EventArguments;
-    using global::UserInterface.EventArguments.DirectedGraph;
+    using EventArguments.DirectedGraph;
     using Gtk;
     using Models;
     using System;
@@ -302,7 +302,6 @@
         /// </summary>
         public void UnSelect()
         {
-            //Console.WriteLine("Unselected");
             nodes.ForEach(node => {  node.Selected = false; });
             arcs.ForEach(arc => { arc.Selected = false; });
             SelectedObject = null;

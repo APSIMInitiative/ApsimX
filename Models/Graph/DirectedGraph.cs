@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System;
+    using System.Linq;
 
     /// <summary>Encapsulates a node on a directed graph</summary>
     [Serializable]
@@ -253,24 +254,24 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        public string nextArcID()
+        public string NextArcID()
         {
             int i = 1;
-            while (Arcs.FindIndex(a => a.Name == ("Arc " + i).ToString()) >= 0)
+            while (Arcs.Any(a => a.Name == $"Arc {i}"))
                 i++;
-            return (("Arc " + i).ToString());
+            return $"Arc {i}";
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string nextNodeID()
+        public string NextNodeID()
         {
             int i = 1;
-            while (Nodes.FindIndex(a => a.Name == ("Node " + i).ToString()) >= 0)
+            while (Nodes.Any(a => a.Name == $"Node {i}"))
                 i++;
-            return (("Node " + i).ToString());
+            return $"Node {i}";
         }
     }
 }

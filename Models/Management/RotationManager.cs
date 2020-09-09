@@ -9,7 +9,6 @@
 // Syntax checking of rules / actions.
 // "fixme" where noted in code
 
-using Models.Interfaces;
 namespace Models.Management
 {
     using System;
@@ -18,6 +17,7 @@ namespace Models.Management
     using System.Globalization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Interfaces;
 
     /// <summary>
     /// The rotation manager model

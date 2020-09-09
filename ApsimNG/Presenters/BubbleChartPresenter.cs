@@ -136,10 +136,13 @@ namespace UserInterface.Presenters
             // not used a a callback for initial state being changed, but it
             // might make sense to update it anyway...
 
-            // Check for multiple nodes with the same name.
-            IEnumerable<IGrouping<string, StateNode>> duplicates = e.Nodes.GroupBy(n => n.Name).Where(g => g.Count() > 1);
-            if (duplicates.Any())
-                throw new Exception($"Unable to apply changes - duplicate node name found: {duplicates.First().Key}");
+            // Check for multiple nodes or arcs with the same name.
+            IEnumerable<IGrouping<string, StateNode>> duplicateNodes = e.Nodes.GroupBy(n => n.Name).Where(g => g.Count() > 1);
+            if (duplicateNodes.Any())
+                throw new Exception($"Unable to apply changes - duplicate node name found: {duplicateNodes.First().Key}");
+            IEnumerable<IGrouping<string, RuleAction>> duplicateArcs = e.Arcs.GroupBy(n => n.Name).Where(g => g.Count() > 1);
+            if (duplicateArcs.Any())
+                throw new Exception($"Unable to apply changes - duplicate arc name found: {duplicateArcs.First().Key}");
 
             ChangeProperty command = new ChangeProperty(changes);
             presenter.CommandHistory.Add(command);

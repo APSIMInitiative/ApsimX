@@ -9,6 +9,17 @@ namespace UserInterface.EventArguments.DirectedGraph
     {
         public List<StateNode> Nodes { get; set; }
         public List<RuleAction> Arcs { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="arcs">Arcs.</param>
+        /// <param name="nodes">Nodes.</param>
+        public GraphChangedEventArgs(List<RuleAction> arcs, List<StateNode> nodes)
+        {
+            Nodes = nodes;
+            Arcs = arcs;
+        }
     }
     public class AddNodeEventArgs : EventArgs
     {
