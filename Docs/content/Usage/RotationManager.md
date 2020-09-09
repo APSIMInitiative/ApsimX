@@ -33,8 +33,8 @@ When transitioning to a new stage, each action in the "Actions" textbox (one per
 
 Additionally, three extra events are published during a state transition, in this order:
 
-- `transition_from_x`
-- `transition`
-- `transition_to_y`
+- `TransitionFromX`
+- `Transition`
+- `TransitionToY`
 
 Where `x` is the previous state and `y` is the next state.

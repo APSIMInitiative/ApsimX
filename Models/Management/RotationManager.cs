@@ -13,6 +13,13 @@ namespace Models.Management
     /// The rotation manager model
     /// </summary>
     /// <remarks>
+    /// The rotation manager visualizes and helps to implement the logic
+    /// in a crop rotation. By itself, the rotation manager understands
+    /// very little of the components with which it is interacting.
+    /// Instead, it relies on other components (usually manager scripts)
+    /// for their specific knowledge. An example crop rotation is provided
+    /// in the RotationManager.apsimx example file.
+    /// 
     /// todo:
     ///
     /// - Implement node/arc ID separate from name?
@@ -26,7 +33,7 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.BubbleChartPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class RotationManager : Model, IBubbleChart
+    public class RotationManager : Model, IBubbleChart, IPublisher
     {
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
@@ -62,6 +69,31 @@ namespace Models.Management
         public string CurrentState { get; private set; }
 
         /// <summary>
+        /// All dynamic events published by the rotation manager.
+        /// </summary>
+        /// <remarks>
+        /// fixme:
+        /// If any nodes are disconnected from the rest of the graph,
+        /// their names will still be included in this list.
+        /// </remarks>
+        public IEnumerable<string> Events
+        {
+            get
+            {
+                foreach (StateNode state in Nodes)
+                {
+                    yield return $"TransitionFrom{state}";
+                    yield return $"TransitionTo{state}";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when transitioning between states.
+        /// </summary>
+        public event EventHandler Transition;
+
+        /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -70,7 +102,6 @@ namespace Models.Management
         private void OnCommence(object sender, EventArgs e)
         {
             CurrentState = InitialState;
-            eventService.Publish("transition", null);
             summary.WriteMessage(this, "Initialised, state=" + CurrentState + "(of " + Nodes.Count + " total)");
         }
 
@@ -120,15 +151,11 @@ namespace Models.Management
         {
             try
             {
-                CurrentState = transition.DestinationName;
+                // Publish pre-transition events.
+                eventService.Publish($"TransitionFrom{CurrentState}", null);
+                Transition?.Invoke(this, EventArgs.Empty);
 
-                // We can now move to another stage.
-                if (CurrentState != "")
-                {
-                    // Publish pre-transition events.
-                    eventService.Publish("transition_from_" + CurrentState, null);
-                    eventService.Publish("transition", null);
-                }
+                CurrentState = transition.DestinationName;
 
                 foreach (string action in transition.Actions)
                 {
@@ -149,7 +176,7 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish("transition_to_" + CurrentState, null);
+                eventService.Publish($"TransitionTo{CurrentState}", null);
             }
             catch (Exception err)
             {
@@ -258,7 +285,11 @@ namespace Models.Management
         /// <summary>
         /// Contructor
         /// </summary>
-        public RuleAction(Arc a) : base(a) { Conditions = new List<string>(); Actions = new List<string>(); }
+        public RuleAction(Arc a) : base(a)
+        {
+            Conditions = new List<string>();
+            Actions = new List<string>();
+        }
 
         /// <summary>Test conditions that need to be satisfied for this transition</summary>
         public List<string> Conditions { get; set; }
@@ -267,7 +298,7 @@ namespace Models.Management
         public List<string> Actions { get; set; }
 
         /// <param name="other"></param>
-        public void copyFrom(RuleAction other)
+        public void CopyFrom(RuleAction other)
         {
             base.CopyFrom(other);
             this.Conditions = new List<string>(other.Conditions);

@@ -307,6 +307,7 @@
     <Compile Include="Management\RotationManager.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\IBubbleChart.cs" />
+    <Compile Include="Core\IPublisher.cs" />
     <Compile Include="PMF\Arbitrator\BiomassTypeArbitrator.cs" />
     <Compile Include="Interfaces\IRootShape.cs" />
     <Compile Include="PMF\Arbitrator\IArbitrationMethod.cs" />

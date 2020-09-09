@@ -205,7 +205,7 @@ namespace UserInterface.Presenters
             if (existingArc == null)
                 newArcs.Add(new RuleAction(e.Arc));
             else
-                existingArc.CopyFrom(new RuleAction(e.Arc));
+                existingArc.CopyFrom((Arc)new RuleAction(e.Arc));
 
             ICommand addArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(addArc);
