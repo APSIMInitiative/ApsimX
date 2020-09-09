@@ -772,10 +772,10 @@
               "Arcs": [
                 {
                   "$type": "Models.Management.RuleAction, Models",
-                  "testCondition": [
+                  "Conditions": [
                     "[SowingRule2].Script.CanHarvest"
                   ],
-                  "action": [
+                  "Actions": [
                     "[SowingRule2].Script.HarvestCrop();"
                   ],
                   "SourceName": "Maize",
@@ -786,10 +786,10 @@
                 },
                 {
                   "$type": "Models.Management.RuleAction, Models",
-                  "testCondition": [
+                  "Conditions": [
                     "[SowingRule1].Script.CanSow"
                   ],
-                  "action": [
+                  "Actions": [
                     "[SowingRule1].Script.SowCrop()"
                   ],
                   "SourceName": "waiting for rain",
@@ -800,10 +800,10 @@
                 },
                 {
                   "$type": "Models.Management.RuleAction, Models",
-                  "testCondition": [
+                  "Conditions": [
                     "[SowingRule1].Script.CanHarvest"
                   ],
-                  "action": [
+                  "Actions": [
                     "[SowingRule1].Script.HarvestCrop(\"glarble\")"
                   ],
                   "SourceName": "Wheat",
@@ -814,10 +814,10 @@
                 },
                 {
                   "$type": "Models.Management.RuleAction, Models",
-                  "testCondition": [
+                  "Conditions": [
                     "[SowingRule2].Script.CanSow"
                   ],
-                  "action": [
+                  "Actions": [
                     "[SowingRule2].Script.SowCrop()"
                   ],
                   "SourceName": "initial",
