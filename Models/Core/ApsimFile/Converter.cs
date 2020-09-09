@@ -3057,6 +3057,12 @@
                 JsonUtilities.RenameChildModel(sample, "NO3N", "NO3");
                 JsonUtilities.RenameChildModel(sample, "NH4N", "NH4");
             }
+
+            foreach (var chloride in JsonUtilities.ChildrenRecursively(root, "Chloride"))
+            {
+                chloride["$type"] = "Models.Soils.Nutrients.Solute, Models";
+                chloride["Name"] = "CL";
+            }
         }
 
         /// <summary>
