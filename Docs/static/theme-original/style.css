@@ -668,8 +668,9 @@ code {
   border: 1px solid #ffeeb8;
   padding: 0px 2px; }
 
-/*.hljs {
-  background: #ffffff; }*/
+.hljs {
+  background: #ffffff; 
+  color: #000000;}
 
 code + .copy-to-clipboard {
   margin-left: -2px;
