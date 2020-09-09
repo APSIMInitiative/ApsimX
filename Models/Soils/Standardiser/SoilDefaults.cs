@@ -195,10 +195,10 @@
         {
             if (!MathUtilities.ValuesInArray(sample.SW))
                 sample.SW = null;
-            if (sample.NO3N != null && !MathUtilities.ValuesInArray(sample.NO3N))
-                sample.NO3N = null;
-            if (sample.NH4N != null && !MathUtilities.ValuesInArray(sample.NH4N))
-                sample.NH4N = null;
+            if (sample.NO3 != null && !MathUtilities.ValuesInArray(sample.NO3))
+                sample.NO3 = null;
+            if (sample.NH4 != null && !MathUtilities.ValuesInArray(sample.NH4))
+                sample.NH4 = null;
             if (!MathUtilities.ValuesInArray(sample.CL))
                 sample.CL = null;
             if (!MathUtilities.ValuesInArray(sample.EC))
