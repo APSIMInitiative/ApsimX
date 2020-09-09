@@ -737,8 +737,8 @@
                   "Description": null,
                   "Name": "waiting for rain",
                   "Location": "421, 204",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Colour": "255, 255, 0",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
@@ -746,8 +746,8 @@
                   "Description": null,
                   "Name": "Maize",
                   "Location": "256, 50",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Colour": "255, 0, 0",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
@@ -755,8 +755,8 @@
                   "Description": null,
                   "Name": "Wheat",
                   "Location": "250, 374",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Colour": "0, 0, 255",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
@@ -764,8 +764,8 @@
                   "Description": null,
                   "Name": "initial",
                   "Location": "70, 200",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Colour": "0, 255, 0",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 }
               ],
@@ -781,7 +781,7 @@
                   "SourceName": "Maize",
                   "DestinationName": "waiting for rain",
                   "Location": "439, 40",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 1"
                 },
                 {
@@ -795,7 +795,7 @@
                   "SourceName": "waiting for rain",
                   "DestinationName": "Wheat",
                   "Location": "430, 384",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 2"
                 },
                 {
@@ -809,7 +809,7 @@
                   "SourceName": "Wheat",
                   "DestinationName": "initial",
                   "Location": "50, 390",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 3"
                 },
                 {
@@ -823,7 +823,7 @@
                   "SourceName": "initial",
                   "DestinationName": "Maize",
                   "Location": "55, 29",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 4"
                 }
               ],

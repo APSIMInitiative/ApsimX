@@ -281,11 +281,11 @@
 
                         if (clickedObject == null)
                             UnSelect();
-                        else
-                        {
-                            clickedObject.Selected = true;
-                            OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(clickedObject, null)); 
-                        }
+                        //else
+                        //{
+                        //    clickedObject.Selected = true;
+                        //    OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(clickedObject, null)); 
+                        //}
                     }
                 }
                 isDragging = false;

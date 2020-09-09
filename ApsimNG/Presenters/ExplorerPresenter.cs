@@ -757,13 +757,6 @@
         /// <param name="presenter">The presenter.</param>
         public void ShowInRightHandPanel(object model, ViewBase newView, IPresenter presenter)
         {
-            if (newView is BubbleChartView bubble)
-            {
-               var arcs = bubble.Arcs;
-               var nodes = bubble.Nodes;
-               var init = bubble.InitialState;
-               Console.WriteLine("Test");
-            }
             currentRightHandPresenter = presenter;
             if (newView != null && currentRightHandPresenter != null)
             {

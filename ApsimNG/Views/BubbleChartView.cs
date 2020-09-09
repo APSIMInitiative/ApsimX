@@ -19,6 +19,7 @@ namespace UserInterface.Views
     /// todo:
     /// - use IDs not names?
     /// - refactor the mechanism used to generate a unique name for new nodes/arcs.
+    /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
     /// </remarks>
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
@@ -76,16 +77,14 @@ namespace UserInterface.Views
             VBox vbox1 = new VBox(false, 0);
             ctxBox = new VBox(false, 0);
             ctxLabel = new Label("Information");
-            ctxBox.PackStart(ctxLabel, false, false, 0);
+            ctxBox.PackStart(ctxLabel, true, true, 0);
 
             // Arc selection: rules & actions
             VBox arcSelBox = new VBox();
 
             Label l1 = new Label("Rules");
-            arcSelBox.PackStart(l1, false, false, 0); l1.Show();
+            arcSelBox.PackStart(l1, true, true, 0); l1.Show();
             RuleList = new EditorView(owner);
-            (RuleList as ViewBase).MainWidget.HeightRequest = 75;
-            (RuleList as ViewBase).MainWidget.WidthRequest = 350;
             RuleList.TextHasChangedByUser += OnRuleChanged;
             //RuleList.ScriptMode = false;
 
@@ -94,13 +93,11 @@ namespace UserInterface.Views
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             rules.AddWithViewport((RuleList as ViewBase).MainWidget);
             (RuleList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(rules, false, false, 0); rules.Show();
+            arcSelBox.PackStart(rules, true, true, 0); rules.Show();
 
             Label l2 = new Label("Actions");
-            arcSelBox.PackStart(l2, false, false, 0); l2.Show();
+            arcSelBox.PackStart(l2, true, true, 0); l2.Show();
             ActionList = new EditorView(owner);
-            (ActionList as ViewBase).MainWidget.HeightRequest = 75;
-            (ActionList as ViewBase).MainWidget.WidthRequest = 350;
             ActionList.TextHasChangedByUser += OnActionChanged;
             //ActionList.ScriptMode = false;
 
@@ -109,8 +106,10 @@ namespace UserInterface.Views
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             actions.AddWithViewport((ActionList as ViewBase).MainWidget);
             (ActionList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(actions, false, false, 0); actions.Show();
+            arcSelBox.PackStart(actions, true, true, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
+            arcSelWdgt.HideAll();
+            ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
             Table t1 = new Table(3, 2, true);
@@ -132,9 +131,8 @@ namespace UserInterface.Views
             colourChooser = new ColorButton();
             colourChooser.ColorSet += OnColourChanged;
             t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            //t1.HeightRequest = 75;
-            t1.ShowAll();
             nodeSelWdgt = t1;
+            nodeSelWdgt.HideAll();
             ctxBox.PackStart(t1, true, true, 0);
 
             // Info
@@ -150,15 +148,16 @@ namespace UserInterface.Views
             "Transition arcs are created by firstly selecting a source node,\n" +
             "then right-clicking over a target node.\n";
             infoWdgt = l6 as Widget;
+            infoWdgt.HideAll();
+            ctxBox.PackStart(infoWdgt, true, true, 0);
+            vbox1.PackStart(ctxBox, true, true, 0);
 
-            vbox1.PackStart(ctxBox, false, false, 0);
-
-            vbox1.PackStart(new Label("Initial State"), false, false, 0);
+            vbox1.PackStart(new Label("Initial State"), true, true, 0);
             combobox1 = new ComboBox();
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
-            vbox1.PackStart(combobox1, false, false, 0);
+            vbox1.PackStart(combobox1, true, true, 0);
             Alignment halign = new Alignment(0, 0, 0, 1);
             halign.Add(vbox1);
 
@@ -247,10 +246,10 @@ namespace UserInterface.Views
         /// <param name="arcs">Arcs of the graph.</param>
         public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
         {
+            string lastSelected = InitialState;
             rules.Clear();
             actions.Clear();
             nodeDescriptions.Clear();
-            string lastSelected = InitialState; 
             comboModel.Clear();
             var graph = new Models.DirectedGraph();
 
@@ -278,8 +277,9 @@ namespace UserInterface.Views
         /// <param name="objectName">Name of the object to be selected.</param>
         public void Select(string objectName)
         {
-            ctxBox.Foreach(c => c.Hide()); 
-            ctxLabel.Show();
+            ctxBox.Foreach(c => ctxBox.Remove(c)); 
+            ctxBox.PackStart(ctxLabel, true, true, 0);
+            ctxLabel.WidthRequest = -1;
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
             Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
@@ -303,21 +303,22 @@ namespace UserInterface.Views
                 colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
                 colourChooser.ColorSet += OnColourChanged;
 
-                nodeSelWdgt.ShowAll();
+                ctxBox.PackStart(nodeSelWdgt, true, true, 0);
             }
             else if (arc != null)
             {
                 ctxLabel.Text = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
                 RuleList.Text = String.Join(Environment.NewLine, rules[arc.Name].ToArray()) ;
                 ActionList.Text = String.Join(Environment.NewLine, actions[arc.Name].ToArray());
-                arcSelWdgt.ShowAll();
+                ctxBox.PackStart(arcSelWdgt, true, true, 0);
+                ctxLabel.WidthRequest = 500;
             }
             else
             {
                 ctxLabel.Text = "Information";
-                infoWdgt.ShowAll();
+                ctxBox.PackStart(infoWdgt, true, true, 0);
             }
-            ctxBox.Show();
+            ctxBox.ShowAll();
         }
 
         /// <summary>
