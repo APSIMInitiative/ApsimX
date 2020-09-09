@@ -437,7 +437,6 @@
     <Compile Include="PMF\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="PMF\Phenology\Scales\BBCH.cs" />
     <Compile Include="PMF\Structure\BudNumberFunction.cs" />
-    <Compile Include="Soils\Nutrients\Chloride.cs" />
     <Compile Include="PMF\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStoreReader.cs" />
     <Compile Include="Storage\RevertCheckpointCommand.cs" />

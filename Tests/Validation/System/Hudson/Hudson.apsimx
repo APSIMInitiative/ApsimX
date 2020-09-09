@@ -1,12 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "ExplorerWidth": 281,
+  "Version": 118,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "W1",
       "Children": [
         {
@@ -31,7 +33,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "Hudson.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
@@ -74,7 +76,7 @@
           "Name": "paddock",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Soil].SoilWater.SW",
@@ -94,13 +96,14 @@
                 "sum([Soil].SoilWater.SWmm[2:6]) as SW110",
                 "sum([Soil].SoilWater.SWmm[7:11]) as SW210",
                 "sum([Soil].SoilWater.SWmm[12:16]) as SW310",
-                "sum([Soil].Chloride.kgha[2:6]) as Cl110",
-                "sum([Soil].Chloride.kgha[7:11]) as Cl210",
-                "sum([Soil].Chloride.kgha[12:16]) as Cl310"
+                "sum([Soil].CL.kgha[2:6]) as Cl110",
+                "sum([Soil].CL.kgha[7:11]) as Cl210",
+                "sum([Soil].CL.kgha[12:16]) as Cl310"
               ],
               "EventNames": [
                 "[Clock].DoReport"
               ],
+              "GroupByVariableName": null,
               "Name": "report",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -124,6 +127,7 @@
               "Latitude": 0.0,
               "Longitude": 0.0,
               "LocationAccuracy": null,
+              "YearOfSampling": null,
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
@@ -169,6 +173,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.0,
                     1.1,
@@ -266,6 +272,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -339,7 +350,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 9.0,
                   "SummerCona": 5.0,
@@ -352,10 +363,9 @@
                   "CN2Bare": 72.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -373,24 +383,6 @@
                     200.0,
                     200.0,
                     200.0
-                  ],
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
                   ],
                   "SWCON": [
                     0.4,
@@ -411,9 +403,8 @@
                     0.4
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -547,6 +538,8 @@
                     0.12266650165572733,
                     0.1010808727977556
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -665,6 +658,10 @@
                   ],
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -709,8 +706,8 @@
                     200.0,
                     200.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
@@ -764,8 +761,8 @@
                     200.0,
                     200.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     0.43,
                     0.43,
@@ -807,9 +804,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Nutrients.Chloride, Models",
-                  "kgha": null,
-                  "Name": "Chloride",
+                  "$type": "Models.Soils.Nutrients.Solute, Models",
+                  "Name": "CL",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -817,213 +813,6 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "DirectedGraphInfo": {
-                    "$type": "Models.Graph.DirectedGraph, Models",
-                    "Nodes": [
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Inert",
-                        "Location": "656, 254",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "SurfaceResidue",
-                        "Location": "566, 69",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMLignin",
-                        "Location": "261, 69",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMCellulose",
-                        "Location": "397, 70",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMCarbohydrate",
-                        "Location": "123, 70",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Microbial",
-                        "Location": "218, 299",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Humic",
-                        "Location": "458, 293",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Urea",
-                        "Location": "529, 419",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "NO3",
-                        "Location": "185, 435",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "NH4",
-                        "Location": "357, 422",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Atmosphere",
-                        "Location": "48, 338",
-                        "Colour": "White",
-                        "OutlineColour": "White",
-                        "Transparent": true
-                      }
-                    ],
-                    "Arcs": [
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Microbial",
-                        "Location": "415, 173",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Humic",
-                        "Location": "499, 172",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Microbial",
-                        "Location": "259, 221",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Humic",
-                        "Location": "255, 105",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Microbial",
-                        "Location": "370, 184",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Humic",
-                        "Location": "463, 224",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Microbial",
-                        "Location": "141, 131",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Humic",
-                        "Location": "204, 215",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Microbial",
-                        "Location": "335, 301",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Humic",
-                        "Location": "319, 278",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Humic",
-                        "DestinationName": "Microbial",
-                        "Location": "334, 340",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Urea",
-                        "DestinationName": "NH4",
-                        "Location": "433, 416",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "NO3",
-                        "DestinationName": "Atmosphere",
-                        "Location": "1, 319",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "NH4",
-                        "DestinationName": "NO3",
-                        "Location": "243, 409",
-                        "Colour": "Black",
-                        "Text": null
-                      }
-                    ]
-                  },
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
                   "IncludeInDocumentation": true,
@@ -1037,14 +826,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "unknown",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 1.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
               "IncludeInDocumentation": true,
@@ -1226,10 +1013,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -1247,11 +1030,11 @@
           "Name": "Crop",
           "Children": [
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1262,7 +1045,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1280,7 +1063,7 @@
               "Name": "Biomass",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1292,7 +1075,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.AboveGround.Wt",
@@ -1310,7 +1092,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1322,7 +1104,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.AboveGround.Wt",
@@ -1340,7 +1121,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1352,7 +1133,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Barley.AboveGround.Wt",
@@ -1375,11 +1155,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1390,7 +1170,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1408,7 +1188,7 @@
               "Name": "Yield",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1420,7 +1200,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.Grain.Wt",
@@ -1438,7 +1217,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1450,7 +1229,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.Grain.Wt",
@@ -1468,7 +1246,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1480,7 +1258,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Barley.Grain.Wt",
@@ -1503,11 +1280,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1518,7 +1295,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1536,7 +1313,7 @@
               "Name": "LAI",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1548,7 +1325,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.Leaf.LAI",
@@ -1566,7 +1342,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1578,7 +1354,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Wheat.Leaf.LAI",
@@ -1596,7 +1371,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1608,7 +1383,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCrop",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Barley.Leaf.LAI",
@@ -1641,11 +1415,11 @@
           "Name": "SoilWater",
           "Children": [
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1656,7 +1430,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1674,7 +1448,7 @@
               "Name": "SW110cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1686,7 +1460,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "SW110",
@@ -1704,7 +1477,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1716,7 +1489,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedSW",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw110",
@@ -1739,11 +1511,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1754,7 +1526,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1772,7 +1544,7 @@
               "Name": "SW210cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1784,7 +1556,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "SW210",
@@ -1802,7 +1573,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1814,7 +1585,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedSW",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw210",
@@ -1837,11 +1607,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1852,7 +1622,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1870,7 +1640,7 @@
               "Name": "SW310cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1882,7 +1652,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "SW310",
@@ -1900,7 +1669,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1912,7 +1681,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedSW",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "sw310",
@@ -1945,22 +1713,22 @@
           "Name": "Chloride",
           "Children": [
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1973,12 +1741,12 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride110cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1990,7 +1758,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Cl110",
@@ -2008,7 +1775,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -2020,7 +1787,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCl",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "CL110",
@@ -2043,22 +1809,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -2071,12 +1837,12 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride210cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -2088,7 +1854,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Cl210",
@@ -2106,7 +1871,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -2118,7 +1883,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCl",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Cl210",
@@ -2141,22 +1905,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -2169,12 +1933,12 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride310cm",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -2186,7 +1950,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Cl310",
@@ -2204,7 +1967,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -2216,7 +1979,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "ObservedCl",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Cl310",
