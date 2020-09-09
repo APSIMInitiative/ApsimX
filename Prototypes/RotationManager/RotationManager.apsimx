@@ -62,7 +62,7 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[RotBubbleChart].currentState",
+                "[RotationManager].CurrentState",
                 "[Wheat].Phenology.Zadok.Stage",
                 "[Wheat].Phenology.CurrentStageName",
                 "[Wheat].IsAlive",
@@ -77,8 +77,6 @@
                 "[Wheat].Grain.Total.Wt",
                 "[Wheat].Grain.Total.N",
                 "[Wheat].Total.Wt",
-                "",
-                "[SowingRule2].Script.accumulatedRain.Sum as accumRain",
                 "",
                 "Sum([Soil].SoilWater.ESW) as ESW",
                 "[Soil].SoilWater.Es as ESoil"
@@ -735,8 +733,8 @@
                 {
                   "$type": "Models.Management.StateNode, Models",
                   "Description": null,
-                  "Name": "waiting for rain",
-                  "Location": "421, 204",
+                  "Name": "summer fallow",
+                  "Location": "428, 190",
                   "Colour": "255, 255, 0",
                   "OutlineColour": "0, 0, 0",
                   "Transparent": false
@@ -755,7 +753,7 @@
                   "Description": null,
                   "Name": "Wheat",
                   "Location": "250, 374",
-                  "Colour": "0, 0, 255",
+                  "Colour": "96, 96, 217",
                   "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
@@ -773,13 +771,13 @@
                 {
                   "$type": "Models.Management.RuleAction, Models",
                   "Conditions": [
-                    "[SowingRule2].Script.CanHarvest"
+                    "[MaizeManager].Script.CanHarvest"
                   ],
                   "Actions": [
-                    "[SowingRule2].Script.HarvestCrop();"
+                    "[MaizeManager].Script.HarvestCrop();"
                   ],
                   "SourceName": "Maize",
-                  "DestinationName": "waiting for rain",
+                  "DestinationName": "summer fallow",
                   "Location": "439, 40",
                   "Colour": "255, 255, 0",
                   "Name": "Arc 1"
@@ -787,12 +785,12 @@
                 {
                   "$type": "Models.Management.RuleAction, Models",
                   "Conditions": [
-                    "[SowingRule1].Script.CanSow"
+                    "[WheatManager].Script.CanSow"
                   ],
                   "Actions": [
-                    "[SowingRule1].Script.SowCrop()"
+                    "[WheatManager].Script.SowCrop()"
                   ],
-                  "SourceName": "waiting for rain",
+                  "SourceName": "summer fallow",
                   "DestinationName": "Wheat",
                   "Location": "430, 384",
                   "Colour": "255, 255, 0",
@@ -801,10 +799,10 @@
                 {
                   "$type": "Models.Management.RuleAction, Models",
                   "Conditions": [
-                    "[SowingRule1].Script.CanHarvest"
+                    "[WheatManager].Script.CanHarvest"
                   ],
                   "Actions": [
-                    "[SowingRule1].Script.HarvestCrop(\"glarble\")"
+                    "[WheatManager].Script.HarvestCrop(\"glarble\")"
                   ],
                   "SourceName": "Wheat",
                   "DestinationName": "initial",
@@ -815,10 +813,10 @@
                 {
                   "$type": "Models.Management.RuleAction, Models",
                   "Conditions": [
-                    "[SowingRule2].Script.CanSow"
+                    "[MaizeManager].Script.CanSow"
                   ],
                   "Actions": [
-                    "[SowingRule2].Script.SowCrop()"
+                    "[MaizeManager].Script.SowCrop()"
                   ],
                   "SourceName": "initial",
                   "DestinationName": "Maize",
@@ -829,7 +827,7 @@
               ],
               "InitialState": "initial",
               "currentState": null,
-              "Name": "RotBubbleChart",
+              "Name": "RotationManager",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -837,7 +835,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] Soil Soil; \n\n        [Separator(\"Script Configuration\")]\n        [Description(\"Crop to manage\")]\n        public IPlant Crop { get; set; }\n        [Description(\"Run script in verbose mode?\")]\n\t\t[Tooltip(\"If enabled, the script will print a large number of diagnostics to the summary file, to aid debugging\")]\n\t\tpublic bool Verbose { get; set; }\n\n        [Separator(\"Sowing Conditions\")]\n        [Description(\"Start of sowing window (d-mmm)\")]\n        public string StartDate { get; set;}\n        [Description(\"End of sowing window (d-mmm)\")]\n        public string EndDate { get; set;}\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\n        public double MinESW { get; set;}\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\n        public double MinRain { get; set;}\n        [Description(\"Duration of rainfall accumulation (d)\")]\n        public int RainDays { get; set;}\n\n        [Tooltip(\"If enabled, and if sowing conditions are not met, the crop will be sown on the final day of the sowing window.\")]\n        [Description(\"Must sow (yes/no)\")]\n        public bool MustSow { get; set;}\n        [Separator(\"Sowing Properties\")]\n        [Description(\"Cultivar to be sown\")]\n        [Display(Type=DisplayType.CultivarName)]\n        public string CultivarName { get; set;}\n        [Description(\"Sowing depth (mm)\")]\n        public double SowingDepth { get; set;}        \n        [Description(\"Row spacing (mm)\")]\n        public double RowSpacing { get; set;}    \n        [Description(\"Plant population (/m2)\")]\n        public double Population { get; set;}    \n\n        private Accumulator accumulatedRain;\n        private bool afterInit = false;\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n            afterInit = true;\n            Summary.WriteMessage(this, this.FullPath + \" - Commence, crop=\" + (Crop as Model).Name);\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void DoManagement(object sender, EventArgs e)\n        {\n            accumulatedRain.Update();\n        }\n\n\t    // Test whether we can sow a crop today\n\t    // +ve number - yes\n\t    // 0          - no\n\t    // -ve number - no, out of scope (planting window)\n\t    [Units(\"0-1\")]\n\t    public int CanSow\n\t    {\n\t        get\n            {\n\t            if (!afterInit)\n\t                return 0;\n\t\t        bool isPossibleToday = false;\n\t            bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\n\t            bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\n\t            if (! Crop.IsAlive && inWindow && accumulatedRain.Sum > MinRain && MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \n\t                isPossibleToday = true;\n\n   \t\t\t    if (Verbose)\n\t\t\t\t{\n\t\t\t\t\tif (isPossibleToday)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today\");\n\t\t\t\t\telse if (!Crop.IsAlive && endOfWindow && MustSow)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today, but conditions are not ideal. Only sowing because MustSow is set to yes\");\n\t\t\t\t\telse if (Crop.IsAlive)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Not sowing today because crop is already alive\");\n\t\t\t\t\telse if (!inWindow)\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because current date ({0}) is not in sowing window ({1} - {2}).\", Clock.Today.ToString(\"dd-MMM\"), StartDate, EndDate));\n\t\t\t\t\telse if (!(accumulatedRain.Sum > MinRain))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because accumulated rain ({0}) is less than min rain required for sowing ({1})\", accumulatedRain.Sum, MinRain));\n\t\t\t\t\telse if (!(MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because ESW ({0}) is less than min ESW required for sowing ({1})\", MathUtilities.Sum(Soil.SoilWater.ESW), MinESW));\n\t\t\t\t}\n\n\t           if (isPossibleToday)\n\t               return 1;\n\n\t           if (! Crop.IsAlive && endOfWindow && MustSow) \n\t               return 1;\n\n\t           if (! Crop.IsAlive && !inWindow)\n\t               return -1;\n\n\t           return 0;\n            }\n        }\n\n\t    public void SowCrop()\n\t    {\n\t       Summary.WriteMessage(this, this.FullPath + \" -  sowing \" + (Crop as Model).Name);\n\t       Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \n\t    }\n\n\t    [Units(\"0-1\")]\n\t    public int CanHarvest\n\t    {\n\t       get\n\t       {\n\t         if (!afterInit)\n\t         \treturn 0;\n\t         return Crop.IsReadyForHarvesting ? 1 : 0;\n\t       }\n\t    }\n\n\t    public void HarvestCrop(string msg)\n\t    {\n\t       Summary.WriteMessage(this, \"Harvesting crop \" + (Crop as IModel).Name + \". Message: \" + msg);\n\t       Crop.Harvest();\n\t       Crop.EndCrop();\n\t    }\n    }\n}\n",
+              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] Soil Soil; \n\n        [Separator(\"Script Configuration\")]\n        [Description(\"Crop to manage\")]\n        public IPlant Crop { get; set; }\n        [Description(\"Run script in verbose mode?\")]\n\t\t[Tooltip(\"If enabled, the script will print a large number of diagnostics to the summary file, to aid debugging\")]\n\t\tpublic bool Verbose { get; set; }\n\n        [Separator(\"Sowing Conditions\")]\n        [Description(\"Start of sowing window (d-mmm)\")]\n        public string StartDate { get; set;}\n        [Description(\"End of sowing window (d-mmm)\")]\n        public string EndDate { get; set;}\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\n        public double MinESW { get; set;}\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\n        public double MinRain { get; set;}\n        [Description(\"Duration of rainfall accumulation (d)\")]\n        public int RainDays { get; set;}\n\n        [Tooltip(\"If enabled, and if sowing conditions are not met, the crop will be sown on the final day of the sowing window.\")]\n        [Description(\"Must sow (yes/no)\")]\n        public bool MustSow { get; set;}\n        [Separator(\"Sowing Properties\")]\n        [Description(\"Cultivar to be sown\")]\n        [Display(Type=DisplayType.CultivarName)]\n        public string CultivarName { get; set;}\n        [Description(\"Sowing depth (mm)\")]\n        public double SowingDepth { get; set;}        \n        [Description(\"Row spacing (mm)\")]\n        public double RowSpacing { get; set;}    \n        [Description(\"Plant population (/m2)\")]\n        public double Population { get; set;}    \n\n        private Accumulator accumulatedRain;\n        private bool afterInit = false;\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n            afterInit = true;\n            Summary.WriteMessage(this, this.FullPath + \" - Commence, crop=\" + (Crop as Model).Name);\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void DoManagement(object sender, EventArgs e)\n        {\n            accumulatedRain.Update();\n        }\n\n\t    // Test whether we can sow a crop today\n\t    // +ve number - yes\n\t    // 0          - no\n\t    // -ve number - no, out of scope (planting window)\n\t    [Units(\"0-1\")]\n\t    public bool CanSow\n\t    {\n\t        get\n            {\n\t            if (!afterInit)\n\t                return false;\n\t\t        bool isPossibleToday = false;\n\t            bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\n\t            bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\n\t            if (! Crop.IsAlive && inWindow && accumulatedRain.Sum > MinRain && MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \n\t                isPossibleToday = true;\n\n   \t\t\t    if (Verbose)\n\t\t\t\t{\n\t\t\t\t\tif (isPossibleToday)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today\");\n\t\t\t\t\telse if (!Crop.IsAlive && endOfWindow && MustSow)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today, but conditions are not ideal. Only sowing because MustSow is set to yes\");\n\t\t\t\t\telse if (Crop.IsAlive)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Not sowing today because crop is already alive\");\n\t\t\t\t\telse if (!inWindow)\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because current date ({0}) is not in sowing window ({1} - {2}).\", Clock.Today.ToString(\"dd-MMM\"), StartDate, EndDate));\n\t\t\t\t\telse if (!(accumulatedRain.Sum > MinRain))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because accumulated rain ({0}) is less than min rain required for sowing ({1})\", accumulatedRain.Sum, MinRain));\n\t\t\t\t\telse if (!(MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because ESW ({0}) is less than min ESW required for sowing ({1})\", MathUtilities.Sum(Soil.SoilWater.ESW), MinESW));\n\t\t\t\t}\n\n\t           if (isPossibleToday)\n\t               return true;\n\n\t           if (! Crop.IsAlive && endOfWindow && MustSow) \n\t               return true;\n\n\t           if (! Crop.IsAlive && !inWindow)\n\t               return false;\n\n\t           return false;\n            }\n        }\n\n\t    public void SowCrop()\n\t    {\n\t       Summary.WriteMessage(this, this.FullPath + \" -  sowing \" + (Crop as Model).Name);\n\t       Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \n\t    }\n\n\t    [Units(\"0-1\")]\n\t    public int CanHarvest\n\t    {\n\t       get\n\t       {\n\t         if (!afterInit)\n\t         \treturn 0;\n\t         return Crop.IsReadyForHarvesting ? 1 : 0;\n\t       }\n\t    }\n\n\t    public void HarvestCrop(string msg)\n\t    {\n\t       Summary.WriteMessage(this, \"Harvesting crop \" + (Crop as IModel).Name + \". Message: \" + msg);\n\t       Crop.Harvest();\n\t       Crop.EndCrop();\n\t    }\n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -888,14 +886,14 @@
                   "Value": "120"
                 }
               ],
-              "Name": "SowingRule1",
+              "Name": "WheatManager",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n\t[Serializable]\n\tpublic class Script : Model\n\t{\n\t\t//[Link] Simulation Simulation;\n\t\t[Link] Clock Clock;\n\t\t[Link] Summary Summary;\n\t\t[Link] Soil Soil;\n\n\t\t[Separator(\"Script Configuration\")]\n\t\t[Description(\"Crop to manage\")]\n\t\tpublic IPlant Crop { get; set; }\n\n\t\t[Description(\"Run script in verbose mode?\")]\n\t\t[Tooltip(\"If enabled, the script will print a large number of diagnostics to the summary file, to aid debugging\")]\n\t\tpublic bool Verbose { get; set; }\n\n\t\t[Separator(\"Sowing Conditions\")]\n\t\t[Description(\"Start of sowing window (d-mmm)\")]\n\t\tpublic string StartDate { get; set; }\n\t\t[Description(\"End of sowing window (d-mmm)\")]\n\t\tpublic string EndDate { get; set; }\n\t\t[Description(\"Minimum extractable soil water for sowing (mm)\")]\n\t\tpublic double MinESW { get; set; }\n\t\t[Description(\"Accumulated rainfall required for sowing (mm)\")]\n\t\tpublic double MinRain { get; set; }\n\t\t[Description(\"Duration of rainfall accumulation (d)\")]\n\t\tpublic int RainDays { get; set; }\n\t\t[Tooltip(\"If enabled, and if sowing conditions are not met, the crop will be sown on the final day of the sowing window.\")]\n\t\t[Description(\"Must sow (yes/no)\")]\n\t\tpublic bool MustSow { get; set; }\n\n\t\t[Separator(\"Sowing Properties\")]\n\t\t[Description(\"Cultivar to be sown\")]\n\t\t[Display(Type = DisplayType.CultivarName)]\n\t\tpublic string CultivarName { get; set; }\n\t\t[Description(\"Sowing depth (mm)\")]\n\t\tpublic double SowingDepth { get; set; }\n\t\t[Description(\"Row spacing (mm)\")]\n\t\tpublic double RowSpacing { get; set; }\n\t\t[Description(\"Plant population (/m2)\")]\n\t\tpublic double Population { get; set; }\n\n\t\tpublic Accumulator accumulatedRain { get; private set; }\n\t\tprivate bool afterInit = false;\n                \n\t\t[EventSubscribe(\"StartOfSimulation\")]\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\n\t\t{\n\t\t\tif (Crop == null)\n\t\t\t\tthrow new Exception(\"Crop must not be null in rotations\");\n\t\t\taccumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n\t\t\tSummary.WriteMessage(this, this.FullPath + \" - Commence, crop=\" + (Crop as Model).Name);\n\t\t\tafterInit = true;\n\t\t}\n        \n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void DoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\taccumulatedRain.Update();\n\t\t}\n\n\t\t// Test whether we can sow a crop today\n\t\t// +ve number - yes\n\t\t// 0          - no\n\t\t// -ve number - no, out of scope (planting window)\n\t\t[Units(\"0-1\")]\n\t\tpublic int CanSow\n\t\t{\n\t\t\tget\n\t\t\t{\n\t\t\t\tif (!afterInit)\n\t\t\t\t\treturn 0;\n\t\t\t\tbool isPossibleToday = false;\n\t\t\t\tbool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\n\t\t\t\tbool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\n\t\t\t\tif (!Crop.IsAlive &&\n\t\t\t\t         inWindow &&\n\t\t\t\t         accumulatedRain.Sum > MinRain &&\n\t\t\t\t         MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW)\n\t\t\t\t\tisPossibleToday = true;\n\t\t\t\tif (Verbose)\n\t\t\t\t{\n\t\t\t\t\tif (isPossibleToday)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today\");\n\t\t\t\t\telse if (!Crop.IsAlive && endOfWindow && MustSow)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Sowing is possible today, but conditions are not ideal. Only sowing because MustSow is set to yes\");\n\t\t\t\t\telse if (Crop.IsAlive)\n\t\t\t\t\t\tSummary.WriteMessage(this, \"Not sowing today because crop is already alive\");\n\t\t\t\t\telse if (!inWindow)\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because current date ({0}) is not in sowing window ({1} - {2}).\", Clock.Today.ToString(\"dd-MMM\"), StartDate, EndDate));\n\t\t\t\t\telse if (!(accumulatedRain.Sum > MinRain))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because accumulated rain ({0}) is less than min rain required for sowing ({1})\", accumulatedRain.Sum, MinRain));\n\t\t\t\t\telse if (!(MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW))\n\t\t\t\t\t\tSummary.WriteMessage(this, string.Format(\"Not sowing today because ESW ({0}) is less than min ESW required for sowing ({1})\", MathUtilities.Sum(Soil.SoilWater.ESW), MinESW));\n\t\t\t\t}\n\t\t\t\t//Summary.WriteMessage(this, \"canEnter:\" + isPossibleToday);\n\t\t\t\tif (isPossibleToday)\n\t\t\t\t\treturn 1;\n         \n\t\t\t\tif (!Crop.IsAlive && endOfWindow && MustSow)\n\t\t\t\t\treturn 1;\n\n\t\t\t\tif (!Crop.IsAlive && !inWindow)\n\t\t\t\t\treturn -1;\n\t\t\t\treturn 0;\n\t\t\t}\n\t\t}\n\n\t\tpublic void SowCrop()\n\t\t{\n\t\t\tSummary.WriteMessage(this, this.FullPath + \" -  sowing \" + (Crop as Model).Name);\n\t\t\tCrop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \n\t\t}\n\n\t\t[Units(\"0-1\")] \n\t\tpublic int CanHarvest\n\t\t{\n\t\t\tget\n\t\t\t{\n\t\t\t\tif (!afterInit)\n\t\t\t\t\treturn (0);\n\t\t\t\t//Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\n\t\t\t\treturn Crop.IsReadyForHarvesting ? 1 : 0;\n\t\t\t}\n\t\t}\n\n\t\tpublic void HarvestCrop()\n\t\t{\n\t\t\tCrop.Harvest();\n\t\t\tCrop.EndCrop();\n\t\t}\n\t}\n}\n",
+              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n\t[Serializable]\n\tpublic class Script : Model\n\t{\n\t\t//[Link] Simulation Simulation;\n\t\t[Link] Clock Clock;\n\t\t[Link] Summary Summary;\n\t\t[Link] Soil Soil;\n\n\t\t[Separator(\"Script Configuration\")]\n\t\t[Description(\"Crop to manage\")]\n\t\tpublic IPlant Crop { get; set; }\n\n\t\t[Description(\"Run script in verbose mode?\")]\n\t\t[Tooltip(\"If enabled, the script will print a large number of diagnostics to the summary file, to aid debugging\")]\n\t\tpublic bool Verbose { get; set; }\n\n\t\t[Separator(\"Sowing Conditions\")]\n\t\t[Description(\"Start of sowing window (d-mmm)\")]\n\t\tpublic string StartDate { get; set; }\n\t\t[Description(\"End of sowing window (d-mmm)\")]\n\t\tpublic string EndDate { get; set; }\n\t\t[Description(\"Minimum extractable soil water for sowing (mm)\")]\n\t\tpublic double MinESW { get; set; }\n\t\t[Description(\"Accumulated rainfall required for sowing (mm)\")]\n\t\tpublic double MinRain { get; set; }\n\t\t[Description(\"Duration of rainfall accumulation (d)\")]\n\t\tpublic int RainDays { get; set; }\n\t\t[Tooltip(\"If enabled, and if sowing conditions are not met, the crop will be sown on the final day of the sowing window.\")]\n\t\t[Description(\"Must sow (yes/no)\")]\n\t\tpublic bool MustSow { get; set; }\n\n\t\t[Separator(\"Sowing Properties\")]\n\t\t[Description(\"Cultivar to be sown\")]\n\t\t[Display(Type = DisplayType.CultivarName)]\n\t\tpublic string CultivarName { get; set; }\n\t\t[Description(\"Sowing depth (mm)\")]\n\t\tpublic double SowingDepth { get; set; }\n\t\t[Description(\"Row spacing (mm)\")]\n\t\tpublic double RowSpacing { get; set; }\n\t\t[Description(\"Plant population (/m2)\")]\n\t\tpublic double Population { get; set; }\n\n\t\tpublic Accumulator accumulatedRain { get; private set; }\n\t\tprivate bool afterInit = false;\n                \n\t\t[EventSubscribe(\"StartOfSimulation\")]\n\t\tprivate void OnSimulationCommencing(object sender, EventArgs e)\n\t\t{\n\t\t\tif (Crop == null)\n\t\t\t\tthrow new Exception(\"Crop must not be null in rotations\");\n\t\t\taccumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n\t\t\tSummary.WriteMessage(this, this.FullPath + \" - Commence, crop=\" + (Crop as Model).Name);\n\t\t\tafterInit = true;\n\t\t}\n        \n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void DoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\taccumulatedRain.Update();\n\t\t}\n\n\t\t// Test whether we can sow a crop today\n\t\t// +ve number - yes\n\t\t// 0          - no\n\t\t// -ve number - no, out of scope (planting window)\n\t\t[Units(\"0-1\")]\n\t\tpublic int CanSow\n\t\t{\n\t\t\tget\n\t\t\t{\n\t\t\t\tif (!afterInit)\n\t\t\t\t\treturn 0;\n\t\t\t\tbool isPossibleToday = false;\n\t\t\t\tbool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\n\t\t\t\tbool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\n\t\t\t\tif (!Crop.IsAlive && inWindow && accumulatedRain.Sum > MinRain && MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW)\n\t\t\t\t\tisPossibleToday = true;\n\n\t\t\t\tif (isPossibleToday)\n\t\t\t\t\treturn 1;\n         \n\t\t\t\tif (!Crop.IsAlive && endOfWindow && MustSow)\n\t\t\t\t\treturn 1;\n\n\t\t\t\tif (!Crop.IsAlive && !inWindow)\n\t\t\t\t\treturn -1;\n\t\t\t\treturn 0;\n\t\t\t}\n\t\t}\n\n\t\tpublic void SowCrop()\n\t\t{\n\t\t\tSummary.WriteMessage(this, this.FullPath + \" -  sowing \" + (Crop as Model).Name);\n\t\t\tCrop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \n\t\t}\n\n\t\t[Units(\"0-1\")] \n\t\tpublic int CanHarvest\n\t\t{\n\t\t\tget\n\t\t\t{\n\t\t\t\tif (!afterInit)\n\t\t\t\t\treturn (0);\n\t\t\t\t//Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\n\t\t\t\treturn Crop.IsReadyForHarvesting ? 1 : 0;\n\t\t\t}\n\t\t}\n\n\t\tpublic void HarvestCrop()\n\t\t{\n\t\t\tCrop.Harvest();\n\t\t\tCrop.EndCrop();\n\t\t}\n\t}\n}\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -950,7 +948,7 @@
                   "Value": ""
                 }
               ],
-              "Name": "SowingRule2",
+              "Name": "MaizeManager",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false

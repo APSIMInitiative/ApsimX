@@ -1,14 +1,3 @@
-//
-// TO DO
-//
-// implement node colours & descriptions, separate name from id
-// dynamic / auto layout of new nodes & arcs
-// implement command history
-// nodes & arcs referenced by ID, not names
-// ?intellisense isn't picking up member functions? events are OK.
-// Syntax checking of rules / actions.
-// "fixme" where noted in code
-
 namespace Models.Management
 {
     using System;
@@ -18,10 +7,20 @@ namespace Models.Management
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Interfaces;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The rotation manager model
     /// </summary>
+    /// <remarks>
+    /// todo:
+    ///
+    /// - Implement node/arc ID separate from name?
+    /// - dynamic / auto layout of new nodes/arcs
+    /// - ?intellisense isn't picking up member functions? events are OK.
+    /// - Syntax checking of rules / actions.
+    /// - "fixme" where noted in code
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.BubbleChartView")]
     [PresenterName("UserInterface.Presenters.BubbleChartPresenter")]
@@ -30,7 +29,7 @@ namespace Models.Management
     public class RotationManager : Model, IBubbleChart
     {
         /// <summary>For logging</summary>
-        [Link] public Summary Summary;
+        [Link] private Summary summary = null;
 
         /// <summary>
         /// Events service. Used to publish events when transitioning
@@ -41,76 +40,26 @@ namespace Models.Management
         private Events eventService = null;
 
         /// <summary>
-        /// The nodes of the graph.
+        /// The nodes of the graph. These represent states of the rotation.
         /// </summary>
-        [Description("Node list")]
         public List<StateNode> Nodes { get; set; } = new List<StateNode>();
 
         /// <summary>
-        /// The arcs on the bubble chart.
+        /// The arcs on the bubble chart which define transition
+        /// between stages (nodes).
         /// </summary>
-        [Description("Arc list")]
         public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
 
         /// <summary>
-        /// Initial state of the graph.
+        /// Initial state of the rotation.
         /// </summary>
-        [Description("Initial state of graph")]
         public string InitialState { get; set; }
 
         /// <summary>
-        /// Add a node
+        /// Current State of the rotation.
         /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public void AddNode(StateNode node)
-        {
-            var myNode = Nodes.Find(delegate (StateNode n) { return (n.Name == node.Name); });
-            if (myNode == null)
-                Nodes.Add(node);
-            else
-                myNode.CopyFrom(node);
-        }
-
-        /// <summary>
-        /// Remove a node
-        /// </summary>
-        /// <param name="nodeName"></param>
-        public void DelNode(string nodeName)
-        {
-            Nodes.RemoveAll(delegate (StateNode n) { return (n.Name == nodeName); });
-        }
-
-        /// <summary>
-        /// add a transition between two nodes
-        /// </summary>
-        public void AddRuleAction(RuleAction value)
-        {
-            if (Nodes.Find(delegate (StateNode n) { return (n.Name == value.SourceName); }) == null ||
-                Nodes.Find(delegate (StateNode n) { return (n.Name == value.DestinationName); }) == null)
-                throw new Exception("Target empty in arc");
-            var myArc = Arcs.Find(a => a.Name == value.Name);
-            if (myArc == null)
-                Arcs.Add(value);
-            else
-                myArc.CopyFrom(value);
-        }
-
-        /// <summary>
-        /// delete an arc
-        /// </summary>
-        /// <param name="arcToDelete"></param>
-        public void DelRuleAction(string arcToDelete)
-        {
-            Arcs.RemoveAll(delegate (RuleAction a) { return (a.Name == arcToDelete); });
-        }
-
-        /// <summary>
-        /// Current State of DG
-        /// </summary>
-        [Units("")]
-        [Description("Current State of DG")]
-        public string currentState { get; private set; }
+        [JsonIgnore]
+        public string CurrentState { get; private set; }
 
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.
@@ -120,9 +69,9 @@ namespace Models.Management
         [EventSubscribe("Commencing")]
         private void OnCommence(object sender, EventArgs e)
         {
-            currentState = InitialState;
+            CurrentState = InitialState;
             eventService.Publish("transition", null);
-            Summary.WriteMessage(this, "Initialised, state=" + currentState + "(of " + Nodes.Count + " total)");
+            summary.WriteMessage(this, "Initialised, state=" + CurrentState + "(of " + Nodes.Count + " total)");
         }
 
         /// <summary>
@@ -139,7 +88,7 @@ namespace Models.Management
                 more = false;
                 double bestScore = -1.0;
                 RuleAction bestArc = null;
-                foreach (var arc in Arcs.FindAll(arc => arc.SourceName == currentState))
+                foreach (var arc in Arcs.FindAll(arc => arc.SourceName == CurrentState))
                 {
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
@@ -171,13 +120,13 @@ namespace Models.Management
         {
             try
             {
-                currentState = transition.DestinationName;
+                CurrentState = transition.DestinationName;
 
                 // We can now move to another stage.
-                if (currentState != "")
+                if (CurrentState != "")
                 {
                     // Publish pre-transition events.
-                    eventService.Publish("transition_from_" + currentState, null);
+                    eventService.Publish("transition_from_" + CurrentState, null);
                     eventService.Publish("transition", null);
                 }
 
@@ -200,11 +149,11 @@ namespace Models.Management
                     else
                         CallMethod(thisAction);
                 }
-                eventService.Publish("transition_to_" + currentState, null);
+                eventService.Publish("transition_to_" + CurrentState, null);
             }
             catch (Exception err)
             {
-                throw new Exception($"Unable to transition to state {currentState}", err);
+                throw new Exception($"Unable to transition to state {CurrentState}", err);
             }
         }
 
