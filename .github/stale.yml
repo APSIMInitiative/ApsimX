@@ -37,7 +37,7 @@ markComment: >
 #   Your comment here.
 
 # Comment to post when closing a stale Issue or Pull Request.
- closeComment: >
+closeComment: >
    This issue is being closed because there has been no recent activity. Feel free
    to re-open or open a new issue if needed.
 

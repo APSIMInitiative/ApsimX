@@ -50,12 +50,6 @@ git pull
 
 cd APSIM.PerformanceTests.Collector
 
-rem Add hol430 remote repo if it doesn't exist, then checkout refactor/ApsimAPI branch.
-rem Note that this is a temporary measure to address API changes
-(git remote show hol430 >nul 2>&1) || git remote add hol430 https://github.com/hol430/APSIM.PerformanceTests
-git fetch hol430
-git checkout hol430/refactor/ApsimAPI
-
 echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
 nuget restore -verbosity quiet
 
