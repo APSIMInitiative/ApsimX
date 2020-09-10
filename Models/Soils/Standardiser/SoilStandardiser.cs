@@ -76,6 +76,8 @@
                 initial.NO3 = soil.ppm2kgha(analysis.NO3N);
             if (analysis.NH4N != null)
                 initial.NH4 = soil.ppm2kgha(analysis.NH4N);
+            if (analysis.LabileP != null)
+                initial.LabileP = soil.ppm2kgha(analysis.LabileP);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
