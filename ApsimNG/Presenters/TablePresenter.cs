@@ -148,7 +148,7 @@
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, args.ControlSpace))
+                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, false, args.ControlSpace))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)

@@ -148,9 +148,9 @@
                             message.AppendLine($"Soil water of {soil.Initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {soil.AirDry[layer].ToString("f3")}");
                     }
 
-                if (!MathUtilities.ValuesInArray(soil.Initial.NO3N))
+                if (!MathUtilities.ValuesInArray(soil.Initial.NO3))
                     message.AppendLine("No starting NO3 values found.");
-                if (!MathUtilities.ValuesInArray(soil.Initial.NH4N))
+                if (!MathUtilities.ValuesInArray(soil.Initial.NH4))
                     message.AppendLine("No starting NH4 values found.");
             }
 

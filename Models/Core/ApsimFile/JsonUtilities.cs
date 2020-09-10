@@ -292,7 +292,8 @@ namespace Models.Core.ApsimFile
         public static void RenameChildModel(JObject node, string childName, string newName)
         {
             JObject child = ChildWithName(node, childName);
-            RenameModel(child, newName);
+            if (child != null)
+                RenameModel(child, newName);
         }
 
         /// <summary>

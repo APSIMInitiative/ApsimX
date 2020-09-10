@@ -73,9 +73,9 @@
             initial.Name = "Initial";
 
             if (analysis.NO3N != null)
-                initial.NO3N = soil.ppm2kgha(analysis.NO3N);
+                initial.NO3 = soil.ppm2kgha(analysis.NO3N);
             if (analysis.NH4N != null)
-                initial.NH4N = soil.ppm2kgha(analysis.NH4N);
+                initial.NH4 = soil.ppm2kgha(analysis.NH4N);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
