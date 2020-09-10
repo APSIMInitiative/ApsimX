@@ -150,14 +150,14 @@ namespace UserInterface.Views
             infoWdgt = l6 as Widget;
             infoWdgt.HideAll();
             ctxBox.PackStart(infoWdgt, true, true, 0);
-            vbox1.PackStart(ctxBox, true, true, 0);
+            vbox1.PackStart(ctxBox, false, false, 0);
 
-            vbox1.PackStart(new Label("Initial State"), true, true, 0);
+            vbox1.PackStart(new Label("Initial State"), false, false, 0);
             combobox1 = new ComboBox();
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
-            vbox1.PackStart(combobox1, true, true, 0);
+            vbox1.PackStart(combobox1, false, false, 0);
             Alignment halign = new Alignment(0, 0, 0, 1);
             halign.Add(vbox1);
 
