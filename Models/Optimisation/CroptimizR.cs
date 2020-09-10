@@ -91,9 +91,10 @@ namespace Models.Optimisation
         /// <summary>
         /// Variable to optimise.
         /// </summary>
-        [Description("Variable to optimise")]
-        [Display(Type = DisplayType.FieldName)]
-        public string VariableName { get; set; }
+        [Description("Variables to optimise")]
+        [Tooltip("Can select multiple values, separated by commas")]
+        //[Display(Type = DisplayType.FieldName)]
+        public string[] VariableNames { get; set; }
 
         /// <summary>
         /// Directory to which output files (graphs, reports, ...) will be saved.
@@ -238,11 +239,12 @@ namespace Models.Optimisation
             StringBuilder contents = new StringBuilder();
             string apsimxFileName = GenerateApsimXFile();
 
-            contents.AppendLine($"variable_names <- c('{VariableName}')");
+            contents.AppendLine($"variable_names <- c({string.Join(", ", VariableNames.Select(x => $"'{x.Trim()}'").ToArray())})");
 
             // If we're reading from the PredictedObserved table, need to fix
             // Predicted./Observed. suffix for the observed variables.
-            contents.AppendLine($"observed_variable_names <- c('{GetObservedVariableName()}', 'Clock.Today')");
+            string[] sanitisedObservedVariables = GetObservedVariableName().Select(x => $"'{x.Trim()}'").ToArray();
+            contents.AppendLine($"observed_variable_names <- c({string.Join(", ", sanitisedObservedVariables)}, 'Clock.Today')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
             contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
@@ -264,11 +266,11 @@ namespace Models.Optimisation
             File.WriteAllText(fileName, contents.ToString());
         }
 
-        private string GetObservedVariableName()
+        private string[] GetObservedVariableName()
         {
             if (PredictedTableName == ObservedTableName)
-                return VariableName.Replace("Predicted.", "Observed.");
-            return VariableName;
+                return VariableNames.Select(x => x.Replace("Predicted.", "Observed.")).ToArray();
+            return VariableNames;
         }
 
         /// <summary>

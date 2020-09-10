@@ -783,7 +783,7 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
-                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>().GetType() == typeof(Market))
+                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)
