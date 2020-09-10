@@ -93,9 +93,17 @@
             "$type": "Models.Node, Models",
             "Name": "Atmosphere",
             "Location": "48, 338",
-            "Colour": "White",
-            "OutlineColour": "White",
+            "Colour": "255, 255, 255",
+            "OutlineColour": "255, 255, 255",
             "Transparent": true
+          },
+          {
+            "$type": "Models.Node, Models",
+            "Name": "LabileP",
+            "Location": "183, 605",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
           }
         ],
         "Arcs": [
@@ -1586,6 +1594,14 @@
           "$type": "Models.Functions.ExpressionFunction, Models",
           "Expression": "([Soil].BD*[Soil].Thickness)/100",
           "Name": "ppm2kgha",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.Solute, Models",
+          "Name": "LabileP",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
