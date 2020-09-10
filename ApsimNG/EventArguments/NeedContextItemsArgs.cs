@@ -87,7 +87,7 @@
         /// <param name="methods">If true, method suggestions will be generated.</param>
         /// <param name="events">If true, event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -115,7 +115,7 @@
 
                 if (methods)
                 {
-                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
                         if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
                         {
@@ -154,7 +154,7 @@
                     }
                 }
 
-                if (events)
+                if (publishedEvents)
                 {
                     foreach (EventInfo evnt in atype.GetEvents(BindingFlags.Instance | BindingFlags.Public))
                     {
@@ -168,6 +168,27 @@
                         item.Descr = GetDescription(evnt);
                         item.Units = "";
                         allItems.Add(item);
+                    }
+                }
+
+                if (subscribedEvents)
+                {
+                    foreach (MethodInfo method in atype.GetMethods(/*BindingFlags.Instance |*/ BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (subscriberAttribute != null)
+                        {
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = subscriberAttribute.ToString();
+                            item.IsProperty = false;
+                            item.IsEvent = false;
+                            item.IsMethod = true;
+                            item.IsWriteable = false;
+                            item.TypeName = atype.Name;
+                            item.Descr = GetDescription(atype);
+                            item.Units = "";
+                            allItems.Add(item);
+                        }
                     }
                 }
             }
@@ -184,11 +205,11 @@
         /// <param name="methods">If true, method suggestions will be generated.</param>
         /// <param name="events">If true, event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
-        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
+        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
-            allItems = ExamineTypeForContextItems(objectType, properties, methods, events);
+            allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
             
             // add in the child models.
             if (o is IModel)
@@ -261,7 +282,7 @@
 
             if (o != null)
             {
-                return ExamineObjectForContextItems(o, properties, methods, events);
+                return ExamineObjectForContextItems(o, properties, methods, events, false);
             }
 
             return new List<ContextItem>();
@@ -274,13 +295,13 @@
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
         /// <returns></returns>
-        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node != null)
             {
-                contextItems = ExamineObjectForContextItems(node, properties, methods, events);
+                contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
             }
             return contextItems;
         }

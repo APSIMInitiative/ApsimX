@@ -202,7 +202,7 @@
         /// <param name="e">Event data.</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, tableModel as IModel, true, false, false))
+            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, tableModel as IModel, true, false, false, false, false))
                 intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
         }
     }
