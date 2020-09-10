@@ -120,6 +120,16 @@
         public double[] LabileP { get; set; }
 
         /// <summary>
+        /// Gets or sets Unavailable P (mg/kg)
+        /// </summary>
+        [Summary]
+        [Description("Unavailable P")]
+        [Units("mg/kg")]
+        [Display(Format = "N3")]
+        public double[] UnavailableP { get; set; }
+
+
+        /// <summary>
         /// Gets or sets soil water. Units will be as specified by SWUnits
         /// </summary>
         [Description("SW")]

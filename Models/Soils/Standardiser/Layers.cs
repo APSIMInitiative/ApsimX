@@ -151,6 +151,7 @@
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
                 analysis.LabileP = MapConcentration(analysis.LabileP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.LabileP));
+                analysis.UnavailableP = MapConcentration(analysis.UnavailableP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.UnavailableP));
 
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.Thickness = thickness;

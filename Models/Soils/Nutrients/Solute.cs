@@ -7,6 +7,7 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
+    using Models.Functions;
 
     /// <summary>
     /// # [Name]
@@ -23,6 +24,9 @@ namespace Models.Soils.Nutrients
     {
         [Link]
         Soil soil = null;
+
+        [Link(Type = LinkType.Child, ByName = true, IsOptional =true)]
+        IFunction InitialValue = null;
 
         /// <summary>Default constructor.</summary>
         public Solute() { }
@@ -56,11 +60,16 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];           
-            if (initialkgha == null)
-                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
-            else
+            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];
+            if (initialkgha != null)
                 kgha = ReflectionUtilities.Clone(initialkgha) as double[];
+            else
+            {
+                kgha = new double[soil.Thickness.Length];
+                if (InitialValue != null)
+                    for (int i = 0; i < kgha.Length; i++)
+                        kgha[i] = InitialValue.Value(i);
+            }
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

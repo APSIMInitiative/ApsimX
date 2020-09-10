@@ -76,6 +76,16 @@
         [Display(Format = "N3")]
         public double[] LabileP { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets Labile P (mg/kg)
+        /// </summary>
+        [Summary]
+        [Description("Unavailable P")]
+        [Units("mg/kg")]
+        [Display(Format = "N3")]
+        public double[] UnavailableP { get; set; }
+
         /// <summary>EC metadata</summary>
         public string[] ECMetadata { get; set; }
 
