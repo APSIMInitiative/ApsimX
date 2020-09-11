@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 113,
+  "Version": 119,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -20,7 +20,7 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
-          "CropType": "Bambatsi",
+          "PlantType": "Bambatsi",
           "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
@@ -2867,6 +2867,16 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -3975,6 +3985,7 @@
                               "Latitude": -34.276,
                               "Longitude": 138.759,
                               "LocationAccuracy": "+/- 20m",
+                              "YearOfSampling": null,
                               "DataSource": "Characterisation 2008 by University of Adelaide, CSIRO Sustainable Ecosystems and Allan Mayfield Consulting, Clare, SA",
                               "Comments": " Roots: Wheat 90cm; barley and oats estimated; OC WB as measured; Strongly duplex low-moderate clay soil. Surface CEC low, moderate below. Texture change at about 7cm. Little chemical impediment to root growth, but high ESP below about 60cm may result in slaking or dispersion and high bulk density.",
                               "Name": "Soil",
@@ -3999,6 +4010,7 @@
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
                                   "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.54,
                                     1.41,
@@ -4042,6 +4054,7 @@
                                   "SATMetadata": null,
                                   "KSMetadata": null,
                                   "RocksMetadata": null,
+                                  "TextureMetadata": null,
                                   "ParticleSizeSandMetadata": null,
                                   "ParticleSizeSiltMetadata": null,
                                   "ParticleSizeClayMetadata": null,
@@ -4230,6 +4243,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -4260,8 +4275,10 @@
                                   "Thickness": [
                                     1800.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": null,
                                   "OC": null,
                                   "EC": null,
@@ -5691,6 +5708,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "soil",
@@ -5737,6 +5755,7 @@
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
                                   "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.0,
                                     1.1,
@@ -5835,6 +5854,7 @@
                                   "SATMetadata": null,
                                   "KSMetadata": null,
                                   "RocksMetadata": null,
+                                  "TextureMetadata": null,
                                   "ParticleSizeSandMetadata": null,
                                   "ParticleSizeSiltMetadata": null,
                                   "ParticleSizeClayMetadata": null,
@@ -6275,6 +6295,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -6323,8 +6345,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": null,
                                   "OC": null,
                                   "EC": null,
@@ -6378,8 +6402,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.43,
                                     0.43,
@@ -8597,6 +8623,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "Upper",
@@ -8644,6 +8671,7 @@
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
                                   "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.38,
                                     1.64,
@@ -8722,6 +8750,7 @@
                                   "SATMetadata": null,
                                   "KSMetadata": null,
                                   "RocksMetadata": null,
+                                  "TextureMetadata": null,
                                   "ParticleSizeSandMetadata": null,
                                   "ParticleSizeSiltMetadata": null,
                                   "ParticleSizeClayMetadata": null,
@@ -9135,6 +9164,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -9175,8 +9206,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": null,
                                   "OC": null,
                                   "EC": null,
@@ -9222,8 +9255,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.1,
                                     0.15,
@@ -9950,6 +9985,7 @@
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "LocationAccuracy": null,
+                              "YearOfSampling": null,
                               "DataSource": null,
                               "Comments": null,
                               "Name": "soil",
@@ -9996,6 +10032,7 @@
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
                                   "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.0,
                                     1.1,
@@ -10094,6 +10131,7 @@
                                   "SATMetadata": null,
                                   "KSMetadata": null,
                                   "RocksMetadata": null,
+                                  "TextureMetadata": null,
                                   "ParticleSizeSandMetadata": null,
                                   "ParticleSizeSiltMetadata": null,
                                   "ParticleSizeClayMetadata": null,
@@ -10534,6 +10572,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -10582,8 +10622,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": null,
                                   "OC": null,
                                   "EC": null,
@@ -10637,8 +10679,10 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.43,
                                     0.43,
@@ -15321,6 +15365,7 @@
                               "Latitude": -34.276,
                               "Longitude": 138.759,
                               "LocationAccuracy": "+/- 20m",
+                              "YearOfSampling": null,
                               "DataSource": "Characterisation 2008 by University of Adelaide, CSIRO Sustainable Ecosystems and Allan Mayfield Consulting, Clare, SA",
                               "Comments": " Roots: Wheat 90cm; barley and oats estimated; OC WB as measured; Strongly duplex low-moderate clay soil. Surface CEC low, moderate below. Texture change at about 7cm. Little chemical impediment to root growth, but high ESP below about 60cm may result in slaking or dispersion and high bulk density.",
                               "Name": "Soil",
@@ -15349,6 +15394,7 @@
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
                                   "Rocks": null,
+                                  "Texture": null,
                                   "BD": [
                                     1.24,
                                     1.25,
@@ -15410,6 +15456,7 @@
                                   "SATMetadata": null,
                                   "KSMetadata": null,
                                   "RocksMetadata": null,
+                                  "TextureMetadata": null,
                                   "ParticleSizeSandMetadata": null,
                                   "ParticleSizeSiltMetadata": null,
                                   "ParticleSizeClayMetadata": null,
@@ -15628,6 +15675,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -15670,8 +15719,10 @@
                                     300.0,
                                     300.0
                                   ],
-                                  "NO3N": null,
-                                  "NH4N": null,
+                                  "NO3": null,
+                                  "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": null,
                                   "OC": null,
                                   "EC": null,
@@ -16938,6 +16989,1053 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "Incubation",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Experiment, Models",
+              "DisabledSimNames": null,
+              "Name": "Incubation",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factors, Models",
+                  "Name": "Factors",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[ControlledEnvironment]",
+                      "Name": "Temperature",
+                      "Children": [
+                        {
+                          "$type": "Models.Climate.ControlledEnvironment, Models",
+                          "MaxT": 10.0,
+                          "MinT": 10.0,
+                          "Rain": 0.0,
+                          "Radn": 0.0,
+                          "PanEvap": 0.0,
+                          "VP": 0.0,
+                          "Wind": 0.0,
+                          "CO2": 350.0,
+                          "AirPressure": 1010.0,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "DayLength": 12.0,
+                          "SunRise": 6.0,
+                          "SunSet": 12.0,
+                          "Name": "10C",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Climate.ControlledEnvironment, Models",
+                          "MaxT": 25.0,
+                          "MinT": 25.0,
+                          "Rain": 0.0,
+                          "Radn": 0.0,
+                          "PanEvap": 0.0,
+                          "VP": 0.0,
+                          "Wind": 0.0,
+                          "CO2": 350.0,
+                          "AirPressure": 1010.0,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "DayLength": 12.0,
+                          "SunRise": 6.0,
+                          "SunSet": 12.0,
+                          "Name": "25C",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Climate.ControlledEnvironment, Models",
+                          "MaxT": 50.0,
+                          "MinT": 50.0,
+                          "Rain": 0.0,
+                          "Radn": 0.0,
+                          "PanEvap": 0.0,
+                          "VP": 0.0,
+                          "Wind": 0.0,
+                          "CO2": 350.0,
+                          "AirPressure": 1010.0,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "DayLength": 12.0,
+                          "SunRise": 6.0,
+                          "SunSet": 12.0,
+                          "Name": "50C",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
+                  "Name": "IncubationBase",
+                  "Children": [
+                    {
+                      "$type": "Models.Clock, Models",
+                      "Start": "2000-01-01T00:00:00",
+                      "End": "2000-12-31T00:00:00",
+                      "Name": "Clock",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Summary, Models",
+                      "CaptureErrors": true,
+                      "CaptureWarnings": true,
+                      "CaptureSummaryText": true,
+                      "Name": "SummaryFile",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Climate.ControlledEnvironment, Models",
+                      "MaxT": 25.0,
+                      "MinT": 25.0,
+                      "Rain": 0.0,
+                      "Radn": 0.0,
+                      "PanEvap": 0.0,
+                      "VP": 0.0,
+                      "Wind": 0.0,
+                      "CO2": 350.0,
+                      "AirPressure": 1010.0,
+                      "Latitude": 0.0,
+                      "Longitude": 0.0,
+                      "DayLength": 12.0,
+                      "SunRise": 6.0,
+                      "SunSet": 12.0,
+                      "Name": "ControlledEnvironment",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.3,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                      "Name": "SoilArbitrator",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Zone, Models",
+                      "Area": 1.0,
+                      "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
+                      "Name": "Field",
+                      "Children": [
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "sum([Soil].Nutrient.Humic.P) as HumP",
+                            "sum([Soil].Nutrient.Microbial.P) as MicrobialP",
+                            "sum([Soil].Nutrient.Inert.P) as InertP",
+                            "sum([Soil].Nutrient.NO3.kgha) as NO3N",
+                            "sum([Soil].Nutrient.NH4.kgha) as NH4N",
+                            "sum([Soil].Nutrient.LabileP.kgha) as LabileP",
+                            "sum([Soil].Nutrient.UnavailableP.kgha) as UnavailableP",
+                            "[Soil].Temperature",
+                            "[Soil].SoilWater.SW"
+                          ],
+                          "EventNames": [
+                            "[Clock].DoReport"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "Report",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Fertiliser, Models",
+                          "Name": "Fertiliser",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": "Vertosol",
+                          "ASCSubOrder": "Black",
+                          "SoilType": "Clay",
+                          "LocalName": null,
+                          "Site": "Norwin",
+                          "NearestTown": "Norwin",
+                          "Region": "Darling Downs and Granite Belt",
+                          "State": "Queensland",
+                          "Country": "Australia",
+                          "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+                          "ApsoilNumber": "900",
+                          "Latitude": -27.581836,
+                          "Longitude": 151.320206,
+                          "LocationAccuracy": " +/- 20m",
+                          "YearOfSampling": null,
+                          "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+                          "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+                          "Name": "Soil",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-10"
+                              ],
+                              "Thickness": [
+                                100.0
+                              ],
+                              "ParticleSizeClay": [
+                                "NaN"
+                              ],
+                              "ParticleSizeSand": [
+                                "NaN"
+                              ],
+                              "ParticleSizeSilt": [
+                                "NaN"
+                              ],
+                              "Rocks": [
+                                "NaN"
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                1.01056473311131
+                              ],
+                              "AirDry": [
+                                0.130250054518252
+                              ],
+                              "LL15": [
+                                0.260500109036505
+                              ],
+                              "DUL": [
+                                0.52100021807301
+                              ],
+                              "SAT": [
+                                0.588654817693846
+                              ],
+                              "KS": [
+                                20.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
+                              "Name": "Physical",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.261
+                                  ],
+                                  "KL": [
+                                    0.06
+                                  ],
+                                  "XF": [
+                                    1.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "WheatSoil",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.WaterModel.WaterBalance, Models",
+                              "SummerDate": "1-Nov",
+                              "SummerU": 0.0,
+                              "SummerCona": 0.0,
+                              "WinterDate": "1-Apr",
+                              "WinterU": 0.0,
+                              "WinterCona": 0.0,
+                              "DiffusConst": 40.0,
+                              "DiffusSlope": 16.0,
+                              "Salb": 0.12,
+                              "CN2Bare": 73.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "Slope": "NaN",
+                              "DischargeWidth": "NaN",
+                              "CatchmentArea": "NaN",
+                              "Thickness": [
+                                100.0,
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SWCON": [
+                                0.3,
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "KLAT": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "ResourceName": "WaterBalance",
+                              "Name": "SoilWater",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-10"
+                              ],
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                100.0
+                              ],
+                              "Carbon": [
+                                1.2
+                              ],
+                              "SoilCNRatio": [
+                                12.0
+                              ],
+                              "FBiom": [
+                                0.04
+                              ],
+                              "FInert": [
+                                0.4
+                              ],
+                              "FOM": [
+                                347.12903231275641
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-10"
+                              ],
+                              "Thickness": [
+                                100.0
+                              ],
+                              "NO3N": [
+                                1.0
+                              ],
+                              "NH4N": [
+                                0.1
+                              ],
+                              "PH": [
+                                8.0
+                              ],
+                              "CL": [
+                                "NaN"
+                              ],
+                              "EC": [
+                                "NaN"
+                              ],
+                              "ESP": [
+                                "NaN"
+                              ],
+                              "LabileP": [
+                                1.0
+                              ],
+                              "UnavailableP": [
+                                "NaN"
+                              ],
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.InitialWater, Models",
+                              "PercentMethod": 1,
+                              "FractionFull": 1.0,
+                              "DepthWetSoil": "NaN",
+                              "RelativeTo": null,
+                              "Name": "InitialWater",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "CERESSoilTemperature",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "ResourceName": "Nutrient",
+                              "Name": "Nutrient",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "InitialResidueName": "wheat_stubble",
+                          "InitialResidueType": "wheat",
+                          "InitialResidueMass": 1.0,
+                          "InitialStandingFraction": 0.0,
+                          "InitialCPR": 0.0,
+                          "InitialCNR": 100.0,
+                          "ResourceName": "SurfaceOrganicMatter",
+                          "Name": "SurfaceOrganicMatter",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": "",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 2,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Org P Pools",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Temperature",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "HumP",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": "Temperature",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "InertP",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -11094807,
+                      "FactorToVaryColours": "Temperature",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "MicrobialP",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series11",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Graphs",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "SoilTemperature",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Soil.Temperature(1)",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "SoilWater",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Soil.SoilWater.SW(1)",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NO3",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "NO3N",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NH4",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "NH4N",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LabileP",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "LabileP",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "MicrobialP",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "MicrobialP",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
