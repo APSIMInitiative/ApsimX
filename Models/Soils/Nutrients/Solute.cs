@@ -22,7 +22,7 @@
         [Link]
         Soil soil = null;
 
-        [Link(Type = LinkType.Child, ByName = true, IsOptional =true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction initialValue = null;
 
         /// <summary>Default constructor.</summary>

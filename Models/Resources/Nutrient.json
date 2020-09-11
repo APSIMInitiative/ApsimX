@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 118,
+  "Version": 119,
   "Name": "Simulations",
   "Children": [
     {
@@ -101,6 +101,14 @@
             "$type": "Models.Node, Models",
             "Name": "LabileP",
             "Location": "183, 605",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "Models.Node, Models",
+            "Name": "UnavailableP",
+            "Location": "50, 50",
             "Colour": "86, 180, 233",
             "OutlineColour": "Black",
             "Transparent": false
@@ -495,6 +503,16 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -586,6 +604,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialValue",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1481,6 +1509,16 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -1602,7 +1640,55 @@
         {
           "$type": "Models.Soils.Nutrients.Solute, Models",
           "Name": "LabileP",
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.Solute, Models",
+          "Name": "UnavailableP",
+          "Children": [
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "InitialValue",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].LabileP.kgha",
+                  "Name": "LabileP",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": null,
+                  "Name": "AvailablePRatio",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
