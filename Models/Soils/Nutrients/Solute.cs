@@ -1,9 +1,6 @@
-﻿
-
-namespace Models.Soils.Nutrients
+﻿namespace Models.Soils.Nutrients
 {
     using Core;
-    using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
@@ -26,12 +23,12 @@ namespace Models.Soils.Nutrients
         Soil soil = null;
 
         [Link(Type = LinkType.Child, ByName = true, IsOptional =true)]
-        IFunction InitialValue = null;
+        IFunction initialValue = null;
 
         /// <summary>Default constructor.</summary>
         public Solute() { }
 
-        /// <summary>Default constructor.</summary>
+        /// <summary>Constructor.</summary>
         public Solute(Soil soilModel, string soluteName, double[] value) 
         {
             soil = soilModel;
@@ -66,9 +63,9 @@ namespace Models.Soils.Nutrients
             else
             {
                 kgha = new double[soil.Thickness.Length];
-                if (InitialValue != null)
+                if (initialValue != null)
                     for (int i = 0; i < kgha.Length; i++)
-                        kgha[i] = InitialValue.Value(i);
+                        kgha[i] = initialValue.Value(i);
             }
         }
         /// <summary>Setter for kgha.</summary>

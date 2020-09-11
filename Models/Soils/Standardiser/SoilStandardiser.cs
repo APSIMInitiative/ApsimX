@@ -63,7 +63,7 @@
         private static void CreateInitialSample(Soil soil)
         {
             var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
-            var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
+            var chemical = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
             if (initial == null)
             {
@@ -72,20 +72,20 @@
             }
             initial.Name = "Initial";
 
-            if (analysis.NO3N != null)
-                initial.NO3 = soil.ppm2kgha(analysis.NO3N);
-            if (analysis.NH4N != null)
-                initial.NH4 = soil.ppm2kgha(analysis.NH4N);
-            if (analysis.LabileP != null)
-                initial.LabileP = soil.ppm2kgha(analysis.LabileP);
-            if (analysis.UnavailableP != null)
-                initial.UnavailableP = soil.ppm2kgha(analysis.UnavailableP);
+            if (chemical.NO3N != null)
+                initial.NO3 = soil.ppm2kgha(chemical.NO3N);
+            if (chemical.NH4N != null)
+                initial.NH4 = soil.ppm2kgha(chemical.NH4N);
+            if (chemical.LabileP != null)
+                initial.LabileP = soil.ppm2kgha(chemical.LabileP);
+            if (chemical.UnavailableP != null)
+                initial.UnavailableP = soil.ppm2kgha(chemical.UnavailableP);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
-            initial.PH = MergeArrays(initial.PH, analysis.PH);
-            initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
-            initial.EC = MergeArrays(initial.EC, analysis.EC);
-            initial.CL = MergeArrays(initial.CL, analysis.CL);
+            initial.PH = MergeArrays(initial.PH, chemical.PH);
+            initial.ESP = MergeArrays(initial.ESP, chemical.ESP);
+            initial.EC = MergeArrays(initial.EC, chemical.EC);
+            initial.CL = MergeArrays(initial.CL, chemical.CL);
 
             soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);
