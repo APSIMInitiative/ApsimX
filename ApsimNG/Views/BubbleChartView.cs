@@ -48,7 +48,7 @@ namespace UserInterface.Views
 
         private DirectedGraphView graphView;
         private ContextMenuHelper contextMenuHelper;
-        private Label ctxLabel = null;
+        private Frame ctxFrame;
         private Widget arcSelWdgt = null;
         public IEditorView RuleList { get; private set; } = null;
         public IEditorView ActionList { get; private set; } = null;
@@ -58,7 +58,16 @@ namespace UserInterface.Views
         private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
 
+        private HPaned hpaned1;
+        private HPaned hpaned2;
+
         private Box ctxBox = null;
+
+        /// <summary>
+        /// Contains the settings such as initial state,
+        /// paddocks for which the rotation is enabled, etc.
+        /// </summary>
+        private VBox settingsBox = null;
         private Menu ContextMenu = new Menu();
 
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
@@ -76,8 +85,6 @@ namespace UserInterface.Views
 
             VBox vbox1 = new VBox(false, 0);
             ctxBox = new VBox(false, 0);
-            ctxLabel = new Label("Information");
-            ctxBox.PackStart(ctxLabel, true, true, 0);
 
             // Arc selection: rules & actions
             VBox arcSelBox = new VBox();
@@ -112,27 +119,36 @@ namespace UserInterface.Views
             ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
-            Table t1 = new Table(3, 2, true);
+            Table t1 = new Table(3, 2, false);
             Label l3 = new Label("Name");
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l3.Xalign = 0;
+            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             Label l4 = new Label("Description");
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l4.Xalign = 0;
+            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             Label l5 = new Label("Colour");
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l5.Xalign = 0;
+            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             nameEntry = new Entry();
-            nameEntry.WidthRequest = 350;
             nameEntry.Changed += OnNameChanged;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            nameEntry.Xalign = 0;
+            // Setting the WidthRequest to 350 will effectively
+            // set the minimum size, beyond which it cannot be further
+            // shrunk by dragging the HPaned's splitter.
+            nameEntry.WidthRequest = 350;
+            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             descEntry = new Entry();
-            descEntry.WidthRequest = 350;
+            descEntry.Xalign = 0;
             descEntry.Changed += OnDescriptionChanged;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            descEntry.WidthRequest = 350;
+            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             colourChooser = new ColorButton();
+            colourChooser.Xalign = 0;
             colourChooser.ColorSet += OnColourChanged;
-            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            colourChooser.WidthRequest = 350;
+            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             nodeSelWdgt = t1;
-            nodeSelWdgt.HideAll();
             ctxBox.PackStart(t1, true, true, 0);
 
             // Info
@@ -148,18 +164,42 @@ namespace UserInterface.Views
             "Transition arcs are created by firstly selecting a source node,\n" +
             "then right-clicking over a target node.\n";
             infoWdgt = l6 as Widget;
-            infoWdgt.HideAll();
-            ctxBox.PackStart(infoWdgt, true, true, 0);
-            vbox1.PackStart(ctxBox, true, true, 0);
+            infoWdgt.ShowAll();
+            Alignment infoWdgtWrapper = new Alignment(0, 0, 0, 0);
+            infoWdgtWrapper.Add(infoWdgt);
+            //ctxBox.PackStart(infoWdgt, true, true, 0);
+            //vbox1.PackStart(ctxBox, false, false, 0);
 
-            vbox1.PackStart(new Label("Initial State"), true, true, 0);
+            settingsBox = new VBox();
+            //settingsBox.PackStart(new Label("Initial State"), false, false, 0);
             combobox1 = new ComboBox();
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
-            vbox1.PackStart(combobox1, true, true, 0);
-            Alignment halign = new Alignment(0, 0, 0, 1);
-            halign.Add(vbox1);
+            settingsBox.PackStart(combobox1, false, false, 0);
+
+
+            hpaned1 = new HPaned();
+            hpaned2 = new HPaned();
+            Frame frame1 = new Frame("Initial State");
+            frame1.Add(settingsBox);
+            frame1.ShadowType = ShadowType.In;
+            Frame frame2 = new Frame();
+            frame2.Add(hpaned2);
+            frame2.ShadowType = ShadowType.In;
+            ctxFrame = new Frame();
+            ctxFrame.Add(ctxBox);
+            ctxFrame.ShadowType = ShadowType.In;
+            Frame frame4 = new Frame("Instructions");
+            frame4.Add(infoWdgtWrapper);
+            frame4.ShadowType = ShadowType.In;
+            hpaned1.Pack1(frame1, false, false);
+            hpaned1.Pack2(frame2, true, false);
+            hpaned2.Pack1(ctxFrame, true, false);
+            hpaned2.Pack2(frame4, true, false);
+            hpaned1.ShowAll();
+            Alignment halign = new Alignment(0, 0, 1, 1);
+            halign.Add(hpaned1);
 
             vpaned1.Pack2(halign, false, false);
             vpaned1.Show();
@@ -278,15 +318,13 @@ namespace UserInterface.Views
         public void Select(string objectName)
         {
             ctxBox.Foreach(c => ctxBox.Remove(c)); 
-            ctxBox.PackStart(ctxLabel, true, true, 0);
-            ctxLabel.WidthRequest = -1;
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
             Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
             if (node != null)
             {
-                ctxLabel.Text = "State";
-
+                //ctxLabel.Text = "State";
+                ctxFrame.Label = $"{node.Name} settings";
                 // Need to detach the event handlers before changing the entries.
                 // Otherwise a changed event will fire which we don't really want.
                 nameEntry.Changed -= OnNameChanged;
@@ -307,16 +345,16 @@ namespace UserInterface.Views
             }
             else if (arc != null)
             {
-                ctxLabel.Text = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
+                ctxFrame.Label = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
                 RuleList.Text = String.Join(Environment.NewLine, rules[arc.Name].ToArray()) ;
                 ActionList.Text = String.Join(Environment.NewLine, actions[arc.Name].ToArray());
                 ctxBox.PackStart(arcSelWdgt, true, true, 0);
-                ctxLabel.WidthRequest = 500;
             }
             else
             {
-                ctxLabel.Text = "Information";
-                ctxBox.PackStart(infoWdgt, true, true, 0);
+                //ctxLabel.Text = "Information";
+                //ctxBox.PackStart(infoWdgt, true, true, 0);
+                ctxFrame.Label = "";
             }
             ctxBox.ShowAll();
         }
@@ -427,6 +465,7 @@ namespace UserInterface.Views
                     // name to the dict.
                     nodeDescriptions[nameEntry.Text] = nodeDescriptions[graphView.SelectedObject.Name];
                     graphView.SelectedObject.Name = nameEntry.Text;
+                    ctxFrame.Label = $"{nameEntry.Text} settings";
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
