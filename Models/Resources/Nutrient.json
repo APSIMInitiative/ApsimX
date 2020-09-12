@@ -93,8 +93,8 @@
             "$type": "Models.Node, Models",
             "Name": "Atmosphere",
             "Location": "48, 338",
-            "Colour": "255, 255, 255",
-            "OutlineColour": "255, 255, 255",
+            "Colour": "White",
+            "OutlineColour": "White",
             "Transparent": true
           },
           {
@@ -371,6 +371,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial",
@@ -691,6 +692,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial",
@@ -833,6 +835,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial",
@@ -975,6 +978,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial",
@@ -1146,6 +1150,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial",
@@ -1337,6 +1342,7 @@
             {
               "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
               "MineralisedN": null,
+              "MineralisedP": null,
               "Catm": null,
               "destinationNames": [
                 "Microbial"
@@ -1650,6 +1656,53 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.PFlow, Models",
+              "Value": null,
+              "sourceName": "LabileP",
+              "destinationName": "UnavailableP",
+              "Name": "PFlow",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nutrient].RateLossAvailableP",
+                      "Name": "LossRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nutrient].WaterFactorForPAvailabilityLoss",
+                      "Name": "WaterFactor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PAvailabilityLossTemperatureFactor, Models",
+                      "Name": "PAvailabilityLossTemperatureFactor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -1674,11 +1727,66 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
-                  "Units": null,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].AvailablePRatio",
                   "Name": "AvailablePRatio",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.PFlow, Models",
+              "Value": null,
+              "sourceName": "UnavailableP",
+              "destinationName": "LabileP",
+              "Name": "PFlow",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nutrient].RateLossAvailableP",
+                      "Name": "LossRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nutrient].WaterFactorForPAvailabilityLoss",
+                      "Name": "WaterFactor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PAvailabilityLossTemperatureFactor, Models",
+                      "Name": "PAvailabilityLossTemperatureFactor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nutrient].AvailablePRatio",
+                      "Name": "AvailablePRatio",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1692,11 +1800,77 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+          "Name": "WaterFactorForPAvailabilityLoss",
+          "Children": [
+            {
+              "$type": "Models.Functions.SoilWaterScale, Models",
+              "Name": "SoilWaterScale",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.XYPairs, Models",
+              "X": [
+                0.0,
+                0.5,
+                1.0,
+                2.0
+              ],
+              "Y": [
+                0.6,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[SoilWaterScale]",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.001,
+          "Units": null,
+          "Name": "RateLossAvailableP",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.1,
+          "Units": null,
+          "Name": "AvailablePRatio",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
-  ]
+]
 }

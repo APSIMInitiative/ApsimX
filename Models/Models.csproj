@@ -282,6 +282,7 @@
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationModel.cs" />
+    <Compile Include="Functions\SoilFunctions\PAvailabilityLossTemperatureFactor.cs" />
     <Compile Include="Functions\SupplyFunctions\StomatalConductanceCO2Modifier.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
@@ -360,6 +361,7 @@
     <Compile Include="Soils\NutrientPatching\SolutePatch.cs" />
     <Compile Include="Soils\Nutrients\CompositeNutrientPool.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
+    <Compile Include="Soils\Nutrients\PFlow.cs" />
     <Compile Include="Soils\SoilsDataTable.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />

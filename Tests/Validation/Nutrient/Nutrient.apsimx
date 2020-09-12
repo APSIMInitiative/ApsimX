@@ -17202,7 +17202,9 @@
                             "sum([Soil].Nutrient.LabileP.kgha) as LabileP",
                             "sum([Soil].Nutrient.UnavailableP.kgha) as UnavailableP",
                             "[Soil].Temperature",
-                            "[Soil].SoilWater.SW"
+                            "[Soil].SoilWater.SW",
+                            "[Nutrient].LabileP.PFlow.Value",
+                            "[Nutrient].UnavailableP.PFlow.Value"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -17372,38 +17374,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-10"
-                              ],
-                              "FOMCNRatio": 40.0,
-                              "Thickness": [
-                                100.0
-                              ],
-                              "Carbon": [
-                                1.2
-                              ],
-                              "SoilCNRatio": [
-                                12.0
-                              ],
-                              "FBiom": [
-                                0.04
-                              ],
-                              "FInert": [
-                                0.4
-                              ],
-                              "FOM": [
-                                347.12903231275641
-                              ],
-                              "CarbonMetadata": null,
-                              "FOMMetadata": null,
-                              "Name": "Organic",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Chemical, Models",
                               "Depth": [
                                 "0-10"
@@ -17432,14 +17402,44 @@
                               "LabileP": [
                                 1.0
                               ],
-                              "UnavailableP": [
-                                "NaN"
-                              ],
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-10"
+                              ],
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                100.0
+                              ],
+                              "Carbon": [
+                                1.2
+                              ],
+                              "SoilCNRatio": [
+                                12.0
+                              ],
+                              "FBiom": [
+                                0.04
+                              ],
+                              "FInert": [
+                                0.4
+                              ],
+                              "FOM": [
+                                347.12903231275641
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -18009,6 +18009,73 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "Name": "UnavailableP",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "UnavailableP",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "MicrobialP",
                       "Children": [
                         {
@@ -18027,6 +18094,140 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "MicrobialP",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LabilePFlow",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Nutrient.LabileP.PFlow.Value(1)",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "UnavailablePFlow",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Temperature",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Nutrient.UnavailableP.PFlow.Value(1)",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,

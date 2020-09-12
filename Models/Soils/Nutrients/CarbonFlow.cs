@@ -1,12 +1,10 @@
-﻿
-namespace Models.Soils.Nutrients
+﻿namespace Models.Soils.Nutrients
 {
     using Core;
     using Models.Functions;
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
-    using Interfaces;
     using System.Data;
     using System.Linq;
 
@@ -140,7 +138,6 @@ namespace Models.Soils.Nutrients
                 if (totalPhosphorusFlowToDestinations > pSupply)
                 {
                     double pSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralPSupply, totalPhosphorusFlowToDestinations - phosphorusFlowFromSource, 1.0), 0.0, 1.0);
-                    pSupplyFactor = 1; // Turn P restrictions off until P is fully active part of simulations
                     SupplyFactor = Math.Min(SupplyFactor, pSupplyFactor);
                 }
                 
