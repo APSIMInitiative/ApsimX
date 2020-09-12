@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -23,6 +23,12 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Relationships/RelationshipTracker.htm")]
     public class RelationshipTracker : Relationship, IValidatableObject
     {
+        /// <summary>
+        /// Current value
+        /// </summary>
+        [JsonIgnore]
+        public double Value { get; set; }
+
         /// <summary>
         /// Initial value of Running value that can be modified by this relationship Modify() during the simulation
         /// </summary>
@@ -82,9 +88,8 @@ namespace Models.CLEM
         /// <returns></returns>
         public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            results = base.Validate(validationContext).ToList();
-            if (Maximum < Minimum)
+            List<ValidationResult> results = base.Validate(validationContext).ToList();
+            if (Maximum <= Minimum)
             {
                 string[] memberNames = new string[] { "Maximum" };
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));

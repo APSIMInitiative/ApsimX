@@ -22,12 +22,12 @@ namespace UnitTests
 
             string reportName = "Report";
 
-            Models.Report report = Apsim.Find(file, typeof(Models.Report)) as Models.Report;
+            Models.Report report = file.FindInScope<Models.Report>();
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as n", "2 * [Clock].Today.DayOfYear as 2n" };
             report.EventNames = new string[] { "[Clock].DoReport" };
             report.Name = reportName;
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            Clock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2019, 1, 1);
             clock.EndDate = new DateTime(2019, 1, 10);
 
@@ -79,10 +79,10 @@ namespace UnitTests
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
-            Simulation sim1 = Apsim.Find(sims, typeof(Simulation)) as Simulation;
-            Simulation sim2 = Apsim.Find(sims, "Sim2") as Simulation;
-            Soil soil = Apsim.Get(sims, ".Simulations.Sim1.Field.Soil") as Soil;
+            Clock clock = sims.FindInScope<Clock>();
+            Simulation sim1 = sims.FindInScope<Simulation>();
+            Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
+            Soil soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
 
             // Check property values - they should be unchanged at this point.
             DateTime start = new DateTime(2003, 11, 15);
@@ -102,14 +102,14 @@ namespace UnitTests
                 throw errors[0];
 
             // Get references to the changed models.
-            clock = Apsim.Find(sims, typeof(Clock)) as Clock;
-            Clock clock2 = Apsim.Get(sims, ".Simulations.SimulationVariant35.Clock") as Clock;
+            clock = sims.FindInScope<Clock>();
+            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock")?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count > 2);
             sim1 = sims.Children.OfType<Simulation>().First();
             sim2 = sims.Children.OfType<Simulation>().Last();
-            soil = Apsim.Get(sims, ".Simulations.Sim1.Field.Soil") as Soil;
+            soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
 
             start = new DateTime(2019, 1, 20);
             DateTime end = new DateTime(2019, 3, 20);
@@ -164,12 +164,18 @@ namespace UnitTests
             sim4.Name = "Base";
 
             Simulations sims = Simulations.Create(new[] { sim1, sim2, sim3, sim4, new DataStore() });
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
 
             string apsimxFileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             sims.Write(apsimxFileName);
 
-            string args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            // Need to quote the regex on unix systems.
+            string args;
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
+            else
+                args = $@"{apsimxFileName} /Verbose '/SimulationNameRegexPattern:sim\d'";
+
             ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Start(models, args, Directory.GetCurrentDirectory(), true);
             proc.WaitForExit();

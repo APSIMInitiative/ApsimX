@@ -669,7 +669,8 @@ code {
   padding: 0px 2px; }
 
 .hljs {
-  background: #ffffff; }
+  background: #ffffff; 
+  color: #000000;}
 
 code + .copy-to-clipboard {
   margin-left: -2px;
@@ -682,7 +683,7 @@ code + .copy-to-clipboard {
 pre {
   padding: 1rem;
   margin: 2rem 0;
-  background: #fffff;
+  background: #ffffff;
   border: 1px solid #272a2c;
   border-radius: 2px;
   line-height: 1.15; }

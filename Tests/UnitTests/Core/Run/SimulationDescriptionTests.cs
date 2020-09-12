@@ -31,7 +31,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new PropertyReplacement("Weather.MaxT", 2));
@@ -59,7 +59,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var replacementWeather = new MockWeather()
             {
@@ -118,7 +118,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -172,7 +172,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -237,7 +237,7 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3N = new double[] { 27 },
+                                NO3 = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
                             },
@@ -246,7 +246,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;

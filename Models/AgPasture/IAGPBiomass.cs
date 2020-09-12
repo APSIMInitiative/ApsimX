@@ -2,7 +2,8 @@
 {
     using Models.Core;
 
-    interface IAGPBiomass
+    /// <summary>An interface that defines a readonly AgPasture biomass.</summary>
+    public interface IAGPBiomass
     {
         /// <summary>Dry matter weight.</summary>
         [Units("kg/ha")]

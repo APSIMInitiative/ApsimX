@@ -658,7 +658,6 @@
                 checkpointsTable.Columns.Add("ID", typeof(int));
                 checkpointsTable.Columns.Add("Name", typeof(string));
                 checkpointsTable.Columns.Add("Version", typeof(string));
-                checkpointsTable.Columns.Add("Date", typeof(DateTime));
                 checkpointsTable.Columns.Add("OnGraphs", typeof(int));
 
                 foreach (var checkpoint in checkpointIDs)
@@ -667,7 +666,7 @@
                     row[0] = checkpoint.Value.ID;
                     row[1] = checkpoint.Key;
                     if (checkpoint.Value.ShowOnGraphs)
-                        row[4] = 1;
+                        row[3] = 1;
                     checkpointsTable.Rows.Add(row);
                 }
                 WriteTable(checkpointsTable);

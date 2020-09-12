@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Linq;
 using Models.Core;
@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using Models.Surface;
 using Models.Interfaces;
 using Models.Soils.NutrientPatching;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -157,8 +158,8 @@ namespace Models.Soils
             HumusCNr = Soil.InitialSoilCNR;
             InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
             ph = Soil.Initial.PH;
-            NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3N);
-            NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4N);
+            NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3);
+            NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4);
             ureappm = new double[Soil.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)

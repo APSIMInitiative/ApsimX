@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.Factorial
 {
@@ -17,13 +17,13 @@ namespace Models.Factorial
     {
         /// <summary>Gets the factors.</summary>
         /// <value>The factors.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<Factor> factors
         {
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in Apsim.Children(this, typeof(Factor)))
+                foreach (Factor factor in this.FindAllChildren<Factor>())
                     f.Add(factor);
                 return f;
             }

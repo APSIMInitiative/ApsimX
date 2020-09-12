@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.GrazPlan;
 using Models.PMF;
 using NUnit.Framework;
@@ -20,6 +21,43 @@ namespace UnitTests.ApsimNG.Presenters
     public class AddModelPresenterTests
     {
         /// <summary>
+        /// Add a resource model under replacements, and ensure its children are visible.
+        /// </summary>
+        [Test]
+        public void AddResourceModelToReplacements()
+        {
+            ExplorerPresenter explorerPresenter = UITestUtilities.OpenBasicFileInGui();
+            GtkUtilities.WaitForGtkEvents();
+
+            // Add a replacements node.
+            Replacements replacements = new Replacements();
+            Structure.Add(replacements, explorerPresenter.ApsimXFile);
+            explorerPresenter.Refresh();
+
+            // Select the replacements node, then activate the 'add model' context menu item.
+            explorerPresenter.SelectNode(replacements);
+            explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);
+            GtkUtilities.WaitForGtkEvents();
+
+            TreeView addModelsTree = (TreeView)ReflectionUtilities.GetValueOfFieldOrProperty("tree", explorerPresenter.CurrentPresenter);
+
+            // Now, we double click on the fertiliser node. This should add a fertiliser model.
+            // For some reason, sending a double click event doesn't trigger the ActivateRow signal.
+            // Therefore, we need to manually activate the row.
+            //GtkUtilities.ClickOnTreeView(treeView, path, 0, EventType.TwoButtonPress, ModifierType.None, GtkUtilities.ButtonPressType.LeftClick);
+            ActivateNode(addModelsTree, ".Models.PMF.Wheat");
+            Assert.AreEqual(1, replacements.Children.Count, "Replacements should now have 1 child after adding wheat, but it doesn't");
+            Assert.AreEqual(typeof(Models.PMF.Plant), replacements.Children[0].GetType());
+
+            // Wheat should have some children (read in from the resource file).
+            IModel wheat = replacements.Children[0];
+            Assert.NotZero(wheat.Children.Count);
+            // The children should all be visible.
+            foreach (IModel child in wheat.Children)
+                Assert.False(child.IsHidden);
+        }
+
+        /// <summary>
         /// This test ensures that double clicking the folder for the
         /// Graph namespace doesn't add a Graph model, and that double-
         /// clicking on the Wheat node adds the wheat model.
@@ -32,7 +70,7 @@ namespace UnitTests.ApsimNG.Presenters
             ExplorerPresenter explorerPresenter = UITestUtilities.OpenBasicFileInGui();
             GtkUtilities.WaitForGtkEvents();
 
-            IModel paddock = Apsim.Find(explorerPresenter.ApsimXFile, typeof(Zone));
+            IModel paddock = explorerPresenter.ApsimXFile.FindInScope<Zone>();
 
             explorerPresenter.SelectNode(paddock);
             explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);
@@ -54,7 +92,7 @@ namespace UnitTests.ApsimNG.Presenters
             Assert.AreEqual(typeof(Plant), paddock.Children[2].GetType());
             Plant wheat = paddock.Children[2] as Plant;
             Assert.AreEqual("Wheat", wheat.ResourceName);
-            Assert.AreEqual("Wheat", wheat.CropType);
+            Assert.AreEqual("Wheat", wheat.PlantType);
         }
 
         /// <summary>
@@ -79,7 +117,7 @@ namespace UnitTests.ApsimNG.Presenters
             var explorerPresenter = UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
             GtkUtilities.WaitForGtkEvents();
 
-            var stock = Apsim.Find(explorerPresenter.ApsimXFile, typeof(Models.GrazPlan.Stock));
+            var stock = explorerPresenter.ApsimXFile.FindInScope<Models.GrazPlan.Stock>();
 
             explorerPresenter.SelectNode(stock);
             explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);

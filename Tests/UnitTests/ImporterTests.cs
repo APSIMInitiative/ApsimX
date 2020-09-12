@@ -86,8 +86,9 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var w = sims.Children[0].Children[0] as Models.Weather;
-            Assert.AreEqual(w.FileName, @"\Examples\MetFiles\Goond.met");
+            var w = sims.Children[0].Children[0] as Models.Climate.Weather;
+            string expected = Path.Combine(Path.DirectorySeparatorChar.ToString(), "Examples", "MetFiles", "Goond.met");
+            Assert.AreEqual(w.FileName, expected);
         }
 
         /// <summary>Ensure AREA imports OK</summary>

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Models.Core;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using APSIM.Shared.Utilities;
     using System.Linq;
 
@@ -25,7 +25,7 @@
         {
             get
             {
-                return Apsim.Parent(this, typeof(Soil)) as Soil;
+                return FindAncestor<Soil>();
             }
         }
 
@@ -139,7 +139,7 @@
             }
         }
 
-        //[XmlIgnore]
+        //[JsonIgnore]
         //[Units("cm")]
         //[Description("Depth")]
         //public string[] Depth
@@ -154,7 +154,7 @@
         /// Gets or sets the plant available water content
         /// </summary>
         [Summary]
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Plant available water")]
         [Units("mm")]
         public double PAW

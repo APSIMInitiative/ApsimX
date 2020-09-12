@@ -36,7 +36,7 @@ namespace Models.Functions
         /// </summary>
         public double Value(int arrayIndex = -1)
         {
-            IFunction[] children = Apsim.Children(this, typeof(IFunction)).Cast<IFunction>().ToArray();
+            IFunction[] children = this.FindAllChildren<IFunction>().ToArray();
             int n = children?.Length ?? 0;
             if (n < 2)
                 throw new Exception($"Error in ProtectedDivideFunction {Name}: 2 child functions required, only found {n}");

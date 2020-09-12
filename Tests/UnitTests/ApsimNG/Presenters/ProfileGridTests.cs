@@ -31,13 +31,13 @@ namespace UnitTests.ApsimNG.Presenters
             GtkUtilities.WaitForGtkEvents();
 
             Simulations sims = explorerPresenter.ApsimXFile;
-            Soil soil = Apsim.Find(sims, typeof(Soil)) as Soil;
-            Sample sample = Apsim.Child(soil, typeof(Sample)) as Sample;
+            Soil soil = sims.FindInScope<Soil>();
+            Sample sample = soil.FindChild<Sample>();
 
             explorerPresenter.SelectNode(sample);
             GtkUtilities.WaitForGtkEvents();
 
-            Assert.IsNull(sample.NO3N);
+            Assert.IsNull(sample.NO3);
 
             ProfileView view = explorerPresenter.CurrentRightHandView as ProfileView;
             GridView grid = view.ProfileGrid as GridView;
@@ -50,8 +50,8 @@ namespace UnitTests.ApsimNG.Presenters
             GtkUtilities.TypeKey(grid.Grid, Gdk.Key.Return, Gdk.ModifierType.None);
 
             // The sample's NO3N property should now be an array containing 1.1.
-            Assert.NotNull(sample.NO3N);
-            Assert.AreEqual(new double[1] { 1.1 }, sample.NO3N);
+            Assert.NotNull(sample.NO3);
+            Assert.AreEqual(new double[1] { 1.1 }, sample.NO3);
         }
     }
 }

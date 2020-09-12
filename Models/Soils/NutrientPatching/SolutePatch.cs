@@ -6,6 +6,7 @@ namespace Models.Soils.NutrientPatching
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
+    using Models.Soils.Nutrients;
 
     /// <summary>
     /// # [Name]
@@ -45,8 +46,8 @@ namespace Models.Soils.NutrientPatching
         public override void OnCreated()
         {
             base.OnCreated();
-            soil = Apsim.Parent(this, typeof(Soil)) as Soil;
-            patchManager = Apsim.Parent(this, typeof(NutrientPatchManager)) as NutrientPatchManager;
+            soil = FindAncestor<Soil>();
+            patchManager = FindAncestor<NutrientPatchManager>();
         }
 
         /// <summary>Performs the initial checks and setup</summary>
@@ -55,7 +56,8 @@ namespace Models.Soils.NutrientPatching
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
+            if (!Name.Contains("PlantAvailable"))
+                Reset();
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace Models.Soils.NutrientPatching
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            double[] initialkgha = soil.Initial.FindByPath(Name + "N")?.Value as double[];
             if (initialkgha == null)
                 SetKgHa(SoluteSetterType.Other, new double[soil.Thickness.Length]);  // Urea will fall to here.
             else

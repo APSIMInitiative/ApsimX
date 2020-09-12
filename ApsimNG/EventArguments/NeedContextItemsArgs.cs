@@ -87,7 +87,7 @@
         /// <param name="methods">If true, method suggestions will be generated.</param>
         /// <param name="events">If true, event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -115,7 +115,7 @@
 
                 if (methods)
                 {
-                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
                         if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
                         {
@@ -154,7 +154,7 @@
                     }
                 }
 
-                if (events)
+                if (publishedEvents)
                 {
                     foreach (EventInfo evnt in atype.GetEvents(BindingFlags.Instance | BindingFlags.Public))
                     {
@@ -168,6 +168,27 @@
                         item.Descr = GetDescription(evnt);
                         item.Units = "";
                         allItems.Add(item);
+                    }
+                }
+
+                if (subscribedEvents)
+                {
+                    foreach (MethodInfo method in atype.GetMethods(/*BindingFlags.Instance |*/ BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (subscriberAttribute != null)
+                        {
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = subscriberAttribute.ToString();
+                            item.IsProperty = false;
+                            item.IsEvent = false;
+                            item.IsMethod = true;
+                            item.IsWriteable = false;
+                            item.TypeName = atype.Name;
+                            item.Descr = GetDescription(atype);
+                            item.Units = "";
+                            allItems.Add(item);
+                        }
                     }
                 }
             }
@@ -184,11 +205,11 @@
         /// <param name="methods">If true, method suggestions will be generated.</param>
         /// <param name="events">If true, event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
-        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
+        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
-            allItems = ExamineTypeForContextItems(objectType, properties, methods, events);
+            allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
             
             // add in the child models.
             if (o is IModel)
@@ -229,12 +250,12 @@
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
+            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = Apsim.Get(replacementModel, objectName) as IModel;
+                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) {  }
             }
@@ -243,7 +264,7 @@
             {
                 try
                 {
-                    o = Apsim.Get(relativeTo, objectName);
+                    o = relativeTo.FindByPath(objectName)?.Value;
                 }
                 catch (Exception) { }
             }
@@ -251,17 +272,17 @@
             if (o == null && relativeTo.Parent is Replacements)
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
+                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
-                    o = Apsim.Get(simulation, objectName) as IModel;
+                    o = simulation.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) { }
             }
 
             if (o != null)
             {
-                return ExamineObjectForContextItems(o, properties, methods, events);
+                return ExamineObjectForContextItems(o, properties, methods, events, false);
             }
 
             return new List<ContextItem>();
@@ -274,13 +295,13 @@
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
         /// <returns></returns>
-        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node != null)
             {
-                contextItems = ExamineObjectForContextItems(node, properties, methods, events);
+                contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
             }
             return contextItems;
         }
@@ -312,7 +333,7 @@
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
                     textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = Apsim.Find(relativeTo, textBeforeFirstDot);
+                node = relativeTo.FindInScope(textBeforeFirstDot);
             }
             else
             {
@@ -320,13 +341,13 @@
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = Apsim.Find(relativeTo, modelName);
+                node = relativeTo.FindInScope(modelName);
 
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
-                if (node == null && Apsim.Parent(relativeTo, typeof(Replacements)) != null)
-                    node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
+                if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
             }
 
             // If the object name string does not contain any children/properties 
@@ -374,7 +395,20 @@
                             return null;
 
                         // Try to set node to the value of the property.
-                        node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        try
+                        {
+                            node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        }
+                        catch (TargetInvocationException err)
+                        {
+                            if (err.InnerException is NullReferenceException)
+                                // Some properties depend on links being resolved which is not
+                                // always the case (ie in an intellisense context).
+                                node = null;
+                            else
+                                throw;
+                        }
+
                         if (node == null)
                         {
                             // This property has the correct name. If the property's type provides a parameterless constructor, we can use 

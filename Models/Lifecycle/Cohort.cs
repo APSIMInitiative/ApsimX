@@ -1,6 +1,7 @@
 ﻿namespace Models.LifeCycle
 {
     using System;
+    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// # [Name]
@@ -26,7 +27,10 @@
         public double Progeny { get; set; }
 
         /// <summary>Number of migrants leaving this cohort</summary>
-        public double Migrants { get; set; }
+        public double Emigrants { get; set; }
+
+        /// <summary>Information about where this cohort came from</summary>
+        public SourceInfo sourceInfo { get; set; }
 
         /// <summary>The LifeCyclePhase this cohort belongs to.</summary>
         public LifeCyclePhase BelongsToPhase;

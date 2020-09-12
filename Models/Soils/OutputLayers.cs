@@ -2,9 +2,10 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
     using Models.Soils.Standardiser;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
@@ -26,9 +27,9 @@
         /// <summary>Constructor</summary>
         public OutputLayers()
         {
-            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
-            UreaSolute = Apsim.Find(this, "Urea") as ISolute;
+            NO3Solute = this.FindInScope("NO3") as ISolute;
+            NH4Solute = this.FindInScope("NH4") as ISolute;
+            UreaSolute = this.FindInScope("Urea") as ISolute;
         }
 
         /// <summary>Gets or sets the thickness of each layer.</summary>
@@ -36,7 +37,7 @@
         public double[] Thickness { get; set; }
 
         ///<summary>Gets the current soil water content of each mapped layer</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm/mm")]
         public double[] SW
         {
@@ -44,7 +45,7 @@
         }
 
         ///<summary>Gets the current soil water amount of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] SWmm
         {
@@ -52,7 +53,7 @@
         }
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] PAW
         {
@@ -60,7 +61,7 @@
         }
 
         ///<summary>Gets the soil water content at the lower limit of each mapped layer</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm/mm")]
         public double[] LL15
         {
@@ -68,7 +69,7 @@
         }
 
         ///<summary>Gets the soil water amount at the lower limit of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] LL15mm
         {
@@ -76,7 +77,7 @@
         }
 
         ///<summary>Gets the soil water content at the upper limit of each mapped layer</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm/mm")]
         public double[] DUL
         {
@@ -84,7 +85,7 @@
         }
 
         ///<summary>Gets the soil water amount at the upper limit of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] DULmm
         {
@@ -92,7 +93,7 @@
         }
 
         ///<summary>Gets the soil water content at saturation of each mapped layer</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm/mm")]
         public double[] SAT
         {
@@ -100,7 +101,7 @@
         }
 
         ///<summary>Gets the soil water amount at saturation of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] SATmm
         {
@@ -108,7 +109,7 @@
         }
 
         ///<summary>Gets the soil urea N content of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] Urea
         {
@@ -116,7 +117,7 @@
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] NH4
         {
@@ -124,7 +125,7 @@
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] NO3
         {
@@ -132,7 +133,7 @@
         }
 
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("%")]
         public double[] OC
         {

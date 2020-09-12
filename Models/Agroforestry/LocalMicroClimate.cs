@@ -1,5 +1,6 @@
 ﻿using System;
 using Models.Core;
+using Models.Climate;
 using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -25,16 +26,20 @@ namespace Models.Agroforestry
         AgroforestrySystem ParentSystem = null;
 
         /// <summary>Gets the start date of the weather file</summary>
+        [JsonIgnore]
         public DateTime StartDate { get { return weather.StartDate; } }
 
         /// <summary>Gets the end date of the weather file</summary>
+        [JsonIgnore]
         public DateTime EndDate { get { return weather.EndDate; } }
 
         /// <summary>Gets or sets the maximum temperature (oc)</summary>
-        public double MaxT { get { return weather.MaxT; } }
+        [JsonIgnore]
+        public double MaxT { get { return weather.MaxT; } set { weather.MaxT = value; } }
 
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
-        public double MinT { get { return weather.MinT; } }
+        [JsonIgnore]
+        public double MinT { get { return weather.MinT; } set { weather.MinT = value; } }
 
         /// <summary>
         /// Daily Mean temperature (oC)
@@ -61,36 +66,49 @@ namespace Models.Agroforestry
         }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>
-        public double Rain { get { return weather.Rain; } }
+        [JsonIgnore]
+        public double Rain { get { return weather.Rain; } set { weather.Rain = value; } }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        public double Radn { get { return weather.Radn * ParentSystem.GetRadiationReduction(Parent as Zone) ; } }
+        [JsonIgnore]
+        public double Radn { get { return weather.Radn * ParentSystem.GetRadiationReduction(Parent as Zone) ; } set { weather.Radn = value; } }
 
         /// <summary>Gets or sets the vapor pressure</summary>
-        public double VP { get { return weather.VP; } }
+        [JsonIgnore]
+        public double VP { get { return weather.VP; } set { weather.VP = value; } }
 
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified.
         /// </summary>
-        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone); } }
+        [JsonIgnore]
+        public double Wind { get { return weather.Wind * ParentSystem.GetWindReduction(Parent as Zone); } set { weather.Wind = value; } }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
-        public double CO2 { get { return weather.CO2; } }
+        [JsonIgnore]
+        public double CO2 { get { return weather.CO2; } set { weather.CO2 = value; } }
 
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
         /// </summary>
+        [JsonIgnore]
         public double AirPressure { get { return weather.AirPressure; } }
 
         /// <summary>Gets the latitude</summary>
+        [JsonIgnore]
         public double Latitude { get { return weather.Latitude; } }
 
+        /// <summary>Gets the longitude</summary>
+        [JsonIgnore]
+        public double Longitude { get { return weather.Longitude; } }
+
         /// <summary>Gets the average temperature</summary>
+        [JsonIgnore]
         public double Tav { get { return weather.Tav; } }
 
         /// <summary>Gets the temperature amplitude.</summary>
+        [JsonIgnore]
         public double Amp { get { return weather.Amp; } }
 
         /// <summary>Met Data from yesterday</summary>

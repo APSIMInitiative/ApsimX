@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -18,6 +18,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
@@ -25,12 +26,6 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Relationships/Relationship.htm")]
     public class Relationship : CLEMModel, IValidatableObject
     {
-        /// <summary>
-        /// Current value
-        /// </summary>
-        [XmlIgnore]
-        public double Value { get; set; }
-
         /// <summary>
         /// X values of relationship
         /// </summary>

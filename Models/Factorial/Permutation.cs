@@ -21,13 +21,13 @@
         internal List<List<CompositeFactor>> GetPermutations()
         {
             var factors = new List<List<CompositeFactor>>();
-            foreach (Factor factor in Apsim.Children(this, typeof(Factor)))
+            foreach (Factor factor in this.FindAllChildren<Factor>())
             {
                 if (factor.Enabled)
                     factors.Add(factor.GetCompositeFactors());
             }
 
-            var compositeFactors = Apsim.Children(this, typeof(CompositeFactor)).Where(cf => cf.Enabled);
+            var compositeFactors = this.FindAllChildren<CompositeFactor>().Where(cf => cf.Enabled);
 
             var permutations = new List<List<CompositeFactor>>();
             if (compositeFactors.Count() > 0)

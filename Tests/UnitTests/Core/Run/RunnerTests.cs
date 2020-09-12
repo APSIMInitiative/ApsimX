@@ -34,13 +34,16 @@
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
 
-            string sqliteSourceFileName = DataStoreWriterTests.FindSqlite3DLL();
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-
-            var sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-            if (!File.Exists(sqliteFileName))
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
-                File.Copy(sqliteSourceFileName, sqliteFileName, overwrite: true);
+                string sqliteSourceFileName = DataStoreWriterTests.FindSqlite3DLL();
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+
+                var sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
+                if (!File.Exists(sqliteFileName))
+                {
+                    File.Copy(sqliteSourceFileName, sqliteFileName, overwrite: true);
+                }
             }
         }
 
@@ -330,7 +333,7 @@
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
-                Assert.IsTrue(exceptions[0].ToString().Contains("Test has failed."));
+                Assert.IsTrue(exceptions[0].ToString().Contains("Test has failed."), $"Exception message {exceptions[0].ToString()} does not contain 'Test has failed.'.");
 
                 database.CloseDatabase();
             }
@@ -528,7 +531,7 @@
             sim1.Children.Add(testPostSim);
 
             Simulations sims = Simulations.Create(new[] { sim1, sim2, new DataStore() });
-            Apsim.InitialiseModel(sims);
+            Utilities.InitialiseModel(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
             List<Exception> errors = runner.Run();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -14,7 +15,7 @@ namespace Models.Functions
     public class BoundFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction Lower = null;
@@ -27,7 +28,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
             foreach (IFunction child in ChildFunctions)
                 if (child != Lower && child != Upper)
                     return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)),Lower.Value(arrayIndex));
@@ -42,10 +43,10 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                    ChildFunctions = this.FindAllChildren<IFunction>();
                 foreach (IFunction child in ChildFunctions)
                     if (child != Lower && child != Upper)
                     {

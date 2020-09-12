@@ -2,10 +2,11 @@
 using Models.Core;
 using System.Xml;
 using Models.Soils;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Interfaces;
+using Models.Soils.Nutrients;
 
 namespace Models
 {
@@ -90,7 +91,7 @@ namespace Models
         // Parameters
         /// <summary>Gets or sets the definitions.</summary>
         /// <value>The definitions.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<FertiliserType> Definitions { get; set; }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace Models
       
         /// <summary>Gets the nitrogen applied.</summary>
         /// <value>The nitrogen applied.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double NitrogenApplied { get ; private set; }
 

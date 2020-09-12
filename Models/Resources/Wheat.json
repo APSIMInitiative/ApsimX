@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 105,
+  "Version": 118,
   "Name": "Simulations",
   "Children": [
     {
@@ -1144,6 +1144,33 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "Name": "LeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "FullyExpandedLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].InitialisedCohortNo",
+                  "Name": "InitialisedLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1463,7 +1490,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1502,7 +1529,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1541,7 +1568,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1580,7 +1607,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1619,7 +1646,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1658,8 +1685,72 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "PTQ",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Radn_mol_per_m2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].Radn",
+                      "Name": "SolarRadiation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.285,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE Temp factor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": true
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2164,102 +2255,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AddFunction, Models",
-              "Name": "HaunStage",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].ExpandedCohortNo",
-                  "Name": "AppearedLeaves",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].NextExpandingLeafProportion",
-                  "Name": "ProportionOfExpandingLeaf",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": null,
               "Name": "StemSenescenceAge",
               "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "PTQ",
-              "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Radn_mol_per_m2",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[IWeather].Radn",
-                      "Name": "SolarRadiation",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.285,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT",
-                      "Name": "RUE Temp factor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": true
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime",
-                  "Name": "ThermalTime",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -3602,6 +3602,11 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3641,31 +3646,13 @@
           "Name": "Leaf",
           "Children": [
             {
-              "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
-              "Name": "CO2internal",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
+              "$type": "Models.Functions.SupplyFunctions.StomatalConductanceCO2Modifier, Models",
               "Name": "StomatalConductanceCO2Modifier",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Leaf].Photosynthesis.FCO2",
-                  "Name": "FCO2",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
-                  "Name": "RelativeCO2Gradient",
+                  "Name": "PhotosynthesisCO2Modifier",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -9704,11 +9691,22 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Wheat"
     }
   ],
   "IncludeInDocumentation": true,

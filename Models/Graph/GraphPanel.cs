@@ -22,7 +22,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class GraphPanel : Model, IPostSimulationTool
+    public class GraphPanel : Model, IPostSimulationTool, ICustomDocumentation
     {
         /// <summary>
         /// When set to anything other than default, changes the legend
@@ -114,7 +114,7 @@ namespace Models
         /// </summary>
         public override void OnCreated()
         {
-            if (Apsim.Child(this, typeof(Manager)) == null)
+            if (this.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
                 script.Name = "Config";
@@ -131,6 +131,17 @@ namespace Models
         public void Run()
         {
             Cache.Clear();
+        }
+
+        /// <summary>
+        /// Document the graph panel.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            
         }
 
         /// <summary>
@@ -197,7 +208,7 @@ namespace Models
         {
             get
             {
-                Manager manager = Apsim.Child(this, typeof(Manager)) as Manager;
+                Manager manager = this.FindChild<Manager>();
                 return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
             }
         }

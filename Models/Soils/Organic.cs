@@ -72,5 +72,11 @@
         [Units("kg/ha")]
         [Display(Format = "N1")]
         public double[] FOM { get; set; }
+
+        /// <summary>Carbon metadata</summary>
+        public string[] CarbonMetadata { get; set; }
+
+        /// <summary>FOM metadata</summary>
+        public string[] FOMMetadata { get; set; }
     }
 }

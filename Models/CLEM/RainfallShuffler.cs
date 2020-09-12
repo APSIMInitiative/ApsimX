@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -43,7 +43,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of shuffled years
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ShuffleYear> ShuffledYears { get; set; }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">";
                 html += StartSeasonMonth.ToString();
             }
-            html += "</class>";
+            html += "</span>";
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\">";

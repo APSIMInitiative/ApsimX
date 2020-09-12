@@ -7,7 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
@@ -34,8 +34,14 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -55,20 +61,6 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            switch ((this.Parent as RuminantActivityFeed).FeedStyle)
-            {
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    if(MonthlyValues.Max() > 1)
-                    {
-                        string[] memberNames = new string[] { "Monthly values" };
-                        results.Add(new ValidationResult("Invalid monthly value provided [v"+ MonthlyValues.Max().ToString() + "] for ["+this.Name+"] Feed Group for ["+this.Parent.Name+"] given the style of feeding selected requires a proportion.", memberNames));
-                    }
-                    break;
-                default:
-                    break;
-            }
             if(MonthlyValues.Count() > 0)
             {
                 if(MonthlyValues.Max() == 0)
@@ -164,6 +156,10 @@ namespace Models.CLEM.Groupings
 
             html += "</div>";
 
+            html += "\n<div class=\"activityentry\">";
+            html += "Individual's intake will automatically be limited to 1.2 x potential intake, with excess food still utilised";
+            html += "</div>";
+
             return html;
         }
 
@@ -186,7 +182,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

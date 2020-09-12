@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -58,13 +58,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Resource to process
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private IResourceType resourceTypeProcessModel { get; set; }
 
         /// <summary>
         /// Resource created
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private IResourceType resourceTypeCreatedModel { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
             }
 
             // get finances required.
-            foreach (ResourceActivityFee item in Apsim.Children(this, typeof(ResourceActivityFee)))
+            foreach (ResourceActivityFee item in this.FindAllChildren<ResourceActivityFee>())
             {
                 if (ResourceRequestList == null)
                 {

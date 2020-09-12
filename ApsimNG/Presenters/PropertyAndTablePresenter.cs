@@ -17,7 +17,7 @@
     {
         /// <summary>The underlying model</summary>
         private IModelAsTable tableModel;
-
+        private IntellisensePresenter intellisense;
         private IDualGridView view;
         private ExplorerPresenter explorerPresenter;
         private DataTable table;
@@ -34,6 +34,8 @@
         {
             explorerPresenter = parentPresenter;
             view = v as IDualGridView;
+            intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
             tableModel = model as IModelAsTable;
             if (tableModel.Tables.Count != 1)
                 throw new Exception("PropertyAndTablePresenter must have a single data table.");
@@ -41,6 +43,7 @@
             view.Grid2.DataSource = table;
             view.Grid2.CellsChanged += OnCellValueChanged2;
             view.Grid2.NumericFormat = null;
+            view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
@@ -56,6 +59,8 @@
         public void Detach()
         {
             view.Grid2.CellsChanged -= OnCellValueChanged2;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            view.Grid2.ContextItemsNeeded -= OnContextItemsNeeded;
             propertyPresenter.Detach();
             gridPresenter.Detach();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -176,6 +181,29 @@
                 table = tableModel.Tables[0];
                 view.Grid2.DataSource = table;
             }
+        }
+
+        /// <summary>
+        /// Called when an intellisense item is selected.
+        /// Inserts the item into view.Grid2 (the lower gridview).
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs e)
+        {
+            view.Grid2.InsertText(e.ItemSelected);
+        }
+
+        /// <summary>
+        /// Called when the view is asking for completion items.
+        /// Shows the intellisense popup.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
+        {
+            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, tableModel as IModel, true, false, false, false, false))
+                intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
         }
     }
 }

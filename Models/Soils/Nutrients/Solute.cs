@@ -6,7 +6,7 @@ namespace Models.Soils.Nutrients
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -24,8 +24,19 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Default constructor.</summary>
+        public Solute() { }
+
+        /// <summary>Default constructor.</summary>
+        public Solute(Soil soilModel, string soluteName, double[] value) 
+        {
+            soil = soilModel;
+            kgha = value;
+            Name = soluteName;
+        }
+
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
@@ -45,7 +56,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
                 kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
             else

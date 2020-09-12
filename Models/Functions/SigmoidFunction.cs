@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.Functions
 {
@@ -11,7 +11,7 @@ namespace Models.Functions
     /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)
     /// </summary>
     [Serializable]
-    [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(x-Xo)/b)")]
+    [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(XValue-Xo)/b)")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : Model, IFunction, ICustomDocumentation, IIndexedFunction
@@ -75,7 +75,7 @@ namespace Models.Functions
                                                          "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, 0, indent+1);
             }
         }

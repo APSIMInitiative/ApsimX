@@ -38,7 +38,7 @@
         /// <param name="Type">The type of estimate</param>
         /// <param name="soilstate">The state of the soil</param>
         /// <param name="uptakeModels">A list of models that do uptake.</param>
-        public Estimate(IModel parent, CalcType Type, SoilState soilstate, List<IModel> uptakeModels)
+        public Estimate(IModel parent, CalcType Type, SoilState soilstate, IEnumerable<IUptake> uptakeModels)
         {
             Values = new List<CropUptakes>();
 

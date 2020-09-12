@@ -32,7 +32,7 @@
             if (allCombinations != null)
             {
                 // Find base simulation.
-                var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+                var baseSimulation = this.FindChild<Simulation>();
 
                 // Loop through all combinations and add a simulation description to the
                 // list of simulations descriptions being returned to the caller.
@@ -72,13 +72,13 @@
         /// </summary>
         private List<List<CompositeFactor>> CalculateAllCombinations()
         {
-           Factors Factors = Apsim.Child(this, typeof(Factors)) as Factors;
+           Factors Factors = this.FindChild<Factors>();
 
             // Create a list of list of factorValues so that we can do permutations of them.
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
             {
-                foreach (CompositeFactor compositeFactor in Apsim.Children(Factors, typeof(CompositeFactor)))
+                foreach (CompositeFactor compositeFactor in Factors.FindAllChildren<CompositeFactor>())
                 {
                     if (compositeFactor.Enabled)
                         allValues.Add(new List<CompositeFactor>() { compositeFactor });
@@ -89,7 +89,7 @@
                         foreach (var compositeFactor in factor.GetCompositeFactors())
                             allValues.Add(new List<CompositeFactor>() { compositeFactor });
                 }
-                foreach (Permutation factor in Apsim.Children(Factors, typeof(Permutation)))
+                foreach (Permutation factor in Factors.FindAllChildren<Permutation>())
                 {
                     if (factor.Enabled)
                         allValues.AddRange(factor.GetPermutations());

@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return ((Age >= BreedParams.MinimumAge1stMating)&(Weight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) &(Age <= BreedParams.MaximumAgeMating) );
+                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
             }
         }
 
@@ -220,7 +220,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(int number, double rate, int ageOffsett)
+        public void UpdateConceptionDetails(int number, double rate, int ageOffset)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
@@ -229,8 +229,9 @@ namespace Models.CLEM.Resources
             }
             PreviousConceptionRate = rate;
             CarryingCount = number;
-            WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age + ageOffsett;
+            AgeAtLastConception = this.Age + ageOffset;
+            // use normalised weight for age if offset provided for pre simulation allocation
+            WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
             NumberOfConceptions++;
         }
 
