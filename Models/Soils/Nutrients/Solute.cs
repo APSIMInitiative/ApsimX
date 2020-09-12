@@ -34,6 +34,12 @@
             soil = soilModel;
             kgha = value;
             Name = soluteName;
+
+            Constant i = new Constant
+            {
+                FixedValue = 0
+            };
+            initialValue = i;
         }
 
         /// <summary>Solute amount (kg/ha)</summary>
