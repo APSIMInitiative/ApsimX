@@ -68,10 +68,14 @@ namespace UserInterface.Presenters
             this.view.DelNode += OnDelNode;
             this.view.AddArc += OnAddArc;
             this.view.DelArc += OnDelArc;
+            this.view.ToggleVerboseMode += OnToggleVerboseMode;
 
             this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
             //view.RuleList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
+
+            this.view.InitialState = this.model.InitialState;
+            this.view.Verbose = this.model.Verbose;
             //view.ActionList.TextHasChangedByUser += OnEventNamesChanged;
 
             intellisense = new IntellisensePresenter(view as ViewBase);
@@ -81,6 +85,7 @@ namespace UserInterface.Presenters
 
             RefreshView();
         }
+
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
@@ -224,6 +229,17 @@ namespace UserInterface.Presenters
             newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
             ICommand deleteArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(deleteArc);
+        }
+
+        /// <summary>
+        /// The view has changed the Verbose setting.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnToggleVerboseMode(object sender, ChangeVerboseModeEventArgs args)
+        {
+            ICommand changeVerbose = new ChangeProperty(model, "Verbose", args.Verbose);
+            presenter.CommandHistory.Add(changeVerbose);
         }
 
         /// <summary>

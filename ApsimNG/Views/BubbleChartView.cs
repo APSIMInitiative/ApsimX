@@ -20,6 +20,7 @@ namespace UserInterface.Views
     /// - use IDs not names?
     /// - refactor the mechanism used to generate a unique name for new nodes/arcs.
     /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
+    /// - should use property presenter rather than manually handle properties like InitialState.
     /// </remarks>
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
@@ -41,6 +42,9 @@ namespace UserInterface.Views
         /// <summary> Invoked when the user changes the initial state. </summary>
         public event EventHandler<InitialStateEventArgs> OnInitialStateChanged;
 
+        /// <summary>Invoked when the user toggles the verbose mode option.</summary>
+        public event EventHandler<ChangeVerboseModeEventArgs> ToggleVerboseMode;
+
         private Paned vpaned1 = null;
         private ComboBox combobox1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
@@ -57,7 +61,7 @@ namespace UserInterface.Views
         private Entry descEntry = null;
         private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
-
+        private CheckButton chkVerbose;
         private HPaned hpaned1;
         private HPaned hpaned2;
 
@@ -67,7 +71,7 @@ namespace UserInterface.Views
         /// Contains the settings such as initial state,
         /// paddocks for which the rotation is enabled, etc.
         /// </summary>
-        private VBox settingsBox = null;
+        private Table settingsBox = null;
         private Menu ContextMenu = new Menu();
 
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
@@ -170,18 +174,22 @@ namespace UserInterface.Views
             //ctxBox.PackStart(infoWdgt, true, true, 0);
             //vbox1.PackStart(ctxBox, false, false, 0);
 
-            settingsBox = new VBox();
-            //settingsBox.PackStart(new Label("Initial State"), false, false, 0);
+            settingsBox = new Table(2, 2, false);
+            settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             combobox1 = new ComboBox();
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
-            settingsBox.PackStart(combobox1, false, false, 0);
+            settingsBox.Attach(combobox1, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
+            chkVerbose = new CheckButton();
+            chkVerbose.Toggled += OnToggleVerboseMode;
+            settingsBox.Attach(new Label("Verbose Mode"), 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            settingsBox.Attach(chkVerbose, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             hpaned1 = new HPaned();
             hpaned2 = new HPaned();
-            Frame frame1 = new Frame("Initial State");
+            Frame frame1 = new Frame("Rotation Settings");
             frame1.Add(settingsBox);
             frame1.ShadowType = ShadowType.In;
             Frame frame2 = new Frame();
@@ -216,6 +224,18 @@ namespace UserInterface.Views
 
             // Ensure the menu is populated
             Select(null);
+        }
+
+        private void OnToggleVerboseMode(object sender, EventArgs e)
+        {
+            try
+            {
+                ToggleVerboseMode?.Invoke(this, new ChangeVerboseModeEventArgs{ Verbose = Verbose });
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -276,6 +296,27 @@ namespace UserInterface.Views
                         break;
                     }
                 } while (combobox1.Model.IterNext(ref iter));
+            }
+        }
+
+        /// <summary>
+        /// Are we running in verbose mode?
+        /// </summary>
+        /// <remarks>
+        /// fixme: should use a PropertyPresenter.
+        /// </remarks>
+        public bool Verbose
+        {
+            get
+            {
+                return chkVerbose.Active;
+            }
+            set
+            {
+                // Don't want to trigger the toggled event.
+                chkVerbose.Toggled -= OnToggleVerboseMode;
+                chkVerbose.Active = value;
+                chkVerbose.Toggled += OnToggleVerboseMode;
             }
         }
 

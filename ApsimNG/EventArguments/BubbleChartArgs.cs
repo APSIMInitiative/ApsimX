@@ -42,6 +42,10 @@ namespace UserInterface.EventArguments.DirectedGraph
     {
         public string initialState { get; set; }
     }
+    public class ChangeVerboseModeEventArgs : EventArgs
+    {
+        public bool Verbose { get; set; }
+    }
     public class ObjectMovedArgs : EventArgs
     {
         /// <summary>

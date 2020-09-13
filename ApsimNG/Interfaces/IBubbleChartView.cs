@@ -47,6 +47,11 @@ namespace UserInterface.Interfaces
         event EventHandler<DelArcEventArgs> DelArc;
 
         /// <summary>
+        /// Invoked when the user toggles the verbose mode option.
+        /// </summary>
+        event EventHandler<ChangeVerboseModeEventArgs> ToggleVerboseMode;
+
+        /// <summary>
         /// Editor for inputting rules.
         /// </summary>
         IEditorView RuleList { get; }
@@ -58,10 +63,16 @@ namespace UserInterface.Interfaces
         IEditorView ActionList { get; }
 
         /// <summary>
-        /// todo: refactor this
+        /// todo: refactor this - use property presenter
         /// </summary>
         /// <value></value>
         string InitialState { get; set; }
+
+        /// <summary>
+        /// todo: refactor this - use property presenter
+        /// </summary>
+        /// <value></value>
+        bool Verbose { get; set;}
 
         /// <summary>
         /// 

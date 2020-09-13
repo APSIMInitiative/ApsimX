@@ -63,6 +63,13 @@ namespace Models.Management
         public string InitialState { get; set; }
 
         /// <summary>
+        /// Iff true, the rotation manager will print debugging diagnostics
+        /// to the summary file during execution.
+        /// </summary>
+        /// <value></value>
+        public bool Verbose { get; set; }
+
+        /// <summary>
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
@@ -102,7 +109,8 @@ namespace Models.Management
         private void OnCommence(object sender, EventArgs e)
         {
             CurrentState = InitialState;
-            summary.WriteMessage(this, "Initialised, state=" + CurrentState + "(of " + Nodes.Count + " total)");
+            if (Verbose)
+                summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)");
         }
 
         /// <summary>
@@ -129,6 +137,23 @@ namespace Models.Management
                             throw new Exception($"Test condition '{testCondition}' returned nothing");
                         score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
                     }
+
+                    if (Verbose)
+                    {
+                        string arcName = $"Transition from {arc.DestinationName} to {arc.DestinationName}";
+                        string message;
+                        if (score > 0)
+                        {
+                            if (score > bestScore)
+                                message = $"{arcName} is possible and weight of {score} exceeds previous best weight of {bestScore}";
+                            else
+                                message = $"{arcName} is possible but weight of {score} does not exceed previous best weight of {bestScore}";
+                        }
+                        else
+                            message = $"{arcName} is not possible. Weight = {score}";
+                        summary.WriteMessage(this, message);
+                    }
+
                     if (score > bestScore)
                     {
                         bestScore = score;
@@ -151,6 +176,8 @@ namespace Models.Management
         {
             try
             {
+                if (Verbose)
+                    summary.WriteMessage(this, $"Transitioning from {transition.SourceName} to {transition.DestinationName}");
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentState}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
@@ -177,6 +204,8 @@ namespace Models.Management
                         CallMethod(thisAction);
                 }
                 eventService.Publish($"TransitionTo{CurrentState}", null);
+                if (Verbose)
+                    summary.WriteMessage(this, $"Current state is now {CurrentState}");
             }
             catch (Exception err)
             {
