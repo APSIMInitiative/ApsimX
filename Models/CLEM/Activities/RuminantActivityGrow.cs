@@ -516,6 +516,8 @@ namespace Models.CLEM.Activities
                     {
                         // recalculate milk production based on DMD of food provided
                         energyMilk = CalculateMilkProduction(femaleind);
+                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
+                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
 
                     // Determine energy required for foetal development
