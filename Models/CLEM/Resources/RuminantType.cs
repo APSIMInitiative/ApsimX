@@ -472,6 +472,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
         /// <summary>
+        /// Potential intake modifier for maximum intake possible when overfeeding
+        /// </summary>
+        [Category("Advanced", "Diet")]
+        [Description("Potential intake modifer for max overfeeding intake")]
+        [Required, GreaterThanEqualValue(1)]
+        [System.ComponentModel.DefaultValue(1)]
+        public double OverfeedPotentialIntakeModifier { get; set; }
+        /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>
         [Category("Advanced", "Diet")]
