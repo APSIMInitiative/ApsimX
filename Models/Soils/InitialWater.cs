@@ -171,7 +171,10 @@
                 }
                 else
                 {
-                    var soilCrop = Soil.Crop(RelativeTo);
+                    var soilCrop = Soil.FindDescendant<SoilCrop>(RelativeTo + "Soil");
+                    if (soilCrop == null)
+                        throw new Exception($"Cannot find a soil crop parameterisation called {RelativeTo}Soil");
+
                     ll = soilCrop.LL;
                     xf = soilCrop.XF;
                 }
@@ -221,7 +224,10 @@
         /// </summary>
         public double[] PAWCCrop(string CropName)
         {
-            var soilCrop = Soil.Crop(CropName);
+            var soilCrop = Soil.FindDescendant<SoilCrop>(CropName + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {CropName}Soil");
+
             if (soilCrop != null)
                 return Soil.CalcPAWC(Soil.Thickness,
                                      soilCrop.LL,

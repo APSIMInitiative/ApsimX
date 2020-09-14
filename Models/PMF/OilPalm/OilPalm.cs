@@ -739,8 +739,10 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
-            soilCrop = Soil.Crop(Name) as SoilCrop; 
-            
+            soilCrop = Soil.FindDescendant<SoilCrop>(Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {Name + "Soil"}");
+
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];
             SWUptake = new double[Soil.Thickness.Length];

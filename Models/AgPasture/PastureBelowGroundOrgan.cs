@@ -45,6 +45,8 @@
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
 
+        private SoilCrop soilCropData;
+
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
         /// <param name="initialDM">Initial dry matter weight</param>
@@ -56,6 +58,10 @@
             soil = zone.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
+
+            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            if (soilCropData == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
 
             nutrient = zone.FindInScope<INutrient>();
             if (nutrient == null)
@@ -268,7 +274,6 @@
         internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)soil.Crop(species.Name);
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * soil.Thickness[layer]));
@@ -516,7 +521,6 @@
             //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
 
             double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)soil.Crop(species.Name);
             double depthTop = 0.0;
             double depthBottom = 0.0;
             double depthFirstStage = Math.Min(RootDepthMaximum, RootDistributionDepthParam);

@@ -29,10 +29,6 @@
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
 
-        /// <summary>Return a list of soil-crop parameterisations.</summary>
-        [NonSerialized]
-        private IEnumerable<SoilCrop> crops;
-
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
         [Description("Record number")]
@@ -170,7 +166,6 @@
 
             Initial = Children.Find(child => child is Sample) as Sample;
             structure = this.FindChild<LayerStructure>();
-            crops = FindAllDescendants<SoilCrop>();
         }
 
         /// <summary>
@@ -309,42 +304,6 @@
             }
         }
 
-        /// <summary>
-        /// KLAT at standard thickness. Units: 0-1
-        /// </summary>
-        [Units("0-1")]
-        internal double[] KLAT
-            {
-            get
-                {
-                if (SoilWater == null) return null;
-                return (SoilWater as WaterModel.WaterBalance).KLAT;
-            }
-        }
-
-        /// <summary>Plant unavailable water.</summary>
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Unavailablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(LL15, Thickness);
-            }
-        }
-
-        /// <summary>Drainable water (SAT-DUL).</summary>
-        [Description("Drainable\r\nPAWC SAT-DUL")]
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] Drainablemm
-        {
-            get
-            {
-                return MathUtilities.Multiply(MathUtilities.Subtract(SAT, DUL), Thickness);
-            }
-        }
-
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAWC
@@ -426,19 +385,6 @@
         }
 
         #endregion
-
-
-
-        /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
-        /// <param name="cropName">Name of the crop.</param>
-        public SoilCrop Crop(string cropName) 
-        {
-            cropName = cropName + "Soil";
-            var foundCrop = crops.FirstOrDefault(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
-            if (foundCrop == null)
-                throw new Exception("Cannot find a soil-crop parameterisation for " + cropName);
-            return foundCrop;
-        }
 
         /// <summary>FBiom. Units: 0-1</summary>
         [Units("0-1")]

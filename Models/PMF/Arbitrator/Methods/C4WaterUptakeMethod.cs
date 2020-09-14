@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.PMF.Arbitrator
 {
@@ -163,7 +164,10 @@ namespace Models.PMF.Arbitrator
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                var soilCrop = Soil.Crop(plant.Name);
+                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
+
                 double[] kl = soilCrop.KL;
 
                 double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);

@@ -13257,7 +13257,9 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            SoilCrop Sugarcane = Soil.Crop("Sugarcane");
+            var Sugarcane = Soil.FindDescendant<SoilCrop>("SugarcaneSoil");
+            if (Sugarcane == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called SugarcaneSoil");
 
             xf = Sugarcane.XF;
             ll = Sugarcane.LL;

@@ -263,7 +263,10 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = soil.Crop(plant.Name);
+                var soilCrop = soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
+
                 xf = soilCrop.XF;
 
                 Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;

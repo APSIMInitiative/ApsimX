@@ -237,6 +237,8 @@
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
 
+        private SoilCrop soilCrop;
+
         /// <summary>Constructor</summary>
         public Root()
         {
@@ -827,7 +829,11 @@
             else
             {
                 var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
-                var soilCrop = myZone.soil.Crop(parentPlant.Name);
+
+                var soilCrop = myZone.soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
+
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
                     double[] kl = soilCrop.KL;
@@ -909,8 +915,6 @@
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    if (soil.Crop(parentPlant.Name) == null)
-                        throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
@@ -966,7 +970,6 @@
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
 
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
@@ -991,8 +994,6 @@
         /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
         public double PlantAvailableWaterSupply()
         {
-            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
-
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
@@ -1082,7 +1083,8 @@
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
-            if (!PlantZone.IsWeirdoPresent && soil.Crop(parentPlant.Name) == null)
+            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (!PlantZone.IsWeirdoPresent && soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             Zones = new List<ZoneState>();

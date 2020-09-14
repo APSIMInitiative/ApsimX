@@ -2128,18 +2128,6 @@
 
         ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the soil water content at lower limit for plant uptake ().</summary>
-        //[Description("Soil water content at lower limit for plant uptake")]
-        [Units("mm^3/mm^3")]
-        public double[] LL
-        {
-            get
-            {
-                SoilCrop soilInfo = (SoilCrop)mySoil.Crop(Name);
-                return soilInfo.LL;
-            }
-        }
-
         /// <summary>Gets or sets the amount of water demanded by the plant (mm).</summary>
         [JsonIgnore]
         [Units("mm")]

@@ -98,6 +98,9 @@ namespace Models.PMF
         [Link(ByName = true)]
         private ISolute NH4 = null;
 
+        /// <summary>Soil crop parameterisation.</summary>
+        private SoilCrop soilCrop;
+
         /// <summary>
         /// Is the plant alive?
         /// </summary>
@@ -176,6 +179,11 @@ namespace Models.PMF
         {
             Uptakes = new List<ZoneWaterAndN>();
             EP = 0;
+
+            soilCrop = Soil.FindDescendant<SoilCrop>(Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {Name}Soil");
+
         }
 
         /// <summary>Run at start of day</summary>
@@ -200,8 +208,6 @@ namespace Models.PMF
 
             double[] PotSWUptake = new double[Soil.LL15.Length];
             SWUptake = new double[Soil.LL15.Length];
-
-            SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.LL15mm[j]));
@@ -237,7 +243,6 @@ namespace Models.PMF
             NO3Uptake = new double[MyZone.NO3N.Length];
             NH4Uptake = new double[MyZone.NH4N.Length];
 
-            var soilCrop = Soil.Crop(Name);
             for (int j = 0; j < Soil.LL15mm.Length; j++)
             {
                 PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
