@@ -27,7 +27,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater
+    public class WEIRDO : Model, ISoilWater, IPhysical
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -438,7 +438,8 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [JsonIgnore]
-        public double[] Ksat { get; set; }
+        public double[] KS { get; set; }
+
         /// <summary>
         /// Hydraulic concutivitiy into each pore
         /// </summary>
@@ -567,7 +568,7 @@ namespace Models.Soils
             TransmissionCapacity = new double[ProfileLayers];
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
-            Ksat = new double[ProfileLayers];
+            KS = new double[ProfileLayers];
             SWmm = new double[ProfileLayers];
             LL15mm = new double[ProfileLayers];
             DULmm = new double[ProfileLayers];
@@ -893,7 +894,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    if (Ksat[l + 1] < 0.001) //Need a better method to establish zero potential base above impervious layer|| (SW[l + 1] == Water.SAT[l + 1]))
+                    if (KS[l + 1] < 0.001) //Need a better method to establish zero potential base above impervious layer|| (SW[l + 1] == Water.SAT[l + 1]))
                         LayerHeight[l] = 0;
                     else
                         LayerHeight[l] = LayerHeight[l + 1] + Thickness[l + 1] / 1000;
@@ -1121,6 +1122,30 @@ namespace Models.Soils
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
         /// <remarks>Not imlpemented</remarks>
         public double[] SoluteFlowEfficiency { get; set; }
+
+        /// <summary>Air dry (mm/mm).</summary>
+        [JsonIgnore]
+        public double[] AirDry { get { return new double[Thickness.Length]; }  set { } }
+
+        /// <summary>Particle size clay.</summary>
+        [JsonIgnore]
+        public double[] ParticleSizeClay { get { return new double[Thickness.Length]; } set { } }
+
+        /// <summary>Particle size sand.</summary>
+        [JsonIgnore]
+        public double[] ParticleSizeSand { get { return new double[Thickness.Length]; } set { } }
+
+        /// <summary>Particle size silt.</summary>
+        [JsonIgnore]
+        public double[] ParticleSizeSilt { get { return new double[Thickness.Length]; } set { } }
+
+        /// <summary>Rocks.</summary>
+        [JsonIgnore]
+        public double[] Rocks { get => throw new NotImplementedException(); }
+
+        /// <summary>Texture.</summary>
+        [JsonIgnore]
+        public string[] Texture { get => throw new NotImplementedException(); }
         #endregion
 
         #region Internal Properties and Methods
@@ -1161,7 +1186,7 @@ namespace Models.Soils
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
-                Ksat[l] = LayerSum(Pores[l], "PoiseuilleFlow");
+                KS[l] = LayerSum(Pores[l], "PoiseuilleFlow");
                 DULmm[l] = MappedDUL[l] * Thickness[l];
                 LL15mm[l] = MappedLL15[l] * Thickness[l];
                 SATmm[l] = MappedSAT[l] * Thickness[l];

@@ -15,9 +15,10 @@
         /// <returns>A standardised soil.</returns>
         public static void Standardise(Soil soil)
         {
-            var waterNode = soil.FindChild<Physical>();
+            var waterNode = soil.FindChild<IPhysical>();
             var analysisNode = soil.FindChild<Chemical>();
             var layerStructure = soil.FindChild<LayerStructure>();
+            var weirdo = soil.FindChild<WEIRDO>();
 
             // Determine the target layer structure.
             var targetThickness = soil.Thickness;
@@ -29,8 +30,8 @@
 
             if (soil.SoilWater is WaterModel.WaterBalance)
                 SetSoilWaterThickness(soil.SoilWater as WaterModel.WaterBalance, targetThickness);
-            if (soil.Weirdo != null)
-                soil.Weirdo.MapVariables(targetThickness);
+            if (weirdo != null)
+                weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);
             SetSoilOrganicMatterThickness(soil.SoilOrganicMatter, targetThickness);
             SetWaterThickness(waterNode, targetThickness, soil);
@@ -40,51 +41,37 @@
         /// <param name="water">The water.</param>
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">Soil</param>
-        private static void SetWaterThickness(Physical water, double[] toThickness, Soil soil)
+        private static void SetWaterThickness(IPhysical water, double[] toThickness, Soil soil)
         {
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
-                bool needToConstrainCropLL = false;
-                if (soil.Crops != null)
-                    foreach (var crop in soil.Crops)
-                    {
-                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
-                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
+                var crops = (water as IModel).FindAllChildren<SoilCrop>();
+                foreach (var crop in crops)
+                {
+                    crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
+                    crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
+                    crop.LL = MapConcentration(crop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.LL));
+                }
 
-                        if (crop is SoilCrop)
-                        {
-                            needToConstrainCropLL = true;
-
-                            var soilCrop = crop as SoilCrop;
-                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
-                        }
-                    }
-
-                soil.BD = MapConcentration(soil.BD, soil.Thickness, toThickness, MathUtilities.LastValue(soil.BD));
-                soil.AirDry = MapConcentration(soil.AirDry, soil.Thickness, toThickness, MathUtilities.LastValue(soil.AirDry));
-                soil.LL15 = MapConcentration(soil.LL15, soil.Thickness, toThickness, MathUtilities.LastValue(soil.LL15));
-                soil.DUL = MapConcentration(soil.DUL, soil.Thickness, toThickness, MathUtilities.LastValue(soil.DUL));
-                soil.SAT = MapConcentration(soil.SAT, soil.Thickness, toThickness, MathUtilities.LastValue(soil.SAT));
-                soil.KS = MapConcentration(soil.KS, soil.Thickness, toThickness, MathUtilities.LastValue(soil.KS));
+                water.BD = MapConcentration(water.BD, water.Thickness, toThickness, MathUtilities.LastValue(water.BD));
+                water.AirDry = MapConcentration(water.AirDry, water.Thickness, toThickness, MathUtilities.LastValue(water.AirDry));
+                water.LL15 = MapConcentration(water.LL15, water.Thickness, toThickness, MathUtilities.LastValue(water.LL15));
+                water.DUL = MapConcentration(water.DUL, water.Thickness, toThickness, MathUtilities.LastValue(water.DUL));
+                water.SAT = MapConcentration(water.SAT, water.Thickness, toThickness, MathUtilities.LastValue(water.SAT));
+                water.KS = MapConcentration(water.KS, water.Thickness, toThickness, MathUtilities.LastValue(water.KS));
                 if (water != null)
                     if (water.ParticleSizeClay != null && water.ParticleSizeClay.Length == water.Thickness.Length)
                         water.ParticleSizeClay = MapConcentration(water.ParticleSizeClay, water.Thickness, toThickness, MathUtilities.LastValue(water.ParticleSizeClay));
                     else
                         water.ParticleSizeClay = null;
-                soil.Thickness = toThickness;
+                water.Thickness = toThickness;
 
-                if (needToConstrainCropLL)
+                foreach (var crop in crops)
                 {
-                    foreach (var crop in soil.Crops)
-                    {
-                        if (crop is SoilCrop)
-                        {
-                            var soilCrop = crop as SoilCrop;
-                            // Ensure crop LL are between Airdry and DUL.
-                            for (int i = 0; i < soilCrop.LL.Length; i++)
-                                soilCrop.LL = MathUtilities.Constrain(soilCrop.LL, water.AirDry, water.DUL);
-                        }
-                    }
+                    var soilCrop = crop as SoilCrop;
+                    // Ensure crop LL are between Airdry and DUL.
+                    for (int i = 0; i < soilCrop.LL.Length; i++)
+                        soilCrop.LL = MathUtilities.Constrain(soilCrop.LL, water.AirDry, water.DUL);
                 }
             }
         }
@@ -311,9 +298,10 @@
             thickness.Add(3000);
 
             // Get the first crop ll or ll15.
+            var firstCrop = soil.FindChild<SoilCrop>();
             double[] LowerBound;
-            if (waterNode != null && soil.Crops.Count > 0)
-                LowerBound = LLMapped(soil.Crops[0] as SoilCrop, thickness.ToArray());
+            if (waterNode != null && firstCrop != null)
+                LowerBound = LLMapped(firstCrop, thickness.ToArray());
             else
                 LowerBound = LL15Mapped(soil, thickness.ToArray());
             if (LowerBound == null)

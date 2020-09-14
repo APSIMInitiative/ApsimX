@@ -8,8 +8,8 @@
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Soil))]
-    public class Physical : Model
+    [ValidParent(ParentType = typeof(Soil))]
+    public class Physical : Model, IPhysical
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
@@ -26,7 +26,7 @@
             }
         }
 
-        /// <summary>Gets or sets the thickness.</summary>
+        /// <summary>The soil thickness (mm).</summary>
         [Summary]
         [Units("mm")]
         public double[] Thickness { get; set; }
@@ -37,7 +37,7 @@
         [Units("%")]
         public double[] ParticleSizeClay { get; set; }
 
-        /// <summary>Particle size clay.</summary>
+        /// <summary>Particle size sand.</summary>
         [Summary]
         [Description("Sand")]
         [Units("%")]
@@ -49,7 +49,7 @@
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
 
-        /// <summary>Particle size clay.</summary>
+        /// <summary>Rocks.</summary>
         [Summary]
         [Description("Rocks")]
         [Units("%")]
@@ -58,42 +58,42 @@
         /// <summary>Texture.</summary>
         public string[] Texture { get; set; }
 
-        /// <summary>Gets or sets the bd.</summary>
+        /// <summary>Bulk density (g/cc).</summary>
         [Summary]
         [Description("BD")]
         [Units("g/cc")]
         [Display(Format = "N2")]
         public double[] BD { get; set; }
 
-        /// <summary>Gets or sets the air dry.</summary>
+        /// <summary>Air dry - volumetric (mm/mm).</summary>
         [Summary]
         [Description("Air dry")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] AirDry { get; set; }
 
-        /// <summary>Gets or sets the l L15.</summary>
+        /// <summary>Lower limit 15 bar (mm/mm).</summary>
         [Summary]
         [Description("LL15")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] LL15 { get; set; }
 
-        /// <summary>Gets or sets the dul.</summary>
+        /// <summary>Drained upper limit (mm/mm).</summary>
         [Summary]
         [Description("DUL")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] DUL { get; set; }
 
-        /// <summary>Gets or sets the sat.</summary>
+        /// <summary>Saturation (mm/mm).</summary>
         [Summary]
         [Description("SAT")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
 
-        /// <summary>Gets or sets the ks.</summary>
+        /// <summary>KS (mm/day).</summary>
         [Summary]
         [Description("KS")]
         [Units("mm/day")]
@@ -105,16 +105,16 @@
 
         /// <summary>Gets or sets the air dry metadata.</summary>
         public string[] AirDryMetadata { get; set; }
-        
+
         /// <summary>Gets or sets the l L15 metadata.</summary>
         public string[] LL15Metadata { get; set; }
-        
+
         /// <summary>Gets or sets the dul metadata.</summary>
         public string[] DULMetadata { get; set; }
-        
+
         /// <summary>Gets or sets the sat metadata.</summary>
         public string[] SATMetadata { get; set; }
-        
+
         /// <summary>Gets or sets the ks metadata.</summary>
         public string[] KSMetadata { get; set; }
 

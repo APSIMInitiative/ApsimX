@@ -3,12 +3,10 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
-    using Models.Soils.Standardiser;
+    using Newtonsoft.Json;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -25,18 +23,15 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     public class Soil : Model, ISoil
     {
-        /// <summary>Gets the water.</summary>
-        private Physical waterNode;
+        /// <summary>The child physical model.</summary>
+        private IPhysical physical;
 
-
-        /// <summary>
-        /// The multipore water model.  An alternativie soil water model that is not yet fully functional
-        /// </summary>
-        /// 
-        [JsonIgnore]
-        public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
+
+        /// <summary>Return a list of soil-crop parameterisations.</summary>
+        [NonSerialized]
+        private IEnumerable<SoilCrop> crops;
 
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
@@ -159,14 +154,11 @@
         /// <summary>Find our children.</summary>
         public void FindChildren()
         {
-            waterNode = this.FindChild<Physical>();
+            physical = this.FindChild<IPhysical>();
 
-            Weirdo = this.FindChild<WEIRDO>();
             SoilWater = this.FindInScope<ISoilWater>();
-            if (Weirdo == null && SoilWater == null)
-                throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
-            if (Weirdo == null && waterNode == null)
-                throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
+            if (physical == null)
+                throw new Exception($"{Name}: Unable to find Physical");
 
             SoilOrganicMatter = this.FindChild<Organic>();
             if (SoilOrganicMatter == null)
@@ -178,12 +170,13 @@
 
             Initial = Children.Find(child => child is Sample) as Sample;
             structure = this.FindChild<LayerStructure>();
+            crops = FindAllDescendants<SoilCrop>();
         }
 
         /// <summary>
         /// Water node of soil.
         /// </summary>
-        public Physical WaterNode { get { return waterNode; } }
+        public IPhysical WaterNode { get { return physical; } }
 
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
@@ -191,7 +184,7 @@
         {
             get
             {
-                return waterNode.Thickness;
+                return physical.Thickness;
             }
         }
 
@@ -199,27 +192,7 @@
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
         [JsonIgnore]
-        public double[] Thickness 
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.Thickness;
-                else if (Weirdo != null)
-                    return Weirdo.Thickness;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.Thickness = value;
-                else if (Weirdo != null)
-                    Weirdo.Thickness = value;
-                else
-                    throw new Exception("Cannot set thickness. No water model found");
-            }
-        }
+        public double[] Thickness { get { return physical.Thickness; } }
 
         /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
         public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
@@ -246,28 +219,8 @@
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] BD
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.BD;
-                else if (Weirdo != null)
-                    return Weirdo.BD;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.BD = value;
-                else if (Weirdo != null)
-                    Weirdo.BD = value;
-                else
-                    throw new Exception("Cannot set BD. No water model found");
-            }
-        }
-
+        public double[] BD {  get { return physical.BD; } }
+        
         /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         public double[] InitialWaterVolumetric
@@ -290,81 +243,15 @@
             }
         }
 
-        /// <summary>
-        /// Calculate and return SW relative to the Water node thicknesses.
-        /// Although there are no references in C# code to this property, it is
-        /// used in the initial water chart in the GUI.
-        /// </summary>
-        [JsonIgnore]
-        public double[] SWAtWaterThickness
-        {
-            get
-            {
-                InitialWater initialWater = this.FindChild<InitialWater>();
-
-                if (initialWater != null)
-                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
-                else
-                {
-                    foreach (Sample Sample in this.FindAllChildren<Sample>())
-                    {
-                        if (MathUtilities.ValuesInArray(Sample.SW))
-                        {
-                            if (waterNode != null)
-                                return Layers.MapSW(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness, this);
-                            else
-                                return Layers.MapSW(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness, this);
-                        }
-                    }
-                }
-                return null;
-            }
-        }
-
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] AirDry
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.AirDry;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.AirDry = value;
-            }
-        }
-
+        public double[] AirDry { get { return physical.AirDry; } }
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] LL15
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.LL15;
-                else if (Weirdo != null)
-                    return Weirdo.LL15;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.LL15 = value;
-                else if (Weirdo != null)
-                    Weirdo.LL15 = value;
-                else
-                    throw new Exception("Cannot set LL15. No water model found");
-            }
-        }
+        public double[] LL15 { get { return physical.LL15; } }
 
         /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
         [Units("mm/mm")]
@@ -379,27 +266,7 @@
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] DUL
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.DUL;
-                else if (Weirdo != null)
-                    return Weirdo.DUL;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.DUL = value;
-                else if (Weirdo != null)
-                    Weirdo.DUL = value;
-                else
-                    throw new Exception("Cannot set DUL. No water model found");
-            }
-        }
+        public double[] DUL { get { return physical.DUL; } }
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm</summary>
         [Units("mm/mm")]
@@ -414,28 +281,8 @@
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] SAT
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.SAT;
-                else if (Weirdo != null)
-                    return Weirdo.SAT;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.SAT = value;
-                else if (Weirdo != null)
-                    Weirdo.SAT = value;
-                else
-                    throw new Exception("Cannot set SAT. No water model found");
-            }
-        }
-
+        public double[] SAT { get { return physical.SAT; } }
+       
         /// <summary>Return saturation at standard thickness. Units: mm</summary>
         [Units("mm/mm")]
         public double[] SATmm
@@ -449,28 +296,8 @@
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
-        public double[] KS
-        {
-            get
-            {
-                if (waterNode != null)
-                    return waterNode.KS;
-                else if (Weirdo != null)
-                    return Weirdo.Ksat;
-                else
-                    return null;
-            }
-            set
-            {
-                if (waterNode != null)
-                    waterNode.KS = value;
-                else if (Weirdo != null)
-                    Weirdo.Ksat = value;
-                else
-                    throw new Exception("Cannot set KS. No water model found");
-            }
-        }
-
+        public double[] KS { get { return physical.KS; } }
+        
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         [Units("0-1")]
         internal double[] SWCON 
@@ -600,21 +427,14 @@
 
         #endregion
 
-        /// <summary>Return a list of soil-crop parameterisations.</summary>
-        public List<SoilCrop> Crops
-        {
-            get
-            {
-                return waterNode?.Children.Cast<SoilCrop>().ToList();
-            }
-        }
+
 
         /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
         /// <param name="cropName">Name of the crop.</param>
         public SoilCrop Crop(string cropName) 
         {
             cropName = cropName + "Soil";
-            var foundCrop = Crops?.Find(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
+            var foundCrop = crops.FirstOrDefault(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
             if (foundCrop == null)
                 throw new Exception("Cannot find a soil-crop parameterisation for " + cropName);
             return foundCrop;

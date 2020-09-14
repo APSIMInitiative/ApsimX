@@ -835,7 +835,7 @@
             if (myZone == null)
                 return null;
 
-            if (myZone.soil.Weirdo != null)
+            if (myZone.IsWeirdoPresent)
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
@@ -1092,11 +1092,12 @@
             Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
-                throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
-
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
+
+            if (!PlantZone.IsWeirdoPresent && soil.Crop(parentPlant.Name) == null)
+                throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
+
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
             DMDemandPriorityFactor = new BiomassPoolType();

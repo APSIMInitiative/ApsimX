@@ -284,7 +284,8 @@
                 SetDoubleValues(table, "ParticleSizeClay (%)", physical.ParticleSizeClay, startRow);
                 SetCodeValues(table, "ParticleSizeClayCode", physical.ParticleSizeClayMetadata, startRow);
 
-                foreach (var soilCrop in soil.Crops)
+                var crops = soil.FindAllDescendants<SoilCrop>();
+                foreach (var soilCrop in crops)
                     SetCropValues(table, soilCrop, startRow);
             }
 

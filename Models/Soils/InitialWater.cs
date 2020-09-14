@@ -245,10 +245,10 @@
         {
             get
             {
-                List<string> crops = new List<string>();
-                crops.Add("LL15");
-                crops.AddRange(this.Soil.Crops.Select(crop => crop.Name));
-                return crops.ToArray();
+                var cropNames = new List<string>();
+                cropNames.Add("LL15");
+                cropNames.AddRange(Soil.FindAllDescendants<SoilCrop>().Select(crop => crop.Name));
+                return cropNames.ToArray();
             }
         }
 

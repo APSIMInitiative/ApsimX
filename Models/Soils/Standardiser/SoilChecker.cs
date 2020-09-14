@@ -32,15 +32,18 @@
         /// <param name="soil">The soil to check.</param>
         public static void Check(Soil soil)
         {
+            var weirdo = soil.FindChild<WEIRDO>();
+
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
             StringBuilder message = new StringBuilder();
 
             //Weirdo is an experimental soil water model that does not have the same soil water parameters
             //so don't do any of these tests if Weirdo is plugged into this simulation.
-            if (soil.Weirdo == null) 
+            if (weirdo == null) 
             {
-                foreach (var soilCrop in soil.Crops)
+                var crops = soil.FindAllDescendants<SoilCrop>();
+                foreach (var soilCrop in crops)
                 {
                     if (soilCrop != null)
                     {

@@ -357,6 +357,7 @@
     <Compile Include="Optimisation\IOptimizationMethod.cs" />
     <Compile Include="Optimisation\Likelihood.cs" />
     <Compile Include="Optimisation\Simplex.cs" />
+    <Compile Include="Soils\IPhysical.cs" />
     <Compile Include="Soils\NutrientPatching\INutrientPatchManager.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />

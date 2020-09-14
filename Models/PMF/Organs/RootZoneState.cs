@@ -27,6 +27,9 @@ namespace Models.PMF.Organs
         /// <summary>The root organ</summary>
         public Root root = null;
 
+        /// <summary>Is the Weirdo model present in the simulation?</summary>
+        public bool IsWeirdoPresent { get; set; }
+
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
 
@@ -151,6 +154,7 @@ namespace Models.PMF.Organs
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
+            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
 
             Clear();
             Zone zone = soil.FindAncestor<Zone>();
@@ -257,7 +261,7 @@ namespace Models.PMF.Organs
 
             double MaxDepth;
             double[] xf = null;
-            if (soil.Weirdo == null)
+            if (!IsWeirdoPresent)
             {
                 var soilCrop = soil.Crop(plant.Name);
                 xf = soilCrop.XF;
