@@ -326,7 +326,6 @@ namespace Models.CLEM.Activities
                 {
                     if (female.BirthDue)
                     {
-                        female.WeightLossDueToCalf = 0;
                         int numberOfNewborn = female.CarryingCount;
                         for (int i = 0; i < numberOfNewborn; i++)
                         {
@@ -357,8 +356,6 @@ namespace Models.CLEM.Activities
 
                             // add to sucklings
                             female.SucklingOffspringList.Add(newCalfRuminant);
-                            // remove calf weight from female
-                            female.WeightLossDueToCalf += newCalfRuminant.Weight;
                             // this now reports for each individual born not a birth event as individual wean events are reported
                             female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         }
