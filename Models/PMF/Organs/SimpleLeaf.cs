@@ -921,11 +921,11 @@
                 }
 
                 // Do maintenance respiration
-                MaintenanceRespiration = 0;
-                if (maintenanceRespiration != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                if (maintenanceRespiration.Value() > 0)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespiration.Value();
-                    MaintenanceRespiration += Live.StorageWt * maintenanceRespiration.Value();
+                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespiration.Value();
+                    Live.MetabolicWt *= (1 - maintenanceRespiration.Value());
+                    Live.StorageWt *= (1 - maintenanceRespiration.Value());
                 }
             }
         }
@@ -1077,19 +1077,6 @@
             Live.StorageN -= storageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
-        }
-
-        /// <summary>
-        /// Remove maintenance respiration from live component of organs.
-        /// </summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            Live.MetabolicWt = Live.MetabolicWt - MathUtilities.Divide(respiration * Live.MetabolicWt , total, 0);
-            Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
         }
 
         /// <summary>

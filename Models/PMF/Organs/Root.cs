@@ -814,19 +814,6 @@
                 throw new Exception("Error in N Allocation: " + Name);
         }
 
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
-        }
-
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
@@ -1165,11 +1152,11 @@
                 RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
 
                 // Do maintenance respiration
-                MaintenanceRespiration = 0;
-                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                if (maintenanceRespirationFunction.Value() > 0)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
+                    Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+                    Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
                 needToRecalculateLiveDead = true;
             }
