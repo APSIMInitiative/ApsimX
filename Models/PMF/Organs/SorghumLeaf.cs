@@ -428,13 +428,6 @@ namespace Models.PMF.Organs
             DMSupply.Fixation = DMSupplyFixation.Value();
         }
 
-        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        public double MaintenanceRespiration { get; }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        public void RemoveMaintenanceRespiration(double respiration)
-        { }
-
         #endregion
 
         #region Events
