@@ -349,9 +349,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = CurrentHerd(false);
             if (herd != null && herd.Count > 0)
             {
-                // calculate feed limit
                 double feedLimit = 0.0;
-                //double dailyAmountShortfall = 1.0;
 
                 ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).LastOrDefault();
                 FoodResourcePacket details = new FoodResourcePacket();
@@ -367,22 +365,6 @@ namespace Models.CLEM.Activities
                     Status = ActivityStatus.NotNeeded;
                     return;
                 }
-
-                //// if feed style is fixed daily amount compare amount received against herd requirement.
-                //// this produces a reduction from potential intake (up to 1.2x) for each individual.
-                //if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount | FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                //{
-                //    double herdRequirement = 0;
-                //    foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
-                //    {
-                //        // allow slight model set overfeed of 1.2xpotential
-                //        herdRequirement += herd.Filter(child).Sum(a => (a.PotentialIntake*1.2) - a.Intake);
-                //    }
-                //    dailyAmountShortfall = Math.Min(1.0, feedRequest.Provided / herdRequirement);
-                //}
-
-                //dailyAmountShortfall = Math.Min(1.0, feedRequest.Provided / feedToSatisfy);
-                // now performed by modifying reuest based on reporting wastage and excess
 
                 // get list from filters
                 foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))

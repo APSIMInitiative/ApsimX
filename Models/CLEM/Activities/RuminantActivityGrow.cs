@@ -144,18 +144,18 @@ namespace Models.CLEM.Activities
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
             double potentialIntake = 0;
-            ind.MilkIntakePotential = 0;
+            ind.MilkPotentialIntake = 0;
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
             if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
-                ind.MilkIntakePotential = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
+                ind.MilkPotentialIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
 
                 // get estimated milk available
                 // this will be updated to the corrected milk available in the calculate energy section.
-                ind.MilkIntake = Math.Min(ind.MilkIntakePotential, ind.MothersMilkProductionAvailable);
+                ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable);
 
                 // if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
                 if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
