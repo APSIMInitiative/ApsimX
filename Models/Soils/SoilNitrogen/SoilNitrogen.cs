@@ -153,10 +153,10 @@ namespace Models.Soils
 
             // get the initial values 
             oc = Soil.Initial.OC;
-            FBiom = Soil.FBiom;
-            FInert = Soil.FInert;
-            HumusCNr = Soil.InitialSoilCNR;
-            InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
+            FBiom = organic.FBiom;
+            FInert = organic.FInert;
+            HumusCNr = initial.OCNR;
+            InitialFOMCNr = organic.FOMCNRatio;
             ph = Soil.Initial.PH;
             NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3);
             NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4);
@@ -369,9 +369,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = Soil.InitialRootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = Soil.InitialRootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = Soil.InitialRootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = organic.FOM[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = organic.FOM[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = organic.FOM[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)

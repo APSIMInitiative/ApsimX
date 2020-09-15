@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 118; } }
+        public static int LatestVersion { get { return 119; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3063,6 +3063,27 @@
                 chloride["$type"] = "Models.Soils.Nutrients.Solute, Models";
                 chloride["Name"] = "CL";
             }
+        }
+
+        /// <summary>
+        /// Change report and manager scripts for soil variables that have been out of soil class. 
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion119(JObject root, string fileName)
+        {
+            var changes = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("[Soil].Temperature", "[Soil].Temperature.Value"),
+                new Tuple<string, string>("[Soil].FBiom", "[Soil].Organic.FBiom"),
+                new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
+                new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
+            };
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Rename the CERESSoilTemperature model to SoilTemperature
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+                JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
         }
 
         /// <summary>

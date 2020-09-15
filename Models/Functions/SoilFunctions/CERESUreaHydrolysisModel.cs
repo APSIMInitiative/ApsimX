@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -16,6 +17,9 @@ namespace Models.Functions
 
         [Link]
         Soil soil = null;
+
+        [Link]
+        ISoilTemperature soilTemperature = null;
 
         [Link(Type = LinkType.Child)]
         CERESMineralisationWaterFactor CERESWF = null;
@@ -32,7 +36,7 @@ namespace Models.Functions
             potentialRate = MathUtilities.Bound(potentialRate, 0, 1);
 
             double WF = MathUtilities.Bound(CERESWF.Value(arrayIndex) + 0.2,0,1);
-            double TF = MathUtilities.Bound(soil.Temperature[arrayIndex] / 40 + 0.2,0,1);
+            double TF = MathUtilities.Bound(soilTemperature.Value[arrayIndex] / 40 + 0.2,0,1);
             double rateModifer = Math.Min(WF, TF);
 
             return potentialRate * rateModifer;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -22,6 +23,9 @@ namespace Models.Functions
         Soils.Soil Soil = null;
 
 
+        [Link]
+        ISoilTemperature soilTemperature = null;
+
         /// <summary>The depth</summary>
         [Units("mm")]
         [Description("Depth")]
@@ -35,7 +39,7 @@ namespace Models.Functions
         {
             int Layer = LayerIndex(Depth, Soil.Thickness);
 
-            return Soil.Temperature[Layer];
+            return soilTemperature.Value[Layer];
         }
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
         /// <param name="depth">Soil depth (mm)</param>

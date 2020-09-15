@@ -14,6 +14,9 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Sample : Model
     {
+        [Link]
+        Organic organic = null;
+
         /// <summary>Constructor.</summary>
         public Sample() 
         { 
@@ -334,7 +337,11 @@
 
         /// <summary>Organic nitrogen. Units: %</summary>
         [Units("%")]
-        public double[] ON { get { return MathUtilities.Divide(OC, Soil.SoilCN); } }
+        public double[] ON { get { return MathUtilities.Divide(OC, organic.SoilCNRatio); } }
+
+        /// <summary>Organic carbon:nitrogen ratio</summary>
+        [Units("%")]
+        public double[] OCNR { get { return MathUtilities.Divide(OC, ON); } }
 
         /// <summary>
         /// Gets the soil associated with this sample

@@ -122,9 +122,6 @@
         /// <summary>Gets the soil organic matter.</summary>
         [JsonIgnore] public Organic SoilOrganicMatter { get; private set; }
 
-        /// <summary>Gets the soil nitrogen.</summary>
-        private ISoilTemperature temperatureModel;
-
         /// <summary>Gets the initial conditions node.</summary>
         [JsonIgnore] 
         public Sample Initial { get; private set; }
@@ -156,10 +153,6 @@
             SoilOrganicMatter = this.FindChild<Organic>();
             if (SoilOrganicMatter == null)
                 throw new Exception($"{Name}: Unable to find Organic child model");
-
-            temperatureModel = this.FindChild<ISoilTemperature>();
-            if (temperatureModel == null)
-                throw new Exception($"{Name}: Unable to find soil temperature child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
         }
@@ -263,17 +256,6 @@
         [Units("mm/mm")]
         [JsonIgnore]
         public double[] KS { get { return physical.KS; } }
-        
-        /// <summary>SWCON at standard thickness. Units: 0-1</summary>
-        [Units("0-1")]
-        internal double[] SWCON 
-        { 
-            get 
-            {
-                if (SoilWater == null || !(SoilWater is WaterModel.WaterBalance)) return null;
-                return (SoilWater as WaterModel.WaterBalance).SWCON;
-            }
-        }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm/mm")]
@@ -356,29 +338,6 @@
         }
 
         #endregion
-
-        /// <summary>FBiom. Units: 0-1</summary>
-        [Units("0-1")]
-        public double[] FBiom { get { return SoilOrganicMatter.FBiom; } }
-
-        /// <summary>FInert. Units: 0-1</summary>
-        [Units("0-1")]
-        public double[] FInert { get { return SoilOrganicMatter.FInert; } }
-
-        /// <summary>Initial Root Wt</summary>
-        [Units("kg/ha")]
-        public double[] InitialRootWt { get { return SoilOrganicMatter.FOM; } }
-
-        /// <summary>Initial soil CN ratio</summary>
-        [Units("kg/ha")]
-        public double[] SoilCN { get { return SoilOrganicMatter.SoilCNRatio; } }
-
-        /// <summary>Initial Root Wt</summary>
-        [Units("kg/ha")]
-        public double[] InitialSoilCNR { get { return MathUtilities.Divide(Initial.OC, Initial.ON); } }
-
-        /// <summary>Gets the temperature of each layer</summary>
-        public double[] Temperature { get { return temperatureModel.Value; } }
 
         /// <summary>Calculates the layer index for a specified depth.</summary>
         /// <param name="depth">The depth to search for.</param>

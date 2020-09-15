@@ -988,7 +988,7 @@ namespace Models.Soils
                 double Tzero = Toptimum * AuxV / (AuxV - 1);
                 double beta = 1 / (Toptimum - Tzero);
 
-                return Math.Min(1.0, Math.Pow(beta * Math.Max(0.0, g.Soil.Temperature[layer] - Tzero), CurveN));
+                return Math.Min(1.0, Math.Pow(beta * Math.Max(0.0, g.soilTemperature.Value[layer] - Tzero), CurveN));
             }
 
             /// <summary>

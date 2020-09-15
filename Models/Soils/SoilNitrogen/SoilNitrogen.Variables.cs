@@ -40,9 +40,20 @@ namespace Models.Soils
         [Link]
         public SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>Link to the soil organic matter.</summary>
+        [Link]
+        public Organic organic = null;
+
+        /// <summary>Link to the initial sample.</summary>
+        [Link]
+        public Sample initial = null;
+
         /// <summary>Link to the soil.</summary>
         [Link]
         public Soil Soil = null;
+
+        [Link]
+        ISoilTemperature soilTemperature = null;
 
         #endregion
 

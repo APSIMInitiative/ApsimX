@@ -121,6 +121,7 @@
 
                 // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
+                soilTemp.Name = "Temperature";
                 soil.Children.Add(soilTemp);
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
