@@ -48,7 +48,6 @@ namespace Models.Soils.NutrientPatching
         {
             base.OnCreated();
             soil = FindAncestor<Soil>();
-            initial = FindChild<Sample>();
             patchManager = FindAncestor<NutrientPatchManager>();
         }
 
@@ -58,6 +57,7 @@ namespace Models.Soils.NutrientPatching
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            initial = soil.FindChild<Sample>();
             if (!Name.Contains("PlantAvailable"))
                 Reset();
         }
