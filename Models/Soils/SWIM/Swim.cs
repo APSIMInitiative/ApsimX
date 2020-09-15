@@ -33,6 +33,9 @@ namespace Models.Soils
         [Link]
         private Soil soil = null;
 
+        [Link]
+        private Sample initial = null;
+
         /// <summary>Link to NO3.</summary>
         [Link]
         private List<ISolute> solutes = null;
@@ -1801,7 +1804,7 @@ namespace Models.Soils
 
             if (reset_theta == null && reset_psi == null)
             {
-                th = soil.InitialWaterVolumetric.Clone() as double[]; 
+                th = initial.SWVolumetric.Clone() as double[]; 
             }
 
             if (waterTable != null && !Double.IsNaN(waterTable.WaterTableDepth))

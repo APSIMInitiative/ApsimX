@@ -26,9 +26,6 @@
         /// <summary>The child physical model.</summary>
         private IPhysical physical;
 
-        /// <summary>A reference to the layer structure node or null if not present.</summary>
-        private LayerStructure structure;
-
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
         [Description("Record number")]
@@ -165,24 +162,9 @@
                 throw new Exception($"{Name}: Unable to find soil temperature child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
-            structure = this.FindChild<LayerStructure>();
         }
-
-        /// <summary>
-        /// Water node of soil.
-        /// </summary>
-        public IPhysical WaterNode { get { return physical; } }
 
         #region Water
-        /// <summary>The layering used to parameterise the water node</summary>
-        public double[] WaterNodeThickness
-        {
-            get
-            {
-                return physical.Thickness;
-            }
-        }
-
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
@@ -215,17 +197,6 @@
         [Units("mm/mm")]
         [JsonIgnore]
         public double[] BD {  get { return physical.BD; } }
-        
-        /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] InitialWaterVolumetric
-        {
-            get
-            {
-                var sample = this.FindChild<Sample>();
-                return sample?.SW;
-            }
-        }
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
         [Units("mm")]

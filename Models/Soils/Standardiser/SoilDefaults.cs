@@ -223,10 +223,10 @@
             if (sample.OC != null)
                 sample.OC = MathUtilities.FixArrayLength(sample.OC, sample.Thickness.Length);
 
-            var water = soil.FindChild<Physical>();
-            if (water != null)
+            var physical = soil.FindChild<Physical>();
+            if (physical != null)
             {
-                double[] ll15 = Layers.LL15Mapped(soil, sample.Thickness);
+                double[] ll15 = Layers.LL15Mapped(physical, sample.Thickness);
                 for (int i = 0; i < sample.Thickness.Length; i++)
                 {
                     if (sample.SW != null && double.IsNaN(sample.SW[i]))
@@ -519,7 +519,8 @@
             if (A == null)
                 return null;
 
-            double[] LL = PredictedLL(soil, A, B);
+            var physical = soil.FindChild<IPhysical>();
+            double[] LL = PredictedLL(physical, A, B);
             LL = Layers.MapConcentration(LL, PredictedThickness, soil.Thickness, LL.Last());
             KL = Layers.MapConcentration(KL, PredictedThickness, soil.Thickness, KL.Last());
             double[] XF = Layers.MapConcentration(PredictedXF, PredictedThickness, soil.Thickness, PredictedXF.Last());
@@ -540,14 +541,14 @@
         /// <summary>
         /// Calculate and return a predicted LL from the specified A and B values.
         /// </summary>
-        /// <param name="soil">The soil.</param>
+        /// <param name="physical">The soil physical properties.</param>
         /// <param name="A">a.</param>
         /// <param name="B">The b.</param>
         /// <returns></returns>
-        private static double[] PredictedLL(Soil soil, double[] A, double B)
+        private static double[] PredictedLL(IPhysical physical, double[] A, double B)
         {
-            double[] LL15 = Layers.LL15Mapped(soil, PredictedThickness);
-            double[] DUL = Layers.DULMapped(soil, PredictedThickness);
+            double[] LL15 = Layers.LL15Mapped(physical, PredictedThickness);
+            double[] DUL = Layers.DULMapped(physical, PredictedThickness);
             double[] LL = new double[PredictedThickness.Length];
             for (int i = 0; i != PredictedThickness.Length; i++)
             {

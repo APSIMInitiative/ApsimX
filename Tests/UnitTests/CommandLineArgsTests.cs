@@ -64,8 +64,8 @@ namespace UnitTests
                 "[Clock].StartDate = 2019-1-20",
                 ".Simulations.Sim1.Clock.EndDate = 3/20/2019",
                 ".Simulations.Sim2.Enabled = false",
-                ".Simulations.Sim1.Field.Soil.Thickness[1] = 500",
-                ".Simulations.Sim1.Field.Soil.Thickness[2] = 2500",
+                ".Simulations.Sim1.Field.Soil.Physical.Thickness[1] = 500",
+                ".Simulations.Sim1.Field.Soil.Physical.Thickness[2] = 2500",
                 ".Simulations.Sim2.Name = SimulationVariant35",
             };
             string configFileName = Path.GetTempFileName();
