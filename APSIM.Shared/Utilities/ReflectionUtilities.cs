@@ -451,6 +451,9 @@
         /// <param name="format">Culture to use for the conversion.</param>
         public static string ObjectToString(object obj, IFormatProvider format)
         {
+            if (obj == null)
+                return null;
+
             if (obj.GetType().IsArray)
             {
                 string stringValue = "";
