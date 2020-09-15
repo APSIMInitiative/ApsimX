@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
+    [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]

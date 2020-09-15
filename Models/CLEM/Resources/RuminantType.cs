@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
