@@ -21,6 +21,9 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        [Link]
+        Sample initial = null;
+
         /// <summary>Default constructor.</summary>
         public Solute() { }
 
@@ -53,7 +56,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];           
+            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
                 kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
             else

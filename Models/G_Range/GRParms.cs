@@ -706,7 +706,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
-                            organicCarbon[0] += Soil.Initial.OC[i] * weight; 
+                            organicCarbon[0] += initial.OC[i] * weight; 
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += Soil.DUL[i] * weight;
@@ -723,7 +723,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
-                            organicCarbon[3] += Soil.Initial.OC[i] * weight;
+                            organicCarbon[3] += initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += Soil.DUL[i] * weight;
@@ -760,7 +760,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
-                            organicCarbon[0] += Soil.Initial.OC[i] * weight;
+                            organicCarbon[0] += initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += Soil.DUL[i] * weight;
@@ -777,7 +777,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[1] += Analysis.Rocks[i] * weight;
                             bulkDensity[1] += Soil.BD[i] * weight;
-                            organicCarbon[1] += Soil.Initial.OC[i] * weight;
+                            organicCarbon[1] += initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[1] += Soil.DUL[i] * weight;
@@ -794,7 +794,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[2] += Analysis.Rocks[i] * weight;
                             bulkDensity[2] += Soil.BD[i] * weight;
-                            organicCarbon[2] += Soil.Initial.OC[i] * weight;
+                            organicCarbon[2] += initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[2] += Soil.DUL[i] * weight;
@@ -811,7 +811,7 @@ namespace Models
                             //if (Analysis.Rocks != null)
                             //    gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
-                            organicCarbon[3] += Soil.Initial.OC[i] * weight;
+                            organicCarbon[3] += initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += Soil.DUL[i] * weight;
@@ -833,7 +833,7 @@ namespace Models
                     //if (Analysis.Rocks != null)
                     //    Array.Copy(Analysis.Rocks, gravel, nSoilLayers);
                     Array.Copy(Soil.BD, bulkDensity, nSoilLayers);
-                    Array.Copy(Soil.Initial.OC, organicCarbon, nSoilLayers);
+                    Array.Copy(initial.OC, organicCarbon, nSoilLayers);
                     if (useApsimHydraulics)
                     {
                         Array.Copy(Soil.DUL, fieldCapacity, nSoilLayers);

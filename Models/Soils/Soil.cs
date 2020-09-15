@@ -119,10 +119,6 @@
         /// <summary>Gets the soil water.</summary>
         [JsonIgnore] public ISoilWater SoilWater { get; private set; }
 
-        /// <summary>Gets the initial conditions node.</summary>
-        [JsonIgnore] 
-        public Sample Initial { get; private set; }
-
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
@@ -146,8 +142,6 @@
             SoilWater = this.FindInScope<ISoilWater>();
             if (physical == null)
                 throw new Exception($"{Name}: Unable to find Physical");
-
-            Initial = Children.Find(child => child is Sample) as Sample;
         }
 
         #region Water

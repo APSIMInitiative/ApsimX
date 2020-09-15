@@ -152,14 +152,14 @@ namespace Models.Soils
             nLayers = dlayer.Length;
 
             // get the initial values 
-            oc = Soil.Initial.OC;
+            oc = initial.OC;
             FBiom = organic.FBiom;
             FInert = organic.FInert;
             HumusCNr = initial.OCNR;
             InitialFOMCNr = organic.FOMCNRatio;
-            ph = Soil.Initial.PH;
-            NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3);
-            NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4);
+            ph = initial.PH;
+            NO3ppm = Soil.kgha2ppm(initial.NO3);
+            NH4ppm = Soil.kgha2ppm(initial.NH4);
             ureappm = new double[Soil.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)

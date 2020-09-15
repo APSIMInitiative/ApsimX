@@ -33,6 +33,7 @@
         public static void Check(Soil soil)
         {
             var weirdo = soil.FindChild<WEIRDO>();
+            var initial = soil.FindChild<Sample>();
 
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
@@ -117,43 +118,43 @@
                         message.AppendLine($"BD value of {soil.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
                 }
 
-                if (soil.Initial.OC.Length == 0)
+                if (initial.OC.Length == 0)
                     message.AppendLine("Cannot find OC values in soil");
                 else
                     for (int layer = 0; layer != soil.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
-                        if (soil.Initial.OC[layer] == MathUtilities.MissingValue || double.IsNaN(soil.Initial.OC[layer]))
+                        if (initial.OC[layer] == MathUtilities.MissingValue || double.IsNaN(initial.OC[layer]))
                             message.AppendLine($"OC value missing in layer {layerNumber}");
-                        else if (MathUtilities.LessThan(soil.Initial.OC[layer], 0.01, 3))
-                            message.AppendLine($"OC value of {soil.Initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01");
+                        else if (MathUtilities.LessThan(initial.OC[layer], 0.01, 3))
+                            message.AppendLine($"OC value of {initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01");
 
-                        if (soil.Initial.PH[layer] == MathUtilities.MissingValue || double.IsNaN(soil.Initial.PH[layer]))
+                        if (initial.PH[layer] == MathUtilities.MissingValue || double.IsNaN(initial.PH[layer]))
                             message.AppendLine($"PH value missing in layer {layerNumber}");
-                        else if (MathUtilities.LessThan(soil.Initial.PH[layer], 3.5, 3))
-                            message.AppendLine($"PH value of {soil.Initial.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
-                        else if (MathUtilities.GreaterThan(soil.Initial.PH[layer], 11, 3))
-                            message.AppendLine($"PH value of {soil.Initial.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
+                        else if (MathUtilities.LessThan(initial.PH[layer], 3.5, 3))
+                            message.AppendLine($"PH value of {initial.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
+                        else if (MathUtilities.GreaterThan(initial.PH[layer], 11, 3))
+                            message.AppendLine($"PH value of {initial.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
                     }
 
-                if (!MathUtilities.ValuesInArray(soil.Initial.SW))
+                if (!MathUtilities.ValuesInArray(initial.SW))
                     message.AppendLine("No starting soil water values found.");
                 else
                     for (int layer = 0; layer != soil.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 
-                        if (soil.Initial.SW[layer] == MathUtilities.MissingValue || double.IsNaN(soil.Initial.SW[layer]))
+                        if (initial.SW[layer] == MathUtilities.MissingValue || double.IsNaN(initial.SW[layer]))
                             message.AppendLine($"Soil water value missing in layer {layerNumber}");
-                        else if (MathUtilities.GreaterThan(soil.Initial.SW[layer], soil.SAT[layer], 3))
-                            message.AppendLine($"Soil water of {soil.Initial.SW[layer].ToString("f3")} in layer {layerNumber} is above saturation of {soil.SAT[layer].ToString("f3")}");
-                        else if (MathUtilities.LessThan(soil.Initial.SW[layer], soil.AirDry[layer], 3))
-                            message.AppendLine($"Soil water of {soil.Initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {soil.AirDry[layer].ToString("f3")}");
+                        else if (MathUtilities.GreaterThan(initial.SW[layer], soil.SAT[layer], 3))
+                            message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is above saturation of {soil.SAT[layer].ToString("f3")}");
+                        else if (MathUtilities.LessThan(initial.SW[layer], soil.AirDry[layer], 3))
+                            message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {soil.AirDry[layer].ToString("f3")}");
                     }
 
-                if (!MathUtilities.ValuesInArray(soil.Initial.NO3))
+                if (!MathUtilities.ValuesInArray(initial.NO3))
                     message.AppendLine("No starting NO3 values found.");
-                if (!MathUtilities.ValuesInArray(soil.Initial.NH4))
+                if (!MathUtilities.ValuesInArray(initial.NH4))
                     message.AppendLine("No starting NH4 values found.");
             }
 

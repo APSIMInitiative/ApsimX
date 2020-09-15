@@ -20,6 +20,9 @@
         [Link]
         private Soil Soil = null;
 
+        [Link]
+        Soils.Sample initial = null;
+
         private ISolute NO3Solute = null;
         private ISolute NH4Solute = null;
         private ISolute UreaSolute = null;
@@ -137,7 +140,7 @@
         [Units("%")]
         public double[] OC
         {
-            get { return Layers.MapConcentration(Soil.Initial.OC, Soil.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(initial.OC, Soil.Thickness, Thickness, double.NaN); }
         }
     }
 }

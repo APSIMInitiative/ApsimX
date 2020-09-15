@@ -51,6 +51,9 @@
         private Soil soil = null;
 
         [Link]
+        Sample initial = null;
+
+        [Link]
         private ISummary summary = null;
 
         /// <summary>Link to the lateral flow model.</summary>
@@ -760,7 +763,7 @@
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-            Water = soil.Initial.SWmm;
+            Water = initial.SWmm;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;

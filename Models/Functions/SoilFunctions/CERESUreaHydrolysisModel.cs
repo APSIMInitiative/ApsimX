@@ -14,9 +14,8 @@ namespace Models.Functions
     [Description("Urea hydrolysis model from CERES-Maize")]
     public class CERESUreaHydrolysisModel : Model, IFunction, ICustomDocumentation
     {
-
         [Link]
-        Soil soil = null;
+        Sample initial = null;
 
         [Link]
         ISoilTemperature soilTemperature = null;
@@ -32,7 +31,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Urea Hydrolysis Model");
 
-            double potentialRate = -1.12 + 1.31 * soil.Initial.OC[arrayIndex] + 0.203 * soil.Initial.PH[arrayIndex] - 0.155 * soil.Initial.OC[arrayIndex] * soil.Initial.PH[arrayIndex];
+            double potentialRate = -1.12 + 1.31 * initial.OC[arrayIndex] + 0.203 * initial.PH[arrayIndex] - 0.155 * initial.OC[arrayIndex] * initial.PH[arrayIndex];
             potentialRate = MathUtilities.Bound(potentialRate, 0, 1);
 
             double WF = MathUtilities.Bound(CERESWF.Value(arrayIndex) + 0.2,0,1);
