@@ -119,9 +119,6 @@
         /// <summary>Gets the soil water.</summary>
         [JsonIgnore] public ISoilWater SoilWater { get; private set; }
 
-        /// <summary>Gets the soil organic matter.</summary>
-        [JsonIgnore] public Organic SoilOrganicMatter { get; private set; }
-
         /// <summary>Gets the initial conditions node.</summary>
         [JsonIgnore] 
         public Sample Initial { get; private set; }
@@ -149,10 +146,6 @@
             SoilWater = this.FindInScope<ISoilWater>();
             if (physical == null)
                 throw new Exception($"{Name}: Unable to find Physical");
-
-            SoilOrganicMatter = this.FindChild<Organic>();
-            if (SoilOrganicMatter == null)
-                throw new Exception($"{Name}: Unable to find Organic child model");
 
             Initial = Children.Find(child => child is Sample) as Sample;
         }

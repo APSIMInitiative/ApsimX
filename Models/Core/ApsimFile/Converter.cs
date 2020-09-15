@@ -3075,6 +3075,7 @@
             var changes = new Tuple<string, string>[]
             {
                 new Tuple<string, string>("[Soil].Temperature", "[Soil].Temperature.Value"),
+                new Tuple<string, string>("Soil.Temperature", "Soil.Temperature.Value"),
                 new Tuple<string, string>("[Soil].FBiom", "[Soil].Organic.FBiom"),
                 new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
                 new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),

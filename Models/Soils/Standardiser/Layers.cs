@@ -19,6 +19,7 @@
             var analysisNode = soil.FindChild<Chemical>();
             var layerStructure = soil.FindChild<LayerStructure>();
             var weirdo = soil.FindChild<WEIRDO>();
+            var organic = soil.FindChild<Organic>();
 
             // Determine the target layer structure.
             var targetThickness = soil.Thickness;
@@ -33,7 +34,7 @@
             if (weirdo != null)
                 weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);
-            SetSoilOrganicMatterThickness(soil.SoilOrganicMatter, targetThickness);
+            SetSoilOrganicMatterThickness(organic, targetThickness);
             SetWaterThickness(waterNode, targetThickness, soil);
         }
 
