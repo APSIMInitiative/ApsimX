@@ -3079,8 +3079,53 @@
                 new Tuple<string, string>("[Soil].FBiom", "[Soil].Organic.FBiom"),
                 new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
                 new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
+                new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
             };
             JsonUtilities.RenameVariables(root, changes);
+
+            // Look in manager scripts and move some soil properties to the soil physical instance.
+            var variablesToMove = new string[] { "ThicknessCumulative" };
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                string physicalName = null;
+                bool replacementMade = false;
+                foreach (var variableToRename in variablesToMove)
+                {
+                    if (manager.LineIndexOf(variableToRename) != -1)
+                    {
+                        replacementMade = true;
+
+                        // Found a variable that needs renaming. 
+                        // See if there is a Physical link. If not add one.
+                        var declarations = manager.GetDeclarations();
+                        Declaration physicalDeclaration = null;
+                        if (physicalName == null)
+                        {
+                            physicalDeclaration = declarations.Find(decl => decl.TypeName == "Physical");
+                            if (physicalDeclaration == null)
+                            {
+                                physicalDeclaration = new Declaration()
+                                {
+                                    TypeName = "Physical",
+                                    InstanceName = "soilPhysical",
+                                    IsPrivate = true
+                                };
+                                declarations.Add(physicalDeclaration);
+                            }
+                            physicalName = physicalDeclaration.InstanceName;
+                        }
+                        if (!physicalDeclaration.Attributes.Contains("[Link]"))
+                            physicalDeclaration.Attributes.Add("[Link]");
+                        manager.SetDeclarations(declarations);
+
+                        // Do the rename.
+                        manager.Replace($"soil.{variableToRename}", $"soilPhysical.{variableToRename}");
+                    }
+                }
+                if (replacementMade)
+                    manager.Save();
+            }
+
 
             // Rename the CERESSoilTemperature model to SoilTemperature
             foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))

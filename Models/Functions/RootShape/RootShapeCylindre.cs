@@ -20,10 +20,10 @@ namespace Models.Functions.RootShape
         public void CalcRootProportionInLayers(ZoneState zone)
         {
             zone.RootArea = (zone.RightDist + zone.LeftDist) * zone.Depth / 1e6;
-            for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
+            for (int layer = 0; layer < zone.Soil.Thickness.Length; layer++)
             {
                 double prop;
-                double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+                double top = layer == 0 ? 0 : MathUtilities.Sum(zone.Soil.Thickness, 0, layer - 1);
 
                 if (zone.Depth < top)
                 {
@@ -31,7 +31,7 @@ namespace Models.Functions.RootShape
                 } 
                 else
                 {
-                    prop = zone.soil.ProportionThroughLayer(layer, zone.Depth);
+                    prop = zone.Soil.ProportionThroughLayer(layer, zone.Depth);
                 }
                 zone.RootProportions[layer] = prop;
             }

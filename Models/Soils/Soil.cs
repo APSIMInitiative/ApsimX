@@ -151,28 +151,6 @@
         [JsonIgnore]
         public double[] Thickness { get { return physical.Thickness; } }
 
-        /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
-        public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
-
-        /// <summary>Gets the depth mid points (mm).</summary>
-        [Units("mm")]
-        public double[] DepthMidPoints
-        {
-            get
-            {
-                var cumulativeThickness = MathUtilities.Cumulative(Thickness).ToArray();
-                var midPoints = new double[cumulativeThickness.Length];
-                for (int layer = 0; layer != cumulativeThickness.Length; layer++)
-                {
-                    if (layer == 0)
-                        midPoints[layer] = cumulativeThickness[layer] / 2.0;
-                    else
-                        midPoints[layer] = (cumulativeThickness[layer] + cumulativeThickness[layer - 1]) / 2.0;
-                }
-                return midPoints;
-            }
-        }
-
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]

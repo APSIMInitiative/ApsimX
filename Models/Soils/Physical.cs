@@ -1,8 +1,10 @@
 ﻿namespace Models.Soils
 {
     using APSIM.Shared.APSoil;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
+    using System.Linq;
 
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
@@ -25,6 +27,28 @@
                 Thickness = SoilUtilities.ToThickness(value);
             }
         }
+
+        /// <summary>Gets the depth mid points (mm).</summary>
+        [Units("mm")]
+        public double[] DepthMidPoints
+        {
+            get
+            {
+                var cumulativeThickness = MathUtilities.Cumulative(Thickness).ToArray();
+                var midPoints = new double[cumulativeThickness.Length];
+                for (int layer = 0; layer != cumulativeThickness.Length; layer++)
+                {
+                    if (layer == 0)
+                        midPoints[layer] = cumulativeThickness[layer] / 2.0;
+                    else
+                        midPoints[layer] = (cumulativeThickness[layer] + cumulativeThickness[layer - 1]) / 2.0;
+                }
+                return midPoints;
+            }
+        }
+
+        /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
+        public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
 
         /// <summary>The soil thickness (mm).</summary>
         [Summary]

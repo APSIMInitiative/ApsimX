@@ -159,10 +159,10 @@ namespace Models.PMF.Arbitrator
             {
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
-                myZone.StartWater = new double[myZone.soil.Thickness.Length];
-                myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
-                myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
-                myZone.Supply = new double[myZone.soil.Thickness.Length];
+                myZone.StartWater = new double[myZone.Soil.Thickness.Length];
+                myZone.AvailableSW = new double[myZone.Soil.Thickness.Length];
+                myZone.PotentialAvailableSW = new double[myZone.Soil.Thickness.Length];
+                myZone.Supply = new double[myZone.Soil.Thickness.Length];
 
                 var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
                 if (soilCrop == null)
@@ -170,18 +170,18 @@ namespace Models.PMF.Arbitrator
 
                 double[] kl = soilCrop.KL;
 
-                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.Soil.Thickness);
 
                 if (root.Depth != myZone.Depth)
                     myZone.Depth += 0; // wtf??
 
-                var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
+                var currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
-                    myZone.StartWater[layer] = myZone.soil.Water[layer];
+                    myZone.StartWater[layer] = myZone.Soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
-                    myZone.PotentialAvailableSW[layer] = Math.Max(myZone.soil.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.Soil.Water[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.PotentialAvailableSW[layer] = Math.Max(myZone.Soil.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
                     var proportion = myZone.RootProportions[layer];
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);

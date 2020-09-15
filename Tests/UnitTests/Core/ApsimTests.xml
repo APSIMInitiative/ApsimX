@@ -39,7 +39,7 @@
           </X>
           <Y>
             <Name>Y</Name>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+            <FieldName>.Field.Soil.Physical.DepthMidPoints</FieldName>
           </Y>
         </Series>
       </Graph>
@@ -373,7 +373,7 @@
           </X>
           <Y>
             <Name>Y</Name>
-            <FieldName>.Field.Soil.DepthMidPoints</FieldName>
+            <FieldName>.Field.Soil.Physical.DepthMidPoints</FieldName>
           </Y>
         </Series>
       </Graph>

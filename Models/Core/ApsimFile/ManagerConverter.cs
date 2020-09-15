@@ -372,6 +372,26 @@
         }
 
         /// <summary>
+        /// Search for a string and return the line index it is on or -1 if not found.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="caseSensitive">Case sensitive?</param>
+        /// <returns></returns>
+        public int LineIndexOf(string searchPattern, bool caseSensitive = false)
+        {
+            if (searchPattern != null)
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    StringComparison comparison = caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+                    if (lines[i].IndexOf(searchPattern, comparison) != -1)
+                        return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// Perform a search and replace in manager script.
         /// </summary>
         /// <param name="searchPattern">The pattern to search for.</param>
