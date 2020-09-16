@@ -86,7 +86,7 @@
             nLayers = soilPhysical.Thickness.Length;
             minimumLiveDM = minLiveDM;
             dulMM = soil.DULmm;
-            ll15MM = soil.LL15mm;
+            ll15MM = soilPhysical.LL15mm;
             Live = tissue[0];
             Dead = tissue[1];
 

@@ -72,7 +72,7 @@
         [Units("mm/mm")]
         public double[] LL15
         {
-            get { return Layers.MapConcentration(Soil.LL15, soilPhysical.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(soilPhysical.LL15, soilPhysical.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at the lower limit of each mapped layer.</summary>
@@ -80,7 +80,7 @@
         [Units("mm")]
         public double[] LL15mm
         {
-            get { return Layers.MapMass(Soil.LL15mm, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapMass(soilPhysical.LL15mm, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the upper limit of each mapped layer</summary>

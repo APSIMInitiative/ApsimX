@@ -17,7 +17,10 @@
         
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         double[] LL15 { get; set; }
-        
+
+        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
+        double[] LL15mm { get; }
+
         /// <summary>Particle size clay.</summary>
         double[] ParticleSizeClay { get; set; }
 

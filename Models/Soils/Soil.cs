@@ -157,26 +157,6 @@
             }
         }
 
-        /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] AirDry { get { return physical.AirDry; } }
-
-        /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] LL15 { get { return physical.LL15; } }
-
-        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
-        [Units("mm/mm")]
-        public double[] LL15mm
-        {
-            get
-            {
-                return MathUtilities.Multiply(LL15, physical.Thickness);
-            }
-        }
-
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]
@@ -219,8 +199,8 @@
             get
             {
                 return CalcPAWC(physical.Thickness,
-                                LL15,
-                                DUL,
+                                physical.LL15,
+                                physical.DUL,
                                 null);
             }
         }
@@ -243,7 +223,7 @@
             get
             {
                 return CalcPAWC(physical.Thickness,
-                                LL15,
+                                physical.LL15,
                                 SoilWater.SW,
                                 null);
             }

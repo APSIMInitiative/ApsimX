@@ -3083,11 +3083,13 @@
                 new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
                 new Tuple<string, string>("[Soil].Thickness", "[Soil].Physical.Thickness"),
                 new Tuple<string, string>("[Soil].BD", "[Soil].Physical.BD"),
+                new Tuple<string, string>("[Soil].AirDry", "[Soil].Physical.AirDry"),
+                new Tuple<string, string>("[Soil].LL15", "[Soil].Physical.LL15"), // will also convert LL15mm
             };
             JsonUtilities.RenameVariables(root, changes);
 
             // Look in manager scripts and move some soil properties to the soil physical instance.
-            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD" };
+            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD", "AirDry", "LL15", "LL15mm" };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 var declarations = manager.GetDeclarations();
@@ -3117,7 +3119,7 @@
                             {
                                 physicalDeclaration = new Declaration()
                                 {
-                                    TypeName = "Physical",
+                                    TypeName = "IPhysical",
                                     InstanceName = "soilPhysical",
                                     IsPrivate = true
                                 };

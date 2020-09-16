@@ -12295,7 +12295,7 @@ namespace Models
             dul_dep = Soil.DULmm;
             sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
             sat_dep = Soil.SATmm;
-            ll15_dep = Soil.LL15mm;
+            ll15_dep = soilPhysical.LL15mm;
 
 
 

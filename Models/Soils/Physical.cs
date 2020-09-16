@@ -103,6 +103,10 @@
         [Display(Format = "N2")]
         public double[] LL15 { get; set; }
 
+        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
+        [Units("mm/mm")]
+        public double[] LL15mm { get { return MathUtilities.Multiply(LL15, Thickness); } }
+
         /// <summary>Drained upper limit (mm/mm).</summary>
         [Summary]
         [Description("DUL")]

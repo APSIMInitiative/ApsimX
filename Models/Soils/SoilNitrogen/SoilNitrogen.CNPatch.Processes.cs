@@ -1009,7 +1009,7 @@ namespace Models.Soils
 
                     // get the modified soil water variable
                     double[] yVals = { 0.0, 1.0, 2.0, 3.0 };
-                    double[] xVals = { 0.0, g.Soil.LL15[layer], g.Soil.DUL[layer], g.Soil.SAT[layer] };
+                    double[] xVals = { 0.0, g.soilPhysical.LL15[layer], g.soilPhysical.DUL[layer], g.soilPhysical.SAT[layer] };
                     double myX = MathUtilities.LinearInterpReal(g.Soil.SoilWater.SW[layer], xVals, yVals, out didInterpolate);
 
                     // get the soil moist factor

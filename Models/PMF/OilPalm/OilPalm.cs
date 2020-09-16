@@ -1211,15 +1211,15 @@ namespace Models.PMF.OilPalm
             PEP = (Soil.SoilWater as ISoilWater).Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - Soil.LL15mm[j]));
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - soilPhysical.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             if (TotPotSWUptake == 0)
                 throw new Exception("Total potential soil water uptake is zero");
 
             EP = 0.0;
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
@@ -1254,10 +1254,10 @@ namespace Models.PMF.OilPalm
             Ndemand = StemNDemand + FrondNDemand + RootNDemand + BunchNDemand;  //kg/ha
 
 
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
                 double swaf = 0;
-                swaf = (Soil.Water[j] - Soil.LL15mm[j]) / (Soil.DULmm[j] - Soil.LL15mm[j]);
+                swaf = (Soil.Water[j] - soilPhysical.LL15mm[j]) / (Soil.DULmm[j] - soilPhysical.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = NO3.kgha[j] * (100.0 / (soilPhysical.BD[j] * soilPhysical.Thickness[j]));
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * NO3.kgha[j] * swaf);
@@ -1266,7 +1266,7 @@ namespace Models.PMF.OilPalm
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
                 NUptake[j] = PotNUptake[j] * Fr;
             NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NUptake));
 
@@ -1288,14 +1288,14 @@ namespace Models.PMF.OilPalm
 
             StemN += StemNDemand / 10 * Fr;
 
-            double[] RootNDef = new double[Soil.LL15mm.Length];
+            double[] RootNDef = new double[soilPhysical.LL15mm.Length];
             double TotNDef = 1e-20;
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
                 RootNDef[j] = Math.Max(0.0, Roots[j].Mass * RootNConcentration.Value() / 100.0 - Roots[j].N);
                 TotNDef += RootNDef[j];
             }
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
                 Roots[j].N += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
 
             foreach (FrondType F in Fronds)
@@ -1660,7 +1660,7 @@ namespace Models.PMF.OilPalm
             UnderstoryPEP = (Soil.SoilWater as ISoilWater).Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < soilPhysical.Thickness.Length; j++)
-                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - Soil.LL15mm[j]));
+                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - soilPhysical.LL15mm[j]));
 
             double TotUnderstoryPotSWUptake = MathUtilities.Sum(UnderstoryPotSWUptake);
 

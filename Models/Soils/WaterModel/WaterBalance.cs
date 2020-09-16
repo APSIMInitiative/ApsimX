@@ -329,7 +329,7 @@
 
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         [JsonIgnore]
-        public double[] ESW { get { return MathUtilities.Subtract(Water, soil.LL15mm); } }
+        public double[] ESW { get { return MathUtilities.Subtract(Water, soilPhysical.LL15mm); } }
 
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
         [JsonIgnore]

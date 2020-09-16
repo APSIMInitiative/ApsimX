@@ -176,7 +176,7 @@
                 double[] xf;
                 if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                 {
-                    ll = this.Soil.LL15;
+                    ll = SoilPhysical.LL15;
                     xf = null;
                 }
                 else

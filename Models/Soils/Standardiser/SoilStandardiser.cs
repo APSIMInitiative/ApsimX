@@ -135,7 +135,7 @@
                     soil.Children.Add(sample);
                 }
 
-                sample.SW = initialWater.SW(sample.Thickness, soil.LL15, soil.DUL, null);
+                sample.SW = initialWater.SW(sample.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
 
                 soil.Children.Remove(initialWater);
             }

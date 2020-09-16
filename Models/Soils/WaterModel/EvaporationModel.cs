@@ -129,8 +129,8 @@
             }
 
             //! set up evaporation stage
-            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilProperties.LL15mm[0]), 
-                                            (soilProperties.DULmm[0] - soilProperties.LL15mm[0]), 
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]), 
+                                            (soilProperties.DULmm[0] - soilPhysical.LL15mm[0]), 
                                             0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 

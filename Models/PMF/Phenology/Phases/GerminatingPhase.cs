@@ -24,6 +24,9 @@ namespace Models.PMF.Phen
         private Soils.Soil soil = null;
 
         [Link]
+        private IPhysical soilPhysical = null;
+
+        [Link]
         private Plant plant = null;
 
         [Link]
@@ -80,7 +83,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
+            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soilPhysical.LL15mm[SowLayer])
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }

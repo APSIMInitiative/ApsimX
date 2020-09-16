@@ -605,7 +605,7 @@ namespace Models.Soils
             {
                 double[] value = new double[n+1];
                 for (int i = 0; i <= n; i++)
-                    value[i] = Math.Max(0.0, (th[i] - soil.LL15[i]) * soilPhysical.Thickness[i]);
+                    value[i] = Math.Max(0.0, (th[i] - soilPhysical.LL15[i]) * soilPhysical.Thickness[i]);
                 return value;
             }
         }
@@ -2815,7 +2815,7 @@ namespace Models.Soils
             double cnpd = 0.0;
             for (int layer = 0; layer <= n; layer++)
             {
-                cnpd = cnpd + (th[layer] - soil.LL15[layer]) / (soil.DUL[layer] - soil.LL15[layer]) * runoff_wf[layer];
+                cnpd = cnpd + (th[layer] - soilPhysical.LL15[layer]) / (soilPhysical.DUL[layer] - soilPhysical.LL15[layer]) * runoff_wf[layer];
             }
             cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
 
@@ -3087,10 +3087,10 @@ namespace Models.Soils
             {
                 psid[layer] = PSIDul;  //- (p%x(p%n) - p%x(layer))
 
-                DELk[layer, 0] = (soil.DUL[layer] - soil.SAT[layer]) / (Math.Log10(-psid[layer]));
-                DELk[layer, 1] = (soil.LL15[layer] - soil.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                DELk[layer, 2] = -soil.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                DELk[layer, 3] = -soil.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 0] = (soilPhysical.DUL[layer] - soilPhysical.SAT[layer]) / (Math.Log10(-psid[layer]));
+                DELk[layer, 1] = (soilPhysical.LL15[layer] - soilPhysical.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
+                DELk[layer, 2] = -soilPhysical.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 3] = -soilPhysical.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
 
                 Mk[layer, 0] = 0.0;
                 Mk[layer, 1] = (DELk[layer, 0] + DELk[layer, 1]) / 2.0;
@@ -3115,17 +3115,17 @@ namespace Models.Soils
 
                 M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
                 M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
-                Y0[layer, 1] = soil.SAT[layer];
-                Y1[layer, 1] = soil.DUL[layer];
+                Y0[layer, 1] = soilPhysical.SAT[layer];
+                Y1[layer, 1] = soilPhysical.DUL[layer];
 
                 M0[layer, 2] = Mk[layer, 1] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 M1[layer, 2] = Mk[layer, 2] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                Y0[layer, 2] = soil.DUL[layer];
-                Y1[layer, 2] = soil.LL15[layer];
+                Y0[layer, 2] = soilPhysical.DUL[layer];
+                Y1[layer, 2] = soilPhysical.LL15[layer];
 
                 M0[layer, 3] = Mk[layer, 2] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 M1[layer, 3] = Mk[layer, 3] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                Y0[layer, 3] = soil.LL15[layer];
+                Y0[layer, 3] = soilPhysical.LL15[layer];
                 Y1[layer, 3] = 0.0;
 
                 M0[layer, 4] = 0.0;
@@ -3139,13 +3139,13 @@ namespace Models.Soils
         {
             for (int layer = 0; layer <= n; layer++)
             {
-                double b = -Math.Log(PSIDul / psi_ll15) / Math.Log(soil.DUL[layer] / soil.LL15[layer]);
+                double b = -Math.Log(PSIDul / psi_ll15) / Math.Log(soilPhysical.DUL[layer] / soilPhysical.LL15[layer]);
                 MicroP[layer] = b * 2.0 + 3.0;
-                Kdula[layer] = Math.Min(0.99 * KDul, soil.KS[layer]);
-                MicroKs[layer] = Kdula[layer] / Math.Pow(soil.DUL[layer] / soil.SAT[layer], MicroP[layer]);
+                Kdula[layer] = Math.Min(0.99 * KDul, soilPhysical.KS[layer]);
+                MicroKs[layer] = Kdula[layer] / Math.Pow(soilPhysical.DUL[layer] / soilPhysical.SAT[layer], MicroP[layer]);
 
-                double Sdul = soil.DUL[layer] / soil.SAT[layer];
-                MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (soil.KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
+                double Sdul = soilPhysical.DUL[layer] / soilPhysical.SAT[layer];
+                MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (soilPhysical.KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
             }
         }
 

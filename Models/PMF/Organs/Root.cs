@@ -698,7 +698,7 @@
 
                 double[] thickness = myZone.Physical.Thickness;
                 double[] water = myZone.Soil.Water;
-                double[] ll15mm = myZone.Soil.LL15mm;
+                double[] ll15mm = myZone.Physical.LL15mm;
                 double[] dulmm = myZone.Soil.DULmm;
                 double[] bd = myZone.Physical.BD;
 
