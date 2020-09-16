@@ -40,9 +40,25 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false)]
         public string PaddockName { get; set; }
 
+        /// <summary>
+        /// Methane store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for methane emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named Methane if present")]
+        public string MethaneStoreName { get; set; }
+
+        /// <summary>
+        /// Nitrous oxide store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for nitrous oxide emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named N2O if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named N2O if present")]
+        public string NitrousOxideStoreName { get; set; }
+
         private GrazeFoodStoreType pasture { get; set; }
-        private GreenhouseGasesType methane { get; set; }
-        private GreenhouseGasesType nox { get; set; }
+        private GreenhouseGasesType methaneStore { get; set; }
+        private GreenhouseGasesType n2oStore { get; set; }
 
         /// <summary>
         /// Constructor
@@ -61,8 +77,22 @@ namespace Models.CLEM.Activities
             // get pasture
             pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
-            methane = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-            nox = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
+                methaneStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            }
+            else
+            {
+                methaneStore = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+            }
+            if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+            {
+                n2oStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            }
+            else
+            {
+                n2oStore = Resources.GetResourceItem(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+            }
         }
 
         /// <summary>
@@ -112,14 +142,14 @@ namespace Models.CLEM.Activities
 
                     // add emissions
                     double burnkg = total * 0.76 * 0.46; // burnkg * burning efficiency * carbon content
-                    if (methane != null)
+                    if (methaneStore != null)
                     {
                         //TODO change emissions for green material
-                        methane.Add(burnkg * 1.333 * 0.0035, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
                     }
-                    if (nox != null)
+                    if (n2oStore != null)
                     {
-                        nox.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName); // * 21; // N20 emissions from fire (CO2 eq)
                     }
 
                     // TODO: add fertilisation to pasture for given period.
@@ -174,5 +204,52 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Burn ";
+
+            if (PaddockName == null || PaddockName == "")
+            {
+                html += "<span class=\"errorlink\">[Pasture NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + PaddockName + "</span>";
+            }
+            html += "if less than <span class=\"setvalue\">" + (MinimumProportionGreen).ToString("0.#%") + "</span> green.</div>";
+            html += "</div>";
+
+            html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
+            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
+                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+            }
+            else
+            {
+                html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
+            }
+            html += "</div>";
+
+            html += "\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ";
+            if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+            {
+                html += "<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present";
+            }
+            else
+            {
+                html += $"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>";
+            }
+            html += "</div>";
+
+            return html;
+        }
+
     }
 }

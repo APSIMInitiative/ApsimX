@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
+    [Version(1, 0, 3, "Allows selection of methane store for emissions")]
     [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
@@ -45,6 +46,14 @@ namespace Models.CLEM.Activities
         public double EnergyGross { get; set; }
 
         /// <summary>
+        /// Methane store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for methane emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named Methane if present")]
+        public string MethaneStoreName { get; set; }
+
+        /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
         [JsonIgnore]
@@ -64,7 +73,14 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
+                methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+            }
+            else
+            {
+                methaneEmissions = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+            }
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
         }
 
@@ -786,6 +802,21 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>";
             }
             html += " MJ/kg dry matter</div>";
+
+
+            html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
+            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
+                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+            }
+            else
+            {
+                html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
+            }
+            html += "</div>";
+
+
+
             return html;
 
         }
