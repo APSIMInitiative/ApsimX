@@ -183,7 +183,7 @@
         {
             get
             {
-                return MathUtilities.Multiply(LL15, Thickness);
+                return MathUtilities.Multiply(LL15, physical.Thickness);
             }
         }
 
@@ -198,7 +198,7 @@
         {
             get
             {
-                return MathUtilities.Multiply(DUL, Thickness);
+                return MathUtilities.Multiply(DUL, physical.Thickness);
             }
         }
 
@@ -213,7 +213,7 @@
         {
             get
             {
-                return MathUtilities.Multiply(SAT, Thickness);
+                return MathUtilities.Multiply(SAT, physical.Thickness);
             }
         }
 
@@ -228,7 +228,7 @@
         {
             get
             {
-                return CalcPAWC(Thickness,
+                return CalcPAWC(physical.Thickness,
                                 LL15,
                                 DUL,
                                 null);
@@ -242,7 +242,7 @@
         {
             get
             {
-                return MathUtilities.Multiply(PAWC, Thickness);
+                return MathUtilities.Multiply(PAWC, physical.Thickness);
             }
         }
 
@@ -252,7 +252,7 @@
         {
             get
             {
-                return CalcPAWC(Thickness,
+                return CalcPAWC(physical.Thickness,
                                 LL15,
                                 SoilWater.SW,
                                 null);
@@ -265,7 +265,7 @@
         {
             get
             {
-                return MathUtilities.Multiply(PAW, Thickness);
+                return MathUtilities.Multiply(PAW, physical.Thickness);
             }
         }
 
@@ -310,7 +310,7 @@
         public int LayerIndexOfDepth(double depth)
         {
             double CumDepth = 0;
-            double[] thickness = Thickness; // use local for efficiency reasons
+            double[] thickness = physical.Thickness; // use local for efficiency reasons
             for (int i = 0; i < thickness.Length; i++)
             {
                 CumDepth = CumDepth + thickness[i];
@@ -326,13 +326,13 @@
         {
             double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
             for (int i = 0; i <= layerIndex; i++)
-                depth_to_layer_bottom += Thickness[i];
+                depth_to_layer_bottom += physical.Thickness[i];
 
-            double depth_to_layer_top = depth_to_layer_bottom - Thickness[layerIndex];
+            double depth_to_layer_top = depth_to_layer_bottom - physical.Thickness[layerIndex];
             double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
             double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / Thickness[layerIndex];
+            return depth_of_root_in_layer / physical.Thickness[layerIndex];
         }
 
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
@@ -345,7 +345,7 @@
 
             double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                ppm[i] = values[i] * (100.0 / (BD[i] * Thickness[i]));
+                ppm[i] = values[i] * (100.0 / (BD[i] * physical.Thickness[i]));
             return ppm;
         }
 
@@ -359,7 +359,7 @@
 
             double[] kgha = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                kgha[i] = values[i] * (BD[i] * Thickness[i] / 100);
+                kgha[i] = values[i] * (BD[i] * physical.Thickness[i] / 100);
             return kgha;
         }
     }

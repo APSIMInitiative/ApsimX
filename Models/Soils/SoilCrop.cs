@@ -10,10 +10,6 @@
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model
     {
-        /// <summary>Access the soil physical properties.</summary>
-        [Link] 
-        private IPhysical soilPhysical = null;
-
         /// <summary>Crop lower limit</summary>
         [Summary]
         [Description("LL")]
@@ -51,10 +47,10 @@
         {
             get
             {
-                Soil soil = FindAncestor<Soil>();
-                if (soil == null)
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
                     return null;
-                return Soil.CalcPAWC(soilPhysical.Thickness, LL, soil.DUL, XF);
+                return Soil.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
         public Soil Soil { get; set; }
         
         /// <summary>The soil in this zone</summary>
-        public Physical Physical { get; set; }
+        public IPhysical Physical { get; set; }
         
         /// <summary>The NO3 solute.</summary>
         public ISolute NO3 = null;
@@ -157,7 +157,7 @@ namespace Models.PMF.Organs
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
-            Physical = soil.FindChild<Physical>();
+            Physical = soil.FindChild<IPhysical>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
 
             Clear();

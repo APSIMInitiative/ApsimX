@@ -3088,17 +3088,25 @@
             var variablesToMove = new string[] { "ThicknessCumulative" };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
+                var declarations = manager.GetDeclarations();
+
                 string physicalName = null;
                 bool replacementMade = false;
                 foreach (var variableToRename in variablesToMove)
                 {
-                    if (manager.LineIndexOf(variableToRename) != -1)
+                    var pattern = $@"(\w+)\.{variableToRename}(\W+)";
+                    manager.ReplaceRegex(pattern, match =>
                     {
+                        // Check the type of the variable to see if it is soil.
+                        var soilInstanceName = match.Groups[1].Value;
+                        var matchDeclaration = declarations.Find(decl => decl.InstanceName == soilInstanceName);
+                        if (matchDeclaration == null || matchDeclaration.TypeName != "Soil")
+                            return match.Groups[0].Value; // Don't change anything as the type isn't a soil.
+
                         replacementMade = true;
 
                         // Found a variable that needs renaming. 
                         // See if there is a Physical link. If not add one.
-                        var declarations = manager.GetDeclarations();
                         Declaration physicalDeclaration = null;
                         if (physicalName == null)
                         {
@@ -3117,14 +3125,15 @@
                         }
                         if (!physicalDeclaration.Attributes.Contains("[Link]"))
                             physicalDeclaration.Attributes.Add("[Link]");
-                        manager.SetDeclarations(declarations);
 
-                        // Do the rename.
-                        manager.Replace($"soil.{variableToRename}", $"soilPhysical.{variableToRename}");
-                    }
+                        return $"{physicalName}.{variableToRename}{match.Groups[2].Value}";
+                    });
                 }
                 if (replacementMade)
+                {
+                    manager.SetDeclarations(declarations);
                     manager.Save();
+                }
             }
 
 

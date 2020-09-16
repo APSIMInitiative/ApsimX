@@ -36,7 +36,7 @@
         {
             get
             {
-                return FindAncestor<IPhysical>();
+                return FindInScope<IPhysical>();
             }
         }
         /// <summary>

@@ -38,5 +38,8 @@
         
         /// <summary>The soil thickness (mm).</summary>
         double[] Thickness { get; set; }
+
+        /// <summary>Gets the depth mid points (mm).</summary>
+        double[] DepthMidPoints { get; }
     }
 }

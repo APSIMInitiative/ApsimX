@@ -16,6 +16,7 @@ using APSIM.Shared.Utilities;
 using Models.Functions;
 using Models.Soils.Standardiser;
 using Models.Climate;
+using System.Linq;
 
 namespace Models.Soils
 {
@@ -184,6 +185,26 @@ namespace Models.Soils
         public double[] SWmm { get; set; }
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
+
+        /// <summary>Gets the depth mid points (mm).</summary>
+        [Units("mm")]
+        public double[] DepthMidPoints
+        {
+            get
+            {
+                var cumulativeThickness = MathUtilities.Cumulative(Thickness).ToArray();
+                var midPoints = new double[cumulativeThickness.Length];
+                for (int layer = 0; layer != cumulativeThickness.Length; layer++)
+                {
+                    if (layer == 0)
+                        midPoints[layer] = cumulativeThickness[layer] / 2.0;
+                    else
+                        midPoints[layer] = (cumulativeThickness[layer] + cumulativeThickness[layer - 1]) / 2.0;
+                }
+                return midPoints;
+            }
+        }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double WaterTable { get; set; }
