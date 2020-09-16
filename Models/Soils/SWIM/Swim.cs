@@ -583,6 +583,29 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] SWmm { get { return MathUtilities.Multiply(th, soilPhysical.Thickness); } }
 
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.SoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                                                                  soilPhysical.LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
+
         [Units("cm^3/cm^3")]
         //[Description("Soil water content of layer")]
         private double[] swf

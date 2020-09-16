@@ -143,6 +143,29 @@ namespace Models.Soils
         [JsonIgnore] 
         public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
 
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.SoilUtilities.CalcPAWC(Thickness,
+                                                                  LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, Thickness);
+            }
+        }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double pond { get; set; }

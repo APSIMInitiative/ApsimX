@@ -392,7 +392,8 @@
                     foreach (ZoneState Z in Zones)
                     {
                         var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        double[] paw = Z.Soil.PAW;
+                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
@@ -422,8 +423,9 @@
                     foreach (ZoneState Z in Zones)
                     {
                         var soilPhysical = Z.Soil.FindChild<IPhysical>();
+                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
 
-                        double[] paw = Z.Soil.PAW;
+                        double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)

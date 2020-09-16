@@ -402,6 +402,29 @@
         /// <summary>Pond.</summary>
         public double Pond { get { return 0; } }
 
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.SoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                                                                  soilPhysical.LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
+
         // --- Event handlers ------------------------------------------------------------
 
         /// <summary>Called when a simulation commences.</summary>

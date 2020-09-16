@@ -17,13 +17,14 @@
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class OutputLayers : Model
     {
-        [Link]
-        private Soil Soil = null;
-        
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical soilPhysical = null;
-
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
+        
         [Link]
         Soils.Sample initial = null;
 
@@ -48,7 +49,7 @@
         [Units("mm/mm")]
         public double[] SW
         {
-            get { return Layers.MapConcentration(Soil.SoilWater.SW, soilPhysical.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(waterBalance.SW, soilPhysical.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the current soil water amount of each mapped layer.</summary>
@@ -56,7 +57,7 @@
         [Units("mm")]
         public double[] SWmm
         {
-            get { return Layers.MapMass(Soil.SoilWater.SWmm, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapMass(waterBalance.SWmm, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
@@ -64,7 +65,7 @@
         [Units("mm")]
         public double[] PAW
         {
-            get { return Layers.MapMass(Soil.PAW, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapMass(waterBalance.PAW, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the lower limit of each mapped layer</summary>

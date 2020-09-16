@@ -157,29 +157,6 @@
             }
         }
 
-        /// <summary>Plant available water (SW-LL15).</summary>
-        [Units("mm/mm")]
-        public double[] PAW
-        {
-            get
-            {
-                return CalcPAWC(physical.Thickness,
-                                physical.LL15,
-                                SoilWater.SW,
-                                null);
-            }
-        }
-
-        /// <summary>Plant available water (SW-LL15).</summary>
-        [Units("mm")]
-        public double[] PAWmm
-        {
-            get
-            {
-                return MathUtilities.Multiply(PAW, physical.Thickness);
-            }
-        }
-
         /// <summary>
         /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
         /// </summary>
