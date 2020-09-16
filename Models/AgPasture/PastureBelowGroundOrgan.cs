@@ -426,7 +426,7 @@
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
             var thickness = soilPhysical.Thickness;
-            var bd = soil.BD;
+            var bd = soilPhysical.BD;
             var water = myZone.Water;
             var nh4 = myZone.NH4N;
             var no3 = myZone.NO3N;

@@ -255,7 +255,7 @@ namespace Models.Soils
             // Calculate conversion factor from kg/ha to ppm (mg/kg)
             convFactor = new double[nLayers];
             for (int layer = 0; layer < nLayers; ++layer)
-                convFactor[layer] = MathUtilities.Divide(100.0, Soil.BD[layer] * dlayer[layer], 0.0);
+                convFactor[layer] = MathUtilities.Divide(100.0, soilPhysical.BD[layer] * dlayer[layer], 0.0);
 
             // Check parameters for patches
             if (DepthToTestByLayer <= epsilon)

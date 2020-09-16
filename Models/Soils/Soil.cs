@@ -146,11 +146,6 @@
 
         #region Water
 
-        /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] BD {  get { return physical.BD; } }
-
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
         [Units("mm")]
         [JsonIgnore]
@@ -340,7 +335,7 @@
 
             double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                ppm[i] = values[i] * (100.0 / (BD[i] * physical.Thickness[i]));
+                ppm[i] = values[i] * (100.0 / (physical.BD[i] * physical.Thickness[i]));
             return ppm;
         }
 
@@ -354,7 +349,7 @@
 
             double[] kgha = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                kgha[i] = values[i] * (BD[i] * physical.Thickness[i] / 100);
+                kgha[i] = values[i] * (physical.BD[i] * physical.Thickness[i] / 100);
             return kgha;
         }
     }

@@ -167,10 +167,11 @@
         {
             List<Declaration> foundDeclarations = new List<Declaration>();
 
-            string pattern = @"(?<Link>\[.+\])?\s+(?<Access>public\s+|private\s+)?(?<TypeName>\w+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
+            string pattern = @"(?<Link>\[.+\])?\s+(?<Access>public\s+|private\s+)?(?<TypeName>[\w\.]+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
             for (int i = 0; i < lines.Count; i++)
             {
-                Match match = Regex.Match(lines[i], pattern);
+                var line = Clean(lines[i]);
+                Match match = Regex.Match(line, pattern);
                 if (match.Groups["TypeName"].Value != string.Empty &&
                     match.Groups["TypeName"].Value != "as" &&
                     match.Groups["TypeName"].Value != "return" &&
@@ -184,7 +185,7 @@
                     decl.TypeName = match.Groups["TypeName"].Value;
                     decl.InstanceName = match.Groups["InstanceName"].Value;
                     decl.Attributes = new List<string>();
-                    decl.IsEvent = lines[i].Contains("event");
+                    decl.IsEvent = line.Contains("event");
                     decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
                     {

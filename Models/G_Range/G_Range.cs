@@ -38,17 +38,11 @@ namespace Models
         //[Link]
         //private ISummary Summary = null;
 
-        [Link(IsOptional =true)]
-        Soils.Soil Soil = null;
-
         [Link(IsOptional = true)]
         Soils.IPhysical soilPhysical = null;
 
         [Link]
         Soils.Sample initial = null;
-
-        [Link]
-        Soils.Physical Analysis = null;
 
         [Link(IsOptional = true)]
         Soils.SoilCrop SoilCrop = null;

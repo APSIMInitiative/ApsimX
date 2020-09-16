@@ -518,7 +518,7 @@ namespace Models.Agroforestry
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
-                        double[] BD = ThisSoil.BD;
+                        double[] BD = soilPhysical.BD;
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)

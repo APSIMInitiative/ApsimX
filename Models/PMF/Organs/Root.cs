@@ -700,7 +700,7 @@
                 double[] water = myZone.Soil.Water;
                 double[] ll15mm = myZone.Soil.LL15mm;
                 double[] dulmm = myZone.Soil.DULmm;
-                double[] bd = myZone.Soil.BD;
+                double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)

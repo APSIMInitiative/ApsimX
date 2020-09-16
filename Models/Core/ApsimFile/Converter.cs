@@ -3074,6 +3074,7 @@
         {
             var changes = new Tuple<string, string>[]
             {
+                new Tuple<string, string>("[ISoil]", "[Soil]"),
                 new Tuple<string, string>("[Soil].Temperature", "[Soil].Temperature.Value"),
                 new Tuple<string, string>("Soil.Temperature", "Soil.Temperature.Value"),
                 new Tuple<string, string>("[Soil].FBiom", "[Soil].Organic.FBiom"),
@@ -3081,12 +3082,12 @@
                 new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
                 new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
                 new Tuple<string, string>("[Soil].Thickness", "[Soil].Physical.Thickness"),
-                new Tuple<string, string>("[ISoil]", "[Soil]"),
+                new Tuple<string, string>("[Soil].BD", "[Soil].Physical.BD"),
             };
             JsonUtilities.RenameVariables(root, changes);
 
             // Look in manager scripts and move some soil properties to the soil physical instance.
-            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness" };
+            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD" };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 var declarations = manager.GetDeclarations();
@@ -3101,7 +3102,7 @@
                         // Check the type of the variable to see if it is soil.
                         var soilInstanceName = match.Groups[1].Value;
                         var matchDeclaration = declarations.Find(decl => decl.InstanceName == soilInstanceName);
-                        if (matchDeclaration == null || matchDeclaration.TypeName != "Soil")
+                        if (matchDeclaration == null || (matchDeclaration.TypeName != "Soil" && matchDeclaration.TypeName != "Soils.Soil"))
                             return match.Groups[0].Value; // Don't change anything as the type isn't a soil.
 
                         replacementMade = true;
@@ -3137,7 +3138,6 @@
                     manager.Save();
                 }
             }
-
 
             // Rename the CERESSoilTemperature model to SoilTemperature
             foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
