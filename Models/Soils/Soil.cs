@@ -146,11 +146,6 @@
 
         #region Water
 
-        /// <summary>Return the soil layer thicknesses (mm)</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double[] Thickness { get { return physical.Thickness; } }
-
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         [JsonIgnore]

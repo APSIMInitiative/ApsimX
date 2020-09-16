@@ -3080,12 +3080,13 @@
                 new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
                 new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
                 new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
+                new Tuple<string, string>("[Soil].Thickness", "[Soil].Physical.Thickness"),
                 new Tuple<string, string>("[ISoil]", "[Soil]"),
             };
             JsonUtilities.RenameVariables(root, changes);
 
             // Look in manager scripts and move some soil properties to the soil physical instance.
-            var variablesToMove = new string[] { "ThicknessCumulative" };
+            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness" };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 var declarations = manager.GetDeclarations();
@@ -3122,9 +3123,10 @@
                                 declarations.Add(physicalDeclaration);
                             }
                             physicalName = physicalDeclaration.InstanceName;
+
+                            if (!physicalDeclaration.Attributes.Contains("[Link]"))
+                                physicalDeclaration.Attributes.Add("[Link]");
                         }
-                        if (!physicalDeclaration.Attributes.Contains("[Link]"))
-                            physicalDeclaration.Attributes.Add("[Link]");
 
                         return $"{physicalName}.{variableToRename}{match.Groups[2].Value}";
                     });
