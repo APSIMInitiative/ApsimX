@@ -194,7 +194,7 @@ namespace UserInterface.Presenters
                                                                  soilInfo.Soil.Latitude,
                                                                  soilInfo.Soil.Longitude).ToString("F1");
 
-                    var pawc = soilInfo.Soil.PAWCmm;
+                    var pawc = soilPhysical.PAWCmm;
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
                     var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);

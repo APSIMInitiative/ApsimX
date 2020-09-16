@@ -80,7 +80,7 @@ namespace Models.WaterModel
                     // if there is EXCESS Amount, 
                     if (w_excess > 0.0)
                     {
-                        if (soil.Properties.KS == null)
+                        if (soilPhysical.KS == null)
                         {
                             //! all this excess goes on down 
                             w_out = w_excess + w_drain;
@@ -96,7 +96,7 @@ namespace Models.WaterModel
 
                             // partition between flow back up and flow down
                             // 'excessDown' is the amount above saturation(overflow) that moves down (mm)
-                            double excess_down = Math.Min(soil.Properties.KS[i] - w_drain, w_excess);
+                            double excess_down = Math.Min(soilPhysical.KS[i] - w_drain, w_excess);
                             double backup = w_excess - excess_down;
 
                             w_out = excess_down + w_drain;

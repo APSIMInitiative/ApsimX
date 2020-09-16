@@ -85,7 +85,7 @@
             // save the parameters for this organ
             nLayers = soilPhysical.Thickness.Length;
             minimumLiveDM = minLiveDM;
-            dulMM = soil.DULmm;
+            dulMM = soilPhysical.DULmm;
             ll15MM = soilPhysical.LL15mm;
             Live = tissue[0];
             Dead = tissue[1];

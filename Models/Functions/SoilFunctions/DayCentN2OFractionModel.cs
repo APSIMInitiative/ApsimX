@@ -18,6 +18,9 @@ namespace Models.Functions
         [Link]
         Soil soil = null;
 
+        [Link]
+        IPhysical soilPhysical = null;
+
         [Link(ByName = true)]
         Solute NO3 = null;
 
@@ -31,7 +34,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Nitrification Model");
 
-            double WFPS = MathUtilities.Divide(soil.SoilWater.SW[arrayIndex], soil.SAT[arrayIndex], 0)*100;
+            double WFPS = MathUtilities.Divide(soil.SoilWater.SW[arrayIndex], soilPhysical.SAT[arrayIndex], 0)*100;
             double WF = 0;
             if (WFPS > 21.3)
                 WF = 1.18 * (WFPS - 21.3) / (100 - 21.3);

@@ -30,9 +30,6 @@ namespace Models.Soils
         [Link]
         private ISummary summary = null;
 
-        [Link]
-        private Soil soil = null;
-        
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical soilPhysical = null;
@@ -3110,8 +3107,8 @@ namespace Models.Soils
 
                 M0[layer, 0] = 0.0;
                 M1[layer, 0] = 0.0;
-                Y0[layer, 0] = soil.SAT[layer];
-                Y1[layer, 0] = soil.SAT[layer];
+                Y0[layer, 0] = soilPhysical.SAT[layer];
+                Y1[layer, 0] = soilPhysical.SAT[layer];
 
                 M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
                 M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
@@ -3255,7 +3252,7 @@ namespace Models.Soils
             const double tolerance = 1e-9;
             const double dpsi = 0.01;
 
-            if (theta == soil.SAT[node])
+            if (theta == soilPhysical.SAT[node])
                 return 0.0;
             else
             {
@@ -3277,7 +3274,7 @@ namespace Models.Soils
         {
             //  Purpose
             //      Calculate S for a given node for a specified suction.
-            return SimpleTheta(layer, psiValue) / soil.SAT[layer];
+            return SimpleTheta(layer, psiValue) / soilPhysical.SAT[layer];
         }
 
         private double SimpleTheta(int layer, double psiValue)
@@ -3351,11 +3348,11 @@ namespace Models.Soils
             {
                 double microK = MicroKs[layer] * Math.Pow(S, MicroP[layer]);
 
-                if (MicroKs[layer] >= soil.KS[layer])
+                if (MicroKs[layer] >= soilPhysical.KS[layer])
                     simpleK = microK;
                 else
                 {
-                    double macroK = (soil.KS[layer] - MicroKs[layer]) * Math.Pow(S, MacroP[layer]);
+                    double macroK = (soilPhysical.KS[layer] - MicroKs[layer]) * Math.Pow(S, MacroP[layer]);
                     simpleK = microK + macroK;
                 }
             }
@@ -4968,8 +4965,8 @@ namespace Models.Soils
                 hkp = (thk * hklgd * psip) / tpsi;
             }
 
-            double thsat = soil.SAT[ix];  // NOTE: this assumes that the wettest p%wc is
-                                          //! first in the pairs of log suction vs p%wc
+            double thsat = soilPhysical.SAT[ix];  // NOTE: this assumes that the wettest p%wc is
+                                                  //! first in the pairs of log suction vs p%wc
 
             // EJZ - this was in the fortran source, but is clearly futile
             //if (thsat == 0.0)       

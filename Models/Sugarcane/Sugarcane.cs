@@ -12292,9 +12292,9 @@ namespace Models
             //num_layers = dlayer.Length;
 
             bd = soilPhysical.BD;           //Soil.BDMapped;
-            dul_dep = Soil.DULmm;
+            dul_dep = soilPhysical.DULmm;
             sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
-            sat_dep = Soil.SATmm;
+            sat_dep = soilPhysical.SATmm;
             ll15_dep = soilPhysical.LL15mm;
 
 

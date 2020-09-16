@@ -702,7 +702,7 @@
                                                "         is at or below drained upper limit of ",
                                                soilPhysical.DUL[i]));
 
-                if (MathUtilities.IsGreaterThan(soil.SAT[i], max_sw))
+                if (MathUtilities.IsGreaterThan(soilPhysical.SAT[i], max_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4} {7} {8} {9:G4} {10} {11} {12:G4})",
                                                " saturation of ",
                                                soilPhysical.SAT[i],

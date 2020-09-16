@@ -89,7 +89,7 @@
                     double[] pawc;
                     if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                     {
-                        pawc = this.Soil.PAWC;
+                        pawc = SoilPhysical.PAWC;
                     }
                     else
                     {
@@ -190,7 +190,7 @@
                 }
 
                 // Get the soil water values for each layer.
-                double[] sw = this.SW(SoilPhysical.Thickness, ll, this.Soil.DUL, xf);
+                double[] sw = this.SW(SoilPhysical.Thickness, ll, SoilPhysical.DUL, xf);
 
                 // Calculate the plant available water (mm/mm)
                 double[] pawVolumetric = MathUtilities.Subtract(sw, ll);
@@ -206,7 +206,7 @@
                 double[] pawc;
                 if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                 {
-                    pawc = this.Soil.PAWC;
+                    pawc = SoilPhysical.PAWC;
                 }
                 else
                 {
@@ -241,7 +241,7 @@
             if (soilCrop != null)
                 return Soil.CalcPAWC(SoilPhysical.Thickness,
                                      soilCrop.LL,
-                                     Soil.DUL,
+                                     SoilPhysical.DUL,
                                      soilCrop.XF);
             else
                 return new double[0];

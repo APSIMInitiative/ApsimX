@@ -146,5 +146,38 @@
             return Thickness;
         }
 
+        /// <summary>
+        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
+        /// </summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <param name="LL">The ll.</param>
+        /// <param name="DUL">The dul.</param>
+        /// <param name="XF">The xf.</param>
+        /// <returns></returns>
+        public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
+        {
+            double[] PAWC = new double[Thickness.Length];
+            if (LL == null || DUL == null)
+                return PAWC;
+            if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
+                throw new Exception("Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
+
+            for (int layer = 0; layer != Thickness.Length; layer++)
+                if (DUL[layer] == MathUtilities.MissingValue ||
+                    LL[layer] == MathUtilities.MissingValue)
+                    PAWC[layer] = 0;
+                else
+                    PAWC[layer] = Math.Max(DUL[layer] - LL[layer], 0.0);
+
+            bool ZeroXFFound = false;
+            for (int layer = 0; layer != Thickness.Length; layer++)
+                if (ZeroXFFound || XF != null && XF[layer] == 0)
+                {
+                    ZeroXFFound = true;
+                    PAWC[layer] = 0;
+                }
+            return PAWC;
+        }
+
     }
 }

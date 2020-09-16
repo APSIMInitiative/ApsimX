@@ -4316,11 +4316,11 @@
             {
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += mySoil.Water[layer] * fractionLayer;
-                myWSat += mySoil.SATmm[layer] * fractionLayer;
+                myWSat += soilPhysical.SATmm[layer] * fractionLayer;
                 if (MinimumWaterFreePorosity <= -Epsilon)
-                    myWMinP += mySoil.DULmm[layer] * fractionLayer;
+                    myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
                 else
-                    myWMinP = mySoil.SATmm[layer] * (1.0 - MinimumWaterFreePorosity) * fractionLayer;
+                    myWMinP = soilPhysical.SATmm[layer] * (1.0 - MinimumWaterFreePorosity) * fractionLayer;
             }
 
             if (mySWater > myWMinP)

@@ -12,13 +12,16 @@
         /// <summary>Drained upper limit (mm/mm).</summary>
         double[] DUL { get; set;  }
 
+        /// <summary>Drained upper limit (mm).</summary>
+        double[] DULmm { get; }
+
         /// <summary>KS (mm/day).</summary>
         double[] KS { get; set; }
         
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         double[] LL15 { get; set; }
 
-        /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
+        /// <summary>Lower limit 15 bar (mm).</summary>
         double[] LL15mm { get; }
 
         /// <summary>Particle size clay.</summary>
@@ -35,14 +38,26 @@
 
         /// <summary>Saturation (mm/mm).</summary>
         double[] SAT { get; set; }
+
+        /// <summary>Saturation (mm).</summary>
+        double[] SATmm { get; }
         
         /// <summary>Texture.</summary>
         string[] Texture { get; }
         
-        /// <summary>The soil thickness (mm).</summary>
+        /// <summary>Soil layer thickness (mm).</summary>
         double[] Thickness { get; set; }
+
+        /// <summary>Soil layer cumulative thicknesses (mm)</summary>
+        double[] ThicknessCumulative { get; }
 
         /// <summary>Gets the depth mid points (mm).</summary>
         double[] DepthMidPoints { get; }
+
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        double[] PAWC { get; }
+
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        double[] PAWCmm { get; }
     }
 }

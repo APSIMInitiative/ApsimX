@@ -47,10 +47,6 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance waterBalance = null;
-
-        /// <summary>The water movement model.</summary>
-        [Link]
-        private Soil soilProperties = null;
         
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
@@ -130,7 +126,7 @@
 
             //! set up evaporation stage
             var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]), 
-                                            (soilProperties.DULmm[0] - soilPhysical.LL15mm[0]), 
+                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]), 
                                             0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 

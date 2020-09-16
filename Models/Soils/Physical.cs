@@ -104,7 +104,7 @@
         public double[] LL15 { get; set; }
 
         /// <summary>Return lower limit limit at standard thickness. Units: mm</summary>
-        [Units("mm/mm")]
+        [Units("mm")]
         public double[] LL15mm { get { return MathUtilities.Multiply(LL15, Thickness); } }
 
         /// <summary>Drained upper limit (mm/mm).</summary>
@@ -114,6 +114,10 @@
         [Display(Format = "N2")]
         public double[] DUL { get; set; }
 
+        /// <summary>Drained upper limit (mm).</summary>
+        [Units("mm")]
+        public double[] DULmm { get { return MathUtilities.Multiply(DUL, Thickness); } }
+
         /// <summary>Saturation (mm/mm).</summary>
         [Summary]
         [Description("SAT")]
@@ -121,12 +125,25 @@
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
 
+        /// <summary>Saturation (mm).</summary>
+        [Units("mm")]
+        public double[] SATmm { get { return MathUtilities.Multiply(SAT, Thickness); } }
+
         /// <summary>KS (mm/day).</summary>
         [Summary]
         [Description("KS")]
         [Units("mm/day")]
         [Display(Format = "N1")]
         public double[] KS { get; set; }
+
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        [Units("mm/mm")]
+        public double[] PAWC { get { return SoilUtilities.CalcPAWC(Thickness, LL15, DUL, null); } }
+
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
 
         /// <summary>Gets or sets the bd metadata.</summary>
         public string[] BDMetadata { get; set; }

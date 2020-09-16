@@ -136,6 +136,13 @@ namespace Models.Soils
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [JsonIgnore]
         public double[] PAWC { get; set; }
+
+        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
+        [Units("mm")]
+        [Display(Format = "N0", ShowTotal = true)]
+        [JsonIgnore] 
+        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double pond { get; set; }
@@ -185,6 +192,9 @@ namespace Models.Soils
         public double[] SWmm { get; set; }
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
+
+        /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
+        public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
 
         /// <summary>Gets the depth mid points (mm).</summary>
         [Units("mm")]

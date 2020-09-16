@@ -157,65 +157,6 @@
             }
         }
 
-        /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] DUL { get { return physical.DUL; } }
-
-        /// <summary>Return drained upper limit at standard thickness. Units: mm</summary>
-        [Units("mm/mm")]
-        public double[] DULmm
-        {
-            get
-            {
-                return MathUtilities.Multiply(DUL, physical.Thickness);
-            }
-        }
-
-        /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] SAT { get { return physical.SAT; } }
-       
-        /// <summary>Return saturation at standard thickness. Units: mm</summary>
-        [Units("mm/mm")]
-        public double[] SATmm
-        {
-            get
-            {
-                return MathUtilities.Multiply(SAT, physical.Thickness);
-            }
-        }
-
-        /// <summary>KS at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        [JsonIgnore]
-        public double[] KS { get { return physical.KS; } }
-
-        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
-        [Units("mm/mm")]
-        public double[] PAWC
-        {
-            get
-            {
-                return CalcPAWC(physical.Thickness,
-                                physical.LL15,
-                                physical.DUL,
-                                null);
-            }
-        }
-
-        /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
-        [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
-        public double[] PAWCmm
-        {
-            get
-            {
-                return MathUtilities.Multiply(PAWC, physical.Thickness);
-            }
-        }
-
         /// <summary>Plant available water (SW-LL15).</summary>
         [Units("mm/mm")]
         public double[] PAW

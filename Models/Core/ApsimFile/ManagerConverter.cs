@@ -167,7 +167,7 @@
         {
             List<Declaration> foundDeclarations = new List<Declaration>();
 
-            string pattern = @"(?<Link>\[.+\])?\s+(?<Access>public\s+|private\s+)?(?<TypeName>[\w\.]+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
+            string pattern = @"(?<Link>\[.+\]\s+)?(?<Access>public\s+|private\s+)?(?<TypeName>[\w\.]+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
             for (int i = 0; i < lines.Count; i++)
             {
                 var line = Clean(lines[i]);
@@ -189,7 +189,7 @@
                     decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
                     {
-                        decl.Attributes.Add(match.Groups["Link"].Value);
+                        decl.Attributes.Add(match.Groups["Link"].Value.Trim());
                         decl.AttributesOnPreviousLines = false;
                     }
 

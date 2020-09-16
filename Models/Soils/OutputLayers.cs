@@ -96,7 +96,7 @@
         [Units("mm")]
         public double[] DULmm
         {
-            get { return Layers.MapMass(Soil.DULmm, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapMass(soilPhysical.DULmm, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at saturation of each mapped layer</summary>
@@ -112,7 +112,7 @@
         [Units("mm")]
         public double[] SATmm
         {
-            get { return Layers.MapMass(Soil.SATmm, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapMass(soilPhysical.SATmm, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil urea N content of each mapped layer.</summary>

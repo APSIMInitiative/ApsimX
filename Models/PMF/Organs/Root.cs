@@ -391,8 +391,9 @@
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
+                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
                         double[] paw = Z.Soil.PAW;
-                        double[] pawc = Z.Soil.PAWC;
+                        double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
                             if (pawc[i] > 0)
@@ -420,8 +421,10 @@
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
+                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
+
                         double[] paw = Z.Soil.PAW;
-                        double[] pawc = Z.Soil.PAWC;
+                        double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
                             MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
@@ -699,7 +702,7 @@
                 double[] thickness = myZone.Physical.Thickness;
                 double[] water = myZone.Soil.Water;
                 double[] ll15mm = myZone.Physical.LL15mm;
-                double[] dulmm = myZone.Soil.DULmm;
+                double[] dulmm = myZone.Physical.DULmm;
                 double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
