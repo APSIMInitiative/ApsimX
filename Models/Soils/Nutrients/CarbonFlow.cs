@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using Models.PMF;
 
     /// <summary>
     /// # [Name]
@@ -138,6 +139,8 @@
                 if (totalPhosphorusFlowToDestinations > pSupply)
                 {
                     double pSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralPSupply, totalPhosphorusFlowToDestinations - phosphorusFlowFromSource, 1.0), 0.0, 1.0);
+                    // ALERT
+                    pSupplyFactor = 1; // remove P constraint until P model fully operational
                     SupplyFactor = Math.Min(SupplyFactor, pSupplyFactor);
                 }
                 
@@ -205,8 +208,9 @@
                     PDeficit -= PImmobilisation;
                     MineralisedP[i] = -PImmobilisation;
 
-                    if (MathUtilities.IsGreaterThan(PDeficit, 0.0))
-                        throw new Exception("Insufficient mineral P for immobilisation demand for C flow " + Name);
+                    // ALERT
+                    //if (MathUtilities.IsGreaterThan(PDeficit, 0.0))
+                    //    throw new Exception("Insufficient mineral P for immobilisation demand for C flow " + Name);
                 }
 
 
