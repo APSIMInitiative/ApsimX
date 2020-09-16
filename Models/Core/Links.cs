@@ -108,6 +108,10 @@
         /// <param name="throwOnFail">Should all links be considered optional?</param>
         private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
+            if (obj is Models.Management.RotationManager)
+            {
+
+            }
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
@@ -126,9 +130,9 @@
                     if (matches.Count == 0 && obj is IModel)
                     {
                         Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
-                        if (fieldType.IsAssignableFrom(typeof(ILocator)) && parentSimulation != null)
+                        if (typeof(ILocator).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Locator(obj as IModel));
-                        else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
+                        else if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
                     if (matches.Count == 0)

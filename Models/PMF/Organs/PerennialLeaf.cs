@@ -681,20 +681,6 @@ namespace Models.PMF.Organs
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
         }
 
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
-        }
-
-
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc { get { return MaximumNConc.Value(); } }
 

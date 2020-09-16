@@ -218,6 +218,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressBarView.cs" />
+    <Compile Include="Classes\ContextMenuHelper.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
@@ -238,6 +239,8 @@
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="EventArguments\AsyncEventHandler.cs" />
+    <Compile Include="EventArguments\BubbleChartArgs.cs" />
+    <Compile Include="EventArguments\GraphObjectSelectedArgs.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />
@@ -251,6 +254,7 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\IBubbleChartView.cs" />
     <Compile Include="Interfaces\ICloudJobView.cs" />
     <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
@@ -365,6 +369,7 @@
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
+    <Compile Include="Presenters\BubbleChartPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
@@ -376,6 +381,7 @@
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Views\AxisView.cs" />
+    <Compile Include="Views\BubbleChartView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
@@ -891,6 +897,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RotationManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />

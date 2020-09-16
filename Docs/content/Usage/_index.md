@@ -14,3 +14,4 @@ weight: 10
 * [Test Results](/usage/tests)
 * [Using an Excel file for weather data](/usage/usingexcelforweatherdata)
 * [Write manager scripts](/usage/writemanagerscript)
+* [Rotation Manager](/usage/rotationmanager)
