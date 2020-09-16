@@ -498,7 +498,7 @@ namespace Models.CLEM.Activities
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
                 ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
-                ind.EnergyFoetus = 0;
+                ind.EnergyFetus = 0;
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = 0;
 
@@ -519,7 +519,7 @@ namespace Models.CLEM.Activities
             else
             {
                 double energyMilk = 0;
-                double energyFoetus = 0;
+                double energyFetus = 0;
 
                 if (ind.Gender == Sex.Female)
                 {
@@ -543,9 +543,9 @@ namespace Models.CLEM.Activities
                         // Potential birth weight
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
-                        double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
-                        //TODO: Check foetus age correct
-                        energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
+                        double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
+                        //TODO: Check fetus age correct
+                        energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
                     }
                 }
 
@@ -558,10 +558,10 @@ namespace Models.CLEM.Activities
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days 
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
-                ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
+                ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
                 ind.EnergyIntake = energyMetablicFromIntake;
-                ind.EnergyFoetus = energyFoetus;
+                ind.EnergyFetus = energyFetus;
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyMilk;
 

@@ -431,7 +431,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy used for foetal development
         /// </summary>
-        public double EnergyFoetus { get; set; }
+        public double EnergyFetus { get; set; }
 
         /// <summary>
         /// Energy used for maintenance
