@@ -5,6 +5,7 @@ namespace Models.WaterModel
     using Core;
     using System;
     using Newtonsoft.Json;
+    using Models.Soils;
 
     /// <summary>
     /// When water content in any layer is below SAT but above DUL, a fraction of the water drains to the next 
@@ -24,6 +25,10 @@ namespace Models.WaterModel
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>Amount of water (mm) backed up.</summary>
         [JsonIgnore]
@@ -37,14 +42,14 @@ namespace Models.WaterModel
                 backedUpSurface = 0.0;
 
                 double[] SW = soil.Water;
-                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
-                double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, soil.Properties.Thickness);
+                double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);
+                double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, soilPhysical.Thickness);
 
                 double w_in = 0.0;   // water coming into layer (mm)
                 double w_out;        // water going out of layer (mm)
-                double[] flux = new double[soil.Properties.Thickness.Length];
-                double[] newSWmm = new double[soil.Properties.Thickness.Length];
-                for (int i = 0; i < soil.Properties.Thickness.Length; i++)
+                double[] flux = new double[soilPhysical.Thickness.Length];
+                double[] newSWmm = new double[soilPhysical.Thickness.Length];
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
                     double w_tot = SW[i] + w_in;
 

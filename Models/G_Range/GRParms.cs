@@ -640,8 +640,8 @@ namespace Models
             // So I guess we want to follow suit, and use weighted averages for 0-300 mm for "top" and 300-1000 for "sub"
             // Or would it be better to go directly to 4 layers? Or get G-Range to handle "n" layers?
             double[] thickness = null;
-            if (Soil != null)
-                thickness = Soil.Thickness;
+            if (soilPhysical != null)
+                thickness = soilPhysical.Thickness;
           
             if (SoilDataSource == SoilDataSourceEnum.APSIM || SoilDataSource == SoilDataSourceEnum.APSIMPhysical)
             {

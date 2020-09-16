@@ -51,6 +51,10 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private Soil soilProperties = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         [Link]
         private IClock clock = null;
@@ -288,7 +292,7 @@
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            var airdryMM = waterBalance.Properties.AirDry[0] * waterBalance.Properties.Thickness[0];
+            var airdryMM = soilPhysical.AirDry[0] * soilPhysical.Thickness[0];
             double avail_sw_top = waterBalance.Water[0] - airdryMM;
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 

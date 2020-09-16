@@ -3080,6 +3080,7 @@
                 new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
                 new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
                 new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
+                new Tuple<string, string>("[ISoil]", "[Soil]"),
             };
             JsonUtilities.RenameVariables(root, changes);
 

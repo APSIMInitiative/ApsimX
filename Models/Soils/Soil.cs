@@ -21,7 +21,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    public class Soil : Model, ISoil
+    public class Soil : Model
     {
         /// <summary>The child physical model.</summary>
         private IPhysical physical;

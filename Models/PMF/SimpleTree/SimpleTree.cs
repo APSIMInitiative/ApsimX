@@ -90,6 +90,10 @@ namespace Models.PMF
         [Link]
         Soils.Soil Soil = null;
 
+        /// <summary>The soil</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
         /// <summary>NO3 solute.</summary>
         [Link(ByName = true)]
         private ISolute NO3 = null;
@@ -322,12 +326,12 @@ namespace Models.PMF
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += Soil.Thickness[i];
-            depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
+                depth_to_layer_bottom += soilPhysical.Thickness[i];
+            depth_to_layer_top = depth_to_layer_bottom - soilPhysical.Thickness[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / Soil.Thickness[layer];
+            return depth_of_root_in_layer / soilPhysical.Thickness[layer];
         }
     }
 }

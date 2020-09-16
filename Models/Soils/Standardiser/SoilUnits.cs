@@ -46,7 +46,8 @@
                 // convert the numbers
                 if (sample.SWUnits == Sample.SWUnitsEnum.Gravimetric)
                 {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
+                    var soilPhysical = soil.FindChild<Soils.IPhysical>();
+                    double[] bd = Layers.BDMapped(soilPhysical, sample.Thickness);
                     return MathUtilities.Multiply(sample.SW, bd);
                 }
                 else

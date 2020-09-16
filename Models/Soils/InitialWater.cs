@@ -30,6 +30,16 @@
         }
 
         /// <summary>
+        /// Gets the parent soil model.
+        /// </summary>
+        private IPhysical SoilPhysical
+        {
+            get
+            {
+                return FindAncestor<IPhysical>();
+            }
+        }
+        /// <summary>
         /// The fraction of a full profile.
         /// </summary>
         private double fractionFull = double.NaN;
@@ -87,7 +97,7 @@
                     }
 
                     // Convert from mm/mm to mm and sum over the profile.
-                    pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                    pawc = MathUtilities.Multiply(pawc, SoilPhysical.Thickness);
                     double totalPAWC = MathUtilities.Sum(pawc);
 
                     // Convert from total to a fraction.
@@ -180,13 +190,13 @@
                 }
 
                 // Get the soil water values for each layer.
-                double[] sw = this.SW(this.Soil.Thickness, ll, this.Soil.DUL, xf);
+                double[] sw = this.SW(SoilPhysical.Thickness, ll, this.Soil.DUL, xf);
 
                 // Calculate the plant available water (mm/mm)
                 double[] pawVolumetric = MathUtilities.Subtract(sw, ll);
 
                 // Convert from mm/mm to mm and return
-                double[] paw = MathUtilities.Multiply(pawVolumetric, this.Soil.Thickness);
+                double[] paw = MathUtilities.Multiply(pawVolumetric, SoilPhysical.Thickness);
                 return MathUtilities.Sum(paw);
             }
 
@@ -204,7 +214,7 @@
                 }
 
                 // Convert from mm/mm to mm and sum over the profile.
-                pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                pawc = MathUtilities.Multiply(pawc, SoilPhysical.Thickness);
                 double totalPAWC = MathUtilities.Sum(pawc);
 
                 // Convert from total to a fraction.
@@ -229,7 +239,7 @@
                 throw new Exception($"Cannot find a soil crop parameterisation called {CropName}Soil");
 
             if (soilCrop != null)
-                return Soil.CalcPAWC(Soil.Thickness,
+                return Soil.CalcPAWC(SoilPhysical.Thickness,
                                      soilCrop.LL,
                                      Soil.DUL,
                                      soilCrop.XF);
@@ -379,7 +389,7 @@
         /// <returns>Total soil depth</returns>
         public double TotalSoilDepth()
         {
-            return MathUtilities.Sum(Soil.Thickness);
+            return MathUtilities.Sum(SoilPhysical.Thickness);
         }
     }
 }

@@ -34,7 +34,7 @@
         {
             var weirdo = soil.FindChild<WEIRDO>();
             var initial = soil.FindChild<Sample>();
-
+            var physical = soil.FindChild<IPhysical>();
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
             StringBuilder message = new StringBuilder();
@@ -56,7 +56,7 @@
                             message.AppendLine($"Values for LL, KL or XF are missing for crop {soilCrop.Name}");
                         else
                         {
-                            for (int layer = 0; layer < soil.Thickness.Length; layer++)
+                            for (int layer = 0; layer < physical.Thickness.Length; layer++)
                             {
                                 int layerNumber = layer + 1;
 
@@ -82,7 +82,7 @@
                 }
 
                 // Check other profile variables.
-                for (int layer = 0; layer < soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < physical.Thickness.Length; layer++)
                 {
                     double max_sw = MathUtilities.Round(1.0 - soil.BD[layer] / specific_bd, 3);
                     int layerNumber = layer + 1;
@@ -121,7 +121,7 @@
                 if (initial.OC.Length == 0)
                     message.AppendLine("Cannot find OC values in soil");
                 else
-                    for (int layer = 0; layer != soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
                         if (initial.OC[layer] == MathUtilities.MissingValue || double.IsNaN(initial.OC[layer]))
@@ -140,7 +140,7 @@
                 if (!MathUtilities.ValuesInArray(initial.SW))
                     message.AppendLine("No starting soil water values found.");
                 else
-                    for (int layer = 0; layer != soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 

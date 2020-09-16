@@ -14,10 +14,10 @@
     {
         /// <summary>Access the summary model.</summary>
         [Link] private ISummary summary = null;
-
-        /// <summary>Access the soil model.</summary>
-        [Link] private Soil soil = null;
-
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] private IPhysical soilPhysical = null;
+        
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
         [JsonIgnore]
         public double IrrigationApplied { get; private set; }
@@ -58,7 +58,7 @@
         {
             if (Irrigated != null && amount > 0.0)
             {
-                if (depth > soil.Thickness.Sum())
+                if (depth > soilPhysical.Thickness.Sum())
                     throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
                 Depth = depth;
  

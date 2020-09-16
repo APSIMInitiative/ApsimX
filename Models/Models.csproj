@@ -466,7 +466,6 @@
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
-    <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />

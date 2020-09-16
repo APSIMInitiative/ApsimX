@@ -148,7 +148,7 @@ namespace Models.Soils
         private void CheckParameters()
         {
             // Get the layering info and set the layer count
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             nLayers = dlayer.Length;
 
             // get the initial values 
@@ -160,7 +160,7 @@ namespace Models.Soils
             ph = initial.PH;
             NO3ppm = Soil.kgha2ppm(initial.NO3);
             NH4ppm = Soil.kgha2ppm(initial.NH4);
-            ureappm = new double[Soil.Thickness.Length];
+            ureappm = new double[soilPhysical.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)
             FOMDecomp_TOptimum = new double[] { 32.0, 32.0 };

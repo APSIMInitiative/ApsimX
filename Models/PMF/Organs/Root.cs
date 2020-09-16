@@ -304,10 +304,10 @@
                 if (PlantZone == null)    // Can be null in autodoc
                     return new double[0]; 
                 double[] value;
-                value = new double[PlantZone.Soil.Thickness.Length];
+                value = new double[PlantZone.Physical.Thickness.Length];
                 double SRL = specificRootLength.Value();
-                for (int i = 0; i < PlantZone.Soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.Soil.Thickness[i];
+                for (int i = 0; i < PlantZone.Physical.Thickness.Length; i++)
+                    value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.Physical.Thickness[i];
                 return value;
             }
         }
@@ -600,9 +600,9 @@
 
             foreach (ZoneState Z in Zones)
             {
-                Z.StructuralNDemand = new double[Z.Soil.Thickness.Length];
-                Z.StorageNDemand = new double[Z.Soil.Thickness.Length];
-                Z.MetabolicNDemand = new double[Z.Soil.Thickness.Length];
+                Z.StructuralNDemand = new double[Z.Physical.Thickness.Length];
+                Z.StorageNDemand = new double[Z.Physical.Thickness.Length];
+                Z.MetabolicNDemand = new double[Z.Physical.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
                 double[] RAw = Z.CalculateRootActivityValues();
@@ -641,9 +641,9 @@
                 foreach (ZoneState Z in Zones)
                 {
                     double[] RAw = Z.CalculateRootActivityValues();
-                    Z.PotentialDMAllocated = new double[Z.Soil.Thickness.Length];
+                    Z.PotentialDMAllocated = new double[Z.Physical.Thickness.Length];
 
-                    for (int layer = 0; layer < Z.Soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
                         Z.PotentialDMAllocated[layer] = dryMatter.Structural * RAw[layer] / TotalRAw;
                 }
                 needToRecalculateLiveDead = true;
@@ -690,13 +690,13 @@
             ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
             {
-                if (RWC == null || RWC.Length != myZone.Soil.Thickness.Length)
-                    RWC = new double[myZone.Soil.Thickness.Length];
+                if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
+                    RWC = new double[myZone.Physical.Thickness.Length];
 
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
 
-                double[] thickness = myZone.Soil.Thickness;
+                double[] thickness = myZone.Physical.Thickness;
                 double[] water = myZone.Soil.Water;
                 double[] ll15mm = myZone.Soil.LL15mm;
                 double[] dulmm = myZone.Soil.DULmm;
@@ -705,10 +705,10 @@
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.Soil.Thickness.Length)
-                        myZone.MassFlow = new double[myZone.Soil.Thickness.Length];
-                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Soil.Thickness.Length)
-                        myZone.Diffusion = new double[myZone.Soil.Thickness.Length];
+                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.Physical.Thickness.Length)
+                        myZone.MassFlow = new double[myZone.Physical.Thickness.Length];
+                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Physical.Thickness.Length)
+                        myZone.Diffusion = new double[myZone.Physical.Thickness.Length];
 
                     var currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
                     for (int layer = 0; layer <= currentLayer; layer++)
@@ -825,7 +825,7 @@
                 return null;
 
             if (myZone.IsWeirdoPresent)
-                return new double[myZone.Soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
+                return new double[myZone.Physical.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
                 var currentLayer = PlantZone.Soil.LayerIndexOfDepth(Depth);
@@ -844,7 +844,7 @@
                     LayerMidPointDepth = myZone.Physical.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
-                        double available = zone.Water[layer] - ll[layer] * myZone.Soil.Thickness[layer] * myZone.LLModifier[layer];
+                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             available * myZone.RootProportions[layer]);
@@ -857,7 +857,7 @@
                     double[] kl = soilCrop.KL;
                     double[] ll = soilCrop.LL;
 
-                    double[] supply = new double[myZone.Soil.Thickness.Length];
+                    double[] supply = new double[myZone.Physical.Thickness.Length];
                     LayerMidPointDepth = myZone.Physical.DepthMidPoints;
                     for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
                     {
@@ -974,7 +974,7 @@
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.Soil.Water;
-            double[] DZ = PlantZone.Soil.Thickness;
+            double[] DZ = PlantZone.Physical.Thickness;
 
             double supply = 0;
             for (int layer = 0; layer < LL.Length; layer++)
@@ -997,13 +997,13 @@
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.Soil.Water;
-            double[] DZ = PlantZone.Soil.Thickness;
-            double[] available = new double[PlantZone.Soil.Thickness.Length];
-            double[] supply = new double[PlantZone.Soil.Thickness.Length];
+            double[] DZ = PlantZone.Physical.Thickness;
+            double[] available = new double[PlantZone.Physical.Thickness.Length];
+            double[] supply = new double[PlantZone.Physical.Thickness.Length];
 
             var currentLayer = PlantZone.Soil.LayerIndexOfDepth(Depth);
-            var layertop = MathUtilities.Sum(PlantZone.Soil.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.Soil.Thickness, 0, currentLayer);
+            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
+            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
 
             for (int layer = 0; layer < LL.Length; layer++)

@@ -157,12 +157,14 @@ namespace Models.PMF.Arbitrator
             ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
             if (myZone != null)
             {
+                var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
-                myZone.StartWater = new double[myZone.Soil.Thickness.Length];
-                myZone.AvailableSW = new double[myZone.Soil.Thickness.Length];
-                myZone.PotentialAvailableSW = new double[myZone.Soil.Thickness.Length];
-                myZone.Supply = new double[myZone.Soil.Thickness.Length];
+                myZone.StartWater = new double[soilPhysical.Thickness.Length];
+                myZone.AvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.PotentialAvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.Supply = new double[soilPhysical.Thickness.Length];
 
                 var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
                 if (soilCrop == null)
@@ -170,7 +172,7 @@ namespace Models.PMF.Arbitrator
 
                 double[] kl = soilCrop.KL;
 
-                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.Soil.Thickness);
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, soilPhysical.Thickness);
 
                 if (root.Depth != myZone.Depth)
                     myZone.Depth += 0; // wtf??

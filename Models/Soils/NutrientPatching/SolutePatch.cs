@@ -22,7 +22,9 @@ namespace Models.Soils.NutrientPatching
     public class SolutePatch : Model, ISolute
     {
         private Soil soil;
-        Sample initial = null;
+        private Sample initial = null;
+        private IPhysical soilPhysical = null;
+
         private NutrientPatchManager patchManager;
 
         /// <summary>Solute amount (kg/ha)</summary>
@@ -58,6 +60,7 @@ namespace Models.Soils.NutrientPatching
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             initial = soil.FindChild<Sample>();
+            soilPhysical = soil.FindChild<IPhysical>();
             if (!Name.Contains("PlantAvailable"))
                 Reset();
         }
@@ -69,7 +72,7 @@ namespace Models.Soils.NutrientPatching
         {
             double[] initialkgha = initial.FindByPath(Name + "N")?.Value as double[];
             if (initialkgha == null)
-                SetKgHa(SoluteSetterType.Other, new double[soil.Thickness.Length]);  // Urea will fall to here.
+                SetKgHa(SoluteSetterType.Other, new double[soilPhysical.Thickness.Length]);  // Urea will fall to here.
             else
                 SetKgHa(SoluteSetterType.Other, ReflectionUtilities.Clone(initialkgha) as double[]);
         }

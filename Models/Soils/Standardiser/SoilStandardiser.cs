@@ -65,9 +65,11 @@
             var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
             var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
+
             if (initial == null)
             {
-                initial = new Sample() { Thickness = soil.Thickness, Parent = soil };
+                initial = new Sample() { Thickness = soilPhysical.Thickness, Parent = soil };
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
@@ -120,6 +122,7 @@
         /// <param name="soil">The soil.</param>
         private static void RemoveInitialWater(Soil soil)
         {
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
             var initialWater = soil.FindChild<InitialWater>();
             if (initialWater != null)
             {
@@ -127,7 +130,7 @@
                 if (sample == null)
                 {
                     sample = new Sample();
-                    sample.Thickness = soil.Thickness;
+                    sample.Thickness = soilPhysical.Thickness;
                     sample.Parent = soil;
                     soil.Children.Add(sample);
                 }

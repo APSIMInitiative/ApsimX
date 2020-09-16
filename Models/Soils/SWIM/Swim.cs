@@ -32,6 +32,10 @@ namespace Models.Soils
 
         [Link]
         private Soil soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         [Link]
         private Sample initial = null;
@@ -580,7 +584,7 @@ namespace Models.Soils
 
         ///<summary>Get water content (mm)</summary>
         [JsonIgnore]
-        public double[] SWmm { get { return MathUtilities.Multiply(th, soil.Thickness); } }
+        public double[] SWmm { get { return MathUtilities.Multiply(th, soilPhysical.Thickness); } }
 
         [Units("cm^3/cm^3")]
         //[Description("Soil water content of layer")]
@@ -601,7 +605,7 @@ namespace Models.Soils
             {
                 double[] value = new double[n+1];
                 for (int i = 0; i <= n; i++)
-                    value[i] = Math.Max(0.0, (th[i] - soil.LL15[i]) * soil.Thickness[i]);
+                    value[i] = Math.Max(0.0, (th[i] - soil.LL15[i]) * soilPhysical.Thickness[i]);
                 return value;
             }
         }
@@ -1226,8 +1230,8 @@ namespace Models.Soils
             {
                 summary.WriteMessage(this, String.Format("{0,6:F1} {1,6:F1}  {2,4:F3}  {3,5:F3}  {4,5:F3}  {5,5:F3}  {6,5:F3} {7,6:F2} {8,8:F2}",
                                            x[layer] * 10.0,
-                                           soil.Thickness[layer], soil.BD[layer], th[layer],
-                                           soil.LL15[layer], soil.DUL[layer], soil.SAT[layer], soil.KS[layer],
+                                           soilPhysical.Thickness[layer], soilPhysical.BD[layer], th[layer],
+                                           soilPhysical.LL15[layer], soilPhysical.DUL[layer], soilPhysical.SAT[layer], soilPhysical.KS[layer],
                                            _psi[layer]));
 
             }
@@ -1625,12 +1629,12 @@ namespace Models.Soils
             // ----------------- SET UP NODE SPECIFICATIONS -----------------------
 
             // safer to use number returned from read routine
-            int num_layers = soil.Thickness.Length;
+            int num_layers = soilPhysical.Thickness.Length;
             if (n != num_layers - 1)
                 ResizeProfileArrays(num_layers);
 
             for (int i = 0; i <= n; i++)
-                dx[i] = soil.Thickness[i] / 10.0;
+                dx[i] = soilPhysical.Thickness[i] / 10.0;
 
             x[0] = 0.0;
             x[1] = 2.0 * dx[0] + x[0];
@@ -2305,8 +2309,8 @@ namespace Models.Soils
                 SwimSoluteParameters soluteParam = this.FindByPath(solute_names[i],true)?.Value as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
-                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, double.NaN);
-                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soil.Thickness, double.NaN);
+                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
             }
@@ -2868,7 +2872,7 @@ namespace Models.Soils
 
             // check if hydro_effective_depth applies for eroded profile.
 
-            profile_depth = MathUtilities.Sum(soil.Thickness);
+            profile_depth = MathUtilities.Sum(soilPhysical.Thickness);
 
             hydrolEffectiveDepth = Math.Min(hydrol_effective_depth, profile_depth);
 
@@ -2877,7 +2881,7 @@ namespace Models.Soils
 
             for (layer = 0; layer <= hydrolEffectiveLayer; layer++)
             {
-                cum_depth += soil.Thickness[layer];
+                cum_depth += soilPhysical.Thickness[layer];
                 cum_depth = Math.Min(cum_depth, hydrolEffectiveDepth);
 
                 // assume water content to c%hydrol_effective_depth affects runoff
@@ -2899,7 +2903,7 @@ namespace Models.Soils
             double cumDepth = 0.0;
             for (int i = 0; i <= n; i++)
             {
-                cumDepth += soil.Thickness[i];
+                cumDepth += soilPhysical.Thickness[i];
                 if (cumDepth > depth)
                     return i;
             }
@@ -5706,13 +5710,13 @@ namespace Models.Soils
             // NOTE: The returned layer number is 0-based
             // If the depth is not reached, the last element is used
             double depth_cum = 0.0;
-            for (int i = 0; i < soil.Thickness.Length; i++)
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
             {
-                depth_cum = depth_cum + soil.Thickness[i];
+                depth_cum = depth_cum + soilPhysical.Thickness[i];
                 if (depth_cum >= depth)
                     return i;
             }
-            return soil.Thickness.Length - 1;
+            return soilPhysical.Thickness.Length - 1;
         }
 
         ///// <summary>
@@ -5836,7 +5840,7 @@ namespace Models.Soils
             if (MathUtilities.Sum(dlt_sw_dep) > 0)
             {
                 // convert to volumetric
-                double[] newSW = MathUtilities.Divide(dlt_sw_dep, soil.Thickness);
+                double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
             }
@@ -5844,7 +5848,7 @@ namespace Models.Soils
 
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [JsonIgnore]
-        public double[] Thickness { get { return soil.Thickness; } }
+        public double[] Thickness { get { return soilPhysical.Thickness; } }
 
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>

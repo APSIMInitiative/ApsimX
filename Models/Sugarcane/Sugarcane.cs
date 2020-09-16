@@ -470,6 +470,9 @@ namespace Models
         [Link]
         private Soil Soil = null;
 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>
         /// The summary
@@ -1398,7 +1401,7 @@ namespace Models
         /// The num_layers.
         /// </value>
         [JsonIgnore]
-        public int num_layers { get { return Soil.Thickness.Length; } }
+        public int num_layers { get { return soilPhysical.Thickness.Length; } }
 
 
         ////[ MinVal=0.0, MaxVal=2.65]
@@ -12285,10 +12288,10 @@ namespace Models
             //:                                    , g%ll15_dep, numvals
             //:                                    , c%sw_dep_lb, c%sw_dep_ub)
 
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             //num_layers = dlayer.Length;
 
-            bd = Soil.BD;           //Soil.BDMapped;
+            bd = soilPhysical.BD;           //Soil.BDMapped;
             dul_dep = Soil.DULmm;
             sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
             sat_dep = Soil.SATmm;

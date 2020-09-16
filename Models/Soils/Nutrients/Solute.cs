@@ -21,6 +21,10 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
         [Link]
         Sample initial = null;
 
@@ -58,7 +62,7 @@ namespace Models.Soils.Nutrients
         {
             double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
-                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
+                kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else
                 kgha = ReflectionUtilities.Clone(initialkgha) as double[];
         }

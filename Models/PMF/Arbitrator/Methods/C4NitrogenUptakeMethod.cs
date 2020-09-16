@@ -195,8 +195,10 @@ namespace Models.PMF.Arbitrator
 
         private void CalculateNitrogenSupply(ZoneState myZone, ZoneWaterAndN zone)
         {
-            myZone.MassFlow = new double[myZone.Soil.Thickness.Length];
-            myZone.Diffusion = new double[myZone.Soil.Thickness.Length];
+            var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+
+            myZone.MassFlow = new double[soilPhysical.Thickness.Length];
+            myZone.Diffusion = new double[soilPhysical.Thickness.Length];
 
             int currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
             for (int layer = 0; layer <= currentLayer; layer++)

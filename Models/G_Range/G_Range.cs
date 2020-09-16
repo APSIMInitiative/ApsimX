@@ -41,6 +41,9 @@ namespace Models
         [Link(IsOptional =true)]
         Soils.Soil Soil = null;
 
+        [Link(IsOptional = true)]
+        Soils.IPhysical soilPhysical = null;
+
         [Link]
         Soils.Sample initial = null;
 

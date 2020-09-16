@@ -24,6 +24,10 @@
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
 
+
+        /// <summary>The soil physical node</summary>
+         private IPhysical soilPhysical = null;
+
         /// <summary>Soil nutrient model where these roots are growing.</summary>
         private INutrient nutrient;
 
@@ -59,6 +63,10 @@
             if (soil == null)
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
 
+            soilPhysical = soil.FindInScope<IPhysical>();
+            if (soilPhysical == null)
+                throw new Exception($"Cannot find soil physical in soil {soil.Name}");
+
             soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
             if (soilCropData == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
@@ -75,7 +83,7 @@
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 
             // save the parameters for this organ
-            nLayers = soil.Thickness.Length;
+            nLayers = soilPhysical.Thickness.Length;
             minimumLiveDM = minLiveDM;
             dulMM = soil.DULmm;
             ll15MM = soil.LL15mm;
@@ -276,7 +284,7 @@
             double[] result = new double[nLayers];
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * soil.Thickness[layer]));
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * soilPhysical.Thickness[layer]));
                 result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
             }
 
@@ -293,7 +301,7 @@
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soil.Thickness[layer];
+                    result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
                 }
                 return result;
             }
@@ -417,7 +425,7 @@
             double swFac;  // the soil water factor
             double bdFac;  // the soil density factor
             double potAvailableN; // potential available N
-            var thickness = soil.Thickness;
+            var thickness = soilPhysical.Thickness;
             var bd = soil.BD;
             var water = myZone.Water;
             var nh4 = myZone.NH4N;
@@ -479,8 +487,8 @@
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
-                    depthTillTopThisLayer += soil.Thickness[z];
-                fractionInLayer = (Depth - depthTillTopThisLayer) / soil.Thickness[layer];
+                    depthTillTopThisLayer += soilPhysical.Thickness[z];
+                fractionInLayer = (Depth - depthTillTopThisLayer) / soilPhysical.Thickness[layer];
                 fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
 
@@ -498,7 +506,7 @@
                 if (Depth > currentDepth)
                 {
                     BottomLayer = layer;
-                    currentDepth += soil.Thickness[layer];
+                    currentDepth += soilPhysical.Thickness[layer];
                 }
                 else
                     layer = nLayers;
@@ -527,7 +535,7 @@
 
             for (int layer = 0; layer < nLayers; layer++)
             {
-                depthBottom += soil.Thickness[layer];
+                depthBottom += soilPhysical.Thickness[layer];
                 if (depthTop >= RootDepthMaximum)
                 {
                     // totally out of root zone
@@ -536,7 +544,7 @@
                 else if (depthBottom <= depthFirstStage)
                 {
                     // totally in the first stage
-                    result[layer] = soil.Thickness[layer] * soilCropData.XF[layer];
+                    result[layer] = soilPhysical.Thickness[layer] * soilCropData.XF[layer];
                 }
                 else
                 {
@@ -554,7 +562,7 @@
                     result[layer] *= soilCropData.XF[layer];
                 }
 
-                depthTop += soil.Thickness[layer];
+                depthTop += soilPhysical.Thickness[layer];
             }
 
             return result;
@@ -576,7 +584,7 @@
             for (int layer = 0; layer < BottomLayer; layer++)
             {
                 cumProportion += TargetDistribution[layer];
-                topLayersDepth += soil.Thickness[layer];
+                topLayersDepth += soilPhysical.Thickness[layer];
             }
             // Then consider layer at the bottom of the root zone
             double layerFrac = Math.Min(1.0, (RootDepthMaximum - topLayersDepth) / (Depth - topLayersDepth));
