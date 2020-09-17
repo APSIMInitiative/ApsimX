@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
@@ -471,6 +472,14 @@ namespace Models.CLEM.Resources
         [Description("Intake intercept in relation to SRW")]
         [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
+        /// <summary>
+        /// Potential intake modifier for maximum intake possible when overfeeding
+        /// </summary>
+        [Category("Advanced", "Diet")]
+        [Description("Potential intake modifer for max overfeeding intake")]
+        [Required, GreaterThanEqualValue(1)]
+        [System.ComponentModel.DefaultValue(1)]
+        public double OverfeedPotentialIntakeModifier { get; set; }
         /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>

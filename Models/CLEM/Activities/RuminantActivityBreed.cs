@@ -298,10 +298,10 @@ namespace Models.CLEM.Activities
             // for each location where parts of this herd are located
             foreach (var location in breeders)
             {
-                // determine all foetus and newborn mortality of all pregnant females.
+                // determine all fetus and newborn mortality of all pregnant females.
                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList())
                 {
-                    // calculate foetus and newborn mortality 
+                    // calculate fetus and newborn mortality 
                     // total mortality / (gestation months + 1) to get monthly mortality
                     // done here before births to account for post birth motality as well..
                     // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
@@ -326,7 +326,6 @@ namespace Models.CLEM.Activities
                 {
                     if (female.BirthDue)
                     {
-                        female.WeightLossDueToCalf = 0;
                         int numberOfNewborn = female.CarryingCount;
                         for (int i = 0; i < numberOfNewborn; i++)
                         {
@@ -357,8 +356,6 @@ namespace Models.CLEM.Activities
 
                             // add to sucklings
                             female.SucklingOffspringList.Add(newCalfRuminant);
-                            // remove calf weight from female
-                            female.WeightLossDueToCalf += newCalfRuminant.Weight;
                             // this now reports for each individual born not a birth event as individual wean events are reported
                             female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         }
