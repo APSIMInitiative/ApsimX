@@ -92,19 +92,24 @@ namespace Models.CLEM.Groupings
                 starter = "The ";
             }
 
+            bool overfeed = false;
             html += "<span class=\"setvalue\">";
             switch (ft)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     html += " of the available food supply";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     html += " per individual per day";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    overfeed = true;
                     html += " per day";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
+                    overfeed = true;
                     html += starter + "live weight";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -117,6 +122,7 @@ namespace Models.CLEM.Groupings
                     break;
             }
             html += "</span> ";
+
             switch (ft)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
@@ -134,10 +140,13 @@ namespace Models.CLEM.Groupings
             }
             html += "</div>";
 
-            html += "\n<div class=\"activityentry\">";
-            html += "Individual's intake will automatically be limited to 1.2 x potential intake, with excess food still utilised";
-            html += "</div>";
+            if (overfeed)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
+                html += "</div>";
 
+            }
             if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
             {
                 html += "<div class=\"warningbanner\">Note: This is a specified daily amount fed to the entire herd. If insufficient provided, each individual's potential intake will not be met</div>";
