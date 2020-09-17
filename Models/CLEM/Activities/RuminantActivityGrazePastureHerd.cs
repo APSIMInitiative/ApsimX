@@ -159,7 +159,8 @@ namespace Models.CLEM.Activities
             double pastureDMD = GrazeFoodStoreModel.DMD;
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-            // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
+            // this will still occur when grazing on improved, irrigated or crops. 
+            // CLEM does not allow grazing on two pastures in the month, whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
             if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
             {
                 return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
@@ -198,7 +199,7 @@ namespace Models.CLEM.Activities
 
                             // assumes animals will stop eating at potential intake if they have been feed before grazing.
                             // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
-                            indAmount = Math.Min(ind.PotentialIntake*1.2 - ind.Intake, indAmount);
+                            indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
                             amount += indAmount;
                         }
                     }

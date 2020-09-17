@@ -310,7 +310,7 @@ namespace Models.CLEM.Resources
         /// Required monthly intake of milk
         /// </summary>
         /// <units>kg/month</units>
-        public double MilkIntakePotential { get; set; }
+        public double MilkPotentialIntake { get; set; }
 
         /// <summary>
         /// Percentage nitrogen of current intake
@@ -328,6 +328,25 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg/month</units>
         public double PotentialIntake { get; set; }
+
+        /// <summary>
+        /// Return intake as a proportion of the potential inake
+        /// This includes milk for sucklings
+        /// </summary>
+        public double ProportionOfPotentialIntakeObtained
+        {
+            get
+            {
+                if (PotentialIntake + MilkPotentialIntake > 0)
+                {
+                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
 
         /// <summary>
         /// Current monthly metabolic intake after crude protein adjustment
@@ -412,7 +431,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy used for foetal development
         /// </summary>
-        public double EnergyFoetus { get; set; }
+        public double EnergyFetus { get; set; }
 
         /// <summary>
         /// Energy used for maintenance

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 105,
+  "Version": 117,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -32,6 +32,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "Single and Mixed Cropping",
           "Children": [
             {
@@ -1386,6 +1387,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "Rotation cropping",
           "Children": [
             {

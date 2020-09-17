@@ -217,6 +217,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+
+            html += "<div class=\"warningbanner\">This is a depreciated activity.<br />It is recommneded that you use a <span class=\"activitylink\">RuminantActivityMarkForSale</span> to perform this activity. With this activity you have more control over defining a dry-breeder which has a number of definitions.<br />For example you can specify the number of days since last birth as a measure of failed births, or look at number of successful pregnancies and the age of the breeder. More metrics can be added if required.</div>";
+
+            html += "\n<div class=\"activityentry\">";
             if (ProportionToRemove == 0)
             {
                 html += "No dry breeders will be sold";
@@ -228,6 +232,8 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"setvalue\">" + MinimumConceptionBeforeSell.ToString("0.###") + "</span> and at least ";
                 html += "<span class=\"setvalue\">" + MonthsSinceBirth.ToString() + "</span> months since last birth will be sold";
             }
+            html += "</div>";
+
             return html;
         }
     }
