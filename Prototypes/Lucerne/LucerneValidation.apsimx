@@ -2035,7 +2035,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 100000.0,
+                      "FixedValue": 0.025,
                       "Units": "g/m^2/d",
                       "Name": "FixationCoefficiency",
                       "Children": [],
@@ -4033,14 +4033,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            100.0,
-                            200.0,
                             300.0
                           ],
                           "Y": [
                             0.068,
-                            0.06,
-                            0.05,
                             0.04
                           ],
                           "Name": "XYPairs",
@@ -4071,17 +4067,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            100.0,
-                            150.0,
-                            200.0,
                             300.0
                           ],
                           "Y": [
                             0.06,
-                            0.058,
-                            0.055,
-                            0.05,
-                            0.041
+                            0.04
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -4148,14 +4138,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            100.0,
-                            200.0,
                             300.0
                           ],
                           "Y": [
                             0.055,
-                            0.05,
-                            0.035,
                             0.035
                           ],
                           "Name": "XYPairs",
@@ -4186,15 +4172,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            100.0,
-                            200.0,
                             300.0
                           ],
                           "Y": [
                             0.052,
-                            0.05,
-                            0.045,
-                            0.04
+                            0.035
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -4700,14 +4682,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        30.0,
-                        31.0
+                        25.0,
+                        40.0,
+                        100.0,
+                        200.0
                       ],
                       "Y": [
                         0.05,
-                        0.05,
-                        0.015
+                        0.038,
+                        0.025,
+                        0.017
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -4735,7 +4719,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.6,
+                      "FixedValue": 0.54,
                       "Units": null,
                       "Name": "Constant",
                       "Children": [],
@@ -6503,8 +6487,8 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    350.0,
-                                    400.0
+                                    300.0,
+                                    350.0
                                   ],
                                   "Y": [
                                     1.5,
@@ -6636,7 +6620,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.001,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Decreasing",
                                   "Children": [],
@@ -7005,7 +6989,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.01,
+                              "FixedValue": 0.0005,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -7026,7 +7010,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.01,
+                              "FixedValue": 0.0005,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -7946,7 +7930,9 @@
                     "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
                     "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
                     "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.NFactor.XYPairs.Y = 1,1.1",
-                    "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.025",
+                    "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023",
+                    "[TapRoot].DMDemands.Storage.Capacity.Maxium.MultiplyFunction.Vegetative.Constant.FixedValue=2.5",
+                    "[TapRoot].DMDemands.Storage.Capacity.Maxium.MultiplyFunction.Reproductive.Constant.FixedValue=3",
                     "[TapRoot].DMDemands.Storage.Capacity.Maxium.Constant.FixedValue=1",
                     "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.01",
                     "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 250, 300",
@@ -7955,7 +7941,7 @@
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1.5",
                     "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 250, 300",
                     "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
-                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.01"
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.005"
                   ],
                   "Name": "FD2",
                   "Children": [],
@@ -7973,15 +7959,17 @@
                     "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
                     "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.NFactor.XYPairs.Y = 1,1.05",
                     "[TapRoot].DMDemands.Storage.Capacity.Maxium.Constant.FixedValue=1",
-                    "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.025",
-                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.015",
-                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 400, 450",
+                    "[TapRoot].DMDemands.Storage.Capacity.Maxium.MultiplyFunction.Vegetative.Constant.FixedValue=2.5",
+                    "[TapRoot].DMDemands.Storage.Capacity.Maxium.MultiplyFunction.Reproductive.Constant.FixedValue=2.5",
+                    "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.01",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 500, 550",
                     "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
-                    "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 400, 450",
+                    "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 500, 550",
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1.5",
-                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 400, 450",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 500, 550",
                     "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
-                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.015"
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.005"
                   ],
                   "Name": "FD10",
                   "Children": [],
@@ -7997,7 +7985,9 @@
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 300, 350",
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1.5",
                     "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.05",
-                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.03"
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 300, 350",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.02"
                   ],
                   "Name": "FD5",
                   "Children": [],
@@ -8075,7 +8065,6 @@
           "VariableNames": [
             "([Lucerne].Leaf.Transpiration + [Soil].SoilWater.Es) as ET",
             "[Clock].Today",
-            "([Lucerne].AboveGround.N +[lucerne].TapRoot.Live.N) as TotalN",
             "[Lucerne].AboveGround.Wt",
             "[Lucerne].AboveGround.Wt *10 as ShootWt",
             "[Lucerne].Grain.Live.N",
@@ -8092,7 +8081,7 @@
             "[Lucerne].Leaf.LAI as LAI",
             "[Lucerne].Leaf.Area",
             "[Lucerne].Leaf.Area.LeafArea.FrostDeath",
-            "[Lucerne].Leaf.Live.N ",
+            "[Lucerne].Leaf.Live.N *10 as LeafNWt ",
             "[Lucerne].Leaf.Live.NConc*100 as LeafN",
             "[Lucerne].Leaf.Live.Wt *10 as LeafWt",
             "[Lucerne].Leaf.NodeNumber as NodeNumber",
@@ -8119,13 +8108,13 @@
             "[Lucerne].Root.WaterUptake",
             "[Lucerne].Shell.Live.N",
             "[Lucerne].Shell.Live.Wt",
-            "[Lucerne].Stem.Live.N ",
+            "[Lucerne].Stem.Live.N *10 as StemNWt ",
             "[Lucerne].Stem.CrudeProteinConc as StemCP",
             "[Lucerne].Stem.MEConc as StemME",
             "[Lucerne].Stem.Live.NConc*100 as StemN",
             "[Lucerne].Stem.Live.Wt",
             "[Lucerne].Stem.Live.Wt *10 as StemWt",
-            "[Lucerne].TapRoot.Live.N ",
+            "[Lucerne].TapRoot.Live.N *10 as RootNWt",
             "[Lucerne].TapRoot.Live.StorageN",
             "[Lucerne].TapRoot.Live.StorageNConc",
             "[Lucerne].TapRoot.Live.NConc*100 as RootN ",
@@ -18203,7 +18192,10 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "SL",
+                        "LS"
+                      ],
                       "LegendOutsideGraph": false,
                       "Name": "StemN",
                       "Children": [
@@ -28204,10 +28196,8 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "DisabledSeries": [
-                        "Iversen_121DefoliationSSFDFD2",
-                        "Iversen_121DefoliationLLFDFD2",
-                        "Iversen_121DefoliationHHFDFD2",
                         "Iversen_121DefoliationSSFDFD5",
+                        "Iversen_121DefoliationLLFDFD5",
                         "Iversen_121DefoliationHHFDFD5",
                         "Iversen_121DefoliationSSFDFD10",
                         "Iversen_121DefoliationLLFDFD10",
@@ -28554,12 +28544,12 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "DisabledSeries": [
-                        "Iversen_121DefoliationSSFDFD2",
-                        "Iversen_121DefoliationLLFDFD2",
-                        "Iversen_121DefoliationHHFDFD2",
                         "Iversen_121DefoliationSSFDFD5",
                         "Iversen_121DefoliationLLFDFD5",
-                        "Iversen_121DefoliationHHFDFD5"
+                        "Iversen_121DefoliationHHFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "LegendOutsideGraph": false,
                       "Name": "RootN",
