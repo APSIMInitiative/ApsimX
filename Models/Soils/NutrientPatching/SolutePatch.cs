@@ -41,7 +41,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
 
         /// <summary>
         /// Invoked when model is first created.

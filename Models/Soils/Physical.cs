@@ -138,7 +138,7 @@
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm/mm")]
-        public double[] PAWC { get { return SoilUtilities.CalcPAWC(Thickness, LL15, DUL, null); } }
+        public double[] PAWC { get { return APSoilUtilities.CalcPAWC(Thickness, LL15, DUL, null); } }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]

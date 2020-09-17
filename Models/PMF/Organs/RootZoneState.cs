@@ -6,6 +6,7 @@ using System.Linq;
 using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -264,7 +265,7 @@ namespace Models.PMF.Organs
         public void GrowRootDepth()
         {
             // Do Root Front Advance
-            int RootLayer = Soil.LayerIndexOfDepth(Depth);
+            int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
             var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
@@ -322,12 +323,12 @@ namespace Models.PMF.Organs
             double[] RAw = new double[Physical.Thickness.Length];
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-                if (layer <= Soil.LayerIndexOfDepth(Depth))
+                if (layer <= SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * Physical.Thickness[layer]
-                                   * Soil.ProportionThroughLayer(layer, Depth);
+                                   * SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)

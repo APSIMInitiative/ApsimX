@@ -93,7 +93,7 @@
 
                 double[] KLs = GetRowOfArray(defaultKLs, i);
 
-                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(water.Thickness);
+                double[] cumThickness = SoilUtilities.ToCumThickness(water.Thickness);
                 crop.KL = new double[water.Thickness.Length];
                 for (int l = 0; l < water.Thickness.Length; l++)
                 {

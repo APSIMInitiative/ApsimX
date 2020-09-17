@@ -44,7 +44,7 @@ namespace Models.Soils.Nutrients
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>

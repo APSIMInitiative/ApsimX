@@ -715,7 +715,7 @@
                     if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Physical.Thickness.Length)
                         myZone.Diffusion = new double[myZone.Physical.Thickness.Length];
 
-                    var currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
+                    var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         var swdep = water[layer]; //mm
@@ -833,7 +833,7 @@
                 return new double[myZone.Physical.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                var currentLayer = PlantZone.Soil.LayerIndexOfDepth(Depth);
+                var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
 
                 var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
                 if (soilCrop == null)
@@ -866,7 +866,7 @@
                     LayerMidPointDepth = myZone.Physical.DepthMidPoints;
                     for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
                     {
-                        if (layer <= myZone.Soil.LayerIndexOfDepth(myZone.Depth))
+                        if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                         {
                             double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
@@ -984,7 +984,7 @@
             double supply = 0;
             for (int layer = 0; layer < LL.Length; layer++)
             {
-                if (layer <= PlantZone.Soil.LayerIndexOfDepth(Depth))
+                if (layer <= SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth))
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
@@ -1006,7 +1006,7 @@
             double[] available = new double[PlantZone.Physical.Thickness.Length];
             double[] supply = new double[PlantZone.Physical.Thickness.Length];
 
-            var currentLayer = PlantZone.Soil.LayerIndexOfDepth(Depth);
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
             var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
             var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);

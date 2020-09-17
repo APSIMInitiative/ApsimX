@@ -200,7 +200,7 @@ namespace Models.PMF.Arbitrator
             myZone.MassFlow = new double[soilPhysical.Thickness.Length];
             myZone.Diffusion = new double[soilPhysical.Thickness.Length];
 
-            int currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
+            int currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
             for (int layer = 0; layer <= currentLayer; layer++)
             {
                 var swdep = myZone.StartWater[layer]; //mm

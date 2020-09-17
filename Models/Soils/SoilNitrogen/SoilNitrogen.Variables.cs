@@ -53,8 +53,8 @@ namespace Models.Soils
         public Soil Soil = null;
         
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
-        private IPhysical soilPhysical = null;
+        [Link]
+        public IPhysical soilPhysical = null;
 
         [Link]
         ISoilTemperature soilTemperature = null;

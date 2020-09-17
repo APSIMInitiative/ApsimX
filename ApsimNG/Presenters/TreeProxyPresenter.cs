@@ -9,6 +9,7 @@
     using Views;
     using Commands;
     using EventArguments;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The tree proxy presenter
@@ -127,7 +128,7 @@
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(physical.Thickness))
+                foreach (string s in SoilUtilities.ToDepthStrings(physical.Thickness))
                 {
                     rowNames.Add(s);
                 }

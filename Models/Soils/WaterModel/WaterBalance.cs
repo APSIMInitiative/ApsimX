@@ -211,11 +211,11 @@
         {
             get
             {
-                return APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -408,7 +408,7 @@
         {
             get
             {
-                return APSIM.Shared.APSoil.SoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness,
                                                                   soilPhysical.LL15,
                                                                   SW,
                                                                   null);
@@ -479,7 +479,7 @@
             {
                 if (irrigation.Amount > 0)
                 {
-                    int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                    int irrigationLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
                     Water[irrigationLayer] += irrigation.Amount;
                     if (irrigationLayer == 0)
                         Infiltration += irrigation.Amount;

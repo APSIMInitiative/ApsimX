@@ -589,7 +589,7 @@ namespace Models.Soils
         {
             get
             {
-                return APSIM.Shared.APSoil.SoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness,
                                                                   soilPhysical.LL15,
                                                                   SW,
                                                                   null);

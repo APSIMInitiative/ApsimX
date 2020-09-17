@@ -239,10 +239,10 @@
                 throw new Exception($"Cannot find a soil crop parameterisation called {CropName}Soil");
 
             if (soilCrop != null)
-                return Soil.CalcPAWC(SoilPhysical.Thickness,
-                                     soilCrop.LL,
-                                     SoilPhysical.DUL,
-                                     soilCrop.XF);
+                return SoilUtilities.CalcPAWC(SoilPhysical.Thickness,
+                                              soilCrop.LL,
+                                              SoilPhysical.DUL,
+                                              soilCrop.XF);
             else
                 return new double[0];
         }

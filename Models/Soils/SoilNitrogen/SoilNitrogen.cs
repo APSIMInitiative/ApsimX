@@ -158,8 +158,8 @@ namespace Models.Soils
             HumusCNr = initial.OCNR;
             InitialFOMCNr = organic.FOMCNRatio;
             ph = initial.PH;
-            NO3ppm = Soil.kgha2ppm(initial.NO3);
-            NH4ppm = Soil.kgha2ppm(initial.NH4);
+            NO3ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NO3);
+            NH4ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NH4);
             ureappm = new double[soilPhysical.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)

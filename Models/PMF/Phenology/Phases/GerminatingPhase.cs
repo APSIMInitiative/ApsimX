@@ -21,9 +21,6 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        private Soils.Soil soil = null;
-
-        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>Link to the soil water balance.</summary>
@@ -113,7 +110,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {
-            SowLayer = soil.LayerIndexOfDepth(plant.SowingData.Depth);
+            SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
         }
 
         /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>

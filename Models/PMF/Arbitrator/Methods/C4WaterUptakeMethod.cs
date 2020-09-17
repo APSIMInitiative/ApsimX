@@ -178,7 +178,7 @@ namespace Models.PMF.Arbitrator
                 if (root.Depth != myZone.Depth)
                     myZone.Depth += 0; // wtf??
 
-                var currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
+                var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = waterBalance.SWmm[layer];

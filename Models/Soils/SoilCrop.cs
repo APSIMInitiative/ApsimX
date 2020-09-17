@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -50,7 +51,7 @@
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                return Soil.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
+                return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
             }
         }
     }

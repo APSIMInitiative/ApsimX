@@ -23,9 +23,6 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     public class Soil : Model
     {
-        /// <summary>The child physical model.</summary>
-        private IPhysical physical;
-
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
         [Description("Record number")]
@@ -137,118 +134,12 @@
         /// <summary>Find our children.</summary>
         public void FindChildren()
         {
-            physical = this.FindChild<IPhysical>();
-
             SoilWater = this.FindInScope<ISoilWater>();
-            if (physical == null)
-                throw new Exception($"{Name}: Unable to find Physical");
         }
-
-        #region Water
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
         [Units("mm")]
         [JsonIgnore]
-        public double[] Water
-        {
-            get
-            {
-                return SoilWater.SWmm;
-            }
-        }
-
-        /// <summary>
-        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
-        /// </summary>
-        /// <param name="Thickness">The thickness.</param>
-        /// <param name="LL">The ll.</param>
-        /// <param name="DUL">The dul.</param>
-        /// <param name="XF">The xf.</param>
-        /// <returns></returns>
-        public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
-        {
-            double[] PAWC = new double[Thickness.Length];
-            if (LL == null || DUL == null)
-                return PAWC;
-            if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
-                throw new ApsimXException(null, "Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
-
-            for (int layer = 0; layer != Thickness.Length; layer++)
-                if (DUL[layer] == MathUtilities.MissingValue ||
-                    LL[layer] == MathUtilities.MissingValue)
-                    PAWC[layer] = 0;
-                else
-                    PAWC[layer] = Math.Max(DUL[layer] - LL[layer], 0.0);
-
-            bool ZeroXFFound = false;
-            for (int layer = 0; layer != Thickness.Length; layer++)
-                if (ZeroXFFound || XF != null && XF[layer] == 0)
-                {
-                    ZeroXFFound = true;
-                    PAWC[layer] = 0;
-                }
-            return PAWC;
-        }
-
-        #endregion
-
-        /// <summary>Calculates the layer index for a specified depth.</summary>
-        /// <param name="depth">The depth to search for.</param>
-        /// <returns>The layer index or throws on error.</returns>
-        public int LayerIndexOfDepth(double depth)
-        {
-            double CumDepth = 0;
-            double[] thickness = physical.Thickness; // use local for efficiency reasons
-            for (int i = 0; i < thickness.Length; i++)
-            {
-                CumDepth = CumDepth + thickness[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
-        }
-
-        /// <summary>Returns the proportion that 'depth' is through the layer.</summary>
-        /// <param name="layerIndex">The layer index</param>
-        /// <param name="depth">The depth</param>
-        public double ProportionThroughLayer(int layerIndex, double depth)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            for (int i = 0; i <= layerIndex; i++)
-                depth_to_layer_bottom += physical.Thickness[i];
-
-            double depth_to_layer_top = depth_to_layer_bottom - physical.Thickness[layerIndex];
-            double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
-            double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-
-            return depth_of_root_in_layer / physical.Thickness[layerIndex];
-        }
-
-        /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public double[] kgha2ppm(double[] values)
-        {
-            if (values == null)
-                return null;
-
-            double[] ppm = new double[values.Length];
-            for (int i = 0; i < values.Length; i++)
-                ppm[i] = values[i] * (100.0 / (physical.BD[i] * physical.Thickness[i]));
-            return ppm;
-        }
-
-        /// <summary>Calculate conversion factor from ppm to kg/ha</summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public double[] ppm2kgha(double[] values)
-        {
-            if (values == null)
-                return null;
-
-            double[] kgha = new double[values.Length];
-            for (int i = 0; i < values.Length; i++)
-                kgha[i] = values[i] * (physical.BD[i] * physical.Thickness[i] / 100);
-            return kgha;
-        }
+        public double[] Water { get { return SoilWater.SWmm; } }
     }
 }

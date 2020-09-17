@@ -32,7 +32,7 @@ namespace Models.Functions.RootShape
                 } 
                 else
                 {
-                    prop = zone.Soil.ProportionThroughLayer(layer, zone.Depth);
+                    prop = SoilUtilities.ProportionThroughLayer(physical.Thickness, layer, zone.Depth);
                 }
                 zone.RootProportions[layer] = prop;
             }
