@@ -5,6 +5,7 @@ using Models.Functions;
 using System.Linq;
 using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
+using Models.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -17,7 +18,10 @@ namespace Models.PMF.Organs
         
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
-        
+
+        /// <summary>The water balance in this zone</summary>
+        public ISoilWater WaterBalance { get; set; }
+
         /// <summary>The NO3 solute.</summary>
         public ISolute NO3 = null;
 
@@ -158,6 +162,7 @@ namespace Models.PMF.Organs
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
             Physical = soil.FindChild<IPhysical>();
+            WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
 
             Clear();

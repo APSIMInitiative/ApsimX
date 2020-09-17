@@ -723,7 +723,7 @@
                     "[NutrientPatchManager].MineralNEachPatch as MineralNEachPatch",
                     "[Fertiliser].NitrogenApplied as Fertiliser",
                     "[Irrigation].IrrigationApplied as IrrigationApplied",
-                    "sum([HE_140mm].PAWmm) as PAW",
+                    "sum([HE_140mm].SoilWater.PAWmm) as PAW",
                     "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundWt",
                     "[AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN as UptakeN",
                     "[AGPRyegrass].AboveGroundWt",

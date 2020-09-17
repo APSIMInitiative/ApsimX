@@ -158,6 +158,7 @@ namespace Models.PMF.Arbitrator
             if (myZone != null)
             {
                 var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+                var waterBalance = myZone.Soil.FindChild<ISoilWater>();
 
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
@@ -180,9 +181,9 @@ namespace Models.PMF.Arbitrator
                 var currentLayer = myZone.Soil.LayerIndexOfDepth(myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
-                    myZone.StartWater[layer] = myZone.Soil.Water[layer];
+                    myZone.StartWater[layer] = waterBalance.SWmm[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.Soil.Water[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.AvailableSW[layer] = Math.Max(waterBalance.SWmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
                     myZone.PotentialAvailableSW[layer] = Math.Max(soilPhysical.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
                     var proportion = myZone.RootProportions[layer];

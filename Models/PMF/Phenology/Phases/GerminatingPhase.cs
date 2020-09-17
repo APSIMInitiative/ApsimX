@@ -6,7 +6,7 @@ using System.IO;
 using Models.Soils;
 using Models.Functions;
 using APSIM.Shared.Utilities;
-
+using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -25,6 +25,10 @@ namespace Models.PMF.Phen
 
         [Link]
         private IPhysical soilPhysical = null;
+
+        /// <summary>Link to the soil water balance.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
 
         [Link]
         private Plant plant = null;
@@ -83,7 +87,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soilPhysical.LL15mm[SowLayer])
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer])
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }

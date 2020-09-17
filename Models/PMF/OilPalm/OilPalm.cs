@@ -154,6 +154,10 @@ namespace Models.PMF.OilPalm
         /// <summary>Access the soil physical properties.</summary>
         [Link] private IPhysical soilPhysical = null;
 
+        /// <summary>Link to the soil water balance.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
+
         /// <summary>The summary</summary>
         [Link]
         ISummary Summary = null;
@@ -1212,7 +1216,7 @@ namespace Models.PMF.OilPalm
 
 
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (Soil.Water[j] - soilPhysical.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * Math.Max(cover_green / 0.9, 0.01) * (waterBalance.SWmm[j] - soilPhysical.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             if (TotPotSWUptake == 0)
@@ -1257,7 +1261,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
                 double swaf = 0;
-                swaf = (Soil.Water[j] - soilPhysical.LL15mm[j]) / (soilPhysical.DULmm[j] - soilPhysical.LL15mm[j]);
+                swaf = (waterBalance.SWmm[j] - soilPhysical.LL15mm[j]) / (soilPhysical.DULmm[j] - soilPhysical.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = NO3.kgha[j] * (100.0 / (soilPhysical.BD[j] * soilPhysical.Thickness[j]));
                 PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * NO3.kgha[j] * swaf);
@@ -1660,7 +1664,7 @@ namespace Models.PMF.OilPalm
             UnderstoryPEP = (Soil.SoilWater as ISoilWater).Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < soilPhysical.Thickness.Length; j++)
-                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (Soil.Water[j] - soilPhysical.LL15mm[j]));
+                UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (waterBalance.SWmm[j] - soilPhysical.LL15mm[j]));
 
             double TotUnderstoryPotSWUptake = MathUtilities.Sum(UnderstoryPotSWUptake);
 

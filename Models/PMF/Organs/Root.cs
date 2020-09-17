@@ -702,7 +702,7 @@
                 double NH4Uptake = 0;
 
                 double[] thickness = myZone.Physical.Thickness;
-                double[] water = myZone.Soil.Water;
+                double[] water = myZone.WaterBalance.SWmm;
                 double[] ll15mm = myZone.Physical.LL15mm;
                 double[] dulmm = myZone.Physical.DULmm;
                 double[] bd = myZone.Physical.BD;
@@ -978,7 +978,7 @@
 
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.Soil.Water;
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
 
             double supply = 0;
@@ -1001,7 +1001,7 @@
         {
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.Soil.Water;
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
             double[] DZ = PlantZone.Physical.Thickness;
             double[] available = new double[PlantZone.Physical.Thickness.Length];
             double[] supply = new double[PlantZone.Physical.Thickness.Length];

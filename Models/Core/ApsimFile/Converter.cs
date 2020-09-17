@@ -3094,57 +3094,13 @@
             JsonUtilities.RenameVariables(root, changes);
 
             // Look in manager scripts and move some soil properties to the soil physical instance.
-            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD", "AirDry", "LL15", "LL15mm", 
+            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD", "AirDry", "LL15", "LL15mm",
                                                  "DUL", "DULmm", "SAT", "SATmm", "KS", "PAWC", "PAWCmm" };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
-                var declarations = manager.GetDeclarations();
-
-                string physicalName = null;
-                bool replacementMade = false;
-                foreach (var variableToRename in variablesToMove)
-                {
-                    var pattern = $@"(\w+)\.{variableToRename}(\W+)";
-                    manager.ReplaceRegex(pattern, match =>
-                    {
-                        // Check the type of the variable to see if it is soil.
-                        var soilInstanceName = match.Groups[1].Value;
-                        var matchDeclaration = declarations.Find(decl => decl.InstanceName == soilInstanceName);
-                        if (matchDeclaration == null || (matchDeclaration.TypeName != "Soil" && matchDeclaration.TypeName != "Soils.Soil"))
-                            return match.Groups[0].Value; // Don't change anything as the type isn't a soil.
-
-                        replacementMade = true;
-
-                        // Found a variable that needs renaming. 
-                        // See if there is a Physical link. If not add one.
-                        Declaration physicalDeclaration = null;
-                        if (physicalName == null)
-                        {
-                            physicalDeclaration = declarations.Find(decl => decl.TypeName == "Physical");
-                            if (physicalDeclaration == null)
-                            {
-                                physicalDeclaration = new Declaration()
-                                {
-                                    TypeName = "IPhysical",
-                                    InstanceName = "soilPhysical",
-                                    IsPrivate = true
-                                };
-                                declarations.Add(physicalDeclaration);
-                            }
-                            physicalName = physicalDeclaration.InstanceName;
-
-                            if (!physicalDeclaration.Attributes.Contains("[Link]"))
-                                physicalDeclaration.Attributes.Add("[Link]");
-                        }
-
-                        return $"{physicalName}.{variableToRename}{match.Groups[2].Value}";
-                    });
-                }
-                if (replacementMade)
-                {
-                    manager.SetDeclarations(declarations);
+                bool changesMade = manager.MoveVariables(variablesToMove, "Soil", "IPhysical", "soilPhysical");
+                if (changesMade)
                     manager.Save();
-                }
             }
 
             // Rename the CERESSoilTemperature model to SoilTemperature

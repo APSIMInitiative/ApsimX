@@ -45,13 +45,13 @@
         [Link]
         private ISummary mySummary = null;
 
-        /// <summary>Link to the Soil (provides soil information).</summary>
-        [Link]
-        private Soil mySoil = null;
-
         /// <summary>Link to the soil physical properties.</summary>
         [Link]
         private IPhysical soilPhysical = null;
+
+        /// <summary>Link to the soil water balance.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
 
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -4315,7 +4315,7 @@
             for (int layer = 0; layer <= roots[0].BottomLayer; layer++)
             {
                 fractionLayer = FractionLayerWithRoots(layer);
-                mySWater += mySoil.Water[layer] * fractionLayer;
+                mySWater += waterBalance.SWmm[layer] * fractionLayer;
                 myWSat += soilPhysical.SATmm[layer] * fractionLayer;
                 if (MinimumWaterFreePorosity <= -Epsilon)
                     myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
