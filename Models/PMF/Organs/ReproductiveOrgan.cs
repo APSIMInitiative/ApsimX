@@ -320,14 +320,6 @@ namespace Models.PMF.Organs
         {
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
-
-            //Do Maintenance respiration
-            MaintenanceRespiration = 0;
-            if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
-            {
-                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-            }
         }
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
@@ -400,19 +392,6 @@ namespace Models.PMF.Organs
                 else
                     return 0.0;
             }
-        }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
         }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>

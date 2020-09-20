@@ -20,6 +20,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
+    [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
@@ -31,6 +32,7 @@ namespace Models.CLEM
         /// </summary>
         [Description("X values of relationship")]
         [Required]
+        [System.ComponentModel.DefaultValue(new double[] { 0 })]
         public double[] XValues { get; set; }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace Models.CLEM
         /// </summary>
         [Description("Y values of relationship")]
         [Required]
+        [System.ComponentModel.DefaultValue(new double[] { 0 })]
         public double[] YValues { get; set; }
 
         /// <summary>
@@ -58,6 +61,14 @@ namespace Models.CLEM
         /// </summary>
         [Description("Name of the y variable")]
         public string NameOfYVariable { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Relationship()
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>
         /// Solve equation for y given x
