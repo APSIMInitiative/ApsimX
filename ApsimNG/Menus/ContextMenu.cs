@@ -293,6 +293,7 @@
                 IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 ICommand command = new AddModelCommand(currentNode, text);
                 explorerPresenter.CommandHistory.Add(command, true);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
