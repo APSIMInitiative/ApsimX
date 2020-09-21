@@ -3052,7 +3052,7 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     1.0,
-                                    2.0
+                                    367.0
                                   ],
                                   "Y": [
                                     0.98,
@@ -8126,12 +8126,6 @@
             "[Lucerne].TapRoot.StructuralFraction.FixedValue",
             "[Lucerne].TapRoot.Total.Wt*10 as RootTotal",
             "[Lucerne].TapRoot.Wt*10 as TapRoot",
-            "[Mower].Script.BudsDays as BudsDays",
-            "[Mower].Script.FloDays as FloDays",
-            "[Mower].Script.HarvestFlag",
-            "[Mower].Script.Rotation as Rotation",
-            "[Mower].Script.Year as GrowthSeason",
-            "([Mower].Script.Year + [Mower].Script.Rotation) as YearRotation",
             "[Soil].SoilWater.Eo",
             "[Soil].SoilWater.Es",
             "[Soil].SoilWater.SWmm as SWmm",
@@ -8805,7 +8799,12 @@
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
                         "[Lucerne].Leaf.LAIFunction",
-                        "[Lucerne].MainN"
+                        "[Lucerne].MainN",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -12471,7 +12470,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -15272,7 +15276,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -20344,7 +20353,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -22876,7 +22890,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -25853,7 +25872,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -30779,7 +30803,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -34032,7 +34061,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -37263,6 +37297,11 @@
                         "[Lucerne].Leaf.Live.Wt",
                         "[Lucerne].Root.Live.Wt",
                         "[Lucerne].Leaf.Live.N",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason",
                         "[Lucerne].Root.Live.N",
                         "[Lucerne].Leaf.Live.NConc",
                         "[Lucerne].Root.Live.NConc",
@@ -37293,7 +37332,12 @@
                         "[Lucerne].Pod.N",
                         "[Lucerne].AboveGround.Wt *10 as shootbiomass",
                         "[Lucerne].Shell.PodNumber",
-                        "[Lucerne].Leaf.LAIFunction"
+                        "[Lucerne].Leaf.LAIFunction",
+                        "[Mower].Script.BudsDays as BudsDays",
+                        "[Mower].Script.FloDays as FloDays",
+                        "[Mower].Script.HarvestFlag",
+                        "[Mower].Script.Rotation as Rotation",
+                        "[Mower].Script.Year as GrowthSeason"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -78680,7 +78724,7 @@
                             0.393,
                             0.389,
                             0.487,
-                            0.498,
+                            0.49,
                             0.49,
                             0.49,
                             0.456,
@@ -83929,7 +83973,7 @@
                             0.393,
                             0.389,
                             0.487,
-                            0.498,
+                            0.49,
                             0.49,
                             0.49,
                             0.456,
