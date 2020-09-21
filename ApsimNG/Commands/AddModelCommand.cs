@@ -33,8 +33,6 @@
                 throw new ArgumentNullException(nameof(parent), "Cannot add a child to a null parent");
             if (child == null)
                 throw new ArgumentNullException(nameof(child), "Cannot add a null child");
-            if (child.Parent != null)
-                throw new ArgumentException($"Cannot add {child.Name} as a child of {parent.Name}: {child.Name} already has a parent ({child.Parent.Name})");
 
             this.parent = parent;
             this.child = child;
