@@ -75,7 +75,7 @@ Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdir
 Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs
 
 [Tasks]
-Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
+Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
 Name: associate; Description: &Associate .apsimx with Apsim Next Generation; GroupDescription: Other tasks:
 
 [UninstallDelete]
