@@ -10,21 +10,21 @@ namespace UserInterface.EventArguments
         /// <summary>
         /// Name of the property which has been changed.
         /// </summary>
-        public string PropertyName { get; private set; }
+        public Guid ID { get; private set; }
 
         /// <summary>
         /// New value of the property.
         /// </summary>
-        public string NewValue { get; set; }
+        public object NewValue { get; set; }
         
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="name">Name of the property which has been changed.</param>
+        /// <param name="id">ID of the property which has been changed.</param>
         /// <param name="value">New value of the property.</param>
-        public PropertyChangedEventArgs(string name, string value)
+        public PropertyChangedEventArgs(Guid id, object value)
         {
-            PropertyName = name;
+            ID = id;
             NewValue = value;
         }
     }

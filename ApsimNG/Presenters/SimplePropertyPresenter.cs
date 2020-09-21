@@ -35,6 +35,12 @@ namespace UserInterface.Presenters
         public Func<PropertyInfo, bool> Filter { get; set; }
 
         /// <summary>
+        /// This associates an ID with each property being displayed in
+        /// the view, and the object to which that property belongs.
+        /// </summary>
+        private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -68,6 +74,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void RefreshView()
         {
+            propertyMap.Clear();
             IEnumerable<Property> properties = GetProperties(model).ToArray();
             view.DisplayProperties(properties);
         }
@@ -75,42 +82,80 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Get a list of properties from the model.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private IEnumerable<Property> GetProperties(IModel model)
+        /// <param name="obj">The object whose properties will be queried.</param>
+        private IEnumerable<Property> GetProperties(object obj)
         {
-            IEnumerable<PropertyInfo> allProperties = GetAllProperties(model)
+            IEnumerable<PropertyInfo> allProperties = GetAllProperties(obj)
+                    // Only show properties with a DescriptionAttribute
                     .Where(p => Attribute.IsDefined(p, typeof(DescriptionAttribute)))
-                    .Where(p => p.CanWrite && p.CanRead)
-                    .OrderBy(p => (p.GetCustomAttribute<DescriptionAttribute>().LineNumber));
+                    // Only show properties which have a getter and a setter.
+                    .Where(p => p.CanRead && p.CanWrite)
+                    // Order by line number of the description attribute.
+                    .OrderBy(p => p.GetCustomAttribute<DescriptionAttribute>().LineNumber);
 
-            // Filter out properties which don't fit the user's filter criterion.
+            // Filter out properties which don't fit the user's custom filter.
             if (Filter != null)
                 allProperties = allProperties.Where(Filter);
 
-            return allProperties.Select(p => new Property(model, p));
+            // Due to DisplayType.SubModel, each PropertyInfo can potentially
+            // yield multiple properties to be displayed in the view.
+            return allProperties.SelectMany(p => CreateProperties(obj, p));
         }
 
         /// <summary>
-        /// Gets all public instance members of a given type,
-        /// sorted by the line number of the member's declaration.
+        /// Gets all public instance members of a given type.
         /// </summary>
-        /// <param name="o">Object whose members will be retrieved.</param>
-        private IEnumerable<PropertyInfo> GetAllProperties(object o)
+        /// <param name="obj">Object whose members will be retrieved.</param>
+        private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly;
-            return o.GetType().GetProperties(flags);
+            return obj.GetType().GetProperties(flags);
+        }
+
+        /// <summary>
+        /// Create Property objects from a PropertyInfo.
+        /// </summary>
+        /// <remarks>
+        /// Each PropertyInfo (a property in the code) can yield multiple
+        /// properties shown in the gui, by using DisplayType.SubModel.
+        /// </remarks>
+        /// <param name="obj">Object reference.</param>
+        /// <param name="property">The property metadata.</param>
+        private IEnumerable<Property> CreateProperties(object obj, PropertyInfo property)
+        {
+            DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
+            if (display != null && display.Type == DisplayType.SubModel)
+            {
+                IEnumerable<SeparatorAttribute> separators = property.GetCustomAttributes<SeparatorAttribute>();
+
+                object subModel = property.GetValue(obj);
+                bool first = true;
+                foreach (Property subProperty in GetProperties(subModel))
+                {
+                    // If the property contains separators, we want to add those separators
+                    // to the first property returned by the sub-model.
+                    if (first)
+                    {
+                        first = false;
+                        if (separators != null && separators.Count() > 0)
+                            subProperty.Separators.InsertRange(0, separators.Select(s => s.ToString()));
+                    }
+                    yield return subProperty;
+                }
+            }
+            else
+            {
+                Property result = new Property(obj, property);
+                propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
+                yield return result;
+            }
         }
 
         /// <summary>
         /// Detach the presenter from the view. Perform misc cleanup.
         /// </summary>
-        /// <remarks>
-        /// Should we update the model at this point?
-        /// </remarks>
         public void Detach()
         {
-            //view.PropertyChanged -= OnViewChanged;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
     
@@ -120,6 +165,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model which was changed.</param>
         private void OnModelChanged(object changedModel)
         {
+            /************* fixme ***************/
             if (changedModel == model)
                 RefreshView();
         }
@@ -135,18 +181,35 @@ namespace UserInterface.Presenters
             // to the model, so we need to temporarily detach the ModelChanged handler.
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
 
+            // Figure out which property of which object is being changed.
+            PropertyInfo property = propertyMap[args.ID].Property;
+            object changedObject = propertyMap[args.ID].Model;
+
+            // In some cases, the new value passed back from the view may be
+            // already of the correct type. For example a boolean property
+            // is editable via a checkbutton, so the view will return a bool.
+            // However, most numbers are just rendered using an entry widget,
+            // so the value from the view will be a string (e.g. 1e-6).
+            object newValue = args.NewValue;
+            if (newValue is string && property.PropertyType != typeof(string))
+                newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue);
+
             // Update the model.
-            Type propertyType = model.GetType().GetProperty(args.PropertyName).PropertyType;
-            object newValue = ReflectionUtilities.StringToObject(propertyType, args.NewValue);
-            ICommand updateModel = new ChangeProperty(model, args.PropertyName, newValue);
+            ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
             presenter.CommandHistory.Add(updateModel);
 
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
             presenter.CommandHistory.ModelChanged += OnModelChanged;
-
-            // Note: we don't really need to refresh the view at this point -
-            // the assumption is that the view already contains the updated state.
         }
-}
+
+        /// <summary>
+        /// Stores a property and the object to which it belongs.
+        /// </summary>
+        private struct PropertyObjectPair
+        {
+            public object Model { get; set; }
+            public PropertyInfo Property { get; set; }
+        }
+    }
 }

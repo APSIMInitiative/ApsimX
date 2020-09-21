@@ -172,6 +172,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\CustomMenuToolButton.cs" />
     <Compile Include="Classes\PDFWriter.cs" />
+    <Compile Include="Classes\PropertyPresenterHelpers.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />

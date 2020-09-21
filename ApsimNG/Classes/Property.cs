@@ -1,5 +1,6 @@
 namespace UserInterface.Classes
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -13,9 +14,21 @@ namespace UserInterface.Classes
     public class Property
     {
         /// <summary>
+        /// A unique ID.
+        /// </summary>
+        public Guid ID { get; private set; }
+
+        /// <summary>
         /// Name of the property, as it appears in the source code.
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// The type of the property. The determines the sort of input
+        /// widget created by the view.
+        /// </summary>
+        /// <value></value>
+        public Type DataType { get; private set; }
 
         /// <summary>
         /// Name of the property, as it will be displayed to the user.
@@ -33,10 +46,7 @@ namespace UserInterface.Classes
         /// <summary>
         /// Value of the property.
         /// </summary>
-        /// <remarks>
-        /// This is a string, so conversions need to occur in the presenter layer.
-        /// </remarks>
-        public string Value { get; private set; }
+        public object Value { get; private set; }
 
         /// <summary>
         /// Determines how the property will be editable. E.g. via a drop-
@@ -51,6 +61,11 @@ namespace UserInterface.Classes
         public string[] DropDownOptions { get; private set; }
 
         /// <summary>
+        /// Separators to be shown above the property. May be null.
+        /// </summary>
+        public List<string> Separators { get; private set; }
+
+        /// <summary>
         /// Instantiates a Property object by reading metadata about
         /// the given property.
         /// </summary>
@@ -58,9 +73,12 @@ namespace UserInterface.Classes
         /// <param name="metadata">Property metadata.</param>
         public Property(object obj, PropertyInfo metadata)
         {
+            ID = Guid.NewGuid();
             Name = metadata.Name;
+
             DisplayName = metadata.GetCustomAttribute<DescriptionAttribute>().ToString();
             Tooltip = metadata.GetCustomAttribute<TooltipAttribute>()?.Tooltip;
+
             DisplayMethod = metadata.GetCustomAttribute<DisplayAttribute>()?.Type ?? DisplayType.None;
             if (DisplayMethod == DisplayType.DropDown)
             {
@@ -68,7 +86,18 @@ namespace UserInterface.Classes
                 MethodInfo method = obj.GetType().GetMethod(methodName);
                 DropDownOptions = ((IEnumerable<object>)method.Invoke(obj, null))?.Select(v => v?.ToString())?.ToArray();
             }
-            Value = ReflectionUtilities.ObjectToString(metadata.GetValue(obj), CultureInfo.InvariantCulture);
+
+            Value = metadata.GetValue(obj);
+            DataType = metadata.PropertyType;
+            Separators = metadata.GetCustomAttributes<SeparatorAttribute>()?.Select(s => s.ToString())?.ToList();
+
+            if (metadata.PropertyType.IsEnum)
+            {
+                DisplayMethod = DisplayType.DropDown;
+                DropDownOptions = Enum.GetValues(metadata.PropertyType).Cast<Enum>()
+                                      .Select(e => VariableProperty.GetEnumDescription(e))
+                                      .ToArray();
+            }
         }
     }
 }
