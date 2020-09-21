@@ -39,7 +39,7 @@ namespace Utility
         private Entry entryEmail = null;
 
         private Model dest = null; // The destination. Should either be a Weather (to be replaced) or a Simulation (to which the Weather will be added)
-        private string replaceNode;
+        private IModel replaceNode;
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
 
@@ -116,62 +116,77 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
-            if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
-                return;
-            if (String.IsNullOrWhiteSpace(entryFilePath.Text))
-            {
-                ShowMessage(MessageType.Warning, "You must provide a file name for saving the weather data", "No file path");
-                BtnBrowse_Clicked(this, null);
-                return;
-            }
-            string newWeatherPath = null;
-            WaitCursor = true;
             try
             {
-                if (radioSiloDataDrill.Active)
-                    newWeatherPath = GetDataDrill();
-                else if (radioSiloPatchPoint.Active)
-                    newWeatherPath = GetPatchPoint();
-                else if (radioNASA.Active)
-                    newWeatherPath = GetNasaChirps();
-            }
-            finally
-            {
-                WaitCursor = false;
-            }
-            if (string.IsNullOrWhiteSpace(newWeatherPath))
-            {
-                ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
-            }
-            else
-            {
-                if (dest is Weather)
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                    return;
+                if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
-                    // If there is an existing Weather model (and there usually will be), is it better to replace
-                    // the model, or modify the FullFileName of the original?
-                    IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
-                    if (currentPresenter is MetDataPresenter)
-                        (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
-                    else
-                        explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                    ShowMessage(MessageType.Warning, "You must provide a file name for saving the weather data", "No file path");
+                    BtnBrowse_Clicked(this, null);
+                    return;
                 }
-                else if (dest is Simulation)
+                string newWeatherPath = null;
+                WaitCursor = true;
+                try
                 {
-                    Weather newWeather = new Weather();
-                    newWeather.FullFileName = newWeatherPath;
-                    var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter);
-                    explorerPresenter.CommandHistory.Add(command, true);
+                    if (radioSiloDataDrill.Active)
+                        newWeatherPath = GetDataDrill();
+                    else if (radioSiloPatchPoint.Active)
+                        newWeatherPath = GetPatchPoint();
+                    else if (radioNASA.Active)
+                        newWeatherPath = GetNasaChirps();
                 }
-                dialog1.Destroy();
+                finally
+                {
+                    WaitCursor = false;
+                }
+                if (string.IsNullOrWhiteSpace(newWeatherPath))
+                {
+                    ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
+                }
+                else
+                {
+                    if (dest is Weather)
+                    {
+                        // If there is an existing Weather model (and there usually will be), is it better to replace
+                        // the model, or modify the FullFileName of the original?
+                        IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
+                        if (currentPresenter is MetDataPresenter)
+                            (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
+                        else
+                            explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                    }
+                    else if (dest is Simulation)
+                    {
+                        Weather newWeather = new Weather();
+                        newWeather.FullFileName = newWeatherPath;
+                        var command = new AddModelCommand(replaceNode, newWeather);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.Refresh();
+                    }
+                    dialog1.Destroy();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
             }
         }
 
         private void RadioAus_Clicked(object sender, EventArgs e)
         {
-            radioSiloDataDrill.Sensitive = radioAus.Active;
-            radioSiloPatchPoint.Sensitive = radioAus.Active;
-            if (!radioAus.Active)
-                radioNASA.Active = true;
+            try
+            {
+                radioSiloDataDrill.Sensitive = radioAus.Active;
+                radioSiloPatchPoint.Sensitive = radioAus.Active;
+                if (!radioAus.Active)
+                    radioNASA.Active = true;
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
+            }
         }
 
         /// <summary>
@@ -182,11 +197,12 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnGetPlacename_Clicked(object sender, EventArgs e)
         {
-            if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
-                return;
-            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
             try
             {
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                    return;
+                string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
                 stream.Position = 0;
                 JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
@@ -217,13 +233,14 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnGetLocation_Clicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(entryPlacename.Text))
-                return;
-            // For now, name matching is restricted to Australia, since at this point we don't
-            // yet have things set up for the global soil database
-            string url = googleGeocodingApi + "components=" + (radioAus.Active ? "country:AU|" : "") + "locality:" + entryPlacename.Text;
             try
             {
+                if (string.IsNullOrWhiteSpace(entryPlacename.Text))
+                    return;
+                // For now, name matching is restricted to Australia, since at this point we don't
+                // yet have things set up for the global soil database
+                string url = googleGeocodingApi + "components=" + (radioAus.Active ? "country:AU|" : "") + "locality:" + entryPlacename.Text;
+
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
                 stream.Position = 0;
                 JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
@@ -271,7 +288,14 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            dialog1.Destroy();
+            try
+            {
+                dialog1.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
+            }
         }
 
         /// <summary>
@@ -279,9 +303,9 @@ namespace Utility
         /// </summary>
         /// <param name="dest">The Weather object to be replaced, or Zone to which Weather will be added</param>
         /// <param name="view">The ExplorerView displaying the soil object in its tree</param>
-        /// <param name="nodePath">The path to the soil object within the view's tree</param>
+        /// <param name="nodePath">The soil object within the view's tree</param>
         /// <param name="explorerPresenter">The ExplorerPresenter that is managing all of this</param>
-        public void ShowFor(Model dest, ExplorerView view, string nodePath, ExplorerPresenter explorerPresenter)
+        public void ShowFor(Model dest, ExplorerView view, IModel nodePath, ExplorerPresenter explorerPresenter)
         {
             this.dest = dest;
             this.replaceNode = nodePath;

@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using UserInterface.Commands;
 using UserInterface.Views;
 using Utility;
 
@@ -228,9 +229,10 @@ namespace UserInterface.Presenters
             {
                 var values = dataView.GetRow(selectedIndex);
                 var soilName = (string)values[0];
-                var matchingSoil = allSoils.First(s => s.Soil.Name == soilName).Soil as IModel;
-                if (matchingSoil != null)
-                    Structure.Add(matchingSoil as IModel, model);
+                Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
+
+                ICommand addSoil = new AddModelCommand(model, matchingSoil);
+                explorerPresenter.CommandHistory.Add(addSoil);
             }
             explorerPresenter.Refresh();
         }
