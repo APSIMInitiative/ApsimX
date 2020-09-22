@@ -45,9 +45,13 @@
         [Link]
         private ISummary mySummary = null;
 
-        /// <summary>Link to the Soil (provides soil information).</summary>
+        /// <summary>Link to the soil physical properties.</summary>
         [Link]
-        private Soil mySoil = null;
+        private IPhysical soilPhysical = null;
+
+        /// <summary>Link to the soil water balance.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
 
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2128,18 +2132,6 @@
 
         ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the soil water content at lower limit for plant uptake ().</summary>
-        //[Description("Soil water content at lower limit for plant uptake")]
-        [Units("mm^3/mm^3")]
-        public double[] LL
-        {
-            get
-            {
-                SoilCrop soilInfo = (SoilCrop)mySoil.Crop(Name);
-                return soilInfo.LL;
-            }
-        }
-
         /// <summary>Gets or sets the amount of water demanded by the plant (mm).</summary>
         [JsonIgnore]
         [Units("mm")]
@@ -2606,7 +2598,7 @@
             DeadTissue = new TissuesHelper(new GenericTissue[] { leaf.DeadTissue, stem.DeadTissue, stolon.DeadTissue });
 
             // get the number of layers in the soil profile
-            nLayers = mySoil.Thickness.Length;
+            nLayers = soilPhysical.Thickness.Length;
 
             // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
             roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
@@ -4323,12 +4315,12 @@
             for (int layer = 0; layer <= roots[0].BottomLayer; layer++)
             {
                 fractionLayer = FractionLayerWithRoots(layer);
-                mySWater += mySoil.Water[layer] * fractionLayer;
-                myWSat += mySoil.SATmm[layer] * fractionLayer;
+                mySWater += waterBalance.SWmm[layer] * fractionLayer;
+                myWSat += soilPhysical.SATmm[layer] * fractionLayer;
                 if (MinimumWaterFreePorosity <= -Epsilon)
-                    myWMinP += mySoil.DULmm[layer] * fractionLayer;
+                    myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
                 else
-                    myWMinP = mySoil.SATmm[layer] * (1.0 - MinimumWaterFreePorosity) * fractionLayer;
+                    myWMinP = soilPhysical.SATmm[layer] * (1.0 - MinimumWaterFreePorosity) * fractionLayer;
             }
 
             if (mySWater > myWMinP)
@@ -4465,8 +4457,8 @@
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
-                    depthTillTopThisLayer += mySoil.Thickness[z];
-                fractionInLayer = (roots[0].Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                    depthTillTopThisLayer += soilPhysical.Thickness[z];
+                fractionInLayer = (roots[0].Depth - depthTillTopThisLayer) / soilPhysical.Thickness[layer];
                 fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
 
@@ -4483,7 +4475,7 @@
                 if (roots[0].Depth > currentDepth)
                 {
                     result = layer;
-                    currentDepth += mySoil.Thickness[layer];
+                    currentDepth += soilPhysical.Thickness[layer];
                 }
                 else
                     layer = nLayers;

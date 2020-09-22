@@ -428,11 +428,13 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
@@ -440,7 +442,7 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
@@ -500,11 +502,13 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
@@ -513,13 +517,13 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
-                        double[] BD = ThisSoil.BD;
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
+                        double[] BD = soilPhysical.BD;
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
+                            Uptake.NO3N[i] = PotentialNO3Uptake(soilPhysical.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
                             Uptake.NO3N[i] *= 10; // convert from g/m2 to kg/ha
                             PotNO3Supply += Uptake.NO3N[i] * ZI.Area;
                         }
@@ -586,11 +590,10 @@ namespace Models.Agroforestry
             {
                 foreach (ZoneWaterAndN ZI in info)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = SearchZ.FindInScope<Soils.Soil>();
-                        ThisSoil.SoilWater.RemoveWater(ZI.Water);
+                        var thisSoil = SearchZ.FindInScope<ISoilWater>();
+                        thisSoil.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
                         { }

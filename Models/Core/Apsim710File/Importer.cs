@@ -338,7 +338,7 @@
                 {
                     newNode = CopyNode(compNode, destParent, "Swim3");
                     this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
-                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
 
                     // may need to copy more details for SoilNitrogen
                 }
@@ -347,7 +347,7 @@
                     newNode = CopyNode(compNode, destParent, "SoilWater");
                     this.soilWaterExists = newNode != null;
                     this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
-                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
 
                     // may need to copy more details for SoilNitrogen
                 }

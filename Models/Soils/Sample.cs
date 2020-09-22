@@ -14,6 +14,12 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Sample : Model
     {
+        [Link]
+        Organic organic = null;
+        
+        [Link]
+        IPhysical physical = null;
+
         /// <summary>Constructor.</summary>
         public Sample() 
         { 
@@ -193,7 +199,7 @@
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, Layers.BDMapped(Soil, this.Thickness)), this.Thickness);
+                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, Layers.BDMapped(physical, this.Thickness)), this.Thickness);
                     }
                     else
                     {
@@ -216,7 +222,7 @@
                 {
                     if (this.SWUnits == SWUnitsEnum.Volumetric)
                     {
-                        return MathUtilities.Divide(this.SW, Layers.BDMapped(Soil, this.Thickness));
+                        return MathUtilities.Divide(this.SW, Layers.BDMapped(physical, this.Thickness));
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
@@ -224,7 +230,7 @@
                     }
                     else
                     {
-                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, Layers.BDMapped(Soil, this.Thickness)), this.Thickness);
+                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, Layers.BDMapped(physical, this.Thickness)), this.Thickness);
                     }
                 }
                 return null;
@@ -246,7 +252,7 @@
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(this.SW, Layers.BDMapped(Soil, this.Thickness));
+                        return MathUtilities.Multiply(this.SW, Layers.BDMapped(physical, this.Thickness));
                     }
                     else
                     {
@@ -334,7 +340,11 @@
 
         /// <summary>Organic nitrogen. Units: %</summary>
         [Units("%")]
-        public double[] ON { get { return MathUtilities.Divide(OC, Soil.SoilCN); } }
+        public double[] ON { get { return MathUtilities.Divide(OC, organic.SoilCNRatio); } }
+
+        /// <summary>Organic carbon:nitrogen ratio</summary>
+        [Units("%")]
+        public double[] OCNR { get { return MathUtilities.Divide(OC, ON); } }
 
         /// <summary>
         /// Gets the soil associated with this sample

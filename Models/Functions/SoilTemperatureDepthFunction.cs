@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.Functions
 {
@@ -16,11 +18,11 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureDepthFunction : Model, IFunction
     {
-
-        /// <summary>The soil</summary>
         [Link]
-        Soils.Soil Soil = null;
+        IPhysical soilPhysical = null;
 
+        [Link]
+        ISoilTemperature soilTemperature = null;
 
         /// <summary>The depth</summary>
         [Units("mm")]
@@ -33,9 +35,9 @@ namespace Models.Functions
         /// </exception>
         public double Value(int arrayIndex = -1)
         {
-            int Layer = LayerIndex(Depth, Soil.Thickness);
+            int Layer = LayerIndex(Depth, soilPhysical.Thickness);
 
-            return Soil.Temperature[Layer];
+            return soilTemperature.Value[Layer];
         }
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
         /// <param name="depth">Soil depth (mm)</param>

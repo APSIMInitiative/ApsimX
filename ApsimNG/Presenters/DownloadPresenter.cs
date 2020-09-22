@@ -184,6 +184,7 @@ namespace UserInterface.Presenters
 
                 foreach (var soilInfo in allSoils)
                 {
+                    var soilPhysical = soilInfo.Soil.FindChild<Physical>();
                     var row = soilData.NewRow();
                     row["Name"] = soilInfo.Soil.Name;
                     row["Data source"] = soilInfo.DataSource;
@@ -193,11 +194,11 @@ namespace UserInterface.Presenters
                                                                  soilInfo.Soil.Latitude,
                                                                  soilInfo.Soil.Longitude).ToString("F1");
 
-                    var pawc = soilInfo.Soil.PAWCmm;
+                    var pawc = soilPhysical.PAWCmm;
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
-                    var pawcConcentration = MathUtilities.Divide(pawc, soilInfo.Soil.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilInfo.Soil.Thickness, pawcmappingLayerStructure, 0);
+                    var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
+                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
