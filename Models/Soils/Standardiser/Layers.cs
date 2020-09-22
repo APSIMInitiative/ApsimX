@@ -5,6 +5,7 @@
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Interfaces;
 
     /// <summary>Methods to standardise a soil ready for running in APSIM.</summary>
     [Serializable]
@@ -20,6 +21,7 @@
             var layerStructure = soil.FindChild<LayerStructure>();
             var weirdo = soil.FindChild<WEIRDO>();
             var organic = soil.FindChild<Organic>();
+            var waterBalance = soil.FindChild<ISoilWater>();
 
             // Determine the target layer structure.
             var targetThickness = physicalNode.Thickness;
@@ -29,8 +31,8 @@
             foreach (Sample sample in soil.FindAllChildren<Sample>())
                 SetSampleThickness(sample, targetThickness, soil);
 
-            if (soil.SoilWater is WaterModel.WaterBalance)
-                SetSoilWaterThickness(soil.SoilWater as WaterModel.WaterBalance, targetThickness);
+            if (waterBalance is WaterModel.WaterBalance)
+                SetSoilWaterThickness(waterBalance as WaterModel.WaterBalance, targetThickness);
             if (weirdo != null)
                 weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);

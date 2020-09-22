@@ -567,54 +567,60 @@
         /// Change manager to reflect moving of variables from one object to another e.g. from Soil to IPhysical.
         /// </summary>
         /// <param name="variablesToMove">The names of variables to move.</param>
-        /// <param name="oldTypeName">The old type name (e.g. Soil) where the variables currently are.</param>
-        /// <param name="newTypeName">The new type name where variables are moving to (e.g. IPhysical).</param>
-        /// <param name="newInstanceName">The name of the instance to create if necessary.</param>
         /// <returns>True if changes were made.</returns>
-        public bool MoveVariables(string[] variablesToMove,
-                                  string oldTypeName,
-                                  string newTypeName, string newInstanceName)
+        public bool MoveVariables(ManagerReplacement[] variablesToMove)
         {
             var declarations = GetDeclarations();
 
-            string declarationName = null;
             bool replacementMade = false;
-            foreach (var variableToRename in variablesToMove)
+            foreach (var variableToMove in variablesToMove)
             {
-                var pattern = $@"(\w+)\.{variableToRename}(\W+)";
+                var tokens = variableToMove.OldName.Split('.');
+                if (tokens.Length != 2)
+                    throw new Exception($"Invalid old variale name found {variableToMove.OldName}");
+                var oldTypeName = tokens[0];
+                var oldInstanceName = tokens[1];
+
+                var pattern = $@"(\w+)\.{oldInstanceName}(\W+)";
                 ReplaceRegex(pattern, match =>
                 {
                     // Check the type of the variable to see if it is soil.
                     var soilInstanceName = match.Groups[1].Value;
                     var matchDeclaration = declarations.Find(decl => decl.InstanceName == soilInstanceName);
-                    if (matchDeclaration == null || (matchDeclaration.TypeName != oldTypeName && matchDeclaration.TypeName.EndsWith($".{oldTypeName}")))
+                    if (matchDeclaration == null || (matchDeclaration.TypeName != oldTypeName && !matchDeclaration.TypeName.EndsWith($".{oldTypeName}")))
                         return match.Groups[0].Value; // Don't change anything as the type isn't a match.
 
                     replacementMade = true;
 
-                    // Found a variable that needs renaming. 
-                    // See if there is a Physical link. If not add one.
-                    Declaration declaration = null;
-                    if (declarationName == null)
-                    {
-                        declaration = declarations.Find(decl => decl.TypeName == newTypeName);
-                        if (declaration == null)
-                        {
-                            declaration = new Declaration()
-                            {
-                                TypeName = newTypeName,
-                                InstanceName = newInstanceName,
-                                IsPrivate = true
-                            };
-                            declarations.Add(declaration);
-                        }
-                        declarationName = declaration.InstanceName;
+                    tokens = variableToMove.NewName.Split('.');
+                    string newInstanceName = null;
+                    string newVariableName = null;
+                    if (tokens.Length >= 1)
+                        newInstanceName = tokens[0];
+                    if (tokens.Length == 2)
+                        newVariableName = tokens[1];
 
-                        if (!declaration.Attributes.Contains("[Link]"))
-                            declaration.Attributes.Add("[Link]");
+                    // Found a variable that needs renaming. 
+                    // See if there is an instance varialbe of the correct type.If not add one.
+                    Declaration declaration = declarations.Find(decl => decl.TypeName == variableToMove.NewInstanceTypeName);
+                    if (declaration == null)
+                    {
+                        declaration = new Declaration()
+                        {
+                            TypeName = variableToMove.NewInstanceTypeName,
+                            InstanceName = newInstanceName,
+                            IsPrivate = true
+                        };
+                        declarations.Add(declaration);
                     }
 
-                    return $"{declarationName}.{variableToRename}{match.Groups[2].Value}";
+                    if (!declaration.Attributes.Contains("[Link]"))
+                        declaration.Attributes.Add("[Link]");
+
+                    if (newVariableName == null)
+                        return $"{declaration.InstanceName}{match.Groups[2].Value}";
+                    else
+                        return $"{declaration.InstanceName}.{newVariableName}{match.Groups[2].Value}";
                 });
             }
             if (replacementMade)
@@ -666,6 +672,34 @@
 
         /// <summary>The method arguments</summary>
         public List<string> Arguments { get; set; }
+    }
+
+    /// <summary>
+    /// Encapsulates a management replacement.
+    /// </summary>
+    public class ManagerReplacement
+    {
+        /// <summary>The old variable name.</summary>
+        public string OldName { get; set; }
+
+        /// <summary>The new variable name.</summary>
+        public string NewName { get; set; }
+
+        /// <summary>The type of the new instance variable..</summary>
+        public string NewInstanceTypeName { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="searchFor"></param>
+        /// <param name="replaceWith"></param>
+        /// <param name="typeName"></param>
+        public ManagerReplacement(string searchFor, string replaceWith, string typeName)
+        {
+            OldName = searchFor;
+            NewName = replaceWith;
+            NewInstanceTypeName = typeName;
+        }
     }
 }
 

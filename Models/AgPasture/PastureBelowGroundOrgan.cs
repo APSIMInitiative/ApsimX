@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF;
     using Models.Soils;
     using Models.Soils.Arbitrator;
@@ -26,7 +27,10 @@
 
 
         /// <summary>The soil physical node</summary>
-         private IPhysical soilPhysical = null;
+        private IPhysical soilPhysical = null;
+
+        /// <summary>The water balance model</summary>
+        private ISoilWater waterBalance = null;
 
         /// <summary>Soil nutrient model where these roots are growing.</summary>
         private INutrient nutrient;
@@ -66,6 +70,10 @@
             soilPhysical = soil.FindInScope<IPhysical>();
             if (soilPhysical == null)
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
+            
+            waterBalance = soil.FindInScope<ISoilWater>();
+            if (waterBalance == null)
+                throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
 
             soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
             if (soilCropData == null)
@@ -722,7 +730,7 @@
         public void PerformWaterUptake(double[] amount)
         {
             if (MathUtilities.IsGreaterThan(amount.Sum(), 0))
-                soil.SoilWater.RemoveWater(amount);
+                waterBalance.RemoveWater(amount);
         }
 
         /// <summary>

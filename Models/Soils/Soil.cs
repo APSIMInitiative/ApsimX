@@ -1,12 +1,7 @@
 ﻿namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Interfaces;
     using Models.Core;
-    using Newtonsoft.Json;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.
@@ -112,34 +107,5 @@
         [Summary]
         [Description("Comments")]
         public string Comments { get; set; }
-
-        /// <summary>Gets the soil water.</summary>
-        [JsonIgnore] public ISoilWater SoilWater { get; private set; }
-
-        /// <summary>Called when model has been created.</summary>
-        public override void OnCreated()
-        {
-            FindChildren();
-        }
-
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            FindChildren();
-        }
-
-        /// <summary>Find our children.</summary>
-        public void FindChildren()
-        {
-            SoilWater = this.FindInScope<ISoilWater>();
-        }
-
-        /// <summary>Gets or sets the soil water for each layer (mm)</summary>
-        [Units("mm")]
-        [JsonIgnore]
-        public double[] Water { get { return SoilWater.SWmm; } }
     }
 }

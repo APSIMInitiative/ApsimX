@@ -1212,7 +1212,7 @@ namespace Models.PMF.OilPalm
                 Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = (Soil.SoilWater as ISoilWater).Eo * cover_green*Math.Min(Fn, Fvpd);
+            PEP = waterBalance.Eo * cover_green*Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
@@ -1228,7 +1228,7 @@ namespace Models.PMF.OilPalm
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += SWUptake[j];
             }
-            Soil.SoilWater.RemoveWater(SWUptake);
+            waterBalance.RemoveWater(SWUptake);
 
             if (PEP > 0.0)
             {
@@ -1661,7 +1661,7 @@ namespace Models.PMF.OilPalm
         {
 
             UnderstoryCoverGreen = UnderstoryCoverMax * (1 - cover_green);
-            UnderstoryPEP = (Soil.SoilWater as ISoilWater).Eo * UnderstoryCoverGreen * (1 - cover_green);
+            UnderstoryPEP = waterBalance.Eo * UnderstoryCoverGreen * (1 - cover_green);
 
             for (int j = 0; j < soilPhysical.Thickness.Length; j++)
                 UnderstoryPotSWUptake[j] = Math.Max(0.0, RootProportion(j, UnderstoryRootDepth) * UnderstoryKLmax * UnderstoryCoverGreen * (waterBalance.SWmm[j] - soilPhysical.LL15mm[j]));
@@ -1674,7 +1674,7 @@ namespace Models.PMF.OilPalm
                 UnderstorySWUptake[j] = UnderstoryPotSWUptake[j] * Math.Min(1.0, UnderstoryPEP / TotUnderstoryPotSWUptake);
                 UnderstoryEP += UnderstorySWUptake[j];
             }
-            Soil.SoilWater.RemoveWater(UnderstorySWUptake);
+            waterBalance.RemoveWater(UnderstorySWUptake);
 
             if (UnderstoryPEP > 0.0)
                 UnderstoryFW = UnderstoryEP / UnderstoryPEP;

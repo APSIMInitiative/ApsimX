@@ -25,8 +25,9 @@ namespace Models.Soils
         [Link]
         Clock clock = null;
 
+        /// <summary>The water balance model</summary>
         [Link]
-        Soil soil = null;
+        ISoilWater waterBalance = null;
 
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
@@ -145,11 +146,11 @@ namespace Models.Soils
             _mint = weather.MinT;
             _maxt = weather.MaxT;
             _radn = weather.Radn;
-            _salb = soil.SoilWater.Salb;
+            _salb = waterBalance.Salb;
             _dlayer = soilPhysical.Thickness;
             _bd = soilPhysical.BD;
             _ll15_dep = soilPhysical.LL15mm;
-            _sw_dep = soil.SoilWater.SWmm;
+            _sw_dep = waterBalance.SWmm;
             _latitude = weather.Latitude;
             _tav = weather.Tav;
             _amp = weather.Amp;

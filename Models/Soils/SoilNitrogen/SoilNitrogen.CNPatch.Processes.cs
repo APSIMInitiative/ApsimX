@@ -775,7 +775,7 @@ namespace Models.Soils
                 //int index = 0; // denitrification calcs are not different whether there is pond or not. use 0 as default
 
                 // the water filled pore space (%)
-                double WFPS = g.Soil.SoilWater.SWmm[layer] / g.soilPhysical.SATmm[layer] * 100.0;
+                double WFPS = g.waterBalance.SWmm[layer] / g.soilPhysical.SATmm[layer] * 100.0;
 
                 // CO2 production today (kgC/ha)
                 double CO2_prod = co2_atm[layer];
@@ -1010,7 +1010,7 @@ namespace Models.Soils
                     // get the modified soil water variable
                     double[] yVals = { 0.0, 1.0, 2.0, 3.0 };
                     double[] xVals = { 0.0, g.soilPhysical.LL15[layer], g.soilPhysical.DUL[layer], g.soilPhysical.SAT[layer] };
-                    double myX = MathUtilities.LinearInterpReal(g.Soil.SoilWater.SW[layer], xVals, yVals, out didInterpolate);
+                    double myX = MathUtilities.LinearInterpReal(g.waterBalance.SW[layer], xVals, yVals, out didInterpolate);
 
                     // get the soil moist factor
                     return MathUtilities.LinearInterpReal(myX, Parameters.xVals, Parameters.yVals, out didInterpolate);
@@ -1038,7 +1038,7 @@ namespace Models.Soils
                     bool didInterpolate;
 
                     // get the WFPS value (%)
-                    double WFPS = g.Soil.SoilWater.SWmm[layer] / g.soilPhysical.SATmm[layer] * 100.0;
+                    double WFPS = g.waterBalance.SWmm[layer] / g.soilPhysical.SATmm[layer] * 100.0;
 
                     // get the WFPS factor
                     return MathUtilities.LinearInterpReal(WFPS, Parameters.xVals, Parameters.yVals, out didInterpolate);

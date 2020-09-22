@@ -51,7 +51,11 @@ namespace Models.Soils
         /// <summary>Link to the soil.</summary>
         [Link]
         public Soil Soil = null;
-        
+
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
         /// <summary>Access the soil physical properties.</summary>
         [Link]
         public IPhysical soilPhysical = null;

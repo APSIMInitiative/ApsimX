@@ -22,10 +22,10 @@
     [ValidParent(ParentType=typeof(Zone))]
     public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
     {
-        /// <summary>Link to the soil component</summary>
+        /// <summary>The water balance model</summary>
         [Link]
-        private Soil soil = null;
-        
+        ISoilWater waterBalance = null;
+
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical soilPhysical = null;
@@ -365,9 +365,9 @@
                 calculatedPotentialDecomposition = true;
                 double precip = weather.Rain + irrig;
                 if (precip > 4.0)
-                    cumeos = soil.SoilWater.Eos - precip;
+                    cumeos = waterBalance.Eos - precip;
                 else
-                    cumeos = this.cumeos + soil.SoilWater.Eos - precip;
+                    cumeos = this.cumeos + waterBalance.Eos - precip;
                 cumeos = Math.Max(cumeos, 0.0);
 
                 if (precip >= minRainToLeach)

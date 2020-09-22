@@ -11,7 +11,6 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
-            soil.FindChildren();
             Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);

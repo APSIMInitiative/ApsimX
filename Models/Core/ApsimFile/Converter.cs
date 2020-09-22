@@ -3089,18 +3089,38 @@
                 new Tuple<string, string>("[Soil].SAT", "[Soil].Physical.SAT"),     // will also convert SATmm
                 new Tuple<string, string>("[Soil].PAWC", "[Soil].Physical.PAWC"),   // will also convert PAWCmm
                 new Tuple<string, string>("[Soil].PAW", "[Soil].SoilWater.PAW"),    // will also convert PAWmm
+                new Tuple<string, string>("[Soil].Water", "[Soil].SoilWater.SWmm"),
                 new Tuple<string, string>("[Soil].KS", "[Soil].Physical.KS"),
             };
             JsonUtilities.RenameVariables(root, changes);
 
             // Look in manager scripts and move some soil properties to the soil physical instance.
-            var variablesToMove = new string[] { "ThicknessCumulative", "Thickness", "BD", "AirDry", "LL15", "LL15mm",
-                                                 "DUL", "DULmm", "SAT", "SATmm", "KS", "PAWC", "PAWCmm" };
+            var variablesToMove = new ManagerReplacement[]
+            {
+                new ManagerReplacement("Soil.ThicknessCumulative", "soilPhysical.ThicknessCumulative", "IPhysical"),
+                new ManagerReplacement("Soil.Thickness", "soilPhysical.Thickness", "IPhysical"),
+                new ManagerReplacement("Soil.BD", "soilPhysical.BD", "IPhysical"),
+                new ManagerReplacement("Soil.AirDry", "soilPhysical.AirDry", "IPhysical"),
+                new ManagerReplacement("Soil.LL15", "soilPhysical.LL15", "IPhysical"),
+                new ManagerReplacement("Soil.LL15mm", "soilPhysical.LL15mm", "IPhysical"),
+                new ManagerReplacement("Soil.DUL", "soilPhysical.DUL", "IPhysical"),
+                new ManagerReplacement("Soil.DULmm", "soilPhysical.DULmm", "IPhysical"),
+                new ManagerReplacement("Soil.SAT", "soilPhysical.SAT", "IPhysical"),
+                new ManagerReplacement("Soil.KS", "soilPhysical.KS", "IPhysical"),
+                new ManagerReplacement("Soil.PAWC", "soilPhysical.PAWC", "IPhysical"),
+                new ManagerReplacement("Soil.PAWCmm", "soilPhysical.PAWCmm", "IPhysical"),
+                new ManagerReplacement("Soil.SoilWater", "waterBalance", "ISoilWater"),
+                new ManagerReplacement("Soil.Water", "waterBalance.SWmm", "ISoilWater"),
+            };
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
-                bool changesMade = manager.MoveVariables(variablesToMove, "Soil", "IPhysical", "soilPhysical");
+                bool changesMade = manager.MoveVariables(variablesToMove);
+
                 if (changesMade)
+                {
+                    manager.AddUsingStatement("Models.Interfaces");
                     manager.Save();
+                }
             }
 
             // Rename the CERESSoilTemperature model to SoilTemperature

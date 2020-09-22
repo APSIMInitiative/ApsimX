@@ -470,6 +470,10 @@ namespace Models
         [Link]
         private Soil Soil = null;
 
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical soilPhysical = null;
@@ -12293,7 +12297,7 @@ namespace Models
 
             bd = soilPhysical.BD;           //Soil.BDMapped;
             dul_dep = soilPhysical.DULmm;
-            sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
+            sw_dep = waterBalance.SWmm;     //Soil.Water;
             sat_dep = soilPhysical.SATmm;
             ll15_dep = soilPhysical.LL15mm;
 
@@ -12519,7 +12523,7 @@ namespace Models
                 //SW DEMAND (Atomospheric Potential)
 
                 //sugar_water_demand(1);
-                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, (Soil.SoilWater as ISoilWater).Eo);
+                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, waterBalance.Eo);
  
 
 
@@ -14240,7 +14244,7 @@ namespace Models
                 NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
                 NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
 
-                Soil.SoilWater.RemoveWater(MathUtilities.Multiply_Value(i_dlt_sw_dep, -1));
+                waterBalance.RemoveWater(MathUtilities.Multiply_Value(i_dlt_sw_dep, -1));
                 }
             else if (uptake_source == "swim3")
                 {

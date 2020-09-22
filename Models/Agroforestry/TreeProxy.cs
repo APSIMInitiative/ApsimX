@@ -590,11 +590,10 @@ namespace Models.Agroforestry
             {
                 foreach (ZoneWaterAndN ZI in info)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = SearchZ.FindInScope<Soils.Soil>();
-                        ThisSoil.SoilWater.RemoveWater(ZI.Water);
+                        var thisSoil = SearchZ.FindInScope<ISoilWater>();
+                        thisSoil.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
                         { }

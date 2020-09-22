@@ -90,6 +90,10 @@ namespace Models.PMF
         [Link]
         Soils.Soil Soil = null;
 
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
         /// <summary>The soil</summary>
         [Link] 
         private IPhysical soilPhysical = null;
@@ -276,7 +280,7 @@ namespace Models.PMF
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            Soil.SoilWater.RemoveWater(SWUptake);
+            waterBalance.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today
