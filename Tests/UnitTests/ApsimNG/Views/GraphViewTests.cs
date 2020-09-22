@@ -105,6 +105,7 @@ namespace UnitTests.ApsimNG.Views
             sims.Write(sims.FileName);
             ExplorerPresenter explorer = UITestsMain.MasterPresenter.OpenApsimXFileInTab(sims.FileName, true);
             GtkUtilities.WaitForGtkEvents();
+            sims = explorer.ApsimXFile;
 
             // Create a graphs folder under the zone.
             IModel paddock = sims.FindInScope<Zone>();
