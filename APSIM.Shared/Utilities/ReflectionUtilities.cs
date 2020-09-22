@@ -460,7 +460,7 @@
                 for (int j = 0; j < arr.Length; j++)
                 {
                     if (j > 0)
-                        stringValue += ",";
+                        stringValue += ", ";
                     stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;
