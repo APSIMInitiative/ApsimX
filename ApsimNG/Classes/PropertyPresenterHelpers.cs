@@ -1,12 +1,17 @@
-using System.Collections.Generic;
-using System.Linq;
-using Models.Core;
-using Models.LifeCycle;
-using Models.PMF;
-
 namespace UserInterface.Classes
 {
-    public static class PropertyPresenterHelpers
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Models.Core;
+    using Models.LifeCycle;
+    using Models.PMF;
+
+    /// <summary>
+    /// Helper functions for the property presenter. Most involve
+    /// fetching valid values for the various DisplayType options.
+    /// </summary>
+    internal static class PropertyPresenterHelpers
     {
         /// <summary>Get a list of cultivars for crop.</summary>
         /// <param name="crop">The crop.</param>
@@ -25,7 +30,7 @@ namespace UserInterface.Classes
 
             // Check for cultivar folders under replacements.
             List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (IModel cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
+            foreach (CultivarFolder cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
             {
                 IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
                 if (replacementFolder != null)
@@ -53,7 +58,6 @@ namespace UserInterface.Classes
                         cultivarNames.Add(cultivar.Name);
                 }
             }
-
             return cultivarNames.ToArray();
         }
 
@@ -76,7 +80,7 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-
+    
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifecycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
