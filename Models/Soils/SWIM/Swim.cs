@@ -1010,8 +1010,9 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Constant potential bottom boundary</summary>
         [Units("cm")]
-        private double bbc_potential
+        public double bbc_potential
         {
             set
             {
@@ -1024,8 +1025,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Constant potential bottom boundary</summary>
         [Units("cm")]
-        private double bbc_seepage_potential
+        public double bbc_seepage_potential
         {
             set
             {
@@ -1038,8 +1040,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Bottom boundary condition</summary>
         [Units("cm")]
-        private double bbc_gradient
+        public double bbc_gradient
         {
             set
             {
