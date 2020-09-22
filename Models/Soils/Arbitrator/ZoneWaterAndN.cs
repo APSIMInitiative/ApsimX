@@ -79,7 +79,7 @@
         /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
-            WaterBalance = soilInZone.FindInScope<ISoilWater>("SoilWater");
+            WaterBalance = soilInZone.FindInScope<ISoilWater>();
             NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
             NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
             var PlantAvailableNO3Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNO3");
