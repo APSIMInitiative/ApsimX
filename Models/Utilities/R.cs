@@ -394,7 +394,7 @@ namespace Models.Utilities
             else
             {
                 // Ignore Microsoft R client. 
-                string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
+                string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).Last();
                 string installDirectory = null; 
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {
