@@ -414,7 +414,9 @@
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
+                //
+                // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
+                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
 
                 // An object array is not good enough. We need an array with correct element type.
                 Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
@@ -458,7 +460,7 @@
                 for (int j = 0; j < arr.Length; j++)
                 {
                     if (j > 0)
-                        stringValue += ",";
+                        stringValue += ", ";
                     stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;
