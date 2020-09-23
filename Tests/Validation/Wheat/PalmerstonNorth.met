@@ -1,6 +1,6 @@
 [weather.met.weather]
-latitude = -40.2  (DECIMAL DEGREES)
-longitude = 172  (DECIMAL DEGREES)
+latitude = -40.35  (DECIMAL DEGREES)
+longitude = 175.6  (DECIMAL DEGREES)
 tav =   13.9 (oC)     ! annual average ambient temperature
 amp =   25(oC)     ! annual amplitude in mean monthly temperature
 
