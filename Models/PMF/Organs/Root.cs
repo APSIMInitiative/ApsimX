@@ -237,6 +237,8 @@
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
 
+        private SoilCrop soilCrop;
+
         /// <summary>Constructor</summary>
         public Root()
         {
@@ -302,10 +304,10 @@
                 if (PlantZone == null)    // Can be null in autodoc
                     return new double[0]; 
                 double[] value;
-                value = new double[PlantZone.soil.Thickness.Length];
+                value = new double[PlantZone.Physical.Thickness.Length];
                 double SRL = specificRootLength.Value();
-                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                for (int i = 0; i < PlantZone.Physical.Thickness.Length; i++)
+                    value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.Physical.Thickness[i];
                 return value;
             }
         }
@@ -389,8 +391,10 @@
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        double[] paw = Z.soil.PAW;
-                        double[] pawc = Z.soil.PAWC;
+                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
+                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        double[] paw = waterBalance.PAW;
+                        double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
                             if (pawc[i] > 0)
@@ -418,8 +422,11 @@
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        double[] paw = Z.soil.PAW;
-                        double[] pawc = Z.soil.PAWC;
+                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
+                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+
+                        double[] paw = waterBalance.PAW;
+                        double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
                             MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
@@ -511,7 +518,7 @@
                 throw new Exception("Cannot find a zone called " + zoneName);
 
             zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
-            zone.soil.SoilWater.RemoveWater(Amount);
+            zone.WaterBalance.RemoveWater(Amount);
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
@@ -598,9 +605,9 @@
 
             foreach (ZoneState Z in Zones)
             {
-                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
-                Z.MetabolicNDemand = new double[Z.soil.Thickness.Length];
+                Z.StructuralNDemand = new double[Z.Physical.Thickness.Length];
+                Z.StorageNDemand = new double[Z.Physical.Thickness.Length];
+                Z.MetabolicNDemand = new double[Z.Physical.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
                 double[] RAw = Z.CalculateRootActivityValues();
@@ -639,9 +646,9 @@
                 foreach (ZoneState Z in Zones)
                 {
                     double[] RAw = Z.CalculateRootActivityValues();
-                    Z.PotentialDMAllocated = new double[Z.soil.Thickness.Length];
+                    Z.PotentialDMAllocated = new double[Z.Physical.Thickness.Length];
 
-                    for (int layer = 0; layer < Z.soil.Thickness.Length; layer++)
+                    for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
                         Z.PotentialDMAllocated[layer] = dryMatter.Structural * RAw[layer] / TotalRAw;
                 }
                 needToRecalculateLiveDead = true;
@@ -688,27 +695,27 @@
             ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
             {
-                if (RWC == null || RWC.Length != myZone.soil.Thickness.Length)
-                    RWC = new double[myZone.soil.Thickness.Length];
+                if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
+                    RWC = new double[myZone.Physical.Thickness.Length];
 
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
 
-                double[] thickness = myZone.soil.Thickness;
-                double[] water = myZone.soil.Water;
-                double[] ll15mm = myZone.soil.LL15mm;
-                double[] dulmm = myZone.soil.DULmm;
-                double[] bd = myZone.soil.BD;
+                double[] thickness = myZone.Physical.Thickness;
+                double[] water = myZone.WaterBalance.SWmm;
+                double[] ll15mm = myZone.Physical.LL15mm;
+                double[] dulmm = myZone.Physical.DULmm;
+                double[] bd = myZone.Physical.BD;
 
                 double accuDepth = 0;
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.soil.Thickness.Length)
-                        myZone.MassFlow = new double[myZone.soil.Thickness.Length];
-                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.soil.Thickness.Length)
-                        myZone.Diffusion = new double[myZone.soil.Thickness.Length];
+                    if (myZone.MassFlow == null || myZone.MassFlow.Length != myZone.Physical.Thickness.Length)
+                        myZone.MassFlow = new double[myZone.Physical.Thickness.Length];
+                    if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.Physical.Thickness.Length)
+                        myZone.Diffusion = new double[myZone.Physical.Thickness.Length];
 
-                    var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
+                    var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         var swdep = water[layer]; //mm
@@ -822,23 +829,27 @@
             if (myZone == null)
                 return null;
 
-            if (myZone.soil.Weirdo != null)
-                return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
+            if (myZone.IsWeirdoPresent)
+                return new double[myZone.Physical.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
-                var soilCrop = myZone.soil.Crop(parentPlant.Name);
+                var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+
+                var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
+
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
                     double[] kl = soilCrop.KL;
                     double[] ll = soilCrop.LL;
 
-                    double[] supply = new double[myZone.soil.Thickness.Length];
+                    double[] supply = new double[myZone.Physical.Thickness.Length];
 
-                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
+                    LayerMidPointDepth = myZone.Physical.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
-                        double available = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer] * myZone.LLModifier[layer];
+                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             available * myZone.RootProportions[layer]);
@@ -851,13 +862,13 @@
                     double[] kl = soilCrop.KL;
                     double[] ll = soilCrop.LL;
 
-                    double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    double[] supply = new double[myZone.Physical.Thickness.Length];
+                    LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+                    for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
                     {
-                        if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
+                        if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                         {
-                            double available = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer] * myZone.LLModifier[layer];
+                            double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             available * myZone.RootProportions[layer]);
@@ -909,8 +920,6 @@
                     Soil soil = zone.FindInScope<Soil>();
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
-                    if (soil.Crop(parentPlant.Name) == null)
-                        throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
                                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
@@ -966,17 +975,16 @@
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
 
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.soil.Water;
-            double[] DZ = PlantZone.soil.Thickness;
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
+            double[] DZ = PlantZone.Physical.Thickness;
 
             double supply = 0;
             for (int layer = 0; layer < LL.Length; layer++)
             {
-                if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
+                if (layer <= SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth))
                 {
                     double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
@@ -991,18 +999,16 @@
         /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
         public double PlantAvailableWaterSupply()
         {
-            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
-
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.soil.Water;
-            double[] DZ = PlantZone.soil.Thickness;
-            double[] available = new double[PlantZone.soil.Thickness.Length];
-            double[] supply = new double[PlantZone.soil.Thickness.Length];
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
+            double[] DZ = PlantZone.Physical.Thickness;
+            double[] available = new double[PlantZone.Physical.Thickness.Length];
+            double[] supply = new double[PlantZone.Physical.Thickness.Length];
 
-            var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
-            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
+            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
 
             for (int layer = 0; layer < LL.Length; layer++)
@@ -1079,11 +1085,13 @@
             Soil soil = this.FindInScope<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
-                throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
-
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
+
+            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (!PlantZone.IsWeirdoPresent && soilCrop == null)
+                throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
+
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
             DMDemandPriorityFactor = new BiomassPoolType();

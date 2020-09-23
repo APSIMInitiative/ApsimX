@@ -93,7 +93,7 @@
 
                 double[] KLs = GetRowOfArray(defaultKLs, i);
 
-                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(water.Thickness);
+                double[] cumThickness = SoilUtilities.ToCumThickness(water.Thickness);
                 crop.KL = new double[water.Thickness.Length];
                 for (int l = 0; l < water.Thickness.Length; l++)
                 {
@@ -223,10 +223,10 @@
             if (sample.OC != null)
                 sample.OC = MathUtilities.FixArrayLength(sample.OC, sample.Thickness.Length);
 
-            var water = soil.FindChild<Physical>();
-            if (water != null)
+            var physical = soil.FindChild<Physical>();
+            if (physical != null)
             {
-                double[] ll15 = Layers.LL15Mapped(soil, sample.Thickness);
+                double[] ll15 = Layers.LL15Mapped(physical, sample.Thickness);
                 for (int i = 0; i < sample.Thickness.Length; i++)
                 {
                     if (sample.SW != null && double.IsNaN(sample.SW[i]))
@@ -519,11 +519,12 @@
             if (A == null)
                 return null;
 
-            double[] LL = PredictedLL(soil, A, B);
-            LL = Layers.MapConcentration(LL, PredictedThickness, soil.Thickness, LL.Last());
-            KL = Layers.MapConcentration(KL, PredictedThickness, soil.Thickness, KL.Last());
-            double[] XF = Layers.MapConcentration(PredictedXF, PredictedThickness, soil.Thickness, PredictedXF.Last());
-            string[] Metadata = StringUtilities.CreateStringArray("Estimated", soil.Thickness.Length);
+            var physical = soil.FindChild<IPhysical>();
+            double[] LL = PredictedLL(physical, A, B);
+            LL = Layers.MapConcentration(LL, PredictedThickness, physical.Thickness, LL.Last());
+            KL = Layers.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());
+            double[] XF = Layers.MapConcentration(PredictedXF, PredictedThickness, physical.Thickness, PredictedXF.Last());
+            string[] Metadata = StringUtilities.CreateStringArray("Estimated", physical.Thickness.Length);
 
             return new SoilCrop()
             {
@@ -540,14 +541,14 @@
         /// <summary>
         /// Calculate and return a predicted LL from the specified A and B values.
         /// </summary>
-        /// <param name="soil">The soil.</param>
+        /// <param name="physical">The soil physical properties.</param>
         /// <param name="A">a.</param>
         /// <param name="B">The b.</param>
         /// <returns></returns>
-        private static double[] PredictedLL(Soil soil, double[] A, double B)
+        private static double[] PredictedLL(IPhysical physical, double[] A, double B)
         {
-            double[] LL15 = Layers.LL15Mapped(soil, PredictedThickness);
-            double[] DUL = Layers.DULMapped(soil, PredictedThickness);
+            double[] LL15 = Layers.LL15Mapped(physical, PredictedThickness);
+            double[] DUL = Layers.DULMapped(physical, PredictedThickness);
             double[] LL = new double[PredictedThickness.Length];
             for (int i = 0; i != PredictedThickness.Length; i++)
             {
@@ -590,12 +591,13 @@
         /// <param name="soil">The soil the crop belongs to.</param>
         private static void ModifyKLForSubSoilConstraints(SoilCrop crop, Soil soil)
         {
+            var soilPhysical = soil.FindChild<IPhysical>();
             var initialConditions = soil.Children.Find(child => child is Sample) as Sample;
             double[] cl = initialConditions.CL;
             if (MathUtilities.ValuesInArray(cl))
             {
-                crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     crop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
             }
             else
@@ -603,8 +605,8 @@
                 double[] esp = initialConditions.ESP;
                 if (MathUtilities.ValuesInArray(esp))
                 {
-                    crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
-                    for (int i = 0; i < soil.Thickness.Length; i++)
+                    crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());
+                    for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                         crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
                 else
@@ -612,8 +614,8 @@
                     double[] ec = initialConditions.EC;
                     if (MathUtilities.ValuesInArray(ec))
                     {
-                        crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
-                        for (int i = 0; i < soil.Thickness.Length; i++)
+                        crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());
+                        for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                             crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }
                 }

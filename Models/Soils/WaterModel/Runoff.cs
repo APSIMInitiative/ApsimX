@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Core;
     using Functions;
+    using Models.Soils;
     using System;
 
     /// <summary>
@@ -48,6 +49,10 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>The summary file model.</summary>
         [Link]
@@ -100,10 +105,10 @@
                 // Calculate CN proportional in dry range (dul to ll15)
                 double[] runoff_wf = RunoffWeightingFactor();
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
+                double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);
                 double cnpd = 0.0;
-                for (int i = 0; i < soil.Properties.Thickness.Length; i++)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
                     double DULFraction = MathUtilities.Divide((SW[i] - LL15[i]), (DUL[i] - LL15[i]), 0.0);
                     cnpd = cnpd + DULFraction * runoff_wf[i];
@@ -150,18 +155,18 @@
             double cumRunoffWeightingFactor = 0.0;
 
             // Get sumulative depth (mm)
-            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Thickness);
+            double[] cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
 
             // Ensure hydro effective depth doesn't go below bottom of soil.
-            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Thickness));
+            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soilPhysical.Thickness));
 
             // Scaling factor for wf function to sum to 1
             double scaleFactor = 1.0 / (1.0 - Math.Exp(-4.16));
 
             // layer number that the effective depth occurs
-            int hydrolEffectiveLayer =soil.Properties.LayerIndexOfDepth(hydrolEffectiveDepth);
+            int hydrolEffectiveLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, hydrolEffectiveDepth);
 
-            double[] runoffWeightingFactor = new double[soil.Properties.Thickness.Length];
+            double[] runoffWeightingFactor = new double[soilPhysical.Thickness.Length];
             for (int i = 0; i <= hydrolEffectiveLayer; i++)
             {
                 double cumDepth = cumThickness[i];

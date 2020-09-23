@@ -64,8 +64,8 @@ namespace UnitTests
                 "[Clock].StartDate = 2019-1-20",
                 ".Simulations.Sim1.Clock.EndDate = 3/20/2019",
                 ".Simulations.Sim2.Enabled = false",
-                ".Simulations.Sim1.Field.Soil.Thickness[1] = 500",
-                ".Simulations.Sim1.Field.Soil.Thickness[2] = 2500",
+                ".Simulations.Sim1.Field.Soil.Physical.Thickness[1] = 500",
+                ".Simulations.Sim1.Field.Soil.Physical.Thickness[2] = 2500",
                 ".Simulations.Sim2.Name = SimulationVariant35",
             };
             string configFileName = Path.GetTempFileName();
@@ -82,7 +82,7 @@ namespace UnitTests
             Clock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();
             Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
-            Soil soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
+            IPhysical physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
 
             // Check property values - they should be unchanged at this point.
             DateTime start = new DateTime(2003, 11, 15);
@@ -91,8 +91,8 @@ namespace UnitTests
 
             Assert.AreEqual(sim1.Name, "Sim1");
             Assert.AreEqual(sim2.Enabled, true);
-            Assert.AreEqual(soil.Thickness[0], 150);
-            Assert.AreEqual(soil.Thickness[1], 150);
+            Assert.AreEqual(physical.Thickness[0], 150);
+            Assert.AreEqual(physical.Thickness[1], 150);
 
             // Run Models.exe with /Edit command.
             sims.Write(apsimxFileName);
@@ -109,7 +109,7 @@ namespace UnitTests
             Assert.That(sims.Children.Count > 2);
             sim1 = sims.Children.OfType<Simulation>().First();
             sim2 = sims.Children.OfType<Simulation>().Last();
-            soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
+            physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
 
             start = new DateTime(2019, 1, 20);
             DateTime end = new DateTime(2019, 3, 20);
@@ -139,8 +139,8 @@ namespace UnitTests
             Assert.That(!sim2.Enabled);
 
             // First 2 soil thicknesses have been changed to 500 and 2500 respectively.
-            Assert.AreEqual(soil.Thickness[0], 500, 1e-8);
-            Assert.AreEqual(soil.Thickness[1], 2500, 1e-8);
+            Assert.AreEqual(physical.Thickness[0], 500, 1e-8);
+            Assert.AreEqual(physical.Thickness[1], 2500, 1e-8);
         }
 
         /// <summary>

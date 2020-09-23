@@ -357,6 +357,7 @@
     <Compile Include="Optimisation\IOptimizationMethod.cs" />
     <Compile Include="Optimisation\Likelihood.cs" />
     <Compile Include="Optimisation\Simplex.cs" />
+    <Compile Include="Soils\IPhysical.cs" />
     <Compile Include="Soils\NutrientPatching\INutrientPatchManager.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />
@@ -465,7 +466,6 @@
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
-    <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />

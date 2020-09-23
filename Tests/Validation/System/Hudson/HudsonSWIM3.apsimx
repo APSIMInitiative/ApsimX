@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 118,
+  "Version": 119,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -79,11 +79,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Soil].SoilWater.SW",
-                "[Soil].SoilWater.Runoff",
-                "[Soil].SoilWater.Drainage",
-                "[Soil].SoilWater.Es",
-                "[Soil].SoilWater.Eo",
+                "[Soil].Swim3.SW",
+                "[Soil].Swim3.Runoff",
+                "[Soil].Swim3.Drainage",
+                "[Soil].Swim3.Es",
+                "[Soil].Swim3.Eo",
                 "[Wheat].Leaf.LAI",
                 "[Wheat].AboveGround.Wt",
                 "[Wheat].Grain.Wt",
@@ -93,9 +93,9 @@
                 "sum([Soil].SoilNitrogen.Denitrification) as dnit",
                 "[Wheat].AboveGround.N",
                 "[Wheat].BelowGround.N",
-                "sum([Soil].SoilWater.SWmm[5:9]) as SW110",
-                "sum([Soil].SoilWater.SWmm[10:14]) as SW210",
-                "sum([Soil].SoilWater.SWmm[15:19]) as SW310",
+                "sum([Soil].Swim3.SWmm[5:9]) as SW110",
+                "sum([Soil].Swim3.SWmm[10:14]) as SW210",
+                "sum([Soil].Swim3.SWmm[15:19]) as SW310",
                 "sum([Soil].CL.kgha[1:9]) as Cl110",
                 "sum([Soil].CL.kgha[10:14]) as Cl210",
                 "sum([Soil].CL.kgha[15:19]) as Cl310"
@@ -836,7 +836,7 @@
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,

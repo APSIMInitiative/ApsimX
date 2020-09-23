@@ -4,6 +4,7 @@
     using Models;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
     using Models.Soils.Nutrients;
     using NUnit.Framework;
     using System;
@@ -14,10 +15,8 @@
     {
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
         [Serializable]
-        public class MockSoil : Model, ISoil
+        public class MockSoil : Model
         {
-            public double[] Thickness { get; set; }
-
             public double[] NO3 { get; set; }
         }
 
@@ -70,13 +69,13 @@
                     new MockSummary(),
                     new MockSoil()
                     {
-                        Thickness = new double[] { 100, 100, 100 },
                         NO3 = new double[] { 1, 2, 3 },
                         Children = new List<IModel>()
                         {
                             new MockSoilSolute("NO3"),
                             new MockSoilSolute("NH4"),
-                            new MockSoilSolute("Urea")
+                            new MockSoilSolute("Urea"),
+                            new Physical() { Thickness = new double[] { 100, 100, 100 }}
                         }
                     },
                     new Fertiliser() { Name = "Fertilise" },
