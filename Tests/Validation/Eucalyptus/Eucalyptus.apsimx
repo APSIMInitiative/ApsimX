@@ -3520,7 +3520,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.4348*([Eucalyptus].IndividualTreeStemWt^0.3116)",
+                      "Expression": "0.443223*([Eucalyptus].IndividualTreeStemWt^0.310907)",
                       "Name": "DBHEquation",
                       "Children": [
                         {
@@ -3631,7 +3631,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.4691*([Eucalyptus].Stem.DBH^1.4178)",
+                      "Expression": "-13.3371+1.36098*[Eucalyptus].Stem.DBH^0.929074+0.555446*([Eucalyptus].Population*10000)^0.451069",
                       "Name": "HeightFunction",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3825,7 +3825,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.Wt*0.98",
+                  "Expression": "[Eucalyptus].Stem.Wt*0.85",
                   "Name": "WoodWt",
                   "Children": [],
                   "IncludeInDocumentation": true,
