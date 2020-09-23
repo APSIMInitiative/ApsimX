@@ -2,9 +2,11 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
+    using Models.Factorial;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.Soils;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -3146,6 +3148,22 @@
                  &&  (sample["ESP"]  == null || !sample["ESP"].HasValues)
                  &&  (sample["PH"]   == null || !sample["PH"].HasValues) )
                 {
+                    // The sample is empty. If it is not being overridden by a factor
+                    // or replacements, get rid of it.
+                    JObject expt = JsonUtilities.Ancestor(sample, typeof(Experiment));
+                    if (expt != null)
+                    {
+                        // The sample is in an experiment. If it's being overriden by a factor,
+                        // ignore it.
+                        JObject factors = JsonUtilities.ChildWithName(expt, "Factors");
+                        if (factors != null && JsonUtilities.DescendantOfType(factors, typeof(Sample)) != null)
+                            continue;
+                    }
+
+                    JObject replacements = JsonUtilities.DescendantOfType(root, typeof(Replacements));
+                    if (replacements != null && JsonUtilities.DescendantOfType(replacements, typeof(Sample)) != null)
+                        continue;
+
                     JObject parent = JsonUtilities.Parent(sample) as JObject;
                     string name = sample["Name"]?.ToString();
                     if (parent != null && !string.IsNullOrEmpty(name))
