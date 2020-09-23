@@ -21,7 +21,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 119; } }
+        public static int LatestVersion { get { return 120; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3126,6 +3126,32 @@
             // Rename the CERESSoilTemperature model to SoilTemperature
             foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
                 JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+        }
+
+        /// <summary>
+        /// Remove empty samples from soils.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion120(JObject root, string fileName)
+        {
+            foreach (JObject sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                if ( (sample["NO3N"] == null || !sample["NO3N"].HasValues)
+                 &&  (sample["NH4N"] == null || !sample["NH4N"].HasValues)
+                 &&  (sample["SW"]   == null || !sample["SW"].HasValues)
+                 &&  (sample["OC"]   == null || !sample["OC"].HasValues)
+                 &&  (sample["EC"]   == null || !sample["EC"].HasValues)
+                 &&  (sample["CL"]   == null || !sample["CL"].HasValues)
+                 &&  (sample["ESP"]  == null || !sample["ESP"].HasValues)
+                 &&  (sample["PH"]   == null || !sample["PH"].HasValues) )
+                {
+                    JObject parent = JsonUtilities.Parent(sample) as JObject;
+                    string name = sample["Name"]?.ToString();
+                    if (parent != null && !string.IsNullOrEmpty(name))
+                        JsonUtilities.RemoveChild(parent, name);
+                }
+            }
         }
 
         /// <summary>
