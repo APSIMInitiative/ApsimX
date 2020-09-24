@@ -698,6 +698,12 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
 
+                    if (presenterName != null && presenterName.ToString().Contains("PropertyPresenter"))
+                    {
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
+                        viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
+                    }
+
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
                     if (!model.GetType().Namespace.Contains("CLEM"))
                     {

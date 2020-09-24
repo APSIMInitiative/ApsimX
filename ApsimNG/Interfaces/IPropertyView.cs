@@ -14,7 +14,7 @@ namespace UserInterface.Interfaces
         /// Display properties to be editable by the user.
         /// </summary>
         /// <param name="properties">Properties to be displayed/edited.</param>
-        void DisplayProperties(IEnumerable<Property> properties);
+        void DisplayProperties(PropertyGroup properties);
 
         /// <summary>
         /// Called when a property is changed by the user.

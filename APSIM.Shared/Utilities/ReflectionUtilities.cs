@@ -422,6 +422,12 @@
                 return result;
             }
 
+            if (dataType == typeof(System.Drawing.Color))
+            {
+                var result = System.Drawing.Color.FromName(newValue);
+                return result;
+            }
+
             // Do we really want enums to be case-insensitive?
             if (dataType.IsEnum)
                 return Enum.Parse(dataType, newValue, true);

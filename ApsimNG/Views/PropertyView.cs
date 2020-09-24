@@ -17,12 +17,22 @@ namespace UserInterface.Views
     /// in a GtkTable, with each row containing a label and an
     /// input component (e.g. an entry, combobox, checkbox, etc).
     /// </summary>
+    /// <remarks>
+    /// The <see cref="PropertyChanged" /> event is triggered differently
+    /// for different input widgets:
+    /// 
+    /// - When a check button is toggled
+    /// - When a dropdown selected item is changed
+    /// - When a text editor (GtkEntry or GtkTextView) loses focus,
+    ///   and its contents have been changed
+    /// - After choosing file(s) in a file chooser dialog
+    /// </remarks>
     public class PropertyView : ViewBase, IPropertyView
     {
         /// <summary>
         /// The main widget which holds the property table.
         /// </summary>
-        private Box box;
+        private Frame box;
 
         /// <summary>
         /// Table which is used to layout property labels/inputs.
@@ -53,9 +63,8 @@ namespace UserInterface.Views
         public PropertyView(ViewBase owner) : base(owner)
         {
             propertyTable = new Table(0, 0, true);
-
-            box = new VBox();
-            box.PackStart(propertyTable, true, true, 0);
+            box = new Frame("Properties");
+            box.Add(propertyTable);
             mainWidget = box;
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
@@ -64,36 +73,90 @@ namespace UserInterface.Views
         /// Display properties and their values to the user.
         /// </summary>
         /// <param name="properties">Properties to be displayed/edited.</param>
-        public void DisplayProperties(IEnumerable<Property> properties)
+        public void DisplayProperties(PropertyGroup properties)
         {
+            uint row = 0;
+            uint col = 0;
+            bool widgetIsFocused = false;
+            int entryPos = -1;
+            int entrySelectionStart = 0;
+            int entrySelectionEnd = 0;
+            if (propertyTable.FocusChild != null)
+            {
+                object topAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "top-attach").Val;
+                object leftAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "left-attach").Val;
+                if (topAttach.GetType() == typeof(uint) && leftAttach.GetType() == typeof(uint))
+                {
+                    row = (uint)topAttach;
+                    col = (uint)leftAttach;
+                    widgetIsFocused = true;
+                    if (propertyTable.FocusChild is Entry entry)
+                    {
+                        entryPos = entry.Position;
+                        entry.GetSelectionBounds(out entrySelectionStart, out entrySelectionEnd);
+                    }
+                }
+            }
             box.Remove(propertyTable);
+            box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
             propertyTable = new Table((uint)properties.Count(), 2, false);
             propertyTable.Destroyed += OnWidgetDestroyed;
-            box.PackStart(propertyTable, true, true, 0);
+            box.Add(propertyTable);
 
+            uint nrow = 0;
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow);
+            mainWidget.ShowAll();
+
+            // If a widget was previously focused, then try to give it focus again.
+            if (widgetIsFocused)
+            {
+                Widget widget = propertyTable.GetChild(row, col);
+                if (widget is Entry entry)
+                {
+                    entry.GrabFocus();
+                    if (entrySelectionStart >= 0 && entrySelectionStart < entrySelectionEnd && entrySelectionEnd <= entry.Text.Length)
+                        entry.SelectRegion(entrySelectionStart, entrySelectionEnd);
+                    else if (entryPos > -1 && entry.Text.Length >= entryPos)
+                        entry.Position = entryPos;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a group of properties to the GtkTable, starting at the specified row.
+        /// </summary>
+        /// <param name="table">Table to be modified.</param>
+        /// <param name="properties">Property group to be modified.</param>
+        /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
+        private void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow)
+        {
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
-            uint i = 0;
-            foreach (Property property in properties)
+            foreach (Property property in properties.Properties)
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
-                        propertyTable.Attach(new Label(separator) { Xalign = 0 }, 0, 2, i, ++i, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                        propertyTable.Attach(new Label(separator) { Xalign = 0 }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
                 label.Xalign = 0;
-                propertyTable.Attach(label, 0, 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+                propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
-                propertyTable.Attach(inputWidget, 1, 2, i, i + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+                propertyTable.Attach(inputWidget, 1, 2, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 
-                i++;
+                startRow++;
             }
-            mainWidget.ShowAll();
+
+            foreach (PropertyGroup subProperties in properties.SubModelProperties)
+            {
+                propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                AddPropertiesToTable(ref table, subProperties, ref startRow);
+            }
         }
 
         /// <summary>
@@ -152,6 +215,17 @@ namespace UserInterface.Views
                     container.PackStart(fileNameInput, true, true, 0);
                     container.PackStart(fileChooserButton, false, false, 0);
                     component = container;
+                    break;
+                case PropertyType.Colour:
+                    ColourDropDownView colourChooser = new ColourDropDownView(this);
+                    List<object> colours = new List<object>();
+                    foreach (var colour in ColourUtilities.Colours)
+                        colours.Add(colour);
+                    colourChooser.Values = colours.ToArray();
+                    colourChooser.SelectedValue = property.Value;
+                    colourChooser.Changed += OnDropDownChanged;
+                    colourChooser.MainWidget.Name = property.ID.ToString();
+                    component = colourChooser.MainWidget;
                     break;
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
@@ -212,6 +286,13 @@ namespace UserInterface.Views
                         PropertyChanged?.Invoke(this, args);
                     }
                 }
+                else if (sender is ColourDropDownView colourChooser)
+                {
+                    var colour = (System.Drawing.Color)colourChooser.SelectedValue;
+                    Guid id = Guid.Parse(colourChooser.MainWidget.Name);
+                    var args = new PropertyChangedEventArgs(id, colour);
+                    PropertyChanged?.Invoke(this, args);
+                }
             }
             catch (Exception err)
             {
@@ -269,11 +350,15 @@ namespace UserInterface.Views
                 else
                     file = fileChooser.GetFile();
 
-                if (button.Parent is Container container && container.Children.Length > 0 && container.Children[0] is Entry entry)
-                    entry.Text = file;
+                // If the user cancels the file selection, file will be null.
+                if (file != null)
+                {
+                    if (button.Parent is Container container && container.Children.Length > 0 && container.Children[0] is Entry entry)
+                        entry.Text = file;
 
-                Guid id = Guid.Parse(button.Name);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(id, file));
+                    Guid id = Guid.Parse(button.Name);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(id, file));
+                }
             }
             catch (Exception err)
             {
@@ -292,10 +377,7 @@ namespace UserInterface.Views
         {
             if (sender is Widget widget)
             {
-                widget.DetachHandlers();
-                if (widget is Container container)
-                    foreach (Widget child in container.Children)
-                        child.DetachHandlers();
+                widget.DetachAllHandlers();
             }
         }
     }

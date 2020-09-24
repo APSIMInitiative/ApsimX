@@ -65,7 +65,7 @@ namespace UserInterface.Presenters
             if (this.view == null)
                 throw new ArgumentException($"The view must be an IPropertyView instance");
             
-            RefreshView();
+            RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.PropertyChanged += OnViewChanged;
         }
@@ -73,9 +73,10 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Refresh the view with the model's current state.
         /// </summary>
-        private void RefreshView()
+        public void RefreshView(IModel model)
         {
-            IEnumerable<Property> properties = GetProperties(model).ToArray();
+            this.model = model;
+            PropertyGroup properties = GetProperties(model);
             view.DisplayProperties(properties);
         }
 
@@ -83,7 +84,7 @@ namespace UserInterface.Presenters
         /// Get a list of properties from the model.
         /// </summary>
         /// <param name="obj">The object whose properties will be queried.</param>
-        private IEnumerable<Property> GetProperties(object obj)
+        private PropertyGroup GetProperties(object obj)
         {
             IEnumerable<PropertyInfo> allProperties = GetAllProperties(obj)
                     // Only show properties with a DescriptionAttribute
@@ -99,7 +100,29 @@ namespace UserInterface.Presenters
 
             // Due to DisplayType.SubModel, each PropertyInfo can potentially
             // yield multiple properties to be displayed in the view.
-            return allProperties.SelectMany(p => CreateProperties(obj, p));
+            List<Property> properties = new List<Property>();
+            List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
+            foreach (PropertyInfo property in allProperties)
+            {
+                DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
+                if (display != null && display.Type == DisplayType.SubModel)
+                {
+                    object subObject = property.GetValue(obj);
+                    if (subObject == null)
+                        subObject = Activator.CreateInstance(property.PropertyType);
+                    PropertyGroup group = GetProperties(subObject);
+                    group.Name = property.GetCustomAttribute<DescriptionAttribute>()?.ToString() ?? property.Name;
+                    subModelProperties.Add(group);
+                }
+                else
+                {
+                    Property result = new Property(obj, property);
+                    propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
+                    properties.Add(result);
+                }
+            }
+            string name = obj is IModel model ? model.Name : obj.GetType().Name;
+            return new PropertyGroup(name, properties, subModelProperties);
         }
 
         /// <summary>
@@ -110,45 +133,6 @@ namespace UserInterface.Presenters
         {
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly;
             return obj.GetType().GetProperties(flags);
-        }
-
-        /// <summary>
-        /// Create Property objects from a PropertyInfo.
-        /// </summary>
-        /// <remarks>
-        /// Each PropertyInfo (a property in the code) can yield multiple
-        /// properties shown in the gui, by using DisplayType.SubModel.
-        /// </remarks>
-        /// <param name="obj">Object reference.</param>
-        /// <param name="property">The property metadata.</param>
-        private IEnumerable<Property> CreateProperties(object obj, PropertyInfo property)
-        {
-            DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
-            if (display != null && display.Type == DisplayType.SubModel)
-            {
-                IEnumerable<SeparatorAttribute> separators = property.GetCustomAttributes<SeparatorAttribute>();
-
-                object subModel = property.GetValue(obj);
-                bool first = true;
-                foreach (Property subProperty in GetProperties(subModel))
-                {
-                    // If the property contains separators, we want to add those separators
-                    // to the first property returned by the sub-model.
-                    if (first)
-                    {
-                        first = false;
-                        if (separators != null && separators.Count() > 0)
-                            subProperty.Separators.InsertRange(0, separators.Select(s => s.ToString()));
-                    }
-                    yield return subProperty;
-                }
-            }
-            else
-            {
-                Property result = new Property(obj, property);
-                propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
-                yield return result;
-            }
         }
 
         /// <summary>
@@ -167,7 +151,7 @@ namespace UserInterface.Presenters
         {
             /************* fixme ***************/
             if (changedModel == model)
-                RefreshView();
+                RefreshView(this.model);
         }
     
         /// <summary>

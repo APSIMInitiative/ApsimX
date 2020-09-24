@@ -25,6 +25,50 @@ namespace UserInterface.Classes
     }
 
     /// <summary>
+    /// Represents all properties of an object, as they are to be displayed
+    /// in the UI for editing.
+    /// </summary>
+    public class PropertyGroup
+    {
+        /// <summary>
+        /// Name of the property group.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Properties belonging to the model.
+        /// </summary>
+        public IEnumerable<Property> Properties { get; private set; }
+
+        /// <summary>
+        /// Properties belonging to properties of the model marked with
+        /// DisplayType.SubModel.
+        /// </summary>
+        public IEnumerable<PropertyGroup> SubModelProperties { get; private set; }
+
+        /// <summary>
+        /// Constructs a property group.
+        /// </summary>
+        /// <param name="name">Name of the property group.</param>
+        /// <param name="properties">Properties belonging to the model.</param>
+        /// <param name="subProperties">Property properties.</param>
+        public PropertyGroup(string name, IEnumerable<Property> properties, IEnumerable<PropertyGroup> subProperties)
+        {
+            Name = name;
+            Properties = properties;
+            SubModelProperties = subProperties;
+        }
+
+        /// <summary>
+        /// Returns the total number of properties in this property group and sub property groups.
+        /// </summary>
+        public int Count()
+        {
+            return Properties.Count() + SubModelProperties.Sum(p => p.Count());
+        }
+    }
+
+    /// <summary>
     /// Represents a property which can be displayed/edited by the user.
     /// </summary>
     /// <remarks>
@@ -92,7 +136,8 @@ namespace UserInterface.Classes
             if (metadata.PropertyType == typeof(DateTime) || (metadata.PropertyType == typeof(DateTime?) && Value != null))
                 // Note: ToShortDateString() uses the current culture, which is what we want in this case.
                 Value = ((DateTime)Value).ToShortDateString();
-            else if (metadata.PropertyType != typeof(bool))
+            // ?else if property type isn't a struct?
+            else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
             // fixme - need to fix this unmaintainable mess brought across from the old PropertyPresenter
@@ -121,6 +166,8 @@ namespace UserInterface.Classes
                     }
                     else if (metadata.PropertyType == typeof(bool))
                         DisplayMethod = PropertyType.Checkbox;
+                    else if (metadata.PropertyType == typeof(System.Drawing.Color))
+                        DisplayMethod = PropertyType.Colour;
                     else
                         DisplayMethod = PropertyType.SingleLineText;
                     break;

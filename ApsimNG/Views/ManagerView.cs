@@ -9,7 +9,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the properties grid.
         /// </summary>
-        IGridView GridView { get; }
+        IPropertyView PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -25,7 +25,7 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private GridView grid;
+        private PropertyView propertyEditor;
         private EditorView scriptEditor;
         private Notebook notebook;
 
@@ -37,9 +37,9 @@ namespace UserInterface.Views
         {
             notebook = new Notebook();
             mainWidget = notebook;
-            grid = new GridView(this);
+            propertyEditor = new PropertyView(this);
             scriptEditor = new EditorView(this);
-            notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
+            notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -48,8 +48,8 @@ namespace UserInterface.Views
         {
             try
             {
-                grid.MainWidget.Destroy();
-                grid = null;
+                propertyEditor.MainWidget.Destroy();
+                propertyEditor = null;
                 scriptEditor.MainWidget.Destroy();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -70,7 +70,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public IGridView GridView { get { return grid; } }
+        public IPropertyView PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
        
     }
