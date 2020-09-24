@@ -431,7 +431,14 @@
             if (underlyingType != null)
                 dataType = underlyingType;
 
-            return Convert.ChangeType(newValue, dataType, format);
+            try
+            {
+                return Convert.ChangeType(newValue, dataType, format);
+            }
+            catch (Exception err)
+            {
+                throw new FormatException($"Unable to convert {newValue} to type {dataType}", err);
+            }
         }
 
         /// <summary>

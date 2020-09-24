@@ -2,6 +2,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using UserInterface.Classes;
@@ -74,7 +75,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private void RefreshView()
         {
-            propertyMap.Clear();
             IEnumerable<Property> properties = GetProperties(model).ToArray();
             view.DisplayProperties(properties);
         }
@@ -179,7 +179,7 @@ namespace UserInterface.Presenters
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            //presenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             // Figure out which property of which object is being changed.
             PropertyInfo property = propertyMap[args.ID].Property;
@@ -191,8 +191,8 @@ namespace UserInterface.Presenters
             // However, most numbers are just rendered using an entry widget,
             // so the value from the view will be a string (e.g. 1e-6).
             object newValue = args.NewValue;
-            if (newValue is string && property.PropertyType != typeof(string))
-                newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue);
+            if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
+                newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue, CultureInfo.CurrentCulture);
 
             // Update the model.
             ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
@@ -200,7 +200,7 @@ namespace UserInterface.Presenters
 
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
+            //presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>

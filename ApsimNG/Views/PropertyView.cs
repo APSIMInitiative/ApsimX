@@ -39,6 +39,14 @@ namespace UserInterface.Views
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
 
         /// <summary>
+        /// Used to check which entries are 'dirty' by keeping track
+        /// of their original text.
+        /// </summary>
+        /// <typeparam name="Guid">ID of the entry/property.</typeparam>
+        /// <typeparam name="string">Original text of the entry/value of the property.</typeparam>
+        private Dictionary<Guid, string> originalEntryText = new Dictionary<Guid, string>();
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -73,7 +81,7 @@ namespace UserInterface.Views
                     foreach (string separator in property.Separators)
                         propertyTable.Attach(new Label(separator) { Xalign = 0 }, 0, 2, i, ++i, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
 
-                Label label = new Label(property.DisplayName);
+                Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
                 label.Xalign = 0;
                 propertyTable.Attach(label, 0, 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
@@ -99,24 +107,21 @@ namespace UserInterface.Views
             Widget component;
             switch (property.DisplayMethod)
             {
-                case DisplayType.None:
-                    if (property.DataType == typeof(bool))
-                    {
-                        CheckButton toggleButton = new CheckButton();
-                        toggleButton.Toggled += OnToggleCheckButton;
-                        toggleButton.Active = (bool)property.Value;
-                        component = toggleButton;
-                    }
-                    else
-                    {
-                        // Default - just a simple text input (GtkEntry).
-                        string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
-                        Entry textInput = new Entry(entryValue ?? "");
-                        textInput.FocusOutEvent += OnEntryChanged;
-                        component = textInput;
-                    }
+                case PropertyType.SingleLineText:
+                case PropertyType.MultiLineText: // fixme
+                    string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
+                    Entry textInput = new Entry(entryValue ?? "");
+                    textInput.FocusOutEvent += OnEntryFocusOut;
+                    component = textInput;
+                    originalEntryText[property.ID] = textInput.Text;
                     break;
-                case DisplayType.DropDown:
+                case PropertyType.Checkbox:
+                    CheckButton toggleButton = new CheckButton();
+                    toggleButton.Active = (bool)property.Value;
+                    toggleButton.Toggled += OnToggleCheckButton;
+                    component = toggleButton;
+                    break;
+                case PropertyType.DropDown:
                     // Dropdown list - use a DropDownView (which wraps GtkComboBox).
                     DropDownView dropDown = new DropDownView(this);
                     dropDown.Values = property.DropDownOptions;
@@ -124,21 +129,23 @@ namespace UserInterface.Views
                     dropDown.Changed += OnDropDownChanged;
                     component = dropDown.MainWidget;
                     break;
-                case DisplayType.FileName:
-                case DisplayType.FileNames:
-                case DisplayType.DirectoryName:
+                case PropertyType.File:
+                case PropertyType.Files:
+                case PropertyType.Directory:
+                //case PropertyType.Directories:
                     // Add an Entry and a Button inside a VBox.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
-                    fileNameInput.FocusOutEvent += OnEntryChanged;
+                    fileNameInput.FocusOutEvent += OnEntryFocusOut;
+                    originalEntryText[property.ID] = fileNameInput.Text;
 
                     Button fileChooserButton = new Button("...");
                     fileChooserButton.Name = property.ID.ToString();
-                    if (property.DisplayMethod == DisplayType.FileName)
+                    if (property.DisplayMethod == PropertyType.File)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, false);
-                    else if (property.DisplayMethod == DisplayType.FileNames)
+                    else if (property.DisplayMethod == PropertyType.Files)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
-                    else if (property.DisplayMethod == DisplayType.DirectoryName)
+                    else if (property.DisplayMethod == PropertyType.Directory)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, true);
                     
                     Box container = new HBox();
@@ -158,20 +165,25 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when an entry widget has been modified by the user.
+        /// Called when an entry widget loses focus.
+        /// Fires a chagned event if the entry widget's text has been modified.
         /// </summary>
         /// <param name="sender">The entry which has been modified.</param>
         /// <param name="e">Event data.</param>
         [GLib.ConnectBefore]
-        private void OnEntryChanged(object sender, EventArgs e)
+        private void OnEntryFocusOut(object sender, EventArgs e)
         {
             try
             {
                 if (sender is Entry component)
                 {
                     Guid id = Guid.Parse(component.Name);
-                    var args = new PropertyChangedEventArgs(id, component.Text);
-                    PropertyChanged?.Invoke(this, args);
+                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], component.Text, StringComparison.CurrentCulture))
+                    {
+                        var args = new PropertyChangedEventArgs(id, component.Text);
+                        PropertyChanged?.Invoke(this, args);
+                        originalEntryText[id] = component.Text;
+                    }
                 }
             }
             catch (Exception err)
