@@ -885,9 +885,6 @@
             // If an exception is thrown while loding the view, this
             // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
-
-            Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            CommandHistory.Add(selectCommand, false);
         }
 
         /// <summary>A node has begun to be dragged.</summary>

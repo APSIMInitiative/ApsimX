@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Models.Core;
 using UserInterface.Commands;
+using UserInterface.Presenters;
 
 namespace UserInterface
 {
@@ -15,6 +16,7 @@ namespace UserInterface
     {
         // Based on http://www.catnapgames.com/blog/2009/03/19/simple-undo-redo-system-for-csharp.html
 
+        private ExplorerPresenter explorer;
         private List<ICommand> commands = new List<ICommand>();
         private int lastExecuted = -1;
         private int lastSaved = -1;
@@ -28,6 +30,8 @@ namespace UserInterface
 
         public delegate void ModelStructureChangedDelegate(IModel model);
         public event ModelStructureChangedDelegate ModelStructureChanged;
+
+        public CommandHistory(ExplorerPresenter explorerPresenter) => explorer = explorerPresenter;
 
         public void Clear()
         {
@@ -115,6 +119,8 @@ namespace UserInterface
                     inUndoRedo = true;
                     try
                     {
+                        if (commands[lastExecuted].AffectedModel != null)
+                            explorer.SelectNode(commands[lastExecuted].AffectedModel);
                         commands[lastExecuted].Undo(this);
                         lastExecuted--;
                         OnChanged(lastExecuted != lastSaved);
