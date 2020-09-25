@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
+  "ExplorerWidth": 300,
   "Version": 119,
   "ApsimVersion": "2020.9.23.5680",
   "Name": "Simulations",
@@ -3546,7 +3546,7 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "BarkThickness",
+                  "Name": "BarkThicknessOLD",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
@@ -3565,8 +3565,8 @@
                         50000.0
                       ],
                       "Y": [
-                        0.0,
-                        0.0,
+                        0.5,
+                        1.0,
                         2.0
                       ],
                       "Name": "XYPairs",
@@ -3583,15 +3583,99 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Eucalyptus].Stem.DBH-([Eucalyptus].Stem.BarkThickness*2)",
-                  "Name": "DBHub",
+                  "Name": "DBHubOLD",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "DBHub",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "IndStemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 50.0,
+                      "Units": null,
+                      "Name": "MinimumIndStemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "0.4*([Eucalyptus].IndividualTreeStemWt^0.310907)",
+                      "Name": "DBHEquation",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "BarkThickness",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.DBH/2",
+                      "Name": "DBH",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.DBHub/2",
+                      "Name": "DBHub",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([Eucalyptus].Stem.DBH/2)^2*3.14159*[Eucalyptus].Population*10000",
+                  "Expression": "([Eucalyptus].Stem.DBH/2)^2*3.14159*[Eucalyptus].Population",
                   "Name": "BA",
                   "Children": [
                     {
@@ -3610,7 +3694,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([Eucalyptus].Stem.DBHub/2)^2*3.14159*[Eucalyptus].Population*10000",
+                  "Expression": "([Eucalyptus].Stem.DBHub/2)^2*3.14159*[Eucalyptus].Population",
                   "Name": "BAub",
                   "Children": [
                     {
@@ -3828,9 +3912,191 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Eucalyptus].Stem.Wt*0.85",
-                  "Name": "WoodWt",
+                  "Name": "WoodWtOLD",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "WoodWtOLD2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.Wt",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        10000.0,
+                        50000.0
+                      ],
+                      "Y": [
+                        0.05,
+                        0.2,
+                        0.85
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "WoodWtOLD3",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WoodWtFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Eucalyptus].Stem.Wt",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            10000.0,
+                            50000.0
+                          ],
+                          "Y": [
+                            0.05,
+                            0.2,
+                            0.85
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.Wt",
+                      "Name": "StemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "WoodWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.Wt",
+                      "Name": "StemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1000.0,
+                      "Units": null,
+                      "Name": "MinStemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "WoodWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "WoodWtFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Eucalyptus].Stem.Wt",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                10000.0,
+                                50000.0
+                              ],
+                              "Y": [
+                                0.05,
+                                0.2,
+                                0.85
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Eucalyptus].Stem.Wt",
+                          "Name": "StemWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5712,53 +5978,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.65",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X= 0,15,20,34",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTFrost.MaximumTemperatureWeighting=0",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, 0, 0, .5,.8, 1",
-                    "",
-                    "[Leaf].LeafDevelopmentRate.LDR.FixedValue=1",
-                    "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=8,26,33,34",
-                    "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=0,1,1,0",
-                    "",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.011, 0.008, 0.006, 0.005, 0.005, 0.005",
-                    "",
-                    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
-                    "[Leaf].SenescenceRate.XYPairs.Y = 0.3, 0.2, 0.1, .08, .05",
-                    "",
-                    "[Leaf].MaximumNConc.FixedValue=0.035",
-                    "[Leaf].MinimumNConc.FixedValue=0.013",
-                    "",
-                    "[Branch].MaximumNConc.FixedValue=0.013",
-                    "[Branch].MinimumNConc.FixedValue=0.0035",
-                    "",
-                    "[Stem].MaximumNConc.FixedValue=0.0075",
-                    "[Stem].MinimumNConc.FixedValue=0.0025",
-                    "",
-                    "[CoarseRoot].MaximumNConc.FixedValue=0.02",
-                    "[CoarseRoot].MinimumNConc.FixedValue=0.0025",
-                    "",
-                    "[FineRoot].MaximumNConc.FixedValue=0.02",
-                    "[FineRoot].MinimumNConc.FixedValue=0.005",
-                    "",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000, 100000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.5,0.6,0.6,.1,.05,.04, 0.03 ",
-                    "",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=.1,.15,.19,.21,.20,.19",
-                    "",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,30000,80000, 120000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.1,0.9,0.99,0.99,0.99,.99, .99",
-                    "",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,500,1000,5000, 10000, 20000, 40000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.28,0.32, 0.36, 0.32, 0.3, .25, .2",
-                    "",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue=0.4"
+                    ""
                   ],
                   "Name": "globulus",
                   "Children": [
@@ -6992,10 +7212,10 @@
                   "YAxis": 0,
                   "ColourArgb": -16777216,
                   "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": "SimulationName",
+                  "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
+                  "Marker": 4,
+                  "MarkerSize": 2,
                   "Line": 4,
                   "LineThickness": 0,
                   "TableName": "Report",
@@ -7007,37 +7227,8 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Observed",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Eucalyptus.StemWood.BasicDensity (kg/m3)",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": false,
@@ -7045,7 +7236,7 @@
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
@@ -14969,10 +15160,10 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Friut\", 0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToRemove(\"Friut\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
                               "Parameters": [],
                               "Name": "TreeThinning",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -27935,7 +28126,7 @@
                                   "Name": "45",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -28113,7 +28304,7 @@
                                   "Name": "125",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -28469,7 +28660,7 @@
                                   "Name": "400",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
@@ -28523,7 +28714,7 @@
                                   "Name": "600",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -28568,7 +28759,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
-                          "FileName": "ScottRiver.met",
+                          "FileName": "C:\\APSIMx Temporary Work Area\\ScottRiver.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
@@ -34000,15 +34191,6 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*ThinFr;\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
-                              "Parameters": [],
-                              "Name": "TreeThinning",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n\r\n        public double TimeSincePlanting {get; set;}\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Planting Date (dd-mmm)\")]\r\n        public String PlantingDate { get; set; }\r\n\r\n        [Description(\"Harvest Age (years)\")]\r\n        public double HarvestAge { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser N to be applied at planting (kg N/ha)\")]\r\n        public double FertAmount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n            double RowWidthmm = RowWidth * 1000;\r\n\r\n            if (DateUtilities.WithinDates(PlantingDate, Clock.Today, PlantingDate) && !Plant.IsAlive)\r\n            {\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: RowWidthmm);\r\n                TimeSincePlanting = 0;\r\n                Fertiliser.Apply(Amount: FertAmount, Type: Fertiliser.Types.NO3N);\r\n            }\r\n\r\n            if (TimeSincePlanting > HarvestAge && Plant.IsAlive)\r\n            {\r\n               Plant.Harvest();\r\n               Plant.EndCrop();         \r\n               TimeSincePlanting = 0;  \r\n            }\r\n\r\n            TimeSincePlanting += 1.0/365.0;\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
@@ -34056,6 +34238,15 @@
                               "GroupByVariableName": null,
                               "Name": "ReportSoilWater",
                               "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Parameters": [],
+                              "Name": "TreeThinning",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -35678,7 +35869,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
-                          "FileName": "Wellstead.met",
+                          "FileName": "C:\\APSIMx Temporary Work Area\\Wellstead.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
@@ -41191,15 +41382,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*ThinFr;\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
-                              "Parameters": [],
-                              "Name": "TreeThinning",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today"
@@ -41210,6 +41392,15 @@
                               "GroupByVariableName": null,
                               "Name": "ReportSoilWater",
                               "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Parameters": [],
+                              "Name": "TreeThinning",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -42832,7 +43023,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
-                          "FileName": "BoyupBrook.met",
+                          "FileName": "C:\\APSIMx Temporary Work Area\\BoyupBrook.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
@@ -48345,15 +48536,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*ThinFr;\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
-                              "Parameters": [],
-                              "Name": "TreeThinning",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today"
@@ -48364,6 +48546,15 @@
                               "GroupByVariableName": null,
                               "Name": "ReportSoilWater",
                               "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Parameters": [],
+                              "Name": "TreeThinning",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -49374,6 +49565,102 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
+                  "Name": "LAI",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Eucalyptus.Leaf.LAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "LAI",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Eucalyptus.Leaf.LAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "BranchWt",
                   "Children": [
                     {
@@ -49629,102 +49916,6 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Root Shoot Ratio",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.RootShootRatio",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.RootShootRatio.Value()",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -50004,295 +50195,7 @@
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": 35462.0,
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "SWD1",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD1",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD1",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": 35431.0,
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": 0.7,
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "SWD2",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD2",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD2",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": 35431.0,
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": 0.0,
-                      "Maximum": 0.7,
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "SWD3",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD3",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD3",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
+                      "Minimum": 34425.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
                       "DateTimeAxis": true,
@@ -50304,7 +50207,7 @@
                       "Title": null,
                       "Inverted": false,
                       "Minimum": 0.0,
-                      "Maximum": 0.7,
+                      "Maximum": 12.0,
                       "Interval": "NaN",
                       "DateTimeAxis": false,
                       "CrossesAtZero": false
@@ -50314,7 +50217,7 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "SWD4",
+                  "Name": "SoilNO3mMD1",
                   "Children": [
                     {
                       "$type": "Models.Series, Models",
@@ -50331,7 +50234,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "SWD4",
+                      "YFieldName": "NO3mMD1",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -50340,6 +50243,35 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "NO3mMD1",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
@@ -50554,6 +50486,85 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "OvsP NO3kgphaD1",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 1,
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Predicted.NO3mMD1",
+                      "YFieldName": "Observed.NO3mMD1",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Predicted.Eucalyptus.AboveGround.Wt]>0.00",
+                      "Name": "Series",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
                       "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
@@ -50650,7 +50661,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
                     {
@@ -50665,11 +50676,11 @@
                       "CrossesAtZero": false
                     }
                   ],
-                  "LegendPosition": 0,
+                  "LegendPosition": 3,
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Ht",
+                  "Name": "OvsP MineralNkgphaD1",
                   "Children": [
                     {
                       "$type": "Models.Series, Models",
@@ -50677,150 +50688,37 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "N",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "S",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "N",
-                      "FactorToVaryMarkers": "S",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "DBH",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "N",
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": "SimulationName",
-                      "FactorToVaryLines": "S",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "N",
-                      "FactorToVaryMarkers": "S",
                       "FactorToVaryLines": null,
                       "Marker": 0,
-                      "MarkerSize": 0,
+                      "MarkerSize": 1,
                       "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "LineThickness": 1,
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Predicted.MineralNkgpha(1)",
+                      "YFieldName": "Observed.MineralNkgpha(1)",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Observed",
-                      "Children": [],
+                      "Filter": "",
+                      "Name": "Series",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
                       "ReadOnly": false
@@ -51332,7 +51230,7 @@
                       "YFieldName": "Eucalyptus.Stem.WoodDensity",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -51340,7 +51238,7 @@
                       "Name": "Predicted",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -51369,12 +51267,12 @@
                       "Name": "Observed",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -51598,16 +51496,16 @@
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "CultivarName",
+                                  "Value": "globulus"
+                                },
+                                {
                                   "Key": "RowSpace",
                                   "Value": "2.5"
                                 },
                                 {
                                   "Key": "RowWidth",
                                   "Value": "3"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "globulus"
                                 },
                                 {
                                   "Key": "SowingDate",
@@ -51624,16 +51522,16 @@
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "CultivarName",
+                                  "Value": "globulus"
+                                },
+                                {
                                   "Key": "RowSpace",
                                   "Value": "1.25"
                                 },
                                 {
                                   "Key": "RowWidth",
                                   "Value": "3"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "globulus"
                                 },
                                 {
                                   "Key": "SowingDate",
@@ -51650,6 +51548,10 @@
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "CultivarName",
+                                  "Value": "grandis"
+                                },
+                                {
                                   "Key": "RowSpace",
                                   "Value": "2.5"
                                 },
@@ -51658,12 +51560,8 @@
                                   "Value": "3"
                                 },
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "grandis"
-                                },
-                                {
                                   "Key": "SowingDate",
-                                  "Value": "08/15/1980 00:00:00"
+                                  "Value": "08/15/1993 00:00:00"
                                 }
                               ],
                               "Name": "gran1333",
@@ -51676,6 +51574,10 @@
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "CultivarName",
+                                  "Value": "grandis"
+                                },
+                                {
                                   "Key": "RowSpace",
                                   "Value": "1.25"
                                 },
@@ -51684,12 +51586,8 @@
                                   "Value": "3"
                                 },
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "grandis"
-                                },
-                                {
                                   "Key": "SowingDate",
-                                  "Value": "08/15/1980 00:00:00"
+                                  "Value": "08/15/1993 00:00:00"
                                 }
                               ],
                               "Name": "gran2667",
@@ -52239,15 +52137,6 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
-                              "Parameters": [],
-                              "Name": "TreeThinning",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
@@ -52303,8 +52192,47 @@
                               "ReadOnly": false
                             },
                             {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Parameters": [],
+                              "Name": "TreeThinning",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Operations, Models",
                               "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1993-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1994-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1995-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1996-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1997-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
+                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1998-08-20",
@@ -52367,56 +52295,32 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1999-02-15",
+                                  "Date": "1993-02-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2000-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.080);",
+                                  "Date": "1994-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2001-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.050);",
+                                  "Date": "1995-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2002-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.043);",
+                                  "Date": "1996-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2003-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.023);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2004-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2005-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.011);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2006-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2007-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                  "Date": "1997-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Enabled": true
                                 }
                               ],
@@ -57126,6 +57030,102 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "DBHvsITSW",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 4,
+                              "MarkerSize": 2,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                              "YFieldName": "Eucalyptus.Stem.DBH",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "",
+                              "Name": "DBH",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 4,
+                              "MarkerSize": 2,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                              "YFieldName": "Eucalyptus.Stem.DBHub",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "",
+                              "Name": "DBHub",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -57200,8 +57200,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "N",
-                          "FactorToVaryMarkers": "S",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -57355,7 +57355,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Ht",
+                      "Name": "DBH",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -57372,7 +57372,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.Ht",
+                          "YFieldName": "Eucalyptus.Stem.DBH",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57392,8 +57392,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "N",
-                          "FactorToVaryMarkers": "S",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -57401,7 +57401,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.Ht",
+                          "YFieldName": "Eucalyptus.Stem.DBH",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57451,7 +57451,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "DBH",
+                      "Name": "Ht",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -57468,7 +57468,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.DBH",
+                          "YFieldName": "Eucalyptus.Stem.Ht",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57488,8 +57488,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryColours": "N",
+                          "FactorToVaryMarkers": "S",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -57497,7 +57497,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.DBH",
+                          "YFieldName": "Eucalyptus.Stem.Ht",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57794,6 +57794,582 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Fw",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "DBHvsITSW",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.DBH",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "DBH",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.DBHub",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "DBHub",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.BarkThickness",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "BarkThickness",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BA",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.BA",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "BA",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.BAub",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "BAub",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "HtvsITSW",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Ht",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Ht",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Vol",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Vol",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Vol",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Volub",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Volub",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.VolBark",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "VolBark",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "MAI",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.MAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "MAI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.MAIub",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "MAIub",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WoodDensity",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.WoodDensity",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -58800,15 +59376,6 @@
                               "GroupByVariableName": null,
                               "Name": "Report",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
-                              "Parameters": [],
-                              "Name": "TreeThinning",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -63687,6 +64254,15 @@
                                 }
                               ],
                               "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Eucalyptus;\r\n        [Link] Clock Clock;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        public void DoThin(double ThinFr)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n\r\n                //Harvest with manager specified removal fractions\r\n                Remove.SetFractionToRemove(\"Leaf\", 0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0);\r\n                Remove.SetFractionToRemove(\"Branch\", 0);\r\n                Remove.SetFractionToRemove(\"FineRoot\", 0);\r\n                Remove.SetFractionToRemove(\"CoarseRoot\", 0);\r\n                Remove.SetFractionToResidue(\"Leaf\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Stem\", ThinFr);\r\n                Remove.SetFractionToResidue(\"Branch\", ThinFr);\r\n                Remove.SetFractionToResidue(\"FineRoot\", ThinFr);\r\n                Remove.SetFractionToResidue(\"CoarseRoot\", ThinFr);\r\n                Remove.SetThinningProportion = ThinFr;\r\n                Eucalyptus.RemoveBiomass(\"Thin\", Remove);\r\n                Eucalyptus.Population = Eucalyptus.Population*(1-ThinFr);\r\n        }\r\n    }\r\n}\r\n\r\n                \r\n",
+                              "Parameters": [],
+                              "Name": "TreeThinning",
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
