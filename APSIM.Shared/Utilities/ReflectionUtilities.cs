@@ -4,6 +4,7 @@
     using Newtonsoft.Json.Serialization;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -422,11 +423,8 @@
                 return result;
             }
 
-            if (dataType == typeof(System.Drawing.Color))
-            {
-                var result = System.Drawing.Color.FromName(newValue);
-                return result;
-            }
+            if (dataType == typeof(System.Drawing.Color) && int.TryParse(newValue, out int argb))
+                return System.Drawing.Color.FromArgb(argb);
 
             // Do we really want enums to be case-insensitive?
             if (dataType.IsEnum)
@@ -479,6 +477,8 @@
                 }
                 return stringValue;
             }
+            else if (obj.GetType() == typeof(System.Drawing.Color))
+                return ((System.Drawing.Color)obj).ToArgb().ToString();
             else
                 return Convert.ToString(obj, format);
         }
