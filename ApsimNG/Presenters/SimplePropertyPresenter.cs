@@ -176,7 +176,12 @@ namespace UserInterface.Presenters
             // so the value from the view will be a string (e.g. 1e-6).
             object newValue = args.NewValue;
             if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
-                newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue, CultureInfo.CurrentCulture);
+            {
+                if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
+                    newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
+                else
+                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue, CultureInfo.CurrentCulture);
+            }
 
             // Update the model.
             ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);

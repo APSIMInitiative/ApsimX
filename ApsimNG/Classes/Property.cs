@@ -137,6 +137,8 @@ namespace UserInterface.Classes
                 // Note: ToShortDateString() uses the current culture, which is what we want in this case.
                 Value = ((DateTime)Value).ToShortDateString();
             // ?else if property type isn't a struct?
+            else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
+                Value = ((IModel)Value).Name;
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
@@ -203,7 +205,7 @@ namespace UserInterface.Classes
                 case DisplayType.FieldName:
                     DisplayMethod = PropertyType.DropDown;
                     IDataStore storage = model.FindInScope<IDataStore>();
-                    PropertyInfo tableNameProperty = model.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttribute<DisplayAttribute>().Type == DisplayType.TableName);
+                    PropertyInfo tableNameProperty = model.GetType().GetProperties().FirstOrDefault(p => p.GetCustomAttribute<DisplayAttribute>()?.Type == DisplayType.TableName);
                     string tableName = tableNameProperty?.GetValue(model) as string;
                     if (storage != null && storage.Reader.TableNames.Contains(tableName))
                         DropDownOptions = storage.Reader.ColumnNames(tableName).ToArray();

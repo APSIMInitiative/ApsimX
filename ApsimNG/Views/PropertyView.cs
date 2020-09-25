@@ -137,7 +137,7 @@ namespace UserInterface.Views
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
-                        propertyTable.Attach(new Label(separator) { Xalign = 0 }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                        propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
