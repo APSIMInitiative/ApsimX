@@ -3554,7 +3554,7 @@
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3572,6 +3572,103 @@
                       "Name": "XYPairs",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "([Eucalyptus].Stem.DBH-[Eucalyptus].Stem.DBHub)/2",
+                  "Name": "BarkThicknessOLD2",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "BarkThickness",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Stem.DBH",
+                      "Name": "DBH",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 7.0,
+                      "Units": null,
+                      "Name": "4",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "BarkThickness",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Eucalyptus].Stem.DBH",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            8.0,
+                            16.0,
+                            32.0,
+                            64.0
+                          ],
+                          "Y": [
+                            2.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3586,7 +3683,7 @@
                   "Name": "DBHubOLD",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3595,7 +3692,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "VariableName": "[Eucalyptus]..Stem.DBH",
                       "Name": "IndStemWt",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3604,7 +3701,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 50.0,
+                      "FixedValue": 5.0,
                       "Units": null,
                       "Name": "MinimumIndStemWt",
                       "Children": [],
@@ -3624,7 +3721,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.35*([Eucalyptus].IndividualTreeStemWt^0.310907)",
+                      "Expression": "[Eucalyptus].Stem.DBH-[Eucalyptus].Stem.BarkThickness*2",
                       "Name": "DBHEquation",
                       "Children": [
                         {
@@ -3637,52 +3734,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "BarkThicknessOLD2",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.DBH",
-                      "Name": "DBH",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.DBHub",
-                      "Name": "DBHub",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([Eucalyptus].Stem.DBH-[Eucalyptus].Stem.DBHub)/2",
-                  "Name": "BarkThickness",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3874,7 +3925,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.Ht*(([Eucalyptus].Stem.DBH/2)^2-([Eucalyptus].Stem.DBHub/2)^2)*3.14159/3*[Eucalyptus].Population*10000/1000000",
+                  "Expression": "[Eucalyptus].Stem.Ht*(([Eucalyptus].Stem.DBH/2)^2-([Eucalyptus].Stem.DBHub/2)^2)*3.14159/3*[Eucalyptus].Population",
                   "Name": "VolBark",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3934,7 +3985,7 @@
                   "Name": "WoodWtOLD",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3947,7 +3998,7 @@
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -3965,12 +4016,12 @@
                       "Name": "XYPairs",
                       "Children": [],
                       "IncludeInDocumentation": false,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3987,7 +4038,7 @@
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -4005,12 +4056,12 @@
                           "Name": "XYPairs",
                           "Children": [],
                           "IncludeInDocumentation": false,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4019,12 +4070,12 @@
                       "Name": "StemWt",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6868,198 +6919,6 @@
                   "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 5,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "DBHvsIndTreeStemWt",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 2,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Observed",
-                  "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                  "YFieldName": "Eucalyptus.Stem.DBH",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 2,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                  "YFieldName": "Eucalyptus.Stem.DBH",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]='WestfieldT6N1200'",
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 5,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "HtvsIndTreeStemWt",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 2,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Observed",
-                  "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                  "YFieldName": "Eucalyptus.Stem.Ht",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 2,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                  "YFieldName": "Eucalyptus.Stem.Ht",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[SimulationName]='WestfieldT6N1200'",
-                  "Name": "Predicted",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
               "DisabledSeries": [],
@@ -7200,7 +7059,7 @@
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
-                  "Minimum": "NaN",
+                  "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": "NaN",
                   "DateTimeAxis": false,
@@ -7211,18 +7070,18 @@
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
-                  "Minimum": "NaN",
+                  "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 0,
+              "LegendPosition": 3,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "WoodDensity",
+              "Name": "OvsP WoodDensity",
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -7230,25 +7089,37 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
-                  "Marker": 4,
-                  "MarkerSize": 2,
+                  "Marker": 11,
+                  "MarkerSize": 1,
                   "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                  "YFieldName": "Eucalyptus.Stem.WoodDensity",
+                  "LineThickness": 1,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Predicted.Eucalyptus.Stem.WoodDensity",
+                  "YFieldName": "Observed.Eucalyptus.Stem.WoodDensity",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "",
-                  "Name": "Predicted",
-                  "Children": [],
+                  "Filter": "[Predicted.Eucalyptus.Stem.DBH]>7",
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -58353,7 +58224,7 @@
                           "Title": null,
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Maximum": 800.0,
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -67322,85 +67193,6 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "OvsP AboveGroundWt",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": "T",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 1,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Eucalyptus.AboveGround.Wt",
-                  "YFieldName": "Observed.Eucalyptus.AboveGround.Wt",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": false,
               "ReadOnly": false
             }
           ],
