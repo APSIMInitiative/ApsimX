@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 119,
-  "ApsimVersion": "2020.9.23.5680",
+  "ApsimVersion": "2020.9.24.5677",
   "Name": "Simulations",
   "Children": [
     {
@@ -775,12 +775,22 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.DivideFunction, Models",
               "Name": "IndividualTreeLiveWt",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Eucalyptus].Aboveground.Wt",
+                  "VariableName": "[Eucalyptus].AboveGround.Wt",
                   "Name": "ABGWt",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -929,6 +939,15 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Fruit].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.05,
                   "Units": "/d",
@@ -1028,15 +1047,6 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DMReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Fruit].MinimumNConc",
-                  "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3265,29 +3275,19 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.45,
+                  "Units": "g/g",
+                  "Name": "CarbonConcentration",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Memo, Models",
                   "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
                   "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "NReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
-                  "Units": "/d",
-                  "Name": "NRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3298,6 +3298,26 @@
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "0-1",
+                  "Name": "MaintenanceRespirationFunction",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3317,7 +3337,27 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "/d",
-                  "Name": "SenescenceRate",
+                  "Name": "NReallocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DMReallocationFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3354,30 +3394,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRateFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespirationFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].MinimumNConc",
+                  "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3442,18 +3461,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.05,
                   "Units": "/d",
-                  "Name": "DMReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].MinimumNConc",
-                  "Name": "CriticalNConc",
+                  "Name": "SenescenceRate",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3461,19 +3471,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.45,
-                  "Units": "g/g",
-                  "Name": "CarbonConcentration",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
+                  "FixedValue": 0.05,
+                  "Units": "/d",
+                  "Name": "NRetranslocationFactor",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3488,12 +3488,22 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.LessThanFunction, Models",
                   "Name": "DBH",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "VariableName": "[Eucalyptus].Stem.DBH",
                       "Name": "IndStemWt",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3502,7 +3512,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 50.0,
+                      "FixedValue": 8.0,
                       "Units": null,
                       "Name": "MinimumIndStemWt",
                       "Children": [],
@@ -3561,7 +3571,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 8.0,
                       "Units": null,
-                      "Name": "4",
+                      "Name": "8",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3603,12 +3613,12 @@
                           ],
                           "Y": [
                             0.8,
-                            2.8,
-                            3.0,
-                            3.0,
                             1.8,
-                            1.8,
-                            1.8
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0,
+                            2.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -3633,7 +3643,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Eucalyptus]..Stem.DBH",
-                      "Name": "IndStemWt",
+                      "Name": "IndStemDBH",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3643,7 +3653,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 5.0,
                       "Units": null,
-                      "Name": "MinimumIndStemWt",
+                      "Name": "MinimumIndStemDBH",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3925,7 +3935,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.Wt",
+                      "VariableName": "[Eucalyptus].Stem.Live.Wt",
                       "Name": "StemWt",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -5909,16 +5919,6 @@
                 }
               ],
               "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "MortalityRate",
-              "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
