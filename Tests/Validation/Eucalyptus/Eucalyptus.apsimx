@@ -3545,61 +3545,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "BarkThicknessOLD",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        10000.0,
-                        50000.0
-                      ],
-                      "Y": [
-                        0.5,
-                        1.0,
-                        2.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([Eucalyptus].Stem.DBH-[Eucalyptus].Stem.DBHub)/2",
-                  "Name": "BarkThicknessOLD2",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LessThanFunction, Models",
                   "Name": "BarkThickness",
                   "Children": [
@@ -3614,7 +3559,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 7.0,
+                      "FixedValue": 8.0,
                       "Units": null,
                       "Name": "4",
                       "Children": [],
@@ -3650,16 +3595,20 @@
                           "X": [
                             0.0,
                             8.0,
+                            12.0,
                             16.0,
-                            32.0,
-                            64.0
+                            20.0,
+                            24.0,
+                            28.0
                           ],
                           "Y": [
-                            2.0,
+                            0.8,
+                            2.8,
                             3.0,
                             3.0,
-                            3.0,
-                            3.0
+                            1.8,
+                            1.8,
+                            1.8
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -3675,15 +3624,6 @@
                   ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.DBH-([Eucalyptus].Stem.BarkThickness*2)",
-                  "Name": "DBHubOLD",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -3977,105 +3917,6 @@
                   ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.Wt*0.85",
-                  "Name": "WoodWtOLD",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "WoodWtOLD2",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.Wt",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        10000.0,
-                        50000.0
-                      ],
-                      "Y": [
-                        0.05,
-                        0.2,
-                        0.85
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "WoodWtOLD3",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WoodWtFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Eucalyptus].Stem.Wt",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            10000.0,
-                            50000.0
-                          ],
-                          "Y": [
-                            0.05,
-                            0.2,
-                            0.85
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.Wt",
-                      "Name": "StemWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6901,6 +6742,85 @@
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "OvsP WoodDensity",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "SimulationName",
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 1,
+                  "Line": 4,
+                  "LineThickness": 1,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Predicted.Eucalyptus.Stem.WoodDensity",
+                  "YFieldName": "Observed.Eucalyptus.Stem.WoodDensity",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[Predicted.Eucalyptus.Stem.DBH]>7",
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
@@ -7027,85 +6947,6 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "Series",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": 0.0,
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": 0.0,
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "OvsP WoodDensity",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 1,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Eucalyptus.Stem.WoodDensity",
-                  "YFieldName": "Observed.Eucalyptus.Stem.WoodDensity",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "[Predicted.Eucalyptus.Stem.DBH]>7",
                   "Name": "Series",
                   "Children": [
                     {
@@ -51464,16 +51305,16 @@
                               "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "grandis"
-                                },
-                                {
                                   "Key": "RowSpace",
                                   "Value": "1.25"
                                 },
                                 {
                                   "Key": "RowWidth",
                                   "Value": "3"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "grandis"
                                 },
                                 {
                                   "Key": "SowingDate",
@@ -52192,25 +52033,37 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1994-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1995-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1996-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1997-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1998-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1999-02-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
                                   "Enabled": true
                                 }
                               ],
