@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
-    [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase

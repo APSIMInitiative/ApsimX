@@ -11,7 +11,6 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
-            soil.FindChildren();
             Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);
@@ -65,17 +64,19 @@
             var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
             var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
+
             if (initial == null)
             {
-                initial = new Sample() { Thickness = soil.Thickness, Parent = soil };
+                initial = new Sample() { Thickness = soilPhysical.Thickness, Parent = soil };
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
 
             if (analysis.NO3N != null)
-                initial.NO3 = soil.ppm2kgha(analysis.NO3N);
+                initial.NO3 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NO3N);
             if (analysis.NH4N != null)
-                initial.NH4 = soil.ppm2kgha(analysis.NH4N);
+                initial.NH4 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NH4N);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
@@ -120,6 +121,7 @@
         /// <param name="soil">The soil.</param>
         private static void RemoveInitialWater(Soil soil)
         {
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
             var initialWater = soil.FindChild<InitialWater>();
             if (initialWater != null)
             {
@@ -127,12 +129,12 @@
                 if (sample == null)
                 {
                     sample = new Sample();
-                    sample.Thickness = soil.Thickness;
+                    sample.Thickness = soilPhysical.Thickness;
                     sample.Parent = soil;
                     soil.Children.Add(sample);
                 }
 
-                sample.SW = initialWater.SW(sample.Thickness, soil.LL15, soil.DUL, null);
+                sample.SW = initialWater.SW(sample.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
 
                 soil.Children.Remove(initialWater);
             }

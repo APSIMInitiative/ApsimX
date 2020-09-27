@@ -21,6 +21,13 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        Sample initial = null;
+
         /// <summary>Default constructor.</summary>
         public Solute() { }
 
@@ -37,7 +44,7 @@ namespace Models.Soils.Nutrients
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -53,9 +60,9 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];           
+            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
-                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
+                kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else
                 kgha = ReflectionUtilities.Clone(initialkgha) as double[];
         }

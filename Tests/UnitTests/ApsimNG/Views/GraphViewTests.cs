@@ -105,32 +105,28 @@ namespace UnitTests.ApsimNG.Views
             sims.Write(sims.FileName);
             ExplorerPresenter explorer = UITestsMain.MasterPresenter.OpenApsimXFileInTab(sims.FileName, true);
             GtkUtilities.WaitForGtkEvents();
+            sims = explorer.ApsimXFile;
 
             // Create a graphs folder under the zone.
             IModel paddock = sims.FindInScope<Zone>();
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
 
-            var command = new AddModelCommand(paddock.FullPath,
-                                              graphs,
-                                              explorer);
+            var command = new AddModelCommand(paddock, graphs);
             explorer.CommandHistory.Add(command, true);
 
             // Add an empty graph to the folder.
             Models.Graph graph = new Models.Graph();
             graph.Name = "Graph";
-            command = new AddModelCommand(graphs.FullPath,
-                                          graph,
-                                          explorer);
+            command = new AddModelCommand(graphs, graph);
             explorer.CommandHistory.Add(command, true);
 
             // Add an empty series to the graph.
             Models.Series series = new Models.Series();
             series.Name = "Series";
-            command = new AddModelCommand(graph.FullPath,
-                                          series,
-                                          explorer);
+            command = new AddModelCommand(graph, series);
             explorer.CommandHistory.Add(command, true);
+            explorer.Refresh();
 
             // click on the series node.
             explorer.SelectNode(series.FullPath);

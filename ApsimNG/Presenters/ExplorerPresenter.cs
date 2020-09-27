@@ -810,7 +810,8 @@
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
-                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath)?.Value as IModel;
+                dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }
         }
 
@@ -913,10 +914,9 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(toParentPath,
-                                                          modelString,
-                                                          this);
+                        var command = new AddModelCommand(toParent, modelString);
                         CommandHistory.Add(command, true);
+                        Refresh();
                     }
                     else if (e.Moved)
                     {
@@ -927,6 +927,7 @@
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
                                 CommandHistory.Add(cmd);
+                                Refresh();
                             }
                         }
                     }

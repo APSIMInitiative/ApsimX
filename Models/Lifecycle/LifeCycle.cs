@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -28,7 +29,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(LifeCycle))]
     [ValidParent(ParentType = typeof(IPlant))]
-    [ValidParent(ParentType = typeof(ISoil))]
+    [ValidParent(ParentType = typeof(Soil))]
     [ValidParent(ParentType = typeof(ISurfaceOrganicMatter))]
     public class LifeCycle : Model
     {
