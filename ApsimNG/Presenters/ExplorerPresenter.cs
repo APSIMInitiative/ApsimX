@@ -698,7 +698,7 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
 
-                    if (presenterName != null && presenterName.ToString().Contains("PropertyPresenter"))
+                    if (presenterName != null && presenterName.ToString().Contains(".PropertyPresenter"))
                     {
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
                         viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");

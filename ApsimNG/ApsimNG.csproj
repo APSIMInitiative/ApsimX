@@ -259,6 +259,7 @@
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\PropertyChangedEventArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Presenters\CompositePropertyPresenter.cs" />
     <Compile Include="Interfaces\IBubbleChartView.cs" />
     <Compile Include="Interfaces\IPropertyView.cs" />
     <Compile Include="Interfaces\ICloudJobView.cs" />

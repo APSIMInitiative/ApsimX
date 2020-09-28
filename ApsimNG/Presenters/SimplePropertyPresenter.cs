@@ -84,7 +84,7 @@ namespace UserInterface.Presenters
         /// Get a list of properties from the model.
         /// </summary>
         /// <param name="obj">The object whose properties will be queried.</param>
-        private PropertyGroup GetProperties(object obj)
+        protected virtual PropertyGroup GetProperties(object obj)
         {
             IEnumerable<PropertyInfo> allProperties = GetAllProperties(obj)
                     // Only show properties with a DescriptionAttribute
