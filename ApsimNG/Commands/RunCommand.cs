@@ -6,10 +6,12 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Media;
     using System.Timers;
+    using Utility;
 
-    class RunCommand : ICommand
+    public sealed class RunCommand : ICommand, IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -50,11 +52,14 @@
             IsRunning = true;
             jobRunner.Run();
 
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.AutoReset = true;
-            timer.Elapsed += OnTimerTick;
-            timer.Start();
+            if (IsRunning)
+            {
+                timer = new Timer();
+                timer.Interval = 1000;
+                timer.AutoReset = true;
+                timer.Elapsed += OnTimerTick;
+                timer.Start();
+            }
         }
 
         /// <summary>Undo the command</summary>
@@ -63,6 +68,10 @@
         /// <summary>All jobs have completed</summary>
         private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            IsRunning = false;
+            if (timer != null)
+                timer.Elapsed -= OnTimerTick;
+
             if (e.AllExceptionsThrown != null)
                 errors.AddRange(e.AllExceptionsThrown);
             try
@@ -78,12 +87,27 @@
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
-            SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12)
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
-            else
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
-            player.Play();
+            if (!Configuration.Settings.Muted)
+            {
+                // Play a completion sound.
+                SoundPlayer player = new SoundPlayer();
+                if (errors.Count > 0)
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+                }
+                else
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
+                }
+
+                player.Play();
+            }
         }
 
         /// <summary>
@@ -109,7 +133,11 @@
         private void Stop()
         {
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
-            timer?.Stop();
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Elapsed -= OnTimerTick;
+            }
             jobRunner?.Stop();
             jobRunner = null;
             IsRunning = false;
@@ -122,14 +150,25 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            if (jobRunner.TotalNumberOfSimulations > 0)
+            if (jobRunner == null)
             {
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         jobRunner.NumberOfSimulationsCompleted + " of " +
-                         (jobRunner.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
-
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.PercentComplete(), CultureInfo.InvariantCulture));
+                timer?.Stop();
+                timer.Elapsed -= OnTimerTick;
             }
+            else //if (jobRunner?.TotalNumberOfSimulations > 0)
+            {
+                double progress = jobRunner?.Progress ?? 0;
+                explorerPresenter.MainPresenter.ShowMessage($"{jobName} running ({jobRunner.Status})", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(progress * 100, CultureInfo.InvariantCulture));
+            }
+            //else if (jobRunner != null)
+            //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));
+        }
+
+        public void Dispose()
+        {
+            if (timer != null)
+                timer.Dispose();
         }
     }
 }

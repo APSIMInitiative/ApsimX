@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -40,6 +40,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Amount { get { return amount; } }
         double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        [NonSerialized]
         private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -74,7 +75,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -126,22 +127,38 @@ namespace Models.CLEM.Resources
             {
                 return;
             }
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
 
-            request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
-                ResourceType = this,
-                Loss = amountRemoved,
-                Activity = request.ActivityModel,
-                Reason = request.Reason
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+                (EquivalentMarketStore as ProductStoreType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm sales");
+            }
+
+            request.Provided = amountRemoved;
+            if (amountRemoved > 0)
+            {
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    Loss = amountRemoved,
+                    Activity = request.ActivityModel,
+                    Reason = request.Reason
+                };
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+            }
         }
 
         /// <summary>

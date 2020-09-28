@@ -41,9 +41,9 @@ namespace Models.CLEM.Activities
         /// Month for assessing dry season feed requirements
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(5)]
-        [Description("Month for assessing dry season feed requirements (1-12)")]
+        [Description("Month for assessing dry season feed requirements")]
         [Required, Month]
-        public int AssessmentMonth { get; set; }
+        public MonthsOfYear AssessmentMonth { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) before restocking
@@ -145,7 +145,7 @@ namespace Models.CLEM.Activities
             ForecastSequence = new Dictionary<DateTime, double>();
             // load ENSO file into memory
 
-            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
             {
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySIOFile, simulation.FileName);
@@ -227,7 +227,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == AssessmentMonth)
+            if (Clock.Today.Month == (int)AssessmentMonth)
             {
                 // Get ENSO forcase for current time
                 ENSOState forecastEnsoState = GetENSOMeasure();
@@ -250,12 +250,13 @@ namespace Models.CLEM.Activities
                         case ENSOState.ElNino:
                             GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
                             double kgha = pasture.TonnesPerHectare * 1000;
-                            herdChange = this.PastureToStockingChangeElNino.SolveY(kgha, false);
+                            //NOTE: ensure calculation method in relationship is fixed values
+                            herdChange = this.PastureToStockingChangeElNino.SolveY(kgha);
                             break;
                         case ENSOState.LaNina:
                             pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
                             kgha = pasture.TonnesPerHectare * 1000;
-                            herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha, false);
+                            herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha);
                             break;
                         default:
                             break;
@@ -305,7 +306,7 @@ namespace Models.CLEM.Activities
             // remove steers
             if (this.SellSteers)
             {
-                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
+                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire == false).ToList();
                 int cnt = 0;
                 while (cnt < steers.Count() && aEforSale > 0)
                 {
@@ -398,8 +399,8 @@ namespace Models.CLEM.Activities
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        BreedingSire = false,
-                        Draught = false,
+                        IsSire = false,
+                        IsDraught = false,
                         Location = paddockName,
                     }
                     );

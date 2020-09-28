@@ -1,15 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AddModelCommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    using Views;
-    using Models.Core;
-    using System.Xml;
-    using System;
     using Interfaces;
+    using Models.Core;
 
     /// <summary>
     /// This command moves a model up or down one spot in the siblings
@@ -85,7 +77,7 @@ namespace UserInterface.Commands
         private void MoveModelDown(CommandHistory commandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
-                explorerView.Tree.MoveDown(Apsim.FullPath(modelToMove));
+                explorerView.Tree.MoveDown(modelToMove.FullPath);
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex + 1, modelToMove as Model);
             modelWasMoved = true;
@@ -98,7 +90,7 @@ namespace UserInterface.Commands
         private void MoveModelUp(CommandHistory commandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
-                explorerView.Tree.MoveUp(Apsim.FullPath(modelToMove));
+                explorerView.Tree.MoveUp(modelToMove.FullPath);
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex - 1, modelToMove as Model);
             modelWasMoved = true;

@@ -7,6 +7,7 @@
     using Models.Soils;
     using NUnit.Framework;
     using System.Collections.Generic;
+    using System.Linq;
 
     [TestFixture]
     class ScopeTests
@@ -23,19 +24,19 @@
             // Create a simulation
             var simulation = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new Zone()
                     {
                         Name = "zone1",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Soil(),
                             new Plant()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf1" },
                                     new GenericOrgan() { Name = "stem1" }
@@ -43,7 +44,7 @@
                             },
                             new Plant()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf2" },
                                     new GenericOrgan() { Name = "stem2" }
@@ -55,11 +56,11 @@
                     new Zone() { Name = "zone2" }
                 }
             };
-            Apsim.ParentAllChildren(simulation);
+            simulation.ParentAllDescendants();
 
             // Ensure correct scoping from leaf1 (remember Plant is a scoping unit)
             var leaf1 = simulation.Children[2].Children[1].Children[0];
-            List<IModel> inScopeOfLeaf1 = Apsim.FindAll(leaf1);
+            List<IModel> inScopeOfLeaf1 = leaf1.FindAllInScope().ToList();
             Assert.AreEqual(inScopeOfLeaf1.Count, 10);
             Assert.AreEqual(inScopeOfLeaf1[0].Name, "Plant");
             Assert.AreEqual(inScopeOfLeaf1[1].Name, "leaf1");
@@ -74,7 +75,7 @@
 
             // Ensure correct scoping from soil
             var soil = simulation.Children[2].Children[0];
-            List<IModel> inScopeOfSoil = Apsim.FindAll(soil);
+            List<IModel> inScopeOfSoil = soil.FindAllInScope().ToList();
             Assert.AreEqual(inScopeOfSoil.Count, 12);
             Assert.AreEqual(inScopeOfSoil[0].Name, "zone1");
             Assert.AreEqual(inScopeOfSoil[1].Name, "Soil");

@@ -9,6 +9,14 @@
     public interface IStorageWriter
     {
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        /// <remarks>
+        /// This is currently used to determine which post-simulation tools to run.
+        /// </remarks>
+        List<string> TablesModified { get; }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>
@@ -19,6 +27,12 @@
         /// </summary>
         /// <param name="data">The data to write.</param>
         void WriteTable(DataTable data);
+
+        /// <summary>
+        /// Deletes a table from the database.
+        /// </summary>
+        /// <param name="tableName">Name of the table to be deleted.</param>
+        void DeleteTable(string tableName);
 
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
         void Empty();
@@ -35,6 +49,11 @@
             /// <summary>Revert a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to revert to.</param>
         void RevertCheckpoint(string name);
+
+        /// <summary>Set a checkpoint show on graphs flag.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="showGraphs">Show graphs?</param>
+        void SetCheckpointShowGraphs(string name, bool showGraphs);
 
         /// <summary>Wait for all records to be written.</summary>
         void WaitForIdle();

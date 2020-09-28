@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -47,6 +47,25 @@ namespace Models.CLEM.Resources
         public object GetByName(string name)
         {
             return this.Children.Where(a => a.Name == name).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public virtual void AddNewResourceType(IResourceWithTransactionType child)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

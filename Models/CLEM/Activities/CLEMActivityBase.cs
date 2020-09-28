@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 
@@ -30,26 +30,26 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Current list of resources requested by this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ResourceRequest> ResourceRequestList { get; set; }
 
         /// <summary>
         /// Current list of activities under this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<CLEMActivityBase> ActivityList { get; set; }
 
         /// <summary>
         /// Current status of this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ActivityStatus Status { get; set; }
 
         private bool enabled = true;
         /// <summary>
         /// Current status of this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool ActivityEnabled
         {
             get
@@ -69,17 +69,40 @@ namespace Models.CLEM.Activities
             }
         }
 
+        ZoneCLEM parentZone = null;
+        /// <summary>
+        /// Multiplier for farms in this zone
+        /// </summary>
+        public double FarmMultiplier 
+        {
+            get
+            {
+                if(parentZone is null)
+                {
+                    parentZone = FindAncestor<ZoneCLEM>();
+                }
+                if(parentZone is null)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return parentZone.FarmMultiplier;
+                }
+            }
+        }
+
         /// <summary>
         /// Resource allocation style
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceAllocationStyle AllocationStyle { get; set; }
 
         /// <summary>
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
-        public bool TimingOK
+        public virtual new bool TimingOK
         {
             get
             {
@@ -92,7 +115,7 @@ namespace Models.CLEM.Activities
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
                 IModel current = this as IModel;
-                while (current.GetType() != typeof(ZoneCLEM))
+                while (current.GetType() != typeof(ZoneCLEM) & current.GetType() != typeof(Market))
                 {
                     result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
@@ -260,7 +283,7 @@ namespace Models.CLEM.Activities
         {
             if (this.Enabled)
             {
-                if (this.TimingOK)
+                if (TimingOK)
                 {
                     ResourcesForAllActivities(model);
                 }
@@ -290,9 +313,9 @@ namespace Models.CLEM.Activities
         {
             // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 
-            if ((model.GetType() == typeof(ActivitiesHolder)&&this.AllocationStyle== ResourceAllocationStyle.Automatic)|| (model.GetType() != typeof(ActivitiesHolder)))
+            if ((model.GetType() == typeof(ActivitiesHolder) & this.AllocationStyle == ResourceAllocationStyle.Automatic) | (model.GetType() != typeof(ActivitiesHolder)))
             {
-                // this will be perfomred if
+                // this will be performed if
                 // (a) the call has come from the Activity Holder and is therefore using the GetResourcesRequired event and the allocation style is automatic, or
                 // (b) the call has come from the Activity
                 GetResourcesRequiredForActivity();
@@ -534,7 +557,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                lr = Apsim.Children(callingModel, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
             }
 
             int currentIndex = 0;
@@ -694,6 +717,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Success;
                 return;
             }
+
             foreach (ResourceRequest request in resourceRequestList)
             {
                 request.ActivityID = uniqueActivityID;
@@ -737,6 +761,7 @@ namespace Models.CLEM.Activities
             if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
+                // this uses the current zone resources, but will find markets if needed in the process
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
@@ -757,7 +782,19 @@ namespace Models.CLEM.Activities
             foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
-                OnShortfallOccurred(rrEventArgs);
+
+                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
+                {
+                    ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
+                    if(marketActivities != null)
+                    {
+                        marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
+                    }
+                }
+                else
+                {
+                    OnShortfallOccurred(rrEventArgs);
+                }
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }
@@ -765,7 +802,6 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.Success;
             }
-
         }
 
         /// <summary>

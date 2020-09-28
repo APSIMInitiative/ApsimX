@@ -7,6 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IValidatableObject
+    public class LabourFeedGroup: CLEMModel, IValidatableObject, IFilterGroup
     {
         /// <summary>
         /// Value to supply for each month
@@ -28,6 +29,18 @@ namespace Models.CLEM.Groupings
         [Description("Value to supply")]
         [GreaterThanValue(0)]
         public double Value { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -76,8 +89,8 @@ namespace Models.CLEM.Groupings
             }
 
 
-            ZoneCLEM zoneCLEM = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
             HumanFoodStoreType food =  resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
             if (food != null)
             {
@@ -129,7 +142,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (Apsim.Children(this, typeof(LabourFilter)).Count() == 0)
+            if (this.FindAllChildren<LabourFilter>().Count() == 0)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

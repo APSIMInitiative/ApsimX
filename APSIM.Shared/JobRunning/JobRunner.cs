@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -32,11 +33,19 @@
         /// </summary>
         public List<IRunnable> SimsRunning { get; private set; } = new List<IRunnable>();
 
+        /// <summary>
+        /// Lock object controlling access to SimsRunning list
+        /// </summary>
+        protected readonly object runningLock = new object();
+
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
 
         /// <summary>A token for cancelling running of jobs</summary>
         protected CancellationTokenSource cancelToken;
+
+        /// <summary>The number of jobs which have finished running.</summary>
+        public int NumJobsCompleted { get; protected set; }
 
         /// <summary>Constructor.</summary>
         /// <param name="numProcessors">Number of processors to use.</param>
@@ -105,41 +114,47 @@
         /// <summary>Main DoWork method for the scheduler thread. NB this does NOT run on the UI thread.        /// </summary>
         protected virtual void WorkerThread()
         {
-            bool multiThreaded = numberOfProcessors > 1;
             try
             {
-                foreach (var jobManager in jobManagers)
+                bool multiThreaded = numberOfProcessors > 1;
+                try
                 {
-                    var jobs = jobManager.GetJobs();
-                    foreach (var job in jobs)
+                    foreach (var jobManager in jobManagers)
                     {
-                        if (cancelToken.IsCancellationRequested)
-                            return;
+                        var jobs = jobManager.GetJobs();
+                        foreach (var job in jobs)
+                        {
+                            if (cancelToken.IsCancellationRequested)
+                                return;
 
-                        // Wait until we have a spare processor to run a job.
-                        if (multiThreaded)
-                            SpinWait.SpinUntil(() => numberJobsRunning <= numberOfProcessors);
+                            // Wait until we have a spare processor to run a job.
+                            if (multiThreaded)
+                                SpinWait.SpinUntil(() => numberJobsRunning <= numberOfProcessors);
 
-                        // Run the job.
-                        Interlocked.Increment(ref numberJobsRunning);
+                            // Run the job.
+                            Interlocked.Increment(ref numberJobsRunning);
 
-                        if (multiThreaded)
-                            Task.Run(() => { RunActualJob(job, jobManager); });
-                        else
-                            RunActualJob(job, jobManager);
+                            if (multiThreaded)
+                                Task.Run(() => { RunActualJob(job, jobManager); });
+                            else
+                                RunActualJob(job, jobManager);
+                        }
                     }
                 }
-            }
-            catch (Exception err)
-            {
-                ExceptionThrownByRunner = err;
-            }
+                catch (Exception err)
+                {
+                    ExceptionThrownByRunner = err;
+                }
 
-            // Wait for all jobs to complete and then signal completion.
-            SpinWait.SpinUntil(() => numberJobsRunning == 0);
-            ElapsedTime = DateTime.Now - startTime;
-            InvokeAllCompleted();
-            completed = true;
+                // Wait for all jobs to complete and then signal completion.
+                SpinWait.SpinUntil(() => numberJobsRunning == 0);
+                ElapsedTime = DateTime.Now - startTime;
+                InvokeAllCompleted();
+            }
+            finally
+            {
+                completed = true;
+            }
         }
 
         /// <summary>Run the specified job.</summary>
@@ -150,7 +165,10 @@
             try
             {
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Add(job);
+                    lock (runningLock)
+                    {
+                        SimsRunning.Add(job);
+                    }
 
                 var startTime = DateTime.Now;
 
@@ -169,7 +187,11 @@
                 InvokeJobCompleted(job, jobManager, startTime, error);
 
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Remove(job);
+                    lock (runningLock)
+                    {
+                        NumJobsCompleted++;
+                        SimsRunning.Remove(job);
+                    }
             }
             finally
             {

@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IButtonView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using System;
 
@@ -17,11 +11,11 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets or sets a value of the text of the button.
         /// </summary>
-        string Value { get; set; }
+        string Text { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the dropdown is visible.
         /// </summary>
-        bool IsVisible { get; set; }
+        bool Visible { get; set; }
     }
 }

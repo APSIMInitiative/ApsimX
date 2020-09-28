@@ -13,7 +13,7 @@
     /// and the associated metadata describing a simulation.
     /// </summary>
     [Serializable]
-    public class SimulationDescription : IRunnable
+    public class SimulationDescription : IRunnable, IReportsStatus
     {
         /// <summary>The top level simulations instance.</summary>
         private IModel topLevelModel;
@@ -31,6 +31,17 @@
         /// The actual simulation object to run
         /// </summary>
         public Simulation SimulationToRun { get; private set; } = null;
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                return SimulationToRun?.Progress ?? 0;
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -63,14 +74,18 @@
         public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
 
         /// <summary>Gets or sets the DataStore for this simulaton.</summary>
-        public DataStore Storage
+        public IDataStore Storage
         {
             get
             {
                 var scope = new ScopingRules();
-                return scope.FindAll(baseSimulation).First(model => model is DataStore) as DataStore;
+                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
             }
         }
+
+        /// <summary>Status message.</summary>
+        public string Status => SimulationToRun.Status;
+
         /// <summary>
         /// Add an override to replace an existing model, as specified by the
         /// path, with a replacement model.
@@ -112,7 +127,16 @@
 
                 Simulation newSimulation;
                 if (doClone)
+                {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
+
+                    // After a binary clone, we need to force all managers to
+                    // recompile their scripts. This is to work around an issue
+                    // where scripts will change during deserialization. See issue
+                    // #4463 and the TestMultipleChildren test inside ReportTests.
+                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
+                        script.OnCreated();
+                }
                 else
                     newSimulation = baseSimulation;
 
@@ -122,15 +146,16 @@
                     newSimulation.Name = Name;
 
                 newSimulation.Parent = null;
-                Apsim.ParentAllChildren(newSimulation);
+                newSimulation.ParentAllDescendants();
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
-                newSimulation.Descriptors = Descriptors;
+                if (newSimulation.Descriptors == null || Descriptors.Count > 0)
+                    newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
 
                 // Standardise the soil.
-                var soils = Apsim.ChildrenRecursively(newSimulation, typeof(Soils.Soil));
+                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
                 foreach (Soils.Soil soil in soils)
                     SoilStandardiser.Standardise(soil);
 
@@ -158,7 +183,7 @@
             }
             else
             {
-                IModel storage = Apsim.Find(topLevelModel, typeof(IDataStore));
+                IModel storage = topLevelModel.FindInScope<DataStore>();
                 services.Add(storage);
             }
 
@@ -179,8 +204,8 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = Apsim.Child(topLevelModel, "Replacements");
-                if (replacements != null)
+                IModel replacements = topLevelModel.FindChild<Replacements>();
+                if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
@@ -196,10 +221,10 @@
         public class Descriptor
         {
             /// <summary>The name of the descriptor.</summary>
-            public string Name { get; }
+            public string Name { get; set; }
 
             /// <summary>The value of the descriptor.</summary>
-            public string Value { get; }
+            public string Value { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="name">Name of the descriptor.</param>

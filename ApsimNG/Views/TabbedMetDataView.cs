@@ -187,7 +187,7 @@ namespace UserInterface.Views
             GraphShowYearsValue = 1;
             worksheetCombo = new DropDownView(this);
             alignment10.Add(worksheetCombo.MainWidget);
-            worksheetCombo.IsVisible = true;
+            worksheetCombo.Visible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }

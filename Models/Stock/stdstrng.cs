@@ -1,13 +1,5 @@
-// -----------------------------------------------------------------------
-// <copyright file="stdstrng.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace StdUnits
 {
-    using System;
-
     /// <summary>
     /// String utility functions
     /// </summary>

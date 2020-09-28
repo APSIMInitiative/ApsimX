@@ -1,20 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ActivityLedgerGridPresenter.cs" company="CSIRO CLEM">
-//     Copyright (c) CSIRO CLEM based  upon GridePresenter APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using Models.Storage;
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Factorial;
     using Views;
-    using global::UserInterface.Interfaces;
-    using System.Collections.Generic;
-    using Models.Storage;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter
@@ -34,6 +25,11 @@ namespace UserInterface.Presenters
         /// The name of the simulation to display
         /// </summary>
         public string SimulationName { get; set; }
+
+        /// <summary>
+        /// The name of the simulation to display
+        /// </summary>
+        public string ZoneName { get; set; }
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
@@ -119,7 +115,7 @@ namespace UserInterface.Presenters
                     {
                         // need to filter by current simulation
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == this.SimulationName);
+                            .Where(row => row.Field<String>("SimulationName") == this.SimulationName & row.Field<String>("Zone") == this.ZoneName);
                         if (filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();

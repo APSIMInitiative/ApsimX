@@ -24,7 +24,7 @@
         {
             var soil = new Soil
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Physical()
                     {
@@ -35,7 +35,7 @@
                         DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                         SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
 
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new SoilCrop
                             {
@@ -65,7 +65,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 300 },
-                        NO3N = new double[] { 23, 7 },
+                        NO3 = new double[] { 23, 7 },
                         OC = new double[] { 1.35, 1.4 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
@@ -90,7 +90,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = Apsim.Find(file, typeof(Simulation));
+            IModel sim = file.FindInScope<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;

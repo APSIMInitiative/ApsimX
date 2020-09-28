@@ -1,6 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Graph;
+using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using ApsimNG.EventArguments;
 
 namespace UserInterface.Presenters
 {
-    public class GraphPanelPresenter : IPresenter
+    public sealed class GraphPanelPresenter : IPresenter, IDisposable
     {
         /// <summary>
         /// The view.
@@ -64,6 +65,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentException();
 
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.GraphViewCreated += ModifyGraphView;
 
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesGrid, presenter);
@@ -85,6 +87,7 @@ namespace UserInterface.Presenters
             processingThread.DoWork -= WorkerThread;
 
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.view.GraphViewCreated -= ModifyGraphView;
             ClearGraphs();
             properties.Detach();
         }
@@ -109,7 +112,7 @@ namespace UserInterface.Presenters
                 status.IsWorking = true;
 
             ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -195,7 +198,7 @@ namespace UserInterface.Presenters
             {
                 Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
                 graph.Parent = panel;
-                Apsim.ParentAllChildren(graph);
+                graph.ParentAllDescendants();
 
                 if (panel.LegendOutsideGraph)
                     graph.LegendOutsideGraph = true;
@@ -222,7 +225,7 @@ namespace UserInterface.Presenters
                         {
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
                         }
-                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim });
+                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim }).ToList();
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
@@ -302,7 +305,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
+            return (panel.FindInScope<IDataStore>()).Reader;
         }
 
         /// <summary>
@@ -311,10 +314,29 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
-            {
+            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
                 Refresh();
-            }
+        }
+
+        /// <summary>
+        /// Called whenever the view creates a graph. Allows for modifications
+        /// to the graph view to be applied.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void ModifyGraphView(object sender, CustomDataEventArgs<IGraphView> args)
+        {
+            // n.b. this will be called on the main thread.
+            if (panel.HideTitles)
+                args.Data.FormatTitle(null);
+            args.Data.FontSize = panel.FontSize;
+            args.Data.MarkerSize = panel.MarkerSize;
+        }
+
+        public void Dispose()
+        {
+            if (processingThread != null)
+                processingThread.Dispose();
         }
 
         private class WorkerStatus

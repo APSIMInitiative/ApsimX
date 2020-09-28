@@ -54,6 +54,8 @@ namespace UnitTests.Storage
 
         public List<string> TableAndViewNames => throw new NotImplementedException();
 
+        public List<string> TablesModified { get; set; }
+
         [Serializable]
         internal class Row
         {
@@ -257,6 +259,26 @@ namespace UnitTests.Storage
         }
 
         public void AddView(string name, string selectSQL)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Tuple<string, Type>> GetColumns(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
         {
             throw new NotImplementedException();
         }

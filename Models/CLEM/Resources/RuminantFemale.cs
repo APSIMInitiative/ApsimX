@@ -14,9 +14,39 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
+        /// Is female of breeing age
+        /// </summary>
+        public bool IsBreeder
+        {
+            get
+            {
+                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
+            }
+        }
+
+        /// <summary>
         /// The age of female at last birth
         /// </summary>
         public double AgeAtLastBirth { get; set; }
+
+        /// <summary>
+        /// The time (months) passed since last birth
+        /// Returns 0 for pre-first birth females
+        /// </summary>
+        public double MonthsSinceLastBirth 
+        { 
+            get 
+            {
+                if (AgeAtLastBirth > 0)
+                {
+                    return Age - AgeAtLastBirth;
+                }
+                else
+                {
+                    return 0;
+                }
+            } 
+        }
 
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
@@ -59,11 +89,6 @@ namespace Models.CLEM.Resources
         public double PreviousConceptionRate { get; set; }
 
         /// <summary>
-        /// Weight lost at birth due to calf
-        /// </summary>
-        public double WeightLossDueToCalf { get; set; }
-
-        /// <summary>
         /// Months since minimum breeding age or entering the population
         /// </summary>
         public double NumberOfBreedingMonths
@@ -96,7 +121,7 @@ namespace Models.CLEM.Resources
             int birthCount = 1;
             if (this.BreedParams.MultipleBirthRate != null)
             {
-                double rnd = ZoneCLEM.RandomGenerator.NextDouble();
+                double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
                 foreach (double i in this.BreedParams.MultipleBirthRate)
                 {
@@ -190,7 +215,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(int number, double rate, int ageOffsett)
+        public void UpdateConceptionDetails(int number, double rate, int ageOffset)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
@@ -199,8 +224,9 @@ namespace Models.CLEM.Resources
             }
             PreviousConceptionRate = rate;
             CarryingCount = number;
-            WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age + ageOffsett;
+            AgeAtLastConception = this.Age + ageOffset;
+            // use normalised weight for age if offset provided for pre simulation allocation
+            WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
             NumberOfConceptions++;
         }
 
@@ -221,9 +247,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                // removed the previous SuccessfulPregnancy and BirthAge > ConceptionAge to allow new ability to conceive while lactating.
-                // ToDo:  Add & this.SuccessfulPregnancy to avoid lactation after failed pregnancy
-                return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
+                return ((this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
             }            
         }
 

@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using NUnit.Framework;
     using System.Collections.Generic;
@@ -19,7 +19,7 @@
             var sim = new Simulation()
             {
                 Name = "Sim1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Series()
                     {
@@ -30,7 +30,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName  Col1  Col2\r\n" +
@@ -43,14 +43,13 @@
             var reader = new TextStorageReader(data);
 
             var series = sim.Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].XFieldName, "Col1");
             Assert.AreEqual(definitions[0].YFieldName, "Col2");
             Assert.AreEqual(definitions[0].Colour, series.Colour);
-            Assert.IsNull(definitions[0].Error);
+            Assert.IsNull(definitions[0].YError);
             Assert.AreEqual(definitions[0].Line, LineType.Solid);
             Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -75,7 +74,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -92,7 +91,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   Exp Col1  Col2\r\n" +
@@ -105,18 +104,17 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 2);
             foreach (var definition in definitions)
             {
                 Assert.AreEqual(definitions[0].XFieldName, "Col1");
                 Assert.AreEqual(definitions[0].YFieldName, "Col2");
-                Assert.IsNull(definitions[0].Error);
+                Assert.IsNull(definitions[0].YError);
                 Assert.AreEqual(definitions[0].Line, LineType.Solid);
                 Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
                 Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -149,7 +147,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -169,7 +167,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Irr  Fert   Col1  Col2\r\n" +
@@ -186,19 +184,18 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Irr");
             Assert.AreEqual(descriptors[1], "Fert");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 4);
             foreach (var definition in definitions)
             {
                 Assert.AreEqual(definitions[0].XFieldName, "Col1");
                 Assert.AreEqual(definitions[0].YFieldName, "Col2");
-                Assert.IsNull(definitions[0].Error);
+                Assert.IsNull(definitions[0].YError);
                 Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
                 Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
                 Assert.AreEqual(definitions[0].MarkerSize, MarkerSizeType.Normal);
@@ -265,7 +262,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -290,16 +287,15 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Irr");
             Assert.AreEqual(descriptors[1], "Fert");
             Assert.AreEqual(descriptors[2], "Cultivar");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 8);
 
@@ -399,7 +395,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -428,14 +424,13 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "ABC");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 12);
 
@@ -510,7 +505,7 @@
             var sim = new Simulation()
             {
                 Name = "Sim1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Series()
                     {
@@ -519,7 +514,7 @@
                         XFieldName = "Col1",
                         YFieldName = "Col2",
 
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Regression()
                             {
@@ -530,7 +525,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName  Col1  Col2\r\n" +
@@ -543,8 +538,7 @@
             var reader = new TextStorageReader(data);
 
             var series = sim.Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 3);
             Assert.AreEqual(definitions[0].Title, "Series");
@@ -575,7 +569,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -584,7 +578,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -606,7 +600,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Exp Col1  Col2  Col3\r\n" +
@@ -619,9 +613,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1, 2, 2 });
@@ -629,8 +621,7 @@
 
 
             var series2 = folder.Children[1].Children[1] as Series;
-            var definitions2 = new List<SeriesDefinition>();
-            series2.GetSeriesToPutOnGraph(reader, definitions2);
+            List<SeriesDefinition> definitions2 = series2.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions2[0].Colour, ColourUtilities.Colours[1]);
             Assert.AreEqual(definitions2[0].Title, "Series2");
             Assert.AreEqual(definitions2[0].X as double[], new double[] { 1, 1, 2, 2 });
@@ -644,7 +635,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -653,7 +644,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -667,7 +658,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
@@ -680,9 +671,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Sim1");
@@ -703,7 +692,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -712,7 +701,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -727,7 +716,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   Zone Col1  Col2\r\n" +
@@ -744,9 +733,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 4);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -782,7 +769,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -791,7 +778,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -805,22 +792,20 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
-                "SimulationName Col1  Col2\r\n" +
-                "            ()   ()   (g)\r\n" +
-                "          Sim1    1    10\r\n" +
-                "          Sim1    2    20\r\n" +
-                "          Sim2    1    30\r\n" +
-                "          Sim2    2    40\r\n";
+                "CheckpointName SimulationName Col1  Col2\r\n" +
+                "            ()             ()   ()   (g)\r\n" +
+                "       Current           Sim1    1    10\r\n" +
+                "       Current           Sim1    2    20\r\n" +
+                "       Current           Sim2    1    30\r\n" +
+                "       Current           Sim2    2    40\r\n";
 
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Exp1");
@@ -842,7 +827,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -851,7 +836,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -866,30 +851,28 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
-                "  ABC  DEF Col1  Col2\r\n" +
-                "   ()   ()   ()   (g)\r\n" +
-                "    A    d    1    10\r\n" +
-                "    A    d    2    20\r\n" +
-                "    A    e    1    30\r\n" +
-                "    A    e    2    40\r\n" +
-                "    B    d    1    50\r\n" +
-                "    B    d    2    60\r\n" +
-                "    B    e    1    70\r\n" +
-                "    B    e    2    80\r\n";
+                " CheckpointName ABC  DEF Col1  Col2\r\n" +
+                "             ()  ()   ()   ()   (g)\r\n" +
+                "        Current   A    d    1    10\r\n" +
+                "        Current   A    d    2    20\r\n" +
+                "        Current   A    e    1    30\r\n" +
+                "        Current   A    e    2    40\r\n" +
+                "        Current   B    d    1    50\r\n" +
+                "        Current   B    d    2    60\r\n" +
+                "        Current   B    e    1    70\r\n" +
+                "        Current   B    e    2    80\r\n";
 
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
 
-            var descriptorNames = series1.GetDescriptorNames().ToArray();
+            var descriptorNames = series1.GetDescriptorNames(reader).ToArray();
             //Assert.AreEqual(descriptorNames, new string[] { "SimulationName", "Graph series", "ABC" });
 
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 4);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -923,7 +906,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -941,7 +924,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Exp   A  Col1  Col2\r\n" +
@@ -954,11 +937,10 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
 
@@ -973,7 +955,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -991,7 +973,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1005,8 +987,7 @@
 
             var series = folder.Children[1] as Series;
 
-            var definitions = new List<SeriesDefinition>();
-            series.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series.GetSeriesDefinitions(reader).ToList();
 
             Assert.AreEqual(definitions.Count, 1);
 
@@ -1024,12 +1005,12 @@
             var simulations = new Simulations()
             {
                 Name = "Simulations",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Folder()
                     {
                         Name = "Folder1",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1038,7 +1019,7 @@
                             }),
                             new Graph()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Series()
                                     {
@@ -1055,7 +1036,7 @@
                     new Folder()
                     {
                         Name = "Folder2",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1068,7 +1049,7 @@
             };
 
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
@@ -1085,9 +1066,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Title, "Sim1");
@@ -1111,12 +1090,12 @@
             var simulations = new Simulations()
             {
                 Name = "Simulations",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Folder()
                     {
                         Name = "Folder1",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1124,7 +1103,7 @@
                             }),
                             new Graph()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Series()
                                     {
@@ -1140,7 +1119,7 @@
                     new Folder()
                     {
                         Name = "Folder2",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1152,7 +1131,7 @@
             };
 
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Col1  Col2\r\n" +
@@ -1165,9 +1144,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
@@ -1184,12 +1161,12 @@
             var simulations = new Simulations()
             {
                 Name = "Simulations",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Folder()
                     {
                         Name = "Folder1",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1197,7 +1174,7 @@
                             }),
                             new Graph()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Series()
                                     {
@@ -1214,7 +1191,7 @@
                     new Folder()
                     {
                         Name = "Folder2",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSimulationDescriptionGenerator(new List<Description>()
                             {
@@ -1225,7 +1202,7 @@
                 }
             };
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   A  Col1  Col2\r\n" +
@@ -1238,9 +1215,7 @@
             var reader = new TextStorageReader(data);
 
             var series1 = simulations.Children[0].Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Title, "a");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
@@ -1254,7 +1229,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -1265,7 +1240,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -1280,7 +1255,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1293,9 +1268,8 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
 
-            series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -1317,7 +1291,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -1327,7 +1301,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -1342,7 +1316,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1355,9 +1329,8 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
 
-            series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
@@ -1373,7 +1346,7 @@
             var folder = new Folder()
             {
                 Name = "Folder",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockSimulationDescriptionGenerator(new List<Description>()
                     {
@@ -1384,7 +1357,7 @@
                     }),
                     new Graph()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -1399,7 +1372,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +
@@ -1412,25 +1385,23 @@
             var reader = new TextStorageReader(data);
 
             var series1 = folder.Children[1].Children[0] as Series;
-            var definitions = new List<SeriesDefinition>();
-
-            series1.GetSeriesToPutOnGraph(reader, definitions);
+            List<SeriesDefinition> definitions = series1.GetSeriesDefinitions(reader).ToList();
             Assert.AreEqual(definitions.Count, 2);
             Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
             Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
             Assert.AreEqual(definitions[0].Title, "Exp1");
             Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
             Assert.AreEqual(definitions[0].Y as double[], new double[] { 1, 5 });
-            Assert.AreEqual(definitions[0].Error.ToList()[0], 0.1, 0.000001);
-            Assert.AreEqual(definitions[0].Error.ToList()[1], 0.5, 0.000001);
+            Assert.AreEqual(definitions[0].YError.ToList()[0], 0.1, 0.000001);
+            Assert.AreEqual(definitions[0].YError.ToList()[1], 0.5, 0.000001);
 
             Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
             Assert.AreEqual(definitions[1].Marker, MarkerType.FilledCircle);
             Assert.AreEqual(definitions[1].Title, "Exp2");
             Assert.AreEqual(definitions[1].X as double[], new double[] { 3, 4 });
             Assert.AreEqual(definitions[1].Y as double[], new double[] { 8, 6 });
-            Assert.AreEqual(definitions[1].Error.ToList()[0], 0.8, 0.000001);
-            Assert.AreEqual(definitions[1].Error.ToList()[1], 0.6, 0.000001);
+            Assert.AreEqual(definitions[1].YError.ToList()[0], 0.8, 0.000001);
+            Assert.AreEqual(definitions[1].YError.ToList()[1], 0.6, 0.000001);
         }
 
         /// <summary>Create some test data and return a storage reader. </summary>

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -19,7 +19,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
     [Description("This component defines a target to be achieved when trying to feed people to set targets")]
     [Version(1, 0, 1, "")]
-    [Version(1, 0, 2, "Displays new www.apsim.info online help.")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTarget.htm")]
     public class LabourActivityFeedTarget: CLEMModel
     {
@@ -49,19 +48,19 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Current target
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get; set; }
 
         /// <summary>
         /// Stored level achieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CurrentAchieved { get; set; }
 
         /// <summary>
         /// Has target been achieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool TargetMet { get { return CurrentAchieved >= Target; } }
 
         /// <summary>

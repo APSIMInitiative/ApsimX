@@ -28,9 +28,9 @@ namespace UnitTests.Weather
             Simulation baseSim = new Simulation()
             {
                 Name = "Base",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
-                    new Models.Weather()
+                    new Models.Climate.Weather()
                     {
                         Name = "Weather",
                         FullFileName = weatherFilePath,

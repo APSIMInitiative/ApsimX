@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -60,7 +60,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
         private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
         private double roundedAreaAvailable;
@@ -68,13 +68,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The total area available 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
 
         /// <summary>
         /// List of currently allocated land
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LandActivityAllocation> AllocatedActivitiesList;
 
         private CLEMModel ActivityRequestingRemainingLand;
@@ -287,7 +287,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion

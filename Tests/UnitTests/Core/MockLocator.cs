@@ -1,6 +1,6 @@
 ﻿using System;
 using Models.Core;
-using Models.Report;
+using Models;
 using System.Collections.Generic;
 
 namespace UnitTests.Core

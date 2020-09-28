@@ -4,30 +4,35 @@
     using Core;
     using Functions;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
+    using Models.Soils;
 
     /// <summary>
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
     /// </summary>
     [Serializable]
-    public class WaterTableModel : Model, IFunction
+    [ValidParent(ParentType = typeof(WaterBalance))]
+    public class WaterTableModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>Depth of water table (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; private set; }
 
         /// <summary>Calculate water table depth.</summary>
-        public double Value(int arrayIndex = -1)
+        public void Calculate()
         {
-            double[] Thickness = soil.Properties.Water.Thickness;
+            double[] Thickness = soilPhysical.Thickness;
             double[] SW = soil.Water;
-            double[] SAT = MathUtilities.Multiply(soil.Properties.Water.SAT, Thickness);
-            double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, Thickness);
-
+            double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
+            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
 
             // Find the first saturated layer
             int sat_layer = -1;
@@ -46,7 +51,6 @@
             {
                 //set the depth of watertable to the total depth of the soil profile
                 Depth = MathUtilities.Sum(Thickness);
-                return Depth;
             }
 
             // Do the calculation of the water table if the fully saturated layer is not the top layer AND
@@ -55,7 +59,7 @@
                                     SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) > 0.0)
             {
                 // layer above is over dul
-                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer - 1, 0.0);
+                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer, 0.0);
                 double saturated = SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) * Thickness[sat_layer - 1];
                 Depth = (bottom_depth - saturated);
             }
@@ -72,8 +76,45 @@
                 //Depth = bottom_depth - saturated;
                 Depth = bottom_depth; // DeanH modified. Bug in original FORTRAN code?
             }
+        }
 
-            return Depth;
+        /// <summary>
+        /// Sets the water table.
+        /// </summary>
+        /// <param name="initialDepth">The initial depth.</param>
+        public void Set(double initialDepth)
+        {
+            double[] Thickness = soilPhysical.Thickness;
+            double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
+            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
+
+            double fraction;
+            double top = 0.0;
+            double bottom = 0.0;
+
+            for (int i = 0; i < soil.Water.Length; i++)
+            {
+                top = bottom;
+                bottom = bottom + soilPhysical.Thickness[i];
+                
+                if (initialDepth >= bottom)
+                {
+                    //do nothing;
+                }
+                else if (initialDepth > top)
+                {
+                    //! top of water table is in this layer
+                    var drainableCapacity = SAT[i] - DUL[i];
+                    fraction = (bottom - initialDepth) / (bottom - top);
+                    soil.Water[i] = DUL[i] + fraction * drainableCapacity;
+                }
+                else
+                {
+                    soil.Water[i] = SAT[i];
+                }
+            }
+
+            Depth = initialDepth;
         }
 
         /// <summary>Calculate the saturated fraction for the specified layer index.</summary>

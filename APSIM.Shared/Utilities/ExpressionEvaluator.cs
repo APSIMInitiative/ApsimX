@@ -939,6 +939,8 @@ namespace APSIM.Shared.Utilities
                         {
                             if (i == 0)
                                 result.m_value = Values[i];
+                            else if (MathUtilities.FloatsAreEqual(Values[i], 0, 1e-8))
+                                result.m_value = 0;
                             else
                                 result.m_value /= Values[i];
                         }
@@ -972,6 +974,333 @@ namespace APSIM.Shared.Utilities
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
                         result.m_value = MathUtilities.Max(Values);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "floor":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;				
+                case "stddev":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.StandardDeviation(Values);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "median":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.5);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile5":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.05);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile10":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.10);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile15":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.15);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile20":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.20);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile25":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.25);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile30":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.30);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile35":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.35);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile40":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.40);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile45":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.45);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile50":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.50);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile55":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.55);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile60":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.60);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile65":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.65);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile70":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.70);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile75":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.75);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile80":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.80);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile85":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.85);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile90":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.90);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile95":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.95);
                         result.m_name = name;
                         result.m_values = null;
                     }

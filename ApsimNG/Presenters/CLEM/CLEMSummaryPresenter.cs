@@ -2,6 +2,8 @@
 namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
     using Models.CLEM;
     using Models.Core;
@@ -53,7 +55,7 @@ namespace UserInterface.Presenters
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
-                "table th {padding:8px; }" +
+                "table th {padding:8px; color:[HeaderFontColor];}" +
                 "table td {padding:8px; }" +
                 " td:nth-child(n+2) {text-align:center;}" +
                 " th:nth-child(1) {text-align:left;}" +
@@ -109,7 +111,9 @@ namespace UserInterface.Presenters
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
-                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
+                ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
+                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
+                ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
@@ -119,13 +123,14 @@ namespace UserInterface.Presenters
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".holdersub {margin: 5px 0px 5px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}"+
-                "\n</style>\n</head>\n<body>";
+                "\n</style>\n<!-- graphscript --></ head>\n<body>";
 
             // apply theme based settings
             if(!Utility.Configuration.Settings.DarkTheme)
             {
                 // light theme
                 htmlString = htmlString.Replace("[FontColor]", "black");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "white");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "floralwhite");
@@ -153,6 +158,7 @@ namespace UserInterface.Presenters
 
                 // filters
                 htmlString = htmlString.Replace("[FiltContBack]", "#fbe8fc");
+                htmlString = htmlString.Replace("[FiltContActivityBack]", "#cc33cc");
 
                 // values
                 htmlString = htmlString.Replace("[ValueSetBack]", "#e8fbfc");
@@ -162,6 +168,7 @@ namespace UserInterface.Presenters
             {
                 // dark theme
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "black");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "#281A0E");
@@ -189,15 +196,20 @@ namespace UserInterface.Presenters
 
                 // filters
                 htmlString = htmlString.Replace("[FiltContBack]", "#5c195e");
+                htmlString = htmlString.Replace("[FiltContActivityBack]", "#cc33cc");
 
                 // values
                 htmlString = htmlString.Replace("[ValueSetBack]", "#49adc4");
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
             }
 
-            if (model.GetType() == typeof(ZoneCLEM))
+            if (model is ZoneCLEM)
             {
                 htmlString += (model as ZoneCLEM).GetFullSummary(model, true, htmlString);
+            }
+            else if (model is Market)
+            {
+                htmlString += (model as Market).GetFullSummary(model, true, htmlString);
             }
             else
             {
@@ -205,6 +217,30 @@ namespace UserInterface.Presenters
             }
             htmlString += "\n</body>\n</html>";
 
+            if(htmlString.Contains("<canvas"))
+            {
+                Assembly _assembly = Assembly.GetExecutingAssembly();
+                StreamReader _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
+                htmlString = htmlString.Replace("<!-- graphscript -->", $"<script>{_textStreamReader.ReadToEnd()}</script>");
+            }
+
+            if (!Utility.Configuration.Settings.DarkTheme)
+            {
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#eee");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#999");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#fda50f");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
+            else
+            {
+                // dark theme
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#555");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#888");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#ff0");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
             return htmlString;
         }
 

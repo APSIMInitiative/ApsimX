@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DoubleEditView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using Gtk;
@@ -159,9 +153,16 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textEntry.Changed -= OnChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                textEntry.Changed -= OnChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -182,21 +183,28 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChanged(object sender, EventArgs e)
         {
-            if (textEntry.Text.Length > 0)
+            try
             {
-                double result;
-                if (double.TryParse(textEntry.Text, out result))    // TODO: need to check the ranges here and adjust the viewed value
-                    value = result;
-                else
+                if (textEntry.Text.Length > 0)
                 {
-                    textEntry.Text = string.Format("{0,0:f" + DecPlaces.ToString() + "}", 0);
+                    double result;
+                    if (double.TryParse(textEntry.Text, out result))    // TODO: need to check the ranges here and adjust the viewed value
+                        value = result;
+                    else
+                    {
+                        textEntry.Text = string.Format("{0,0:f" + DecPlaces.ToString() + "}", 0);
+                    }
+                }
+
+                if (OnChange != null)
+                {
+                    EventArgs args = new EventArgs();
+                    OnChange(this, args);
                 }
             }
-
-            if (OnChange != null)
+            catch (Exception err)
             {
-                EventArgs args = new EventArgs();
-                OnChange(this, args);
+                ShowError(err);
             }
         }
     }

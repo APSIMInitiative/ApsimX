@@ -11,6 +11,8 @@ using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
 using System.Drawing;
+using Utility;
+using System.Globalization;
 
 namespace UserInterface.Views
 {
@@ -192,13 +194,29 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            if (Browser.Document.Body != null)
+            if (Browser.Document.Body != null && !html.Contains("<script"))
                 // If we already have a document body, this is the more efficient
                 // way to update its contents. It doesn't affect the scroll position
                 // and doesn't make a little clicky sound.
+                // lie112: we do need a full update if the html code includes java <script> used for Chart.js otherwise it is not run and updated
                 Browser.Document.Body.InnerHtml = html;
             else
+            {
+                // When the browser loads and creates its body for the first time,
+                // its BackColor and ForeColor properties are reset to their default
+                // values (white/black). This causes a flicker when in dark mode.
+                // To work around this, we embed some css into the markup when we
+                // first load the document. This is a pretty gnarly workaround so
+                // may need to be tweaked if there's some strange html passed into here.
+
+                string bgColour = Colour.ToHex(Colour.FromGtk(HoldingWidget.Style.Background(StateType.Normal)));
+                string fgColour = Colour.ToHex(Colour.FromGtk(HoldingWidget.Style.Foreground(StateType.Normal)));
+                Pango.FontDescription font = HoldingWidget.Style.FontDescription;
+                // Don't want any peksy commas showing up during the conversion to string.
+                string fontSize = GetHtmlFontSize(font).ToString(CultureInfo.InvariantCulture);
+                html = $"<style>body {{ background-color: {bgColour}; color: {fgColour}; font-family: {font.Family}; font-size: {fontSize}; }}</style>" + html;
                 Browser.DocumentText = html;
+            }
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -207,6 +225,11 @@ namespace UserInterface.Views
             while (Browser != null && Browser.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
+        }
+
+        private double GetHtmlFontSize(Pango.FontDescription font)
+        {
+            return 1.5 * font.Size / Pango.Scale.PangoScale;
         }
 
         public System.Drawing.Color BackgroundColour
@@ -252,7 +275,8 @@ namespace UserInterface.Views
 
                 if (Browser.Document.Body.Style == null)
                     Browser.Document.Body.Style = "";
-                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {1.5 * value.Size / Pango.Scale.PangoScale}px;";
+                string fontSize = GetHtmlFontSize(value).ToString(CultureInfo.InvariantCulture);
+                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {fontSize}px;";
             }
         }
 
@@ -279,7 +303,7 @@ namespace UserInterface.Views
 
         public void ExecJavaScript(string command, object[] args)
         {
-            Browser.Document.InvokeScript(command, args);
+            var res = Browser.Document.InvokeScript(command, args);
         }
 
         public void ExecJavaScript(string script)
@@ -743,7 +767,7 @@ namespace UserInterface.Views
         /// <summary>
         /// VBox obejct which holds the web browser.
         /// </summary>
-        private VBox vbox2 = null;
+        protected VBox vbox2 = null;
 
         /// <summary>
         /// Frame object which holds and is used to position <see cref="vbox2"/>.
@@ -777,11 +801,6 @@ namespace UserInterface.Views
         private bool editing = false;
 
         /// <summary>
-        /// Used when exporting a map (e.g. autodocs).
-        /// </summary>
-        protected Gtk.Window popupWindow = null;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
@@ -792,21 +811,6 @@ namespace UserInterface.Views
             frame1 = (Frame)builder.GetObject("frame1");
             hbox1 = (HBox)builder.GetObject("hbox1");
             mainWidget = vpaned1;
-            // Handle a temporary browser created when we want to export a map.
-            if (owner == null)
-            {
-                popupWindow = new Gtk.Window(Gtk.WindowType.Popup);
-                popupWindow.SetSizeRequest(500, 500);
-                // Move the window offscreen; the user doesn't need to see it.
-                // This works with IE, but not with WebKit
-                // Not yet tested on OSX
-                if (ProcessUtilities.CurrentOS.IsWindows)
-                    popupWindow.Move(-10000, -10000);
-                popupWindow.Add(MainWidget);
-                popupWindow.ShowAll();
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
-            }
             memo = new MemoView(this);
             hbox1.PackStart(memo.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
@@ -858,6 +862,8 @@ namespace UserInterface.Views
         // I couldn't find any better technique. 
         public void OnWidgetExpose(object o, ExposeEventArgs args)
         {
+            try
+            {
             int height, width;
             frame1.GdkWindow.GetSize(out width, out height);
             frame1.SetSizeRequest(width, height);
@@ -875,6 +881,11 @@ namespace UserInterface.Views
                     brow.Browser.Height = height;
                     brow.Browser.Width = width;
                 }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -906,31 +917,34 @@ namespace UserInterface.Views
 
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            memo.MemoChange -= this.TextUpdate;
-            vbox2.SizeAllocated -= OnBrowserSizeAlloc;
-            if (keyPressObject != null)
-                (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
-            frame1.ExposeEvent -= OnWidgetExpose;
-            hbox1.Realized -= Hbox1_Realized;
-            hbox1.SizeAllocated -= Hbox1_SizeAllocated;
-            if ((browser as TWWebBrowserIE) != null)
+            try
             {
-                if (vbox2.Toplevel is Window)
-                    (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
-                frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).WebSocket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                memo.MemoChange -= this.TextUpdate;
+                vbox2.SizeAllocated -= OnBrowserSizeAlloc;
+                if (keyPressObject != null)
+                    (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
+                frame1.ExposeEvent -= OnWidgetExpose;
+                hbox1.Realized -= Hbox1_Realized;
+                hbox1.SizeAllocated -= Hbox1_SizeAllocated;
+                if ((browser as TWWebBrowserIE) != null)
+                {
+                    if (vbox2.Toplevel is Window)
+                        (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+                    frame1.Unrealized -= Frame1_Unrealized;
+                    (browser as TWWebBrowserIE).WebSocket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                }
+                if (browser != null)
+                    browser.Dispose();
+                memo.StartEdit -= this.ToggleEditing;
+                memo.MainWidget.Destroy();
+                memo = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            if (browser != null)
-                browser.Dispose();
-            if (popupWindow != null)
+            catch (Exception err)
             {
-                popupWindow.Destroy();
+                ShowError(err);
             }
-            memo.StartEdit -= this.ToggleEditing;
-            memo.MainWidget.Destroy();
-            memo = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
         }
 
         protected virtual void NewTitle(string title)
@@ -939,8 +953,15 @@ namespace UserInterface.Views
 
         private void Hbox1_Realized(object sender, EventArgs e)
         {
-            vpaned1.Position = 30; 
-            memo.LabelText = "Edit text";
+            try
+            {
+                vpaned1.Position = 30; 
+                memo.LabelText = "Edit text";
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -981,21 +1002,41 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Hbox1_SizeAllocated(object sender, EventArgs e)
         {
-             
-            if (!this.editing)
-                vpaned1.Position = memo.HeaderHeight();
+            try
+            {
+                if (!this.editing)
+                    vpaned1.Position = memo.HeaderHeight();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void Frame1_Unrealized(object sender, EventArgs e)
         {
-            if ((browser as TWWebBrowserIE) != null)
-                (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+            try
+            {
+                if ((browser as TWWebBrowserIE) != null)
+                    (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void MainWindow_SetFocus(object o, SetFocusArgs args)
         {
-            if (MasterView.MainWindow != null)
-                MasterView.MainWindow.Focus(0);
+            try
+            {
+                if (MasterView.MainWindow != null)
+                    MasterView.MainWindow.Focus(0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1011,17 +1052,6 @@ namespace UserInterface.Views
                 if (ProcessUtilities.CurrentOS.IsWindows)
                 {
                     browser = CreateIEBrowser(vbox2);
-
-                    /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
-                    /// other controls. It's actually a COM object, I guess, and running
-                    /// with a different message loop, and probably in a different thread. 
-                    /// 
-                    /// Well, this hack works, more or less.
-                    if (vbox2.Toplevel is Window)
-                        (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
-                    frame1.Unrealized += Frame1_Unrealized;
-                    if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                       (browser as TWWebBrowserIE).Browser.ScrollBarsEnabled = false;
                 }
                 else if (ProcessUtilities.CurrentOS.IsMac)
                 {
@@ -1037,7 +1067,8 @@ namespace UserInterface.Views
             else
                browser.LoadHTML(contents);
 
-            browser.Font = (MasterView as ViewBase).MainWidget.Style.FontDescription;
+            if (MasterView != null)
+                browser.Font = (MasterView as ViewBase).MainWidget.Style.FontDescription;
 
             if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).Browser != null)
             {
@@ -1045,6 +1076,17 @@ namespace UserInterface.Views
                 keyPressObject = ieBrowser.Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+
+                /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
+                /// other controls. It's actually a COM object, I guess, and running
+                /// with a different message loop, and probably in a different thread. 
+                /// 
+                /// Well, this hack works, more or less.
+                if (vbox2.Toplevel is Window)
+                    (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
+                frame1.Unrealized += Frame1_Unrealized;
+                if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
+                    ieBrowser.Browser.ScrollBarsEnabled = false;
             }
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
@@ -1060,27 +1102,34 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments.</param>
         private void OnKeyPress(object sender, HtmlElementEventArgs e)
         {
-            if (browser is TWWebBrowserIE)
+            try
             {
-                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
-
-                // By default, we assume that the key press is not significant, so we set the
-                // event args' return value to false, so event propagation continues.
-                e.ReturnValue = false;
-
-                int keyCode = e.KeyPressedCode;
-                if (e.CtrlKeyPressed)
+                if (browser is TWWebBrowserIE)
                 {
-                    keyCode += 96;
-                    if (keyCode == 'c')
-                        Copy?.Invoke(this, new CopyEventArgs() { Text = ieBrowser.GetSelectedText() });
-                    else if (keyCode == 'a')
-                        ieBrowser.SelectAll();
-                    else if (keyCode == 'f')
-                        // We just send the appropriate keypress event to the WebBrowser. This doesn't 
-                        // seem to work well for ctrl + a, and doesn't work at all for ctrl + c. 
-                        SendKeys.SendWait("^f");
+                    TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+
+                    // By default, we assume that the key press is not significant, so we set the
+                    // event args' return value to false, so event propagation continues.
+                    e.ReturnValue = false;
+
+                    int keyCode = e.KeyPressedCode;
+                    if (e.CtrlKeyPressed)
+                    {
+                        keyCode += 96;
+                        if (keyCode == 'c')
+                            Copy?.Invoke(this, new CopyEventArgs() { Text = ieBrowser.GetSelectedText() });
+                        else if (keyCode == 'a')
+                            ieBrowser.SelectAll();
+                        else if (keyCode == 'f')
+                            // We just send the appropriate keypress event to the WebBrowser. This doesn't 
+                            // seem to work well for ctrl + a, and doesn't work at all for ctrl + c. 
+                            SendKeys.SendWait("^f");
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -1124,7 +1173,14 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnEditClick(object sender, EventArgs e)
         {
-            TurnEditorOn(true);
+            try
+            {
+                TurnEditorOn(true);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1134,11 +1190,18 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void TextUpdate(object sender, EventArgs e)
         {
-            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-            markDown.ExtraMode = true;
-            string html = markDown.Transform(memo.MemoText);
-            html = ParseHtmlImages(html);
-            PopulateView(html);
+            try
+            {
+                MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+                markDown.ExtraMode = true;
+                string html = markDown.Transform(memo.MemoText);
+                html = ParseHtmlImages(html);
+                PopulateView(html);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1148,11 +1211,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ToggleEditing(object sender, EventArgs e)
         {
-            if (editing)
-                vpaned1.Position = memo.HeaderHeight();
-            else
-                vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
-            editing = !editing;
+            try
+            {
+                if (editing)
+                    vpaned1.Position = memo.HeaderHeight();
+                else
+                    vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
+                editing = !editing;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1193,7 +1263,14 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnHelpClick(object sender, EventArgs e)
         {
-            Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            try
+            {
+                Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

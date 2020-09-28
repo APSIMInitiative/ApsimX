@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils
 {
     using APSIM.Shared.APSoil;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -13,7 +14,7 @@
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
-        [Units("mm")]
+        [Units("cm")]
         public string[] Depth
         {
             get
@@ -72,5 +73,11 @@
         [Units("kg/ha")]
         [Display(Format = "N1")]
         public double[] FOM { get; set; }
+
+        /// <summary>Carbon metadata</summary>
+        public string[] CarbonMetadata { get; set; }
+
+        /// <summary>FOM metadata</summary>
+        public string[] FOMMetadata { get; set; }
     }
 }

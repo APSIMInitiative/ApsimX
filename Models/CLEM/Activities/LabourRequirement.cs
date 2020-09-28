@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"labourgroupsborder\">";
             html += "<div class=\"labournote\">The required labour will be taken from each of the following groups</div>";
 
-            if (Apsim.Children(this, typeof(LabourFilterGroup)).Count() == 0)
+            if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
             {
                 html += "\n<div class=\"filterborder clearfix\">";
                 html += "<div class=\"filtererror\">No filter group provided</div>";
@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perKg:
                     return "kg";
                 case LabourUnitType.perUnit:
-                    return "hectare";
+                    return "unit";
                 default:
                     return "Unknown";
             }

@@ -21,7 +21,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
-    [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
+    [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase
     {
@@ -29,7 +30,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; }
 
@@ -37,7 +38,7 @@ namespace Models.CLEM.Activities
         /// Resource type to sell
         /// </summary>
         [Description("Resource to sell")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
@@ -54,9 +55,14 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount;
 
         /// <summary>
-        /// Store finance type to use
+        /// Store type to use
         /// </summary>
         private IResourceType resourceToSell;
+
+        /// <summary>
+        /// Store type to place resource within market if present
+        /// </summary>
+        private IResourceType resourceToPlace;
 
         private ResourcePricing price;
         private double unitsAvailable;
@@ -71,6 +77,21 @@ namespace Models.CLEM.Activities
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            // find market if present
+            Market market = Resources.FoundMarket;
+            // find a suitable store to place resource
+            if(market != null)
+            {
+                resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
+            }
+            if(resourceToPlace != null)
+            {
+                price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
+            {
+                price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
+            }
         }
 
         /// <summary>
@@ -96,8 +117,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            // get pricing
-            price = resourceToSell.Price;
             unitsAvailable = unitsAvailableForSale;
             return null;
         }
@@ -130,6 +149,8 @@ namespace Models.CLEM.Activities
         public override void AdjustResourcesNeededForActivity()
         {
             // adjust resources sold based on labour shortfall
+            double labourLimit = this.LabourLimitProportion;
+            unitsAvailable *= labourLimit;
             return;
         }
 
@@ -158,13 +179,23 @@ namespace Models.CLEM.Activities
                 {
                     ActivityModel = this,
                     Required = units * price.PacketSize,
-                    AllowTransmutation = false,
+                    AllowTransmutation = true,
                     Reason = "Sell " + (resourceToSell as Model).Name
                 };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned
-                bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                if (bankAccount != null)
+                {
+                    bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                    if (bankAccount.EquivalentMarketStore != null)
+                    {
+                        purchaseRequest.Required = units * price.PricePerPacket;
+                        purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
+                        (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                    }
+                }
+
                 SetStatusSuccess();
             }
         }

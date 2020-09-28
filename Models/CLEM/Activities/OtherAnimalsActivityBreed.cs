@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
         public string AnimalType { get; set; }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Month this overhead is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime NextDueDate { get; set; }
 
         /// <summary>

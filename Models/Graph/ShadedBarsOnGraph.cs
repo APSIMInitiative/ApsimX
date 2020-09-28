@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -16,7 +16,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class ShadedBarsOnGraph : Model, IGraphable
+    public class ShadedBarsOnGraph : Model, ICachableGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -44,11 +44,11 @@
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = this.FindInScope<IDataStore>();
             if (storage == null)
                 return null;
 
-            Series series = Apsim.Parent(this, typeof(Series)) as Series;
+            Series series = FindAncestor<Series>();
             if (series == null)
                 return null;
 
@@ -61,7 +61,7 @@
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+            return FindAncestor<Series>()?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
         }
 
 
@@ -75,15 +75,27 @@
             else
                 return new string[] { ColumnName };
         }
+        /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
+        /// <param name="storage">Storage service</param>
+        /// <param name="simulationFilter">(Optional) simulation name filter.</param>
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null)
+        {
+            Series seriesAncestor = FindAncestor<Series>();
+            if (seriesAncestor == null)
+                throw new Exception("ShadedBarsOnGraph model must be a descendant of a series");
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationFilter);
+
+            return GetSeriesToPutOnGraph(storage, definitions, simulationFilter).ToList();
+        }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesToPutOnGraph(IStorageReader storage, IEnumerable<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
             data = null;
-            if (definitions != null && definitions.Count > 0)
+            if (definitions != null && definitions.Any())
             {
                 // Try to find a definition that has the correct simulation name.
                 foreach (var definition in definitions)
@@ -98,16 +110,15 @@
 
                 if (data == null)
                     data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
-                xFieldName = definitions[0].XFieldName;
+                xFieldName = definitions.First().XFieldName;
             }
-
+            return new List<SeriesDefinition>();
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        public IEnumerable<IAnnotation> GetAnnotations()
         {
-            Graph parentGraph = Parent.Parent as Graph;
+            List<IAnnotation> annotations = new List<IAnnotation>();
 
             if (data != null && ColumnName != null && xFieldName != null)
             {
@@ -144,7 +155,7 @@
                                 if (!string.IsNullOrEmpty(startName))
                                 {
                                     // Add a line annotation.
-                                    AddAnnotation(annotations, x, baseColour, colourMap, startIndex, startName, i);
+                                    annotations.Add(CreateAnnotation(x, baseColour, colourMap, startIndex, startName, i));
                                 }
                                 startName = names[i];
                                 startIndex = i;
@@ -152,13 +163,14 @@
 
                         }
                         if (startIndex != -1)
-                            AddAnnotation(annotations, x, baseColour, colourMap, startIndex, startName, names.Length);
+                            annotations.Add(CreateAnnotation(x, baseColour, colourMap, startIndex, startName, names.Length));
                     }
                 }
             }
+            return annotations;
         }
 
-        private static void AddAnnotation(List<Annotation> annotations, List<object> x, Color baseColour, Dictionary<string, Color> colourMap, int startIndex, string startName, int i)
+        private static IAnnotation CreateAnnotation(List<object> x, Color baseColour, Dictionary<string, Color> colourMap, int startIndex, string startName, int i)
         {
             var bar = new LineAnnotation();
             if (colourMap.ContainsKey(startName))
@@ -175,7 +187,7 @@
             bar.y2 = double.MaxValue;
             bar.InFrontOfSeries = false;
             bar.ToolTip = startName;
-            annotations.Add(bar);
+            return bar;
         }
 
         /// <summary>Find and return the phenology stage column name.</summary>
@@ -188,6 +200,5 @@
             var columnNames = data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
             return columnNames.Find(name => name.Contains(ColumnName));
         }
-
     }
 }

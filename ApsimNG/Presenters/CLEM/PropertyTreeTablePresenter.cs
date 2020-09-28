@@ -11,7 +11,6 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
-    using Importer;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -230,10 +229,10 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.FirstOrDefault();
+                IModel firstChild = model.Children.FirstOrDefault();
                 if (firstChild != null)
                 {
-                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    List<IModel> sameTypeChildren = model.FindAllChildren().Where(c => firstChild.GetType().IsAssignableFrom(c.GetType())).ToList();
                     return sameTypeChildren;
                 }
             }

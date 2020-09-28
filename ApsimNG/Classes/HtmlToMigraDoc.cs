@@ -1,9 +1,7 @@
 ﻿namespace UserInterface.Classes
 {
-    using APSIM.Shared.Utilities;
     using HtmlAgilityPack;
     using MigraDoc.DocumentObjectModel;
-    using MigraDoc.DocumentObjectModel.Shapes;
     using MigraDoc.DocumentObjectModel.Tables;
     using System;
     using System.Collections.Generic;
@@ -11,7 +9,6 @@
     using System.Linq;
     using System.Net;
     using System.Reflection;
-    using System.Text;
 
     public class HtmlToMigraDoc
     {
@@ -28,7 +25,7 @@
         /// <param name="html">The HTML to parse.</param>
         /// <param name="section">To section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
-        public static void Convert(string html, Section section, string imagePath)
+        public static void Convert(string html, DocumentObject section, string imagePath)
         {
             if (!string.IsNullOrEmpty(html) && section != null)
             {
@@ -194,11 +191,8 @@
             innerText = innerText.Replace("\n", string.Empty);
             innerText = innerText.Replace("\t", string.Empty);
 
-            if (!string.IsNullOrWhiteSpace(innerText))
-            {
-                tableColumnNames.Add(innerText);
-                table.AddColumn(Unit.FromCentimeter(innerText.Length / 3));
-            }
+            tableColumnNames.Add(innerText);
+            table.AddColumn();
 
             return table;
         }
@@ -326,6 +320,8 @@
                 newParagraph = (section as Section).AddParagraph();
             else if (section is Paragraph)
                 newParagraph = (section as Paragraph).Section.AddParagraph();
+            else if (section is Cell)
+                newParagraph = (section as Cell).AddParagraph();
 
             if (quoteLevel > 0)
             {
@@ -451,6 +447,8 @@
                 return (parentObject as Paragraph).AddText(innerText);
             else if (parentObject is Section)
                 return (parentObject as Section).AddParagraph(innerText);
+            else if (parentObject is Cell)
+                return (parentObject as Cell).AddParagraph(innerText);
             else
                 return null;
         }
@@ -480,6 +478,8 @@
                 return parentObject as Paragraph;
             else if (parentObject is Section)
                 return (parentObject as Section).AddParagraph();
+            else if (parentObject is Cell)
+                return (parentObject as Cell).AddParagraph();
             else
                 return parentObject.Section.AddParagraph();
         }
@@ -622,6 +622,5 @@
                 p.Style = "TableParagraph";
             }
         }
-
     }
 }

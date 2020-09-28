@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Report;
+using Models;
 using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
-    public class ReportPasturePoolDetails: Models.Report.Report
+    public class ReportPasturePoolDetails: Models.Report
     {
         [Link]
         private ResourcesHolder Resources = null;
@@ -69,7 +69,7 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            IModel zone = Apsim.Parent(this, typeof(Zone));
+            IModel zone = FindAncestor<Zone>();
             List<string> variableNames = new List<string>();
             if (VariableNames != null)
             {
@@ -94,13 +94,16 @@ namespace Models.CLEM.Reporting
                                 // make each pool entry
                                 for (int j = 0; j <= 12; j++)
                                 {
-                                    variableNames.Add(splitName[0] + "-" + j.ToString() + "-" + splitName[1]);
+                                    if (splitName[1].ToLower() != "growth" | j == 0)
+                                    {
+                                        variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Pool(" + j.ToString() + ", true)." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
+                                    }
                                 }
                                 if (splitName[1] == "Amount")
                                 {
                                     // add amounts
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as Total kgPerHa");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as TotalAmount");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as TotalkgPerHa");
                                 }
                             }
                             else
@@ -152,30 +155,15 @@ namespace Models.CLEM.Reporting
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public new void DoOutput()
         {
-            object[] valuesToWrite = new object[columns.Count];
-            for (int i = 0; i < columns.Count; i++)
-            {
-                // if contains Pools[ then get the value
-                if (columns[i].Name.Contains("-"))
-                {
-                    string[] values = columns[i].Name.Split('-');
-                    double value = grazeStore.GetValueByPoolAge(Convert.ToInt32(values[1], CultureInfo.InvariantCulture), values[2]);
-                    if (value != 0)
-                    {
-                        valuesToWrite[i] = Math.Round(value, 2);
-                    }
-                }
-                else
-                {
-                    // otherwise normal approach
-                    valuesToWrite[i] = columns[i].GetValue();
-                }
-            }
-
             if (dataToWriteToDb == null)
             {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                    folderName = folderDescriptor.Value;
                 dataToWriteToDb = new ReportData()
                 {
+                    FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
                     ColumnNames = columns.Select(c => c.Name).ToList(),
@@ -183,15 +171,41 @@ namespace Models.CLEM.Reporting
                 };
             }
 
-            // Add row to our table that will be written to the db file
-            dataToWriteToDb.Rows.Add(valuesToWrite.ToList());
+            // Get number of groups.
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
+
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
+            {
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
+            }
 
             // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count == 100)
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
@@ -249,17 +263,30 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        private void FindVariableMembers()
+        private new void FindVariableMembers()
         {
             this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to = null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+                FindFromTo(out from, out to);
+
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
+                try
                 {
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
                 }
             }
         }

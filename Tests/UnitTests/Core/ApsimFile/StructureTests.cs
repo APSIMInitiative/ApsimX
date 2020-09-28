@@ -13,21 +13,21 @@
     public class StructureTests
     {
         [Test]
-        public void StructureTests_EnsureAddOldXMLWorks()
+        public void EnsureAddXMLFromOldAPSIMWorks()
         {
             Simulation simulation = new Simulation();
 
-            string xml = 
-            "<Memo>" +
-            "  <Name>TitlePage</Name>" +
-            "  <IncludeInDocumentation>true</IncludeInDocumentation>" +
-            "  <Text>Some text</Text>" +
-            "</Memo>";
+            var xml = "<clock>" +
+                      "  <start_date type=\"date\">01/01/1990</start_date>" +
+                      "  <end_date type=\"date\">31/12/2000</end_date>" +
+                      "</clock>";
 
             Structure.Add(xml, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
-            Memo memo = simulation.Children[0] as Memo;
-            Assert.AreEqual(memo.Text, "Some text");
+            var clock = simulation.Children[0] as Clock;
+            Assert.IsNotNull(clock);
+            Assert.AreEqual(clock.StartDate, new DateTime(1990, 1, 1));
+            Assert.AreEqual(clock.EndDate, new DateTime(2000, 12, 31));
         }
 
         [Test]
@@ -84,9 +84,9 @@
             Structure.Add(soilXml, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
             Soil soil = simulation.Children[0] as Soil;
-            Assert.AreEqual(soil.Children.Count, 6);
-            Assert.IsTrue(soil.Children[4] is InitialWater);
-            Assert.IsTrue(soil.Children[5] is Sample);
+            Assert.AreEqual(7, soil.Children.Count);
+            Assert.IsTrue(soil.Children[5] is InitialWater);
+            Assert.IsTrue(soil.Children[6] is Sample);
         }
 
         [Test]
@@ -121,6 +121,32 @@
             Exception err = Assert.Throws<Exception>(() => Structure.Add(json, simulation));
             Assert.AreEqual(err.Message, "Unknown string encountered. Not JSON or XML. String: INVALID STRING");
         }
+
+        /// <summary>
+        /// This test reproduces bug #4693, where a user tries to copy
+        /// a simulations node into the GUI. This is a common
+        /// occurrence for model developers who might copy a released
+        /// model's resource file into the GUI so it can be edited.
+        /// When this happens, we want to add the first child of the
+        /// simulations node (not the simulations node itself!).
+        /// </summary>
+        /// <remarks>
+        /// Adding only the first child seems a little strange, but I'm
+        /// leaving this as-is for now to maintain the previous
+        /// intended behaviour.
+        /// </remarks>
+        [Test]
+        public void AddSimulationsNode()
+        {
+            // Get official wheat model.
+            string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
+            Simulations file = new Simulations();
+            Structure.Add(json, file);
+
+            // Should have 1 child, of type replacements.
+            Assert.NotNull(file.Children);
+            Assert.AreEqual(1, file.Children.Count);
+            Assert.AreEqual(typeof(Models.PMF.Plant), file.Children[0].GetType());
+        }
     }
 }
-

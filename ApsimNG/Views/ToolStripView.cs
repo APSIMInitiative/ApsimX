@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ToolStripView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using Interfaces;
@@ -43,8 +38,15 @@ namespace UserInterface.Views
 
         private void OnDestroyed(object sender, EventArgs e)
         {
-            toolStrip.Destroyed -= OnDestroyed;
-            Destroy();
+            try
+            {
+                toolStrip.Destroyed -= OnDestroyed;
+                Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Destroy the toolstrip</summary>

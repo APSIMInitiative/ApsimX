@@ -39,7 +39,7 @@ namespace Models.CLEM
         /// <summary>
         /// Get the current price of this resource.
         /// </summary>
-        ResourcePricing Price { get; }
+        ResourcePricing Price(PurchaseOrSalePricingStyleType priceType);
 
         /// <summary>
         /// Get the units of measure this resource.

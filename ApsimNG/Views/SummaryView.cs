@@ -59,16 +59,23 @@
         /// <param name="e"></param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            topBox.Destroy();
-            SummaryCheckBox.MainWidget.Destroy();
-            WarningCheckBox.MainWidget.Destroy();
-            ErrorCheckBox.MainWidget.Destroy();
-            middleBox.Destroy();
-            SimulationDropDown.MainWidget.Destroy();
-            mainControl.Destroy();
-            HtmlView.MainWidget.Destroy();
-            mainWidget.Destroyed -= MainWidgetDestroyed;
-            owner = null;
+            try
+            {
+                topBox.Destroy();
+                SummaryCheckBox.MainWidget.Destroy();
+                WarningCheckBox.MainWidget.Destroy();
+                ErrorCheckBox.MainWidget.Destroy();
+                middleBox.Destroy();
+                SimulationDropDown.MainWidget.Destroy();
+                mainControl.Destroy();
+                HtmlView.MainWidget.Destroy();
+                mainWidget.Destroyed -= MainWidgetDestroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

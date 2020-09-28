@@ -6,7 +6,6 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Interfaces;
-    using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -22,6 +21,7 @@
     [TestFixture]
     public class ReportTests
     {
+        private Simulations simulations;
         private Simulation simulation;
         private Clock clock;
         private Report report;
@@ -34,24 +34,90 @@
         [SetUp]
         public void Setup()
         {
-            storage = new MockStorage();
-            clock = new Clock()
+            simulations = new Simulations()
             {
-                StartDate = new DateTime(2017, 1, 1),
-                EndDate = new DateTime(2017, 1, 10)
-            };
-            report = new Report()
-            {
-                VariableNames = new string[] { },
-                EventNames = new string[] { "[Clock].EndOfDay" },
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new MockStorage(),
+                            new MockSummary(),
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10)
+                            },
+                            new Report()
+                            {
+                                VariableNames = new string[] { },
+                                EventNames = new string[] { "[Clock].EndOfDay" },
+                            }
+                        }
+                    }
+                }
             };
 
-            simulation = new Simulation()
-            {
-                Children = new List<Model>() { storage, clock, report, new MockSummary() }
-            };
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulations);
+            simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
+            storage = simulation.Children[0] as MockStorage;
+            clock = simulation.Children[2] as Clock;
+            report = simulation.Children[3] as Report;
+        }
+        /// <summary>
+        /// Ensures that multiple components that expose the same variables are reported correctly
+        /// 
+        /// </summary>
+        [Test]
+        public void TestMultipleChildren()
+        {
+            var m1 = new Manager()
+            {
+                Name = "Manager1",
+                Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +
+                            "public class Script1 : Model\r\n {\r\n " +
+                            "public double A { get { return (1); } set { } }\r\n" +
+                            "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
+            };
+            var m2 = new Manager()
+            {
+                Name = "Manager2",
+                Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" + "" +
+                            "    public class Script2 : Model\r\n {\r\n" +
+                            " public double A { get { return (3); } set { } }\r\n" +
+                            " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
+            };
+            report.VariableNames = new[]
+            {
+                "[Manager1].Script1.A as M1A",
+                "[Manager2].Script2.A as M2A"
+            };
+            report.EventNames = new[]
+            {
+                "[Clock].DoReport"
+            };
+            simulation.Children.AddRange(new[] { m1, m2 });
+            simulation.ParentAllDescendants();
+            m1.OnCreated();
+            m2.OnCreated();
+
+            var runners = new[]
+            {
+                new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
+            };
+            foreach (Runner runner in runners)
+            {
+                List<Exception> errors = runner.Run();
+                if (errors != null && errors.Count > 0)
+                    throw errors[0];
+
+                double[] actual = storage.Get<double>("M1A");
+                double[] expected = storage.Get<double>("M2A");
+                Assert.AreNotEqual(expected, actual);
+            }
         }
 
         /// <summary>
@@ -74,7 +140,6 @@
             };
 
             runner.Run();
-
             Assert.AreEqual(storage.Get<double>("sum"),
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 });
             Assert.AreEqual(storage.Get<double>("mean"),
@@ -106,6 +171,46 @@
 
             Assert.AreEqual(storage.Get<double>("weekly"),
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27, 38, 50, 63, 77, 15 });
+        }
+
+        /// <summary>This test ensures the 'on' keyword works.</summary>
+        [Test]
+        public void EnsureOnKeywordWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 31);
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfMonth"
+            };
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
+            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+        }
+
+        /// <summary>This test ensures an expression with spaces works.</summary>
+        [Test]
+        public void EnsureExpressionWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of ([Clock].Today.DayOfYear + 1) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation"
+            };
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy"), new double[] { 65 });
         }
 
         /// <summary>This test ensures weekly aggregation works with weekly reporting frequency.</summary>
@@ -274,7 +379,7 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });
+            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
             Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
@@ -301,7 +406,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = Apsim.Find(file, typeof(Simulation));
+            IModel sim = file.FindInScope<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -311,7 +416,7 @@
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            var storage = file.FindInScope<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
@@ -338,7 +443,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = Apsim.Find(file, typeof(Report)) as Report;
+            Report report = file.FindInScope<Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -348,7 +453,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            Clock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -358,12 +463,13 @@
                 throw errors[0];
 
             List<string> fieldNames = new List<string>() { "doy" };
-            IDataStore storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = file.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
             Assert.AreEqual(expected, actual);
         }
+
 
         /// <summary>
         /// Ensure a simple array specification (e.g. soil.water[3]) works.
@@ -373,7 +479,7 @@
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3 } };
             simulation.Children.Add(model);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]" };
 
@@ -394,7 +500,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -426,7 +532,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -457,7 +563,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -489,7 +595,7 @@
         {
             Simulations sims = Utilities.GetRunnableSim();
 
-            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            IModel paddock = sims.FindInScope<Zone>();
             Manager script = new Manager();
             script.Name = "Manager";
             script.Code = @"using System;
@@ -516,7 +622,7 @@ namespace Models
             script.Parent = paddock;
             script.OnCreated();
 
-            Report report = Apsim.Find(sims, typeof(Report)) as Report;
+            Report report = sims.FindInScope<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
@@ -527,7 +633,7 @@ namespace Models
                 throw new Exception("Errors while running sims", errors[0]);
 
             List<string> fieldNames = new List<string>() { "x" };
-            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = sims.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
 
@@ -535,5 +641,76 @@ namespace Models
             string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();
             Assert.AreEqual(expected, actual);
         }
+
+        /// <summary>
+        /// Ensure a group by works.
+        /// </summary>
+        [Test]
+        public void TestGroupBySpecification()
+        {
+            report.EventNames = new string[] { "[Clock].EndOfSimulation" };
+            report.GroupByVariableName = "[Mock].A";
+
+            var model = new MockModelValuesChangeDaily
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                 bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+            { 
+                 Name = "Mock"
+            };
+
+            simulation.Children.Add(model);
+            Utilities.InitialiseModel(simulation);
+
+            report.VariableNames = new string[] 
+            { 
+                "[Clock].Today",
+                "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
+            };
+
+            Assert.IsNull(runner.Run());
+
+            Assert.AreEqual(storage.Get<double>("SumA"),
+                            new double[] { 6, 15, 34 });
+
+            Assert.AreEqual(storage.Get<DateTime>("Clock.Today"),
+                            new DateTime[] { new DateTime(2017, 1, 3), new DateTime(2017, 1, 6), new DateTime(2017, 1, 10) });
+        }
+
+        /// <summary>This test ensures that having lots of spacing is ok.</summary>
+        [Test]
+        public void EnsureLotsOfSpacingWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 15);
+            report.VariableNames = new string[]
+            {
+                "sum   of   [Clock].Today.DayOfYear   from   [Report].DayAfterLastOutput   to   [Clock].Today   as   values",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("values"),
+                            new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+        }
+
+        /// <summary>This test ensures that having a dot in the alias is ok.</summary>
+        [Test]
+        public void EnsureDotInAliasWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Total.DayOfYear",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("Total.DayOfYear"), new double[] { 55 });
+        }
+
     }
 }

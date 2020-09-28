@@ -14,7 +14,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Xml.Serialization;
+    using System.Text;
     using Utilities;
 
     /// <summary>
@@ -31,23 +31,65 @@
         [Link]
         private IDataStore dataStore = null;
 
+        private int _numPaths = 200;
+        private int _numIntervals = 20;
+        private int _jump = 10;
+        private string _tableName = "Report";
+        private string _aggregationVariableName = "Clock.Today.Year";
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>Parameter values coming back from R</summary>
+        [JsonIgnore]
         public DataTable ParameterValues { get; set; }
 
         /// <summary>The number of paths to run</summary>
         [Description("Number of paths:")]
-        public int NumPaths { get; set; } = 200;
+        public int NumPaths
+        {
+            get { return _numPaths; }
+            set { _numPaths = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>The number of intervals</summary>
         [Description("Number of intervals:")]
-        public int NumIntervals { get; set; } = 20;
+        public int NumIntervals
+        {
+            get { return _numIntervals; }
+            set { _numIntervals = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>The jump parameter</summary>
         [Description("Jump:")]
-        public int Jump { get; set; } = 10;
+        public int Jump
+        {
+            get { return _jump; }
+            set { _jump = value; ParametersHaveChanged = true; }
+        }
+
+        /// <summary>Name of table in DataStore to read from.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of table to read from:")]
+        [Display(Type = DisplayType.TableName)]
+        public string TableName
+        {
+            get { return _tableName; }
+            set { _tableName = value; ParametersHaveChanged = true; }
+        }
+        /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of variable in table for aggregation:")]
+        [Display(Type = DisplayType.FieldName)]
+        public string AggregationVariableName
+        {
+            get { return _aggregationVariableName; }
+            set { _aggregationVariableName = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>
         /// List of parameters
@@ -56,22 +98,6 @@
         /// Needs to be public so that it gets written to .apsimx file
         /// </remarks>
         public List<Parameter> Parameters { get; set; }
-
-        /// <summary>Name of table in DataStore to read from.</summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        [Description("Name of table to read from:")]
-        [Display(Type=DisplayType.TableName)]
-        public string TableName { get; set; } = "Report";
-
-        /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        [Description("Name of variable in table for aggregation:")]
-        [Display(Type = DisplayType.FieldName)]
-        public string AggregationVariableName { get; set; } = "Clock.Today.Year";
 
         /// <summary>
         /// List of aggregation values
@@ -101,7 +127,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get
@@ -130,6 +156,7 @@
             }
             set
             {
+                ParametersHaveChanged = true;
                 Parameters.Clear();
                 foreach (DataRow row in value[0].Rows)
                 {
@@ -148,10 +175,13 @@
             }
         }
 
+        /// <summary>Have the values of the parameters changed?</summary>
+        public bool ParametersHaveChanged { get; set; }  = false;
+
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            var baseSimulation = this.FindChild<Simulation>();
 
             // Calculate all combinations.
             CalculateFactors();
@@ -180,6 +210,7 @@
                 simulationNumber++;
             }
 
+            Console.WriteLine($"Simulation names generated by morris:\n{string.Join("\n", simulationDescriptions.Select(s => s.Name))}");
             return simulationDescriptions;
         }
 
@@ -193,6 +224,11 @@
         {
             R r = new R();
             r.InstallPackage("sensitivity");
+            if (ParametersHaveChanged)
+            {
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
+            }
         }
 
         /// <summary>
@@ -202,10 +238,41 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues == null)
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");
+
+                int n = NumPaths * (Parameters.Count + 1);
+                // Sometimes R will return an incorrect number of parameter values, usually
+                // this happens when jump is too high. In this situation, we retry up to 10 times.
+                for (int numTries = 1; numTries < 10 && ParameterValues.Rows.Count != n; numTries++)
+                {
+                    StringBuilder msg = new StringBuilder();
+                    msg.AppendLine("Morris error: Number of parameter values from R is not equal to num paths * (N + 1).");
+                    msg.AppendLine($"Number of parameters from R = {ParameterValues.Rows.Count}");
+                    msg.AppendLine($"NumPaths={NumPaths}");
+                    msg.AppendLine($"Parameters.Count={Parameters.Count}");
+                    msg.AppendLine($"Trying again...");
+                    Console.WriteLine(msg.ToString());
+
+                    ParameterValues = RunRToGetParameterValues();
+                }
+
+                if (ParameterValues.Rows.Count != n)
+                {
+                    // We've tried and failed 10 times to generate the right number of parameter values.
+                    // Time to give up and throw a fatal.
+                    StringBuilder msg = new StringBuilder();
+                    msg.AppendLine("Morris error: Number of parameter values from R is not equal to num paths * (N + 1).");
+                    msg.AppendLine($"Number of parameters from R = {ParameterValues.Rows.Count}");
+                    msg.AppendLine($"NumPaths={NumPaths}");
+                    msg.AppendLine($"Parameters.Count={Parameters.Count}");
+                    msg.AppendLine($"ParameterValues as returned from R:");
+                    using (StringWriter writer = new StringWriter(msg))
+                        DataTableUtilities.DataTableToText(ParameterValues, 0, ",", true, writer);
+                    throw new Exception(msg.ToString());
+                }
 
                 int simulationNumber = 1;
                 foreach (DataRow parameterRow in ParameterValues.Rows)
@@ -232,13 +299,18 @@
         {
             get
             {
-                return Apsim.Child(this, typeof(Simulation)) as Simulation;
+                return this.FindChild<Simulation>();
             }
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
         public void Run()
         {
+            // If the predicted table has not been modified, don't do anything.
+            // This can happen if other simulations were run but the Morris model was not.
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
+                return;
+
             DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {

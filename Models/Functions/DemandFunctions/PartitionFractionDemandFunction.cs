@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -18,14 +19,14 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The arbitrator</summary>
         [Link]
-        OrganArbitrator Arbitrator = null;
+        IArbitrator arbitrator = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (Arbitrator.DM != null)
-                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+            if (arbitrator.DM != null)
+                return arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
             else
                 return 0;
         }
@@ -42,7 +43,7 @@ namespace Models.Functions.DemandFunctions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add a description of the equation for this function
@@ -50,7 +51,7 @@ namespace Models.Functions.DemandFunctions
 
                 // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent+1);
             }
         }

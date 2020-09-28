@@ -1,17 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableExpression.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Collections;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.
@@ -147,7 +138,7 @@ namespace Models.Core
                 Symbol sym = (Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = Apsim.Get(Object as Model, sym.m_name.Trim());
+                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim())?.Value;
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)
@@ -211,5 +202,11 @@ namespace Models.Core
         /// <param name="attributeType">Type of attribute to find</param>
         /// <returns>The attribute or null if not found</returns>
         public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

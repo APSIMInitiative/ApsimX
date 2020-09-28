@@ -3,6 +3,7 @@ namespace UnitTests
 {
     using APSIM.Shared.Utilities;
     using Models.Storage;
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
@@ -158,6 +159,16 @@ namespace UnitTests
         public void Refresh()
         {
             throw new System.NotImplementedException();
+        }
+
+        public List<Tuple<string, Type>> GetColumns(string tableName)
+        {
+            return new List<Tuple<string, Type>>();
+        }
+
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            return true;
         }
     }
 

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Links.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -36,22 +31,23 @@ namespace Models.Core
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
         /// <param name="allLinks">Unresolve all links or just the non child links?</param>
-        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
             var scope = new ScopingRules();
 
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
-                allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
+                allModels.AddRange(rootNode.FindAllDescendants());
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
-                        ResolveInternal(modelNode, scope);
+                        ResolveInternal(modelNode, scope, throwOnFail);
                 }
             }
             else
-                ResolveInternal(rootNode, scope);
+                ResolveInternal(rootNode, scope, throwOnFail);
         }
 
         /// <summary>
@@ -88,7 +84,7 @@ namespace Models.Core
         public void Unresolve(IModel model, bool allLinks)
         {
             List<IModel> allModels = new List<IModel>() { model };
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            allModels.AddRange(model.FindAllDescendants());
             foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s
@@ -109,8 +105,13 @@ namespace Models.Core
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="scope">The scoping rules to use to resolve links.</param>
-        private void ResolveInternal(object obj, ScopingRules scope)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
+            if (obj is Models.Management.RotationManager)
+            {
+
+            }
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
@@ -128,10 +129,10 @@ namespace Models.Core
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
                     if (matches.Count == 0 && obj is IModel)
                     {
-                        Simulation parentSimulation = Apsim.Parent(obj as IModel, typeof(Simulation)) as Simulation;
-                        if (fieldType.IsAssignableFrom(typeof(ILocator)) && parentSimulation != null)
+                        Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
+                        if (typeof(ILocator).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Locator(obj as IModel));
-                        else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
+                        else if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
                     if (matches.Count == 0)
@@ -172,7 +173,7 @@ namespace Models.Core
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0)
+                    else if (matches.Count == 0 && !throwOnFail)
                     {
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
@@ -219,8 +220,10 @@ namespace Models.Core
         /// <returns>The matching parent</returns>
         private object GetParent(object obj, Type type)
         {
-            if (obj is IModel)
-                return Apsim.Parent(obj as IModel, type);
+            // fixme - 1. shouldn't be reimplementing model.FindAncestor<T>()
+            //         2. obj should be of type IModel
+            if (obj is IModel model)
+                return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
             else
                 throw new NotImplementedException();
         }
@@ -233,7 +236,7 @@ namespace Models.Core
         private string GetFullName(object obj)
         {
             if (obj is IModel)
-                return Apsim.FullPath(obj as IModel);
+                return (obj as IModel).FullPath;
             else
                 return obj.GetType().FullName;
         }

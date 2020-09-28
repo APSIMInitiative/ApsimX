@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
-using Models.Soils;
 
 namespace Models.Functions
 {
@@ -27,7 +24,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
 
-            double CNRF = Math.Exp(-0.693 * (nutrient.FOMCNR[arrayIndex] - 25) / 25);
+            double CNRF = Math.Exp(-0.693 * (nutrient.FOMCNR(arrayIndex) - 25) / 25);
             return MathUtilities.Bound(CNRF, 0, 1);
         }
 
@@ -43,7 +40,7 @@ namespace Models.Functions
 
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in this.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

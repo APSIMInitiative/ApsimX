@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,8 @@ using Models;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.Surface;
+using Models.Soils.NutrientPatching;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -38,9 +40,28 @@ namespace Models.Soils
         [Link]
         public SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>Link to the soil organic matter.</summary>
+        [Link]
+        public Organic organic = null;
+
+        /// <summary>Link to the initial sample.</summary>
+        [Link]
+        public Sample initial = null;
+
         /// <summary>Link to the soil.</summary>
         [Link]
         public Soil Soil = null;
+
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        public IPhysical soilPhysical = null;
+
+        [Link]
+        ISoilTemperature soilTemperature = null;
 
         #endregion
 
@@ -57,7 +78,7 @@ namespace Models.Soils
         /// Used to determine which node of xml file will be used to overwrite some [Param]'s
         /// </remarks>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string SoilNParameterSet = "standard";
 
         /// <summary>
@@ -72,7 +93,7 @@ namespace Models.Soils
         /// When 'yes', nitrification is computed using nitritation + nitratation, and codenitrification is also computed
         /// </remarks>
         [Units("yes/no")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string UseCodenitrification
         {
             get { return (usingNewNitrification) ? "yes" : "no"; }
@@ -83,7 +104,7 @@ namespace Models.Soils
         /// Gets or sets flag for whether soil profile reduction is allowed (yes/no).
         /// </summary>
         [Units("yes/no")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string AllowProfileReduction
         {
             get { return (profileReductionAllowed) ? "yes" : "no"; }
@@ -97,7 +118,7 @@ namespace Models.Soils
         /// It should always be false, as organic solutes are not implemented yet
         /// </remarks>
         [Units("yes/no")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string allowOrganicSolutes
         {
             get { return (organicSolutesAllowed) ? "yes" : "no"; }
@@ -109,7 +130,7 @@ namespace Models.Soils
         /// </summary>
         [Units("g/g")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DefaultCarbonInSoilOM = 0.588;
 
         /// <summary>
@@ -120,14 +141,14 @@ namespace Models.Soils
         /// </remarks>
         [Units("g/g")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DefaultCarbonInFOM = 0.4;
 
         /// <summary>
         /// Default initial pH, used case no pH is initialised in model.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DefaultInitialpH = 6.0;
 
         /// <summary>
@@ -138,14 +159,14 @@ namespace Models.Soils
         /// is raised, values smaller than this threshold will be zeroed without any message
         /// </remarks>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double WarningNegativeThreshold = -0.0000000001;
 
         /// <summary>
         /// Threshold for a fatal error due to negative values (loss of mass balance).
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FatalNegativeThreshold = -0.000001;
 
         #endregion general settings
@@ -160,7 +181,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 5, Upper = 30)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] HumusCNr = { 10.0, 11.0 };
 
         /// <summary>
@@ -171,7 +192,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 5, Upper = 15)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MBiomassCNr = 8.0;
 
         /// <summary>
@@ -179,7 +200,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0, Upper = 1)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FBiom = { 0.05, 0.01 };
 
         /// <summary>
@@ -187,7 +208,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0, Upper = 1)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FInert = { 0.5, 0.95 };
 
         #endregion params for OM setup
@@ -199,7 +220,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0, Upper = 100000)]
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double InitialFOMWt = 2000;
 
         /// <summary>
@@ -210,7 +231,7 @@ namespace Models.Soils
         /// Distribution follows an exponential function
         /// </remarks>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double InitialFOMDepth = -99.0;
 
         /// <summary>
@@ -218,12 +239,12 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.01, Upper = 10.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double InitialFOMDistCoefficient = 3.0;
 
         /// <summary>Initial C:N ratio of soil FOM (g/g).</summary>
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double InitialFOMCNr = 40.0;
 
         /// <summary>
@@ -240,7 +261,7 @@ namespace Models.Soils
         /// <remarks>
         /// This sets the partition of FOM C between the different pools (carbohydrate, cellulose, lignin)
         /// </remarks>
-        [XmlIgnore]
+        [JsonIgnore]
         public string InitialFOMType
         {
             get { return fom_types[FOMtypeID_reset]; }
@@ -266,7 +287,7 @@ namespace Models.Soils
         /// <summary>
         /// List of available FOM types names.
         /// </summary>
-        [XmlArray("fom_type")]
+        [System.Xml.Serialization.XmlArray("fom_type")]
         public string[] fom_types = { "default", "manure", "mucuna", "lablab", "shemp", "stable" };
 
         /// <summary>
@@ -298,7 +319,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResiduesRespirationFactor = 0.6;
 
         /// <summary>
@@ -309,7 +330,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResiduesFractionIntoBiomass = 0.9;
 
         /// <summary>
@@ -317,7 +338,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResiduesDecompDepth = 100;
 
         #endregion
@@ -329,7 +350,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Pool1FOMTurnOverRate = { 0.2, 0.1 };
 
         /// <summary>
@@ -337,7 +358,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Pool2FOMTurnOverRate = { 0.05, 0.25 };
 
         /// <summary>
@@ -345,7 +366,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Pool3FOMTurnOverRate = { 0.0095, 0.003 };
 
         /// <summary>
@@ -353,7 +374,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FOMRespirationFactor = 0.6;
 
         /// <summary>
@@ -364,7 +385,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FOMFractionIntoBiomass = 0.9;
 
         #region Limiting factors
@@ -374,7 +395,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FOMDecomp_CNCoefficient = 0.693;
 
         /// <summary>
@@ -382,7 +403,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double FOMDecomp_CNThreshold = 25.0;
 
         /// <summary>
@@ -394,7 +415,7 @@ namespace Models.Soils
         /// Optimum temperature for FOM decomposition, aerobic and anaerobic conditions (oC).
         /// </summary>
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FOMDecomp_TOptimum
         {
             get { return FOMDecomp_TemperatureFactorData.xValueForOptimum; }
@@ -406,7 +427,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FOMDecomp_TFactorAtZero
         {
             get { return FOMDecomp_TemperatureFactorData.yValueAtZero; }
@@ -417,7 +438,7 @@ namespace Models.Soils
         /// Curve coefficient for temperature factor of FOM decomposition, aerobic and anaerobic conditions.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FOMDecomp_TCurveCoeff
         {
             get { return FOMDecomp_TemperatureFactorData.CurveExponent; }
@@ -437,7 +458,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FOMDecomp_NormWaterContents
         { set { FOMDecomp_MoistureFactorData.xVals = value; } }
 
@@ -446,7 +467,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FOMDecomp_MoistureFactors
         { set { FOMDecomp_MoistureFactorData.yVals = value; } }
 
@@ -463,7 +484,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] MBiomassTurnOverRate = { 0.0081, 0.004 };
 
         /// <summary>
@@ -471,7 +492,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MBiomassRespirationFactor = 0.6;
 
         /// <summary>
@@ -482,7 +503,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MBiomassFractionIntoBiomass = 0.6;
 
         /// <summary>
@@ -490,7 +511,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] AHumusTurnOverRate = { 0.00015, 0.00007 };
 
         /// <summary>
@@ -498,7 +519,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/g/")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double AHumusRespirationFactor = 0.6;
 
         #region Limiting factors
@@ -512,7 +533,7 @@ namespace Models.Soils
         /// Optimum temperature for soil OM mineralisation (oC).
         /// </summary>
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SOMMiner_TOptimum
         {
             get { return SOMMiner_TemperatureFactorData.xValueForOptimum; }
@@ -524,7 +545,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SOMMiner_TFactorAtZero
         {
             get { return SOMMiner_TemperatureFactorData.yValueAtZero; }
@@ -535,7 +556,7 @@ namespace Models.Soils
         /// Curve coefficient to calculate temperature factor for soil OM mineralisation.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SOMMiner_TCurveCoeff
         {
             get { return SOMMiner_TemperatureFactorData.CurveExponent; }
@@ -555,7 +576,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SOMMiner_NormWaterContents
         {
             get { return SOMMiner_MoistureFactorData.xVals; }
@@ -567,7 +588,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SOMMiner_MoistureFactors
         {
             get { return SOMMiner_MoistureFactorData.yVals; }
@@ -585,35 +606,35 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double UreaHydrol_MinRate = 0.25;
 
         /// <summary>
         /// Parameter A for the potential urea hydrolysis function.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double UreaHydrol_parmA = -1.12;
 
         /// <summary>
         /// Parameter B for the potential urea hydrolysis function.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double UreaHydrol_parmB = 1.31;
 
         /// <summary>
         /// Parameter C for the potential urea hydrolysis function.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double UreaHydrol_parmC = 0.203;
 
         /// <summary>
         /// Parameter D for the potential urea hydrolysis function.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double UreaHydrol_parmD = -0.155;
 
         #region limiting factors
@@ -628,7 +649,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UreaHydrol_TOptimum
         {
             get { return UreaHydrolysis_TemperatureFactorData.xValueForOptimum; }
@@ -640,7 +661,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UreaHydrol_TFactorAtZero
         {
             get { return UreaHydrolysis_TemperatureFactorData.yValueAtZero; }
@@ -651,7 +672,7 @@ namespace Models.Soils
         /// Curve coefficient to calculate the temperature factor for urea hydrolysis.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UreaHydrol_TCurveCoeff
         {
             get { return UreaHydrolysis_TemperatureFactorData.CurveExponent; }
@@ -671,7 +692,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UreaHydrol_NormWaterContents
         {
             get { return UreaHydrolysis_MoistureFactorData.xVals; }
@@ -683,7 +704,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] UreaHydrol_MoistureFactors
         {
             get { return UreaHydrolysis_MoistureFactorData.yVals; }
@@ -703,7 +724,7 @@ namespace Models.Soils
         /// This is the parameter M on Michaelis-Menten equation, r = MC/(k+C)
         /// </remarks>
         [Units("ppm/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitrificationMaxPotential = 40.0;
 
         /// <summary>
@@ -714,7 +735,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitrificationNH4ForHalfRate = 90.0;
 
         /// <summary>
@@ -722,7 +743,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Nitrification_DenitLossFactor = 0.0;
 
         /// <summary>
@@ -735,7 +756,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_TOptimum
         {
             get { return Nitrification_TemperatureFactorData.xValueForOptimum; }
@@ -747,7 +768,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_FactorAtZero
         {
             get { return Nitrification_TemperatureFactorData.yValueAtZero; }
@@ -758,7 +779,7 @@ namespace Models.Soils
         /// Curve coefficient for calculating the temperature factor for nitrification.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_CurveCoeff
         {
             get { return Nitrification_TemperatureFactorData.CurveExponent; }
@@ -778,7 +799,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_NormWaterContents
         {
             get { return Nitrification_MoistureFactorData.xVals; }
@@ -790,7 +811,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_MoistureFactors
         {
             get { return Nitrification_MoistureFactorData.yVals; }
@@ -807,7 +828,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_pHValues
         {
             get { return Nitrification_pHFactorData.xVals; }
@@ -819,7 +840,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification_pHFactors
         {
             get { return Nitrification_pHFactorData.yVals; }
@@ -836,7 +857,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitritationMaxPotential = 40.0;
 
         /// <summary>
@@ -847,7 +868,7 @@ namespace Models.Soils
         /// </remarks>
         [Units("ppm")]
         [Bounds(Lower = 0.0, Upper = 200.0)]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitritationNH4ForHalfRate = 90.0;
 
         /// <summary>
@@ -858,7 +879,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("ppm/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitratationMaxPotential = 400.0;
 
         /// <summary>
@@ -869,7 +890,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 500.0)]
         [Units("ppm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double NitratationNH4ForHalfRate = 90.0;
 
         /// <summary>
@@ -877,7 +898,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmmoxLossParam1 = 0.0025;
 
         /// <summary>
@@ -885,7 +906,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmmoxLossParam2 = 0.45;
 
         /// <summary>
@@ -898,7 +919,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification2_TOptimum
         {
             get { return Nitrification2_TemperatureFactorData.xValueForOptimum; }
@@ -910,7 +931,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification2_TFactorAtZero
         {
             get { return Nitrification2_TemperatureFactorData.yValueAtZero; }
@@ -921,7 +942,7 @@ namespace Models.Soils
         /// Curve coefficient for calculating the temperature factor for nitrification (Nitrition + Nitration).
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification2_TCurveCoeff
         {
             get { return Nitrification2_TemperatureFactorData.CurveExponent; }
@@ -941,7 +962,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification2_NormWaterContents
         {
             get { return Nitrification2_MoistureFactorData.xVals; }
@@ -953,7 +974,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitrification2_MoistureFactors
         {
             get { return Nitrification2_MoistureFactorData.yVals; }
@@ -970,7 +991,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitritation_pHValues
         {
             get { return Nitritation_pHFactorData.xVals; }
@@ -982,7 +1003,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitritation_pHFactors
         {
             get { return Nitritation_pHFactorData.yVals; }
@@ -999,7 +1020,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitratation_pHValues
         {
             get { return Nitratation_pHFactorData.xVals; }
@@ -1011,7 +1032,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Nitratation_pHFactors
         {
             get { return Nitratation_pHFactorData.yVals; }
@@ -1029,7 +1050,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("kg/mg/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double CodenitrificationRateCoefficient = 0.0006;
 
         /// <summary>
@@ -1042,7 +1063,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_TOptmimun
         {
             get { return Codenitrification_TemperatureFactorData.xValueForOptimum; }
@@ -1054,7 +1075,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_TFactorAtZero
         {
             get { return Codenitrification_TemperatureFactorData.yValueAtZero; }
@@ -1065,7 +1086,7 @@ namespace Models.Soils
         /// Curve coefficient for calculating the temperature factor for codenitrification.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_TCurveCoeff
         {
             get { return Codenitrification_TemperatureFactorData.CurveExponent; }
@@ -1085,7 +1106,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_NormWaterContents
         {
             get { return Codenitrification_MoistureFactorData.xVals; }
@@ -1097,7 +1118,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_MoistureFactors
         {
             get { return Codenitrification_MoistureFactorData.yVals; }
@@ -1114,7 +1135,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_pHValues
         {
             get { return Codenitrification_pHFactorData.xVals; }
@@ -1126,7 +1147,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_pHFactors
         {
             get { return Codenitrification_pHFactorData.yVals; }
@@ -1143,7 +1164,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("ppm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_NHNOValues
         {
             get { return Codenitrification_NH3NO2FactorData.xVals; }
@@ -1155,7 +1176,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Codenitrification_NHNOFactors
         {
             get { return Codenitrification_NH3NO2FactorData.yVals; }
@@ -1171,35 +1192,35 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("kg/mg")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DenitrificationRateCoefficient = 0.0006;
 
         /// <summary>
         /// Parameter A of linear function to compute soluble carbon.
         /// </summary>
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double actC_parmA = 24.5;
 
         /// <summary>
         /// Parameter B of linear function to compute soluble carbon.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double actC_parmB = 0.0031;
 
         /// <summary>
         /// Parameter A of exponential function to compute soluble carbon.
         /// </summary>
         [Units("g/g")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double actCExp_parmA = 0.011;
 
         /// <summary>
         /// Parameter B of exponential function to compute soluble carbon.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double actCExp_parmB = 0.895;
 
         /// <summary>
@@ -1212,7 +1233,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denitrification_TOptimum
         {
             get { return Denitrification_TemperatureFactorData.xValueForOptimum; }
@@ -1224,7 +1245,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denitrification_TFactorAtZero
         {
             get { return Denitrification_TemperatureFactorData.yValueAtZero; }
@@ -1235,7 +1256,7 @@ namespace Models.Soils
         /// Curve coefficient for calculating the temperature factor for denitrification.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denitrification_TCurveCoeff
         {
             get { return Denitrification_TemperatureFactorData.CurveExponent; }
@@ -1255,7 +1276,7 @@ namespace Models.Soils
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denitrification_NormWaterContents
         {
             get { return Denitrification_MoistureFactorData.xVals; }
@@ -1267,7 +1288,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denitrification_MoistureFactors
         {
             get { return Denitrification_MoistureFactorData.yVals; }
@@ -1281,21 +1302,21 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Denit_k1 = 25.1;
 
         /// <summary>
         /// Parameter A in the function computing the N2:N2O ratio.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double N2N2O_parmA = 0.16;
 
         /// <summary>
         /// Parameter B in the function computing the N2:N2O ratio.
         /// </summary>
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double N2N2O_parmB = -0.80;
 
         /// <summary>
@@ -1308,7 +1329,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("%")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denit_WPFSValues
         {
             get { return Denitrification_WFPSFactorData.xVals; }
@@ -1320,7 +1341,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Denit_WFPSFactors
         {
             get { return Denitrification_WFPSFactorData.yVals; }
@@ -1338,20 +1359,10 @@ namespace Models.Soils
         #region Parameter for handling patches
 
         /// <summary>
-        /// The approach used for partitioning the N between patches.
-        /// </summary>
-        [XmlIgnore]
-        public string NPartitionApproach
-        {
-            get { return patchNPartitionApproach; }
-            set { patchNPartitionApproach = value.Trim(); }
-        }
-
-        /// <summary>
         /// Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double LayerForNPartition = -99;
 
         /// <summary>
@@ -1359,7 +1370,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MininumRelativeAreaCNPatch
         {
             get { return minimumPatchArea; }
@@ -1371,7 +1382,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("ppm/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaximumUptakeRateNH4
         {
             get { return reset_MaximumNH4Uptake; }
@@ -1394,7 +1405,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("ppm/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaximumUptakeRateNO3
         {
             get { return reset_MaximumNO3Uptake; }
@@ -1417,7 +1428,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("kg/ha/day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaximumNitrogenAvailableToPlants
         {
             get { return maxTotalNAvailableToPlants; }
@@ -1430,17 +1441,6 @@ namespace Models.Soils
         #region Parameter for amalgamating patches
 
         /// <summary>
-        /// Flag for whether auto amalgamation of CN patches is allowed (yes/no).
-        /// </summary>
-        [Units("yes/no")]
-        [XmlIgnore]
-        public string AllowPatchAutoAmalgamation
-        {
-            get { return (patchAutoAmalgamationAllowed) ? "yes" : "no"; }
-            set { patchAutoAmalgamationAllowed = value.ToLower().Contains("yes"); }
-        }
-
-        /// <summary>
         /// Approach to use when comparing patches for AutoAmalagamation.
         /// </summary>
         /// <remarks>
@@ -1449,11 +1449,11 @@ namespace Models.Soils
         ///  - CompareBase: All patches are compare to base first, then merged, then compared again
         ///  - CompareMerge: Patches are compare and merged at once if deemed equal, then compare to next
         /// </remarks>
-        [XmlIgnore]
-        public string AutoAmalgamationApproach
+        [JsonIgnore]
+        public AutoAmalgamationApproachEnum AutoAmalgamationApproach
         {
             get { return patchAmalgamationApproach; }
-            set { patchAmalgamationApproach = value.Trim(); }
+            set { patchAmalgamationApproach = value; }
         }
 
         /// <summary>
@@ -1466,29 +1466,29 @@ namespace Models.Soils
         ///  - IDBased: the patch with lowest ID (=0) is used as the base
         ///  - AreaBased: The [first] patch with the biggest area is used as base
         /// </remarks>
-        [XmlIgnore]
-        public string basePatchApproach
+        [JsonIgnore]
+        public BaseApproachEnum basePatchApproach
         {
             get { return patchbasePatchApproach; }
-            set { patchbasePatchApproach = value.Trim(); }
+            set { patchbasePatchApproach = value; }
         }
 
         /// <summary>
         /// Flag for whether an age check is used to force amalgamation of patches (yes/no).
         /// </summary>
         [Units("yes/no")]
-        [XmlIgnore]
-        public string AllowPatchAmalgamationByAge
+        [JsonIgnore]
+        public bool AllowPatchAmalgamationByAge
         {
-            get { return (patchAmalgamationByAgeAllowed) ? "yes" : "no"; }
-            set { patchAmalgamationByAgeAllowed = value.ToLower().Contains("yes"); }
+            get { return (patchAmalgamationByAgeAllowed); }
+            set { patchAmalgamationByAgeAllowed = value; }
         }
 
         /// <summary>
         /// Age of patch at which merging is enforced (years).
         /// </summary>
         [Units("years")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PatchAgeForForcedMerge
         {
             get { return forcedMergePatchAge; }
@@ -1500,7 +1500,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalOrgC = 0.02;
 
         /// <summary>
@@ -1508,7 +1508,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalOrgN = 0.02;
 
         /// <summary>
@@ -1516,7 +1516,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalBiomC = 0.02;
 
         /// <summary>
@@ -1524,7 +1524,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalUrea = 0.02;
 
         /// <summary>
@@ -1532,7 +1532,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalNH4 = 0.02;
 
         /// <summary>
@@ -1540,7 +1540,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_TotalNO3 = 0.02;
 
         /// <summary>
@@ -1548,7 +1548,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_LayerBiomC = 0.02;
 
         /// <summary>
@@ -1556,7 +1556,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_LayerUrea = 0.02;
 
         /// <summary>
@@ -1564,7 +1564,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_LayerNH4 = 0.02;
 
         /// <summary>
@@ -1572,84 +1572,84 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double relativeDiff_LayerNO3 = 0.02;
 
         /// <summary>
         /// Absolute difference in total organic carbon (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalOrgC = 500;
 
         /// <summary>
         /// Absolute difference in total organic nitrogen (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalOrgN = 50;
 
         /// <summary>
         /// Absolute difference in total organic nitrogen (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalBiomC = 50;
 
         /// <summary>
         /// Absolute difference in total urea N amount (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalUrea = 2;
 
         /// <summary>
         /// Absolute difference in total NH4 N amount (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalNH4 = 5;
 
         /// <summary>
         /// Absolute difference in total NO3 N amount (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_TotalNO3 = 5;
 
         /// <summary>
         /// Absolute difference in urea N amount at any layer (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_LayerBiomC = 1;
 
         /// <summary>
         /// Absolute difference in urea N amount at any layer (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_LayerUrea = 1;
 
         /// <summary>
         /// Absolute difference in NH4 N amount at any layer (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_LayerNH4 = 1;
 
         /// <summary>
         /// Absolute difference in NO3 N amount at any layer (kg/ha).
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double absoluteDiff_LayerNO3 = 1;
 
         /// <summary>
         /// Depth to consider when testing diffs by layer, if -ve soil depth is used (mm).
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DepthToTestByLayer = 99;
 
         /// <summary>
@@ -1657,7 +1657,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double DiffAdjustFactor = 0.5;
 
         #endregion amalgamating patches
@@ -1670,7 +1670,7 @@ namespace Models.Soils
         /// pH of soil (assumed equivalent to a 1:1 soil-water slurry).
         /// </summary>
         [Bounds(Lower = 3.0, Upper = 11.0)]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ph = { 6, 6 };
 
         #endregion ph data
@@ -1681,7 +1681,7 @@ namespace Models.Soils
         /// Total soil organic carbon content (%).
         /// </summary>
         [Units("%")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] oc
         {
             get
@@ -1725,7 +1725,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ureappm
         {
             get
@@ -1754,7 +1754,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] NH4ppm
         {
             get
@@ -1783,7 +1783,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] NO3ppm
         {
             get
@@ -1824,7 +1824,7 @@ namespace Models.Soils
         /// Soil loss due to erosion (t/ha).
         /// </summary>
         [Units("t/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double soil_loss;
 
         #endregion
@@ -1846,14 +1846,14 @@ namespace Models.Soils
         /// Amount of C decomposed in pond that is added to soil m. biomass.
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double pond_biom_C;
 
         /// <summary>
         /// Amount of C decomposed in pond that is added to soil humus.
         /// </summary>
         [Units("kg/ha")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double pond_hum_C;
 
         #endregion
@@ -1910,7 +1910,7 @@ namespace Models.Soils
         /// This is used to compute plant available N when using patches
         /// </remarks>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double RootingDepth
         {
             get { return rootDepth; }
@@ -2467,7 +2467,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "Urea", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "Urea", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
@@ -2546,7 +2546,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "NH4", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "NH4", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
@@ -2633,7 +2633,7 @@ namespace Models.Soils
                 (callingModelType == SoluteSetterType.Plant)))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(deltaN, "NO3", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(deltaN, "NO3", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];
@@ -2869,6 +2869,27 @@ namespace Models.Soils
                                        + Patch[k].fom_n[2][layer]
                                        + Patch[k].hum_n[layer]
                                        + Patch[k].biom_n[layer]) * Patch[k].RelativeArea;
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Soil organic carbon, old style
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] organic_c
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        result[layer] += (Patch[k].fom_c[0][layer]
+                                       + Patch[k].fom_c[1][layer]
+                                       + Patch[k].fom_c[2][layer]
+                                       + Patch[k].hum_c[layer]
+                                       + Patch[k].biom_c[layer]) * Patch[k].RelativeArea;
 
                 return result;
             }
@@ -3376,6 +3397,23 @@ namespace Models.Soils
                 for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].inert_c[layer] * Patch[k].RelativeArea;
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Amount of N in inert humic pool
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] InertN
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                    for (int k = 0; k < Patch.Count; k++)
+                        result[layer] += Patch[k].inert_n[layer] * Patch[k].RelativeArea;
 
                 return result;
             }
@@ -6094,7 +6132,7 @@ namespace Models.Soils
         /// <summary>
         /// List of all existing patches (internal instances of C and N processes).
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<soilCNPatch> Patch;
 
         #endregion components
@@ -6247,13 +6285,13 @@ namespace Models.Soils
         /// <summary>
         /// Total C content at the beginning of the day.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TodaysInitialC;
 
         /// <summary>
         /// Total N content at the beginning of the day.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TodaysInitialN;
 
         /// <summary>
@@ -6298,17 +6336,12 @@ namespace Models.Soils
         /// <summary>
         /// Approach to use when partitioning dltN amongst patches.
         /// </summary>
-        private string patchNPartitionApproach = "BasedOnConcentrationAndDelta";
-
-        /// <summary>
-        /// Whether auto amalgamation of patches is allowed.
-        /// </summary>
-        private bool patchAutoAmalgamationAllowed = false;
+        public PartitionApproachEnum NPartitionApproach { get; set; } = PartitionApproachEnum.BasedOnConcentrationAndDelta;
 
         /// <summary>
         /// Approach to use for AutoAmalagamation (CompareAll, CompareBase, CompareMerge).
         /// </summary>
-        private string patchAmalgamationApproach = "CompareAll";
+        private AutoAmalgamationApproachEnum patchAmalgamationApproach = AutoAmalgamationApproachEnum.CompareAll;
 
         /// <summary>
         /// indicates whether an age check is used to force amalgamation of patches.
@@ -6323,7 +6356,7 @@ namespace Models.Soils
         /// <summary>
         /// Approach to use for defining the base patch (IDBased, AreaBased).
         /// </summary>
-        private string patchbasePatchApproach = "AreaBased";
+        private BaseApproachEnum patchbasePatchApproach = BaseApproachEnum.AreaBased;
 
         /// <summary>
         /// Layer down to which test for diffs are made (upon auto amalgamation).
@@ -6404,6 +6437,72 @@ namespace Models.Soils
         }
 
         #endregion
+
+        /// <summary>The inert pool.</summary>
+        public INutrientPool Inert { get { return new NutrientPool() { C = InertC, N = InertN }; } }
+
+        /// <summary>The microbial pool.</summary>
+        public INutrientPool Microbial { get { return new NutrientPool() { C = MicrobialC, N = MicrobialN }; } }
+
+        /// <summary>The humic pool.</summary>
+        public INutrientPool Humic { get { return new NutrientPool() { C = HumicC, N = HumicN }; } }
+
+        /// <summary>The fresh organic matter cellulose pool.</summary>
+        public INutrientPool FOMCellulose => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter carbohydrate pool.</summary>
+        public INutrientPool FOMCarbohydrate => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter lignin pool.</summary>
+        public INutrientPool FOMLignin => throw new NotImplementedException();
+
+        /// <summary>The fresh organic matter pool.</summary>
+        public INutrientPool FOM { get { return new NutrientPool() { C = FOMC, N = FOMN }; } }
+
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
+        public INutrientPool Organic { get { return new NutrientPool() { C = organic_c, N = organic_n }; } }
+
+        /// <summary>The fresh organic matter surface residue pool.</summary>
+        public INutrientPool SurfaceResidue => throw new NotImplementedException();
+
+        /// <summary>The NO3 pool.</summary>
+        public ISolute NO3 { get { return new Solute(Soil, "NO3", CalculateNO3()); } }
+
+        /// <summary>The NH4 pool.</summary>
+        public ISolute NH4 { get { return new Solute(Soil, "NH4", CalculateNH4()); } }
+
+        /// <summary>The Urea pool.</summary>
+        public ISolute Urea { get { return new Solute(Soil, "Urea", CalculateUrea()); } }
+
+        /// <summary>Total C lost to the atmosphere</summary>
+        public double[] Catm => co2_atm;
+
+        /// <summary>Total N lost to the atmosphere</summary>
+        public double[] Natm => n2_atm;
+
+        /// <summary>Total N2O lost to the atmosphere</summary>
+        public double[] N2Oatm => n2o_atm;
+
+        /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
+        public double[] DenitrifiedN => Denitrification;
+
+        /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
+        public double[] NitrifiedN => Nitrification;
+
+        /// <summary>Urea converted to NH4 via hydrolysis.</summary>
+        public double[] HydrolysedN => dlt_urea_hydrol;
+
+        /// <summary>Total Mineral N in each soil layer</summary>
+        public double[] MineralN => mineral_n;
+
+        /// <summary>Net N Mineralisation from surface residue</summary>
+        public double[] MineralisedNSurfaceResidue => dlt_n_min_res;
+
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
+        public double FOMCNR(int i)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     #region classes for organising data
@@ -6496,6 +6595,19 @@ namespace Models.Soils
     /// <param name="Data">The data.</param>
     public delegate void AddSoilCNPatchwithFOMFOMDelegate(AddSoilCNPatchwithFOMFOMType Data);
 
+    /// <summary>Specifies the different types of deposition in calls to add a patch.</summary>
+    public enum DepositionTypeEnum
+    {
+        /// <summary></summary>
+        ToNewPatch,
+        /// <summary></summary>
+        NewOverlappingPatches,
+        /// <summary></summary>
+        ToSpecificPatch,
+        /// <summary></summary>
+        ToAllPaddock,
+    }
+
     /// <summary>
     /// AddSoilCNPatchwithFOM
     /// </summary>
@@ -6504,9 +6616,9 @@ namespace Models.Soils
         /// <summary>The Sender</summary>
         public String Sender = "";
         /// <summary>The SuppressMessages</summary>
-        public String SuppressMessages = "";
+        public bool SuppressMessages;
         /// <summary>The DepositionType</summary>
-        public String DepositionType = "";
+        public DepositionTypeEnum DepositionType = DepositionTypeEnum.ToAllPaddock;
         /// <summary>The AffectedPatches_nm</summary>
         public String[] AffectedPatches_nm;
         /// <summary>The AffectedPatches_id</summary>
@@ -6547,9 +6659,9 @@ namespace Models.Soils
         /// <summary>The Sender</summary>
         public String Sender = "";
         /// <summary>The SuppressMessages</summary>
-        public String SuppressMessages = "";
+        public bool SuppressMessages;
         /// <summary>The DepositionType</summary>
-        public String DepositionType = "";
+        public DepositionTypeEnum DepositionType = DepositionTypeEnum.ToAllPaddock;
         /// <summary>The AffectedPatches_nm</summary>
         public String[] AffectedPatches_nm;
         /// <summary>The AffectedPatches_id</summary>
@@ -6583,12 +6695,6 @@ namespace Models.Soils
         /// <summary>The FOM_N</summary>
         public Double[] FOM_N;
     }
-
-    /// <summary>
-    /// AddSoilCNPatchDelegate
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void AddSoilCNPatchDelegate(AddSoilCNPatchType Data);
 
     #endregion
 
@@ -6688,6 +6794,31 @@ namespace Models.Soils
     {
         /// <summary>The pool</summary>
         public SurfaceOrganicMatterDecompPoolType[] Pool;
+
+        /// <summary>Add two pools together.</summary>
+        /// <param name="from">The pool to add into this instance.</param>
+        public void Add(SurfaceOrganicMatterDecompType from)
+        {
+            if (Pool.Length != from.Pool.Length)
+                throw new Exception("Cannot add SurfaceOrganicMatterDecompType together. Pool lengths differ.");
+            for (int p = 0; p < Pool.Length; p++)
+            {
+                Pool[p].FOM.amount += from.Pool[p].FOM.amount;
+                Pool[p].FOM.C += from.Pool[p].FOM.C;
+                Pool[p].FOM.N += from.Pool[p].FOM.N;
+            }
+        }
+
+        /// <summary>Multiply the FOM C and N by a value.</summary>
+        /// <param name="value">The value to multiply the C and N by.</param>
+        public void Multiply(double value)
+        {
+            foreach (var pool in Pool)
+            {
+                pool.FOM.C *= value;
+                pool.FOM.N *= value;
+            }
+        }
     }
 
     /// <summary>

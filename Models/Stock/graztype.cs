@@ -1,16 +1,6 @@
-// -----------------------------------------------------------------------
-// <copyright file="graztype.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
     /// This is nearly the same information as "GrazType.ReproType" (below), but is intended for
@@ -579,81 +569,6 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         [Serializable]
-        public class PopulationnHerbageAttr
-        {
-            /// <summary>
-            /// kg/ha
-            /// </summary>
-            public double fMass_DM;
-
-            /// <summary>
-            /// kg/kg
-            /// </summary>
-            public double fDM_Digestibility;
-
-            /// <summary>
-            /// kg/kg
-            /// </summary>
-            public double[] fNutrientConc = new double[3]; // TODO: Check this!! [N..S]    
-            
-            /// <summary>
-            /// kg/kg degradability
-            /// </summary>
-            public double fNDegradability;
-
-            /// <summary>
-            /// mol/kg ash alkalinity
-            /// </summary>
-            public double fAshAlkalinity;
-
-            /// <summary>
-            /// kg/m^3 bulk density
-            /// </summary>
-            public double fBulkDensity;
-
-            /// <summary>
-            /// 0-1, bite-size scale
-            /// </summary>
-            public double fGroundAreaFract;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Serializable]
-        public class PopulationHerbageData
-        {
-            /// <summary>
-            /// Is a legume
-            /// </summary>
-            public bool bIsLegume;
-
-            /// <summary>
-            /// The selection factor
-            /// </summary>
-            public double fSelectFactor;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public PopulationnHerbageAttr[,] Herbage = new PopulationnHerbageAttr[2, HerbClassNo + 1];
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public PopulationnHerbageAttr[] Seeds = new PopulationnHerbageAttr[RIPE + 1];
-
-            /// <summary>
-            /// 
-            /// </summary>
-            public int[] iSeedClass = new int[RIPE + 1];
-        }
-        /* TSppSeedArray => double[MaxPlantSpp + 1, 3]  //1..50(1..MaxPlantSpp), 1..2(UNRIPE..RIPE)     */
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Serializable]
         public class GrazingOutputs // Quantities grazed from a pasture         
         {
             /// <summary>
@@ -717,31 +632,6 @@ namespace Models.GrazPlan
         /// Default class digestibilities
         /// </summary>
         static public readonly double[] ClassDig = { 0.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3 };
-
-        /// <summary>
-        /// Height below which herbage is unavailable for grazing, GH (metres). From GRAZGRZE
-        /// </summary>
-        /// <param name="height">Height of herbage, H                  (metres)</param>
-        /// <param name="maxGH">Maximum value of GH                    (metres)</param>
-        /// <param name="curvature">Curvature                          (0-1)</param>
-        /// <param name="slope">Initial slope of the GH-H relationship (0-1)</param>
-        /// <returns></returns>
-        public static double fGrazingHeight(double height, double maxGH, double curvature, double slope)
-        {
-            double result;
-
-            if (slope <= 0.0)                                                    // fSlope=0 => all herbage available        
-                result = 0.0;
-            else if (curvature <= 0.0)                                           // fCurvature=0 => rectangular hyperbola    
-                result = maxGH * height / (height + maxGH / slope);
-            else if (curvature >= 1.0)                                           // fCurvature=1 => piecewise linear         
-                result = Math.Min(slope * height, maxGH);
-            else                                                                      // Otherwise, a non-rectangular hyperbola   
-                result = (slope * height + maxGH
-                           - Math.Sqrt(Math.Pow(slope * height + maxGH, 2) - 4.0 * curvature * maxGH * slope * height))
-                          / (2.0 * curvature);
-            return result;
-        }
 
         /// <summary>
         /// Get a weighted average
@@ -839,70 +729,6 @@ namespace Models.GrazPlan
             totPool.Nu[p] = totPool.Nu[p] + partPool.Nu[p];
             totPool.Nu[s] = totPool.Nu[s] + partPool.Nu[s];
             totPool.AshAlk = totPool.AshAlk + partPool.AshAlk;
-        }
-    }
-
-    /// <summary>
-    /// Class to manage deserialisation
-    /// </summary>
-    sealed class PreMergeToMergedDeserializationBinder : SerializationBinder
-    {
-        /// <summary>
-        /// Bind function
-        /// </summary>
-        /// <param name="assemblyName">Name of the assembly</param>
-        /// <param name="typeName">The type name</param>
-        /// <returns>The type to deserialise</returns>
-        public override Type BindToType(string assemblyName, string typeName)
-        {
-            Type typeToDeserialize = null;
-
-            // For each assemblyName/typeName that you want to deserialize to
-            // a different type, set typeToDeserialize to the desired type.
-            string exeAssembly = Assembly.GetExecutingAssembly().FullName;
-
-            // The following line of code returns the type.
-            typeToDeserialize = Type.GetType(string.Format("{0}, {1}", typeName, exeAssembly));
-
-            return typeToDeserialize;
-        }
-    }
-
-    /// <summary>
-    /// Reference Article http://www.codeproject.com/KB/tips/SerializedObjectCloner.aspx
-    /// Provides a method for performing a deep copy of an object.
-    /// Binary Serialization is used to perform the copy.
-    /// </summary>
-    public static class ObjectCopier
-    {
-        /// <summary>
-        /// Perform a deep Copy of the object.
-        /// </summary>
-        /// <typeparam name="T">The type of object being copied.</typeparam>
-        /// <param name="source">The object instance to copy.</param>
-        /// <returns>The copied object.</returns>
-        public static T Clone<T>(T source)
-        {
-            if (!typeof(T).IsSerializable)
-            {
-                throw new ArgumentException(typeof(T).Name + " type must be serializable.", "source");
-            }
-
-            // Don't serialize a null object, simply return the default for that object
-            if (object.ReferenceEquals(source, null))
-            {
-                return default(T);
-            }
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                formatter.Serialize(stream, source);
-                stream.Seek(0, SeekOrigin.Begin);
-                formatter.Binder = new PreMergeToMergedDeserializationBinder();
-                return (T)formatter.Deserialize(stream);
-            }
         }
     }
 }

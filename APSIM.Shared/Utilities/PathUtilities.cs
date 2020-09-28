@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PathUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
     using System.IO;
@@ -67,13 +62,16 @@ namespace APSIM.Shared.Utilities
         /// <returns>The absolute path</returns>
         public static string GetAbsolutePath(string path, string relativePath)
         {
-            if (path == null)
-                return null;
+            if (string.IsNullOrEmpty(path))
+                return path;
 
-            // Remove any %root% macro.
-            string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-            path = path.Replace("%root%", rootDirectory);
-            
+            // Remove any %root% macro (even if relative path is null).
+            string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+            path = path.Replace("%root%", apsimxDirectory);
+
+            if (string.IsNullOrEmpty(relativePath))
+                return ConvertSlashes(path);
+
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
             if (relativeDirectory != null)
@@ -83,11 +81,7 @@ namespace APSIM.Shared.Utilities
             }
 
             // Convert slashes.
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                path = path.Replace("/", @"\");
-            else
-                path = path.Replace(@"\", "/");
+            path = ConvertSlashes(path);
 
             return Path.GetFullPath(path);
         }
@@ -100,8 +94,8 @@ namespace APSIM.Shared.Utilities
         /// <returns>The relative path</returns>
         public static string GetRelativePath(string path, string relativePath)
         {
-            if (System.String.IsNullOrEmpty(path))
-                throw new ArgumentNullException("path");
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
+                return path;
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
@@ -109,11 +103,6 @@ namespace APSIM.Shared.Utilities
             {
                 // Try getting rid of the relative directory.
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
-
-                // Try putting in a %root%.
-                string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-                // if (path.StartsWith(Path.Combine(rootDirectory, "Examples")))
-                path = path.Replace(rootDirectory, "%root%");
             }
 
             // Convert slashes.
@@ -134,6 +123,17 @@ namespace APSIM.Shared.Utilities
         private static string ReducePath(string path)
         {
             return path.Substring(path.IndexOf(Path.DirectorySeparatorChar) + 1, path.Length - path.IndexOf(Path.DirectorySeparatorChar) - 1);
+        }
+
+        /// <summary>
+        /// Convert all slashes to the correct directory separator character.
+        /// </summary>
+        private static string ConvertSlashes(string path)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32Windows)
+                return path.Replace("/", @"\");
+
+            return path.Replace(@"\", "/");
         }
     }
 }

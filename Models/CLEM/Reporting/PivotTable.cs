@@ -1,14 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PivotTable.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 
 namespace Models.CLEM.Reporting
 {

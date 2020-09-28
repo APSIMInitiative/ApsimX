@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQueryPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ApsimNG.Views.CLEM;
+﻿using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using System;
@@ -45,15 +39,15 @@ namespace ApsimNG.Presenters.CLEM
             this.explorer = explorerPresenter;
 
             this.view.RunQuery += OnRunQuery;
-            this.view.LoadFile += OnLoadFile;
-            this.view.WriteTable += OnWriteTable;
+            //this.view.LoadFile += OnLoadFile;
+            //this.view.WriteTable += OnWriteTable;
 
             // If the model contains sql, update the view to display it
             if (!string.IsNullOrEmpty(query.Sql))
             {
                 this.view.Sql = query.Sql;
-                this.view.Filename = query.Filename;
-                this.view.Tablename = query.Tablename;
+                //this.view.Filename = query.Filename;
+                //this.view.Tablename = query.Tablename;
                 if (query.Enabled)
                 {
                     OnRunQuery(this, EventArgs.Empty);
@@ -82,11 +76,11 @@ namespace ApsimNG.Presenters.CLEM
             ChangeProperty sqlcom = new ChangeProperty(this.query, "Sql", view.Sql);
             explorer.CommandHistory.Add(sqlcom);
 
-            ChangeProperty filecom = new ChangeProperty(this.query, "Filename", view.Filename);
-            explorer.CommandHistory.Add(filecom);
+            //ChangeProperty filecom = new ChangeProperty(this.query, "Filename", view.Filename);
+            //explorer.CommandHistory.Add(filecom);
 
-            ChangeProperty tablecom = new ChangeProperty(this.query, "Tablename", view.Tablename);
-            explorer.CommandHistory.Add(tablecom);
+            //ChangeProperty tablecom = new ChangeProperty(this.query, "Tablename", view.Tablename);
+            //explorer.CommandHistory.Add(tablecom);
         }
 
         /// <summary>
@@ -96,7 +90,7 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e"></param>        
         private void OnRunQuery(object sender, EventArgs e)
         {
-            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            var store = query.FindInScope<IDataStore>();
             view.Grid.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
             TrackChanges();
@@ -112,7 +106,7 @@ namespace ApsimNG.Presenters.CLEM
             DataTable data = view.Grid.DataSource;
             data.TableName = view.Tablename;
 
-            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            var store = query.FindInScope<IDataStore>();
             store.Writer.WriteTable(data);
 
             TrackChanges();

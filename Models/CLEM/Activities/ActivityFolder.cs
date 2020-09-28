@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>
@@ -128,15 +128,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            double opacity = 1;
-            if (!this.Enabled)
-            {
-                if (this.Parent.Enabled)
-                {
-                    opacity = 0.4;
-                }
-            }
-            return "\n<div class=\"activityborder\" style=\"opacity: " + opacity.ToString() + ";\">";
+            return "\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
         }
 
     }

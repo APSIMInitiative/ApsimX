@@ -1,24 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.Globalization;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileCrop.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>
@@ -120,7 +111,7 @@ namespace Models.CLEM
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -131,7 +122,7 @@ namespace Models.CLEM
                 }  
                 else
                 {
-                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                    Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
                     {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
@@ -220,7 +211,7 @@ namespace Models.CLEM
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>

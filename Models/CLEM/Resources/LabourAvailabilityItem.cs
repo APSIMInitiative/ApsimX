@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    public class LabourAvailabilityItem : LabourSpecificationItem
+    public class LabourAvailabilityItem : LabourSpecificationItem, IFilterGroup
     {
         /// <summary>
         /// Single values 
@@ -31,6 +32,12 @@ namespace Models.CLEM.Resources
         public double Value { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
         /// Provide the labour availability
         /// </summary>
         /// <param name="month">Month for labour</param>
@@ -39,6 +46,12 @@ namespace Models.CLEM.Resources
         {
             return Value;
         }
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -112,7 +125,7 @@ namespace Models.CLEM.Resources
             if (formatForParentControl)
             {
                 html += "<tr><td>";
-                if ((Apsim.Children(this, typeof(LabourFilter)).Count() == 0))
+                if ((this.FindAllChildren<LabourFilter>().Count() == 0))
                 {
                     html += "<div class=\"filter\">Any labour</div>";
                 }
@@ -120,7 +133,7 @@ namespace Models.CLEM.Resources
             else
             {
                 html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">Any labour</div>";
                 }

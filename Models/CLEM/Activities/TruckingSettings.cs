@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// Number of 450kg animals per truck load
         /// </summary>
         [Description("Number of 450kg animals per truck load")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double Number450kgPerTruck { get; set; }
 
         /// <summary>
@@ -58,6 +58,20 @@ namespace Models.CLEM.Activities
         [Description("Minimum proportion of truck load before selling (0 continuous sales)")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadBeforeSelling { get; set; }
+
+        /// <summary>
+        /// Minimum number of truck loads before buying (0 continuous purchase)
+        /// </summary>
+        [Description("Minimum number of truck loads before buying (0 no limit)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MinimumTrucksBeforeBuying { get; set; }
+
+        /// <summary>
+        /// Minimum proportion of truck load before buying (0 continuous purchase)
+        /// </summary>
+        [Description("Minimum proportion of truck load before buying (0 no limit)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MinimumLoadBeforeBuying { get; set; }
 
         /// <summary>
         /// Truck CO2 emissions per km
@@ -80,6 +94,30 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double TruckN2OEmissions { get; set; }
 
+        /// <summary>
+        /// Methane store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for methane emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named Methane if present")]
+        public string MethaneStoreName { get; set; }
+
+        /// <summary>
+        /// Carbon dioxide store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for carbon dioxide emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named CO2 if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named CO2 if present")]
+        public string CarbonDioxideStoreName { get; set; }
+
+        /// <summary>
+        /// Nitrous oxide store for emissions
+        /// </summary>
+        [Description("Greenhouse gas store for nitrous oxide emissions")]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named N2O if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [System.ComponentModel.DefaultValue("Use store named N2O if present")]
+        public string NitrousOxideStoreName { get; set; }
+
         private GreenhouseGasesType CO2Store;
         private GreenhouseGasesType MethaneStore;
         private GreenhouseGasesType N2OStore;
@@ -98,21 +136,37 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GreenhouseGases gasesPresent = Resources.GreenhouseGases();
-
-            if (gasesPresent != null)
+            if (TruckMethaneEmissions > 0)
             {
-                if (TruckMethaneEmissions > 0)
+                if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                 {
-                    MethaneStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    MethaneStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
                 }
-                if (TruckCO2Emissions > 0)
+                else
                 {
-                    CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    MethaneStore = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
-                if (TruckN2OEmissions > 0)
+            }
+            if (TruckCO2Emissions > 0)
+            {
+                if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
                 {
-                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+                }
+                else
+                {
+                    CO2Store = Resources.GetResourceItem(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                }
+            }
+            if (TruckN2OEmissions > 0)
+            {
+                if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+                {
+                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+                }
+                else
+                {
+                    N2OStore = Resources.GetResourceItem(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
             }
         }
@@ -166,11 +220,19 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("#.###") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.###") + "</span> per km per truck";
+            html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.##") + "</span> per km per truck";
             html += "</div>";
 
-            html += "\n<div class=\"activityentry\">Each truck load can carry <span class=\"setvalue\">" + Number450kgPerTruck.ToString("#.###") + "</span> 450 kg individuals ";
-            html += "</div>";
+            html += "\n<div class=\"activityentry\">Each truck load can carry ";
+            if (Number450kgPerTruck == 0)
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + Number450kgPerTruck.ToString("0.###") + "</span>";
+            }
+            html += " 450 kg individuals</div>";
 
             if(MinimumLoadBeforeSelling>0 || MinimumTrucksBeforeSelling>0)
             {
@@ -192,28 +254,98 @@ namespace Models.CLEM.Activities
                     }
                     html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full";
                 }
-                html += "</div>";
+                html += " for sales</div>";
             }
 
-            if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
+            if (MinimumLoadBeforeBuying > 0 || MinimumTrucksBeforeBuying > 0)
             {
-                html += "\n<div class=\"activityentry\">Each truck will emmit <span class=\"setvalue\">";
-                if (TruckMethaneEmissions > 0)
+                html += "\n<div class=\"activityentry\">";
+                if (MinimumTrucksBeforeBuying > 0)
                 {
-                    html += TruckMethaneEmissions.ToString("0.###") + "</span> kg methane per km";
+                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required";
                 }
-                if (MinimumLoadBeforeSelling > 0)
+                if (MinimumLoadBeforeBuying > 0)
                 {
-                    if (MinimumTrucksBeforeSelling > 0)
+                    if (MinimumTrucksBeforeBuying > 0)
                     {
-                        html += " and ";
+                        html += " and each ";
                     }
                     else
                     {
-                        html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg N<sub>2</sub>O per km";
+                        html += "Each ";
+
                     }
+                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full";
                 }
+                html += " for purchases</div>";
+            }
+
+
+            if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
+            {
+                html += "\n<div class=\"activityentry\">Each truck will emmit ";
+                if (TruckMethaneEmissions > 0)
+                {
+                    html += "<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane";
+                }
+                if (TruckCO2Emissions > 0)
+                {
+                    if (TruckMethaneEmissions > 0)
+                    {
+                        html += ", ";
+                    }
+                    html += "<span class=\"setvalue\">" + TruckCO2Emissions.ToString("0.###") + "</span> kg carbon dioxide";
+                }
+                if (TruckN2OEmissions > 0)
+                {
+                    if (TruckMethaneEmissions + TruckCO2Emissions > 0)
+                    {
+                        html += " and ";
+                    }
+                    html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg nitrous oxide";
+                }
+                html += " per km";
                 html += "</div>";
+
+                if (TruckMethaneEmissions > 0)
+                {
+                    html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
+                    if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                    {
+                        html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+                    }
+                    else
+                    {
+                        html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
+                    }
+                    html += "</div>";
+                }
+                if (TruckCO2Emissions > 0)
+                {
+                    html += "\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ";
+                    if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
+                    {
+                        html += "<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present";
+                    }
+                    else
+                    {
+                        html += $"<span class=\"resourcelink\">{CarbonDioxideStoreName}</span>";
+                    }
+                    html += "</div>";
+                }
+                if (TruckN2OEmissions > 0)
+                {
+                    html += "\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ";
+                    if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+                    {
+                        html += "<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present";
+                    }
+                    else
+                    {
+                        html += $"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>";
+                    }
+                    html += "</div>";
+                }
             }
 
             return html;

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="UpgradeForm.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Diagnostics;
@@ -90,6 +85,14 @@ namespace UserInterface.Views
             oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
 
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version.Revision == 0)
+            {
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+            }
+
             CellRendererText textRender = new Gtk.CellRendererText();
             textRender.Editable = false;
 
@@ -121,6 +124,7 @@ namespace UserInterface.Views
             htmlView = new HTMLView(new ViewBase(null));
             htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
+
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
             window1.Modal = true;
             oldVersions.Toggled += OnShowOldVersionsToggled;
@@ -183,6 +187,7 @@ namespace UserInterface.Views
             else
                 label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
 
+
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
             emailBox.Text = Utility.Configuration.Settings.Email;
@@ -195,16 +200,26 @@ namespace UserInterface.Views
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            try
+            if (version.Revision == 0)
             {
-                // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
             }
-            catch (Exception)
+            else
             {
-                ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                loadFailure = true;
+                try
+                {
+                    // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                    // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                }
+                catch (Exception)
+                {
+                    ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    loadFailure = true;
+                }
             }
 
         }
@@ -414,70 +429,77 @@ namespace UserInterface.Views
 
         private void Web_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            if (waitDlg != null)
+            try
             {
-                waitDlg.Destroy();
-                waitDlg = null;
-            }
-            if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
-            {
-                try
+                if (waitDlg != null)
                 {
-                    if (e.Error != null) // On Linux, we get to this point even when errors have occurred
-                        throw e.Error;
-
-                    if (File.Exists(tempSetupFileName))
+                    waitDlg.Destroy();
+                    waitDlg = null;
+                }
+                if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
+                {
+                    try
                     {
-                        // Copy the separate upgrader executable to the temp directory.
-                        string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                        string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
+                        if (e.Error != null) // On Linux, we get to this point even when errors have occurred
+                            throw e.Error;
 
-                        // Check to see if upgrader is already running for whatever reason.
-                        // Kill them if found.
-                        foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                            process.Kill();
-
-                        // Delete the old upgrader.
-                        if (File.Exists(upgraderFileName))
-                            File.Delete(upgraderFileName);
-                        // Copy in the new upgrader.
-                        File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                        // Run the upgrader.
-                        string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                        string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                        string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                        string arguments = StringUtilities.DQuote(ourDirectory) + " " +
-                                           StringUtilities.DQuote(newDirectory);
-
-                        ProcessStartInfo info = new ProcessStartInfo();
-                        if (ProcessUtilities.CurrentOS.IsMac)
+                        if (File.Exists(tempSetupFileName))
                         {
-                            info.FileName = "mono";
-                            info.Arguments = upgraderFileName + " " + arguments;
+                            // Copy the separate upgrader executable to the temp directory.
+                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
+                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
+
+                            // Check to see if upgrader is already running for whatever reason.
+                            // Kill them if found.
+                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                                process.Kill();
+
+                            // Delete the old upgrader.
+                            if (File.Exists(upgraderFileName))
+                                File.Delete(upgraderFileName);
+                            // Copy in the new upgrader.
+                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
+
+                            // Run the upgrader.
+                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
+                            string arguments = StringUtilities.DQuote(ourDirectory) + " " +
+                                               StringUtilities.DQuote(newDirectory);
+
+                            ProcessStartInfo info = new ProcessStartInfo();
+                            if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                info.FileName = "mono";
+                                info.Arguments = upgraderFileName + " " + arguments;
+                            }
+                            else
+                            {
+                                info.FileName = upgraderFileName;
+                                info.Arguments = arguments;
+                            }
+                            info.WorkingDirectory = Path.GetTempPath();
+                            Process.Start(info);
+                            window1.GdkWindow.Cursor = null;
+
+                            // Shutdown the user interface
+                            window1.Destroy();
+                            tabbedExplorerView.Close();
                         }
-                        else
-                        {
-                            info.FileName = upgraderFileName;
-                            info.Arguments = arguments;
-                        }
-                        info.WorkingDirectory = Path.GetTempPath();
-                        Process.Start(info);
+                    }
+                    catch (Exception err)
+                    {
                         window1.GdkWindow.Cursor = null;
-
-                        // Shutdown the user interface
-                        window1.Destroy();
-                        tabbedExplorerView.Close();
+                        Application.Invoke(delegate
+                        {
+                            ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
+                        });
                     }
                 }
-                catch (Exception err)
-                {
-                    window1.GdkWindow.Cursor = null;
-                    Application.Invoke(delegate
-                    {
-                        ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
-                    });
-                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

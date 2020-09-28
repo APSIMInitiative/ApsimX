@@ -1,19 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EditorView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
     using Utility;
-    using Presenters;
     using Cairo;
     using System.Globalization;
     using Mono.TextEditor.Highlighting;
@@ -230,6 +222,7 @@ namespace UserInterface.Views
                         LoadReportSyntaxMode();
                     textEditor.Document.MimeType = "text/x-apsimreport";
                 }
+                textEditor.Document.SetNotDirtyState();
             }
         }
 
@@ -415,44 +408,51 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textEditor.Document.LineChanged -= OnTextHasChanged;
-            textEditor.TextArea.FocusInEvent -= OnTextBoxEnter;
-            textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
-            textEditor.TextArea.KeyPressEvent -= OnKeyPress;
-            scroller.Hadjustment.Changed -= Hadjustment_Changed;
-            scroller.Vadjustment.Changed -= Vadjustment_Changed;
-            textEditor.Options.Changed -= EditorOptionsChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-
-            // It's good practice to disconnect all event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popupMenu)
+            try
             {
-                if (w is MenuItem)
+                textEditor.Document.LineChanged -= OnTextHasChanged;
+                textEditor.TextArea.FocusInEvent -= OnTextBoxEnter;
+                textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
+                textEditor.TextArea.KeyPressEvent -= OnKeyPress;
+                scroller.Hadjustment.Changed -= Hadjustment_Changed;
+                scroller.Vadjustment.Changed -= Vadjustment_Changed;
+                textEditor.Options.Changed -= EditorOptionsChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+
+                // It's good practice to disconnect all event handlers, as it makes memory leaks
+                // less likely. However, we may not "own" the event handlers, so how do we 
+                // know what to disconnect?
+                // We can do this via reflection. Here's how it currently can be done in Gtk#.
+                // Windows.Forms would do it differently.
+                // This may break if Gtk# changes the way they implement event handlers.
+                foreach (Widget w in popupMenu)
                 {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
+                    if (w is MenuItem)
                     {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
+                        PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (pi != null)
                         {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
+                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                            if (handlers != null && handlers.ContainsKey("activate"))
+                            {
+                                EventHandler handler = (EventHandler)handlers["activate"];
+                                (w as MenuItem).Activated -= handler;
+                            }
                         }
                     }
                 }
-            }
 
-            popupMenu.Destroy();
-            accel.Dispose();
-            textEditor.Destroy();
-            textEditor = null;
-            findForm.Destroy();
-            owner = null;
+                popupMenu.Destroy();
+                accel.Dispose();
+                textEditor.Destroy();
+                textEditor = null;
+                findForm.Destroy();
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -462,11 +462,18 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void Vadjustment_Changed(object sender, EventArgs e)
         {
-            if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
+            try
             {
-                scroller.Vadjustment.Value = vertScrollPos;
-                scroller.Vadjustment.ChangeValue();
-                vertScrollPos = -1;
+                if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
+                {
+                    scroller.Vadjustment.Value = vertScrollPos;
+                    scroller.Vadjustment.ChangeValue();
+                    vertScrollPos = -1;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -477,11 +484,18 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void Hadjustment_Changed(object sender, EventArgs e)
         {
-            if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
+            try
             {
-                scroller.Hadjustment.Value = horizScrollPos;
-                scroller.Hadjustment.ChangeValue();
-                horizScrollPos = -1;
+                if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
+                {
+                    scroller.Hadjustment.Value = horizScrollPos;
+                    scroller.Hadjustment.ChangeValue();
+                    horizScrollPos = -1;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -493,61 +507,68 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            e.RetVal = false;
-            char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
-            Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                //Mac window manager already uses control-scroll, so use command
-                //Command might be either meta or mod1, depending on GTK version
-                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
+            try
+            {
+                e.RetVal = false;
+                char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
+                Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
+                    //Mac window manager already uses control-scroll, so use command
+                    //Command might be either meta or mod1, depending on GTK version
+                    : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
 
-            bool controlSpace = IsControlSpace(e.Event);
-            bool controlShiftSpace = IsControlShiftSpace(e.Event);
-            string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
-            double x; // unused, but needed as an out parameter.
-            if (e.Event.Key == Gdk.Key.F3)
-            {
-                if (string.IsNullOrEmpty(findForm.LookFor))
-                    findForm.ShowFor(textEditor, false);
-                else
-                    findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
-                e.RetVal = true;
-            }
-            // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-            else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
-            {
-                // If the user entered a period, we need to take that into account when generating intellisense options.
-                // To do this, we insert a period manually and stop the Gtk signal from propagating further.
-                e.RetVal = true;
-                if (keyChar == '.')
+                bool controlSpace = IsControlSpace(e.Event);
+                bool controlShiftSpace = IsControlShiftSpace(e.Event);
+                string textBeforePeriod = GetWordBeforePosition(textEditor.Caret.Offset);
+                double x; // unused, but needed as an out parameter.
+                if (e.Event.Key == Gdk.Key.F3)
                 {
-                    textEditor.InsertAtCaret(keyChar.ToString());
-
-                    // Process all events in the main loop, so that the period is inserted into the text editor.
-                    while (GLib.MainContext.Iteration()) ;
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, false);
+                    else
+                        findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    e.RetVal = true;
                 }
-                NeedContextItemsArgs args = new NeedContextItemsArgs
+                // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
+                else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
                 {
-                    Coordinates = GetPositionOfCursor(),
-                    Code = textEditor.Text,
-                    Offset = this.Offset,
-                    ControlSpace = controlSpace,
-                    ControlShiftSpace = controlShiftSpace,
-                    LineNo = textEditor.Caret.Line,
-                    ColNo = textEditor.Caret.Column - 1
-                };
+                    // If the user entered a period, we need to take that into account when generating intellisense options.
+                    // To do this, we insert a period manually and stop the Gtk signal from propagating further.
+                    e.RetVal = true;
+                    if (keyChar == '.')
+                    {
+                        textEditor.InsertAtCaret(keyChar.ToString());
 
-                ContextItemsNeeded?.Invoke(this, args);
-            }
-            else if ((e.Event.State & ctlModifier) != 0)
-            {
-                switch (e.Event.Key)
-                {
-                    case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
-                    case Gdk.Key.KP_Add:
-                    case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
-                    case Gdk.Key.KP_Subtract:
-                    case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
+                        // Process all events in the main loop, so that the period is inserted into the text editor.
+                        while (GLib.MainContext.Iteration()) ;
+                    }
+                    NeedContextItemsArgs args = new NeedContextItemsArgs
+                    {
+                        Coordinates = GetPositionOfCursor(),
+                        Code = textEditor.Text,
+                        Offset = this.Offset,
+                        ControlSpace = controlSpace,
+                        ControlShiftSpace = controlShiftSpace,
+                        LineNo = textEditor.Caret.Line,
+                        ColNo = textEditor.Caret.Column - 1
+                    };
+
+                    ContextItemsNeeded?.Invoke(this, args);
                 }
+                else if ((e.Event.State & ctlModifier) != 0)
+                {
+                    switch (e.Event.Key)
+                    {
+                        case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
+                        case Gdk.Key.KP_Add:
+                        case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
+                        case Gdk.Key.KP_Subtract:
+                        case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -617,8 +638,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void HideCompletionWindow(object sender, EventArgs e)
         {
-            textEditor.Document.ReadOnly = false;
-            textEditor.GrabFocus();
+            try
+            {
+                textEditor.Document.ReadOnly = false;
+                textEditor.GrabFocus();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -663,8 +691,17 @@ namespace UserInterface.Views
             if (textEditor.Text.Length > index + triggerWord.Length)
                 textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
 
+            // Changing the text property of the text editor will reset the scroll
+            // position. To work around this, we record the scroll position before
+            // we change the text then reset it manually afterwards.
+            double verticalPosition = scroller.Vadjustment.Value;
+            double horizontalPosition = scroller.Hadjustment.Value;
+
             textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
             textEditor.Caret.Offset = index + completionOption.Length;
+
+            scroller.Vadjustment.Value = verticalPosition;
+            scroller.Hadjustment.Value = horizontalPosition;
         }
 
         /// <summary>
@@ -694,8 +731,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextHasChanged(object sender, EventArgs e)
         {
-            if (TextHasChangedByUser != null)
-                TextHasChangedByUser(sender, e);
+            try
+            {
+                if (TextHasChangedByUser != null)
+                    TextHasChangedByUser(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -705,7 +749,14 @@ namespace UserInterface.Views
         /// <param name="args">The arguments</param>
         private void OnTextBoxEnter(object o, FocusInEventArgs args)
         {
-            ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
+            try
+            {
+                ((o as Widget).Toplevel as Gtk.Window).AddAccelGroup(accel);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -715,9 +766,16 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextBoxLeave(object o, EventArgs e)
         {
-            ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
-            if (LeaveEditor != null)
-                LeaveEditor.Invoke(this, e);
+            try
+            {
+                ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+                if (LeaveEditor != null)
+                    LeaveEditor.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         #region Code related to Edit menu
@@ -808,7 +866,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCut(object sender, EventArgs e)
         {
-            ClipboardActions.Cut(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                ClipboardActions.Cut(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -818,7 +883,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopy(object sender, EventArgs e)
         {
-            ClipboardActions.Copy(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                ClipboardActions.Copy(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -828,7 +900,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnPaste(object sender, EventArgs e)
         {
-            ClipboardActions.Paste(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                ClipboardActions.Paste(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -838,7 +917,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnDelete(object sender, EventArgs e)
         {
-            DeleteActions.Delete(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                DeleteActions.Delete(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -848,7 +934,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnUndo(object sender, EventArgs e)
         {
-            MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -858,7 +951,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnRedo(object sender, EventArgs e)
         {
-            MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+            try
+            {
+                MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -868,7 +968,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnFind(object sender, EventArgs e)
         {
-            findForm.ShowFor(textEditor, false);
+            try
+            {
+                findForm.ShowFor(textEditor, false);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -878,7 +985,14 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnReplace(object sender, EventArgs e)
         {
-            findForm.ShowFor(textEditor, true);
+            try
+            {
+                findForm.ShowFor(textEditor, true);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -888,21 +1002,28 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChangeEditorStyle(object sender, EventArgs e)
         {
-            MenuItem subItem = (MenuItem)sender;
-            string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
-
-            foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+            try
             {
-                item.Activated -= OnChangeEditorStyle;  // stop recursion
-                item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
-                item.Activated += OnChangeEditorStyle;
+                MenuItem subItem = (MenuItem)sender;
+                string caption = ((Gtk.Label)(subItem.Children[0])).LabelProp;
+
+                foreach (CheckMenuItem item in ((Menu)subItem.Parent).Children)
+                {
+                    item.Activated -= OnChangeEditorStyle;  // stop recursion
+                    item.Active = (string.Compare(caption, ((Gtk.Label)item.Children[0]).LabelProp, true) == 0);
+                    item.Activated += OnChangeEditorStyle;
+                }
+
+                Utility.Configuration.Settings.EditorStyleName = caption;
+                textEditor.Options.ColorScheme = caption;
+                textEditor.QueueDraw();
+
+                StyleChanged?.Invoke(this, EventArgs.Empty);
             }
-
-            Utility.Configuration.Settings.EditorStyleName = caption;
-            textEditor.Options.ColorScheme = caption;
-            textEditor.QueueDraw();
-
-            StyleChanged?.Invoke(this, EventArgs.Empty);
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -913,7 +1034,14 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void EditorOptionsChanged(object sender, EventArgs e)
         {
-            Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
+            try
+            {
+                Utility.Configuration.Settings.EditorZoom = textEditor.Options.Zoom;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         // The following block comes from the example code provided at 

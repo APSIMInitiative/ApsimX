@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using Interfaces;
@@ -69,18 +64,25 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            entry1.Changed -= OnTextBox1TextChanged;
-            entry2.Changed -= OnTextBox2TextChanged;
-            radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
-            spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
-            combobox1.Changed -= OnComboBox1SelectedValueChanged;
-            frameRadio1.Toggled -= FrameRadio_Toggled;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            graphView1.MainWidget.Destroy();
-            graphView1 = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                entry1.Changed -= OnTextBox1TextChanged;
+                entry2.Changed -= OnTextBox2TextChanged;
+                radiobutton1.Toggled -= OnRadioButton1CheckedChanged;
+                spinbutton1.Changed -= OnNumericUpDown1ValueChanged;
+                combobox1.Changed -= OnComboBox1SelectedValueChanged;
+                frameRadio1.Toggled -= FrameRadio_Toggled;
+                comboModel.Dispose();
+                comboRender.Destroy();
+                graphView1.MainWidget.Destroy();
+                graphView1 = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -303,14 +305,21 @@ namespace UserInterface.Views
 
         private void FrameRadio_Toggled(object sender, EventArgs e)
         {
-            if (!inToggle)
+            try
             {
-                inToggle = true;
-                frame1.Child.Sensitive = frameRadio1.Active;
-                frame2.Child.Sensitive = frameRadio2.Active;
-                if (OnSpecifierChanged != null)
-                    OnSpecifierChanged.Invoke(sender, e);
-                inToggle = false;
+                if (!inToggle)
+                {
+                    inToggle = true;
+                    frame1.Child.Sensitive = frameRadio1.Active;
+                    frame2.Child.Sensitive = frameRadio2.Active;
+                    if (OnSpecifierChanged != null)
+                        OnSpecifierChanged.Invoke(sender, e);
+                    inToggle = false;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -321,9 +330,16 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnNumericUpDown1ValueChanged(object sender, EventArgs e)
         {
-            spinbutton1.Update();
-            if (this.OnPercentFullChanged != null)
-                this.OnPercentFullChanged.Invoke(sender, e);
+            try
+            {
+                spinbutton1.Update();
+                if (this.OnPercentFullChanged != null)
+                    this.OnPercentFullChanged.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -333,8 +349,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextBox2TextChanged(object sender, EventArgs e)
         {
-            if (this.OnPAWChanged != null)
-                this.OnPAWChanged.Invoke(sender, e);
+            try
+            {
+                if (this.OnPAWChanged != null)
+                    this.OnPAWChanged.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -344,8 +367,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnRadioButton1CheckedChanged(object sender, EventArgs e)
         {
-            if (this.OnFilledFromTopChanged != null)
-                this.OnFilledFromTopChanged(sender, e);
+            try
+            {
+                if (this.OnFilledFromTopChanged != null)
+                    this.OnFilledFromTopChanged(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -355,8 +385,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnTextBox1TextChanged(object sender, EventArgs e)
         {
-            if (OnDepthWetSoilChanged != null)
-                OnDepthWetSoilChanged.Invoke(sender, e);
+            try
+            {
+                if (OnDepthWetSoilChanged != null)
+                    OnDepthWetSoilChanged.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -366,8 +403,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnComboBox1SelectedValueChanged(object sender, EventArgs e)
         {
-            if (OnRelativeToChanged != null)
-                OnRelativeToChanged.Invoke(sender, e);
+            try
+            {
+                if (OnRelativeToChanged != null)
+                    OnRelativeToChanged.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

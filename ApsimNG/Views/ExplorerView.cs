@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-// The basics are all here, but there are still a few things to be implemented:
+﻿// The basics are all here, but there are still a few things to be implemented:
 // Drag and drop is pinning an object so we can pass its address around as data. Is there a better way?
 // (Probably not really, as we go through a native layer, unless we can get by with the serialized XML).
 // Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.
@@ -127,15 +121,22 @@ namespace UserInterface.Views
         /// <param name="args">Event arguments.</param>
         private void OnLoaded(object sender, EventArgs args)
         {
-            // Context menu keyboard shortcuts are registered when the tree
-            // view gains focus. Unfortunately, some views seem to prevent this
-            // event from firing, and as a result, the keyboard shortcuts don't
-            // work. To fix this, we select the first node in the tree when it
-            // is "realized" (rendered).
-            TreeIter iter;
-            treeviewWidget.Model.GetIterFirst(out iter);
-            string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
-            Tree.SelectedNode = "." + firstNodeName;
+            try
+            {
+                // Context menu keyboard shortcuts are registered when the tree
+                // view gains focus. Unfortunately, some views seem to prevent this
+                // event from firing, and as a result, the keyboard shortcuts don't
+                // work. To fix this, we select the first node in the tree when it
+                // is "realized" (rendered).
+                TreeIter iter;
+                treeviewWidget.Model.GetIterFirst(out iter);
+                string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
+                Tree.SelectedNode = "." + firstNodeName;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
         
         /// <summary>
@@ -145,18 +146,25 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnDestroyed(object sender, EventArgs e)
         {
-            treeviewWidget.Realized -= OnLoaded;
-            if (rightHandView != null)
+            try
             {
-                foreach (Widget child in rightHandView.Children)
+                treeviewWidget.Realized -= OnLoaded;
+                if (rightHandView != null)
                 {
-                    rightHandView.Remove(child);
-                    child.Destroy();
+                    foreach (Widget child in rightHandView.Children)
+                    {
+                        rightHandView.Remove(child);
+                        child.Destroy();
+                    }
                 }
+                ToolStrip.Destroy();
+                mainWidget.Destroyed -= OnDestroyed;
+                owner = null;
             }
-            ToolStrip.Destroy();
-            mainWidget.Destroyed -= OnDestroyed;
-            owner = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

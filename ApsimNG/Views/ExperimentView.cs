@@ -57,13 +57,20 @@
         /// <param name="e"></param>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
-            (List as ListView).MainWidget.Destroy();
-            (NumberSimulationsLabel as LabelView).MainWidget.Destroy();
-            (MaximumNumSimulations as EditView).MainWidget.Destroy();
-            (RunAPSIMAction as MenuItemView).Destroy();
+            try
+            {
+                (List as ListView).MainWidget.Destroy();
+                (NumberSimulationsLabel as LabelView).MainWidget.Destroy();
+                (MaximumNumSimulations as EditView).MainWidget.Destroy();
+                (RunAPSIMAction as MenuItemView).Destroy();
 
-            mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            owner = null;
+                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }
