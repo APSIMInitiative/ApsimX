@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 119,
-  "ApsimVersion": "2020.9.24.5677",
+  "Version": 120,
+  "ApsimVersion": "2020.9.28.5689",
   "Name": "Simulations",
   "Children": [
     {
@@ -65,6 +65,7 @@
             "[Eucalyptus].Stem.Volub",
             "[Eucalyptus].Stem.WoodDensity",
             "[Eucalyptus].Stem.WoodWt",
+            "[Eucalyptus].Stem.Wt",
             "[Eucalyptus].Stem.Live.Wt",
             "[Eucalyptus].Fruit.Wt",
             "(([Soil].SoilWater.SW[2])+([Soil].SoilWater.SW[3]))/2 as SW30",
@@ -244,6 +245,16 @@
                 }
               ],
               "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3331,14 +3342,14 @@
                         160000.0
                       ],
                       "Y": [
-                        0.0002,
-                        0.00031,
-                        0.0005,
-                        0.001,
-                        0.002,
-                        0.003,
-                        0.0008,
-                        0.0008
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -3392,7 +3403,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
@@ -3587,8 +3598,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.DBH",
-                      "Name": "DBH",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "Criterion",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3596,9 +3607,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 8.0,
+                      "FixedValue": 10000.0,
                       "Units": null,
-                      "Name": "8",
+                      "Name": "LowLimit",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3639,13 +3650,13 @@
                             28.0
                           ],
                           "Y": [
-                            2.5,
-                            2.5,
-                            2.5,
-                            2.2,
-                            2.2,
-                            2.2,
-                            2.2
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -3669,8 +3680,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus]..Stem.DBH",
-                      "Name": "IndStemWt",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "Criterion",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3678,9 +3689,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 5.0,
+                      "FixedValue": 10000.0,
                       "Units": null,
-                      "Name": "MinimumIndStemWt",
+                      "Name": "LowLimit",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3724,17 +3735,7 @@
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "([Eucalyptus].Stem.DBH/2)^2*3.14159*[Eucalyptus].Population",
                   "Name": "BA",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3743,17 +3744,7 @@
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "([Eucalyptus].Stem.DBHub/2)^2*3.14159*[Eucalyptus].Population",
                   "Name": "BAub",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3763,19 +3754,19 @@
                   "Name": "Ht",
                   "Children": [
                     {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "-13.3371+1.36098*[Eucalyptus].Stem.DBH^0.929074+0.555446*([Eucalyptus].Population*10000)^0.451069",
-                      "Name": "HeightFunction",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 3.0,
+                      "Units": "m",
+                      "Name": "MinimumHeight",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.1,
-                      "Units": "m",
-                      "Name": "MinimumHeight",
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "-13.3371+(1.36098*[Eucalyptus].Stem.DBH^0.929074)+(0.555446*([Eucalyptus].Population*10000)^0.451069)",
+                      "Name": "HeightFunction",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3792,8 +3783,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].Ht",
-                      "Name": "Height",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "Criterion",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3801,9 +3792,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.0,
+                      "FixedValue": 10000.0,
                       "Units": null,
-                      "Name": "MinimumHeight",
+                      "Name": "LowLimit",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3822,63 +3813,6 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "(((((([Eucalyptus].Stem.DBH)/2)^2)*3.14159)/3)*([Eucalyptus].Stem.Ht*100))*[Eucalyptus].Population*10000/1000000",
-                      "Name": "VolumeEquation",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LessThanFunction, Models",
-                  "Name": "VolFittedAll",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].Ht",
-                      "Name": "Height",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.0,
-                      "Units": null,
-                      "Name": "MinimumHeight",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Zero",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.0018*[Eucalyptus].IndividualTreeLiveWt+27.752",
                       "Name": "VolumeEquation",
                       "Children": [
                         {
@@ -3922,17 +3856,7 @@
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Eucalyptus].Stem.Vol/[Eucalyptus].Age",
                   "Name": "MAI",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3941,17 +3865,7 @@
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Eucalyptus].Stem.Volub/[Eucalyptus].Age",
                   "Name": "MAIub",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3962,8 +3876,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.Live.Wt",
-                      "Name": "StemWt",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "Criterion",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -3971,9 +3885,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000.0,
+                      "FixedValue": 10000.0,
                       "Units": null,
-                      "Name": "MinStemWt",
+                      "Name": "LowLimit",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -4010,13 +3924,17 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
+                                2000.0,
                                 10000.0,
-                                50000.0
+                                20000.0,
+                                100000.0
                               ],
                               "Y": [
-                                0.1,
+                                0.3,
                                 0.6,
-                                0.9
+                                0.9,
+                                0.99,
+                                0.999
                               ],
                               "Name": "XYPairs",
                               "Children": [],
@@ -4050,7 +3968,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.Wt-[Eucalyptus].Stem.WoodWt",
+                  "Expression": "[Eucalyptus].Stem.Live.Wt-[Eucalyptus].Stem.WoodWt",
                   "Name": "BarkWt",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4063,8 +3981,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Stem.Live.Wt",
-                      "Name": "Height",
+                      "VariableName": "[Eucalyptus].IndividualTreeStemWt",
+                      "Name": "Criterion",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -4072,9 +3990,9 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000.0,
+                      "FixedValue": 10000.0,
                       "Units": null,
-                      "Name": "MinimumHeight",
+                      "Name": "LowLimit",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -5926,7 +5844,15 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
+                    "",
+                    "[Stem].SenescenceRate.XYPairs.X=0,2500,5000,10000,20000,40000,80000,16000",
+                    "[Stem].SenescenceRate.XYPairs.Y=0.0003,0.0003,0.00005,0.00005,0.00005,0.00005,0.00005,0.00005",
+                    "",
+                    "[Stem].DetachmentRateFunction.FixedValue=0.05",
+                    "",
+                    "[Stem].DBH.DBHEquation.Expression=0.15*([Eucalyptus].IndividualTreeStemWt^0.425)",
+                    "[Stem].Ht.HeightFunction.Expression=-13.3371+(1.38*[Eucalyptus].Stem.DBH^0.96)+(0.57*([Eucalyptus].Population*10000)^0.46)"
                   ],
                   "Name": "globulus",
                   "Children": [
@@ -5946,16 +5872,6 @@
                 }
               ],
               "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "MortalityRate",
-              "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
@@ -7449,45 +7365,6 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-40",
-                                "40-100",
-                                "100-200",
-                                "200-300",
-                                "300-400",
-                                "400-500",
-                                "500-600"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                300.0,
-                                600.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -12697,45 +12574,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-40",
-                                    "40-100",
-                                    "100-200",
-                                    "200-300",
-                                    "300-400",
-                                    "400-500",
-                                    "500-600"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    300.0,
-                                    600.0,
-                                    1000.0,
-                                    1000.0,
-                                    1000.0,
-                                    1000.0,
-                                    1000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -15836,45 +15674,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-40",
-                                "40-100",
-                                "100-200",
-                                "200-300",
-                                "300-400",
-                                "400-500",
-                                "500-600"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                300.0,
-                                600.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "Children": [],
@@ -17176,45 +16975,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -18171,45 +17931,6 @@
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -19270,45 +18991,6 @@
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -20449,45 +20131,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -21578,45 +21221,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -22398,45 +22002,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-22",
-                                "22-45",
-                                "45-73",
-                                "73-117",
-                                "117-153",
-                                "153-197",
-                                "197-400",
-                                "400-3000"
-                              ],
-                              "Thickness": [
-                                220.0,
-                                230.0,
-                                280.0,
-                                440.0,
-                                360.0,
-                                440.0,
-                                2030.0,
-                                26000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "Children": [],
@@ -22987,45 +22552,6 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-22",
-                                "22-45",
-                                "45-73",
-                                "73-117",
-                                "117-153",
-                                "153-197",
-                                "197-400",
-                                "400-3000"
-                              ],
-                              "Thickness": [
-                                220.0,
-                                230.0,
-                                280.0,
-                                440.0,
-                                360.0,
-                                440.0,
-                                2030.0,
-                                26000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -23887,45 +23413,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -24780,45 +24267,6 @@
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -26597,45 +26045,6 @@
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-22",
-                                    "22-45",
-                                    "45-73",
-                                    "73-117",
-                                    "117-153",
-                                    "153-197",
-                                    "197-400",
-                                    "400-3000"
-                                  ],
-                                  "Thickness": [
-                                    220.0,
-                                    230.0,
-                                    280.0,
-                                    440.0,
-                                    360.0,
-                                    440.0,
-                                    2030.0,
-                                    26000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -28615,49 +28024,6 @@
                               "Comments": "Landuse is Plantation forestry",
                               "Name": "ScottRiverSynthSoilModified",
                               "Children": [
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-200",
-                                    "200-300",
-                                    "300-600",
-                                    "600-640"
-                                  ],
-                                  "Thickness": [
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    1000.0,
-                                    1000.0,
-                                    3000.0,
-                                    400.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
                                 {
                                   "$type": "Models.Soils.InitialWater, Models",
                                   "PercentMethod": 1,
@@ -35725,49 +35091,6 @@
                               "Comments": "Landuse is Grazing natural vegetation",
                               "Name": "WellsteadSynthetic Soil Derived from the SLGA",
                               "Children": [
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-200",
-                                    "200-300",
-                                    "300-600",
-                                    "600-1800"
-                                  ],
-                                  "Thickness": [
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    1000.0,
-                                    1000.0,
-                                    3000.0,
-                                    12000.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
                                 {
                                   "$type": "Models.Soils.InitialWater, Models",
                                   "PercentMethod": 0,
@@ -42879,49 +42202,6 @@
                               "Comments": "Landuse is Strict nature reserves",
                               "Name": "BoyupBrookSynthetic Soil Derived from the SLGA",
                               "Children": [
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-200",
-                                    "200-300",
-                                    "300-600",
-                                    "600-720"
-                                  ],
-                                  "Thickness": [
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    1000.0,
-                                    1000.0,
-                                    3000.0,
-                                    1200.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
                                 {
                                   "$type": "Models.Soils.InitialWater, Models",
                                   "PercentMethod": 0,
@@ -51256,109 +50536,713 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[TreeSowingRule]",
+                          "Specification": "",
                           "Name": "E",
                           "Children": [
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "globulus"
-                                },
-                                {
-                                  "Key": "RowSpace",
-                                  "Value": "2.5"
-                                },
-                                {
-                                  "Key": "RowWidth",
-                                  "Value": "3"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "08/15/1993 00:00:00"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[TreeSowingRule]",
+                                "[Management]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "glob1333",
+                              "Children": [
+                                {
+                                  "$type": "Models.Manager, Models",
+                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Parameters": [
+                                    {
+                                      "Key": "RowSpace",
+                                      "Value": "2.5"
+                                    },
+                                    {
+                                      "Key": "RowWidth",
+                                      "Value": "3"
+                                    },
+                                    {
+                                      "Key": "CultivarName",
+                                      "Value": "globulus"
+                                    },
+                                    {
+                                      "Key": "SowingDate",
+                                      "Value": "08/15/1993 00:00:00"
+                                    }
+                                  ],
+                                  "Name": "glob1333",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1999-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2000-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2001-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2002-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2003-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2004-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2005-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2006-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2007-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.08);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.01);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.033);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.057);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Management",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "globulus"
-                                },
-                                {
-                                  "Key": "RowSpace",
-                                  "Value": "1.25"
-                                },
-                                {
-                                  "Key": "RowWidth",
-                                  "Value": "3"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "08/15/1993 00:00:00"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[TreeSowingRule]",
+                                "[Management]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "glob2667",
+                              "Children": [
+                                {
+                                  "$type": "Models.Manager, Models",
+                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Parameters": [
+                                    {
+                                      "Key": "RowSpace",
+                                      "Value": "1.25"
+                                    },
+                                    {
+                                      "Key": "RowWidth",
+                                      "Value": "3"
+                                    },
+                                    {
+                                      "Key": "CultivarName",
+                                      "Value": "globulus"
+                                    },
+                                    {
+                                      "Key": "SowingDate",
+                                      "Value": "08/15/1993 00:00:00"
+                                    }
+                                  ],
+                                  "Name": "glob2667",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1999-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2000-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2001-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2002-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2003-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2004-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2005-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2006-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2007-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.07);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.022);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.055);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.047);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.085);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Management",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "grandis"
-                                },
-                                {
-                                  "Key": "RowSpace",
-                                  "Value": "2.5"
-                                },
-                                {
-                                  "Key": "RowWidth",
-                                  "Value": "3"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "08/15/1993 00:00:00"
-                                }
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[TreeSowingRule]",
+                                "[Management]"
                               ],
+                              "Paths": null,
+                              "Values": null,
                               "Name": "gran1333",
+                              "Children": [
+                                {
+                                  "$type": "Models.Manager, Models",
+                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Parameters": [
+                                    {
+                                      "Key": "RowSpace",
+                                      "Value": "2.5"
+                                    },
+                                    {
+                                      "Key": "RowWidth",
+                                      "Value": "3"
+                                    },
+                                    {
+                                      "Key": "CultivarName",
+                                      "Value": "grandis"
+                                    },
+                                    {
+                                      "Key": "SowingDate",
+                                      "Value": "08/15/1993 00:00:00"
+                                    }
+                                  ],
+                                  "Name": "gran1333",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1999-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2000-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2001-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2002-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2003-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2004-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2005-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2006-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2007-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.02);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.02);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.021);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.043);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Management",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                              "Parameters": [
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[TreeSowingRule]",
+                                "[Management]"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "gran2667",
+                              "Children": [
                                 {
-                                  "Key": "RowSpace",
-                                  "Value": "1.25"
+                                  "$type": "Models.Manager, Models",
+                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Parameters": [
+                                    {
+                                      "Key": "RowSpace",
+                                      "Value": "1.25"
+                                    },
+                                    {
+                                      "Key": "RowWidth",
+                                      "Value": "3"
+                                    },
+                                    {
+                                      "Key": "CultivarName",
+                                      "Value": "grandis"
+                                    },
+                                    {
+                                      "Key": "SowingDate",
+                                      "Value": "08/15/1993 00:00:00"
+                                    }
+                                  ],
+                                  "Name": "gran2667",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 },
                                 {
-                                  "Key": "RowWidth",
-                                  "Value": "3"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "grandis"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "08/15/1993 00:00:00"
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1999-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2000-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2001-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2002-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2003-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2004-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2005-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2006-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2007-08-20",
+                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1993-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.03);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1994-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1995-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1996-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.021);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1997-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1998-12-15",
+                                      "Action": "[TreeThinning].Script.DoThin(0.043);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Management",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
-                              "Name": "gran2667",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -51797,45 +51681,6 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-5",
-                                    "5-15",
-                                    "15-25",
-                                    "25-35",
-                                    "35-55",
-                                    "55-105",
-                                    "105-150",
-                                    "150-300"
-                                  ],
-                                  "Thickness": [
-                                    50.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
-                                    200.0,
-                                    500.0,
-                                    450.0,
-                                    1500.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
@@ -52059,48 +51904,6 @@
                                   "$type": "Models.Operation, Models",
                                   "Date": "2007-08-20",
                                   "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1993-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1994-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1995-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1996-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1997-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1998-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1999-02-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
                                   "Enabled": true
                                 }
                               ],
@@ -56810,102 +56613,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "DBHvsITSW",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "SimulationName",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 2,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Report",
-                              "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                              "YFieldName": "Eucalyptus.Stem.DBH",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": "",
-                              "Name": "DBH",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "SimulationName",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 2,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Report",
-                              "XFieldName": "Eucalyptus.IndividualTreeStemWt",
-                              "YFieldName": "Eucalyptus.Stem.DBHub",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": "",
-                              "Name": "DBHub",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -57135,6 +56842,102 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "Name": "IndividualStemWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "DBH",
                       "Children": [
                         {
@@ -57268,8 +57071,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "N",
-                          "FactorToVaryMarkers": "S",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -57373,107 +57176,11 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.StemVol",
+                          "YFieldName": "Eucalyptus.Stem.Vol",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "IndividualStemWt",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.IndividualTreeStemWt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Observed",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.IndividualTreeStemWt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -57625,8 +57332,8 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 4,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
@@ -57659,6 +57366,35 @@
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.DBH",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "DBHObserved",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 1,
+                          "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Eucalyptus.IndividualTreeStemWt",
                           "YFieldName": "Eucalyptus.Stem.DBHub",
@@ -57684,9 +57420,9 @@
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 4,
+                          "Marker": 11,
                           "MarkerSize": 2,
-                          "Line": 4,
+                          "Line": 2,
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Eucalyptus.IndividualTreeStemWt",
@@ -57699,6 +57435,35 @@
                           "CumulativeX": false,
                           "Filter": "",
                           "Name": "BarkThickness",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.BarkThickness",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "BarkThicknessObserved",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -57846,8 +57611,8 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 4,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
@@ -57862,6 +57627,35 @@
                           "CumulativeX": false,
                           "Filter": "",
                           "Name": "Ht",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Ht",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "HtObs",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -57911,9 +57705,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "Graph series",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": "Graph series",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
@@ -57927,7 +57721,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "",
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
                           "Name": "Vol",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57940,9 +57734,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "Graph series",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": "Graph series",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
@@ -57956,7 +57750,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "",
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
                           "Name": "Volub",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57969,9 +57763,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "Graph series",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": "Graph series",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
@@ -57985,8 +57779,37 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "",
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
                           "Name": "VolBark",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Graph series",
+                          "Marker": 0,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Vol",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Name": "VolObserved",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -58105,7 +57928,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
                         {
@@ -58114,7 +57937,7 @@
                           "Title": null,
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": 800.0,
+                          "Maximum": "NaN",
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -58124,7 +57947,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "WoodDensity",
+                      "Name": "StemWt",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -58132,24 +57955,24 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "Graph series",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "Graph series",
                           "Marker": 11,
                           "MarkerSize": 2,
-                          "Line": 0,
+                          "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.WoodDensity",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Wt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "",
-                          "Name": "Predicted",
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Name": "StemWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -58161,24 +57984,82 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "SimulationName",
-                          "FactorToVaryLines": null,
-                          "Marker": 4,
+                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Graph series",
+                          "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
-                          "TableName": "Observed",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.WoodDensity",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.Live.Wt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "",
-                          "Name": "Observed",
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Name": "StemLiveWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Graph series",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.BarkWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Name": "BarkWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Graph series",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Eucalyptus.IndividualTreeStemWt",
+                          "YFieldName": "Eucalyptus.Stem.WoodWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Name": "WoodWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -58266,7 +58147,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Eucalyptus.Stem.Wood.Wt",
+                          "YFieldName": "Eucalyptus.Stem.WoodWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -58371,6 +58252,102 @@
                           "CumulativeX": false,
                           "Filter": "",
                           "Name": "WoodWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": 800.0,
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WoodDensity",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.WoodDensity",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Eucalyptus.Stem.WoodDensity",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Observed",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -67806,45 +67783,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-10",
-                            "10-40",
-                            "40-100",
-                            "100-200",
-                            "200-300",
-                            "300-400",
-                            "400-500",
-                            "500-600"
-                          ],
-                          "Thickness": [
-                            100.0,
-                            300.0,
-                            600.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "Children": [],
@@ -68398,45 +68336,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-10",
-                            "10-40",
-                            "40-100",
-                            "100-200",
-                            "200-300",
-                            "300-400",
-                            "400-500",
-                            "500-600"
-                          ],
-                          "Thickness": [
-                            100.0,
-                            300.0,
-                            600.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -69002,45 +68901,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-10",
-                            "10-40",
-                            "40-100",
-                            "100-200",
-                            "200-300",
-                            "300-400",
-                            "400-500",
-                            "500-600"
-                          ],
-                          "Thickness": [
-                            100.0,
-                            300.0,
-                            600.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "Children": [],
@@ -69594,45 +69454,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-10",
-                            "10-40",
-                            "40-100",
-                            "100-200",
-                            "200-300",
-                            "300-400",
-                            "400-500",
-                            "500-600"
-                          ],
-                          "Thickness": [
-                            100.0,
-                            300.0,
-                            600.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0,
-                            1000.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -70390,45 +70211,6 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-40",
-                                "40-100",
-                                "100-200",
-                                "200-300",
-                                "300-400",
-                                "400-500",
-                                "500-600"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                300.0,
-                                600.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -71433,45 +71215,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-40",
-                                "40-100",
-                                "100-200",
-                                "200-300",
-                                "300-400",
-                                "400-500",
-                                "500-600"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                300.0,
-                                600.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0,
-                                1000.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "Children": [],
@@ -72172,45 +71915,6 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-5",
-                                "5-15",
-                                "15-25",
-                                "25-35",
-                                "35-55",
-                                "55-105",
-                                "105-155",
-                                "155-300"
-                              ],
-                              "Thickness": [
-                                50.0,
-                                100.0,
-                                100.0,
-                                100.0,
-                                200.0,
-                                500.0,
-                                500.0,
-                                1450.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -73516,45 +73220,6 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-5",
-                                "5-15",
-                                "15-25",
-                                "25-35",
-                                "35-55",
-                                "55-105",
-                                "105-155",
-                                "155-300"
-                              ],
-                              "Thickness": [
-                                50.0,
-                                100.0,
-                                100.0,
-                                100.0,
-                                200.0,
-                                500.0,
-                                500.0,
-                                1450.0
-                              ],
-                              "NO3": null,
-                              "NH4": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
