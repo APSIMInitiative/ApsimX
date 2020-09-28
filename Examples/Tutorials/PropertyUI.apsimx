@@ -78,6 +78,63 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+          "Name": "ChildPropertyDemo",
+          "Children": [
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 1.0,
+              "FractionDeadToResidue": 1.0,
+              "Name": "Harvest",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 1.0,
+              "FractionDeadToResidue": 1.0,
+              "Name": "Cut",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 0.0,
+              "FractionDeadToResidue": 0.0,
+              "Name": "Prune",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+              "FractionLiveToRemove": 0.0,
+              "FractionDeadToRemove": 0.0,
+              "FractionLiveToResidue": 0.0,
+              "FractionDeadToResidue": 0.0,
+              "Name": "Graze",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.Plant, Models",
           "ResourceName": "Wheat",
           "Name": "Wheat",
