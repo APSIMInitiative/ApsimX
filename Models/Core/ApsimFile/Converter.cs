@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 120; } }
+        public static int LatestVersion { get { return 121; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3170,6 +3170,17 @@
                         JsonUtilities.RemoveChild(parent, name);
                 }
             }
+        }
+
+        /// <summary>
+        /// Replace all instances of PhaseBasedSwitch with PhaseLookupValues.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion121(JObject root, string fileName)
+        {
+            foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+                phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
         }
 
         /// <summary>
