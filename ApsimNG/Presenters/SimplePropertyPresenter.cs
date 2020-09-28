@@ -147,10 +147,9 @@ namespace UserInterface.Presenters
         /// Called when a model is changed. Refreshes the view.
         /// </summary>
         /// <param name="changedModel">The model which was changed.</param>
-        private void OnModelChanged(object changedModel)
+        protected virtual void OnModelChanged(object changedModel)
         {
-            /************* fixme ***************/
-            if (changedModel == model)
+            if (propertyMap.Values.Any(p => p.Model == changedModel))
                 RefreshView(this.model);
         }
     
