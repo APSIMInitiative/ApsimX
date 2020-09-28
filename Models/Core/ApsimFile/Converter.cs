@@ -3180,7 +3180,12 @@
         private static void UpgradeToVersion121(JObject root, string fileName)
         {
             foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+            {
                 phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
+                Constant value = new Constant();
+                value.FixedValue = 1;
+                JsonUtilities.AddModel(phaseSwitch, value);
+            }
         }
 
         /// <summary>
