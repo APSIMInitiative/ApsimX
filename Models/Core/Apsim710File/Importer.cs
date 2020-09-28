@@ -268,6 +268,7 @@
                 {
                     XmlNode newSim = this.AddCompNode(destParent, "Simulation", XmlUtilities.NameAttr(compNode));
                     this.AddChildComponents(compNode, newSim);
+                    AddCompNode(newSim, "SoilArbitrator", "SoilArbitrator");
                 }
                 else if (compNode.Name == "folder")
                 {
@@ -428,6 +429,10 @@
                 {
                     this.ImportPlant(compNode, destParent, newNode);
                 }
+                else if (string.Equals("irrigation", compNode.Name, StringComparison.InvariantCultureIgnoreCase))
+                    AddCompNode(destParent, "Irrigation", "Irrigation");
+                else if (string.Equals("fertiliser", compNode.Name, StringComparison.InvariantCultureIgnoreCase))
+                    AddCompNode(destParent, "Fertiliser", "Fertiliser");
                 else
                 {
                     // Do nothing.
