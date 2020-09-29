@@ -7723,7 +7723,6 @@
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue"
                   ],
                   "Name": "Gamenya",
                   "Children": [],
