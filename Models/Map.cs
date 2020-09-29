@@ -26,9 +26,11 @@ namespace Models
         public class Coordinate
         {
             /// <summary>The latitude</summary>
+            [Description("Latitude")]
             public double Latitude { get; set; }
 
             /// <summary>The longitude</summary>
+            [Description("Latitude")]
             public double Longitude { get; set; }
 
             /// <summary>
@@ -91,6 +93,8 @@ namespace Models
         /// <summary>
         /// Coordinate of the center of the map
         /// </summary>
+        [Description("Map Center")]
+        [Display(Type = DisplayType.SubModel)]
         public Coordinate Center
         {
             get
@@ -108,6 +112,7 @@ namespace Models
         /// <summary>
         /// Zoom factor for the map
         /// </summary>
+        [Description("Zoom level")]
         public Double Zoom
         {
             get

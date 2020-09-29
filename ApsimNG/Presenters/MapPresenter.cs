@@ -29,6 +29,8 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private PropertyPresenter propertyPresenter;
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -40,6 +42,9 @@
             this.map = model as Map;
             this.view = view as MapView;
             this.explorerPresenter = explorerPresenter;
+
+            propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, this.view.Grid, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
