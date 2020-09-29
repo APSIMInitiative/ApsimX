@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity processes one resource into another resource with associated labour and costs.")]
-    [HelpUri(@"Content/Features/activities/All resources/ProcessResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/ProcessResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityProcess : CLEMActivityBase
     {
