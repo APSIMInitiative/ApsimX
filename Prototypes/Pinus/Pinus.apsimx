@@ -5894,7 +5894,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "ObservedPinus.xlsx"
+            "Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -8132,8 +8132,8 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "InitialResidueName": "pasture",
-                              "InitialResidueType": "pasture",
+                              "InitialResidueName": "Pinus",
+                              "InitialResidueType": "Eucalyptus",
                               "InitialResidueMass": 0.0,
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
