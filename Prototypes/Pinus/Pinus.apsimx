@@ -1822,7 +1822,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.4,
+                      "FixedValue": 1.5,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "Children": [
@@ -3342,14 +3342,14 @@
                         160000.0
                       ],
                       "Y": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.0003,
+                        0.0003,
+                        5E-05,
+                        5E-05,
+                        5E-05,
+                        5E-05,
+                        5E-05,
+                        5E-05
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -3403,7 +3403,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.05,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
@@ -3570,7 +3570,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.443223*([Pinus].IndividualTreeStemWt^0.310907)",
+                      "Expression": "0.15*([Pinus].IndividualTreeStemWt^0.425)",
                       "Name": "DBHEquation",
                       "Children": [
                         {
@@ -3765,7 +3765,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "-13.3371+(1.36098*[Pinus].Stem.DBH^0.929074)+(0.555446*([Pinus].Population*10000)^0.451069)",
+                      "Expression": "-13.3371+(1.38*[Pinus].Stem.DBH^0.96)+(0.57*([Pinus].Population*10000)^0.46)",
                       "Name": "HeightFunction",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -5398,474 +5398,35 @@
             },
             {
               "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "grandis",
+              "Name": "radiata",
               "Children": [
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     ""
                   ],
-                  "Name": "grandis",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
-                  ],
-                  "Name": "grandisCoffsHarbour",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification is for a Coffs Harbour provenance of E. grandis, but as no actually genotype-specific parameters are specified, simulations using this genotype use the unchanged parameter set of the main Pinus model. \r\n\r\n  \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0,0.03,0.04",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.24,0.2,0.2,.23,0.2,.12",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=.06,.06,.06,.05,.04,.03",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue=0.2",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,30000,80000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.2,0.45,0.7,0.99,0.99,.99"
-                  ],
-                  "Name": "grandisC15",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was used to specifiy partitioning to for the C15 clone used by the Aracruz company (now Fibria), in order to approximate the root:shoot ratios reported in [almeida]. \r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0,0.08,0.08",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.22,0.2,0.19,0.13,0.10,.06"
-                  ],
-                  "Name": "grandisC22",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was used to specifiy partitioning to for the C22 clone used by the Aracruz company (now Fibria), in order to approximate the root:shoot ratios reported in [almeida]. \r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "grandisXurophylla",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
-                  ],
-                  "Name": "grandisXurophylla",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for a cline of grandisXurophylla, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
-                  ],
-                  "Name": "grandisXurophyllaC3334",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the clone C3334, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
-                  ],
-                  "Name": "grandisXurophyllaC3336",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the clone C3336, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "urophyllaXglobulus",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    ""
-                  ],
-                  "Name": "urophyllaXglobulus",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the urophyllaXglobulus hybird of E. grandis, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "BrazilClones",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.51",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.34",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.60",
-                    "",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.39, 0.61",
-                    "",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
-                    "",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.2, 0.17, 0.15",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
-                    "",
-                    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
-                    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
-                    "",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.005,0.03,0.04",
-                    "",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.26"
-                  ],
-                  "Name": "BrazilPlasticClone",
+                  "Name": "radiata",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.69",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.30",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.56",
-                    "",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15,0.40, 0.64",
-                    "",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.08,0.08,0.08",
-                    "",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.19, 0.17, 0.17",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
-                    "",
-                    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
-                    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
-                    "",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.03,0.1,0.1",
-                    "",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.35",
-                    "",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.018, 0.014, 0.011, 0.009, 0.008, 0.007"
-                  ],
-                  "Name": "BrazilTropicalClone",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.57",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.26",
-                    "",
-                    "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.55",
-                    "",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.30, 0.57",
-                    "",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
-                    "",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.20, 0.16, 0.15",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  6, 17, 22, 38",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1  ",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0.5, 1, 1, 1, 1, 1, 1",
-                    "",
-                    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
-                    "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
-                    "",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.02,0.05,0.06",
-                    "",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.24",
-                    "",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.015, 0.013, 0.009, 0.008, 0.007, 0.007"
-                  ],
-                  "Name": "BrazilSubTropicalClone",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "saligna",
+              "Name": "elliottii",
               "Children": [
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     ""
                   ],
-                  "Name": "saligna",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the species E. saligna, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "nitens",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.65",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X= 2,13,14,32",
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
-                    "",
-                    "[Leaf].Photosynthesis.FT.FTFrost.MaximumTemperatureWeighting=0",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
-                    "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, 0, 0, .5,.8, 1",
-                    "",
-                    "[Leaf].LeafDevelopmentRate.LDR.FixedValue=1",
-                    "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=8,26,33,34",
-                    "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=0,1,1,0",
-                    "",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
-                    "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.011, 0.008, 0.006, 0.005, 0.005, 0.005",
-                    "",
-                    "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
-                    "[Leaf].SenescenceRate.XYPairs.Y = 0.3, 0.2, 0.1, .08, .05",
-                    "",
-                    "[Leaf].MaximumNConc.FixedValue=0.035",
-                    "[Leaf].MinimumNConc.FixedValue=0.013",
-                    "",
-                    "[Branch].MaximumNConc.FixedValue=0.013",
-                    "[Branch].MinimumNConc.FixedValue=0.0035",
-                    "",
-                    "[Stem].MaximumNConc.FixedValue=0.0075",
-                    "[Stem].MinimumNConc.FixedValue=0.0025",
-                    "",
-                    "[CoarseRoot].MaximumNConc.FixedValue=0.02",
-                    "[CoarseRoot].MinimumNConc.FixedValue=0.0025",
-                    "",
-                    "[FineRoot].MaximumNConc.FixedValue=0.02",
-                    "[FineRoot].MinimumNConc.FixedValue=0.005",
-                    "",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000, 100000",
-                    "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.5,0.6,0.6,.1,.05,.04, 0.03 ",
-                    "",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
-                    "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=.1,.15,.19,.21,.20,.19",
-                    "",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,30000,80000, 120000",
-                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.1,0.9,0.99,0.99,0.99,.99, .99",
-                    "",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,500,1000,5000, 10000, 20000, 40000",
-                    "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.28,0.32, 0.36, 0.32, 0.3, .25, .2",
-                    "",
-                    "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue=0.4"
-                  ],
-                  "Name": "nitens",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "globulus",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.5",
-                    "",
-                    "[Stem].SenescenceRate.XYPairs.X=0,2500,5000,10000,20000,40000,80000,16000",
-                    "[Stem].SenescenceRate.XYPairs.Y=0.0003,0.0003,0.00005,0.00005,0.00005,0.00005,0.00005,0.00005",
-                    "",
-                    "[Stem].DetachmentRateFunction.FixedValue=0.05",
-                    "",
-                    "[Stem].DBH.DBHEquation.Expression=0.15*([Pinus].IndividualTreeStemWt^0.425)",
-                    "[Stem].Ht.HeightFunction.Expression=-13.3371+(1.38*[Pinus].Stem.DBH^0.96)+(0.57*([Pinus].Population*10000)^0.46)"
-                  ],
-                  "Name": "globulus",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
-                      "Name": "Genotype note",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Name": "elliottii",
+                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6936,12 +6497,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "Shepparton",
+              "Name": "BFG",
               "Children": [
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
-                  "Name": "Shepparton",
+                  "Name": "BFG",
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factors, Models",
@@ -6949,713 +6510,139 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "",
-                          "Name": "E",
+                          "Specification": "[Management]",
+                          "Name": "C",
                           "Children": [
                             {
-                              "$type": "Models.Factorial.CompositeFactor, Models",
-                              "Specifications": [
-                                "[TreeSowingRule]",
-                                "[Management]"
-                              ],
-                              "Paths": null,
-                              "Values": null,
-                              "Name": "glob1333",
-                              "Children": [
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
                                 {
-                                  "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                                  "Parameters": [
-                                    {
-                                      "Key": "RowSpace",
-                                      "Value": "2.5"
-                                    },
-                                    {
-                                      "Key": "RowWidth",
-                                      "Value": "3"
-                                    },
-                                    {
-                                      "Key": "CultivarName",
-                                      "Value": "globulus"
-                                    },
-                                    {
-                                      "Key": "SowingDate",
-                                      "Value": "08/15/1993 00:00:00"
-                                    }
-                                  ],
-                                  "Name": "glob1333",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1993-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
                                 },
                                 {
-                                  "$type": "Models.Operations, Models",
-                                  "Operation": [
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1999-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2000-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2001-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2002-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2003-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2004-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2005-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2006-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2007-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.08);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.011);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.033);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.057);",
-                                      "Enabled": true
-                                    }
-                                  ],
-                                  "Name": "Management",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2003-12-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.08);",
+                                  "Enabled": true
                                 }
                               ],
+                              "Name": "",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "[Management]",
+                          "Name": "F",
+                          "Children": [
                             {
-                              "$type": "Models.Factorial.CompositeFactor, Models",
-                              "Specifications": [
-                                "[TreeSowingRule]",
-                                "[Management]"
-                              ],
-                              "Paths": null,
-                              "Values": null,
-                              "Name": "glob2667",
-                              "Children": [
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
                                 {
-                                  "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                                  "Parameters": [
-                                    {
-                                      "Key": "RowSpace",
-                                      "Value": "1.25"
-                                    },
-                                    {
-                                      "Key": "RowWidth",
-                                      "Value": "3"
-                                    },
-                                    {
-                                      "Key": "CultivarName",
-                                      "Value": "globulus"
-                                    },
-                                    {
-                                      "Key": "SowingDate",
-                                      "Value": "08/15/1993 00:00:00"
-                                    }
-                                  ],
-                                  "Name": "glob2667",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1993-08-20",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Enabled": true
                                 },
                                 {
-                                  "$type": "Models.Operations, Models",
-                                  "Operation": [
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1999-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2000-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2001-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2002-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2003-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2004-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2005-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2006-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2007-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.07);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.022);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.055);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.047);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.085);",
-                                      "Enabled": true
-                                    }
-                                  ],
-                                  "Name": "Management",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2003-12-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.08);",
+                                  "Enabled": true
                                 }
                               ],
+                              "Name": "",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "[Management]",
+                          "Name": "I",
+                          "Children": [
                             {
-                              "$type": "Models.Factorial.CompositeFactor, Models",
-                              "Specifications": [
-                                "[TreeSowingRule]",
-                                "[Management]"
-                              ],
-                              "Paths": null,
-                              "Values": null,
-                              "Name": "gran1333",
-                              "Children": [
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Parameters": [
                                 {
-                                  "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                                  "Parameters": [
-                                    {
-                                      "Key": "RowSpace",
-                                      "Value": "2.5"
-                                    },
-                                    {
-                                      "Key": "RowWidth",
-                                      "Value": "3"
-                                    },
-                                    {
-                                      "Key": "CultivarName",
-                                      "Value": "grandis"
-                                    },
-                                    {
-                                      "Key": "SowingDate",
-                                      "Value": "08/15/1993 00:00:00"
-                                    }
-                                  ],
-                                  "Name": "gran1333",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "Key": "FASW",
+                                  "Value": "0"
                                 },
                                 {
-                                  "$type": "Models.Operations, Models",
-                                  "Operation": [
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1999-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2000-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2001-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2002-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2003-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2004-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2005-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2006-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2007-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.02);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.02);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.021);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.043);",
-                                      "Enabled": true
-                                    }
-                                  ],
-                                  "Name": "Management",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "Key": "WaterDeficit",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "AutoIrrigationOn",
+                                  "Value": "True"
+                                },
+                                {
+                                  "Key": "FASWThreshold",
+                                  "Value": "0.9"
+                                },
+                                {
+                                  "Key": "FASWDepth",
+                                  "Value": "600"
                                 }
                               ],
+                              "Name": "",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "[Management]",
+                          "Name": "IF",
+                          "Children": [
                             {
-                              "$type": "Models.Factorial.CompositeFactor, Models",
-                              "Specifications": [
-                                "[TreeSowingRule]",
-                                "[Management]"
-                              ],
-                              "Paths": null,
-                              "Values": null,
-                              "Name": "gran2667",
-                              "Children": [
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Parameters": [
                                 {
-                                  "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                                  "Parameters": [
-                                    {
-                                      "Key": "RowSpace",
-                                      "Value": "1.25"
-                                    },
-                                    {
-                                      "Key": "RowWidth",
-                                      "Value": "3"
-                                    },
-                                    {
-                                      "Key": "CultivarName",
-                                      "Value": "grandis"
-                                    },
-                                    {
-                                      "Key": "SowingDate",
-                                      "Value": "08/15/1993 00:00:00"
-                                    }
-                                  ],
-                                  "Name": "gran2667",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "Key": "FASW",
+                                  "Value": "0"
                                 },
                                 {
-                                  "$type": "Models.Operations, Models",
-                                  "Operation": [
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1999-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2000-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2001-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2002-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2003-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2004-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2005-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2006-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "2007-08-20",
-                                      "Action": "[Fertiliser].Apply(Amount: 150, Type: Fertiliser.Types.NO3N, 0)",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1993-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1994-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1995-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.0);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1996-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.021);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1997-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.011);",
-                                      "Enabled": true
-                                    },
-                                    {
-                                      "$type": "Models.Operation, Models",
-                                      "Date": "1998-12-15",
-                                      "Action": "[TreeThinning].Script.DoThin(0.043);",
-                                      "Enabled": true
-                                    }
-                                  ],
-                                  "Name": "Management",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
+                                  "Key": "WaterDeficit",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "AutoIrrigationOn",
+                                  "Value": "True"
+                                },
+                                {
+                                  "Key": "FASWThreshold",
+                                  "Value": "0.9"
+                                },
+                                {
+                                  "Key": "FASWDepth",
+                                  "Value": "600"
                                 }
                               ],
+                              "Name": "",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -7674,11 +6661,11 @@
                       "$type": "Models.Core.Simulation, Models",
                       "IsRunning": false,
                       "Descriptors": null,
-                      "Name": "Shepparton",
+                      "Name": "BFG",
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
-                          "FileName": "toolara8797.met",
+                          "FileName": "BFG1900-2020.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
@@ -7688,8 +6675,8 @@
                         },
                         {
                           "$type": "Models.Clock, Models",
-                          "Start": "1993-07-01T00:00:00",
-                          "End": "1997-09-01T00:00:00",
+                          "Start": "1973-05-01T00:00:00",
+                          "End": "2001-06-15T00:00:00",
                           "Name": "Clock",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7725,30 +6712,30 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "RecordNumber": 0,
-                              "ASCOrder": null,
-                              "ASCSubOrder": null,
-                              "SoilType": null,
+                              "RecordNumber": 1,
+                              "ASCOrder": "NA",
+                              "ASCSubOrder": "NA",
+                              "SoilType": "Loam over Clay Loam",
                               "LocalName": null,
-                              "Site": null,
-                              "NearestTown": null,
-                              "Region": null,
-                              "State": null,
+                              "Site": "30395_43104",
+                              "NearestTown": "HALL",
+                              "Region": "South Eastern Highlands",
+                              "State": "ACT",
                               "Country": null,
-                              "NaturalVegetation": null,
-                              "ApsoilNumber": null,
-                              "Latitude": 0.0,
-                              "Longitude": 0.0,
-                              "LocationAccuracy": null,
-                              "YearOfSampling": null,
-                              "DataSource": null,
-                              "Comments": null,
-                              "Name": "Soil",
+                              "NaturalVegetation": "Cleared, non-native vegetation, buildings",
+                              "ApsoilNumber": "9999",
+                              "Latitude": -35.33,
+                              "Longitude": 148.92,
+                              "LocationAccuracy": "+- 90m",
+                              "YearOfSampling": "2020",
+                              "DataSource": "Soil and Landscape Grid of Australia. This soil parameter file was automatically generated from the GSM National Surfaces using pedotransfer functions.",
+                              "Comments": "Landuse is Plantation forestry",
+                              "Name": "Synthetic Soil BFG",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.InitialWater, Models",
-                                  "PercentMethod": 1,
-                                  "FractionFull": 0.8,
+                                  "PercentMethod": 0,
+                                  "FractionFull": 1.0,
                                   "DepthWetSoil": "NaN",
                                   "RelativeTo": null,
                                   "Name": "Initial water",
@@ -7760,24 +6747,20 @@
                                 {
                                   "$type": "Models.Soils.Physical, Models",
                                   "Depth": [
-                                    "0-5",
-                                    "5-15",
-                                    "15-25",
-                                    "25-35",
-                                    "35-55",
-                                    "55-105",
-                                    "105-150",
-                                    "150-300"
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100"
                                   ],
                                   "Thickness": [
-                                    50.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
                                     200.0,
-                                    500.0,
-                                    450.0,
-                                    1500.0
+                                    200.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
@@ -7785,56 +6768,53 @@
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
-                                    1.14,
-                                    1.2,
-                                    1.3,
-                                    1.45,
-                                    1.62,
-                                    1.6,
-                                    1.52,
-                                    1.52
+                                    1.44686982609676,
+                                    1.58102674010469,
+                                    1.55808208502411,
+                                    1.52403757154559,
+                                    1.54523686801681,
+                                    1.58479930454788
                                   ],
                                   "AirDry": [
-                                    0.03,
-                                    0.03,
-                                    0.04,
-                                    0.04,
-                                    0.12,
-                                    0.15,
-                                    0.2,
-                                    0.2
+                                    0.052485069828094,
+                                    0.0476177042335085,
+                                    0.0540432206786868,
+                                    0.0571750889684758,
+                                    0.0588065961186905,
+                                    0.0595517775378662
                                   ],
                                   "LL15": [
-                                    0.03,
-                                    0.03,
-                                    0.05,
-                                    0.05,
-                                    0.13,
-                                    0.16,
-                                    0.22,
-                                    0.22
+                                    0.157455211058834,
+                                    0.142853114129057,
+                                    0.162129663657357,
+                                    0.17152526862068,
+                                    0.176419790120269,
+                                    0.178655334400152
                                   ],
                                   "DUL": [
-                                    0.19,
-                                    0.19,
-                                    0.23,
-                                    0.27,
-                                    0.29,
-                                    0.3,
-                                    0.3,
-                                    0.29
+                                    0.297394975170657,
+                                    0.247377542733505,
+                                    0.267140014078206,
+                                    0.276038852640568,
+                                    0.279980813681673,
+                                    0.280683508570741
                                   ],
                                   "SAT": [
-                                    0.35,
-                                    0.35,
-                                    0.34,
-                                    0.34,
-                                    0.33,
-                                    0.33,
-                                    0.32,
-                                    0.31
+                                    0.391291911484027,
+                                    0.35305023838407,
+                                    0.366098784194791,
+                                    0.380896375995038,
+                                    0.375257540357217,
+                                    0.362396592818238
                                   ],
-                                  "KS": null,
+                                  "KS": [
+                                    61.6364186324386,
+                                    33.8795520884493,
+                                    18.6935399460044,
+                                    13.0862696954496,
+                                    11.0996751829044,
+                                    10.4081529251015
+                                  ],
                                   "BDMetadata": null,
                                   "AirDryMetadata": null,
                                   "LL15Metadata": null,
@@ -7851,39 +6831,733 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.03,
-                                        0.03,
-                                        0.04,
-                                        0.04,
-                                        0.12,
-                                        0.15,
-                                        0.2,
-                                        0.2
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "WheatSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "OatsSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.167250994546662,
+                                        0.150169824131368,
+                                        0.169337283210935,
+                                        0.178238477447794,
+                                        0.182191587785136,
+                                        0.183032000623536
+                                      ],
+                                      "KL": [
+                                        0.07,
+                                        0.07,
+                                        0.068637229803457,
+                                        0.0642328831229831,
+                                        0.0557333006799039,
+                                        0.0428966435885339
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "SorghumSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.167250994546662,
+                                        0.150169824131368,
+                                        0.169312029391661,
+                                        0.178132111202921,
+                                        0.181930857082001,
+                                        0.182544005452615
+                                      ],
+                                      "KL": [
+                                        0.07,
+                                        0.07,
+                                        0.0683967409452436,
+                                        0.0632151566152742,
+                                        0.0532156478587106,
+                                        0.0381136983394517
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "BarleySoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168430284682608,
+                                        0.177764181935642,
+                                        0.181641082101643,
+                                        0.182072266060019
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.059694760001482,
+                                        0.0504175393581151,
+                                        0.0334900794574074
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "ChickpeaSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168430284682608,
+                                        0.177388492123689,
+                                        0.180722005130582,
+                                        0.180648669377885
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.0561001094546091,
+                                        0.0415428011655496,
+                                        0.0195371032946296
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "MungbeanSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.171449187470016,
+                                        0.153305556989501,
+                                        0.172630698699442,
+                                        0.181976627022669,
+                                        0.186511146941027,
+                                        0.186736070023293
+                                      ],
+                                      "KL": [
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.0974435793865497,
+                                        0.0792010215691015
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "CottonSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "CanolaSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168430284682608,
+                                        0.177761523458456,
+                                        0.181558384648951,
+                                        0.181846869494155
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.0596693233349389,
+                                        0.0496190009712913,
+                                        0.0312809194121913
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "Pigeon PeaSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "MaizeSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "CowpeasSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.171373695321049,
+                                        0.152240306179881,
+                                        0.170552657472526,
+                                        0.179119257801682,
+                                        0.18246519544813,
+                                        0.182410081569567
+                                      ],
+                                      "KL": [
+                                        0.0994605382576801,
+                                        0.089808594757769,
+                                        0.080211081873469,
+                                        0.0726603077697194,
+                                        0.0583752952603428,
+                                        0.0368010816614016
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "SunflowerSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.16865039218778,
+                                        0.151215068417412,
+                                        0.170530491691025,
+                                        0.179886355342271,
+                                        0.184041440525665,
+                                        0.184051857493366
                                       ],
                                       "KL": [
                                         0.08,
                                         0.08,
-                                        0.07,
-                                        0.06,
-                                        0.05,
-                                        0.04,
-                                        0.01,
-                                        0.01
+                                        0.08,
+                                        0.08,
+                                        0.0735957423294126,
+                                        0.0528924793282186
                                       ],
                                       "XF": [
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        0.8,
-                                        0.8,
-                                        0.8,
-                                        0.0,
-                                        0.0
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "FababeanSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.171449187470016,
+                                        0.153305556989501,
+                                        0.172630698699442,
+                                        0.181976627022669,
+                                        0.18677589247641,
+                                        0.188836445906077
+                                      ],
+                                      "KL": [
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.0997872557133301
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
                                       "XFMetadata": null,
                                       "Name": "PinusSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.171449187470016,
+                                        0.153305556989501,
+                                        0.172630698699442,
+                                        0.181976627022669,
+                                        0.186511146941027,
+                                        0.186736070023293
+                                      ],
+                                      "KL": [
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.1,
+                                        0.0974435793865497,
+                                        0.0792010215691015
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "PerennialsSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "LupinsSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "LentilsSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.167250994546662,
+                                        0.150070995986883,
+                                        0.168568820773963,
+                                        0.177080238414166,
+                                        0.180323720738846,
+                                        0.180120207359086
+                                      ],
+                                      "KL": [
+                                        0.07,
+                                        0.0690544971562694,
+                                        0.0613192612994801,
+                                        0.0531506965872418,
+                                        0.0376969103270981,
+                                        0.0143575337973344
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "TriticaleSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.167250994546662,
+                                        0.150169824131368,
+                                        0.169337283210935,
+                                        0.178238477447794,
+                                        0.182191587785136,
+                                        0.183032000623536
+                                      ],
+                                      "KL": [
+                                        0.07,
+                                        0.07,
+                                        0.068637229803457,
+                                        0.0642328831229831,
+                                        0.0557333006799039,
+                                        0.0428966435885339
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "MilletSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "SoybeansSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.165851596905543,
+                                        0.149124579845324,
+                                        0.168266736138743,
+                                        0.177107235599841,
+                                        0.18094490983746,
+                                        0.181616675172037
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.058442548346808,
+                                        0.0534090092834092,
+                                        0.0436952007770331,
+                                        0.029024735529753
+                                      ],
+                                      "XF": [
+                                        0.993195274489024,
+                                        0.829256827063768,
+                                        0.855594118570081,
+                                        0.928526014933418,
+                                        0.870105444350986,
+                                        0.767911164999949
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "Pasture grasses & legumesSoil",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
@@ -7896,51 +7570,38 @@
                                 },
                                 {
                                   "$type": "Models.WaterModel.WaterBalance, Models",
-                                  "SummerDate": "1-Nov",
+                                  "SummerDate": "1-nov",
                                   "SummerU": 6.0,
-                                  "SummerCona": 3.5,
-                                  "WinterDate": "1-Apr",
+                                  "SummerCona": 6.0,
+                                  "WinterDate": "1-apr",
                                   "WinterU": 2.0,
                                   "WinterCona": 2.0,
-                                  "DiffusConst": 44.0,
-                                  "DiffusSlope": 16.0,
+                                  "DiffusConst": 111.89197563737373,
+                                  "DiffusSlope": 39.238373620607859,
                                   "Salb": 0.13,
-                                  "CN2Bare": 75.0,
+                                  "CN2Bare": 78.0,
                                   "CNRed": 20.0,
-                                  "CNCov": 0.8,
-                                  "Slope": 0.0,
-                                  "DischargeWidth": 0.0,
-                                  "CatchmentArea": 0.0,
+                                  "CNCov": 0.0,
+                                  "Slope": 8.63724422454834,
+                                  "DischargeWidth": 10.0,
+                                  "CatchmentArea": 6537.54296875,
                                   "Thickness": [
-                                    50.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
                                     200.0,
-                                    500.0,
-                                    450.0,
-                                    1500.0
+                                    200.0
                                   ],
                                   "SWCON": [
-                                    0.9,
-                                    0.9,
-                                    0.9,
-                                    0.6,
-                                    0.6,
-                                    0.6,
-                                    0.5,
-                                    0.5
+                                    0.555817702160325,
+                                    0.480702705549204,
+                                    0.412954411325804,
+                                    0.353415876857948,
+                                    0.29517399575911,
+                                    0.310184654685506
                                   ],
-                                  "KLAT": [
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
+                                  "KLAT": null,
                                   "ResourceName": "WaterBalance",
                                   "Name": "SoilWater",
                                   "IncludeInDocumentation": true,
@@ -7950,75 +7611,61 @@
                                 {
                                   "$type": "Models.Soils.Organic, Models",
                                   "Depth": [
-                                    "0-5",
-                                    "5-15",
-                                    "15-25",
-                                    "25-35",
-                                    "35-55",
-                                    "55-105",
-                                    "105-150",
-                                    "150-300"
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100"
                                   ],
-                                  "FOMCNRatio": 60.0,
+                                  "FOMCNRatio": 40.0,
                                   "Thickness": [
-                                    50.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
                                     200.0,
-                                    500.0,
-                                    450.0,
-                                    1500.0
+                                    200.0
                                   ],
                                   "Carbon": [
-                                    3.0,
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.2,
-                                    0.1,
-                                    0.08,
-                                    0.06
+                                    2.72390320191222,
+                                    0.953094022263907,
+                                    0.683538068402915,
+                                    0.394457084180904,
+                                    0.315421116975079,
+                                    0.331190871449361
                                   ],
                                   "SoilCNRatio": [
-                                    12.0,
-                                    12.0,
-                                    12.0,
-                                    12.0,
-                                    12.0,
-                                    12.0,
-                                    12.0,
-                                    12.0
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0
                                   ],
                                   "FBiom": [
-                                    0.02,
-                                    0.02,
-                                    0.01,
-                                    0.01,
-                                    0.01,
+                                    0.04,
+                                    0.03106,
+                                    0.01404,
                                     0.01,
                                     0.01,
                                     0.01
                                   ],
                                   "FInert": [
-                                    0.4,
-                                    0.4,
-                                    0.4,
-                                    0.5,
-                                    0.9,
-                                    0.99,
-                                    0.99,
-                                    0.99
+                                    0.134559218453726,
+                                    0.323184187605624,
+                                    0.456325134190656,
+                                    0.786996922471623,
+                                    0.982222423985719,
+                                    0.935805060907539
                                   ],
                                   "FOM": [
-                                    0.21212208303382984,
-                                    0.19193599792074,
-                                    0.17367087278675772,
-                                    0.15714390412042145,
-                                    0.12865854696212684,
-                                    0.078035353366607635,
-                                    0.047330834358356971,
-                                    0.011102407451159615
+                                    475.4746586022116,
+                                    303.17602770752188,
+                                    193.3135701631787,
+                                    123.26217442655363,
+                                    67.647715615544115,
+                                    37.125853484990209
                                   ],
                                   "CarbonMetadata": null,
                                   "FOMMetadata": null,
@@ -8031,54 +7678,44 @@
                                 {
                                   "$type": "Models.Soils.Chemical, Models",
                                   "Depth": [
-                                    "0-5",
-                                    "5-15",
-                                    "15-25",
-                                    "25-35",
-                                    "35-55",
-                                    "55-105",
-                                    "105-150",
-                                    "150-300"
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100"
                                   ],
                                   "Thickness": [
-                                    50.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
                                     200.0,
-                                    500.0,
-                                    450.0,
-                                    1500.0
+                                    200.0
                                   ],
                                   "NO3N": [
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "NH4N": [
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "PH": [
-                                    4.88,
-                                    5.13,
-                                    5.02,
-                                    6.06,
-                                    7.87,
-                                    8.61,
-                                    8.61,
-                                    8.61
+                                    5.21263170743796,
+                                    5.24703019300802,
+                                    5.29409675290632,
+                                    5.33750682265195,
+                                    5.38374250856154,
+                                    5.42226090044229
                                   ],
                                   "CL": null,
                                   "EC": null,
@@ -8094,8 +7731,47 @@
                                   "ReadOnly": false
                                 },
                                 {
+                                  "$type": "Models.Soils.InitialWater, Models",
+                                  "PercentMethod": 0,
+                                  "FractionFull": 1.0,
+                                  "DepthWetSoil": "NaN",
+                                  "RelativeTo": null,
+                                  "Name": "Initial water",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Sample, Models",
+                                  "Depth": [
+                                    "0-180"
+                                  ],
+                                  "Thickness": [
+                                    1800.0
+                                  ],
+                                  "NO3": null,
+                                  "NH4": [
+                                    1.0
+                                  ],
+                                  "SW": null,
+                                  "OC": null,
+                                  "EC": null,
+                                  "CL": null,
+                                  "ESP": null,
+                                  "PH": null,
+                                  "SWUnits": 0,
+                                  "OCUnits": 0,
+                                  "PHUnits": 0,
+                                  "Name": "Initial conditions",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
+                                  "Name": "CERESSoilTemperature",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -8167,19 +7843,19 @@
                               "Parameters": [
                                 {
                                   "Key": "RowSpace",
-                                  "Value": "2.5"
-                                },
-                                {
-                                  "Key": "RowWidth",
                                   "Value": "3"
                                 },
                                 {
+                                  "Key": "RowWidth",
+                                  "Value": "3.3"
+                                },
+                                {
                                   "Key": "CultivarName",
-                                  "Value": "grandis"
+                                  "Value": "radiata"
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "08/15/1980 00:00:00"
+                                  "Value": "05/16/1973 00:00:00"
                                 }
                               ],
                               "Name": "TreeSowingRule",
@@ -8201,7 +7877,7 @@
                                 },
                                 {
                                   "Key": "AutoIrrigationOn",
-                                  "Value": "True"
+                                  "Value": "False"
                                 },
                                 {
                                   "Key": "FASWThreshold",
