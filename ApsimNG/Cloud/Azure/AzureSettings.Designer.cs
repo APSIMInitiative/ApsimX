@@ -12,7 +12,7 @@ namespace ApsimNG.Cloud.Azure {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     internal sealed partial class AzureSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static AzureSettings defaultInstance = ((AzureSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new AzureSettings())));
@@ -44,6 +44,66 @@ namespace ApsimNG.Cloud.Azure {
             }
             set {
                 this["LicenceFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public string NumCPUCores {
+            get {
+                return ((string)(this["NumCPUCores"]));
+            }
+            set {
+                this["NumCPUCores"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APSIMDirectory {
+            get {
+                return ((string)(this["APSIMDirectory"]));
+            }
+            set {
+                this["APSIMDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APSIMZipFile {
+            get {
+                return ((string)(this["APSIMZipFile"]));
+            }
+            set {
+                this["APSIMZipFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APSIMVersion {
+            get {
+                return ((string)(this["APSIMVersion"]));
+            }
+            set {
+                this["APSIMVersion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LowPriority {
+            get {
+                return ((bool)(this["LowPriority"]));
+            }
+            set {
+                this["LowPriority"] = value;
             }
         }
     }

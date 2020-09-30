@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 93,
+  "Version": 113,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -221,9 +221,39 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 570.0,
-                      "Units": null,
+                      "FixedValue": 523.0,
+                      "Units": "",
                       "Name": "NUptakeCease",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.029,
+                      "Units": null,
+                      "Name": "MaxNUptakeRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 5.0,
+                      "Units": null,
+                      "Name": "NSupplyFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.0,
+                      "Units": "",
+                      "Name": "MaxDiffusion",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -330,7 +360,8 @@
                   "Name": "DltTT",
                   "Children": [
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "agregationMethod": 0,
                       "Name": "ThermalTime",
                       "Children": [
                         {
@@ -349,7 +380,16 @@
                             26.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "Response",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -852,7 +892,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -891,7 +931,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4421,14 +4461,11 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5591,26 +5628,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.029,
-                  "Units": null,
-                  "Name": "MaxNUptakeRate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 5.0,
-                  "Units": null,
-                  "Name": "NSupplyFraction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LessThanFunction, Models",
                   "Name": "DltThermalTime",
                   "Children": [
@@ -5653,16 +5670,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 2.0,
-                  "Units": "",
-                  "Name": "MaxDiffusion",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5900,6 +5907,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.01,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5914,7 +5960,6 @@
               "R50": 0.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
-              "FRGR": 0.0,
               "PotentialEP": 0.0,
               "LightProfile": null,
               "DltLAI": 0.0,
@@ -8196,9 +8241,19 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -3.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "FrostKill",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -3.5,
+                  "Units": null,
+                  "Name": "FrostKillSevere",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8463,6 +8518,51 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "FRGR",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE_FT",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Others",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
+                          "Name": "RUE_FN",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
+                          "Name": "RUE_FVPD",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8481,16 +8581,6 @@
               "IsAboveGround": true,
               "Name": "Rachis",
               "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
@@ -9621,6 +9711,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9639,34 +9768,6 @@
               "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWtFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
-                      "Units": "g/plant",
-                      "Name": "InitialPlantWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.01,
@@ -11185,6 +11286,63 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "g/plant",
+                          "Name": "InitialPlantWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -12823,7 +12981,7 @@
                     "[Root].RootFrontVelocity.EndGrainFill.Function.FixedValue = 0",
                     "[Root].RootFrontVelocity.EndGrainFill.Function.FixedValue = 0",
                     "",
-                    "[Root].NUptakeCease.FixedValue = 683",
+                    "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 683",
                     "[Grain].GNMaxCoeff.FixedValue = 210",
                     "[Grain].PotKernelWt.FixedValue = 320"
                   ],
@@ -13028,7 +13186,7 @@
             "// Primary outputs",
             "// ---------------------------------------------",
             "",
-            "[C4Maize].Phenology.DaysAfterSowing as Das",
+            "[C4Maize].DaysAfterSowing as Das",
             "[C4Maize].Phenology.Stage as Stage",
             "[C4Maize].Phenology.CurrentStageName as StageName",
             "[C4Maize].AboveGround.Wt as BiomassWt",
@@ -13093,7 +13251,7 @@
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
-            "[C4Maize].Phenology.DaysAfterSowing as Das",
+            "[C4Maize].DaysAfterSowing as Das",
             "[C4Maize].Phenology.CurrentStageName as Stage",
             "[C4Maize].AboveGround.Wt as BiomassWt",
             "[C4Maize].AboveGround.N as biomass_n",
@@ -14644,10 +14802,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo98Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 3N Yr1.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -14741,6 +14901,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -14793,6 +14954,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -14914,6 +15079,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -15027,6 +15193,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -15083,6 +15251,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -21893,10 +22065,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo99Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 3N Yr2.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -21990,6 +22164,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -22042,6 +22217,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -22163,6 +22342,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -22276,6 +22456,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22332,6 +22514,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22662,10 +22848,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "Angelo00Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Exp1 2ND Yr3.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -22759,6 +22947,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -22811,6 +23000,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -22932,6 +23125,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -23045,6 +23239,8 @@
                                 7.3174261657349753,
                                 4.43824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -23101,6 +23297,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -23408,10 +23608,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "UQGattonBase",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\UQG .met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -23497,6 +23699,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -23559,6 +23762,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -23690,6 +23897,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -23817,6 +24025,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -23883,6 +24093,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24271,10 +24485,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "DRKBase",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\DRK.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -24360,6 +24576,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -24422,6 +24639,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -24553,6 +24774,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -24680,6 +24902,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24746,6 +24970,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -25293,10 +25521,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K841Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\K841.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -25382,6 +25612,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -25444,6 +25675,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -25575,6 +25810,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -25702,6 +25938,8 @@
                                 54.6792291715739,
                                 33.164628942012989
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -25768,6 +26006,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -25947,7 +26189,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "// According to REMS, the simulation Maize_K841_K841QK6D\r\n// actually applies 40mm of irrigation on 1983-11-26, as\r\n// opposed to the 15mm applied in every other treatment\r\n// on this date. This script implements this discrepancy.\r\n\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] private Clock clock;\r\n\r\n\t\t[Link] private Plant crop;\r\n\t\t[Link] private Irrigation irrigation;\r\n\t\t[Link] private Operations operations;\r\n\r\n\t\tprivate DateTime irrigDate = new DateTime(1983, 11, 26);\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// The operations node will apply 15mm like every other sim.\r\n\t\t\t// Add in an extra 25mm to make up the difference.\r\n\t\t\tif (IsDrySim() && crop.SowingData.Cultivar == \"QK_694\" && IsToday(irrigDate))\r\n\t\t\t\tirrigation.Apply(25);\r\n\t\t}\r\n\r\n\t\tprivate bool IsDrySim()\r\n\t\t{\r\n\t\t\treturn operations.Operation.Count > 10; // eww\r\n\t\t}\r\n\r\n\t\tprivate bool IsToday(DateTime date)\r\n\t\t{\r\n\t\t\treturn clock.Today.Year == date.Year && clock.Today.DayOfYear == date.DayOfYear;\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Code": "// According to REMS, the simulation Maize_K841_K841QK6D\r\n// actually applies 40mm of irrigation on 1983-11-26, as\r\n// opposed to the 15mm applied in every other treatment\r\n// on this date. This script implements this discrepancy.\r\n\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock clock;\r\n\r\n        [Link] private Plant crop;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Operations operations;\r\n\r\n        private DateTime irrigDate = new DateTime(1983, 11, 26);\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            // The operations node will apply 15mm like every other sim.\r\n            // Add in an extra 25mm to make up the difference.\r\n            if (IsDrySim() && crop.SowingData.Cultivar == \"QK_694\" && IsToday(irrigDate))\r\n                irrigation.Apply(25);\r\n        }\r\n\r\n        private bool IsDrySim()\r\n        {\r\n            return operations.Operation.Count > 10; // eww\r\n        }\r\n\r\n        private bool IsToday(DateTime date)\r\n        {\r\n            return clock.Today.Year == date.Year && clock.Today.DayOfYear == date.DayOfYear;\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "StupidIrrigationHack",
                               "IncludeInDocumentation": true,
@@ -26297,10 +26539,12 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "K842Base",
                   "Children": [
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\K842.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -26386,6 +26630,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -26448,6 +26693,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -26579,6 +26828,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -26706,6 +26956,8 @@
                                 54.6792291715739,
                                 33.164628942012989
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26772,6 +27024,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -27201,6 +27457,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -27263,6 +27520,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -27394,6 +27655,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -27521,6 +27783,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -27587,6 +27851,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -27822,6 +28090,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -27889,6 +28158,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -28025,6 +28298,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28159,6 +28433,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28230,6 +28506,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28454,6 +28734,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -28516,6 +28797,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -28647,6 +28932,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -28774,6 +29060,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -28840,6 +29128,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29073,6 +29365,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29135,6 +29428,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -29266,6 +29563,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -29393,6 +29691,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29459,6 +29759,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -29682,6 +29986,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29749,6 +30054,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -29885,6 +30194,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -30019,6 +30329,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30090,6 +30402,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30262,6 +30578,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -30329,6 +30646,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -30465,6 +30786,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -30599,6 +30921,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30670,6 +30994,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -30842,6 +31170,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -30909,6 +31238,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -31045,6 +31378,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31179,6 +31513,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31250,6 +31586,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31406,6 +31746,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -31463,6 +31804,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -31589,6 +31934,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -31709,6 +32055,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31770,6 +32118,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -31924,6 +32276,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -31991,6 +32344,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -32127,6 +32484,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32261,6 +32619,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32332,6 +32692,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32500,6 +32864,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -32557,6 +32922,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -32683,6 +33052,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -32803,6 +33173,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -32864,6 +33236,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33016,6 +33392,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33078,6 +33455,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -33209,6 +33590,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33336,6 +33718,8 @@
                                     27.338953846061745,
                                     15.577266347597392
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33402,6 +33786,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33567,6 +33955,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33624,6 +34013,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -33750,6 +34143,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -33870,6 +34264,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -33931,6 +34327,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34085,6 +34485,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34152,6 +34553,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -34288,6 +34693,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34422,6 +34828,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34493,6 +34901,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -34653,6 +35065,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34720,6 +35133,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -34856,6 +35273,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -34990,6 +35408,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35061,6 +35481,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35221,6 +35645,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -35288,6 +35713,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -35424,6 +35853,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -35558,6 +35988,8 @@
                                     21.804963481377339,
                                     13.578035032717718
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35629,6 +36061,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -35799,6 +36235,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -35861,6 +36298,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -35992,6 +36433,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36119,6 +36561,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36185,6 +36629,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36354,6 +36802,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36421,6 +36870,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -36557,6 +37010,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -36691,6 +37145,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36762,6 +37218,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -36930,6 +37390,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36987,6 +37448,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -37113,6 +37578,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37233,6 +37699,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37294,6 +37762,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37442,6 +37914,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37494,6 +37967,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -37615,6 +38092,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -37728,6 +38206,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37784,6 +38264,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -37941,6 +38425,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37993,6 +38478,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -38114,6 +38603,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38227,6 +38717,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38283,6 +38775,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38430,6 +38926,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -38487,6 +38984,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -38613,6 +39114,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -38733,6 +39235,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -38794,6 +39298,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39010,6 +39518,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -39067,6 +39576,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -39193,6 +39706,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39313,6 +39827,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39374,6 +39890,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39600,6 +40120,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -39652,6 +40173,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -39773,6 +40298,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -39886,6 +40412,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -39942,6 +40470,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40157,6 +40689,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -40219,6 +40752,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -40350,6 +40887,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -40477,6 +41015,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40543,6 +41083,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -40730,6 +41274,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMWBase",
                   "Children": [
                     {
@@ -40754,7 +41300,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -40861,6 +41407,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -40923,6 +41470,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -41054,6 +41605,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -41181,6 +41733,8 @@
                                 24.33203633136019,
                                 16.310251713778211
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -41247,6 +41801,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -41506,6 +42064,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -41553,6 +42112,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -41669,6 +42232,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -41775,6 +42339,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -41826,6 +42392,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42048,6 +42618,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42090,6 +42661,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -42201,6 +42776,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42300,6 +42876,8 @@
                                     77.215605578518364,
                                     32.768206270024812
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42346,6 +42924,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42571,6 +43153,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42628,6 +43211,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -42754,6 +43341,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -42874,6 +43462,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -42935,6 +43525,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43169,6 +43763,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -43226,6 +43821,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -43352,6 +43951,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43472,6 +44072,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43533,6 +44135,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -43689,6 +44295,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -43746,6 +44353,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -43872,6 +44483,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -43992,6 +44604,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44053,6 +44667,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44287,6 +44905,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -44344,6 +44963,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -44470,6 +45093,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -44590,6 +45214,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44651,6 +45277,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -44887,6 +45517,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -44949,6 +45580,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -45080,6 +45715,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45207,6 +45843,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45273,6 +45911,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45512,6 +46154,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -45574,6 +46217,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -45705,6 +46352,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -45832,6 +46480,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -45898,6 +46548,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46073,6 +46727,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46140,6 +46795,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -46276,6 +46935,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -46410,6 +47070,8 @@
                                     20.818515315125651,
                                     14.62747447475053
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46481,6 +47143,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -46721,6 +47387,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46778,6 +47445,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -46904,6 +47575,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -47024,6 +47696,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47085,6 +47759,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47319,6 +47997,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -47376,6 +48055,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -47502,6 +48185,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -47622,6 +48306,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47683,6 +48369,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -47915,6 +48605,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -47967,6 +48658,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -48088,6 +48783,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48201,6 +48897,8 @@
                                     36.998989848158949,
                                     21.443810852972604
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48257,6 +48955,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48490,6 +49192,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -48552,6 +49255,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -48683,6 +49390,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -48810,6 +49518,8 @@
                                     24.33203633136019,
                                     16.310251713778211
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -48876,6 +49586,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49113,6 +49827,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49170,6 +49885,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -49296,6 +50015,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49416,6 +50136,8 @@
                                     29.330996575780514,
                                     18.48771391773769
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49477,6 +50199,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -49707,6 +50433,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49754,6 +50481,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -49870,6 +50601,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -49976,6 +50708,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50027,6 +50761,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50251,6 +50989,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -50298,6 +51037,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -50414,6 +51157,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -50520,6 +51264,8 @@
                                     50.154563313485653,
                                     25.750211402747539
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50571,6 +51317,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -50755,6 +51505,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "BMW2Base",
                   "Children": [
                     {
@@ -50779,7 +51531,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -50838,6 +51590,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -50885,6 +51638,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -51001,6 +51758,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51107,6 +51865,8 @@
                                 50.154563313485653,
                                 25.750211402747539
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51158,6 +51918,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51429,6 +52193,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KatumaniBase",
                   "Children": [
                     {
@@ -51453,7 +52219,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -51518,6 +52284,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -51580,6 +52347,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -51711,6 +52482,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -51838,6 +52610,8 @@
                                 30.25986365658261,
                                 14.938471267620042
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51904,6 +52678,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -52255,6 +53033,7 @@
                                       "ParticleSizeClay": null,
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -52317,6 +53096,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -52448,6 +53231,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -52575,6 +53359,8 @@
                                         24.33203633136019,
                                         16.310251713778211
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -52641,6 +53427,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -52814,6 +53604,7 @@
                                       "ParticleSizeClay": null,
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
+                                      "Rocks": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -52876,6 +53667,10 @@
                                       "DULMetadata": null,
                                       "SATMetadata": null,
                                       "KSMetadata": null,
+                                      "RocksMetadata": null,
+                                      "ParticleSizeSandMetadata": null,
+                                      "ParticleSizeSiltMetadata": null,
+                                      "ParticleSizeClayMetadata": null,
                                       "Name": "Physical",
                                       "Children": [
                                         {
@@ -53007,6 +53802,7 @@
                                         0.08,
                                         0.9
                                       ],
+                                      "NPartitionApproach": 0,
                                       "Name": "SoilNitrogen",
                                       "Children": [
                                         {
@@ -53134,6 +53930,8 @@
                                         24.33203633136019,
                                         16.310251713778211
                                       ],
+                                      "CarbonMetadata": null,
+                                      "FOMMetadata": null,
                                       "Name": "Organic",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -53200,6 +53998,10 @@
                                       "CL": null,
                                       "EC": null,
                                       "ESP": null,
+                                      "ECMetadata": null,
+                                      "CLMetadata": null,
+                                      "ESPMetadata": null,
+                                      "PHMetadata": null,
                                       "Name": "Chemical",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -53344,6 +54146,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "JMW2KibokoBase",
                   "Children": [
                     {
@@ -53368,7 +54172,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\KIBOKO.MET",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -53433,6 +54237,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -53495,6 +54300,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -53626,6 +54435,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -53753,6 +54563,8 @@
                                 24.33203633136019,
                                 16.310251713778211
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -53819,6 +54631,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -54096,10 +54912,12 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_89_m1g5n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_89.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -54185,6 +55003,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -54247,6 +55066,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -54378,6 +55201,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -54505,6 +55329,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -54571,6 +55397,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -55021,10 +55851,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Early_m1g6n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_90_Early.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -55110,6 +55942,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -55172,6 +56005,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -55303,6 +56140,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -55430,6 +56268,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -55496,6 +56336,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -55982,10 +56826,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_90_Late_m1g7n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_90_Late.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -56071,6 +56917,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -56133,6 +56980,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -56264,6 +57115,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -56391,6 +57243,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -56457,6 +57311,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -56973,10 +57831,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Maize_Gatton_91_m1g8n2",
               "Children": [
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Gatton_91.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -57062,6 +57922,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -57124,6 +57985,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -57255,6 +58120,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -57382,6 +58248,8 @@
                             27.339614585786951,
                             16.582314471006494
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57448,6 +58316,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -57993,7 +58865,7 @@
                           "Name": "Year1982",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gains82IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -58020,7 +58892,7 @@
                           "Name": "Year1983",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gains83IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -58046,6 +58918,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GainsBase",
                   "Children": [
                     {
@@ -58070,7 +58944,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Gains82IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -58135,6 +59009,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -58197,6 +59072,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -58328,6 +59207,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -58455,6 +59335,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -58521,6 +59403,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -58857,7 +59743,7 @@
                           "Name": "Year1977Population6",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy776IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -58914,6 +59800,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.2,
                                     1.2,
@@ -58976,6 +59863,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -59107,6 +59998,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -59234,6 +60126,8 @@
                                     27.339614585786951,
                                     16.582314471006494
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59300,6 +60194,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59390,7 +60288,7 @@
                           "Name": "Year1977Population9",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy779IB.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
@@ -59447,6 +60345,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.2,
                                     1.2,
@@ -59509,6 +60408,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -59640,6 +60543,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -59767,6 +60671,8 @@
                                     27.339614585786951,
                                     16.582314471006494
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59833,6 +60739,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -59923,7 +60833,7 @@
                           "Name": "Year1978Population6",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\talah78.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -59976,6 +60886,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.35,
                                     1.54,
@@ -60028,6 +60939,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -60153,6 +61068,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60266,6 +61182,8 @@
                                     36.587130828674873,
                                     22.1912165985086
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60322,6 +61240,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60406,7 +61328,7 @@
                           "Name": "Year1978Population9",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Quincy789IB.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
@@ -60459,6 +61381,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.28,
                                     1.26,
@@ -60511,6 +61434,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -60636,6 +61563,7 @@
                                     0.08,
                                     0.9
                                   ],
+                                  "NPartitionApproach": 0,
                                   "Name": "SoilNitrogen",
                                   "Children": [
                                     {
@@ -60749,6 +61677,8 @@
                                     36.587130828674873,
                                     22.1912165985086
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60805,6 +61735,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -60886,6 +61820,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "QuincyBase",
                   "Children": [
                     {
@@ -60910,7 +61846,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Quincy776IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -60975,6 +61911,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -61037,6 +61974,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -61168,6 +62109,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -61295,6 +62237,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -61361,6 +62305,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -61704,7 +62652,7 @@
                           "Name": "Year1982",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct82IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61731,7 +62679,7 @@
                           "Name": "Year1983",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct83IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61758,7 +62706,7 @@
                           "Name": "Year1984",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct84IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61785,7 +62733,7 @@
                           "Name": "Year1985",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct85IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61812,7 +62760,7 @@
                           "Name": "Year1986",
                           "Children": [
                             {
-                              "$type": "Models.Weather, Models",
+                              "$type": "Models.Climate.Weather, Models",
                               "FileName": "met\\Gjunct86IB.met",
                               "ExcelWorkSheetName": null,
                               "Name": "Weather",
@@ -61838,6 +62786,8 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "GjunctBase",
                   "Children": [
                     {
@@ -61862,7 +62812,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
                       "FileName": "met\\Gjunct82IB.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -61927,6 +62877,7 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -61989,6 +62940,10 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -62120,6 +63075,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -62247,6 +63203,8 @@
                                 27.339614585786951,
                                 16.582314471006494
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -62313,6 +63271,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -62631,6 +63593,8 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
               "Name": "Champ83",
               "Children": [
                 {
@@ -62655,7 +63619,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Weather, Models",
+                  "$type": "Models.Climate.Weather, Models",
                   "FileName": "met\\Champ83IB.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -62714,6 +63678,7 @@
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
+                          "Rocks": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -62761,6 +63726,10 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
                           "Name": "Physical",
                           "Children": [
                             {
@@ -62883,6 +63852,7 @@
                             0.08,
                             0.9
                           ],
+                          "NPartitionApproach": 0,
                           "Name": "SoilNitrogen",
                           "Children": [
                             {
@@ -62989,6 +63959,8 @@
                             62.612803670569953,
                             23.033963224506504
                           ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -63040,6 +64012,10 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -63367,7 +64343,7 @@
       "Children": [
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System.Linq;\r\nusing System.Collections.Generic;\r\nusing Models.Storage;\r\nusing Models;\r\nusing Models.Factorial;\r\nusing Models.Core.Run;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    /// <summary>\r\n    /// This script must implement the IGraphPanelScript interface.\r\n    /// </summary>\r\n    [Serializable]\r\n    public class Script : Model, IGraphPanelScript\r\n    {\r\n        /// <summary>\r\n        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.\r\n        /// </summary>\r\n        /// <param name=\"storage\">Provides access to the datastore.</param>\r\n        /// <param name=\"panel\">Provides access to the graph panel and the simulations tree.</param>\r\n        public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)\r\n        {\r\n            // Get a list of all descendants of the panel's parent which are runnable\r\n            // (simulations, experiments, etc).\r\n            List<ISimulationDescriptionGenerator> runnables = Apsim.ChildrenRecursively(panel.Parent, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();\r\n\r\n            // Remove all simulations which are children of an experiment.\r\n            runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);\r\n\r\n            // Return the names of all simulations generated by these runnables.\r\n            return runnables.SelectMany(r => r.GenerateSimulationDescriptions().Select(d => d.Name)).ToArray();\r\n        }\r\n\r\n        /// <summary>\r\n        /// Called on each graph before it is drawn in a tab.\r\n        /// </summary>\r\n        /// <param name=\"graph\">The graph.</param>\r\n        /// <param name=\"simulationName\">Simulation name for this tab.</param>\r\n        public void TransformGraph(Models.Graph graph, string simulationName)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Core.Run;\r\nusing Models.Factorial;\r\nusing Models;\r\nusing Models.Storage;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    /// <summary>\r\n    /// This script must implement the IGraphPanelScript interface.\r\n    /// </summary>\r\n    [Serializable]\r\n    public class Script : Model, IGraphPanelScript\r\n    {\r\n        /// <summary>\r\n        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.\r\n        /// </summary>\r\n        /// <param name=\"storage\">Provides access to the datastore.</param>\r\n        /// <param name=\"panel\">Provides access to the graph panel and the simulations tree.</param>\r\n        public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)\r\n        {\r\n            // Get a list of all descendants of the panel's parent which are runnable\r\n            // (simulations, experiments, etc).\r\n            List<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().OfType<IModel>().ToList().Cast<ISimulationDescriptionGenerator>().ToList();\r\n\r\n            // Remove all simulations which are children of an experiment.\r\n            runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);\r\n\r\n            // Return the names of all simulations generated by these runnables.\r\n            return runnables.SelectMany(r => r.GenerateSimulationDescriptions().Select(d => d.Name)).ToArray();\r\n        }\r\n\r\n        /// <summary>\r\n        /// Called on each graph before it is drawn in a tab.\r\n        /// </summary>\r\n        /// <param name=\"graph\">The graph.</param>\r\n        /// <param name=\"simulationName\">Simulation name for this tab.</param>\r\n        public void TransformGraph(Models.Graph graph, string simulationName)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "Config",
           "IncludeInDocumentation": true,
@@ -64070,6 +65046,7 @@
           "FieldNameUsedForMatch": "SimulationID",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [
             {

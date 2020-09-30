@@ -21,6 +21,7 @@
     [TestFixture]
     public class ReportTests
     {
+        private Simulations simulations;
         private Simulation simulation;
         private Clock clock;
         private Report report;
@@ -33,26 +34,33 @@
         [SetUp]
         public void Setup()
         {
-            simulation = new Simulation()
+            simulations = new Simulations()
             {
                 Children = new List<IModel>()
                 {
-                    new MockStorage(),
-                    new MockSummary(),
-                    new Clock()
+                    new Simulation()
                     {
-                        StartDate = new DateTime(2017, 1, 1),
-                        EndDate = new DateTime(2017, 1, 10)
-                    },
-                    new Report()
-                    {
-                        VariableNames = new string[] { },
-                        EventNames = new string[] { "[Clock].EndOfDay" },
+                        Children = new List<IModel>()
+                        {
+                            new MockStorage(),
+                            new MockSummary(),
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10)
+                            },
+                            new Report()
+                            {
+                                VariableNames = new string[] { },
+                                EventNames = new string[] { "[Clock].EndOfDay" },
+                            }
+                        }
                     }
                 }
             };
 
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulations);
+            simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
             clock = simulation.Children[2] as Clock;
@@ -69,7 +77,7 @@
             {
                 Name = "Manager1",
                 Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +
-                            "public class Script : Model\r\n {\r\n " +
+                            "public class Script1 : Model\r\n {\r\n " +
                             "public double A { get { return (1); } set { } }\r\n" +
                             "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
             };
@@ -77,20 +85,24 @@
             {
                 Name = "Manager2",
                 Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" + "" +
-                            "    public class Script : Model\r\n {\r\n" +
+                            "    public class Script2 : Model\r\n {\r\n" +
                             " public double A { get { return (3); } set { } }\r\n" +
                             " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
             };
             report.VariableNames = new[]
             {
-                "[Manager1].Script.A as M1A",
-                "[Manager2].Script.A as M2A"
+                "[Manager1].Script1.A as M1A",
+                "[Manager2].Script2.A as M2A"
             };
             report.EventNames = new[]
             {
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
+            simulation.ParentAllDescendants();
+            m1.OnCreated();
+            m2.OnCreated();
+
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
@@ -394,7 +406,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = Apsim.Find(file, typeof(Simulation));
+            IModel sim = file.FindInScope<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -404,7 +416,7 @@
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            var storage = file.FindInScope<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
@@ -431,7 +443,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = Apsim.Find(file, typeof(Report)) as Report;
+            Report report = file.FindInScope<Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -441,7 +453,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            Clock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -451,7 +463,7 @@
                 throw errors[0];
 
             List<string> fieldNames = new List<string>() { "doy" };
-            IDataStore storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = file.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
@@ -467,7 +479,7 @@
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3 } };
             simulation.Children.Add(model);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]" };
 
@@ -488,7 +500,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -520,7 +532,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -551,7 +563,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -583,7 +595,7 @@
         {
             Simulations sims = Utilities.GetRunnableSim();
 
-            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            IModel paddock = sims.FindInScope<Zone>();
             Manager script = new Manager();
             script.Name = "Manager";
             script.Code = @"using System;
@@ -610,7 +622,7 @@ namespace Models
             script.Parent = paddock;
             script.OnCreated();
 
-            Report report = Apsim.Find(sims, typeof(Report)) as Report;
+            Report report = sims.FindInScope<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
@@ -621,7 +633,7 @@ namespace Models
                 throw new Exception("Errors while running sims", errors[0]);
 
             List<string> fieldNames = new List<string>() { "x" };
-            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = sims.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
 
@@ -647,7 +659,7 @@ namespace Models
             };
 
             simulation.Children.Add(model);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] 
             { 

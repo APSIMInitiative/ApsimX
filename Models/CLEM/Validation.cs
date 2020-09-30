@@ -141,7 +141,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class MonthAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must represent a month from [1] (Jan) to [12] (Dec)";
+        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December] )";
 
         /// <summary>
         /// 
@@ -160,7 +160,17 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            int monthvalue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            int monthvalue;
+
+            if(value.GetType().IsEnum)
+            {
+                monthvalue = (int)value;
+            }
+            else
+            {
+                monthvalue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            }
+                
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if ((monthvalue >= 1) && (monthvalue <= 12))
@@ -201,7 +211,15 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value);
+            double maxvalue = 0;
+            if (value.GetType().IsArray)
+            {
+                maxvalue = (value as double[]).Min();
+            }
+            else
+            {
+                maxvalue = Convert.ToDouble(value);
+            }
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (maxvalue > compareValue)
@@ -243,7 +261,16 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value);
+            double maxvalue = 0;
+            if (value.GetType().IsArray)
+            {
+                maxvalue = (value as double[]).Min();
+            }
+            else
+            {
+                maxvalue = Convert.ToDouble(value);
+            }
+
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (maxvalue >= compareValue)

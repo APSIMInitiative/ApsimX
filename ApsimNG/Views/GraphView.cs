@@ -358,7 +358,8 @@
         /// <param name="y">The y values for the series</param>
         /// <param name="xFieldName">The name of the x variable.</param>
         /// <param name="yFieldName">The name of the y variable.</param>
-        /// <param name="error">The error values for the series</param>
+        /// <param name="xError">The error values for the x series</param>
+        /// <param name="yError">The error values for the y series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -374,7 +375,8 @@
              IEnumerable y,
              string xFieldName,
              string yFieldName,
-             IEnumerable error,
+             IEnumerable xError,
+             IEnumerable yError,
              Models.Axis.AxisType xAxisType,
              Models.Axis.AxisType yAxisType,
              Color colour,
@@ -448,13 +450,13 @@
                 }
 
                 this.plot1.Model.Series.Add(series);
-                if (error != null)
+                if (xError != null || yError != null)
                 {
                     ScatterErrorSeries errorSeries = new ScatterErrorSeries();
-                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, error, xAxisType, yAxisType);
+                    errorSeries.ItemsSource = this.PopulateErrorPointSeries(x, y, xError, yError, xAxisType, yAxisType);
                     errorSeries.XAxisKey = xAxisType.ToString();
                     errorSeries.YAxisKey = yAxisType.ToString();
-                    errorSeries.ErrorBarColor = series.MarkerFill;
+                    errorSeries.ErrorBarColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                     this.plot1.Model.Series.Add(errorSeries);
                 }
             }
@@ -1383,7 +1385,7 @@
         /// </summary>
         /// <param name="x">The x values</param>
         /// <param name="y">The y values</param>
-        /// <param name="error">The error size values</param>
+        /// <param name="yError">The error size values</param>
         /// <param name="xAxisType">The x axis the data is associated with</param>
         /// <param name="yAxisType">The y axis the data is associated with</param>
         /// <returns>A list of 'DataPoint' objects ready to be plotted</returns>
@@ -1391,26 +1393,49 @@
         private List<ScatterErrorPoint> PopulateErrorPointSeries(
             IEnumerable x,
             IEnumerable y,
-            IEnumerable error,
+            IEnumerable xError,
+            IEnumerable yError,
             Models.Axis.AxisType xAxisType,
             Models.Axis.AxisType yAxisType)
         {
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
-            if (x != null && y != null && error != null)
+            if (x != null && y != null && (yError != null || xError != null))
             {
                 // Create a new data point for each x.
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
                 double[] yValues = GetDataPointValues(y.GetEnumerator(), yAxisType);
-                double[] errorValues = GetDataPointValues(error.GetEnumerator(), yAxisType);
+                double[] xErrorValues = GetDataPointValues(xError?.GetEnumerator(), xAxisType);
+                double[] yErrorValues = GetDataPointValues(yError?.GetEnumerator(), yAxisType);
 
-                if (xValues.Length == yValues.Length && xValues.Length == errorValues.Length)
+                if (xValues.Length == yValues.Length)
                 {
-                    // Create data points
-                    for (int i = 0; i < xValues.Length; i++)
-                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(errorValues[i]))
-                            points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, errorValues[i], 0));
+                    if (xValues.Length == xErrorValues.Length && xErrorValues.Length == yErrorValues.Length)
+                    {
+                        // We have error data for both x and y series.
+                        for (int i = 0; i < xValues.Length; i++)
+                            if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(yErrorValues[i]) && !double.IsNaN(xErrorValues[i]))
+                                points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], yErrorValues[i], 0));
 
-                    return points;
+                        return points;
+                    }
+                    else if (xValues.Length == xErrorValues.Length)
+                    {
+                        // We have error data for the x series.
+                        for (int i = 0; i < xValues.Length; i++)
+                            if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]))
+                                points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], 0, 0));
+
+                        return points;
+                    }
+                    else if (yValues.Length == yErrorValues.Length)
+                    {
+                        // We have error data for the y series.
+                        for (int i = 0; i < xValues.Length; i++)
+                            if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(yErrorValues[i]))
+                                points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, yErrorValues[i], 0));
+
+                        return points;
+                    }
                 }
             }
             return null;
@@ -1425,8 +1450,8 @@
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
                       // compatibility with older versions VS/C#.
-            if (!enumerator.MoveNext())
-                return null;
+            if (enumerator == null || !enumerator.MoveNext())
+                return new double[0];
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
@@ -1590,29 +1615,27 @@
                 Point location = new Point((int)e.Position.X, (int)e.Position.Y);
                 Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
-                if (plotArea.Contains(location))
+
+                Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
+                Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
+                if (legendArea.Contains(location))
                 {
-                    Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
-                    Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                    if (legendArea.Contains(location))
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
+                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                    int seriesIndex = y / itemHeight;
+                    if (this.OnLegendClick != null)
                     {
-                        int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                        int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
-                        int seriesIndex = y / itemHeight;
-                        if (this.OnLegendClick != null)
-                        {
-                            LegendClickArgs args = new LegendClickArgs();
-                            args.SeriesIndex = seriesIndex;
-                            args.ControlKeyPressed = e.IsControlDown;
-                            this.OnLegendClick.Invoke(sender, args);
-                        }
+                        LegendClickArgs args = new LegendClickArgs();
+                        args.SeriesIndex = seriesIndex;
+                        args.ControlKeyPressed = e.IsControlDown;
+                        this.OnLegendClick.Invoke(sender, args);
                     }
-                    else
+                }
+                else if (plotArea.Contains(location))
+                {
+                    if (this.OnPlotClick != null)
                     {
-                        if (this.OnPlotClick != null)
-                        {
-                            this.OnPlotClick.Invoke(sender, e);
-                        }
+                        this.OnPlotClick.Invoke(sender, e);
                     }
                 }
                 else
@@ -1639,19 +1662,19 @@
 
                     if (this.OnAxisClick != null)
                     {
-                        if (leftAxisArea.Contains(location))
+                        if (leftAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Left) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Left);
                         }
-                        else if (topAxisArea.Contains(location))
+                        else if (topAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Top) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Top);
                         }
-                        else if (rightAxisArea.Contains(location))
+                        else if (rightAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Right) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Right);
                         }
-                        else if (bottomAxisArea.Contains(location))
+                        else if (bottomAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Bottom) != null)
                         {
                             this.OnAxisClick.Invoke(Models.Axis.AxisType.Bottom);
                         }

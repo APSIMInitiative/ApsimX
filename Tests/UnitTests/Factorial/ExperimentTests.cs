@@ -7,6 +7,8 @@
     using System;
     using System.Collections.Generic;
     using UnitTests.Weather;
+    using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
 
     /// <summary>This is a test class for the Experiment class</summary>
     [TestFixture]
@@ -47,7 +49,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 2);
@@ -98,7 +100,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
@@ -169,7 +171,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
@@ -238,7 +240,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1Factor1");
@@ -338,7 +340,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1SiteGoondiwindi");
@@ -450,7 +452,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1Site1");
@@ -501,7 +503,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             experiment.DisabledSimNames = new List<string>() { "Exp1MaxT10", "Exp1StartDate2003-11-01" };
 
@@ -569,7 +571,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);
@@ -680,7 +682,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 8);
@@ -767,6 +769,23 @@
 
         }
 
+        /// <summary>
+        /// Ensure that property/model overrides apply to all paddocks.
+        /// </summary>
+        [Test]
+        public void TestOverridingInMultiplePaddocks()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            Runner runner = new Runner(sims);
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+        }
+
         /// <summary>Ensure a permutation correctly multiplies child factor with composite factor models.</summary>
         [Test]
         public void EnsurePermutationWithCompositeFactorsWorks()
@@ -820,7 +839,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);

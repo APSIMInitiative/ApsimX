@@ -549,7 +549,7 @@
                     {
                         if (j > 0)
                         {
-                            stringValue += ",";
+                            stringValue += ", ";
                         }
 
                         Array arr2d = arr.GetValue(j) as Array;

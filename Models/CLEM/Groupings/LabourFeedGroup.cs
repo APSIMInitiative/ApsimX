@@ -7,7 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -33,8 +33,14 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -83,8 +89,8 @@ namespace Models.CLEM.Groupings
             }
 
 
-            ZoneCLEM zoneCLEM = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
             HumanFoodStoreType food =  resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
             if (food != null)
             {
@@ -136,7 +142,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (Apsim.Children(this, typeof(LabourFilter)).Count() == 0)
+            if (this.FindAllChildren<LabourFilter>().Count() == 0)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

@@ -40,7 +40,7 @@
         /// </summary>
         public static List<FieldInfo> GetAllFields(Type type, BindingFlags flags)
         {
-            if (type == typeof(Object)) return new List<FieldInfo>();
+            if (type == null || type == typeof(Object)) return new List<FieldInfo>();
 
             var list = GetAllFields(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
@@ -54,7 +54,7 @@
         /// </summary>
         public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags)
         {
-            if (type == typeof(Object)) return new List<PropertyInfo>();
+            if (type == typeof(Object) || type == null) return new List<PropertyInfo>();
 
             var list = GetAllProperties(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
@@ -114,7 +114,7 @@
             }
             else
             {
-                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase;
+                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 FieldInfo F = obj.GetType().GetField(name, Flags);
                 if (F != null)
                 {
@@ -414,7 +414,9 @@
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
+                //
+                // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
+                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
 
                 // An object array is not good enough. We need an array with correct element type.
                 Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
@@ -458,7 +460,7 @@
                 for (int j = 0; j < arr.Length; j++)
                 {
                     if (j > 0)
-                        stringValue += ",";
+                        stringValue += ", ";
                     stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;

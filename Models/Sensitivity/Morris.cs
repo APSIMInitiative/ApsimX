@@ -15,7 +15,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
@@ -42,6 +41,7 @@
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>Parameter values coming back from R</summary>
+        [JsonIgnore]
         public DataTable ParameterValues { get; set; }
 
         /// <summary>The number of paths to run</summary>
@@ -127,7 +127,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get
@@ -181,7 +181,7 @@
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            var baseSimulation = this.FindChild<Simulation>();
 
             // Calculate all combinations.
             CalculateFactors();
@@ -226,8 +226,8 @@
             r.InstallPackage("sensitivity");
             if (ParametersHaveChanged)
             {
-                allCombinations.Clear();
-                ParameterValues.Clear();
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
             }
         }
 
@@ -299,13 +299,18 @@
         {
             get
             {
-                return Apsim.Child(this, typeof(Simulation)) as Simulation;
+                return this.FindChild<Simulation>();
             }
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
         public void Run()
         {
+            // If the predicted table has not been modified, don't do anything.
+            // This can happen if other simulations were run but the Morris model was not.
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
+                return;
+
             DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {

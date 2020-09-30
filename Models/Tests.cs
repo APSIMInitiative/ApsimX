@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Data;
 using System.Text;
 using Models.Core;
@@ -25,7 +25,7 @@ namespace Models
         /// <summary>
         /// data table
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DataTable Table { get; set; }
 
         /// <summary>
@@ -194,7 +194,19 @@ namespace Models
                                     current,
                                     null,
                                     null);
-                    Table.Rows[rowIndex]["Current"] = current;
+                    if (Table.Rows.Count > rowIndex)
+                        Table.Rows[rowIndex]["Current"] = current;
+                    else
+                    {
+                        // The row for this particular variable/stat doesn't exist in the accepted table.
+                        Table.Rows.Add(PO.Name,
+                            stats[i].Name,
+                            statNames[j],
+                            null,
+                            current,
+                            null,
+                            null);
+                    }
                     rowIndex++;
                 }
 
@@ -323,6 +335,8 @@ namespace Models
 
                 // add data to doc table.
                 tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentChildren(this, tags, headingLevel, indent);
             }
         }
 

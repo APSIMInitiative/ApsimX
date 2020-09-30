@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM
@@ -124,7 +124,7 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Transmutation/TransmutationCost.htm")]
     public class TransmutationCost : CLEMModel, IValidatableObject, ITransmutationCost
     {
-        [XmlIgnore]
+        [JsonIgnore]
         [Link]
         private ResourcesHolder Resources = null;
 
@@ -137,7 +137,7 @@ namespace Models.CLEM
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
         [Required]
         public string ResourceTypeName { get; set; }
 
@@ -176,8 +176,17 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        string[] memberNames = new string[] { "ResourceTypeName" };
-                        results.Add(new ValidationResult("Could not find resource " + ResourceTypeName.Split('.').First() + " in transmutation cost", memberNames));
+                        string[] memberNames = new string[] { "ResourceGroup" };
+                        results.Add(new ValidationResult("Could not find resource [r=" + ResourceTypeName.Split('.').First() + "] in transmutation cost", memberNames));
+                    }
+                    else
+                    {
+                        object resultType = Resources.GetResourceItem(this, ResourceTypeName,OnMissingResourceActionTypes.Ignore,OnMissingResourceActionTypes.Ignore);
+                        if (resultType is null)
+                        {
+                            string[] memberNames = new string[] { "ResourceType" };
+                            results.Add(new ValidationResult($"Could not find resource [r={ResourceTypeName.Split('.').First()}][r={ResourceTypeName.Split('.').Last()}] in transmutation cost", memberNames));
+                        }
                     }
                 }
             }
@@ -365,21 +374,21 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Type ResourceType { get; set; }
 
         /// <summary>
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
         /// Cost per unit taken from pricing component if available.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CostPerUnit
         {
             get
@@ -402,7 +411,7 @@ namespace Models.CLEM
         /// <summary>
         /// Get the price object for this transmutation cost
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourcePricing Pricing { get {return pricing; } }
 
         /// <summary>
@@ -423,7 +432,7 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // get pricing if available
-            IResourceType parentResource = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
             if (parentResource != null)
             {
                 pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
@@ -458,8 +467,8 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
-            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            var w = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            bool multiPrice = (w as IModel).FindAllChildren<ResourcePricing>().Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price != null)
             {

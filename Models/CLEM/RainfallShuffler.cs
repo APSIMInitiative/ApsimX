@@ -6,19 +6,19 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
     ///<summary>
-    /// SQLite database reader for access to GRASP data for other models.
+    /// Randomises the years of grown provided in pasture reader.
     ///</summary>
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
-    [ValidParent(ParentType = typeof(FileSQLiteGRASP))]
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ValidParent(ParentType = typeof(FileSQLitePasture))]
     [Description("This component shuffles rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
@@ -43,7 +43,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of shuffled years
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ShuffleYear> ShuffledYears { get; set; }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">";
                 html += StartSeasonMonth.ToString();
             }
-            html += "</class>";
+            html += "</span>";
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\">";

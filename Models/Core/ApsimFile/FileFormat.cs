@@ -9,7 +9,6 @@
     using System.Xml;
     using Newtonsoft.Json.Serialization;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Models.Core.Interfaces;
     using Newtonsoft.Json.Linq;
 
@@ -21,7 +20,7 @@
     /// * Can WRITE a model in memory to an APSIM Next Generation .json string.
     ///     - Only writes public, settable, properties of a model.
     ///     - If a model implements IDontSerialiseChildren then no child models will be serialised.
-    ///     - Won't serialise any property with XmlIgnore attribute.
+    ///     - Won't serialise any property with LinkAttribute.
     /// * Can READ an APSIM Next Generation JSON or XML string to models in memory.
     ///     - Calls converter on the string before deserialisation.
     ///     - Sets fileName property in all simulation models read in.
@@ -68,7 +67,8 @@
             // Set the filename
             if (newModel is Simulations)
                 (newModel as Simulations).FileName = fileName;
-            Apsim.ChildrenRecursively(newModel, typeof(Simulation)).ForEach(m => (m as Simulation).FileName = fileName);
+            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                sim.FileName = fileName;
             return newModel;
         }
 
@@ -94,11 +94,11 @@
 
             // Parent all models.
             newModel.Parent = null;
-            Apsim.ParentAllChildren(newModel);
+            newModel.ParentAllDescendants();
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in Apsim.ChildrenRecursively(newModel))
+            foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
                 {
@@ -120,7 +120,7 @@
                 var result = base.GetSerializableMembers(objectType);
                 result.RemoveAll(m => m is PropertyInfo &&
                                       !(m as PropertyInfo).CanWrite);
-                result.RemoveAll(m => m.GetCustomAttribute(typeof(XmlIgnoreAttribute)) != null);
+                result.RemoveAll(m => m.GetCustomAttribute(typeof(LinkAttribute)) != null);
                 return result;
             }
 
@@ -150,9 +150,9 @@
                 {
                     property.ShouldSerialize = instance =>
                     {
-                        var xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
+                        var link = member.GetCustomAttribute<LinkAttribute>();
                         var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-                        if (xmlIgnore != null || jsonIgnore != null)
+                        if (link != null || jsonIgnore != null)
                             return false;
 
                         // If this property has a description attribute, then it's settable
@@ -163,7 +163,7 @@
 
                         // If the model is under a replacements node, then serialize everything.
                         ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (Apsim.Ancestor<Replacements>(resource) != null)
+                        if (resource.FindAncestor<Replacements>() != null)
                             return true;
 
                         // Otherwise, only serialize if the property is inherited from
@@ -186,15 +186,15 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is ModelCollectionFromResource m && Apsim.Ancestor<Replacements>(m) == null)
+                    if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
                         return m.ChildrenToSerialize;
 
-                    return new DynamicValueProvider(memberInfo).GetValue(target);
+                    return new ExpressionValueProvider(memberInfo).GetValue(target);
                 }
 
                 public void SetValue(object target, object value)
                 {
-                    new DynamicValueProvider(memberInfo).SetValue(target, value);
+                    new ExpressionValueProvider(memberInfo).SetValue(target, value);
                 }
             }
         }

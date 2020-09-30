@@ -4,13 +4,14 @@
     using Models.Core;
     using Models.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using System;
     using System.Linq;
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
-    internal class RootTissue: Model
+    public class RootTissue: Model
     {
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
@@ -55,26 +56,22 @@
         [Link]
         private PastureSpecies species = null;
 
-        /// <summary>Nutrient model.</summary>
+        /// <summary>Link to the soil physical properties.</summary>
         [Link]
-        private Soil soil = null;
+        private IPhysical soilPhysical = null;
 
         /// <summary>Nutrient model.</summary>
         [Link]
         private INutrient nutrient = null;
-
-        /// <summary>The surface organic matter model.</summary>
-        [Link]
-        private SurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
         /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
         public void Initialise(double[] initialDMByLayer, double[] initialNByLayer)
         {
-            pLayer = new double[soil.Thickness.Length];
-            dmLayersTransferedIn = new double[soil.Thickness.Length];
-            nLayersTransferedIn = new double[soil.Thickness.Length];
+            pLayer = new double[soilPhysical.Thickness.Length];
+            dmLayersTransferedIn = new double[soilPhysical.Thickness.Length];
+            nLayersTransferedIn = new double[soilPhysical.Thickness.Length];
             if (initialNByLayer != null && initialNByLayer != null)
             {
                 dmLayer = initialDMByLayer;
@@ -82,8 +79,8 @@
             }
             else
             {
-                dmLayer = new double[soil.Thickness.Length];
-                nLayer = new double[soil.Thickness.Length];
+                dmLayer = new double[soilPhysical.Thickness.Length];
+                nLayer = new double[soilPhysical.Thickness.Length];
             }
             UpdateDM();
         }
@@ -117,8 +114,9 @@
                 dmLayer[layer] = amountDMToRemove * prevRootFraction[layer];
 
             UpdateDM();
+            double[] newRootFraction = FractionWt;
             for (int layer = 0; layer < dmLayer.Length; layer++)
-                nLayer[layer] = amountNToRemove * FractionWt[layer];
+                nLayer[layer] = amountNToRemove * newRootFraction[layer];
 
             // additions need to consider distribution over the profile
             dmTransferedIn = dmLayersTransferedIn.Sum();
@@ -141,13 +139,33 @@
         {
             if (amountDM + amountN > 0.0)
             {
+                var amountDMLayered = new double[dmLayer.Length];
+                var amountNLayered = new double[dmLayer.Length];
+
+                var fractionWt = FractionWt;
+                for (int layer = 0; layer < dmLayer.Length; layer++)
+                {
+                    amountDMLayered[layer] = amountDM * fractionWt[layer];
+                    amountNLayered[layer] = amountN * fractionWt[layer];
+                }
+                DetachBiomass(amountDMLayered, amountNLayered);
+            }
+        }
+
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public void DetachBiomass(double[] amountDM, double[] amountN)
+        {
+            if (amountDM.Sum() + amountN.Sum() > 0.0)
+            {
                 FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[dmLayer.Length];
                 for (int layer = 0; layer < dmLayer.Length; layer++)
                 {
                     FOMType fomData = new FOMType();
-                    fomData.amount = amountDM * FractionWt[layer];
-                    fomData.N = amountN * FractionWt[layer];
-                    fomData.C = amountDM * carbonFractionInDM * FractionWt[layer];
+                    fomData.amount = amountDM[layer];
+                    fomData.N = amountN[layer];
+                    fomData.C = fomData.amount * carbonFractionInDM;
                     fomData.P = 0.0; // P not considered here
                     fomData.AshAlk = 0.0; // Ash not considered here
 
@@ -170,9 +188,9 @@
         /// Remove a fraction of the biomass.
         /// </summary>
         /// <param name="fractionToRemove">The fraction from each layer to remove.</param>
-        /// <param name="sendToSurfaceOrganicMatter">Send to surface organic matter?</param>
+        /// <param name="sendToSoil">Send to soil?</param>
         /// <returns></returns>
-        public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSurfaceOrganicMatter)
+        public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSoil)
         {
             var removed = new BiomassAndNLayered();
             removed.Wt = MathUtilities.Multiply_Value(dmLayer, fractionToRemove);
@@ -184,8 +202,8 @@
             }
             UpdateDM();
 
-            if (sendToSurfaceOrganicMatter)
-                surfaceOrganicMatter.Add(removed.Wt.Sum(), removed.N.Sum(), 0.0, species.Name, species.Name);
+            if (sendToSoil)
+                DetachBiomass(removed.Wt, removed.N);
 
             return removed;
         }
@@ -197,7 +215,7 @@
         /// <param name="toTissue">The tissue to move to biomass to.</param>
         public void MoveFractionToTissue(double fractionToRemove, RootTissue toTissue)
         {
-            var removed = RemoveBiomass(fractionToRemove, sendToSurfaceOrganicMatter: false);
+            var removed = RemoveBiomass(fractionToRemove, sendToSoil: false);
             toTissue.AddBiomass(removed.Wt, removed.N);
             if (fractionToRemove == 1)
                 Reset();
@@ -297,7 +315,8 @@
             nRemobilised = NRemobilisable * fraction;
         }
 
-        public void UpdateDM()
+        /// <summary>Update dry matter.</summary>
+        private void UpdateDM()
         {
             biomass.Wt = dmLayer.Sum();
             biomass.N = nLayer.Sum();
@@ -315,6 +334,7 @@
             UpdateDM();
         }
 
+        /// <summary>Reset root tissue to initial state.</summary>
         public void Reset()
         {
             for (int layer = 0; layer < dmLayer.Length; layer++)

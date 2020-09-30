@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 100,
+  "Version": 121,
   "Name": "Simulations",
   "Children": [
     {
@@ -679,7 +679,7 @@
               "Name": "FRGRFunction",
               "Children": [
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "FRGRFunctionTemp",
                   "Children": [
                     {
@@ -696,7 +696,7 @@
                         1.0,
                         0.0
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
@@ -1947,11 +1947,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -2447,11 +2458,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -3070,11 +3092,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -3558,11 +3591,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -4070,6 +4114,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -4467,11 +4516,22 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Eucalyptus"
     }
   ],
   "IncludeInDocumentation": true,

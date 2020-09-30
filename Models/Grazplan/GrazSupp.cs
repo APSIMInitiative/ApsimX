@@ -1431,6 +1431,11 @@ namespace Models.GrazPlan
         private const string ATTRHEADER = "R    DM    DMD    M/D     EE     CP     dg    ADIP     P        S       AA    MaxP Locales";
 
         /// <summary>
+        /// Lock object controlling access to GDefSupp
+        /// </summary>
+        protected readonly static object defSuppLock = new object();
+
+        /// <summary>
         /// Gets the default supp consts.
         /// </summary>
         /// <value>
@@ -1440,12 +1445,15 @@ namespace Models.GrazPlan
         {
             get
             {
-                if (GDefSupp == null)
+                lock (defSuppLock)
                 {
-                    GDefSupp = new SupplementLibrary();
-                    SetupDefaultSupplements();
+                    if (GDefSupp == null)
+                    {
+                        GDefSupp = new SupplementLibrary();
+                        SetupDefaultSupplements();
+                    }
+                    return GDefSupp;
                 }
-                return GDefSupp;
             }
         }
 
@@ -1608,7 +1616,7 @@ namespace Models.GrazPlan
                     while (transStr != string.Empty)
                     {
                         StringUtilities.TextToken(ref transStr, out language);
-                        if (transStr[0] == ':')
+                        if (transStr.Length > 0 && transStr[0] == ':')
                         {
                             transStr = transStr.Substring(1);
                             StringUtilities.TextToken(ref transStr, out transName, true);

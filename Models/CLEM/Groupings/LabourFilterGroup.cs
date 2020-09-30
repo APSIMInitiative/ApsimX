@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -28,8 +28,14 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -83,7 +89,7 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";
             }

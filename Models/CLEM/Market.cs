@@ -2,13 +2,15 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -26,30 +28,35 @@ namespace Models.CLEM
     [ScopedModel]
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
+        [Link]
+        IDataStore DataStore = null;
+        [Link]
+        ISummary Summary = null;
+
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Slope { get; set; }
 
         /// <summary>
         /// not used in CLEM
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         private ResourcesHolder resources;
@@ -82,6 +89,38 @@ namespace Models.CLEM
             }
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMValidate")]
+        private void OnCLEMValidate(object sender, EventArgs e)
+        {
+            // validation is performed here
+            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
+            // commencing is too early as Summary has not been created for reporting.
+            // some values assigned in commencing will not be checked before processing, but will be caught here
+            // each ZoneCLEM and Market will call this validation for all children
+            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            if (!ZoneCLEM.Validate(this, "", this, Summary))
+            {
+                string error = "@i:Invalid parameters in model";
+
+                // find IStorageReader of simulation
+                IModel parentSimulation = FindAncestor<Simulation>();
+                IStorageReader ds = DataStore.Reader;
+                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
+                {
+                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                    // all all current errors and validation problems to error string.
+                    foreach (DataRow dr in dataRows)
+                    {
+                        error += "\n" + dr[6].ToString();
+                    }
+                }
+                throw new ApsimXException(this, error);
+            }
+        }
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -109,7 +148,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            holderCount = FindAncestor<Zone>().FindAllChildren<Market>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
@@ -131,7 +170,7 @@ namespace Models.CLEM
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
-            foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
                 html += cm.GetFullSummary(cm, true, "");
             }

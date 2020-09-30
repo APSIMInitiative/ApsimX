@@ -155,13 +155,21 @@
 
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
-            hbox1.HeightRequest = 20;            
+            hbox1.HeightRequest = 20;
 
             TextTag tag = new TextTag("error");
-            tag.Foreground = "red";
+            // Make errors orange-ish in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(1));
+            else
+                tag.Foreground = "red";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
-            tag.Foreground = "brown";
+            // Make warnings yellow in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(7));
+            else
+                tag.Foreground = "brown";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
@@ -172,15 +180,23 @@
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
 
-            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            // If font is null, or font family is null, or font size is 0, fallback
+            // to the default font (on windows only).
+            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
+                                                         f.Family == null ||
+                                                         f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+                Utility.Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (Utility.Configuration.Settings.Font != null)
-                ChangeFont(Utility.Configuration.Settings.Font);
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                ChangeFont(font);
+            }
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -766,7 +782,6 @@
                 progressBar.Visible = false;
                 stopButton.Visible = false;
             });
-            while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>
@@ -866,8 +881,8 @@
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            if (Utility.Configuration.Settings.Font != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+            if (Utility.Configuration.Settings.FontName != null)
+                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
 
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
@@ -891,7 +906,7 @@
             try
             {
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
-                Utility.Configuration.Settings.Font = newFont;
+                Utility.Configuration.Settings.FontName = newFont.ToString();
                 ChangeFont(newFont);
             }
             catch (Exception err)

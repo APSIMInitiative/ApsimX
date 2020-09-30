@@ -5,7 +5,10 @@
     /// <summary>An interface for a model that references external files</summary>
     public interface IReferenceExternalFiles
     {
-        /// <summary>Run tests. Should throw an exception if the test fails.</summary>
+        /// <summary>Return paths to all files referenced by this model.</summary>
         IEnumerable<string> GetReferencedFileNames();
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        void RemovePathsFromReferencedFileNames();
     }
 }

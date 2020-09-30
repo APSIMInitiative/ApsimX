@@ -43,7 +43,7 @@ namespace Models.Functions.DemandFunctions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add a description of the equation for this function
@@ -51,7 +51,7 @@ namespace Models.Functions.DemandFunctions
 
                 // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent+1);
             }
         }

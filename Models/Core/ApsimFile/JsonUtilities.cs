@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Models.Functions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -117,14 +118,39 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns the descendant of a given node of the specified type.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="type">The type of model to search for.</param>
+        public static JObject DescendantOfType(JObject node, Type type)
+        {
+            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == type.Name);
+        }
+
+        /// <summary>
         /// Returns the first child model of a given node that has the specified name.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="name">The type of children to return.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
         /// <returns>The found child or null if not found.</returns>
-        public static JObject ChildWithName(JObject node, string name)
+        public static JObject ChildWithName(JObject node, string name, bool ignoreCase = false)
         {
-            return Children(node).Find(child => Name(child) == name);
+            StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+            return Children(node).Find(child => string.Equals(Name(child), name, comparisonType));
+        }
+
+        /// <summary>
+        /// Returns the first descendant model of a given node that has the specified name.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="name">The type of children to return.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        /// <returns>The found child or null if not found.</returns>
+        public static JObject DescendantWithName(JObject node, string name, bool ignoreCase = false)
+        {
+            StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+            return ChildrenRecursively(node).Find(child => string.Equals(Name(child), name, comparisonType));
         }
 
         /// <summary>
@@ -289,7 +315,8 @@ namespace Models.Core.ApsimFile
         public static void RenameChildModel(JObject node, string childName, string newName)
         {
             JObject child = ChildWithName(node, childName);
-            RenameModel(child, newName);
+            if (child != null)
+                RenameModel(child, newName);
         }
 
         /// <summary>
@@ -569,7 +596,79 @@ namespace Models.Core.ApsimFile
                     }
                 }
             }
+
+            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            {
+                foreach (var replacement in changes)
+                {
+                    string variableName = variableRef["VariableName"]?.ToString();
+                    if (variableName.Contains(replacement.Item1))
+                    {
+                        replacementMade = true;
+                        variableRef["VariableName"] = variableName?.Replace(replacement.Item1, replacement.Item2);
+                    }
+                }
+            }
+
+            foreach (JObject series in ChildrenOfType(node, nameof(Series)))
+            {
+                foreach (var change in changes)
+                {
+                    var from = change.Item1.Replace("[", "").Replace("]", "");
+                    var to = change.Item2.Replace("[", "").Replace("]", "");
+                    if (series["XFieldName"]?.ToString() != null && series["XFieldName"].ToString().Contains(from))
+                    {
+                        replacementMade = true;
+                        series["XFieldName"] = series["XFieldName"].ToString().Replace(from, to);
+                    }
+
+                    if (series["YFieldName"]?.ToString() != null && series["YFieldName"].ToString().Contains(from))
+                    {
+                        replacementMade = true;
+                        series["YFieldName"] = series["YFieldName"].ToString().Replace(from, to);
+                    }
+
+                    if (series["X2FieldName"]?.ToString() != null && series["X2FieldName"].ToString().Contains(from))
+                    {
+                        replacementMade = true;
+                        series["X2FieldName"] = series["X2FieldName"].ToString().Replace(from, to);
+                    }
+
+                    if (series["Y2FieldName"]?.ToString() != null && series["Y2FieldName"].ToString().Contains(from))
+                    {
+                        replacementMade = true;
+                        series["Y2FieldName"] = series["Y2FieldName"].ToString().Replace(from, to);
+                    }
+
+                    if (series["Filter"]?.ToString() != null && series["Filter"].ToString().Contains(from))
+                    {
+                        replacementMade = true;
+                        series["Filter"] = series["Filter"].ToString().Replace(from, to);
+                    }
+                }
+            }
+
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="type">Type of ancestor to search for.</param>
+        public static JObject Ancestor(JObject token, Type type)
+        {
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                Type parentType = System.Type.GetType(Type(parent, true));
+                if (type.IsAssignableFrom(parentType))
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
         }
     }
 }

@@ -1,5 +1,5 @@
 ---
-title: "Procedurally Edit .apsimx Files"
+title: "Edit .apsimx files from command line"
 draft: false
 ---
 
@@ -15,7 +15,7 @@ The /Edit argument instructs APSIM to edit the .apsimx file rather than run it.
 
 The argument immediately following /Edit must be the path to a config file. The config file should contain zero or more lines of the form `path = value`.
 
-The path should be the path to a model or property of a model in the .apsimx file. This can be a [scoped or absolute path](/development/model/4-pathspecification). An absolute path can be obtained by right-clicking on the model in the user interface and clicking "Copy path to node". This will copy the path to the model, not to one of the model's properties. For example:
+The path should be the path to a model or property of a model in the .apsimx file. This can be a [scoped or absolute path](/usage/pathspecification). An absolute path can be obtained by right-clicking on the model in the user interface and clicking "Copy path to node". This will copy the path to the model, not to one of the model's properties. For example:
 
 ![Wheat clock image](/images/Usage.EditFile.WheatClock.png)
 
@@ -51,13 +51,14 @@ You will end up with this:
 
 ### Arrays
 
-Array or list properties should be specified as comma-separated values. It is also possible to modify an element at a particular index of an array or list, but the indices start at 1.
+Array or list properties should be specified as comma-separated values. It is also possible to modify an element at a particular index or indices of an array or list, but the indices start at 1. If modifying multiple elements, a second index can be provided after a colon, as in the example below.
 
 For example this:
 
 ```
 .Simulations.Simulation.Field.Soil.Physical.BD = 1,2,3,4,5,6,7
 .Simulations.Simulation.Field.Soil.Physical.AirDry[1] = 8
+.Simulations.Simulation.Field.Soil.Physical.LL15[3:5] = 9
 ```
 
 Results in:

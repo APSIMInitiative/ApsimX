@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 100,
+  "Version": 121,
   "Name": "Simulations",
   "Children": [
     {
@@ -200,7 +200,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -215,7 +215,7 @@
                     30.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -267,7 +267,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -322,7 +322,7 @@
                         0.0,
                         -0.5
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -779,6 +779,42 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].FinalLeafNumber",
+                  "Name": "FinalLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "Name": "LeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].ExpandedCohortNo",
+                  "Name": "FullyExpandedLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].InitialisedCohortNo",
+                  "Name": "InitialisedLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1599,7 +1635,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1638,7 +1674,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1677,7 +1713,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -8633,6 +8669,20 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "WidthFunction",
+              "FixedValue": "0"
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].Height",
+              "Name": "DepthFunction",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -9406,11 +9456,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "StartGrainFill",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -10143,11 +10204,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -10807,6 +10879,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -10952,11 +11029,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "StartGrainFill",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -12026,11 +12114,22 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Wheat"
     }
   ],
   "IncludeInDocumentation": true,

@@ -2,6 +2,8 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using System;
 
@@ -23,10 +25,10 @@
             // locate surfaceOM and soil nutrient model
             if (zone != null)
             {
-                AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                var soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
-                SoilLayerThickness = soil.Thickness;
-                AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
+                AddFaecesObj = (SurfaceOrganicMatter)zone.FindInScope<SurfaceOrganicMatter>();
+                var soilPhysical = zone.FindInScope<IPhysical>();
+                SoilLayerThickness = soilPhysical.Thickness;
+                AddUrineObj = (ISolute)zone.FindInScope("Urea");
             }
         }
 

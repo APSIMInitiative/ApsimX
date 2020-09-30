@@ -7,6 +7,7 @@ namespace Models
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
 
     /// <summary>
     /// A regression model.
@@ -15,7 +16,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class Regression : Model, IGraphable
+    public class Regression : Model, ICachableGraphable
     {
         /// <summary>The stats from the regression</summary>
         private List<MathUtilities.RegrStats> stats = new List<MathUtilities.RegrStats>();
@@ -44,16 +45,30 @@ namespace Models
         [Description("Display equation?")]
         public bool showEquation { get; set; } = true;
 
-        /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
-        /// <param name="definitions">A list of definitions to add to.</param>
+        /// <summary>Get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationsFilter">Unused simulation names filter.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationsFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationsFilter = null)
+        {
+            Series seriesAncestor = FindAncestor<Series>();
+            if (seriesAncestor == null)
+                throw new Exception("Regression model must be a descendant of a series");
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationsFilter);
+
+            return GetSeriesToPutOnGraph(storage, definitions, simulationsFilter);
+        }
+
+        /// <summary>Get a list of all actual series to put on the graph.</summary>
+        /// <param name="storage">Storage service (required for access to checkpoint names).</param>
+        /// <param name="definitions">Series definitions to be used (allows for caching of data).</param>
+        /// <param name="simulationsFilter">Unused simulation names filter.</param>
+        public IEnumerable<SeriesDefinition> GetSeriesToPutOnGraph(IStorageReader storage, IEnumerable<SeriesDefinition> definitions, List<string> simulationsFilter = null)
         {
             stats.Clear();
             equationColours.Clear();
 
             int checkpointNumber = 0;
+            List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
             foreach (var checkpointName in storage.CheckpointNames)
             {
                 // Get all x/y data
@@ -72,13 +87,18 @@ namespace Models
                 if (ForEachSeries)
                 {
                     // Display a regression line for each series.
-                    int numDefinitions = definitions.Count;
-                    for (int i = 0; i < numDefinitions; i++)
+                    // todo - should this also filter on checkpoint name?
+                    int numDefinitions = definitions.Count();
+                    foreach (SeriesDefinition definition in definitions)
                     {
-                        if (definitions[i].X is double[] && definitions[i].Y is double[])
+                        if (definition.X is double[] && definition.Y is double[])
                         {
-                            PutRegressionLineOnGraph(definitions, definitions[i].X, definitions[i].Y, definitions[i].Colour, null);
-                            equationColours.Add(definitions[i].Colour);
+                            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(definition.X, definition.Y, definition.Colour, null);
+                            if (regressionSeries != null)
+                            {
+                                regressionLines.Add(regressionSeries);
+                                equationColours.Add(definition.Colour);
+                            }
                         }
                     }
                 }
@@ -89,15 +109,21 @@ namespace Models
                         regresionLineName = "Regression line (" + checkpointName + ")";
 
                     // Display a single regression line for all data.
-                    PutRegressionLineOnGraph(definitions, x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
-                    equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                    SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
+                    if (regressionSeries != null)
+                    {
+                        regressionLines.Add(regressionSeries);
+                        equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                    }
                 }
 
                 if (showOneToOne)
-                    Put1To1LineOnGraph(definitions, x, y);
+                    regressionLines.Add(Put1To1LineOnGraph(x, y));
 
                 checkpointNumber++;
             }
+
+            return regressionLines;
         }
         
         /// <summary>Return a list of extra fields that the definition should read.</summary>
@@ -109,13 +135,11 @@ namespace Models
         }
 
         /// <summary>Puts the regression line and 1:1 line on graph.</summary>
-        /// <param name="definitions">The definitions.</param>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
         /// <param name="colour">The colour of the regresion line.</param>
         /// <param name="title">The title to put in the legen.</param>
-        private void PutRegressionLineOnGraph(List<SeriesDefinition> definitions, IEnumerable x, IEnumerable y, 
-                                              Color colour, string title)
+        private SeriesDefinition PutRegressionLineOnGraph(IEnumerable x, IEnumerable y, Color colour, string title)
         {
             MathUtilities.RegrStats stat = MathUtilities.CalcRegressionStats(title, y, x);
             if (stat != null)
@@ -132,15 +156,15 @@ namespace Models
                     (title, colour,
                      new double[] { minimumX, maximumX },
                      new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept });
-                definitions.Add(regressionDefinition);
+                return regressionDefinition;
             }
+            throw new Exception($"Unable to generate regression line for series {title} - there is no data");
         }
 
         /// <summary>Puts the 1:1 line on graph.</summary>
-        /// <param name="definitions">The definitions.</param>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
-        private static void Put1To1LineOnGraph(List<SeriesDefinition> definitions, IEnumerable x, IEnumerable y)
+        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable x, IEnumerable y)
         {
             double minimumX = MathUtilities.Min(x);
             double maximumX = MathUtilities.Max(x);
@@ -149,17 +173,15 @@ namespace Models
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
 
-            var oneToOne = new SeriesDefinition
+            return new SeriesDefinition
                 ("1:1 line", Color.Empty,
                 new double[] { lowestAxisScale, largestAxisScale },
                 new double[] { lowestAxisScale, largestAxisScale },
                 LineType.Dash, MarkerType.None);
-            definitions.Add(oneToOne);
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        public IEnumerable<IAnnotation> GetAnnotations()
         {
             if (showEquation)
             {
@@ -178,10 +200,9 @@ namespace Models
                     equation.textRotation = 0;
                     equation.x = double.MinValue;
                     equation.y = double.MinValue;
-                    annotations.Add(equation);
+                    yield return equation;
                 }
             }
         }
-
     }
 }

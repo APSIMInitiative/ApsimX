@@ -11,7 +11,7 @@
     using System.Timers;
     using Utility;
 
-    public class RunCommand : ICommand
+    public sealed class RunCommand : ICommand, IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -155,14 +155,20 @@
                 timer?.Stop();
                 timer.Elapsed -= OnTimerTick;
             }
-            else if (jobRunner?.TotalNumberOfSimulations > 0)
+            else //if (jobRunner?.TotalNumberOfSimulations > 0)
             {
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         jobRunner?.NumberOfSimulationsCompleted + " of " +
-                         (jobRunner?.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
-
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner?.PercentComplete(), CultureInfo.InvariantCulture));
+                double progress = jobRunner?.Progress ?? 0;
+                explorerPresenter.MainPresenter.ShowMessage($"{jobName} running ({jobRunner.Status})", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(progress * 100, CultureInfo.InvariantCulture));
             }
+            //else if (jobRunner != null)
+            //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));
+        }
+
+        public void Dispose()
+        {
+            if (timer != null)
+                timer.Dispose();
         }
     }
 }

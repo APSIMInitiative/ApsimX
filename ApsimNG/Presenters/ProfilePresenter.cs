@@ -105,12 +105,12 @@
             {
                 // The graph's series contain many variables such as [Soil].LL. We now replace
                 // these relative paths with absolute paths.
-                foreach (Series series in Apsim.Children(graph, typeof(Series)))
+                foreach (Series series in graph.FindAllChildren<Series>())
                 {
-                    series.XFieldName = series.XFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.YFieldName = series.YFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.XFieldName = series.XFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.YFieldName = series.YFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
                 }
 
                 this.parentForGraph = this.model.Parent as IModel;
@@ -149,9 +149,9 @@
                             cropLLSeries.ShowInLegend = true;
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
-                            cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
-                            cropLLSeries.XFieldName = Apsim.FullPath((profileGrid.Properties[i].Object as IModel)) + "." + profileGrid.Properties[i].Name;
-                            //cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
+                            cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
+                            cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
+                            //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
                             this.graph.Children.Add(cropLLSeries);

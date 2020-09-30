@@ -65,7 +65,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 300 },
-                        NO3N = new double[] { 23, 7 },
+                        NO3 = new double[] { 23, 7 },
                         OC = new double[] { 1.35, 1.4 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
@@ -90,7 +90,7 @@
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = Apsim.Find(file, typeof(Simulation));
+            IModel sim = file.FindInScope<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;

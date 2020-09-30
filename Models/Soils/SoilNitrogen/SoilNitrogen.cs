@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Linq;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Surface;
 using Models.Interfaces;
+using Models.Soils.NutrientPatching;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -64,7 +66,7 @@ namespace Models.Soils
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, INutrient
+    public partial class SoilNitrogen : Model, INutrient, INutrientPatchManager
     {
 
         /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
@@ -146,19 +148,19 @@ namespace Models.Soils
         private void CheckParameters()
         {
             // Get the layering info and set the layer count
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             nLayers = dlayer.Length;
 
             // get the initial values 
-            oc = Soil.Initial.OC;
-            FBiom = Soil.FBiom;
-            FInert = Soil.FInert;
-            HumusCNr = Soil.InitialSoilCNR;
-            InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
-            ph = Soil.Initial.PH;
-            NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3N);
-            NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4N);
-            ureappm = new double[Soil.Thickness.Length];
+            oc = initial.OC;
+            FBiom = organic.FBiom;
+            FInert = organic.FInert;
+            HumusCNr = initial.OCNR;
+            InitialFOMCNr = organic.FOMCNRatio;
+            ph = initial.PH;
+            NO3ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NO3);
+            NH4ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NH4);
+            ureappm = new double[soilPhysical.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)
             FOMDecomp_TOptimum = new double[] { 32.0, 32.0 };
@@ -253,7 +255,7 @@ namespace Models.Soils
             // Calculate conversion factor from kg/ha to ppm (mg/kg)
             convFactor = new double[nLayers];
             for (int layer = 0; layer < nLayers; ++layer)
-                convFactor[layer] = MathUtilities.Divide(100.0, Soil.BD[layer] * dlayer[layer], 0.0);
+                convFactor[layer] = MathUtilities.Divide(100.0, soilPhysical.BD[layer] * dlayer[layer], 0.0);
 
             // Check parameters for patches
             if (DepthToTestByLayer <= epsilon)
@@ -367,9 +369,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = Soil.InitialRootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = Soil.InitialRootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = Soil.InitialRootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = organic.FOM[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = organic.FOM[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = organic.FOM[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)
@@ -513,12 +515,12 @@ namespace Models.Soils
         private void OnDoUpdate(object sender, EventArgs e)
         {
             // Check whether patch auto amalgamation is allowed
-            if ((Patch.Count > 1) && (patchAutoAmalgamationAllowed))
+            if (Patch.Count > 1)
             {
-                if ((patchAmalgamationApproach.ToLower() == "CompareAll".ToLower()) ||
-                    (patchAmalgamationApproach.ToLower() == "CompareBase".ToLower()) ||
-                    (patchAmalgamationApproach.ToLower() == "CompareAge".ToLower()) ||
-                    (patchAmalgamationApproach.ToLower() == "CompareMerge".ToLower()))
+                if ((patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareAll) ||
+                    (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareBase) ||
+                    (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareAge) ||
+                    (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareMerge))
                 {
                     CheckPatchAutoAmalgamation();
                 }
@@ -532,7 +534,7 @@ namespace Models.Soils
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             // Check whether patch amalgamation by age is allowed (done on a monthly basis)
-            if (AllowPatchAmalgamationByAge.ToLower() == "yes")
+            if (AllowPatchAmalgamationByAge)
                 CheckPatchAgeAmalgamation();
         }
 
@@ -912,7 +914,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
@@ -931,7 +933,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
@@ -950,7 +952,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", patchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", NPartitionApproach);
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];
@@ -969,8 +971,7 @@ namespace Models.Soils
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
-        [EventSubscribe("AddSoilCNPatch")]  // RJM TODO check name
-        private void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
+        public void Add(AddSoilCNPatchType PatchtoAdd)
         {
             // data passed with this event:
             //.Sender: the name of the module that raised this event
@@ -1071,7 +1072,7 @@ namespace Models.Soils
             // check that required data is supplied
             bool isDataOK = true;
 
-            if (PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower())
+            if (PatchtoAdd.DepositionType == DepositionTypeEnum.ToNewPatch)
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
@@ -1084,7 +1085,7 @@ namespace Models.Soils
                     isDataOK = false;
                 }
             }
-            else if (PatchtoAdd.DepositionType.ToLower() == "ToSpecificPatch".ToLower())
+            else if (PatchtoAdd.DepositionType == DepositionTypeEnum.ToSpecificPatch)
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
@@ -1092,7 +1093,7 @@ namespace Models.Soils
                     isDataOK = false;
                 }
             }
-            else if (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower())
+            else if (PatchtoAdd.DepositionType == DepositionTypeEnum.NewOverlappingPatches)
             {
                 if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
@@ -1100,7 +1101,7 @@ namespace Models.Soils
                     isDataOK = false;
                 }
             }
-            else if ((PatchtoAdd.DepositionType.ToLower() == "ToAllPaddock".ToLower()) || (PatchtoAdd.DepositionType == ""))
+            else if (PatchtoAdd.DepositionType == DepositionTypeEnum.ToAllPaddock)
             {
                 // assume stuff is added homogeneously and with no patch creation, thus no factors are actually required
             }
@@ -1114,12 +1115,12 @@ namespace Models.Soils
             {
                 List<int> PatchesToAddStuff;
 
-                if ((PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower()) ||
-                    (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower()))
+                if ((PatchtoAdd.DepositionType == DepositionTypeEnum.ToNewPatch) ||
+                    (PatchtoAdd.DepositionType == DepositionTypeEnum.NewOverlappingPatches))
                 { // New patch(es) will be added
                     AddNewCNPatch(PatchtoAdd);
                 }
-                else if (PatchtoAdd.DepositionType.ToLower() == "ToSpecificPatch".ToLower())
+                else if (PatchtoAdd.DepositionType == DepositionTypeEnum.ToSpecificPatch)
                 {  // add stuff to selected patches, no new patch will be created
 
                     // 1. get the list of patch id's to which stuff will be added

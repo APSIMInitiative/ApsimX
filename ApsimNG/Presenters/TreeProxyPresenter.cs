@@ -9,6 +9,7 @@
     using Views;
     using Commands;
     using EventArguments;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The tree proxy presenter
@@ -88,18 +89,17 @@
             if (!(forestryModel.Parent is AgroforestrySystem))
                 throw new ApsimXException(forestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
 
-            Soil soil;
-            List<IModel> zones = Apsim.ChildrenRecursively(forestryModel.Parent, typeof(Zone));
-            if (zones.Count == 0)
+            IEnumerable<Zone> zones = forestryModel.Parent.FindAllDescendants<Zone>();
+            if (!zones.Any())
                 return;
 
             // Setup tree heights.
             forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
-            soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
+            var physical = zones.First().FindInScope<Physical>();
 
-            forestryViewer.SoilMidpoints = soil.DepthMidPoints;
+            forestryViewer.SoilMidpoints = physical.DepthMidPoints;
             
             // Setup columns.
             List<string> colNames = new List<string>();
@@ -128,7 +128,7 @@
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(soil.Thickness))
+                foreach (string s in SoilUtilities.ToDepthStrings(physical.Thickness))
                 {
                     rowNames.Add(s);
                 }

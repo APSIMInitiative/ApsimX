@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 100,
+  "Version": 121,
   "Name": "Simulations",
   "Children": [
     {
@@ -35,7 +35,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -59,7 +59,7 @@
                     25.0,
                     0.0
                   ],
-                  "Name": "TemperatureResponse",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -106,7 +106,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "VernalisingDays",
                   "Children": [
                     {
@@ -123,7 +123,7 @@
                         1.0,
                         0.0
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -144,7 +144,7 @@
                   "agregationMethod": "0"
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "DevernalisingDays",
                   "Children": [
                     {
@@ -161,7 +161,7 @@
                         1.0,
                         1.0
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5351,11 +5351,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Ripening",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -6351,6 +6362,11 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -7373,11 +7389,22 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "Chicory"
     }
   ],
   "IncludeInDocumentation": true,

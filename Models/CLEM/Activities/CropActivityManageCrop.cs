@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 
@@ -52,13 +52,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
@@ -289,12 +289,12 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
-            IModel clemParent = Apsim.Parent(this, typeof(ZoneCLEM));
+            IModel clemParent = FindAncestor<ZoneCLEM>();
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 if (clemParent != null && clemParent.Enabled)
                 {
-                    parentLand = Apsim.Find(clemParent, LandItemNameToUse.Split('.')[0]) as Land;
+                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
                 }
             }
 
@@ -332,7 +332,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 0)
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
             {
                 html += "\n</div>";
             }
@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
 
-            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() == 0)
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
             {
                 html += "\n<div class=\"errorbanner clearfix\">";
                 html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
@@ -355,7 +355,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+                bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
                 if (rotation)
                 {
                     html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";

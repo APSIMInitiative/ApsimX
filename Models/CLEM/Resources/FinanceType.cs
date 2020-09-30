@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -129,7 +129,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
                     {
                         (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                         (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
-                        (resourceAmount as ResourceRequest).Reason = "Farm sales";
+                        (resourceAmount as ResourceRequest).Reason = "Farm transaction";
                         (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
                     }
                 }

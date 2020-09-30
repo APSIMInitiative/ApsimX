@@ -12,6 +12,7 @@ namespace APSIM.Shared.Utilities
     using System.Threading;
     using System.Text;
     using System.Globalization;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A collection of utilities for dealing with processes (threads)
@@ -144,16 +145,28 @@ namespace APSIM.Shared.Utilities
             /// </summary>
             public bool WriteToConsole { get; private set; }
 
+            /// <summary>
+            /// Invoked whenever the R process writes to standard output.
+            /// </summary>
+            public event EventHandler<DataReceivedEventArgs> OutputReceived;
+
+            /// <summary>
+            /// Invoked whenever the R process writes to standard error.
+            /// </summary>
+            public event EventHandler<DataReceivedEventArgs> ErrorReceived;
+
             /// <summary>Run the specified executable with the specified arguments and working directory.</summary>
             /// <param name="executable">Path to the executable.</param>
             /// <param name="arguments">Arguments which will be passed to the executable.</param>
             /// <param name="workingDirectory">Directory in which the executable will be run.</param>
             /// <param name="redirectOutput">If true, standard error/output will be collected.</param>
+            /// <param name="environment">Environment variables to be set in the process' environment.</param>
             /// <param name="writeToConsole">
             /// If true, the child process' standard error/output will be written to this process' standard error/output.
             /// This has no effect if redirectOutput is false!
             /// </param>
-            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, bool writeToConsole = false)
+            /// <param name="cancelToken">Proces will be killed if cancellation is requested on this token.</param>
+            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, CancellationToken cancelToken = new CancellationToken(), bool writeToConsole = false, Dictionary<string, string> environment = null)
             {
                 Executable = executable;
                 Arguments = arguments;
@@ -173,6 +186,10 @@ namespace APSIM.Shared.Utilities
                 }
                 process.StartInfo.WorkingDirectory = workingDirectory;
 
+                if (environment != null)
+                    foreach (KeyValuePair<string, string> variable in environment)
+                        process.StartInfo.Environment.Add(variable);
+
                 // Set our event handler to asynchronously read the output.
                 if (redirectOutput)
                 {
@@ -181,7 +198,11 @@ namespace APSIM.Shared.Utilities
                 }
                 process.Exited += OnExited;
                 process.EnableRaisingEvents = true;
+
+                cancelToken.Register(Kill);
+
                 process.Start();
+
                 if (redirectOutput)
                 {
                     process.BeginOutputReadLine();
@@ -210,7 +231,8 @@ namespace APSIM.Shared.Utilities
             /// <summary>Kill the process.</summary>
             public void Kill()
             {
-                process.Kill();
+                if (!process.HasExited)
+                    process.Kill();
             }
 
             /// <summary>Handler for all strings written to StdOut</summary>
@@ -223,6 +245,8 @@ namespace APSIM.Shared.Utilities
 
                 else if (!string.IsNullOrWhiteSpace(outLine.Data))
                 {
+                    OutputReceived?.Invoke(this, outLine);
+
                     output.Append(outLine.Data + Environment.NewLine);
                     if (WriteToConsole)
                         Console.WriteLine(outLine.Data);
@@ -236,6 +260,8 @@ namespace APSIM.Shared.Utilities
             {
                 if (!string.IsNullOrWhiteSpace(outLine.Data))
                 {
+                    ErrorReceived?.Invoke(this, outLine);
+
                     error.Append(outLine.Data + Environment.NewLine);
                     if (WriteToConsole)
                         Console.Error.WriteLine(outLine.Data);

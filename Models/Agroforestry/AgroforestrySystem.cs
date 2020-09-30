@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
@@ -30,14 +30,14 @@ namespace Models.Agroforestry
         /// The reduction in wind as a fraction.
         /// </summary>
         [Units("0-1")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Urel { get; set; }
 
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
-        public List<IModel> ZoneList;
+        [JsonIgnore]
+        public IEnumerable<IModel> ZoneList;
 
         /// <summary>
         /// Fraction of rainfall intercepted by canopy
@@ -54,13 +54,13 @@ namespace Models.Agroforestry
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public override double Area
         {
             get
             {
                 double A = 0;
-                foreach (Zone Z in Apsim.Children(this, typeof(Zone)))
+                foreach (Zone Z in this.FindAllChildren<Zone>())
                     A += Z.Area;
                 return A;
             }
@@ -72,7 +72,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// A pointer to the tree model.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public TreeProxy tree = null;
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -81,8 +81,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
-            ZoneList = Apsim.Children(this, typeof(Zone));
+            tree = FindChild<TreeProxy>();
+            ZoneList = FindAllChildren<Zone>().ToList();
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Models.Agroforestry
                 // write description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
+                tree = this.FindChild<TreeProxy>();
                 AutoDocumentation.DocumentModel(tree, tags, headingLevel, indent);
             }
         }

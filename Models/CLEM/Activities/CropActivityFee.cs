@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
-    [Description("This is a fee required to perfrom a crop management task.")]
+    [Description("This is a fee required to perform a crop management task.")]
     [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
         /// Account to use
         /// </summary>
         [Description("Account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
 
             if (!productParent.IsTreeCrop)
             {
@@ -114,13 +114,13 @@ namespace Models.CLEM.Activities
                         sumneeded = Amount;
                         break;
                     case CropPaymentStyleType.perHa:
-                        CropActivityManageCrop cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
-                        CropActivityManageProduct productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                        CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
+                        CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
                         sumneeded = cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     case CropPaymentStyleType.perTree:
-                        cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
-                        productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
+                        cropParent = FindAncestor<CropActivityManageCrop>();
+                        productParent = FindAncestor<CropActivityManageProduct>();
                         sumneeded = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
                     default:

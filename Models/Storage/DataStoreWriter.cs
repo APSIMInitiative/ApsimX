@@ -94,6 +94,16 @@
         }
 
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        public List<string> TablesModified { get; private set; } = new List<string>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumJobs { get { return 0; } }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>
@@ -116,6 +126,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -148,6 +160,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -158,6 +172,9 @@
         public void DeleteTable(string tableName)
         {
             Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+            lock (lockObject)
+                if (!TablesModified.Contains(tableName))
+                    TablesModified.Add(tableName);
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -641,7 +658,6 @@
                 checkpointsTable.Columns.Add("ID", typeof(int));
                 checkpointsTable.Columns.Add("Name", typeof(string));
                 checkpointsTable.Columns.Add("Version", typeof(string));
-                checkpointsTable.Columns.Add("Date", typeof(DateTime));
                 checkpointsTable.Columns.Add("OnGraphs", typeof(int));
 
                 foreach (var checkpoint in checkpointIDs)
@@ -650,7 +666,7 @@
                     row[0] = checkpoint.Value.ID;
                     row[1] = checkpoint.Key;
                     if (checkpoint.Value.ShowOnGraphs)
-                        row[4] = 1;
+                        row[3] = 1;
                     checkpointsTable.Rows.Add(row);
                 }
                 WriteTable(checkpointsTable);

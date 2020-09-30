@@ -3,12 +3,13 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Soils.Nutrients;
     using Soils;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The SoilWater module is a cascading water balance model that owes much to its precursors in 
@@ -48,6 +49,13 @@
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        Sample initial = null;
 
         [Link]
         private ISummary summary = null;
@@ -92,6 +100,11 @@
         [NonSerialized]
         private List<IrrigationApplicationType> irrigations;
 
+        /// <summary>Water content (mm).</summary>
+        private double[] waterMM;
+
+        /// <summary>Water content (mm/mm).</summary>
+        private double[] waterVolumetric;
 
         /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
         [Units("dd-mmm")]
@@ -191,18 +204,18 @@
         public double CatchmentArea { get; set; } = 10;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Depth")]
         [Units("cm")]
         public string[] Depth
         {
             get
             {
-                return APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -212,65 +225,85 @@
         public double[] Thickness { get; set; }
 
         /// <summary>Amount of water in the soil (mm).</summary>
-        [XmlIgnore]
-        public double[] Water { get; set; }
+        [JsonIgnore]
+        public double[] Water 
+        { 
+            get { return waterMM; } 
+            set 
+            { 
+                waterMM = value; 
+                waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
+            } 
+        }
+
+        /// <summary>Amount of water in the soil (mm/mm).</summary>
+        [JsonIgnore]
+        public double[] SW
+        {
+            get { return waterVolumetric; }
+            set
+            {
+                waterVolumetric = value;
+                waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
+            }
+        }
 
         /// <summary>Runon (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Runon { get; set; }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SoluteFluxEfficiency { get; set; }
 
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SoluteFlowEfficiency { get; set; }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialInfiltration { get; set; }
 
         // --- Outputs -------------------------------------------------------------------
 
         /// <summary>Lateral flow (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LateralFlow { get { return lateralFlowModel.OutFlow; } }
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LateralOutflow { get { return LateralFlow; } }
 
         /// <summary>Runoff (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Runoff { get; private set; }
 
         /// <summary>Infiltration (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Infiltration { get; private set; }
 
         /// <summary>Drainage (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
 
         /// <summary>Evaporation (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Evaporation { get { return evaporationModel.Es; } }
 
         /// <summary>Water table.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterTable { get { return waterTableModel.Depth; } set { waterTableModel.Set(value); } }
 
         /// <summary>Flux. Water moving down (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Flux { get; private set; }
 
         /// <summary>Flow. Water moving up (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Flow { get; private set; }
 
         /// <summary>Gets todays potential runoff (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialRunoff
         {
             get
@@ -287,35 +320,31 @@
         }
 
         /// <summary>Provides access to the soil properties.</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Soil Properties { get { return soil; } }
 
-        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
-        [XmlIgnore]
-        public double[] SW { get { return MathUtilities.Divide(Water, soil.Thickness); } set { Water = MathUtilities.Multiply(value, soil.Thickness); ; } }
-
         ///<summary>Gets soil water content (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SWmm { get { return Water; } }
 
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
-        [XmlIgnore]
-        public double[] ESW { get { return MathUtilities.Subtract(Water, soil.LL15mm); } }
+        [JsonIgnore]
+        public double[] ESW { get { return MathUtilities.Subtract(Water, soilPhysical.LL15mm); } }
 
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eos { get { return evaporationModel.Eos; } }
 
         /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Es { get { return evaporationModel.Es; } }
 
         ///<summary>Time since start of second stage evaporation (days).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double T { get { return evaporationModel.t; } }
 
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eo { get { return evaporationModel.Eo; } set { evaporationModel.Eo = value; } }
 
         /// <summary>Fractional amount of water above DUL that can drain under gravity per day.</summary>
@@ -343,35 +372,58 @@
         public double[] KLAT { get; set; }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNO3 { get { if (FlowNO3 == null) return 0; else return FlowNO3.Last(); } }
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNH4 { get { return 0; } }
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNO3 { get; private set; }
 
         /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNH4 { get; private set; }
 
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowUrea { get; private set; }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PrecipitationInterception { get; set; }
 
         /// <summary>Pond.</summary>
         public double Pond { get { return 0; } }
+
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                                                                  soilPhysical.LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
 
         // --- Event handlers ------------------------------------------------------------
 
@@ -391,6 +443,7 @@
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             irrigations.Clear();
+            Runon = 0;
         }
 
         /// <summary>Called when an irrigation occurs.</summary>
@@ -419,14 +472,14 @@
             // Calculate infiltration.
             Infiltration = PotentialInfiltration - Runoff;
 
-            Water[0] = Water[0] + Infiltration;
+            Water[0] = Water[0] + Infiltration + Runon;
 
             // Allow irrigation to infiltrate.
             foreach (var irrigation in irrigations)
             {
                 if (irrigation.Amount > 0)
                 {
-                    int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                    int irrigationLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
                     Water[irrigationLayer] += irrigation.Amount;
                     if (irrigationLayer == 0)
                         Infiltration += irrigation.Amount;
@@ -494,6 +547,9 @@
             // Set solute state variables.
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
+
+            // Now that we've finished moving water, calculate volumetric water
+            waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -625,54 +681,54 @@
 
             double min_sw = 0.0;
 
-            for (int i = 0; i < soil.Thickness.Length; i++)
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
             {
-                double max_sw = 1.0 - MathUtilities.Divide(soil.BD[i], specific_bd, 0.0);  // ie. Total Porosity
+                double max_sw = 1.0 - MathUtilities.Divide(soilPhysical.BD[i], specific_bd, 0.0);  // ie. Total Porosity
 
-                if (MathUtilities.IsLessThan(soil.AirDry[i], min_sw))
+                if (MathUtilities.IsLessThan(soilPhysical.AirDry[i], min_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " Air dry lower limit of ",
-                                               soil.AirDry[i],
+                                               soilPhysical.AirDry[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is below acceptable value of ",
                                                min_sw));
 
-                if (MathUtilities.IsLessThan(soil.LL15[i], soil.AirDry[i]))
+                if (MathUtilities.IsLessThan(soilPhysical.LL15[i], soilPhysical.AirDry[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " 15 bar lower limit of ",
-                                               soil.LL15[i],
+                                               soilPhysical.LL15[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is below air dry value of ",
-                                               soil.AirDry[i]));
+                                               soilPhysical.AirDry[i]));
 
-                if (MathUtilities.IsLessThanOrEqual(soil.DUL[i], soil.LL15[i]))
+                if (MathUtilities.IsLessThanOrEqual(soilPhysical.DUL[i], soilPhysical.LL15[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " drained upper limit of ",
-                                               soil.DUL[i],
+                                               soilPhysical.DUL[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is at or below lower limit of ",
-                                               soil.LL15[i]));
+                                               soilPhysical.LL15[i]));
 
-                if (MathUtilities.IsLessThanOrEqual(soil.SAT[i], soil.DUL[i]))
+                if (MathUtilities.IsLessThanOrEqual(soilPhysical.SAT[i], soilPhysical.DUL[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " saturation of ",
-                                               soil.SAT[i],
+                                               soilPhysical.SAT[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is at or below drained upper limit of ",
-                                               soil.DUL[i]));
+                                               soilPhysical.DUL[i]));
 
-                if (MathUtilities.IsGreaterThan(soil.SAT[i], max_sw))
+                if (MathUtilities.IsGreaterThan(soilPhysical.SAT[i], max_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4} {7} {8} {9:G4} {10} {11} {12:G4})",
                                                " saturation of ",
-                                               soil.SAT[i],
+                                               soilPhysical.SAT[i],
                                                " in layer ",
                                                i,
                                                "\n",
@@ -680,12 +736,12 @@
                                                max_sw,
                                                "\n",
                                                "You must adjust bulk density (bd) to below ",
-                                               (1.0 - soil.SAT[i]) * specific_bd,
+                                               (1.0 - soilPhysical.SAT[i]) * specific_bd,
                                                "\n",
                                                "OR saturation (sat) to below ",
                                                max_sw));
 
-                if (MathUtilities.IsGreaterThan(SW[i], soil.SAT[i]))
+                if (MathUtilities.IsGreaterThan(SW[i], soilPhysical.SAT[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                                " soil water of ",
                                                SW[i],
@@ -693,9 +749,9 @@
                                                i,
                                                "\n",
                                                "         is above saturation of ",
-                                               soil.SAT[i]));
+                                               soilPhysical.SAT[i]));
 
-                if (MathUtilities.IsLessThan(SW[i], soil.AirDry[i]))
+                if (MathUtilities.IsLessThan(SW[i], soilPhysical.AirDry[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                                " soil water of ",
                                                SW[i],
@@ -703,7 +759,7 @@
                                                i,
                                                "\n",
                                                "         is below air-dry value of ",
-                                               soil.AirDry[i]));
+                                               soilPhysical.AirDry[i]));
             }
 
         }
@@ -734,7 +790,7 @@
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-            Water = soil.Initial.SWmm;
+            Water = initial.SWmm;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;

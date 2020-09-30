@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 358,
-  "Version": 88,
+  "Version": 115,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -332,7 +332,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "Children": [
                     {
@@ -347,7 +348,7 @@
                         26.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -359,6 +360,15 @@
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -390,7 +400,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "agregationMethod": 0,
                       "Name": "TempResponseProfile",
                       "Children": [
                         {
@@ -445,9 +456,18 @@
                             0.0,
                             -0.5
                           ],
-                          "Name": "XYPairs",
+                          "Name": "Response",
                           "Children": [],
                           "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -830,6 +850,15 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].LeafTipsAppeared",
+                      "Name": "LeafTipNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -857,6 +886,42 @@
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].FinalLeafNumber",
+                      "Name": "FinalLeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                      "Name": "LeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].ExpandedCohortNo",
+                      "Name": "FullyExpandedLeafNo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].InitialisedCohortNo",
+                      "Name": "InitialisedLeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1148,7 +1213,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1187,7 +1252,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1226,7 +1291,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2027,6 +2092,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -2570,13 +2636,21 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
@@ -2761,16 +2835,6 @@
                   "FixedValue": 0.01,
                   "Units": null,
                   "Name": "KNH4",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3287,6 +3351,55 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.005,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "RootDepthStressFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -3305,12 +3418,15 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Albedo": 0.25,
               "Gsmax350": 0.011,
               "R50": 150.0,
               "LAI": 0.0,
+              "Depth": 0.0,
+              "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -3393,6 +3509,11 @@
                 {
                   "$type": "Models.PMF.Organs.Leaf+LeafCohortParameters, Models",
                   "ExpansionStressValue": 0.0,
+                  "CellDivisionStressValue": 0.0,
+                  "DroughtInducedLagAccelerationValue": 0.0,
+                  "DroughtInducedSenAccelerationValue": 0.0,
+                  "ShadeInducedSenescenceRateValue": 0.0,
+                  "SenessingLeafRelativeSizeValue": 0.0,
                   "Name": "CohortParameters",
                   "Children": [
                     {
@@ -4816,6 +4937,25 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "WidthFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Height",
+                  "Name": "DepthFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4828,6 +4968,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5078,16 +5219,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5535,6 +5666,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -5547,6 +5717,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5862,16 +6033,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6311,6 +6472,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -6494,6 +6694,16 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -6507,6 +6717,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_1_1_PseudoAphid_AgeBasedDevt",
       "Children": [
         {
@@ -6549,7 +6761,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -6645,6 +6857,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -6672,6 +6885,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -6732,6 +6947,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -6885,6 +7105,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -6941,6 +7163,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -7081,7 +7307,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -7110,7 +7335,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -7203,7 +7428,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7224,7 +7448,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -7391,7 +7615,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7536,6 +7759,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_1_2_PseudoAphid_AgeBasedDevtResults",
       "Children": [
         {
@@ -7567,7 +7792,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -7668,6 +7893,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -7695,6 +7921,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -7755,6 +7983,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -7908,6 +8141,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -7964,6 +8199,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -8104,7 +8343,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -8124,7 +8362,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -8217,7 +8455,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -8238,7 +8475,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -8387,7 +8624,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -8805,6 +9041,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_2_1_PseudoAphid_ConstantMetTempDevt",
       "Children": [
         {
@@ -8836,7 +9074,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "20°C.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -8937,6 +9175,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -8964,6 +9203,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -9024,6 +9265,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -9177,6 +9423,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -9233,6 +9481,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -9373,7 +9625,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -9393,7 +9644,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -9459,7 +9710,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9480,7 +9730,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -9620,7 +9870,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -10029,6 +10278,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_2_2_PseudoAphid_ConstantTempDevt",
       "Children": [
         {
@@ -10071,7 +10322,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -10171,6 +10422,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -10198,6 +10450,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -10258,6 +10512,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -10411,6 +10670,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -10467,6 +10728,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -10607,7 +10872,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -10627,7 +10891,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -10693,7 +10957,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -10714,7 +10977,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -10854,7 +11117,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -11205,6 +11467,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_2_3_PseudoAphid_MeanFieldTempDevt",
       "Children": [
         {
@@ -11236,7 +11500,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -11337,6 +11601,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -11364,6 +11629,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -11424,6 +11691,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -11577,6 +11849,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -11633,6 +11907,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -11773,7 +12051,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -11793,7 +12070,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -11859,7 +12136,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -11880,7 +12156,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -12020,7 +12296,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -12371,6 +12646,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_3_1_PseudoAphid_DegreeDayDevt",
       "Children": [
         {
@@ -12402,7 +12679,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -12501,6 +12778,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -12528,6 +12806,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -12588,6 +12868,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -12741,6 +13026,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -12797,6 +13084,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -12937,7 +13228,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -12957,7 +13247,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -13023,7 +13313,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -13044,7 +13333,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -13184,7 +13473,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -13382,6 +13670,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_4_1_PseudoAphid_3HrlyDevt",
       "Children": [
         {
@@ -13424,7 +13714,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -13512,6 +13802,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -13539,6 +13830,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -13599,6 +13892,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -13752,6 +14050,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -13808,6 +14108,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -13940,7 +14244,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -13960,7 +14263,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -13977,7 +14280,8 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -13996,7 +14300,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14046,7 +14359,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -14067,7 +14379,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -14207,7 +14519,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -14413,6 +14724,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_5_1_PseudoAphid_TempDepMortality",
       "Children": [
         {
@@ -14455,7 +14768,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "normal.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -14544,6 +14857,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -14571,6 +14885,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -14631,6 +14947,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -14784,6 +15105,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -14840,6 +15163,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -14980,7 +15307,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -15000,7 +15326,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -15008,7 +15334,8 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -15027,7 +15354,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -15209,7 +15545,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -15230,7 +15565,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -15503,7 +15838,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -15768,6 +16102,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_6_1_PseudoAphid_DensityDepMortality",
       "Children": [
         {
@@ -15810,7 +16146,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "Toowoomba.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -15901,6 +16237,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -15928,6 +16265,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -15988,6 +16327,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -16141,6 +16485,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -16197,6 +16543,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -16337,7 +16687,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -16357,7 +16706,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -16374,7 +16723,8 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -16393,7 +16743,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -16579,7 +16938,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -16600,7 +16958,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -16896,7 +17254,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -17314,6 +17671,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_7_1_PseudoAphid_DrynessDepMortalityRain",
       "Children": [
         {
@@ -17356,7 +17715,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "Toowoomba.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -17447,6 +17806,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -17474,6 +17834,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -17534,6 +17896,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -17687,6 +18054,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -17743,6 +18112,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -17883,7 +18256,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -17903,7 +18275,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -17920,7 +18292,8 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -17939,7 +18312,7 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -17949,6 +18322,15 @@
                               "$type": "Models.Memo, Models",
                               "Text": "Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.",
                               "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -18186,7 +18568,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -18207,7 +18588,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -18735,7 +19116,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -19153,6 +19533,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Tutorial_8_1_PseudoAphid_DrynessDepMortalitySoil",
       "Children": [
         {
@@ -19195,7 +19577,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "Toowoomba.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -19277,6 +19659,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -19304,6 +19687,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -19364,6 +19749,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -19517,6 +19907,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -19573,6 +19965,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -19713,7 +20109,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -19733,7 +20128,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -19750,7 +20145,8 @@
                       "Name": "Development",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -19769,7 +20165,7 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -19779,6 +20175,15 @@
                               "$type": "Models.Memo, Models",
                               "Text": "Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.",
                               "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -20026,7 +20431,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -20047,7 +20451,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -20405,7 +20809,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "Juvenile",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -20823,6 +21226,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "Wheat_rust",
       "Children": [
         {
@@ -20847,7 +21252,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -20905,7 +21310,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -20929,6 +21333,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -20956,6 +21361,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -21016,6 +21423,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -21137,6 +21549,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -21250,6 +21663,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -21306,6 +21721,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -21455,7 +21874,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.PMF;\nusing Models.Core;\nusing System;\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Summary Summary;\n        \n        \n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount { get; set;}\n        \n        [Description(\"Crop to be fertilised\")]\n        public string CropName { get; set;}\n        \n        \n        \n\n        [EventSubscribe(\"Sowing\")]\n        private void OnSowing(object sender, EventArgs e)\n        {\n            Model crop = sender as Model;\n            if (crop.Name.ToLower()==CropName.ToLower())\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "Amount",
@@ -21473,7 +21892,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.Utilities;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link(ByName = true)] Plant Wheat;\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Wheat.IsReadyForHarvesting)\n            {\n               Wheat.Harvest();\n               Wheat.EndCrop();    \n            }\n        \n        }\n        \n    }\n}\n",
               "Parameters": [],
               "Name": "Harvest",
               "IncludeInDocumentation": true,
@@ -21482,7 +21901,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Summary Summary;\n        [Link(ByName = true)] Plant Wheat;\n        [Link] Soil Soil; \n        Accumulator accumulatedRain;\n        \n        [Description(\"Start of sowing window (d-mmm)\")]\n        public string StartDate { get; set;}\n        [Description(\"End of sowing window (d-mmm)\")]\n        public string EndDate { get; set;}\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\n        public double MinESW { get; set;}\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\n        public double MinRain { get; set;}\n        [Description(\"Duration of rainfall accumulation (d)\")]\n        public int RainDays { get; set;}\n        [Description(\"Cultivar to be sown\")]\n        [Display(Type=DisplayType.CultivarName)]\n        public string CultivarName { get; set;}\n        [Description(\"Sowing depth (mm)\")]\n        public double SowingDepth { get; set;}        \n        [Description(\"Row spacing (mm)\")]\n        public double RowSpacing { get; set;}    \n        [Description(\"Plant population (/m2)\")]\n        public double Population { get; set;}    \n        \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n        }\n        \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            accumulatedRain.Update();\n            \n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\n                !Wheat.IsAlive &&\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\n                accumulatedRain.Sum > MinRain)\n            {\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \n            }\n        \n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -21539,7 +21958,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Spore",
                   "Children": [
                     {
@@ -21876,7 +22295,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -21897,7 +22315,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "Infective",
                   "Children": [
                     {
@@ -22203,7 +22621,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -22397,6 +22814,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "SeedBank_TimeBasedTranferToNonDormant",
       "Children": [
         {
@@ -22430,7 +22849,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -22495,6 +22914,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -22526,6 +22946,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.01056473311131,
@@ -22598,6 +23020,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -22727,6 +23154,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -22847,6 +23275,8 @@
                     36.5871308286749,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -22908,6 +23338,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -23022,7 +23456,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -23102,7 +23536,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -23123,7 +23556,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -23170,7 +23603,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -23333,7 +23765,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -23386,6 +23817,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "SeedBank_TimeBasedTranferToNonDormantAndMortality",
       "Children": [
         {
@@ -23419,7 +23852,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -23484,6 +23917,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -23515,6 +23949,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.01056473311131,
@@ -23587,6 +24023,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -23716,6 +24157,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -23836,6 +24278,8 @@
                     36.5871308286749,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -23897,6 +24341,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -24011,7 +24459,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -24142,7 +24590,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -24163,7 +24610,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -24261,7 +24708,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -24424,7 +24870,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -24477,6 +24922,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "SeedBank_3PoolsDormancy_toGermitable",
       "Children": [
         {
@@ -24510,7 +24957,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -24576,6 +25023,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -24607,6 +25055,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.01056473311131,
@@ -24679,6 +25129,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -24808,6 +25263,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -24928,6 +25384,8 @@
                     36.5871308286749,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -24989,6 +25447,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -25198,7 +25660,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "LongDormancy",
                   "Children": [
                     {
@@ -25329,7 +25791,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -25350,7 +25811,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "MediumDormancy",
                   "Children": [
                     {
@@ -25481,7 +25942,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -25502,7 +25962,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "ShortDormancy",
                   "Children": [
                     {
@@ -25633,7 +26093,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -25654,7 +26113,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -25795,7 +26254,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -25816,7 +26274,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "GermitableSeeds",
                   "Children": [
                     {
@@ -25863,7 +26321,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -26218,7 +26675,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -26323,6 +26779,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "a_WildRadishSeedBank_2000",
       "Children": [
         {
@@ -26365,7 +26823,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -26431,6 +26889,7 @@
               "Latitude": -36.278,
               "Longitude": 145.744,
               "LocationAccuracy": "+/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems in collaboration with Riverine Plains farmer group as part of GRDC Project'Training growers to manage soil water' 2007; Watville3",
               "Comments": "Textural description based on Particle Size Analysis",
               "Name": "Loamy Sand over Clay (Wattville No207)",
@@ -26463,6 +26922,8 @@
                   ],
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.555,
                     1.759,
@@ -26510,6 +26971,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -26675,6 +27141,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -26781,6 +27248,8 @@
                     47.831179500981357,
                     26.250307878240648
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -26853,6 +27322,10 @@
                     4.5,
                     5.1
                   ],
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -26970,7 +27443,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -27109,7 +27582,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -27130,7 +27602,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "GerminableSeeds",
                   "Children": [
                     {
@@ -27177,7 +27649,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -27846,7 +28317,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -1663232,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -27856,7 +28327,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today.DayOfYear",
-                      "YFieldName": "LifeCycle.GerminableSeeds.TotalPopulation",
+                      "YFieldName": "LifeCycle.TotalPopulation",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -27865,35 +28336,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Simulated",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Young2000",
-                      "XFieldName": "DayOfYear",
-                      "YFieldName": "No100",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Measured",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -27911,7 +28353,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -27964,6 +28405,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "b__WildRadishSeedBank_2001",
       "Children": [
         {
@@ -27988,7 +28431,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -28007,7 +28450,7 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.Utilities;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Summary Summary;\n        [Link] Soil Soil;\n        Accumulator accumulatedRain;\n        \n        [Description(\"Crop\")]\n        public IPlant Crop { get; set; }\n        [Description(\"Sowing date (d-mmm)\")]\n        public string SowDate { get; set; }\n    [Display(Type = DisplayType.CultivarName)]\n        [Description(\"Cultivar to be sown\")]\n        public string CultivarName { get; set; }\n        [Description(\"Sowing depth (mm)\")]\n        public double SowingDepth { get; set; }\n        [Description(\"Row spacing (mm)\")]\n        public double RowSpacing { get; set; }\n        [Description(\"Plant population (/m2)\")]\n        public double Population { get; set; }\n        \n\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\n            {\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \n            }\n        \n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -28041,7 +28484,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] LifeCycle.LifeCyclePhase GerminableSeeds;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n      \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                !Crop.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                double Population = GerminableSeeds.TotalPopulation;\r\n\r\n                if (Population >20) \r\n                {\r\n                    Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing); \r\n                    //GerminableSeeds.TotalPopulation = 0;\r\n                  }   \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Utilities;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Summary Summary;\n        [Link] Soil Soil;\n        [Link] LifeCycle.LifeCyclePhase GerminableSeeds;\n        Accumulator accumulatedRain;\n        \n        [Description(\"Crop\")]\n        public IPlant Crop { get; set; }\n        [Description(\"Start of sowing window (d-mmm)\")]\n        public string StartDate { get; set; }\n        [Description(\"End of sowing window (d-mmm)\")]\n        public string EndDate { get; set; }\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\n        public double MinESW { get; set; }\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\n        public double MinRain { get; set; }\n        [Description(\"Duration of rainfall accumulation (d)\")]\n        public int RainDays { get; set; }\n    [Display(Type = DisplayType.CultivarName)]\n        [Description(\"Cultivar to be sown\")]\n        public string CultivarName { get; set; }\n        [Description(\"Sowing depth (mm)\")]\n        public double SowingDepth { get; set; }\n        [Description(\"Row spacing (mm)\")]\n        public double RowSpacing { get; set; }\n      \n        \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\n        }\n        \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            accumulatedRain.Update();\n            \n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\n                !Crop.IsAlive &&\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\n                accumulatedRain.Sum > MinRain)\n            {\n                double Population = GerminableSeeds.TotalPopulation;\n\n                if (Population >20) \n                {\n                    Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing); \n                    //GerminableSeeds.TotalPopulation = 0;\n                  }   \n            }\n        \n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -28138,6 +28581,7 @@
               "Latitude": -36.278,
               "Longitude": 145.744,
               "LocationAccuracy": "+/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems in collaboration with Riverine Plains farmer group as part of GRDC Project'Training growers to manage soil water' 2007; Watville3",
               "Comments": "Textural description based on Particle Size Analysis",
               "Name": "Loamy Sand over Clay (Wattville No207)",
@@ -28170,6 +28614,8 @@
                   ],
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.555,
                     1.759,
@@ -28217,6 +28663,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -28382,6 +28833,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -28488,6 +28940,8 @@
                     47.831179500981357,
                     26.250307878240648
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -28560,6 +29014,10 @@
                     4.5,
                     5.1
                   ],
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -28668,7 +29126,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -28807,7 +29265,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -28828,7 +29285,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
-                  "Migrants": 0.0,
+                  "Emigrants": 0.0,
                   "Name": "GerminableSeeds",
                   "Children": [
                     {
@@ -28875,7 +29332,6 @@
                       "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
                       "NameOfLifeCycleForProgeny": "LifeCycle",
                       "NameOfPhaseForProgeny": "",
-                      "ProgenyToDestination": 0.0,
                       "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -29480,35 +29936,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "Young2001",
-                      "XFieldName": "DayOfYear",
-                      "YFieldName": "No100",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Measured",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -29522,7 +29949,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -29531,7 +29957,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Weed",
               "ResourceName": "Weed",
               "Name": "Weed",
               "IncludeInDocumentation": true,

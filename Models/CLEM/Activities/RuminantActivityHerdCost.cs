@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 

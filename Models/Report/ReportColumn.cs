@@ -257,7 +257,7 @@
                           $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                    // APSIM variable or expression
                           $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                   // on keyword
                           $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +          // from and to keywords
-                          @"(\s+as\s+(?<alias>[\w.]+))?";                                       // alias
+                          @"(\s+as\s+(?<alias>[\w.@]+))?";                                      // alias
 
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
@@ -330,8 +330,8 @@
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
 
-                fromVariable = Apsim.GetVariableObject(clock as IModel, fromString);
-                toVariable = Apsim.GetVariableObject(clock as IModel, toString);
+                fromVariable = (clock as IModel).FindByPath(fromString);
+                toVariable = (clock as IModel).FindByPath(toString);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.

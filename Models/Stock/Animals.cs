@@ -154,7 +154,7 @@
         /// <summary>Get the names of all fields.</summary>
         public IEnumerable<string> GetFieldNames()
         {
-            return Apsim.FindAll(this, typeof(Zone)).Select(zone => zone.Name);
+            return this.FindAllInScope<Zone>().Select(zone => zone.Name);
         }
 
         // ------------------ Events subscribed to ------------------
@@ -165,7 +165,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            stock.AnimalList.Add(this);
+            stock.StockModel.Add(this);
         }
     }
 }
