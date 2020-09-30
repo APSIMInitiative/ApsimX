@@ -33,8 +33,7 @@
             "[Clock].Today",
             "//[TreeManagement].Script.CultivarName. as Cultivar",
             "[Pinus].Age",
-            "[Pinus].Age",
-            "[Pinus].Population*10000 as Stemsperha",
+            "[Pinus].Population*10000 as stemsperha",
             "[Pinus].AboveGround.Wt",
             "[Pinus].BelowGround.Wt",
             "[Pinus].Leaf.Dead.Wt",
@@ -2388,11 +2387,11 @@
                         8.0
                       ],
                       "Y": [
-                        100.0,
-                        140.0,
-                        180.0,
-                        220.0,
-                        280.0
+                        700.0,
+                        700.0,
+                        700.0,
+                        700.0,
+                        700.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -5534,7 +5533,7 @@
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5603,17 +5602,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5682,17 +5681,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5761,17 +5760,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5840,17 +5839,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5919,17 +5918,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5971,7 +5970,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -5998,17 +5997,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6077,17 +6076,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6156,17 +6155,96 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "OvsP Vol",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "SimulationName",
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 1,
+                  "Line": 4,
+                  "LineThickness": 1,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Predicted.Pinus.Stem.DBH",
+                  "YFieldName": "Observed.Pinus.Stem.DBH",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[Predicted.Pinus.Stem.DBH]>0",
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6235,17 +6313,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6314,17 +6392,17 @@
                       "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6487,7 +6565,7 @@
             }
           ],
           "IncludeInDocumentation": true,
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -6516,7 +6594,116 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "Operation": [],
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1973-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1974-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1980-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1981-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1982-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.01);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1983-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1984-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1985-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1986-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1987-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1988-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.56);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1989-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1990-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                }
+                              ],
                               "Name": "C",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6526,6 +6713,120 @@
                             {
                               "$type": "Models.Operations, Models",
                               "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1973-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1974-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1980-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1981-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1982-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1983-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1984-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1985-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.04);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1986-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1987-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1988-01-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1988-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.47);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1989-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1990-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1983-09-28",
@@ -6576,7 +6877,7 @@
                               "Name": "I",
                               "Children": [],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -6622,7 +6923,7 @@
                               "Name": "IF",
                               "Children": [],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
@@ -7614,12 +7915,12 @@
                                     0.05
                                   ],
                                   "SoilCNRatio": [
-                                    24.0,
-                                    28.0,
-                                    159.0,
-                                    159.0,
-                                    159.0,
-                                    159.0
+                                    15.0,
+                                    15.0,
+                                    15.0,
+                                    15.0,
+                                    15.0,
+                                    15.0
                                   ],
                                   "FBiom": [
                                     0.04,
@@ -7843,7 +8144,7 @@
                               "Parameters": [
                                 {
                                   "Key": "RowSpace",
-                                  "Value": "2.7"
+                                  "Value": "2.71"
                                 },
                                 {
                                   "Key": "RowWidth",
@@ -7869,7 +8170,7 @@
                               "Parameters": [
                                 {
                                   "Key": "allowIrrigation",
-                                  "Value": "True"
+                                  "Value": "False"
                                 },
                                 {
                                   "Key": "seasonStart",
@@ -8035,13 +8336,13 @@
                                   "$type": "Models.Operation, Models",
                                   "Date": "1984-08-15",
                                   "Action": "[AutomaticIrrigation].Script.allowIrrigation.Equals(true)",
-                                  "Enabled": true
+                                  "Enabled": false
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-08-15",
                                   "Action": "[AutomaticIrrigation].Script.allowIrrigation.Equals(true)",
-                                  "Enabled": true
+                                  "Enabled": false
                                 }
                               ],
                               "Name": "Management",
@@ -12804,7 +13105,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Stemsperha",
+                          "YFieldName": "stemsperha",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -12833,7 +13134,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Stemsperha",
+                          "YFieldName": "stemspha",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -13815,7 +14116,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -13842,15 +14143,15 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Graph series",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Report",
-                          "XFieldName": "Pinus.IndividualTreeStemWt",
+                          "XFieldName": "Clock.Today",
                           "YFieldName": "Pinus.Stem.Vol",
                           "X2FieldName": "",
                           "Y2FieldName": "",
@@ -13858,7 +14159,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "Vol",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -13871,15 +14172,15 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Graph series",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Report",
-                          "XFieldName": "Pinus.IndividualTreeStemWt",
+                          "XFieldName": "Clock.Today",
                           "YFieldName": "Pinus.Stem.Volub",
                           "X2FieldName": "",
                           "Y2FieldName": "",
@@ -13887,7 +14188,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "Volub",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -13900,15 +14201,15 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Graph series",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Report",
-                          "XFieldName": "Pinus.IndividualTreeStemWt",
+                          "XFieldName": "Clock.Today",
                           "YFieldName": "Pinus.Stem.VolBark",
                           "X2FieldName": "",
                           "Y2FieldName": "",
@@ -13916,7 +14217,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "VolBark",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -13929,15 +14230,15 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Graph series",
+                          "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Observed",
-                          "XFieldName": "Pinus.IndividualTreeStemWt",
+                          "XFieldName": "Clock.Today",
                           "YFieldName": "Pinus.Stem.Vol",
                           "X2FieldName": null,
                           "Y2FieldName": null,
@@ -13945,7 +14246,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "VolObserved",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14108,7 +14409,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "StemWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14137,7 +14438,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "StemLiveWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14166,7 +14467,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "BarkWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14195,7 +14496,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='SheppartonEgran1333'",
+                          "Filter": "",
                           "Name": "WoodWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14480,7 +14781,7 @@
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": "",
