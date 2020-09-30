@@ -1854,10 +1854,10 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                5.0,
-                                20.0,
-                                25.0,
-                                35.0
+                                2.0,
+                                13.0,
+                                14.0,
+                                32.0
                               ],
                               "Y": [
                                 0.0,
@@ -1885,12 +1885,24 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 -5.0,
+                                -2.0,
+                                -1.0,
                                 0.0,
-                                2.0
+                                1.0,
+                                2.0,
+                                3.0,
+                                4.0,
+                                7.0
                               ],
                               "Y": [
-                                1.0,
-                                1.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.5,
+                                0.8,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -2292,11 +2304,11 @@
                             8.0
                           ],
                           "Y": [
+                            0.019,
+                            0.018,
+                            0.017,
                             0.016,
-                            0.0105,
-                            0.0089,
-                            0.0085,
-                            0.0073
+                            0.015
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -2446,7 +2458,7 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            10.0,
+                            8.0,
                             26.0,
                             33.0,
                             34.0
@@ -2962,9 +2974,9 @@
                                     10000.0
                                   ],
                                   "Y": [
-                                    0.06,
-                                    0.06,
-                                    0.06
+                                    0.2,
+                                    0.2,
+                                    0.15
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -3344,14 +3356,14 @@
                         160000.0
                       ],
                       "Y": [
-                        0.0003,
-                        0.0003,
-                        5E-05,
-                        5E-05,
-                        5E-05,
-                        5E-05,
-                        5E-05,
-                        5E-05
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -3572,7 +3584,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.15*([Pinus].IndividualTreeStemWt^0.425)",
+                      "Expression": "0.07*([Pinus].IndividualTreeStemWt^0.5)",
                       "Name": "DBHEquation",
                       "Children": [
                         {
@@ -3932,11 +3944,11 @@
                                 100000.0
                               ],
                               "Y": [
-                                0.3,
-                                0.6,
+                                0.5,
+                                0.8,
                                 0.9,
-                                0.99,
-                                0.999
+                                0.9,
+                                0.9
                               ],
                               "Name": "XYPairs",
                               "Children": [],
@@ -4067,9 +4079,9 @@
                                     10000.0
                                   ],
                                   "Y": [
-                                    0.35,
+                                    0.1,
                                     0.45,
-                                    0.58
+                                    0.6
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -4265,6 +4277,63 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stem].maximumNconc",
                           "Name": "MaxNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "BarkDensity",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Pinus].IndividualTreeStemWt",
+                      "Name": "Criterion",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10000.0,
+                      "Units": null,
+                      "Name": "LowLimit",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "[Pinus].Stem.BarkWt*10/[Pinus].Stem.VolBark",
+                      "Name": "WoodDensity",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
+                          "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -4535,9 +4604,9 @@
                                     10000.0
                                   ],
                                   "Y": [
-                                    0.01,
-                                    0.03,
-                                    0.05
+                                    0.02,
+                                    0.1,
+                                    0.2
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -5111,7 +5180,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.25,
+                              "FixedValue": 0.45,
                               "Units": null,
                               "Name": "PartitionFraction",
                               "Children": [],
@@ -5894,7 +5963,7 @@
                   "YAxis": 0,
                   "ColourArgb": -3376729,
                   "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
+                  "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 1,
@@ -7112,461 +7181,6 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "WheatSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "OatsSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.167250994546662,
-                                        0.150169824131368,
-                                        0.169337283210935,
-                                        0.178238477447794,
-                                        0.182191587785136,
-                                        0.183032000623536
-                                      ],
-                                      "KL": [
-                                        0.07,
-                                        0.07,
-                                        0.068637229803457,
-                                        0.0642328831229831,
-                                        0.0557333006799039,
-                                        0.0428966435885339
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "SorghumSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.167250994546662,
-                                        0.150169824131368,
-                                        0.169312029391661,
-                                        0.178132111202921,
-                                        0.181930857082001,
-                                        0.182544005452615
-                                      ],
-                                      "KL": [
-                                        0.07,
-                                        0.07,
-                                        0.0683967409452436,
-                                        0.0632151566152742,
-                                        0.0532156478587106,
-                                        0.0381136983394517
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "BarleySoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168430284682608,
-                                        0.177764181935642,
-                                        0.181641082101643,
-                                        0.182072266060019
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.06,
-                                        0.059694760001482,
-                                        0.0504175393581151,
-                                        0.0334900794574074
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "ChickpeaSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168430284682608,
-                                        0.177388492123689,
-                                        0.180722005130582,
-                                        0.180648669377885
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.06,
-                                        0.0561001094546091,
-                                        0.0415428011655496,
-                                        0.0195371032946296
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "MungbeanSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.171449187470016,
-                                        0.153305556989501,
-                                        0.172630698699442,
-                                        0.181976627022669,
-                                        0.186511146941027,
-                                        0.186736070023293
-                                      ],
-                                      "KL": [
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.0974435793865497,
-                                        0.0792010215691015
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "CottonSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "CanolaSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168430284682608,
-                                        0.177761523458456,
-                                        0.181558384648951,
-                                        0.181846869494155
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.06,
-                                        0.0596693233349389,
-                                        0.0496190009712913,
-                                        0.0312809194121913
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "Pigeon PeaSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "MaizeSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "CowpeasSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.171373695321049,
-                                        0.152240306179881,
-                                        0.170552657472526,
-                                        0.179119257801682,
-                                        0.18246519544813,
-                                        0.182410081569567
-                                      ],
-                                      "KL": [
-                                        0.0994605382576801,
-                                        0.089808594757769,
-                                        0.080211081873469,
-                                        0.0726603077697194,
-                                        0.0583752952603428,
-                                        0.0368010816614016
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "SunflowerSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.16865039218778,
-                                        0.151215068417412,
-                                        0.170530491691025,
-                                        0.179886355342271,
-                                        0.184041440525665,
-                                        0.184051857493366
-                                      ],
-                                      "KL": [
-                                        0.08,
-                                        0.08,
-                                        0.08,
-                                        0.08,
-                                        0.0735957423294126,
-                                        0.0528924793282186
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "FababeanSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
                                         0.171449187470016,
                                         0.153305556989501,
                                         0.172630698699442,
@@ -7575,270 +7189,25 @@
                                         0.188836445906077
                                       ],
                                       "KL": [
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.0997872557133301
+                                        0.06,
+                                        0.05,
+                                        0.04,
+                                        0.03,
+                                        0.02,
+                                        0.01
                                       ],
                                       "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        0.0,
+                                        0.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
                                       "XFMetadata": null,
                                       "Name": "PinusSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.171449187470016,
-                                        0.153305556989501,
-                                        0.172630698699442,
-                                        0.181976627022669,
-                                        0.186511146941027,
-                                        0.186736070023293
-                                      ],
-                                      "KL": [
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.0974435793865497,
-                                        0.0792010215691015
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "PerennialsSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "LupinsSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "LentilsSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.167250994546662,
-                                        0.150070995986883,
-                                        0.168568820773963,
-                                        0.177080238414166,
-                                        0.180323720738846,
-                                        0.180120207359086
-                                      ],
-                                      "KL": [
-                                        0.07,
-                                        0.0690544971562694,
-                                        0.0613192612994801,
-                                        0.0531506965872418,
-                                        0.0376969103270981,
-                                        0.0143575337973344
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "TriticaleSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.167250994546662,
-                                        0.150169824131368,
-                                        0.169337283210935,
-                                        0.178238477447794,
-                                        0.182191587785136,
-                                        0.183032000623536
-                                      ],
-                                      "KL": [
-                                        0.07,
-                                        0.07,
-                                        0.068637229803457,
-                                        0.0642328831229831,
-                                        0.0557333006799039,
-                                        0.0428966435885339
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "MilletSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "SoybeansSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.165851596905543,
-                                        0.149124579845324,
-                                        0.168266736138743,
-                                        0.177107235599841,
-                                        0.18094490983746,
-                                        0.181616675172037
-                                      ],
-                                      "KL": [
-                                        0.06,
-                                        0.06,
-                                        0.058442548346808,
-                                        0.0534090092834092,
-                                        0.0436952007770331,
-                                        0.029024735529753
-                                      ],
-                                      "XF": [
-                                        0.993195274489024,
-                                        0.829256827063768,
-                                        0.855594118570081,
-                                        0.928526014933418,
-                                        0.870105444350986,
-                                        0.767911164999949
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "Pasture grasses & legumesSoil",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
@@ -7909,20 +7278,20 @@
                                     200.0
                                   ],
                                   "Carbon": [
-                                    1.4,
+                                    1.7,
+                                    0.6,
                                     0.4,
-                                    0.27,
-                                    0.1,
+                                    0.2,
                                     0.1,
                                     0.05
                                   ],
                                   "SoilCNRatio": [
-                                    15.0,
-                                    15.0,
-                                    15.0,
-                                    15.0,
-                                    15.0,
-                                    15.0
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0,
+                                    14.0
                                   ],
                                   "FBiom": [
                                     0.04,
@@ -7933,9 +7302,9 @@
                                     0.01
                                   ],
                                   "FInert": [
-                                    0.134559218453726,
-                                    0.323184187605624,
-                                    0.456325134190656,
+                                    0.3,
+                                    0.4,
+                                    0.6,
                                     0.786996922471623,
                                     0.982222423985719,
                                     0.935805060907539
@@ -14675,6 +14044,102 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "Name": "WoodBarkWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Stem.BarkWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName]='BFGF'",
+                          "Name": "BarkWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -3376729,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Stem.WoodWt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName]='BFGF'",
+                          "Name": "WoodWt",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "StemWt",
                       "Children": [
                         {
@@ -14722,102 +14187,6 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Pinus.Stem.Wt ",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": "",
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "WoodWt",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 2,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Stem.WoodWt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": "",
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": "SimulationName",
-                          "FactorToVaryLines": null,
-                          "Marker": 4,
-                          "MarkerSize": 2,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Observed",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Stem.WoodWt ",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -14953,7 +14322,7 @@
                           "Title": null,
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Maximum": 800.0,
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -14963,7 +14332,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "WoodBarkWt",
+                      "Name": "BarkDensity",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -14980,15 +14349,15 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Stem.BarkWt",
+                          "YFieldName": "Pinus.Stem.WoodDensity",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='BFGF'",
-                          "Name": "BarkWt",
+                          "Filter": "",
+                          "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -14999,25 +14368,121 @@
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
-                          "ColourArgb": -3376729,
-                          "FactorToVaryColours": null,
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
-                          "Marker": 11,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
                           "MarkerSize": 2,
                           "Line": 4,
                           "LineThickness": 0,
-                          "TableName": "Report",
+                          "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Stem.WoodWt",
+                          "YFieldName": "Pinus.Stem.WoodDensity",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName]='BFGF'",
-                          "Name": "WoodWt",
+                          "Filter": "",
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WoodWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Stem.WoodWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Stem.WoodWt ",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Observed",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
