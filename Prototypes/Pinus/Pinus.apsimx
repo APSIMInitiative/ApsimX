@@ -33,6 +33,7 @@
             "[Clock].Today",
             "//[TreeManagement].Script.CultivarName. as Cultivar",
             "[Pinus].Age",
+            "[Pinus].Age",
             "[Pinus].Population*10000 as Stemsperha",
             "[Pinus].AboveGround.Wt",
             "[Pinus].BelowGround.Wt",
