@@ -68,8 +68,7 @@
 
     public class MapView : ViewBase, IMapView
     {
-        private int mapWidth = 800;
-        private int mapHeight = 500;
+        private const double scrollIncrement = 5;
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -138,12 +137,14 @@
             container.AddEvents(
               (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
-            | (int)Gdk.EventMask.ButtonReleaseMask);
+            | (int)Gdk.EventMask.ButtonReleaseMask
+            | (int)Gdk.EventMask.ScrollMask);
             container.MotionNotifyEvent += OnMouseMove;
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
             image.SizeAllocated += OnSizeAllocated;
             container.Destroyed += OnMainWidgetDestroyed;
+            container.ScrollEvent += OnMouseScroll;
 
             mainWidget = box;
             mainWidget.ShowAll();
@@ -172,7 +173,7 @@
         private void OnMapChanged()
         {
             RefreshMap();
-            ViewChanged?.Invoke(this, EventArgs.Empty);
+            //ViewChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void RefreshMap()
@@ -234,7 +235,7 @@
             }
         }
     
-        private void OnMouseMove(object o, Gtk.MotionNotifyEventArgs args)
+        private void OnMouseMove(object o, MotionNotifyEventArgs args)
         {
             try
             {
@@ -247,7 +248,7 @@
             }
         }
 
-        private void OnButtonPress(object o, Gtk.ButtonPressEventArgs args)
+        private void OnButtonPress(object o, ButtonPressEventArgs args)
         {
             try
             {
@@ -259,7 +260,7 @@
             }
         }
 
-        private void OnButtonRelease(object o, Gtk.ButtonReleaseEventArgs args)
+        private void OnButtonRelease(object o, ButtonReleaseEventArgs args)
         {
             try
             {
@@ -271,19 +272,56 @@
             }
         }
 
+        private void OnMouseScroll(object o, ScrollEventArgs args)
+        {
+            try
+            {
+                map.MapViewOnChange -= OnMapChanged;
+                Envelope viewport = map.Envelope;
+                double mouseLat = args.Event.Y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+                double mouseLon = args.Event.X / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+
+                if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
+                {
+                    // Adjust zoom level on map.
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
+                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 0, map.MaximumZoom);
+
+                    // Adjust center of map, so that coordinates at mouse cursor are the same
+                    // as previously.
+                    viewport = map.Envelope;
+                    double newMouseLat = args.Event.Y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+                    double newMouseLon = args.Event.X / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+
+                    double dx = newMouseLon - mouseLon;
+                    double dy = newMouseLat - mouseLat;
+                    map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
+                    RefreshMap();
+                }
+                map.MapViewOnChange += OnMapChanged;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         private void OnSizeAllocated(object sender, EventArgs args)
         {
             try
             {
-                image.SizeAllocated -= OnSizeAllocated;
-                if (image.Allocation.Width > 0 && image.Allocation.Height > 0)
+                // Update the map size iff the allocated width and height are both > 0,
+                // and width or height have changed.
+                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
+                 && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
                 {
+                    image.SizeAllocated -= OnSizeAllocated;
                     map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
                     image.Pixbuf = ImageToPixbuf(map.GetMap());
                     //map.Zoom = 360;
                     //map.Center = new Coordinate(0, 0);
+                    image.SizeAllocated += OnSizeAllocated;
                 }
-                //image.SizeAllocated += OnSizeAllocated;
             }
             catch (Exception err)
             {
@@ -298,6 +336,7 @@
                 mainWidget.MotionNotifyEvent -= OnMouseMove;
                 mainWidget.ButtonPressEvent -= OnButtonPress;
                 mainWidget.ButtonReleaseEvent -= OnButtonRelease;
+                mainWidget.ScrollEvent -= OnMouseScroll;
                 image.SizeAllocated -= OnSizeAllocated;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
             }
