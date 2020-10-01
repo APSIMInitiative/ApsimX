@@ -42,6 +42,7 @@ dos2unix ./Template/Contents/MacOS/ApsimNG
 cp ./Template/Contents/MacOS/ApsimNG ./MacBundle/APSIM$version.app/Contents/MacOS/ApsimNG
 cp ./Template/Contents/Resources/ApsimNG.icns ./MacBundle/APSIM$version.app/Contents/Resources/ApsimNG.icns
 cp -rf $apsimx/Examples ./MacBundle/APSIM$version.app/Contents/Resources/Examples
+cp -rf $apsimx/ApsimNG/Resources/world ./MacBundle/APSIM$version.app/Contents/Resources/ApsimNG/Resources/world
 cp -rf $apsimx/Tests/UnderReview ./MacBundle/APSIM$version.app/Contents/Resources/UnderReview
 cp -f $apsimx/Bin/*.dll ./MacBundle/APSIM$version.app/Contents/Resources/Bin
 cp -f $apsimx/Bin/*.exe ./MacBundle/APSIM$version.app/Contents/Resources/Bin
