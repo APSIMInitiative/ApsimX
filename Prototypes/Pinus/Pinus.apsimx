@@ -38,6 +38,7 @@
             "[Pinus].BelowGround.Wt",
             "[Pinus].Leaf.Dead.Wt",
             "[Pinus].Leaf.Live.Wt",
+            "[Pinus].Leaf.Wt",
             "[Pinus].Branch.Live.Wt",
             "[Pinus].Leaf.Detached.Wt",
             "[Pinus].Stem.Live.Wt",
@@ -63,6 +64,7 @@
             "[Pinus].Stem.VolBark",
             "[Pinus].Stem.Volub",
             "[Pinus].Stem.WoodDensity",
+            "[Pinus].Stem.BarkDensity",
             "[Pinus].Stem.WoodWt",
             "[Pinus].Stem.Wt",
             "[Pinus].Stem.Live.Wt",
@@ -70,12 +72,12 @@
             "[Pinus].CoarseRoot.Wt",
             "[Pinus].Fruit.Wt",
             "[Pinus].TotalWoodBark.Wt",
-            "(([Soil].SoilWater.SW[2])+([Soil].SoilWater.SW[3]))/2 as SW30",
+            "//(([Soil].SoilWater.SW[2])+([Soil].SoilWater.SW[3]))/2 as SW30",
             "//(([Soil].SoilWater.SW[9])+([Soil].SoilWater.SW[10]))/2 as SW600",
             "[Soil].SoilWater.SW[1] as SWD3",
             "[Soil].SoilWater.SW[2] as SWD3",
-            "[Soil].SoilWater.SW[3] as SWD3",
-            "[Soil].SoilWater.SW[4] as SWD4",
+            "//[Soil].SoilWater.SW[3] as SWD3",
+            "//[Soil].SoilWater.SW[4] as SWD4",
             "//[Soil].SoilWater.SW[5] as SWD5",
             "//[Soil].SoilWater.SW[6] as SWD6",
             "//[Soil].SoilWater.SW[7] as SWD7",
@@ -84,8 +86,9 @@
             "//[SoilNitrogen].NO3ppm",
             "//[SoilNitrogen].NH4ppm",
             "//[SoilNitrogen].NO3.kgha",
-            "[Nutrient].NH4.kgha[1]",
-            "//([SoilNitrogen].NO3.kgha)+([SoilNitrogen].NH4.kgha) as MineralNkgpha",
+            "//[Nutrient].NH4.kgha[1]",
+            "//[Nutrient].NO3.kgha[1]",
+            "Sum ([Nutrient].NO3.kgha)+([Nutrient].NH4.kgha) as MineralNkgpha",
             "//([SoilNitrogen].NO3.kgha[1]*1000000/14)/([Soil].SoilWater.SW[1]*1000000) as NO3mMD1",
             "//([SoilNitrogen].NO3.kgha[2]*1000000/14)/([Soil].SoilWater.SW[2]*1000000) as NO3mMD2",
             "//([SoilNitrogen].NO3.kgha[3]*1000000/14)/([Soil].SoilWater.SW[3]*1000000) as NO3mMD3",
@@ -1824,7 +1827,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.5,
+                      "FixedValue": 1.3,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "Children": [
@@ -3983,7 +3986,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Pinus].Stem.Live.Wt-[Pinus].Stem.WoodWt",
-                  "Name": "BarkWt",
+                  "Name": "BarkWtOLD",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4341,6 +4344,53 @@
                         }
                       ],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "BarkWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Pinus].IndividualTreeStemWt",
+                      "Name": "Criterion",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10000.0,
+                      "Units": null,
+                      "Name": "LowLimit",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "[Pinus].Stem.Live.Wt-[Pinus].Stem.WoodWt",
+                      "Name": "BarkWt",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4940,7 +4990,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 6.0,
+                  "FixedValue": 0.5,
                   "Units": "kg/ha/d",
                   "Name": "MaxDailyNUptake",
                   "Children": [],
@@ -5654,8 +5704,8 @@
                   "Line": 4,
                   "LineThickness": 1,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Pinus.Wood.Wt",
-                  "YFieldName": "Observed.Pinus.Wood.Wt",
+                  "XFieldName": "Predicted.Pinus.Stem.WoodWt",
+                  "YFieldName": "Observed.Pinus.Stem.WoodWt",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -5725,7 +5775,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -5733,8 +5783,8 @@
                   "Line": 4,
                   "LineThickness": 1,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Pinus.Stem.Live.Wt",
-                  "YFieldName": "Observed.Pinus.Stem.Live.Wt",
+                  "XFieldName": "Predicted.Pinus.Stem.Wt",
+                  "YFieldName": "Observed.Pinus.Stem.Wt",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -5883,7 +5933,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -5891,8 +5941,8 @@
                   "Line": 4,
                   "LineThickness": 1,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Pinus.Leaf.Live.Wt",
-                  "YFieldName": "Observed.Pinus.Leaf.Live.Wt",
+                  "XFieldName": "Pred-Obs.Pinus.Leaf.Wt",
+                  "YFieldName": "Observed.Pinus.Leaf.Wt",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -6059,19 +6109,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6436,7 +6474,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -6452,7 +6490,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Predicted.Pinus.Stem.DBH]>7",
+                  "Filter": "",
                   "Name": "Series",
                   "Children": [
                     {
@@ -6901,13 +6939,13 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1983-09-28",
-                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NH4N, 0)",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1983-11-18",
-                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N, 0)",
+                                  "Action": "[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NH4N, 0)",
                                   "Enabled": true
                                 }
                               ],
@@ -7083,18 +7121,6 @@
                               "Name": "Synthetic Soil BFG",
                               "Children": [
                                 {
-                                  "$type": "Models.Soils.InitialWater, Models",
-                                  "PercentMethod": 0,
-                                  "FractionFull": 0.8,
-                                  "DepthWetSoil": "NaN",
-                                  "RelativeTo": null,
-                                  "Name": "Initial water",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.Physical, Models",
                                   "Depth": [
                                     "0-10",
@@ -7102,7 +7128,9 @@
                                     "20-45",
                                     "45-60",
                                     "60-80",
-                                    "80-100"
+                                    "80-100",
+                                    "100-150",
+                                    "150-200"
                                   ],
                                   "Thickness": [
                                     100.0,
@@ -7110,7 +7138,9 @@
                                     250.0,
                                     150.0,
                                     200.0,
-                                    200.0
+                                    200.0,
+                                    500.0,
+                                    500.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
@@ -7123,47 +7153,59 @@
                                     1.55808208502411,
                                     1.52403757154559,
                                     1.54523686801681,
-                                    1.58479930454788
+                                    1.58479930454788,
+                                    1.585,
+                                    1.585
                                   ],
                                   "AirDry": [
-                                    0.052485069828094,
-                                    0.0476177042335085,
-                                    0.0540432206786868,
-                                    0.0571750889684758,
-                                    0.0588065961186905,
-                                    0.0595517775378662
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.03,
+                                    0.07,
+                                    0.07,
+                                    0.08,
+                                    0.08
                                   ],
                                   "LL15": [
-                                    0.157455211058834,
-                                    0.142853114129057,
-                                    0.162129663657357,
-                                    0.17152526862068,
-                                    0.176419790120269,
-                                    0.178655334400152
+                                    0.03,
+                                    0.02,
+                                    0.02,
+                                    0.04,
+                                    0.08,
+                                    0.08,
+                                    0.09,
+                                    0.09
                                   ],
                                   "DUL": [
-                                    0.297394975170657,
-                                    0.247377542733505,
-                                    0.267140014078206,
-                                    0.276038852640568,
-                                    0.279980813681673,
-                                    0.280683508570741
+                                    0.18,
+                                    0.18,
+                                    0.2,
+                                    0.22,
+                                    0.23,
+                                    0.2,
+                                    0.18,
+                                    0.19
                                   ],
                                   "SAT": [
-                                    0.391291911484027,
-                                    0.35305023838407,
-                                    0.366098784194791,
-                                    0.380896375995038,
-                                    0.375257540357217,
-                                    0.362396592818238
+                                    0.25,
+                                    0.25,
+                                    0.25,
+                                    0.25,
+                                    0.25,
+                                    0.25,
+                                    0.25,
+                                    0.25
                                   ],
                                   "KS": [
-                                    61.6364186324386,
-                                    33.8795520884493,
-                                    18.6935399460044,
-                                    13.0862696954496,
-                                    11.0996751829044,
-                                    10.4081529251015
+                                    250.0,
+                                    220.0,
+                                    200.0,
+                                    150.0,
+                                    25.0,
+                                    50.0,
+                                    100.0,
+                                    100.0
                                   ],
                                   "BDMetadata": null,
                                   "AirDryMetadata": null,
@@ -7181,28 +7223,34 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.171449187470016,
-                                        0.153305556989501,
-                                        0.172630698699442,
-                                        0.181976627022669,
-                                        0.18677589247641,
-                                        0.188836445906077
+                                        0.175,
+                                        0.175,
+                                        0.195,
+                                        0.215,
+                                        0.225,
+                                        0.195,
+                                        0.175,
+                                        0.185
                                       ],
                                       "KL": [
-                                        0.06,
                                         0.05,
                                         0.04,
                                         0.03,
+                                        0.03,
                                         0.02,
+                                        0.01,
+                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        0.0,
-                                        0.0
+                                        0.9,
+                                        0.9,
+                                        0.9,
+                                        0.9,
+                                        0.6,
+                                        0.4,
+                                        0.2,
+                                        0.1
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -7214,6 +7262,84 @@
                                       "ReadOnly": false
                                     }
                                   ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.InitialWater, Models",
+                                  "PercentMethod": 1,
+                                  "FractionFull": 0.5,
+                                  "DepthWetSoil": "NaN",
+                                  "RelativeTo": null,
+                                  "Name": "Initial water",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Sample, Models",
+                                  "Depth": [
+                                    "0-10",
+                                    "10-20",
+                                    "20-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100",
+                                    "100-150",
+                                    "150-200"
+                                  ],
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    250.0,
+                                    150.0,
+                                    200.0,
+                                    200.0,
+                                    500.0,
+                                    500.0
+                                  ],
+                                  "NO3": [
+                                    2.0,
+                                    1.0,
+                                    0.5,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "NH4": [
+                                    2.0,
+                                    1.0,
+                                    0.5,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "SW": [
+                                    0.17,
+                                    0.17,
+                                    0.19,
+                                    0.21,
+                                    0.22,
+                                    0.19,
+                                    0.17,
+                                    0.18
+                                  ],
+                                  "OC": null,
+                                  "EC": null,
+                                  "CL": null,
+                                  "ESP": null,
+                                  "PH": null,
+                                  "SWUnits": 0,
+                                  "OCUnits": 0,
+                                  "PHUnits": 0,
+                                  "Name": "Initial conditions",
+                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -7241,13 +7367,17 @@
                                     250.0,
                                     150.0,
                                     200.0,
-                                    200.0
+                                    200.0,
+                                    500.0,
+                                    500.0
                                   ],
                                   "SWCON": [
-                                    0.6,
-                                    0.6,
                                     0.4,
-                                    0.2,
+                                    0.4,
+                                    0.4,
+                                    0.1,
+                                    0.1,
+                                    0.1,
                                     0.1,
                                     0.1
                                   ],
@@ -7266,7 +7396,9 @@
                                     "20-45",
                                     "45-60",
                                     "60-80",
-                                    "80-100"
+                                    "80-100",
+                                    "100-150",
+                                    "150-200"
                                   ],
                                   "FOMCNRatio": 40.0,
                                   "Thickness": [
@@ -7275,7 +7407,9 @@
                                     250.0,
                                     150.0,
                                     200.0,
-                                    200.0
+                                    200.0,
+                                    500.0,
+                                    500.0
                                   ],
                                   "Carbon": [
                                     1.7,
@@ -7283,9 +7417,13 @@
                                     0.4,
                                     0.2,
                                     0.1,
+                                    0.05,
+                                    0.05,
                                     0.05
                                   ],
                                   "SoilCNRatio": [
+                                    14.0,
+                                    14.0,
                                     14.0,
                                     14.0,
                                     14.0,
@@ -7299,6 +7437,8 @@
                                     0.01404,
                                     0.01,
                                     0.01,
+                                    0.01,
+                                    0.01,
                                     0.01
                                   ],
                                   "FInert": [
@@ -7307,7 +7447,9 @@
                                     0.6,
                                     0.786996922471623,
                                     0.982222423985719,
-                                    0.935805060907539
+                                    0.935805060907539,
+                                    0.936,
+                                    0.936
                                   ],
                                   "FOM": [
                                     475.4746586022116,
@@ -7315,7 +7457,9 @@
                                     193.3135701631787,
                                     123.26217442655363,
                                     67.647715615544115,
-                                    37.125853484990209
+                                    37.125853484990209,
+                                    37.126,
+                                    37.126
                                   ],
                                   "CarbonMetadata": null,
                                   "FOMMetadata": null,
@@ -7333,7 +7477,9 @@
                                     "20-45",
                                     "45-60",
                                     "60-80",
-                                    "80-100"
+                                    "80-100",
+                                    "100-150",
+                                    "150-200"
                                   ],
                                   "Thickness": [
                                     100.0,
@@ -7341,12 +7487,16 @@
                                     250.0,
                                     150.0,
                                     200.0,
-                                    200.0
+                                    200.0,
+                                    500.0,
+                                    500.0
                                   ],
                                   "NO3N": [
                                     2.0,
                                     1.0,
                                     0.5,
+                                    0.0,
+                                    0.0,
                                     0.0,
                                     0.0,
                                     0.0
@@ -7357,6 +7507,8 @@
                                     0.5,
                                     0.0,
                                     0.0,
+                                    0.0,
+                                    0.0,
                                     0.0
                                   ],
                                   "PH": [
@@ -7365,7 +7517,9 @@
                                     5.3,
                                     5.33750682265195,
                                     5.38374250856154,
-                                    5.42226090044229
+                                    5.42226090044229,
+                                    5.422,
+                                    5.422
                                   ],
                                   "CL": null,
                                   "EC": null,
@@ -7375,67 +7529,6 @@
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.InitialWater, Models",
-                                  "PercentMethod": 0,
-                                  "FractionFull": 1.0,
-                                  "DepthWetSoil": "NaN",
-                                  "RelativeTo": null,
-                                  "Name": "Initial water",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0
-                                  ],
-                                  "NO3": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "NH4": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial conditions",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -7598,7 +7691,7 @@
                               ],
                               "Name": "AutomaticIrrigation",
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -12555,6 +12648,102 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "Name": "Stresses",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Leaf.Fn",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Fn",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Pinus.Leaf.Fw",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Fw",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "LAI",
                       "Children": [
                         {
@@ -12994,102 +13183,6 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "Stresses",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Leaf.Fn",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Fn",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 1,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Leaf.Fw",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": true,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Fw",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -14349,7 +14442,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Stem.WoodDensity",
+                          "YFieldName": "Pinus.Stem.BarkDensity",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -14771,6 +14864,73 @@
                           "CumulativeX": false,
                           "Filter": "",
                           "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "MineralN",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 2,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "MineralNkgpha(1)",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "",
+                          "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
