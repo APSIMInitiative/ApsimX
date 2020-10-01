@@ -115,7 +115,7 @@
             {
                 if (map == null)
                     return null;
-                return new Map.Coordinate(map.Center.X, map.Center.Y);
+                return new Map.Coordinate(map.Center.Y, map.Center.X);
             }
             set
             {
@@ -174,6 +174,7 @@
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
             image.SizeAllocated += OnSizeAllocated;
+            image.ExposeEvent += OnImageExposed;
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
@@ -238,11 +239,13 @@
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
-            markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.LargeImages.Wheat.png");
+            markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
             markerLayer.DataSource = new GeometryProvider(locations);
             map.Layers.Add(markerLayer);
             map.Zoom = zoom;
             map.Center = new Coordinate(center.Longitude, center.Latitude);
+            if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
+                RefreshMap();
         }
 
         /// <summary>
@@ -296,6 +299,31 @@
             lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
         }
     
+        /// <summary>
+        /// Traps the Exposed event for the image. This event fires after
+        /// size/space allocation has occurred but before it is actually
+        /// drawn on the screen. Because the size-allocated signal is emitted
+        /// several times, we don't want to refresh the map each time.
+        /// Therefore, we refresh the map once, during the expose event.
+        /// 
+        /// We also disconnect the event handler after refreshing the map so
+        /// that we don't refresh it multiple times unnecessarily.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnImageExposed(object sender, ExposeEventArgs args)
+        {
+            try
+            {
+                RefreshMap();
+                image.ExposeEvent -= OnImageExposed;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>
         /// Called when the mouse button is pressed down. Records the
         /// mouse position, to be used to move map center when the
@@ -401,7 +429,9 @@
                 {
                     image.SizeAllocated -= OnSizeAllocated;
                     map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    RefreshMap();
+                    //RefreshMap();
+                    image.WidthRequest = image.Allocation.Width;
+                    image.HeightRequest = image.Allocation.Height;
                     image.SizeAllocated += OnSizeAllocated;
                 }
             }
