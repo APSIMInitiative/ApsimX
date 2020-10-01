@@ -40,6 +40,8 @@
             "[Pinus].Leaf.Live.Wt",
             "[Pinus].Leaf.Wt",
             "[Pinus].Branch.Live.Wt",
+            "[Pinus].Branch.Dead.Wt",
+            "[Pinus].Branch.Wt",
             "[Pinus].Leaf.Detached.Wt",
             "[Pinus].Stem.Live.Wt",
             "[Pinus].Total.N",
@@ -5862,8 +5864,8 @@
                   "Line": 4,
                   "LineThickness": 1,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Pinus.Branch.Live.Wt",
-                  "YFieldName": "Observed.Pinus.Branch.Live.Wt",
+                  "XFieldName": "Predicted.Pinus.Branch.Wt",
+                  "YFieldName": "Observed.Pinus.Branch.Wt",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -5941,7 +5943,7 @@
                   "Line": 4,
                   "LineThickness": 1,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Pred-Obs.Pinus.Leaf.Wt",
+                  "XFieldName": "Predicted.Pinus.Leaf.Wt",
                   "YFieldName": "Observed.Pinus.Leaf.Wt",
                   "X2FieldName": "",
                   "Y2FieldName": "",
@@ -6158,7 +6160,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -6316,7 +6318,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": "SimulationName",
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -14968,15 +14970,87 @@
                         {
                           "$type": "Models.Factorial.Factor, Models",
                           "Specification": "[Management]",
-                          "Name": "G",
+                          "Name": "S",
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1973-12-31",
+                                  "Date": "1973-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.11);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.02);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.003);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.01);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1980-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.003);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1981-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.016);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1982-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.067);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1983-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.060);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1984-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.021);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1985-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.037);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1985-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 }
                               ],
@@ -14991,8 +15065,86 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1973-12-31",
+                                  "Date": "1973-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1975-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.113);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1976-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.005);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1977-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1978-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.005);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1979-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.746);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1980-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1981-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1982-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1983-07-14",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1983-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.679);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1984-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.019);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1985-07-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0);",
                                   "Enabled": true
                                 }
                               ],
@@ -15065,463 +15217,6 @@
                           "Altitude": 50.0,
                           "Name": "Plantation",
                           "Children": [
-                            {
-                              "$type": "Models.Soils.Soil, Models",
-                              "RecordNumber": 1,
-                              "ASCOrder": "NA",
-                              "ASCSubOrder": "NA",
-                              "SoilType": "Loam over Clay Loam",
-                              "LocalName": null,
-                              "Site": "30395_43104",
-                              "NearestTown": "HALL",
-                              "Region": "South Eastern Highlands",
-                              "State": "ACT",
-                              "Country": null,
-                              "NaturalVegetation": "Cleared, non-native vegetation, buildings",
-                              "ApsoilNumber": "9999",
-                              "Latitude": -35.33,
-                              "Longitude": 148.92,
-                              "LocationAccuracy": "+- 90m",
-                              "YearOfSampling": "2020",
-                              "DataSource": "Soil and Landscape Grid of Australia. This soil parameter file was automatically generated from the GSM National Surfaces using pedotransfer functions.",
-                              "Comments": "Landuse is Plantation forestry",
-                              "Name": "Synthetic Soil BFG",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.Physical, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-150",
-                                    "150-200"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    500.0,
-                                    500.0
-                                  ],
-                                  "ParticleSizeClay": null,
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
-                                  "Rocks": null,
-                                  "Texture": null,
-                                  "BD": [
-                                    1.44686982609676,
-                                    1.58102674010469,
-                                    1.55808208502411,
-                                    1.52403757154559,
-                                    1.54523686801681,
-                                    1.58479930454788,
-                                    1.585,
-                                    1.585
-                                  ],
-                                  "AirDry": [
-                                    0.02,
-                                    0.01,
-                                    0.01,
-                                    0.03,
-                                    0.07,
-                                    0.07,
-                                    0.08,
-                                    0.08
-                                  ],
-                                  "LL15": [
-                                    0.03,
-                                    0.02,
-                                    0.02,
-                                    0.04,
-                                    0.08,
-                                    0.08,
-                                    0.09,
-                                    0.09
-                                  ],
-                                  "DUL": [
-                                    0.18,
-                                    0.18,
-                                    0.2,
-                                    0.22,
-                                    0.23,
-                                    0.2,
-                                    0.18,
-                                    0.19
-                                  ],
-                                  "SAT": [
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25
-                                  ],
-                                  "KS": [
-                                    250.0,
-                                    220.0,
-                                    200.0,
-                                    150.0,
-                                    25.0,
-                                    50.0,
-                                    100.0,
-                                    100.0
-                                  ],
-                                  "BDMetadata": null,
-                                  "AirDryMetadata": null,
-                                  "LL15Metadata": null,
-                                  "DULMetadata": null,
-                                  "SATMetadata": null,
-                                  "KSMetadata": null,
-                                  "RocksMetadata": null,
-                                  "TextureMetadata": null,
-                                  "ParticleSizeSandMetadata": null,
-                                  "ParticleSizeSiltMetadata": null,
-                                  "ParticleSizeClayMetadata": null,
-                                  "Name": "Physical",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.175,
-                                        0.175,
-                                        0.195,
-                                        0.215,
-                                        0.225,
-                                        0.195,
-                                        0.175,
-                                        0.185
-                                      ],
-                                      "KL": [
-                                        0.05,
-                                        0.04,
-                                        0.03,
-                                        0.03,
-                                        0.02,
-                                        0.01,
-                                        0.01,
-                                        0.01
-                                      ],
-                                      "XF": [
-                                        0.9,
-                                        0.9,
-                                        0.9,
-                                        0.9,
-                                        0.6,
-                                        0.4,
-                                        0.2,
-                                        0.1
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "PinusSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.InitialWater, Models",
-                                  "PercentMethod": 1,
-                                  "FractionFull": 0.5,
-                                  "DepthWetSoil": "NaN",
-                                  "RelativeTo": null,
-                                  "Name": "Initial water",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-150",
-                                    "150-200"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    500.0,
-                                    500.0
-                                  ],
-                                  "NO3": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "NH4": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "SW": [
-                                    0.17,
-                                    0.17,
-                                    0.19,
-                                    0.21,
-                                    0.22,
-                                    0.19,
-                                    0.17,
-                                    0.18
-                                  ],
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial conditions",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.WaterModel.WaterBalance, Models",
-                                  "SummerDate": "1-nov",
-                                  "SummerU": 6.0,
-                                  "SummerCona": 6.0,
-                                  "WinterDate": "1-apr",
-                                  "WinterU": 2.0,
-                                  "WinterCona": 2.0,
-                                  "DiffusConst": 111.89197563737373,
-                                  "DiffusSlope": 39.238373620607859,
-                                  "Salb": 0.13,
-                                  "CN2Bare": 78.0,
-                                  "CNRed": 20.0,
-                                  "CNCov": 0.0,
-                                  "Slope": 8.63724422454834,
-                                  "DischargeWidth": 10.0,
-                                  "CatchmentArea": 6537.54296875,
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    500.0,
-                                    500.0
-                                  ],
-                                  "SWCON": [
-                                    0.4,
-                                    0.4,
-                                    0.4,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
-                                  ],
-                                  "KLAT": null,
-                                  "ResourceName": "WaterBalance",
-                                  "Name": "SoilWater",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Organic, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-150",
-                                    "150-200"
-                                  ],
-                                  "FOMCNRatio": 40.0,
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    500.0,
-                                    500.0
-                                  ],
-                                  "Carbon": [
-                                    1.7,
-                                    0.6,
-                                    0.4,
-                                    0.2,
-                                    0.1,
-                                    0.05,
-                                    0.05,
-                                    0.05
-                                  ],
-                                  "SoilCNRatio": [
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0
-                                  ],
-                                  "FBiom": [
-                                    0.04,
-                                    0.03106,
-                                    0.01404,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
-                                  ],
-                                  "FInert": [
-                                    0.3,
-                                    0.4,
-                                    0.6,
-                                    0.786996922471623,
-                                    0.982222423985719,
-                                    0.935805060907539,
-                                    0.936,
-                                    0.936
-                                  ],
-                                  "FOM": [
-                                    475.4746586022116,
-                                    303.17602770752188,
-                                    193.3135701631787,
-                                    123.26217442655363,
-                                    67.647715615544115,
-                                    37.125853484990209,
-                                    37.126,
-                                    37.126
-                                  ],
-                                  "CarbonMetadata": null,
-                                  "FOMMetadata": null,
-                                  "Name": "Organic",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Chemical, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-45",
-                                    "45-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-150",
-                                    "150-200"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    250.0,
-                                    150.0,
-                                    200.0,
-                                    200.0,
-                                    500.0,
-                                    500.0
-                                  ],
-                                  "NO3N": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "NH4N": [
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "PH": [
-                                    5.7,
-                                    5.5,
-                                    5.3,
-                                    5.33750682265195,
-                                    5.38374250856154,
-                                    5.42226090044229,
-                                    5.422,
-                                    5.422
-                                  ],
-                                  "CL": null,
-                                  "EC": null,
-                                  "ESP": null,
-                                  "ECMetadata": null,
-                                  "CLMetadata": null,
-                                  "ESPMetadata": null,
-                                  "PHMetadata": null,
-                                  "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                                  "ResourceName": "Nutrient",
-                                  "Name": "Nutrient",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
                             {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
@@ -20374,6 +20069,507 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Soil, Models",
+                              "RecordNumber": -1,
+                              "ASCOrder": "NA",
+                              "ASCSubOrder": "NA",
+                              "SoilType": "Aluandic Andosols",
+                              "LocalName": null,
+                              "Site": "NA",
+                              "NearestTown": "NA",
+                              "Region": "NA",
+                              "State": "NA",
+                              "Country": "New Zealand",
+                              "NaturalVegetation": "NA",
+                              "ApsoilNumber": "9999",
+                              "Latitude": -38.375,
+                              "Longitude": 176.125,
+                              "LocationAccuracy": "+- 250 m",
+                              "YearOfSampling": "2019",
+                              "DataSource": "ISRIC SoilGrids",
+                              "Comments": "",
+                              "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.Physical, Models",
+                                  "Depth": [
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100",
+                                    "100-120",
+                                    "120-140",
+                                    "140-170",
+                                    "170-200"
+                                  ],
+                                  "Thickness": [
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    300.0,
+                                    300.0
+                                  ],
+                                  "ParticleSizeClay": [
+                                    27.7,
+                                    31.5,
+                                    34.8,
+                                    36.2,
+                                    37.2,
+                                    37.8,
+                                    37.9,
+                                    37.7,
+                                    37.5,
+                                    37.1
+                                  ],
+                                  "ParticleSizeSand": [
+                                    38.7,
+                                    37.0,
+                                    35.8,
+                                    35.2,
+                                    35.2,
+                                    35.8,
+                                    36.0,
+                                    36.0,
+                                    36.0,
+                                    36.0
+                                  ],
+                                  "ParticleSizeSilt": [
+                                    33.7,
+                                    31.5,
+                                    29.2,
+                                    27.8,
+                                    27.3,
+                                    27.8,
+                                    27.9,
+                                    27.7,
+                                    27.5,
+                                    27.2
+                                  ],
+                                  "Rocks": null,
+                                  "Texture": null,
+                                  "BD": [
+                                    0.819,
+                                    0.938,
+                                    0.997,
+                                    1.034,
+                                    1.064,
+                                    1.087,
+                                    1.1,
+                                    1.104,
+                                    1.109,
+                                    1.115
+                                  ],
+                                  "AirDry": [
+                                    0.096,
+                                    0.093,
+                                    0.093,
+                                    0.093,
+                                    0.092,
+                                    0.091,
+                                    0.09,
+                                    0.09,
+                                    0.09,
+                                    0.09
+                                  ],
+                                  "LL15": [
+                                    0.288,
+                                    0.28,
+                                    0.28,
+                                    0.28,
+                                    0.278,
+                                    0.273,
+                                    0.27,
+                                    0.27,
+                                    0.27,
+                                    0.27
+                                  ],
+                                  "DUL": [
+                                    0.46,
+                                    0.439,
+                                    0.433,
+                                    0.428,
+                                    0.421,
+                                    0.41,
+                                    0.405,
+                                    0.405,
+                                    0.405,
+                                    0.405
+                                  ],
+                                  "SAT": [
+                                    0.615,
+                                    0.58,
+                                    0.565,
+                                    0.555,
+                                    0.545,
+                                    0.535,
+                                    0.53,
+                                    0.53,
+                                    0.53,
+                                    0.53
+                                  ],
+                                  "KS": [
+                                    14.184,
+                                    9.093,
+                                    6.237,
+                                    5.241,
+                                    4.667,
+                                    4.404,
+                                    4.328,
+                                    4.429,
+                                    4.56,
+                                    4.721
+                                  ],
+                                  "BDMetadata": null,
+                                  "AirDryMetadata": null,
+                                  "LL15Metadata": null,
+                                  "DULMetadata": null,
+                                  "SATMetadata": null,
+                                  "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
+                                  "Name": "Physical",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.288,
+                                        0.28,
+                                        0.281,
+                                        0.292,
+                                        0.306,
+                                        0.318,
+                                        0.333,
+                                        0.351,
+                                        0.373,
+                                        0.399
+                                      ],
+                                      "KL": [
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.055,
+                                        0.048,
+                                        0.04,
+                                        0.032,
+                                        0.024,
+                                        0.014,
+                                        0.003
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "PinusSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.InitialWater, Models",
+                                  "PercentMethod": 0,
+                                  "FractionFull": 1.0,
+                                  "DepthWetSoil": "NaN",
+                                  "RelativeTo": null,
+                                  "Name": "Initial water",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.WaterModel.WaterBalance, Models",
+                                  "SummerDate": "1-nov",
+                                  "SummerU": 6.0,
+                                  "SummerCona": 6.0,
+                                  "WinterDate": "1-apr",
+                                  "WinterU": 2.0,
+                                  "WinterCona": 2.0,
+                                  "DiffusConst": 599.26,
+                                  "DiffusSlope": 12.09,
+                                  "Salb": 0.13,
+                                  "CN2Bare": 73.0,
+                                  "CNRed": 20.0,
+                                  "CNCov": 0.0,
+                                  "Slope": 0.5,
+                                  "DischargeWidth": 5.0,
+                                  "CatchmentArea": 10.0,
+                                  "Thickness": [
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    300.0,
+                                    300.0
+                                  ],
+                                  "SWCON": [
+                                    0.296,
+                                    0.25,
+                                    0.209,
+                                    0.192,
+                                    0.145,
+                                    0.139,
+                                    0.137,
+                                    0.139,
+                                    0.102,
+                                    0.105
+                                  ],
+                                  "KLAT": null,
+                                  "ResourceName": "WaterBalance",
+                                  "Name": "SoilWater",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Organic, Models",
+                                  "Depth": [
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100",
+                                    "100-120",
+                                    "120-140",
+                                    "140-170",
+                                    "170-200"
+                                  ],
+                                  "FOMCNRatio": 40.0,
+                                  "Thickness": [
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    300.0,
+                                    300.0
+                                  ],
+                                  "Carbon": [
+                                    7.897,
+                                    4.392,
+                                    3.066,
+                                    2.54,
+                                    2.177,
+                                    1.956,
+                                    1.841,
+                                    1.825,
+                                    1.806,
+                                    1.783
+                                  ],
+                                  "SoilCNRatio": [
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9,
+                                    9.9
+                                  ],
+                                  "FBiom": [
+                                    0.04,
+                                    0.031,
+                                    0.014,
+                                    0.01,
+                                    0.01,
+                                    0.01,
+                                    0.01,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "FInert": [
+                                    0.354,
+                                    0.556,
+                                    0.749,
+                                    0.872,
+                                    0.989,
+                                    0.99,
+                                    0.99,
+                                    0.99,
+                                    0.99,
+                                    0.99
+                                  ],
+                                  "FOM": [
+                                    24.257598896319994,
+                                    19.370086146871081,
+                                    15.467327947042886,
+                                    12.350912226583924,
+                                    9.1497808194939729,
+                                    6.7783243463252374,
+                                    5.0215061814482311,
+                                    3.7200232744827271,
+                                    2.3719915644983973,
+                                    1.512448596933551
+                                  ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
+                                  "Name": "Organic",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Chemical, Models",
+                                  "Depth": [
+                                    "0-15",
+                                    "15-30",
+                                    "30-45",
+                                    "45-60",
+                                    "60-80",
+                                    "80-100",
+                                    "100-120",
+                                    "120-140",
+                                    "140-170",
+                                    "170-200"
+                                  ],
+                                  "Thickness": [
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    150.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    200.0,
+                                    300.0,
+                                    300.0
+                                  ],
+                                  "NO3N": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "NH4N": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "PH": [
+                                    5.4,
+                                    5.45,
+                                    5.5,
+                                    5.5,
+                                    5.53,
+                                    5.58,
+                                    5.61,
+                                    5.63,
+                                    5.66,
+                                    5.69
+                                  ],
+                                  "CL": null,
+                                  "EC": null,
+                                  "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
+                                  "Name": "Chemical",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Sample, Models",
+                                  "Depth": [
+                                    "0-180"
+                                  ],
+                                  "Thickness": [
+                                    1800.0
+                                  ],
+                                  "NO3": null,
+                                  "NH4": [
+                                    1.0
+                                  ],
+                                  "SW": null,
+                                  "OC": null,
+                                  "EC": null,
+                                  "CL": null,
+                                  "ESP": null,
+                                  "PH": null,
+                                  "SWUnits": 0,
+                                  "OCUnits": 0,
+                                  "PHUnits": 0,
+                                  "Name": "Initial conditions",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "CERESSoilTemperature",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "ResourceName": "Nutrient",
+                                  "Name": "Nutrient",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -20618,7 +20814,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -20646,7 +20842,7 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -21855,7 +22051,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Leaf.Wt ",
+                          "YFieldName": "Pinus.Leaf.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -21922,7 +22118,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Branch.Live.Wt",
+                          "YFieldName": "Pinus.Branch.Wt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -21951,7 +22147,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Pinus.Branch.Wt ",
+                          "YFieldName": "Pinus.Branch.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
