@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 121; } }
+        public static int LatestVersion { get { return 122; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3185,6 +3185,21 @@
                 Constant value = new Constant();
                 value.FixedValue = 1;
                 JsonUtilities.AddModel(phaseSwitch, value);
+            }
+        }
+
+        /// <summary>
+        /// Set maps' default zoom level to 360.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion122(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            {
+                map["Zoom"] = 360;
+                map["Center"]["Latitude"] = 0;
+                map["Center"]["Longitude"] = 0;
             }
         }
 
