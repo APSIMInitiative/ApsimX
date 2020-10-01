@@ -1085,8 +1085,6 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                 frame1.Unrealized += Frame1_Unrealized;
-                if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                    ieBrowser.Browser.ScrollBarsEnabled = false;
             }
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
