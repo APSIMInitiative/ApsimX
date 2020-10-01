@@ -121,6 +121,6 @@ namespace Models
         /// <summary>
         /// Zoom level
         /// </summary>
-        private Double _Zoom = 1.4;
+        private Double _Zoom = 360;
     }
 }
