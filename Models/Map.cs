@@ -30,7 +30,7 @@ namespace Models
             public double Latitude { get; set; }
 
             /// <summary>The longitude</summary>
-            [Description("Latitude")]
+            [Description("Longitude")]
             public double Longitude { get; set; }
 
             /// <summary>

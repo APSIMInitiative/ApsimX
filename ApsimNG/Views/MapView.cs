@@ -20,6 +20,8 @@
     using System.Reflection;
     using Interfaces;
     using Gtk;
+    using Utility;
+    using SharpMap.Data;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -185,23 +187,41 @@
         /// <summary>
         /// Initialise the map component.
         /// </summary>
-        private static SharpMap.Map InitMap()
+        private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            
-            VectorStyle style = new VectorStyle();
-            style.Outline = new Pen(Color.Green, 1);
-            style.EnableOutline = true;
-            VectorLayer layWorld = new VectorLayer("Countries");
-            layWorld.DataSource = new ShapeFile("/home/drew/code/SharpMapTest/world/countries.shp", true);
-            layWorld.Style = style;
-
-            result.Layers.Add(layWorld);
             result.MaximumZoom = 720;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
             result.Zoom = result.MaximumZoom;
+            
+            VectorLayer layWorld = new VectorLayer("Countries");
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimx = Directory.GetParent(bin).FullName;
+            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
+            layWorld.DataSource = new ShapeFile("/home/drew/code/SharpMapTest/world/countries.shp", true);
+            layWorld.Style = new VectorStyle();
+            layWorld.Style.EnableOutline = true;
+            Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+            Color foreground = Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+            layWorld.Style.Fill = new SolidBrush(background);
+            layWorld.Style.Outline.Color = foreground;
+            result.Layers.Add(layWorld);
 
+            // Show country names.
+            LabelLayer countryNames = new LabelLayer("Country labels");
+			countryNames.DataSource = layWorld.DataSource;
+            //countryNames.Enabled = true;
+            countryNames.LabelColumn = "Name";
+            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
+            countryNames.Style = new LabelStyle();
+            //^countryNames.Style.BackColor = new SolidBrush(foreground);
+            countryNames.Style.ForeColor = foreground;
+            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
+            //countryNames.MaxVisible = 90;
+            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
+            result.Layers.Add(countryNames);
+            
             return result;
         }
 
@@ -362,6 +382,7 @@
                     double dx = lon - mouseAtDragStart.Longitude;
 
                     map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
+                    Console.WriteLine($"Moving to (lat={map.Center.Y}, lon={map.Center.X})");
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }
