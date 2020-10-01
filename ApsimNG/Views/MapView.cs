@@ -209,6 +209,7 @@
             result.Layers.Add(layWorld);
 
             // Show country names.
+            // Note this doesn't appear to work under mono for now.
             LabelLayer countryNames = new LabelLayer("Country labels");
 			countryNames.DataSource = layWorld.DataSource;
             //countryNames.Enabled = true;

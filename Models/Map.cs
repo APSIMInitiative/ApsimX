@@ -86,6 +86,19 @@ namespace Models
         }
 
         /// <summary>
+        /// Zoom factor for the map
+        /// </summary>
+        [Description("Zoom level")]
+        public Double Zoom
+        {
+            get
+            {
+                return _Zoom;
+            }
+            set { _Zoom = value; }
+        }
+
+        /// <summary>
         /// Coordinate of map center
         /// </summary>
         private Coordinate _Center = new Coordinate(0, 0);
@@ -94,6 +107,7 @@ namespace Models
         /// Coordinate of the center of the map
         /// </summary>
         [Description("Map Center")]
+        [Separator("Coordinates for center of map")]
         [Display(Type = DisplayType.SubModel)]
         public Coordinate Center
         {
@@ -108,18 +122,5 @@ namespace Models
         /// Zoom level
         /// </summary>
         private Double _Zoom = 1.4;
-
-        /// <summary>
-        /// Zoom factor for the map
-        /// </summary>
-        [Description("Zoom level")]
-        public Double Zoom
-        {
-            get
-            {
-                return _Zoom;
-            }
-            set { _Zoom = value; }
-        }
     }
 }
