@@ -199,7 +199,7 @@
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            layWorld.DataSource = new ShapeFile("/home/drew/code/SharpMapTest/world/countries.shp", true);
+            layWorld.DataSource = new ShapeFile(shapeFileName, true);
             layWorld.Style = new VectorStyle();
             layWorld.Style.EnableOutline = true;
             Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
