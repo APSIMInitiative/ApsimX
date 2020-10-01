@@ -633,7 +633,6 @@
     <Compile Include="Functions\MinimumFunction.cs" />
     <Compile Include="Functions\MultiplyFunction.cs" />
     <Compile Include="Functions\OnEventFunction.cs" />
-    <Compile Include="Functions\PhaseBasedSwitch.cs" />
     <Compile Include="Functions\PhaseLookup.cs" />
     <Compile Include="Functions\PhaseLookupValue.cs" />
     <Compile Include="Functions\PhotoperiodDeltaFunction.cs" />
