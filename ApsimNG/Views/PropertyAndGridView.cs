@@ -1,6 +1,7 @@
 using Gtk;
 using System;
 using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -8,7 +9,7 @@ namespace UserInterface.Views
     public interface IPropertyAndGridView
     {
         /// <summary>Top grid in view.</summary>
-        IPropertyView PropertiesView { get; }
+        ViewBase PropertiesView { get; }
 
         /// <summary>bottom grid in view.</summary>
         IGridView Grid2 { get; }
@@ -18,7 +19,7 @@ namespace UserInterface.Views
     public class PropertyAndGridView : ViewBase, IPropertyAndGridView
     {
         /// <summary>Top grid in view.</summary>
-        public IPropertyView PropertiesView { get; private set; }
+        public ViewBase PropertiesView { get; private set; }
 
         /// <summary>bottom grid in view.</summary>
         public IGridView Grid2 { get; private set; }
@@ -26,7 +27,10 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public PropertyAndGridView(ViewBase owner) : base(owner)
         {
-            PropertiesView = new PropertyView(owner);
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                PropertiesView = new PropertyView(owner);
+            else
+                PropertiesView = new GridView(this);
             Grid2 = new GridView(owner);
 
             VPaned panel = new VPaned();

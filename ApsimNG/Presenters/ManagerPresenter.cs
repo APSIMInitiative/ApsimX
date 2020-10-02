@@ -9,6 +9,7 @@
     using Models.Core;
     using Views;
     using ICSharpCode.NRefactory.CSharp;
+    using Utility;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -18,7 +19,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private SimplePropertyPresenter propertyPresenter = new SimplePropertyPresenter();
+        private IPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -69,6 +70,10 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
@@ -128,9 +133,15 @@
             if (!intellisense.Visible)
                 BuildScript();
             if (scriptModel != null)
-            {
-                propertyPresenter.RefreshView(scriptModel);
-            }
+                RefreshProperties();
+        }
+
+        private void RefreshProperties()
+        {
+            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
+                simplePresenter.RefreshView(scriptModel);
+            else if (propertyPresenter is PropertyPresenter presenter)
+                presenter.Refresh();
         }
 
         /// <summary>
@@ -182,7 +193,7 @@
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
                 if (scriptModel != null)
-                    propertyPresenter.RefreshView(scriptModel);
+                    RefreshProperties();
             }
             catch (Exception err)
             {

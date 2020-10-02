@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using Utility;
     using Views;
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
@@ -21,7 +22,7 @@
         private IPropertyAndGridView view;
         private ExplorerPresenter explorerPresenter;
         private DataTable table;
-        private SimplePropertyPresenter propertyPresenter;
+        private IPresenter propertyPresenter;
         private GridPresenter gridPresenter;
 
         /// <summary>
@@ -46,7 +47,10 @@
             view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            propertyPresenter = new SimplePropertyPresenter();
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
             gridPresenter = new GridPresenter();

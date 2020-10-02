@@ -9,7 +9,10 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the properties grid.
         /// </summary>
-        IPropertyView PropertyEditor { get; }
+        /// <remarks>
+        /// Change type to IProeprtyView when ready to release new property view.
+        /// </remarks>
+        ViewBase PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -25,7 +28,7 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private PropertyView propertyEditor;
+        private ViewBase propertyEditor;
         private EditorView scriptEditor;
         private Notebook notebook;
 
@@ -37,7 +40,10 @@ namespace UserInterface.Views
         {
             notebook = new Notebook();
             mainWidget = notebook;
-            propertyEditor = new PropertyView(this);
+            if (Utility.Configuration.Settings.UseNewPropertyPresenter)
+                propertyEditor = new PropertyView(this);
+            else
+                propertyEditor = new GridView(this);
             scriptEditor = new EditorView(this);
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
@@ -70,7 +76,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public IPropertyView PropertyEditor { get { return propertyEditor; } }
+        public ViewBase PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
        
     }
