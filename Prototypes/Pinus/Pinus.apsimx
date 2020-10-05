@@ -39,6 +39,7 @@
             "[Pinus].BelowGround.Wt",
             "[Pinus].Leaf.Dead.Wt",
             "[Pinus].Leaf.Live.Wt",
+            "[Pinus].Leaf.Live.NConc",
             "[Pinus].Leaf.Wt",
             "[Pinus].Branch.Live.Wt",
             "[Pinus].Branch.Dead.Wt",
@@ -46,7 +47,8 @@
             "[Pinus].Leaf.Detached.Wt",
             "[Pinus].Stem.Live.Wt",
             "[Pinus].Total.N",
-            "[Pinus].Leaf.Live.N",
+            "[Pinus].Leaf.Live.N*10 as LiveFoliarN",
+            "[Pinus].Leaf.N as TotalFoliarN",
             "[Pinus].Leaf.CoverGreen",
             "[Pinus].Leaf.LAI",
             "[Pinus].Leaf.Fn",
@@ -76,7 +78,9 @@
             "[Pinus].Fruit.Wt",
             "[Pinus].TotalWoodBark.Wt",
             "//(([Soil].SoilWater.SW[2])+([Soil].SoilWater.SW[3]))/2 as SW30",
+            "//(([Soil].SoilWater.SW[2])+([Soil].SoilWater.SW[3]))/2 as SW30",
             "//(([Soil].SoilWater.SW[9])+([Soil].SoilWater.SW[10]))/2 as SW600",
+            "sum ([SoilWater].PAWmm) as PAWmmTotal",
             "[Soil].SoilWater.SW[1] as SWD3",
             "[Soil].SoilWater.SW[2] as SWD3",
             "//[Soil].SoilWater.SW[3] as SWD3",
@@ -200,6 +204,22 @@
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "([Nutrient].MineralisedN[1]+[Nutrient].MineralisedN[2]+[Nutrient].MineralisedN[3])*10 as NNMkg45cmAnnual"
+          ],
+          "EventNames": [
+            "[Clock].EndOfYear"
+          ],
+          "GroupByVariableName": null,
+          "Name": "AnnualReport",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -6795,164 +6815,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "SW30",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 1,
-                  "TableName": "PredictedObservedSoilWater",
-                  "XFieldName": "Predicted.SW30",
-                  "YFieldName": "Observed.SW30",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "SW600",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 1,
-                  "Line": 4,
-                  "LineThickness": 1,
-                  "TableName": "PredictedObservedSoilWater",
-                  "XFieldName": "Predicted.SW600",
-                  "YFieldName": "Observed.SW600",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": false,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -7048,50 +6910,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1983-12-31",
+                                  "Date": "1983-06-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1984-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1985-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1986-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1987-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1988-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.56);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1989-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1990-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1989-04-03",
+                                  "Action": "[TreeThinning].Script.DoThin(0.563);",
                                   "Enabled": true
                                 }
                               ],
@@ -7166,56 +6992,38 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1983-12-31",
+                                  "Date": "1983-06-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1984-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
+                                  "Date": "1985-06-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.068);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1985-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.04);",
+                                  "Date": "1986-06-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.029);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1986-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1987-08-27",
+                                  "Action": "[TreeThinning].Script.DoThin(0.015);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1987-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1988-04-03",
+                                  "Action": "[TreeThinning].Script.DoThin(0.032);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1988-01-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1988-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.47);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1989-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1990-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1989-06-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.46);",
                                   "Enabled": true
                                 },
                                 {
@@ -7285,78 +7093,54 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1980-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1981-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1982-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1983-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1984-12-31",
+                                  "Date": "1983-06-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1985-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1987-08-27",
+                                  "Action": "[TreeThinning].Script.DoThin(0.014);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1986-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1988-04-03",
+                                  "Action": "[TreeThinning].Script.DoThin(0.014);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1987-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1989-04-03",
+                                  "Action": "[TreeThinning].Script.DoThin(0.555);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1988-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.56);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1989-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1990-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1984-08-15",
+                                  "Date": "1989-08-15",
                                   "Action": "[AutomaticIrrigation].Script.TurnOn()",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1988-08-15",
+                                  "Date": "2003-08-15",
                                   "Action": "[AutomaticIrrigation].Script.TurnOff()",
                                   "Enabled": true
                                 }
@@ -7409,73 +7193,31 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1979-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1980-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1981-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1982-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.01);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1983-12-31",
+                                  "Date": "1980-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1984-12-31",
+                                  "Date": "1981-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1985-12-31",
+                                  "Date": "1982-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.00);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1986-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1987-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1988-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.56);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1989-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1990-12-31",
-                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Date": "1989-04-03",
+                                  "Action": "[TreeThinning].Script.DoThin(0.462);",
                                   "Enabled": true
                                 },
                                 {
@@ -7538,7 +7280,7 @@
                         {
                           "$type": "Models.Clock, Models",
                           "Start": "1973-05-01T00:00:00",
-                          "End": "2001-06-15T00:00:00",
+                          "End": "2006-06-15T00:00:00",
                           "Name": "Clock",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7622,54 +7364,54 @@
                                   "Rocks": null,
                                   "Texture": null,
                                   "BD": [
-                                    1.44686982609676,
-                                    1.58102674010469,
-                                    1.55808208502411,
-                                    1.52403757154559,
-                                    1.54523686801681,
-                                    1.58479930454788,
-                                    1.585,
-                                    1.585
+                                    1.5,
+                                    1.6,
+                                    1.68,
+                                    1.75,
+                                    1.75,
+                                    1.7,
+                                    1.7,
+                                    1.7
                                   ],
                                   "AirDry": [
+                                    0.01,
+                                    0.01,
+                                    0.01,
                                     0.02,
-                                    0.01,
-                                    0.01,
-                                    0.03,
-                                    0.07,
-                                    0.07,
-                                    0.08,
-                                    0.08
+                                    0.02,
+                                    0.05,
+                                    0.05,
+                                    0.05
                                   ],
                                   "LL15": [
-                                    0.03,
                                     0.02,
                                     0.02,
-                                    0.04,
-                                    0.08,
-                                    0.08,
-                                    0.09,
-                                    0.09
+                                    0.02,
+                                    0.05,
+                                    0.05,
+                                    0.07,
+                                    0.07,
+                                    0.07
                                   ],
                                   "DUL": [
-                                    0.18,
-                                    0.18,
-                                    0.2,
-                                    0.22,
+                                    0.17,
+                                    0.17,
+                                    0.17,
+                                    0.23,
                                     0.23,
                                     0.2,
-                                    0.18,
-                                    0.19
+                                    0.19,
+                                    0.18
                                   ],
                                   "SAT": [
+                                    0.35,
+                                    0.3,
+                                    0.3,
+                                    0.28,
+                                    0.28,
                                     0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25
+                                    0.24,
+                                    0.23
                                   ],
                                   "KS": [
                                     250.0,
@@ -7697,14 +7439,14 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.175,
-                                        0.175,
-                                        0.195,
-                                        0.215,
-                                        0.225,
-                                        0.195,
-                                        0.175,
-                                        0.185
+                                        0.11,
+                                        0.11,
+                                        0.11,
+                                        0.158,
+                                        0.158,
+                                        0.148,
+                                        0.146,
+                                        0.138
                                       ],
                                       "KL": [
                                         0.05,
@@ -7821,13 +7563,13 @@
                                 {
                                   "$type": "Models.WaterModel.WaterBalance, Models",
                                   "SummerDate": "1-nov",
-                                  "SummerU": 6.0,
-                                  "SummerCona": 6.0,
+                                  "SummerU": 4.0,
+                                  "SummerCona": 3.5,
                                   "WinterDate": "1-apr",
-                                  "WinterU": 2.0,
-                                  "WinterCona": 2.0,
-                                  "DiffusConst": 111.89197563737373,
-                                  "DiffusSlope": 39.238373620607859,
+                                  "WinterU": 4.0,
+                                  "WinterCona": 3.5,
+                                  "DiffusConst": 88.0,
+                                  "DiffusSlope": 35.4,
                                   "Salb": 0.13,
                                   "CN2Bare": 78.0,
                                   "CNRed": 20.0,
@@ -7846,14 +7588,14 @@
                                     500.0
                                   ],
                                   "SWCON": [
-                                    0.4,
-                                    0.4,
-                                    0.4,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.9,
+                                    0.9,
+                                    0.9,
+                                    0.6,
+                                    0.6,
+                                    0.6,
+                                    0.6,
+                                    0.6
                                   ],
                                   "KLAT": null,
                                   "ResourceName": "WaterBalance",
@@ -7872,7 +7614,8 @@
                                     "60-80",
                                     "80-100",
                                     "100-150",
-                                    "150-200"
+                                    "150-200",
+                                    ""
                                   ],
                                   "FOMCNRatio": 40.0,
                                   "Thickness": [
@@ -7883,17 +7626,19 @@
                                     200.0,
                                     200.0,
                                     500.0,
-                                    500.0
+                                    500.0,
+                                    999999.0
                                   ],
                                   "Carbon": [
-                                    1.7,
-                                    0.6,
-                                    0.4,
-                                    0.2,
-                                    0.1,
-                                    0.05,
-                                    0.05,
-                                    0.05
+                                    1.5,
+                                    0.45,
+                                    0.27,
+                                    0.27,
+                                    0.27,
+                                    0.27,
+                                    0.27,
+                                    0.27,
+                                    0.27
                                   ],
                                   "SoilCNRatio": [
                                     14.0,
@@ -7903,7 +7648,8 @@
                                     14.0,
                                     14.0,
                                     14.0,
-                                    14.0
+                                    14.0,
+                                    "NaN"
                                   ],
                                   "FBiom": [
                                     0.04,
@@ -7913,7 +7659,8 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01
+                                    0.01,
+                                    "NaN"
                                   ],
                                   "FInert": [
                                     0.3,
@@ -7923,7 +7670,8 @@
                                     0.982222423985719,
                                     0.935805060907539,
                                     0.936,
-                                    0.936
+                                    0.936,
+                                    "NaN"
                                   ],
                                   "FOM": [
                                     475.4746586022116,
@@ -7933,7 +7681,8 @@
                                     67.647715615544115,
                                     37.125853484990209,
                                     37.126,
-                                    37.126
+                                    37.126,
+                                    "NaN"
                                   ],
                                   "CarbonMetadata": null,
                                   "FOMMetadata": null,
@@ -7986,14 +7735,14 @@
                                     0.0
                                   ],
                                   "PH": [
-                                    5.7,
-                                    5.5,
-                                    5.3,
-                                    5.33750682265195,
-                                    5.38374250856154,
-                                    5.42226090044229,
-                                    5.422,
-                                    5.422
+                                    5.4,
+                                    5.2,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0
                                   ],
                                   "CL": null,
                                   "EC": null,
@@ -13028,6 +12777,22 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "sum ([Nutrient].MineralisedN[1]+[Nutrient].MineralisedN[2]+[Nutrient].MineralisedN[3]) from 16-Jun to 14-Jun as NNM45Annual"
+                              ],
+                              "EventNames": [
+                                "[Pinus].Harvesting"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "AnnualReport",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -15448,6 +15213,169 @@
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": "",
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": 30317.0,
+                          "Maximum": 32873.0,
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 3,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "PAWmmTotal",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 1,
+                          "Line": 4,
+                          "LineThickness": 1,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PAWmmTotal",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 1,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PAWmmTotal",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": 30317.0,
+                          "Maximum": 32873.0,
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 3,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NNM45Annual",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 1,
+                          "TableName": "AnnualReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Nutrient.MineralisedN(1)+Nutrient.MineralisedN(2)+Nutrient.MineralisedN(3)",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -45715,6 +45643,22 @@
                               "Name": "Report",
                               "Children": [],
                               "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "sum ([Nutrient].MineralisedN[1]+[Nutrient].MineralisedN[2]+[Nutrient].MineralisedN[3]) from 16-Jun to 14-Jun as NNM45Annual"
+                              ],
+                              "EventNames": [
+                                "[Pinus].Harvesting"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "AnnualReport",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
