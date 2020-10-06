@@ -172,6 +172,7 @@
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\CustomMenuToolButton.cs" />
     <Compile Include="Classes\PDFWriter.cs" />
+    <Compile Include="Classes\PropertyPresenterHelpers.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -218,7 +219,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressBarView.cs" />
+    <Compile Include="Views\PropertyAndGridView.cs" />
+    <Compile Include="Views\PropertyView.cs" />
     <Compile Include="Classes\ContextMenuHelper.cs" />
+    <Compile Include="Classes\Property.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
@@ -253,8 +257,11 @@
     <Compile Include="EventArguments\IntellisenseItemSelectedArgs.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
+    <Compile Include="EventArguments\PropertyChangedEventArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Presenters\CompositePropertyPresenter.cs" />
     <Compile Include="Interfaces\IBubbleChartView.cs" />
+    <Compile Include="Interfaces\IPropertyView.cs" />
     <Compile Include="Interfaces\ICloudJobView.cs" />
     <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
@@ -283,6 +290,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utility\ApsimFileMetadata.cs" />
+    <Compile Include="Utility\GtkUtilities.cs" />
     <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
     <Compile Include="Presenters\CompositeFactorPresenter.cs" />
@@ -361,6 +369,7 @@
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
+    <Compile Include="Presenters\SimplePropertyPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
