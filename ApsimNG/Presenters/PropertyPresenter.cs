@@ -1038,7 +1038,7 @@
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-                PopulateGrid(model);
+                Refresh();
         }
 
         /// <summary>
