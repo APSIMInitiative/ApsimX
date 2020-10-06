@@ -16,7 +16,7 @@ using Models.Storage;
 namespace Models.CLEM.Reporting
 {
     /// <summary>
-    /// A report class for writing output to the data store.
+    /// A report class for writing resource balances to the data store.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]

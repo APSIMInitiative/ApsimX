@@ -356,8 +356,19 @@ namespace Models.CLEM.Activities
 
             List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
-            while (includedMonthCount < 5)
+            // number of previous growth months to consider. default should be 5 
+            int growMonthHistory = 5;
+
+            while (includedMonthCount < growMonthHistory)
             {
+                // start month before start of simulation.
+                monthCount++;
+                month--;
+                currentN -= LinkedNativeFoodType.DecayNitrogen;
+                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
+                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
+                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
+
                 if (month == 0)
                 {
                     month = 12;
@@ -376,12 +387,6 @@ namespace Models.CLEM.Activities
                     includedMonthCount++;
                 }
                 propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
-                currentN -= LinkedNativeFoodType.DecayNitrogen;
-                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
-                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
-                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
-                monthCount++;
-                month--;
             }
 
             // assign pasture biomass to pools based on proportion of total

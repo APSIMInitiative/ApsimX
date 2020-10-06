@@ -488,6 +488,7 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumSireAge)))
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
+                    this.Status = ActivityStatus.Success;
 
                     // ensure females are not pregnant and add warning if pregnant old females found.
                     if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)

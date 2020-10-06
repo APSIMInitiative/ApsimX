@@ -226,10 +226,10 @@ namespace Models
                     {
                         valuesToWrite.Add(columns[i].GetValue(groupIndex));
                     }
-                    catch// (Exception err)
+                    catch (Exception err)
                     {
                         // Should we include exception message?
-                        invalidVariables.Add(columns[i].Name);
+                        invalidVariables.Add($"{columns[i].Name}: {err.Message}");
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)

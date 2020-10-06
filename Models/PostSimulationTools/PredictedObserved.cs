@@ -44,17 +44,17 @@ namespace Models.PostSimulationTools
 
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Values = nameof(CommonColumns))]
         public string FieldNameUsedForMatch { get; set; }
 
         /// <summary>Gets or sets the second field name used for match.</summary>
         [Description("Second field name to use for matching predicted with observed data (optional)")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Values = nameof(CommonColumns))]
         public string FieldName2UsedForMatch { get; set; }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Third field name to use for matching predicted with observed data (optional)")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Values = nameof(CommonColumns))]
         public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>
@@ -274,6 +274,24 @@ namespace Models.PostSimulationTools
                 else
                     throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
             }
+        }
+
+        /// <summary>
+        /// Returns all columns which exist in both predicted and observed tables.
+        /// </summary>
+        public string[] CommonColumns()
+        {
+            if (string.IsNullOrEmpty(PredictedTableName) || string.IsNullOrEmpty(ObservedTableName))
+                return new string[0];
+
+            IDataStore storage = FindInScope<IDataStore>();
+            if (!storage.Reader.TableNames.Contains(PredictedTableName) || !storage.Reader.TableNames.Contains(ObservedTableName))
+                return new string[0];
+
+            IEnumerable<string> predictedColumns = storage.Reader.GetColumns(PredictedTableName).Select(c => c.Item1);
+            IEnumerable<string> observedColumns = storage.Reader.GetColumns(ObservedTableName).Select(c => c.Item1);
+
+            return predictedColumns.Intersect(observedColumns).ToArray();
         }
     }
 }

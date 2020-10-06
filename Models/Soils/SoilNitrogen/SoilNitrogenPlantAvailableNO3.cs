@@ -5,6 +5,7 @@
     using Models.Core;
     using Newtonsoft.Json;
     using Models.Soils.Nutrients;
+    using APSIM.Shared.Utilities;
 
     /// <summary>This class encapsulates a SoilNitrogen model 'PlantAvailableNO3' solute.</summary>
     [Serializable]
@@ -29,7 +30,7 @@
         }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return parent.Soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(parent.soilPhysical.Thickness, parent.soilPhysical.BD, kgha); } }
 
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

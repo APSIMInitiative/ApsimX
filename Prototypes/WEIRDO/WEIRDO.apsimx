@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 408,
-  "Version": 114,
+  "ExplorerWidth": 281,
+  "Version": 119,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -1529,8 +1529,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -1572,8 +1572,8 @@
                             200.0,
                             1000.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.37,
                             0.33,
@@ -1602,7 +1602,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1817,7 +1817,7 @@
                       "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today",
-                        "sum([Soil].SoilWater.SWmm) as MeasuredProfile",
+                        "sum([Soil].WEIRDO.SWmm) as MeasuredProfile",
                         "[Soil].OutputLayers.SW"
                       ],
                       "EventNames": [
@@ -4558,8 +4558,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.22,
                             0.26,
@@ -4635,8 +4635,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.22,
                             0.27,
@@ -5122,8 +5122,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -5161,8 +5161,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.27,
                             0.27,
@@ -5457,7 +5457,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5521,7 +5521,7 @@
                         "[Clock].Today",
                         "[SurfaceOrganicMatter].Cover",
                         "[SurfaceOrganicMatter].Wt",
-                        "sum([Soil].SoilWater.SWmm[1:13]) as MeasuredProfile",
+                        "sum([Soil].WEIRDO.SWmm[1:13]) as MeasuredProfile",
                         "[Soil].OutputLayers.SWmm",
                         "[Soil].OutputLayers.SW",
                         "[Soil].WEIRDO.PoreWater"
@@ -5568,7 +5568,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Interfaces;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Weather Met;\n        [Link] private Fertiliser Fert;\n        [Link] private Irrigation Irrig;\n        [Link(ByName = true)]\n        private ISolute Urea;\n        [Link(ByName = true)]\n        private ISolute NO3;\n        [Link(ByName = true)]\n        private ISolute NH4;\n        [Link(ByName = true)]\n        private SoilNitrogen SoilNitrogen;\n        [Link] Soils.Soil Soil;\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double AccumPlantN { get; set; }\n        [XmlIgnore] public double AccumMineralisation { get; set; }\n        [XmlIgnore] public double AccumDenit { get; set; }\n        [XmlIgnore] public double AccumFert { get; set; }\n        [XmlIgnore] public double AccumLeach { get; set; }\n        [XmlIgnore] public double AccumDetach { get; set; }\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\n        \n        [XmlIgnore] public double AccumEO { get; set; }\n        [XmlIgnore] public double AccumEP { get; set; }\n        [XmlIgnore] public double AccumES { get; set; }\n        [XmlIgnore] public double AccumDrainage { get; set; }\n        [XmlIgnore] public double AccumRunoff { get; set; }\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\n        [XmlIgnore] public double AccumIrrigation { get; set; }\n        [XmlIgnore] public double AccumRainfall { get; set; }\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\n        \n        [XmlIgnore] public double AccumTtemerg { get; set; }\n        \n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\n        [XmlIgnore] public double  InitialMineralN { get; set; }\n        \n        [XmlIgnore] public double SWC { get; set; }\n        [XmlIgnore] public double DUL { get; set; }\n        [XmlIgnore] public double OutFlowLat { get; set; }\n        [XmlIgnore] public double SWDep60 { get; set; }\n        [XmlIgnore] public double Flux1 { get; set; }\n        [XmlIgnore] public double Flux3 { get; set; }\n        \n        [XmlIgnore] public double FomN { get; set; }\n        [XmlIgnore] public double BiomN { get; set; }\n        [XmlIgnore] public double HumN { get; set; }\n        [XmlIgnore] public double OrganicN { get; set; }\n        [XmlIgnore] public double NO3N { get; set; }\n        [XmlIgnore] public double NH4N { get; set; }\n        [XmlIgnore] public double UreaN { get; set; }\n        [XmlIgnore] public double MineralN { get; set; }\n        [XmlIgnore] public double DltNMinRes { get; set; }\n        [XmlIgnore] public double DltNMinTot { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //!!!!!! Nitrogen balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\n            OrganicN = FomN + HumN + BiomN;\n            NO3N = MathUtilities.Sum(NO3.kgha);\n            NH4N = MathUtilities.Sum(NH4.kgha);\n            UreaN = MathUtilities.Sum(Urea.kgha);\n            MineralN = NO3N + NH4N + UreaN; \n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            int layers = Soil.Thickness.Length;\n            if (InitialDay == true)\n            {\n                InitialSurfaceOMN = SOM.N;\n                InitialSoilOMN = OrganicN;\n                InitialMineralN = MineralN;\n                InitialDay = false;\n            }\n            AccumFert += Fert.NitrogenApplied;\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\n            DeltaSoilMineralN = MineralN - InitialMineralN;\n            SoilNitrogenContent = MineralN;\n            \n            //!!!!!! Water balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n\n            AccumIrrigation += Irrig.IrrigationApplied; \n            AccumRainfall += Met.Rain;\n            SWDep60 = 0;\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\n            DUL = MathUtilities.Sum(Soil.DULmm);\n            SoilWaterDeficit = (SWC - DUL);\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\n            AccumOutflowLat -= OutFlowLat;\n            SWDep60 = Soil.SoilWater.SWmm[0] + Soil.SoilWater.SWmm[1] + Soil.SoilWater.SWmm[2];\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            int layers = Soil.Thickness.Length;            \n            AccumEO -= Soil.SoilWater.Eo;\n            AccumES -= Soil.SoilWater.Es; \n            AccumDrainage -= Soil.SoilWater.Drainage;\n            AccumRunoff -= Soil.SoilWater.Runoff;\n        }\n    }\n}\n       \n",
+                      "Code": "using Models.Soils.Nutrients;\r\nusing Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] private Soils.Soil Soil;\r\n        [Link] private Models.Surface.SurfaceOrganicMatter SOM;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumTtemerg { get; set; }\r\n        \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n        [XmlIgnore] public double SWDep60 { get; set; }\r\n        [XmlIgnore] public double Flux1 { get; set; }\r\n        [XmlIgnore] public double Flux3 { get; set; }\r\n        \r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = soilPhysical.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied; \r\n            AccumRainfall += Met.Rain;\r\n            SWDep60 = 0;\r\n            SWC = MathUtilities.Sum(waterBalance.SWmm);\r\n            DUL = MathUtilities.Sum(soilPhysical.DULmm);\r\n            SoilWaterDeficit = (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(waterBalance.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n            SWDep60 = waterBalance.SWmm[0] + waterBalance.SWmm[1] + waterBalance.SWmm[2];\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            int layers = soilPhysical.Thickness.Length;            \r\n            AccumEO -= waterBalance.Eo;\r\n            AccumES -= waterBalance.Es; \r\n            AccumDrainage -= waterBalance.Drainage;\r\n            AccumRunoff -= waterBalance.Runoff;\r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": null,
                       "Name": "ExtraVariables",
                       "IncludeInDocumentation": true,
@@ -8542,8 +8542,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -8581,8 +8581,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.3,
                             0.3,
@@ -8877,7 +8877,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10498,8 +10498,8 @@
                                 800.0,
                                 800.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.3,
                                 0.15
@@ -10542,8 +10542,8 @@
                                 800.0,
                                 800.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.15,
                                 0.3
@@ -11319,8 +11319,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -11358,8 +11358,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.44,
                             0.44,
@@ -11659,7 +11659,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -13173,8 +13173,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -13198,8 +13198,8 @@
                           "Thickness": [
                             1600.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.44
                           ],
@@ -13486,7 +13486,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -15705,8 +15705,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -15730,8 +15730,8 @@
                           "Thickness": [
                             1600.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.15
                           ],
@@ -16018,7 +16018,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -19000,8 +19000,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -19025,8 +19025,8 @@
                           "Thickness": [
                             1400.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.15
                           ],
@@ -19313,7 +19313,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -20591,8 +20591,8 @@
                           "Thickness": [
                             1400.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.3
                           ],
@@ -20632,8 +20632,8 @@
                           "Thickness": [
                             1400.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.24
                           ],
@@ -20673,8 +20673,8 @@
                           "Thickness": [
                             1400.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.18
                           ],
@@ -21165,8 +21165,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -21186,8 +21186,8 @@
                           "$type": "Models.Soils.Sample, Models",
                           "Depth": null,
                           "Thickness": null,
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -21473,7 +21473,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -22883,8 +22883,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -22908,8 +22908,8 @@
                           "Thickness": [
                             1400.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.2
                           ],
@@ -23197,7 +23197,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -23947,8 +23947,8 @@
                               "Thickness": [
                                 1400.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.44
                               ],
@@ -23988,8 +23988,8 @@
                               "Thickness": [
                                 1400.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.15
                               ],
@@ -24708,8 +24708,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -24729,8 +24729,8 @@
                           "$type": "Models.Soils.Sample, Models",
                           "Depth": null,
                           "Thickness": null,
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -25016,7 +25016,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -26577,8 +26577,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
@@ -26614,8 +26614,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.44,
                             0.46,
@@ -26880,7 +26880,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,

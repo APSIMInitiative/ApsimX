@@ -28,8 +28,8 @@
         public string TableName { get; set; }
 
         /// <summary>The fields to split on.</summary>
-        [Description("Fields to split om (csv)")]
-        [Display]
+        [Description("Fields to split on (csv)")]
+        [Tooltip("Values must be separated by commas")]
         public string[] FieldNamesToSplitOn { get; set; } = new string[] { "SimulationName" };
 
         /// <summary>.</summary>

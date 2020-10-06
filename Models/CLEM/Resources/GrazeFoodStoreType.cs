@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreType.htm")]
+    [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]

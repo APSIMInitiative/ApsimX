@@ -101,6 +101,7 @@ namespace UserInterface.Views
             tree = treeView;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
+            tree.ButtonPressEvent += OnTreeButtonDown;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
@@ -265,6 +266,8 @@ namespace UserInterface.Views
         {
             try
             {
+                tree.ButtonPressEvent -= OnTreeButtonDown;
+                tree.ButtonReleaseEvent -= OnTreeClicked;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;
             }
@@ -352,6 +355,32 @@ namespace UserInterface.Views
             //{
             //    ShowError(err);
             //}
+        }
+
+        /// <summary>
+        /// Called when the user pushes the mouse button down.
+        /// If it's a right click event, we will prevent the
+        /// signal from propagating any further. If we don't do this,
+        /// the selection (if multiple rows are selected) will be
+        /// cleared before the button release event is fired. The
+        /// result will be right clicking on a selection and having
+        /// the selection disappear, which is not what would be expected.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [GLib.ConnectBefore]
+        private void OnTreeButtonDown(object sender, ButtonPressEventArgs args)
+        {
+            try
+            {
+                tree.GetPathAtPos((int)args.Event.X, (int)args.Event.Y, out TreePath path);
+                if (args.Event.Button == 3 && tree.Selection.GetSelectedRows().Contains(path))
+                    args.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

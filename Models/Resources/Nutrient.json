@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 117,
+  "Version": 122,
   "Name": "Simulations",
   "Children": [
     {
@@ -235,7 +235,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].FInert * [Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness",
+              "Expression": "[Soil].Organic.FInert * [Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -254,7 +254,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Inert].C / [Soil].InitialSoilCNR",
+              "Expression": "[Inert].C / [Soil].Initial.OCNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -606,7 +606,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.1 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.1 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -748,7 +748,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.7 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.7 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -890,7 +890,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.2 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.2 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1032,7 +1032,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(([Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)",
+              "Expression": "(([Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1243,7 +1243,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(1-[Soil].FInert)*[Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C",
+              "Expression": "(1-[Soil].Organic.FInert)*[Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1262,7 +1262,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Humic].C / [Soil].InitialSoilCNR",
+              "Expression": "[Humic].C / [Soil].Initial.OCNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -1584,7 +1584,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "([Soil].BD*[Soil].Thickness)/100",
+          "Expression": "([Soil].Physical.BD*[Soil].Physical.Thickness)/100",
           "Name": "ppm2kgha",
           "Children": [],
           "IncludeInDocumentation": true,

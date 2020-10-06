@@ -67,6 +67,7 @@ Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
+Source: ..\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
@@ -75,7 +76,7 @@ Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdir
 Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs
 
 [Tasks]
-Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
+Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
 Name: associate; Description: &Associate .apsimx with Apsim Next Generation; GroupDescription: Other tasks:
 
 [UninstallDelete]

@@ -1,45 +1,10 @@
-﻿namespace APSIM.Shared.APSoil
+﻿namespace APSIM.Shared.Utilities
 {
-    using APSIM.Shared.Utilities;
     using System;
-    using System.IO;
-    using System.Xml.Serialization;
 
     /// <summary>Various soil utilities.</summary>
     public class SoilUtilities
     {
-        /// <summary>Create a soil object from the XML passed in.</summary>
-        /// <param name="Xml">The XML.</param>
-        /// <returns></returns>
-        public static Soil FromXML(string Xml)
-        {
-            XmlSerializer x = new XmlSerializer(typeof(Soil));
-            StringReader F = new StringReader(Xml);
-            return x.Deserialize(F) as Soil;
-        }
-
-        /// <summary>Write soil to XML</summary>
-        /// <param name="soil">The soil.</param>
-        /// <returns></returns>
-        public static string ToXML(Soil soil)
-        {
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-            ns.Add("", "");
-            XmlSerializer x = new XmlSerializer(typeof(Soil));
-
-            StringWriter Out = new StringWriter();
-            x.Serialize(Out, soil, ns);
-            string st = Out.ToString();
-            if (st.Length > 5 && st.Substring(0, 5) == "<?xml")
-            {
-                // remove the first line: <?xml version="1.0"?>/n
-                int posEol = st.IndexOf("\n");
-                if (posEol != -1)
-                    return st.Substring(posEol + 1);
-            }
-            return st;
-        }
-
         /// <summary>Convert the specified thicknesses to mid points for plotting.</summary>
         /// <param name="Thickness">The thicknesses.</param>
         static public double[] ToMidPoints(double[] Thickness)
@@ -74,12 +39,67 @@
         }
 
         /// <summary>Return the index of the layer that contains the specified depth.</summary>
-        /// <param name="soil">The soil</param>
+        /// <param name="thickness">The soil layer thicknesses.</param>
         /// <param name="depth">The depth to search for.</param>
         /// <returns></returns>
-        static public int FindLayerIndex(Soil soil, double depth)
+        static public int LayerIndexOfDepth(double[] thickness, double depth)
         {
-            return Array.FindIndex(ToCumThickness(soil.Water.Thickness), d => d >= depth);
+            double CumDepth = 0;
+            for (int i = 0; i < thickness.Length; i++)
+            {
+                CumDepth = CumDepth + thickness[i];
+                if (CumDepth >= depth) { return i; }
+            }
+            throw new Exception("Depth deeper than bottom of soil profile");
+        }
+
+        /// <summary>Returns the proportion that 'depth' is through the layer.</summary>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="layerIndex">The layer index</param>
+        /// <param name="depth">The depth</param>
+        public static double ProportionThroughLayer(double[] thickness, int layerIndex, double depth)
+        {
+            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+            for (int i = 0; i <= layerIndex; i++)
+                depth_to_layer_bottom += thickness[i];
+
+            double depth_to_layer_top = depth_to_layer_bottom - thickness[layerIndex];
+            double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
+            double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
+
+            return depth_of_root_in_layer / thickness[layerIndex];
+        }
+
+        /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="bd">Bulk density.</param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static double[] kgha2ppm(double[] thickness, double[] bd, double[] values)
+        {
+            if (values == null)
+                return null;
+
+            double[] ppm = new double[values.Length];
+            for (int i = 0; i < values.Length; i++)
+                ppm[i] = values[i] * (100.0 / (bd[i] * thickness[i]));
+            return ppm;
+        }
+
+        /// <summary>Calculate conversion factor from ppm to kg/ha</summary>
+        /// <param name="thickness">Soil layer thickness.</param>
+        /// <param name="bd">Bulk density.</param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static double[] ppm2kgha(double[] thickness, double[] bd, double[] values)
+        {
+            if (values == null)
+                return null;
+
+            double[] kgha = new double[values.Length];
+            for (int i = 0; i < values.Length; i++)
+                kgha[i] = values[i] * (bd[i] * thickness[i] / 100);
+            return kgha;
         }
 
         /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
@@ -144,6 +164,39 @@
                 }
             }
             return Thickness;
+        }
+
+        /// <summary>
+        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
+        /// </summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <param name="LL">The ll.</param>
+        /// <param name="DUL">The dul.</param>
+        /// <param name="XF">The xf.</param>
+        /// <returns></returns>
+        public static double[] CalcPAWC(double[] Thickness, double[] LL, double[] DUL, double[] XF)
+        {
+            double[] PAWC = new double[Thickness.Length];
+            if (LL == null || DUL == null)
+                return PAWC;
+            if (Thickness.Length != DUL.Length || Thickness.Length != LL.Length)
+                throw new Exception("Number of soil layers in SoilWater is different to number of layers in SoilWater.Crop");
+
+            for (int layer = 0; layer != Thickness.Length; layer++)
+                if (DUL[layer] == MathUtilities.MissingValue ||
+                    LL[layer] == MathUtilities.MissingValue)
+                    PAWC[layer] = 0;
+                else
+                    PAWC[layer] = Math.Max(DUL[layer] - LL[layer], 0.0);
+
+            bool ZeroXFFound = false;
+            for (int layer = 0; layer != Thickness.Length; layer++)
+                if (ZeroXFFound || XF != null && XF[layer] == 0)
+                {
+                    ZeroXFFound = true;
+                    PAWC[layer] = 0;
+                }
+            return PAWC;
         }
 
     }

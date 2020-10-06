@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 303,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "ExplorerWidth": 281,
+  "Version": 119,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -17,6 +17,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "TwoZone_GodLevelManagement",
       "Children": [
         {
@@ -41,7 +43,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
@@ -60,8 +62,8 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary = null;\r\n        private Zone[] Zones {get; set; }\r\n        \r\n        private double[] SoilWaterDeficit { get; set; }\r\n                \r\n        private double DaysSinceIrrig = 0;\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<Zone> zones = new List<Zone>();\r\n               foreach (Zone zone in Apsim.FindAll(this.Parent, typeof(Zone)))\r\n               {\r\n                   zones.Add(zone as Zone);\r\n                   summary.WriteMessage(this, \"zone: \" + zone.Name);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               SoilWaterDeficit = new double[Zones.Length];\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            DaysSinceIrrig += 1;\r\n            //Calculate soil water deficit in each zone\r\n            if (DaysSinceIrrig > 10)\r\n            {\r\n              for (int i = 0; i < Zones.Length; i++)\r\n              {\r\n              Soil soil = Apsim.Find(Zones[i], typeof(Soil)) as Soil;\r\n              SoilWaterDeficit[i] = MathUtilities.Sum(soil.DULmm) - MathUtilities.Sum(soil.SoilWater.SWmm);\r\n              Irrigation irrigation = Apsim.Find(Zones[i], typeof(Irrigation)) as Irrigation;\r\n              irrigation.Apply(SoilWaterDeficit[i]);\r\n              }\r\n              DaysSinceIrrig = 0;\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
-          "Parameters": null,
+          "Code": "using System.Linq;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary = null;\r\n        private Zone[] Zones {get; set; }\r\n        \r\n        private double[] SoilWaterDeficit { get; set; }\r\n                \r\n        private double DaysSinceIrrig = 0;\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               //Set up our list on zones in the simulation\r\n               List<Zone> zones = new List<Zone>();\r\n               foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())\r\n               {\r\n                   zones.Add(zone as Zone);\r\n                   summary.WriteMessage(this, \"zone: \" + zone.Name);\r\n               }\r\n               Zones = zones.ToArray();\r\n               \r\n               //Set up local solution variables\r\n               SoilWaterDeficit = new double[Zones.Length];\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            DaysSinceIrrig += 1;\r\n            //Calculate soil water deficit in each zone\r\n            if (DaysSinceIrrig > 10)\r\n            {\r\n              for (int i = 0; i < Zones.Length; i++)\r\n              {\r\n              var waterBalance = Zones[i].FindInScope<ISoilWater>();\r\n              var soilPhysical = Zones[i].FindInScope<IPhysical>();\r\n              SoilWaterDeficit[i] = MathUtilities.Sum(soilPhysical.DULmm) - MathUtilities.Sum(waterBalance.SWmm);\r\n              Irrigation irrigation = Zones[i].FindInScope<Irrigation>() as Irrigation;\r\n              irrigation.Apply(SoilWaterDeficit[i]);\r\n              }\r\n              DaysSinceIrrig = 0;\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+          "Parameters": [],
           "Name": "MultiZoneIrrigator",
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -76,7 +78,7 @@
           "Name": "Field1",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Wheat].Phenology.CurrentStageName",
@@ -94,6 +96,7 @@
               "EventNames": [
                 "[Clock].EndOfDay"
               ],
+              "GroupByVariableName": null,
               "Name": "Report1",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -125,6 +128,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -152,6 +156,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -212,6 +218,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -258,7 +269,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 5.0,
                   "SummerCona": 5.0,
@@ -271,10 +282,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -283,15 +293,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
                   ],
                   "SWCON": [
                     0.3,
@@ -303,9 +304,8 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -344,6 +344,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -457,6 +458,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -513,6 +516,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -551,8 +558,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -618,7 +625,7 @@
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -631,14 +638,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -647,10 +652,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -676,7 +677,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Amount",
@@ -694,7 +695,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] ISoilWater WaterBalance; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(WaterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -760,7 +761,7 @@
           "Name": "Field2",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Wheat].Phenology.CurrentStageName",
@@ -778,6 +779,7 @@
               "EventNames": [
                 "[Clock].EndOfDay"
               ],
+              "GroupByVariableName": null,
               "Name": "Report2",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -809,6 +811,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -836,6 +839,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -896,6 +901,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -942,7 +952,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 5.0,
                   "SummerCona": 5.0,
@@ -955,10 +965,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -967,15 +976,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
                   ],
                   "SWCON": [
                     0.3,
@@ -987,9 +987,8 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1028,6 +1027,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -1141,6 +1141,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1197,6 +1199,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1235,8 +1241,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -1302,7 +1308,7 @@
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1315,14 +1321,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -1331,10 +1335,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -1360,7 +1360,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Amount",
@@ -1378,7 +1378,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] ISoilWater WaterBalance; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(WaterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -1436,11 +1436,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": "Date",
               "Inverted": false,
@@ -1451,7 +1451,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": "Biomass",
               "Inverted": false,
@@ -1469,7 +1469,7 @@
           "Name": "Biomass",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1481,7 +1481,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Wheat.AboveGround.Wt",
@@ -1499,7 +1498,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1511,7 +1510,6 @@
               "MarkerSize": 0,
               "Line": 1,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report2",
               "XFieldName": "Clock.Today",
               "YFieldName": "Wheat.AboveGround.Wt",
@@ -1534,11 +1532,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": "Date",
               "Inverted": false,
@@ -1549,7 +1547,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": "Biomass",
               "Inverted": false,
@@ -1567,7 +1565,7 @@
           "Name": "Irrigation",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1579,7 +1577,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Irrigation.IrrigationApplied",
@@ -1597,7 +1594,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1609,7 +1606,6 @@
               "MarkerSize": 0,
               "Line": 1,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report2",
               "XFieldName": "Clock.Today",
               "YFieldName": "Irrigation.IrrigationApplied",
@@ -1640,7 +1636,7 @@
           "Name": "Field21",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Wheat].Phenology.CurrentStageName",
@@ -1658,6 +1654,7 @@
               "EventNames": [
                 "[Clock].EndOfDay"
               ],
+              "GroupByVariableName": null,
               "Name": "Report2",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1689,6 +1686,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -1716,6 +1714,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -1776,6 +1776,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -1822,7 +1827,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 5.0,
                   "SummerCona": 5.0,
@@ -1835,10 +1840,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1847,15 +1851,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
                   ],
                   "SWCON": [
                     0.3,
@@ -1867,9 +1862,8 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1908,6 +1902,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -2021,6 +2016,8 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2077,6 +2074,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2115,8 +2116,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -2182,7 +2183,7 @@
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2195,14 +2196,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -2211,10 +2210,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -2240,7 +2235,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Amount",
@@ -2258,7 +2253,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] ISoilWater WaterBalance; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(WaterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",

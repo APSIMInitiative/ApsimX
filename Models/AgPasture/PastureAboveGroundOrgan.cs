@@ -53,7 +53,7 @@
         public GenericTissue[] LiveTissue { get; private set; }
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; private set; }
+        public double MinimumLiveDM { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
