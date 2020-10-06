@@ -113,9 +113,12 @@
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    if (sample == null && initWater == null)
+                    bool res = false;
+                    if (initWater == null)
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
@@ -125,7 +128,10 @@
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
-
+                        res = true;
+                    }
+                    if (sample == null)
+                    {
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
                         JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
@@ -134,8 +140,9 @@
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["SWUnits"] = "Volumetric";
                         soilChildren.Add(sample);
-                        return true;
+                        res = true;
                     }
+                    return res;
                 }
             }
 
