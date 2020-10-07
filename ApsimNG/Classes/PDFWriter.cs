@@ -460,11 +460,11 @@
 
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
+                            string pngFileName;
 #if NETFRAMEWORK
                             // From MapView:
                             // With WebKit, it appears we need to give it time to actually update the display
                             // Really only a problem with the temporary windows used for generating documentation
-                            string pngFileName;
                             if (view is MapView mapView)
                             {
                                 var watch = new System.Diagnostics.Stopwatch();
@@ -478,8 +478,8 @@
                                 img.Save(pngFileName);
                             }
                             else
-                                pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
 #endif
+                                pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
                             presenter.Detach();
                             view.MainWidget.Cleanup();
