@@ -6,7 +6,7 @@
 
     /// <summary>This is a memo/text component that stores user entered text information.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("ApsimNG.Resources.Glade.MemoView.glade")]
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
     [ValidParent(DropAnywhere = true)]
     public class Memo : Model, ICustomDocumentation

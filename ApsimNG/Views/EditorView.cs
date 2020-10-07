@@ -139,6 +139,9 @@
         /// Redraws the text editor.
         /// </summary>
         void Refresh();
+
+        /// <summary>Gets or sets the widget visibility.</summary>
+        bool Visible { get; set; }
     }
 
     /// <summary>
@@ -200,6 +203,19 @@
         /// Invoked when the user changes the style.
         /// </summary>
         public event EventHandler StyleChanged;
+
+        /// <summary>Constructor.</summary>
+        public EditorView() { }
+
+        /// <summary>
+        /// Default constructor that configures the Completion form.
+        /// </summary>
+        /// <param name="owner">The owner view</param>
+        public EditorView(ViewBase owner) : base(owner)
+        {
+            textEditor = new TextEditor();
+            InitialiseWidget();
+        }
 
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
@@ -340,18 +356,36 @@
             }
         }
 
-        /// <summary>
-        /// Default constructor that configures the Completion form.
-        /// </summary>
-        /// <param name="owner">The owner view</param>
-        public EditorView(ViewBase owner) : base(owner)
+        /// <summary>Gets or sets the visibility of the widget.</summary>
+        public bool Visible
         {
-            scroller = new ScrolledWindow();
+            get { return textEditor.Visible; }
+            set 
+            { 
+                textEditor.Visible = value;
+                textEditor.Parent.Visible = value;
+            }
+        }
+
+        /// <summary>Initialise widget.</summary>
+        /// <param name="owner">Owner of widget.</param>
+        /// <param name="gtkControl">GTK widget control.</param>
+        protected override void Initialise(ViewBase owner, GLib.Object gtkControl)
+        {
+            var parentContainer = (Container)gtkControl;
             textEditor = new TextEditor();
+            parentContainer.Add(textEditor);
+            InitialiseWidget();
+        }
+
+        /// <summary>Initialise widget.</summary>
+        private void InitialiseWidget()
+        { 
+            scroller = new ScrolledWindow();
             scroller.Add(textEditor);
             mainWidget = scroller;
-            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
-            Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
+            CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
+            TextEditorOptions options = new TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
             options.ColorScheme = Configuration.Settings.EditorStyleName;
             options.Zoom = Configuration.Settings.EditorZoom;
