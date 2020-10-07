@@ -1453,8 +1453,8 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        0.2,
+                        0.1,
+                        0.6,
                         1.0
                       ],
                       "Y": [
