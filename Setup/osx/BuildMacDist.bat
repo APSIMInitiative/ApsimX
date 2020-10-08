@@ -36,6 +36,7 @@ dos2unix .\Template\Contents\MacOS\ApsimNG>nul 2>&1
 copy .\Template\Contents\MacOS\ApsimNG .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS\ApsimNG>nul
 copy .\Template\Contents\Resources\ApsimNG.icns .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG.icns>nul
 xcopy /S /I /Y /Q %apsimx%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Examples>nul
+xcopy /S /I /Y /Q %apsimx%\ApsimNG\Resources\world .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG\Resources\world>nul
 xcopy /S /I /Y /Q %apsimx%\Tests\UnderReview .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\UnderReview>nul
 xcopy /I /Y /Q %apsimx%\Bin\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
 xcopy /I /Y /Q %apsimx%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul

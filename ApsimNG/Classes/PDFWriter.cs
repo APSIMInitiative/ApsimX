@@ -406,7 +406,11 @@
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
+                    Image map = mapView.Export();
+                    string pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                    if (map.Width > section.PageSetup.PageWidth)
+                        map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
+                    map.Save(pngFileName);
                     if (!String.IsNullOrEmpty(pngFileName))
                         section.AddImage(pngFileName);
                     mapPresenter.Detach();
@@ -442,7 +446,7 @@
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
                             Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                            popupWin.SetSizeRequest(800, 800);
+                            popupWin.SetSizeRequest(700, 700);
                             popupWin.Add(view.MainWidget);
 
                             if (view is IMapView map)
@@ -456,15 +460,21 @@
                             // From MapView:
                             // With WebKit, it appears we need to give it time to actually update the display
                             // Really only a problem with the temporary windows used for generating documentation
-                            if (view is MapView)
+                            string pngFileName;
+                            if (view is MapView mapView)
                             {
                                 var watch = new System.Diagnostics.Stopwatch();
                                 watch.Start();
                                 while (watch.ElapsedMilliseconds < 1000)
                                     Gtk.Application.RunIteration();
+                                Image img = mapView.Export();
+                                pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                                if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
+                                    img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
+                                img.Save(pngFileName);
                             }
-
-                            string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+                            else
+                                pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
                             presenter.Detach();
                             view.MainWidget.Destroy();

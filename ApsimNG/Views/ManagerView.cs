@@ -9,7 +9,10 @@ namespace UserInterface.Views
         /// <summary>
         /// Provides access to the properties grid.
         /// </summary>
-        IGridView GridView { get; }
+        /// <remarks>
+        /// Change type to IProeprtyView when ready to release new property view.
+        /// </remarks>
+        ViewBase PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -25,7 +28,7 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private GridView grid;
+        private ViewBase propertyEditor;
         private EditorView scriptEditor;
         private Notebook notebook;
 
@@ -37,9 +40,12 @@ namespace UserInterface.Views
         {
             notebook = new Notebook();
             mainWidget = notebook;
-            grid = new GridView(this);
+            if (Utility.Configuration.Settings.UseNewPropertyPresenter)
+                propertyEditor = new PropertyView(this);
+            else
+                propertyEditor = new GridView(this);
             scriptEditor = new EditorView(this);
-            notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
+            notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -48,8 +54,8 @@ namespace UserInterface.Views
         {
             try
             {
-                grid.MainWidget.Destroy();
-                grid = null;
+                propertyEditor.MainWidget.Destroy();
+                propertyEditor = null;
                 scriptEditor.MainWidget.Destroy();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -70,7 +76,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public IGridView GridView { get { return grid; } }
+        public ViewBase PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
        
     }
