@@ -11,6 +11,7 @@ namespace UserInterface.Views
     using EventArguments;
     using APSIM.Shared.Utilities;
     using System.Globalization;
+    using Extensions;
 
     /// <summary>
     /// This view will display a list of properties to the user
@@ -41,7 +42,11 @@ namespace UserInterface.Views
         /// The table is destroyed and rebuilt from scratch when
         /// <see cref="DisplayProperties()" /> is called.
         /// </remarks>
+#if NETFRAMEWORK
         private Table propertyTable;
+#else
+        private Grid propertyTable;
+#endif
 
         /// <summary>
         /// Called when a property is changed by the user.
@@ -62,10 +67,20 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view.</param>
         public PropertyView(ViewBase owner) : base(owner)
         {
+#if NETFRAMEWORK
             propertyTable = new Table(0, 0, true);
+#else
+            propertyTable = new Grid();
+#endif
             box = new Frame("Properties");
             box.Add(propertyTable);
+#if NETFRAMEWORK
             mainWidget = box;
+#else
+            Box container = new Box(Orientation.Vertical, 0);
+            container.PackStart(box, false, false, 0);
+            mainWidget = container;
+#endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
 
@@ -75,8 +90,13 @@ namespace UserInterface.Views
         /// <param name="properties">Properties to be displayed/edited.</param>
         public void DisplayProperties(PropertyGroup properties)
         {
+#if NETFRAMEWORK
             uint row = 0;
             uint col = 0;
+#else
+            int row = 0;
+            int col = 0;
+#endif
             bool widgetIsFocused = false;
             int entryPos = -1;
             int entrySelectionStart = 0;
@@ -87,8 +107,13 @@ namespace UserInterface.Views
                 object leftAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "left-attach").Val;
                 if (topAttach.GetType() == typeof(uint) && leftAttach.GetType() == typeof(uint))
                 {
+#if NETFRAMEWORK
                     row = (uint)topAttach;
                     col = (uint)leftAttach;
+#else
+                    row = (int)topAttach;
+                    col = (int)leftAttach;
+#endif
                     widgetIsFocused = true;
                     if (propertyTable.FocusChild is Entry entry)
                     {
@@ -99,12 +124,22 @@ namespace UserInterface.Views
             }
             box.Remove(propertyTable);
             box.Label = $"{properties.Name} Properties";
-            propertyTable.Destroy();
+            propertyTable.Cleanup();
+#if NETFRAMEWORK
             propertyTable = new Table((uint)properties.Count(), 2, false);
+#else
+            propertyTable = new Grid();
+            //propertyTable.RowHomogeneous = true;
+            propertyTable.RowSpacing = 5;
+#endif
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 
+#if NETFRAMEWORK
             uint nrow = 0;
+#else
+            int nrow = 0;
+#endif
             AddPropertiesToTable(ref propertyTable, properties, ref nrow);
             mainWidget.ShowAll();
 
@@ -129,7 +164,11 @@ namespace UserInterface.Views
         /// <param name="table">Table to be modified.</param>
         /// <param name="properties">Property group to be modified.</param>
         /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
+#if NETFRAMEWORK
         private void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow)
+#else
+        private void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow)
+#endif
         {
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
@@ -137,17 +176,30 @@ namespace UserInterface.Views
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
+#if NETFRAMEWORK
                         propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+#else
+                        propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, startRow, 2, 1);
+                        startRow++;
+#endif
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
                 label.Xalign = 0;
+#if NETFRAMEWORK
                 propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+#else
+                propertyTable.Attach(label, 0, startRow, 1, 1);
+#endif
 
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
+#if NETFRAMEWORK
                 propertyTable.Attach(inputWidget, 1, 2, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+#else
+                propertyTable.Attach(inputWidget, 1, startRow, 1, 1);
+#endif
 
                 startRow++;
             }
