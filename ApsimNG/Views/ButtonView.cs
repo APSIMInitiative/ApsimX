@@ -32,32 +32,40 @@
                 button.Clicked += OnButtonClick;
                 button.SetSizeRequest(80, 36);
             }
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
         }
 
         /// <summary>Invoked when the user clicks the button.</summary>
         public event EventHandler Clicked;
 
         /// <summary>Gets or sets the text of the button.</summary>
-        public string Value
+        public string Text
         {
             get { if (button == null) return toolButton.Label; else return button.Label; }
             set { if (button == null) toolButton.Label = value; else button.Label = value; }
         }
 
-        /// <summary>Gets or sets a value indicating whether the dropdown is visible.</summary>
-        public bool IsVisible
+        /// <summary>Gets or sets a value indicating whether the button is visible.</summary>
+        public bool Visible
         {
             get { if (button == null) return toolButton.Visible; else return button.Visible; }
             set { if (button == null) toolButton.Visible = value; else button.Visible = value; }
         }
+
+        /// <summary>Gets or sets a value indicating whether the button is enabled.</summary>
+        public bool IsEnabled
+        {
+            get { if (button == null) return toolButton.Sensitive; else return button.Sensitive; }
+            set { if (button == null) toolButton.Sensitive = value; else button.Sensitive = value; }
+        }
+
 
         /// <summary>
         /// Cleanup objects
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The argument parameters</param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
             try
             {
@@ -65,7 +73,7 @@
                     toolButton.Clicked -= OnButtonClick;
                 else
                     button.Clicked -= OnButtonClick;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;
             }
             catch (Exception err)
@@ -116,7 +124,7 @@
                 toolButton.Clicked += OnButtonClick;
                 mainWidget = toolButton;
             }
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
         }
 
     }

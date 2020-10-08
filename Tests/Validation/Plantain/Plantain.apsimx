@@ -370,7 +370,6 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
-          "RepColumnName": "Rep",
           "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": true,

@@ -5,6 +5,7 @@
     using Models.Soils.Standardiser;
     using NUnit.Framework;
     using System.Collections.Generic;
+    using System.Linq;
 
     [TestFixture]
     public class StandardiserTests
@@ -64,7 +65,7 @@
                     }
                 }
             };
-            Apsim.InitialiseModel(soil);
+            Utilities.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
@@ -141,7 +142,7 @@
                     }
                 }
             };
-            Apsim.InitialiseModel(soil);
+            Utilities.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
@@ -206,18 +207,18 @@
                     }
                 }
             };
-            Apsim.InitialiseModel(soil);
+            Utilities.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
             var initial = soil.Children[5] as Sample;
             var analysis = soil.Children[4] as Chemical;
 
-            Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
+            Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
             Assert.AreEqual(initial.Name, "Initial");
             Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(initial.NO3N, new double[] { 29.240000000000002, 2.432 });  // kg/ha
-            Assert.AreEqual(initial.NH4N, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
+            Assert.AreEqual(initial.NO3, new double[] { 29.240000000000002, 2.432 });  // kg/ha
+            Assert.AreEqual(initial.NH4, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
             Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
             Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(initial.EC, new double[] { 150, 200 });

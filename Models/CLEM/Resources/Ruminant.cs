@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -85,8 +85,19 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                normalisedWeight = StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                normalisedWeight = CalculateNormalisedWeight(age);
+                    //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
+        }
+
+        /// <summary>
+        /// Calculate normalised weight from age
+        /// </summary>
+        /// <param name="age">Age in months</param>
+        /// <returns></returns>
+        public double CalculateNormalisedWeight(double age)
+        {
+            return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
 
         /// <summary>
@@ -196,25 +207,81 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
-                    (Gender == Sex.Female &
-                    (Age >= BreedParams.MinimumAge1stMating &
-                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
-                    Age <= BreedParams.MaximumAgeMating)
-                    );
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
 
         /// <summary>
+        /// Determine the category of this individual
+        /// </summary>
+        public string Category
+        {
+            get
+            {
+                if(this.IsCalf)
+                {
+                    return "Calf";
+                }
+                else if(this.IsWeaner)
+                {
+                    return "Weaner";
+                }
+                else
+                {
+                    if(this is RuminantFemale)
+                    {
+                        if ((this as RuminantFemale).IsHeifer)
+                        {
+                            return "Heifer";
+                        }
+                        else
+                        {
+                            return "Breeder";
+                        }
+                    }
+                    else
+                    {
+                        if((this as RuminantMale).IsSire)
+                        {
+                            return "Sire";
+                        }
+                        else if((this as RuminantMale).IsCastrated)
+                        {
+                            return "Castraded";
+                        }
+                        else
+                        {
+                            return "Steer";
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
-        public bool Weaner
+        public bool IsWeaner
         {
             get
             {
                 return (Weaned && Age<12);
             }
         }
+
+        /// <summary>
+        /// Determine if weaned and less that 12 months old. Weaner
+        /// </summary>
+        public bool IsCalf
+        {
+            get
+            {
+                return (!Weaned);
+            }
+        }
+
 
         /// <summary>
         /// The current weight as a proportion of Standard Reference Weight
@@ -243,10 +310,10 @@ namespace Models.CLEM.Resources
         /// Required monthly intake of milk
         /// </summary>
         /// <units>kg/month</units>
-        public double MilkIntakePotential { get; set; }
+        public double MilkPotentialIntake { get; set; }
 
         /// <summary>
-        /// Percentage Nitrogen of current intake
+        /// Percentage nitrogen of current intake
         /// </summary>
         public double PercentNOfIntake { get; set; }
 
@@ -261,6 +328,25 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg/month</units>
         public double PotentialIntake { get; set; }
+
+        /// <summary>
+        /// Return intake as a proportion of the potential inake
+        /// This includes milk for sucklings
+        /// </summary>
+        public double ProportionOfPotentialIntakeObtained
+        {
+            get
+            {
+                if (PotentialIntake + MilkPotentialIntake > 0)
+                {
+                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
 
         /// <summary>
         /// Current monthly metabolic intake after crude protein adjustment
@@ -345,7 +431,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy used for foetal development
         /// </summary>
-        public double EnergyFoetus { get; set; }
+        public double EnergyFetus { get; set; }
 
         /// <summary>
         /// Energy used for maintenance
@@ -488,7 +574,7 @@ namespace Models.CLEM.Resources
                 // determine the adjusted DMD of all intake
                 this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DMD * intake.Amount)) / (this.Intake + intake.Amount);
                 // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount); ;
+                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount);
                 this.Intake += intake.Amount;
             }
         }

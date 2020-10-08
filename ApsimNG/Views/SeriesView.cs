@@ -203,8 +203,8 @@
         {
             label4.Visible = show;
             label5.Visible = show;
-            X2.IsVisible = show;
-            Y2.IsVisible = show;
+            X2.Visible = show;
+            Y2.Visible = show;
         }
 
         /// <summary>Show the filter help.</summary>
@@ -215,7 +215,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
             }
             catch (Exception err)
             {

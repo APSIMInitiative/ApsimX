@@ -7,7 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
@@ -34,8 +34,14 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -55,20 +61,6 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            switch ((this.Parent as RuminantActivityFeed).FeedStyle)
-            {
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    if(MonthlyValues.Max() > 1)
-                    {
-                        string[] memberNames = new string[] { "Monthly values" };
-                        results.Add(new ValidationResult("Invalid monthly value provided [v"+ MonthlyValues.Max().ToString() + "] for ["+this.Name+"] Feed Group for ["+this.Parent.Name+"] given the style of feeding selected requires a proportion.", memberNames));
-                    }
-                    break;
-                default:
-                    break;
-            }
             if(MonthlyValues.Count() > 0)
             {
                 if(MonthlyValues.Max() == 0)
@@ -106,6 +98,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     if (grps.LastOrDefault().Key != 1)
                     {
                         html += (Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
@@ -128,7 +121,8 @@ namespace Models.CLEM.Groupings
                     case RuminantFeedActivityTypes.ProportionOfWeight:
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                            html += (Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                        html += (Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
                         break;
                     default:
                         break;
@@ -142,14 +136,26 @@ namespace Models.CLEM.Groupings
                 starter = "The ";
             }
 
+            bool overfeed = false;
+
             html += "<span class=\"setvalue\">";
             switch (ft)
             {
+                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                    html += " feed available";
+                    overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    html += " per individual per day";
+                    overfeed = true;
+                    break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     html += " per day";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                     html += starter + "live weight";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     html += starter + "potential intake";
@@ -163,6 +169,13 @@ namespace Models.CLEM.Groupings
             html += "</span> is fed each month to the individuals that match the following conditions:";
 
             html += "</div>";
+
+            if (overfeed)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
+                html += "</div>";
+            }
 
             return html;
         }
@@ -186,7 +199,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

@@ -276,25 +276,29 @@ namespace Models.CLEM
     public enum RuminantFeedActivityTypes
     {
         /// <summary>
-        /// Feed specified amount daily to all individuals
+        /// A specified amount daily to all individuals
         /// </summary>
         SpecifiedDailyAmount,
         /// <summary>
-        /// Feed specified amount daily to each individual
+        /// A specified amount daily to each individual
         /// </summary>
         SpecifiedDailyAmountPerIndividual,
         /// <summary>
-        /// Feed proportion of animal weight in selected months
+        /// The proportion of animal weight in selected months
         /// </summary>
         ProportionOfWeight,
         /// <summary>
-        /// Feed proportion of potential intake
+        /// The proportion of potential intake
         /// </summary>
         ProportionOfPotentialIntake,
         /// <summary>
-        /// Feed proportion of remaining amount required
+        /// The proportion of remaining amount required
         /// </summary>
-        ProportionOfRemainingIntakeRequired
+        ProportionOfRemainingIntakeRequired,
+        /// <summary>
+        /// A proportion of the feed pool available
+        /// </summary>
+        ProportionOfFeedAvailable
     }
 
     /// <summary>

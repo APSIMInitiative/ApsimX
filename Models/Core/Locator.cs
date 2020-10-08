@@ -60,7 +60,7 @@
         /// <returns>The found model or null if not found</returns>
         public IModel Get(Type typeToMatch)
         {
-            return Apsim.Find(relativeToModel, typeToMatch);
+            return relativeToModel.FindAllInScope().FirstOrDefault(m => typeToMatch.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
             if (string.IsNullOrEmpty(namePath))
                 throw new Exception($"Unable to find variable with null variable name");
             else if (namePath[0] != '.' &&
-                     (namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1
+                     (namePath.Replace("()", "").IndexOfAny("+*/^".ToCharArray()) != -1
                      | (namePath.IndexOfAny("(".ToCharArray()) >= 0 && namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1)))
             {
                 // expression - need a better way of detecting an expression
@@ -129,14 +129,14 @@
 
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    Model foundModel = Apsim.Find(relativeTo, modelName) as Model;
+                    Model foundModel = relativeTo.FindInScope(modelName) as Model;
                     if (foundModel == null)
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = Apsim.Find(relativeTo, modelTypes[0]) as Model;
+                            foundModel = relativeTo.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
                     if (foundModel == null)
                         throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
@@ -383,14 +383,14 @@
         //            }
         //            string modelName = namePath.Substring(1, posCloseBracket - 1);
         //            namePath = namePath.Remove(0, posCloseBracket + 1);
-        //            Model foundModel = Apsim.Find(relativeTo, modelName) as Model;
+        //            Model foundModel = relativeTo.FindInScope(modelName) as Model;
         //            if (foundModel == null)
         //            {
         //                // Didn't find a model with a name matching the square bracketed string so
         //                // now try and look for a model with a type matching the square bracketed string.
         //                Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
         //                if (modelTypes.Length == 1)
-        //                    foundModel = Apsim.Find(relativeTo, modelTypes[0]) as Model;
+        //                    foundModel = relativeTo.FindInScope(modelTypes[0]) as Model;
         //            }
         //            if (foundModel == null)
         //                return null;

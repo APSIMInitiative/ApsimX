@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Linq;
 using System.Text;
 using Models.Core;
 using Models;
 using APSIM.Shared.Utilities;
+using Models.Soils.NutrientPatching;
 
 namespace Models.Soils
 {
@@ -66,14 +67,14 @@ namespace Models.Soils
 
             // 1. get the list of id's of patches which are affected by this addition, and the area affected
             double AreaAffected = 0;
-            if (PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower())
+            if (PatchtoAdd.DepositionType == DepositionTypeEnum.ToNewPatch)
             {
                 // check which patches are affected
                 idPatchesAffected = CheckPatchIDs(PatchtoAdd.AffectedPatches_id, PatchtoAdd.AffectedPatches_nm);
                 for (int i = 0; i < idPatchesAffected.Count; i++)
                     AreaAffected += Patch[idPatchesAffected[i]].RelativeArea;
             }
-            else if (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower())
+            else if (PatchtoAdd.DepositionType == DepositionTypeEnum.NewOverlappingPatches)
             {
                 // all patches are affected
                 idPatchesAffected = new List<int>();
@@ -161,7 +162,7 @@ namespace Models.Soils
                         }
                         Patch[k].CreationDate = Clock.Today;
                         idPatchesJustAdded.Add(k);
-                        if (PatchtoAdd.SuppressMessages.ToLower() != "yes")
+                        if (!PatchtoAdd.SuppressMessages)
                         {
                             mySummary.WriteMessage(this, "create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
                                          ", based on existing patch(" + idPatchesAffected[i].ToString() +
@@ -212,7 +213,7 @@ namespace Models.Soils
         {
             int nPatches = Patch.Count;
 
-            if (patchAmalgamationApproach.ToLower() == "CompareAll".ToLower())
+            if (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareAll)
             {
                 // A1. initialise the lists, for each existing patch, of patches to be merged to it
                 List<List<int>> MergingPatches = new List<List<int>>();
@@ -261,7 +262,7 @@ namespace Models.Soils
                     DeletePatches(PatchesToDelete);
                 }
             }
-            else if (patchAmalgamationApproach.ToLower() == "CompareBase".ToLower())
+            else if (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareBase)
             {
                 // B1. initialise the list of patches to be merged/deleted
                 List<int> PatchesToDelete = new List<int>();
@@ -296,7 +297,7 @@ namespace Models.Soils
                     }
                 } while (k < nPatches - 1);
             }
-            else if (patchAmalgamationApproach.ToLower() == "CompareMerge".ToLower())
+            else if (patchAmalgamationApproach == NutrientPatching.AutoAmalgamationApproachEnum.CompareMerge)
             {
                 // C1. initialise the list of patches to be deleted
                 List<int> PatchesToDelete = new List<int>();
@@ -555,10 +556,10 @@ namespace Models.Soils
             // Adjust factor for diffs
             //  it is used to differentiate whether the patch is the 'base'. The diffs can then be a bit less stringent
             double AdjustFactor = 1.0;
-            if (patchbasePatchApproach == "IDBased")
+            if (patchbasePatchApproach == NutrientPatching.BaseApproachEnum.IDBased)
                 if (k == 1)
                     AdjustFactor = DiffAdjustFactor;
-            if (patchbasePatchApproach == "AreaBased")
+            if (patchbasePatchApproach == NutrientPatching.BaseApproachEnum.AreaBased)
                 if (Patch[k].RelativeArea == Patch.Max(x => x.RelativeArea))
                     AdjustFactor = DiffAdjustFactor;
             //else {}  // do not use a different adjustFactor for the base patch
@@ -751,7 +752,7 @@ namespace Models.Soils
         /// <param name="SoluteName">The solute or pool that is changing</param>
         /// <param name="PartitionType">The type of partition to be used</param>
         /// <returns>The values of dlt partitioned for each existing patch</returns>
-        private double[][] partitionDelta(double[] incomingDelta, string SoluteName, string PartitionType)
+        private double[][] partitionDelta(double[] incomingDelta, string SoluteName, PartitionApproachEnum PartitionType)
         {
             int nPatches = Patch.Count;
 
@@ -762,6 +763,10 @@ namespace Models.Soils
 
             try
             {
+                if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
+                    for (int k = 0; k < nPatches; k++)
+                        Patch[k].CalcTotalMineralNInRootZone();
+
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[nPatches][];
                 for (int k = 0; k < nPatches; k++)
@@ -772,13 +777,13 @@ namespace Models.Soils
                             existingSoluteAmount[k] = Patch[k].urea;
                             break;
                         case "NH4":
-                            if (senderModule == "Plant".ToLower())
+                            if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
                                 existingSoluteAmount[k] = Patch[k].nh4AvailableToPlants;
                             else
                                 existingSoluteAmount[k] = Patch[k].nh4;
                             break;
                         case "NO3":
-                            if (senderModule == "Plant".ToLower())
+                            if (senderModule.Equals("Plant", StringComparison.InvariantCultureIgnoreCase))
                                 existingSoluteAmount[k] = Patch[k].no3AvailableToPlants;
                             else
                                 existingSoluteAmount[k] = Patch[k].no3;
@@ -802,14 +807,14 @@ namespace Models.Soils
                         thisLayerPatchSolute = new double[nPatches];
 
                         // 3.2- get the solute amounts for each patch in this layer
-                        if ((PartitionType == "BasedOnLayerConcentration".ToLower()) ||
-                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() && incomingDelta[layer] < epsilon))
+                        if ((PartitionType == PartitionApproachEnum.BasedOnLayerConcentration) ||
+                            (PartitionType == PartitionApproachEnum.BasedOnConcentrationAndDelta && incomingDelta[layer] < epsilon))
                         {
                             for (int k = 0; k < nPatches; k++)
                                 thisLayerPatchSolute[k] = existingSoluteAmount[k][layer] * Patch[k].RelativeArea;
                         }
-                        else if ((PartitionType == "BasedOnSoilConcentration".ToLower()) ||
-                            (PartitionType == "BasedOnConcentrationAndDelta".ToLower() && incomingDelta[layer] >= epsilon))
+                        else if ((PartitionType == PartitionApproachEnum.BasedOnSoilConcentration) ||
+                            (PartitionType == PartitionApproachEnum.BasedOnConcentrationAndDelta && incomingDelta[layer] >= epsilon))
                         {
                             for (int k = 0; k < nPatches; k++)
                             {
@@ -830,7 +835,7 @@ namespace Models.Soils
                         thisLayersTotalSolute = SumDoubleArray(thisLayerPatchSolute);
 
                         // 3.4- Check whether the existing solute is greater than the incoming delta
-                        if (thisLayersTotalSolute + incomingDelta[layer] < FatalNegativeThreshold)
+                        if (MathUtilities.IsLessThan(thisLayersTotalSolute + incomingDelta[layer], 0))
                         {
                             string myMessage = "attempt to change " + SoluteName + "[" + (layer + 1) +
                                                "] to a negative value";

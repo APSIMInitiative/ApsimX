@@ -5,6 +5,7 @@
     using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Surface;
     using StdUnits;
     using System;
@@ -184,7 +185,6 @@
 
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
-            this.RandSeed = 0;
         }
 
         #region Initialisation properties ====================================================
@@ -3595,9 +3595,10 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
-            var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
+            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

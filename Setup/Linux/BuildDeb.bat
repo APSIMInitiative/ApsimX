@@ -52,6 +52,7 @@ for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
 
 rem Copy the binaries and examples to their destinations
 xcopy /S /I /Y /Q %apsimx%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
+xcopy /S /I /Y /Q %apsimx%\ApsimNG\Resources\world .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\ApsimNG\Resources\world
 xcopy /S /I /Y /Q %apsimx%\Tests\UnderReview .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\UnderReview
 xcopy /I /Y /Q %apsimx%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin

@@ -18,6 +18,8 @@
         /// </summary>
         public double Progress { get { return 0; } }
 
+        public string Name { get { return "Empty the database"; } }
+
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database to cleanup.</param>
         public EmptyCommand(IDatabaseConnection databaseConnection)
@@ -75,7 +77,14 @@
 
             // If all data tables were emptied then delete all tables.
             if (allTablesEmpty)
+            {
                 tableNamesToDelete = database.GetTableNames();
+                // remove any database Views created if no tables remain
+                foreach (string viewName in database.GetViewNames())
+                {
+                    database.ExecuteNonQuery(string.Format("DROP VIEW IF EXISTS [{0}]", viewName));
+                }
+            }
 
             foreach (string tableName in tableNamesToDelete)
                 database.DropTable(tableName);

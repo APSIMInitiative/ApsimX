@@ -16,7 +16,7 @@ using Models.Storage;
 namespace Models.CLEM.Reporting
 {
     /// <summary>
-    /// A report class for writing output to the data store.
+    /// A report class for writing resource balances to the data store.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
@@ -105,7 +105,7 @@ namespace Models.CLEM.Reporting
                                 else
                                 {
                                     // get all children
-                                    foreach (CLEMModel item in model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // Apsim.Children(this, typeof(CLEMModel))) //
+                                    foreach (CLEMModel item in model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // this.FindAllChildren<CLEMModel>()) //
                                     {
                                         string amountStr = "Amount";
                                         switch (item.GetType().Name)

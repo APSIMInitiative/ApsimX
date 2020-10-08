@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
-        public List<RuminantFilterGroup> HerdFilters { get; set; }
+        public List<RuminantActivityGroup> HerdFilters { get; set; }
 
         /// <summary>
         /// Herd name determined for this activity
@@ -55,14 +55,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         private void GetHerdFilters()
         {
-            HerdFilters = new List<RuminantFilterGroup>();
+            HerdFilters = new List<RuminantActivityGroup>();
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantFilterGroup>().Cast<RuminantFilterGroup>();
+                var filtergroup = current.Children.OfType<RuminantActivityGroup>().Cast<RuminantActivityGroup>();
                 if(filtergroup.Count() > 1)
                 {
-                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name +"]"+ Environment.NewLine + "Only the first filter group will be used.");
+                    Summary.WriteWarning(this, "Multiple [f=RuminantActivityGroups] have been supplied for [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.");
                 }
                 if (filtergroup.FirstOrDefault() != null)
                 {
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         {
             if (HerdFilters == null)
             {
-                throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perfrom InitialiseHerd() in CLEMInitialiseActivity for this activity.");
+                throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perform InitialiseHerd() in CLEMInitialiseActivity for this activity. Please report this issue to CLEM developers.");
             }
             if(includeCheckHerdMeetsCriteria)
             {
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, "@error:No ruminant herd has been defined for [a=" + this.Name + "]" + Environment.NewLine + "You need to add Ruminants to the resources section of this simulation setup.");
             }
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
-            foreach (RuminantFilterGroup filter in HerdFilters)
+            foreach (RuminantActivityGroup filter in HerdFilters)
             {
                 herd = herd.Filter(filter).ToList();
             }

@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace Models.Core
 {
@@ -21,7 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation, IReportsStatus
     {
         [Link]
         private ISummary summary = null;
@@ -43,7 +42,7 @@ namespace Models.Core
         {
             get
             {
-                return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
+                return this.FindAllChildren<Zone>().Sum(z => (z as Zone).Area);
             }
         }
 
@@ -114,7 +113,7 @@ namespace Models.Core
         {
             get
             {
-                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                Clock c = this.FindChild<Clock>();
                 if (c == null)
                     return 0;
                 else
@@ -126,7 +125,6 @@ namespace Models.Core
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
-        [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -155,12 +153,15 @@ namespace Models.Core
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FileName { get; set; }
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
         [JsonIgnore]
         public List<object> Services { get; set; } = new List<object>();
+
+        /// <summary>Status message.</summary>
+        public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
 
         /// <summary>
         /// Simulation has completed. Clear scope and locator
@@ -188,13 +189,13 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = Apsim.Parent(this, typeof(Folder));
+            var folderNode = FindAncestor<Folder>();
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+            foreach (var zone in this.FindAllDescendants<Zone>())
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -209,8 +210,6 @@ namespace Models.Core
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken = null)
         {
-            IsRunning = true;
-
             // If the cancelToken is null then give it a default one. This can happen 
             // when called from the unit tests.
             if (cancelToken == null)
@@ -225,23 +224,30 @@ namespace Models.Core
             if (!hasBeenDeserialised)
             {
                 // Parent all models.
-                Apsim.ParentAllChildren(this);
+                this.ParentAllDescendants();
 
                 // Call OnCreated in all models.
-                Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
+                foreach (IModel model in FindAllDescendants().ToList())
+                    model.OnCreated();
             }
+
+            // Call OnPreLink in all models.
+            // Note the ToList(). This is important because some models can
+            // add/remove models from the simulations tree in their OnPreLink()
+            // method, and FindAllDescendants() is lazy.
+            FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
 
             if (Services == null || Services.Count < 1)
             {
-                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                var simulations = FindAncestor<Simulations>();
                 if (simulations != null)
                     Services = simulations.GetServices();
                 else
                 {
                     Services = new List<object>();
-                    IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                    IDataStore storage = this.FindInScope<IDataStore>();
                     if (storage != null)
-                        Services.Add(Apsim.Find(this, typeof(IDataStore)));
+                        Services.Add(this.FindInScope<IDataStore>());
                     Services.Add(new ScriptCompiler());
                 }
             }
@@ -256,6 +262,8 @@ namespace Models.Core
 
                 // Resolve all links
                 links.Resolve(this, true);
+
+                IsRunning = true;
 
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
@@ -312,6 +320,14 @@ namespace Models.Core
                 foreach (IModel child in Children)
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
+        }
+
+        /// <summary>
+        /// Gets the locater model.
+        /// </summary>
+        protected override Locater Locator()
+        {
+            return Locater;
         }
     }
 }

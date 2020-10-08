@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
-    [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase
@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             // find market if present
-            Market market = Resources.FindMarket;
+            Market market = Resources.FoundMarket;
             // find a suitable store to place resource
             if(market != null)
             {

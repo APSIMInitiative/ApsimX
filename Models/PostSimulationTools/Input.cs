@@ -11,7 +11,6 @@
     using System.Linq;
     using System.IO;
     using System.Threading;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -42,7 +41,7 @@
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("EXCEL file name")]
         public string[] FullFileNames
         {
@@ -52,13 +51,13 @@
                     return null;
 
                 if (storage == null)
-                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName)).ToArray();
+                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, FindAncestor<Simulations>().FileName)).ToArray();
                 return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, storage.FileName)).ToArray();
             }
 
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                Simulations simulations = FindAncestor<Simulations>();
                 this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
         }
@@ -67,6 +66,13 @@
         public IEnumerable<string> GetReferencedFileNames()
         {
             return FileNames;
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
         }
 
         /// <summary>

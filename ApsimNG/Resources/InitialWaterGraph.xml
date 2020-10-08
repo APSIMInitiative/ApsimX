@@ -20,10 +20,10 @@
     <YAxis>Left</YAxis>
     <ColourArgb>-3479297</ColourArgb>
     <Marker>None</Marker>
-    <XFieldName>[Soil].LL15</XFieldName>
-    <YFieldName>[Soil].DepthMidPoints</YFieldName>
-    <X2FieldName>[Soil].SWAtWaterThickness</X2FieldName>
-    <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+    <XFieldName>[Soil].Physical.LL15</XFieldName>
+    <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
+    <X2FieldName>[Soil].Physical.SWAtWaterThickness</X2FieldName>
+    <Y2FieldName>[Soil].Physical.DepthMidPoints</Y2FieldName>
     <SplitOn>*</SplitOn>
   </Series>  
   <Series>
@@ -36,8 +36,8 @@
     <ColourArgb>-65536</ColourArgb>
     <Marker>None</Marker>
     <Line>Solid</Line>
-    <XFieldName>[Soil].AirDry</XFieldName>
-    <YFieldName>[Soil].DepthMidPoints</YFieldName>
+    <XFieldName>[Soil].Physical.AirDry</XFieldName>
+    <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -50,8 +50,8 @@
     <ColourArgb>-16711681</ColourArgb>
     <Marker>None</Marker>
     <Line>Solid</Line>
-    <XFieldName>[Soil].LL15</XFieldName>
-    <YFieldName>[Soil].DepthMidPoints</YFieldName>
+    <XFieldName>[Soil].Physical.LL15</XFieldName>
+    <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -64,8 +64,8 @@
     <ColourArgb>-16776961</ColourArgb>
     <Marker>None</Marker>
     <Line>Solid</Line>
-    <XFieldName>[Soil].DUL</XFieldName>
-    <YFieldName>[Soil].DepthMidPoints</YFieldName>
+    <XFieldName>[Soil].Physical.DUL</XFieldName>
+    <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
   <Series>
@@ -78,8 +78,8 @@
     <ColourArgb>-16760704</ColourArgb>
     <Marker>None</Marker>
     <Line>Solid</Line>
-    <XFieldName>[Soil].SAT</XFieldName>
-    <YFieldName>[Soil].DepthMidPoints</YFieldName>
+    <XFieldName>[Soil].Physical.SAT</XFieldName>
+    <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
     <SplitOn>*</SplitOn>
   </Series>
 </Graph>

@@ -45,7 +45,15 @@ namespace APSIM.Shared.Utilities
         {
             return (value1 - value2) > tolerance;
         }
-        
+
+        /// <summary>
+        /// Return true if the true if value 1 is greater than or equal to value 2
+        /// </summary>
+        public static bool IsGreaterThanOrEqual(double value1, double value2)
+        {
+            return (value1 - value2) >= tolerance;
+        }
+
         /// <summary>
         /// Return true if the true if value 1 is less than value 2
         /// </summary>
@@ -411,7 +419,11 @@ namespace APSIM.Shared.Utilities
 
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
+            {
+                if (dXCoordinate.Length > 1 && dXCoordinate[0] > dXCoordinate[1])
+                    throw new Exception("Linear interp x-series out of order (must be in ascending order)");
                 return dYCoordinate[0];  // off the bottom
+            }
             else if (pos >= 0)
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)
@@ -1047,20 +1059,6 @@ namespace APSIM.Shared.Utilities
             hrangl = System.Math.Acos(coshra);
             hrlt = hrangl * rdn2hr * 2.0;
             return hrlt;
-        }
-
-        /// <summary>
-        /// Calculate the time of solar noon for a given latitued
-        /// </summary>
-        /// <param name="DayOfYear"></param>
-        /// <param name="Latitude"></param>
-        /// <returns></returns>
-        static public double SolarNoon(double DayOfYear, double Latitude)
-        {
-            double Gamma = ((2 * Math.PI) / 365) * DayOfYear - 1 + ((12 / 24));
-            double eqtime = 229.18 * (0.000075 + 0.001868 * Math.Cos(Gamma) - 0.032077 * Math.Sin(Gamma) 
-                          - 0.014615 * Math.Cos(2 * Gamma)- 0.040849 * Math.Sin(2 * Gamma));
-            return 720 - 4 * Latitude-eqtime;
         }
 
         /// <summary>

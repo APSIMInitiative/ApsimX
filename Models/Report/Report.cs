@@ -11,7 +11,6 @@ namespace Models
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -61,7 +60,7 @@ namespace Models
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] public int ActiveTabIndex = 0;
 
         /// <summary>
         /// Gets or sets variable names for outputting
@@ -158,7 +157,9 @@ namespace Models
         protected string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            IModel zone = Apsim.Parent(this, typeof(Zone));
+            IModel zone = FindAncestor<Zone>();
+            if (zone == null)
+                zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
@@ -225,10 +226,10 @@ namespace Models
                     {
                         valuesToWrite.Add(columns[i].GetValue(groupIndex));
                     }
-                    catch// (Exception err)
+                    catch (Exception err)
                     {
                         // Should we include exception message?
-                        invalidVariables.Add(columns[i].Name);
+                        invalidVariables.Add($"{columns[i].Name}: {err.Message}");
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)

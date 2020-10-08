@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Models.Core;
 using System.IO;
 using System.Reflection;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Globalization;
 using APSIM.Shared.Utilities;
 
@@ -103,7 +103,7 @@ namespace Models
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
-                        Apsim.Set(this, variableName, value);
+                        this.FindByPath(variableName).Value = value;
                     }
                     else if (st.Trim() != string.Empty)
                     {
@@ -116,7 +116,7 @@ namespace Models
                         string modelName = st.Substring(0, posPeriod);
                         string methodName = st.Substring(posPeriod + 1).Replace(";", "").Trim();
 
-                        Model model = Apsim.Get(this, modelName) as Model;
+                        Model model = this.FindByPath(modelName)?.Value as Model;
                         if (model == null)
                             throw new ApsimXException(this, "Cannot find model: " + modelName);
 

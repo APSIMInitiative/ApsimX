@@ -268,6 +268,7 @@
                 {
                     XmlNode newSim = this.AddCompNode(destParent, "Simulation", XmlUtilities.NameAttr(compNode));
                     this.AddChildComponents(compNode, newSim);
+                    AddCompNode(newSim, "SoilArbitrator", "SoilArbitrator");
                 }
                 else if (compNode.Name == "folder")
                 {
@@ -338,7 +339,7 @@
                 {
                     newNode = CopyNode(compNode, destParent, "Swim3");
                     this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
-                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
 
                     // may need to copy more details for SoilNitrogen
                 }
@@ -347,7 +348,7 @@
                     newNode = CopyNode(compNode, destParent, "SoilWater");
                     this.soilWaterExists = newNode != null;
                     this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
-                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
 
                     // may need to copy more details for SoilNitrogen
                 }
@@ -428,6 +429,10 @@
                 {
                     this.ImportPlant(compNode, destParent, newNode);
                 }
+                else if (string.Equals("irrigation", compNode.Name, StringComparison.InvariantCultureIgnoreCase))
+                    AddCompNode(destParent, "Irrigation", "Irrigation");
+                else if (string.Equals("fertiliser", compNode.Name, StringComparison.InvariantCultureIgnoreCase))
+                    AddCompNode(destParent, "Fertiliser", "Fertiliser");
                 else
                 {
                     // Do nothing.

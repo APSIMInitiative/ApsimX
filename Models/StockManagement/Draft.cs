@@ -166,7 +166,7 @@
             {
                 field = zone;
                 animalGroups = stockModel.StockModel.Animals;
-                foreach (IPlantDamage forage in Apsim.ChildrenRecursively(zone, typeof(IPlantDamage)))
+                foreach (IPlantDamage forage in zone.FindAllDescendants<IPlantDamage>())
                     foreach (var organ in forage.Organs)
                         if (organ.IsAboveGround)
                             forageOrgans.Add(organ);

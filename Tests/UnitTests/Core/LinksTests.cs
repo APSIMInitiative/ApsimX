@@ -119,7 +119,7 @@ namespace UnitTests.Core
                     new ModelWithLinks()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -165,7 +165,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -190,7 +190,7 @@ namespace UnitTests.Core
                     new ModelWithScopedLinkByName()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -214,7 +214,7 @@ namespace UnitTests.Core
                     new ModelWithScopedLink()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -243,7 +243,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -254,7 +254,7 @@ namespace UnitTests.Core
 
             // If we now add another child, resolve should fail as there are two matches.
             model.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
             Assert.Throws<Exception>(() =>
             {
                 links.Resolve(sim, true);
@@ -281,7 +281,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -312,7 +312,7 @@ namespace UnitTests.Core
                     new Zone() { Name = "zone2" }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -352,7 +352,7 @@ namespace UnitTests.Core
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(sim, true);
@@ -384,7 +384,7 @@ namespace UnitTests.Core
                     }
                  }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             var links = new Links();
             links.Resolve(simulations.Children[1], true);

@@ -16,7 +16,11 @@
     public class ManagerConverter
     {
         private List<string> lines = new List<string>();
-        private JObject manager;
+
+        /// <summary>
+        /// The Json token.
+        /// </summary>
+        public JObject Token { get; private set; }
 
         /// <summary>Default constructor.</summary>
         public ManagerConverter() { }
@@ -29,10 +33,10 @@
             get
             {
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
-                if (manager["Parameters"] == null)
+                if (Token["Parameters"] == null)
                     return parameters;
 
-                foreach (var parameter in manager["Parameters"])
+                foreach (var parameter in Token["Parameters"])
                     parameters.Add(parameter["Key"].ToString(), parameter["Value"].ToString());
                 return parameters;
             }
@@ -44,7 +48,7 @@
         /// <param name="manager">The JSON manager object.</param>
         public ManagerConverter(JObject manager)
         {
-            this.manager = manager;
+            this.Token = manager;
             if (manager["Code"] != null)
                 Read(manager["Code"].ToString());
         }
@@ -90,7 +94,7 @@
         /// </summary>
         public void Save()
         {
-            manager["Code"] = ToString();
+            Token["Code"] = ToString();
         }
 
         /// <summary>Write script</summary>
@@ -147,18 +151,33 @@
             }
         }
 
+        /// <summary>
+        /// Add a using statement if it doesn't already exist.
+        /// </summary>
+        /// <param name="statement"></param>
+        public void AddUsingStatement(string statement)
+        {
+            List<string> usings = GetUsingStatements().ToList();
+            usings.Add(statement);
+            SetUsingStatements(usings.Distinct());
+        }
+
         /// <summary>Gets a collection of declarations.</summary>
         public List<Declaration> GetDeclarations()
         {
             List<Declaration> foundDeclarations = new List<Declaration>();
 
-            string pattern = @"(?<Link>\[.+\])?\s+(?<Access>public\s+|private\s+)?(?<TypeName>\w+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
+            string pattern = @"(?<Link>\[.+\]\s+)?(?<Access>public\s+|private\s+)?(?<TypeName>[\w\.]+)\s+(?<InstanceName>\w+)\s*(=\s*null)?;";
             for (int i = 0; i < lines.Count; i++)
             {
-                Match match = Regex.Match(lines[i], pattern);
+                var line = Clean(lines[i]);
+                Match match = Regex.Match(line, pattern);
                 if (match.Groups["TypeName"].Value != string.Empty &&
                     match.Groups["TypeName"].Value != "as" &&
+                    match.Groups["TypeName"].Value != "return" &&
                     match.Groups["InstanceName"].Value != string.Empty &&
+                    match.Groups["InstanceName"].Value != "get" &&
+                    match.Groups["InstanceName"].Value != "set" &&
                     match.Groups["TypeName"].Value != "using")
                 {
                     Declaration decl = new Declaration();
@@ -166,11 +185,11 @@
                     decl.TypeName = match.Groups["TypeName"].Value;
                     decl.InstanceName = match.Groups["InstanceName"].Value;
                     decl.Attributes = new List<string>();
-                    decl.IsEvent = lines[i].Contains("event");
+                    decl.IsEvent = line.Contains("event");
                     decl.IsPrivate = !decl.IsEvent && match.Groups["Access"].Value.TrimEnd() != "public";
                     if (match.Groups["Link"].Success)
                     {
-                        decl.Attributes.Add(match.Groups["Link"].Value);
+                        decl.Attributes.Add(match.Groups["Link"].Value.Trim());
                         decl.AttributesOnPreviousLines = false;
                     }
 
@@ -354,6 +373,26 @@
         }
 
         /// <summary>
+        /// Search for a string and return the line index it is on or -1 if not found.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="caseSensitive">Case sensitive?</param>
+        /// <returns></returns>
+        public int LineIndexOf(string searchPattern, bool caseSensitive = false)
+        {
+            if (searchPattern != null)
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    StringComparison comparison = caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+                    if (lines[i].IndexOf(searchPattern, comparison) != -1)
+                        return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// Perform a search and replace in manager script.
         /// </summary>
         /// <param name="searchPattern">The pattern to search for.</param>
@@ -366,6 +405,27 @@
             if (oldCode == null || searchPattern == null)
                 return false;
             var newCode = Regex.Replace(oldCode, searchPattern, replacePattern, options);
+            if (newCode != oldCode)
+            {
+                Read(newCode);
+                replacementDone = true;
+            }
+            return replacementDone;
+        }
+
+        /// <summary>
+        /// Perform a search and replace in manager script.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacer">Delegate that returns a custom replacment string depending on the match..</param>
+        /// <param name="options">Regular expression options to use. Default value is none.</param>
+        public bool ReplaceRegex(string searchPattern, MatchEvaluator replacer, RegexOptions options = RegexOptions.None)
+        {
+            bool replacementDone = false;
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return false;
+            var newCode = Regex.Replace(oldCode, searchPattern, replacer, options);
             if (newCode != oldCode)
             {
                 Read(newCode);
@@ -497,10 +557,75 @@
         /// <param name="newParam">New value of the parameter.</param>
         public void UpdateParameter(string key, string newParam)
         {
-            foreach (var parameter in manager["Parameters"].Children())
+            foreach (var parameter in Token["Parameters"].Children())
                 if (parameter["Key"].ToString() == key)
                     parameter["Value"] = newParam;
                     //return;
+        }
+
+        /// <summary>
+        /// Change manager to reflect moving of variables from one object to another e.g. from Soil to IPhysical.
+        /// </summary>
+        /// <param name="variablesToMove">The names of variables to move.</param>
+        /// <returns>True if changes were made.</returns>
+        public bool MoveVariables(ManagerReplacement[] variablesToMove)
+        {
+            var declarations = GetDeclarations();
+
+            bool replacementMade = false;
+            foreach (var variableToMove in variablesToMove)
+            {
+                var tokens = variableToMove.OldName.Split('.');
+                if (tokens.Length != 2)
+                    throw new Exception($"Invalid old variale name found {variableToMove.OldName}");
+                var oldTypeName = tokens[0];
+                var oldInstanceName = tokens[1];
+
+                var pattern = $@"(\w+)\.{oldInstanceName}(\W+)";
+                ReplaceRegex(pattern, match =>
+                {
+                    // Check the type of the variable to see if it is soil.
+                    var soilInstanceName = match.Groups[1].Value;
+                    var matchDeclaration = declarations.Find(decl => decl.InstanceName == soilInstanceName);
+                    if (matchDeclaration == null || (matchDeclaration.TypeName != oldTypeName && !matchDeclaration.TypeName.EndsWith($".{oldTypeName}")))
+                        return match.Groups[0].Value; // Don't change anything as the type isn't a match.
+
+                    replacementMade = true;
+
+                    tokens = variableToMove.NewName.Split('.');
+                    string newInstanceName = null;
+                    string newVariableName = null;
+                    if (tokens.Length >= 1)
+                        newInstanceName = tokens[0];
+                    if (tokens.Length == 2)
+                        newVariableName = tokens[1];
+
+                    // Found a variable that needs renaming. 
+                    // See if there is an instance varialbe of the correct type.If not add one.
+                    Declaration declaration = declarations.Find(decl => decl.TypeName == variableToMove.NewInstanceTypeName);
+                    if (declaration == null)
+                    {
+                        declaration = new Declaration()
+                        {
+                            TypeName = variableToMove.NewInstanceTypeName,
+                            InstanceName = newInstanceName,
+                            IsPrivate = true
+                        };
+                        declarations.Add(declaration);
+                    }
+
+                    if (!declaration.Attributes.Contains("[Link]"))
+                        declaration.Attributes.Add("[Link]");
+
+                    if (newVariableName == null)
+                        return $"{declaration.InstanceName}{match.Groups[2].Value}";
+                    else
+                        return $"{declaration.InstanceName}.{newVariableName}{match.Groups[2].Value}";
+                });
+            }
+            if (replacementMade)
+                SetDeclarations(declarations);
+            return replacementMade;
         }
     }
 
@@ -547,6 +672,34 @@
 
         /// <summary>The method arguments</summary>
         public List<string> Arguments { get; set; }
+    }
+
+    /// <summary>
+    /// Encapsulates a management replacement.
+    /// </summary>
+    public class ManagerReplacement
+    {
+        /// <summary>The old variable name.</summary>
+        public string OldName { get; set; }
+
+        /// <summary>The new variable name.</summary>
+        public string NewName { get; set; }
+
+        /// <summary>The type of the new instance variable..</summary>
+        public string NewInstanceTypeName { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="searchFor"></param>
+        /// <param name="replaceWith"></param>
+        /// <param name="typeName"></param>
+        public ManagerReplacement(string searchFor, string replaceWith, string typeName)
+        {
+            OldName = searchFor;
+            NewName = replaceWith;
+            NewInstanceTypeName = typeName;
+        }
     }
 }
 

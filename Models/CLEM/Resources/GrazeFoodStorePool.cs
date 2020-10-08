@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -44,14 +44,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount { get { return amount; } }
         private double amount = 0;
 
         /// <summary>
         /// Age of pool in months
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int Age { get; set; }
 
         /// <summary>

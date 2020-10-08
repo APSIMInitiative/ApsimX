@@ -2,10 +2,12 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using System.Linq;
+    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// # [Name]
@@ -27,7 +29,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(LifeCycle))]
     [ValidParent(ParentType = typeof(IPlant))]
-    [ValidParent(ParentType = typeof(ISoil))]
+    [ValidParent(ParentType = typeof(Soil))]
     [ValidParent(ParentType = typeof(ISurfaceOrganicMatter))]
     public class LifeCycle : Model
     {
@@ -47,13 +49,7 @@
         {
             get
             {
-                List<IModel> phases = Apsim.Children(this, typeof(LifeCyclePhase));
-                List<string> names = new List<string>();
-                names.Add("");
-                foreach (IModel p in phases)
-                    names.Add(p.Name);
-
-                return names.ToArray();
+                return FindAllChildren<LifeCyclePhase>().Select(p => p.Name).ToArray();
             }
         }
 
@@ -79,7 +75,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             LifeCyclePhases = new List<LifeCyclePhase>();
-            foreach (LifeCyclePhase stage in Apsim.Children(this, typeof(LifeCyclePhase)))
+            foreach (LifeCyclePhase stage in this.FindAllChildren<LifeCyclePhase>())
             {
                 LifeCyclePhases.Add(stage);
             }
@@ -113,12 +109,12 @@
         }
 
         /// <summary>Method to bring a new cohort of individuls to the specified LifeCyclePhase</summary>
-        /// <param name="Immigrants"></param>
-        public void Infest(Cohort Immigrants)
+        /// <param name="InfestationInfo"></param>
+        public void Infest(SourceInfo InfestationInfo)
         {
-            LifeCyclePhase InfestingPhase = Immigrants.BelongsToPhase;
-            InfestingPhase.NewCohort(Immigrants.Population, Immigrants.ChronologicalAge, Immigrants.PhysiologicalAge);
-            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + Apsim.FullPath(this) + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
+            LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
+            InfestingPhase.NewCohort(InfestationInfo);
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
         }
     }
 }

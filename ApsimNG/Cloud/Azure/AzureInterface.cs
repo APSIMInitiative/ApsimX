@@ -168,19 +168,6 @@ namespace ApsimNG.Cloud
             if (!Directory.Exists(job.ModelPath))
                 Directory.CreateDirectory(job.ModelPath);
 
-            // Copy weather files to models directory to be compressed.
-            Simulations sims = Apsim.Parent(job.Model, typeof(Simulations)) as Simulations;
-            foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
-            {
-                if (Path.GetDirectoryName(child.FullFileName) != Path.GetDirectoryName(sims.FileName))
-                    throw new Exception("Weather file must be in the same directory as .apsimx file: " + child.FullFileName);
-
-                string sourceFile = child.FullFileName;
-                string destFile = Path.Combine(job.ModelPath, child.FileName);
-                if (!File.Exists(destFile))
-                    File.Copy(sourceFile, destFile);
-            }
-
             if (ct.IsCancellationRequested)
             {
                 UpdateStatus("Cancelled");
@@ -189,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ });
+            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
@@ -240,34 +227,37 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
-        public async Task<List<JobDetails>> ListJobsAsync(CancellationToken ct, Action<double> ShowProgress)
+        public async void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJobHandler)
         {
-            if (batchClient == null || storageClient == null)
-                return null;
-
-            ShowProgress(0);
-
-            ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
-
-            // Download raw job list via the Azure API.
-            List<CloudJob> cloudJobs = await batchClient.JobOperations.ListJobs(jobDetailLevel).ToListAsync(ct);
-
-            if (ct.IsCancellationRequested)
-                return null;
-
-            // Parse jobs into a list of JobDetails objects.
-            List<JobDetails> jobs = new List<JobDetails>();
-            for (int i = 0; i < cloudJobs.Count; i++)
+            try
             {
+                if (batchClient == null || storageClient == null)
+                    return;
+
+                ShowProgress(0);
+
+                ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
+
+                // Download raw job list via the Azure API.
+                List<CloudJob> cloudJobs = await batchClient.JobOperations.ListJobs(jobDetailLevel).ToListAsync(ct);
+
                 if (ct.IsCancellationRequested)
-                    return jobs;
+                    return;
 
-                ShowProgress(100.0 * i / cloudJobs.Count);
-                jobs.Add(await GetJobDetails(cloudJobs[i], ct));
+                // Parse jobs into a list of JobDetails objects.
+                for (int i = 0; i < cloudJobs.Count; i++)
+                {
+                    if (ct.IsCancellationRequested)
+                        return;
+
+                    ShowProgress(100.0 * i / cloudJobs.Count);
+                    AddJobHandler(await GetJobDetails(cloudJobs[i], ct));
+                }
             }
-
-            ShowProgress(100);
-            return jobs;
+            finally
+            {
+                ShowProgress(100);
+            }
         }
 
         /// <summary>
@@ -314,61 +304,101 @@ namespace ApsimNG.Cloud
         /// <param name="ShowProgress">Function which reports progress (in range [0, 1]) to the user.</param>
         public async Task DownloadResultsAsync(DownloadOptions options, CancellationToken ct, Action<double> ShowProgress)
         {
-            if (!Directory.Exists(options.Path))
-                Directory.CreateDirectory(options.Path);
+            // Determine what the resulting .zip file will be called.
+            var resultsZip = Path.Combine(options.Path, options.Name + ".zip");
+            resultsZip = DirectoryUtilities.EnsureFileNameIsUnique(resultsZip);
 
-            List<CloudBlockBlob> outputs = await GetJobOutputs(options.JobID, ct);
+            // Create a temporary workarea which will be zipped later.
+            var resultTempDirectory = Path.Combine(options.Path, Path.GetFileNameWithoutExtension(resultsZip));
+            if (!Directory.Exists(resultTempDirectory))
+                Directory.CreateDirectory(resultTempDirectory);
 
-            // Build up a list of files to download.
-            List<CloudBlockBlob> toDownload = new List<CloudBlockBlob>();
-            CloudBlockBlob results = outputs.Find(b => string.Equals(b.Name, resultsFileName, StringComparison.InvariantCultureIgnoreCase));
-            if (results != null)
-                toDownload.Add(results);
-            else
-                // Always download debug files if no results archive can be found.
-                options.DownloadDebugFiles = true;
-
-            if (options.DownloadDebugFiles)
-                toDownload.AddRange(outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))));
-
-            // Now download the necessary files.
-            for (int i = 0; i < toDownload.Count; i++)
+            // Get a list of outputs generated by cloud run.
+            var outputs = await GetJobOutputs(options.JobID, ct);
+            if (outputs != null && outputs.Count > 0)
             {
-                ShowProgress(i / toDownload.Count);
-                CloudBlockBlob blob = toDownload[i];
+                // First try and get just the results.zip
+                var resultsZipFile = outputs.FindAll(output => output.Name == "Results.zip");
+                await DownloadAndProcessFiles(resultsZipFile, ShowProgress, resultTempDirectory, ct);
+
+                var resultsDB = Path.Combine(resultTempDirectory, "Results.db");
+                if (!File.Exists(resultsDB))
+                {
+                    // Cound't find results.db file so download everything to provide debug info to user.
+                    await DownloadAndProcessFiles(outputs, ShowProgress, resultTempDirectory, ct);
+                }
+
+                // Zip up resulting temp folder.
+                using (ZipArchive zip = ZipFile.Open(resultsZip, ZipArchiveMode.Create, Encoding.UTF8))
+                {
+                    foreach (string fileName in Directory.GetFiles(resultTempDirectory))
+                        zip.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
+                }
+
+                // Delete temp folder.
+                Directory.Delete(resultTempDirectory, true);
+            }
+            else
+                throw new Exception($"No results were found. Is this an APSIM 7.10 run?");
+        }
+
+        /// <summary>
+        /// Download one or more files and process the .zip and .db files.
+        /// </summary>
+        /// <param name="outputs"></param>
+        /// <param name="ShowProgress"></param>
+        /// <param name="resultTempDirectory"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        private static async Task DownloadAndProcessFiles(List<CloudBlockBlob> outputs, Action<double> ShowProgress, string resultTempDirectory, CancellationToken ct)
+        {
+            // Download all run outputs.
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                ShowProgress(i / outputs.Count);
+                CloudBlockBlob blob = outputs[i];
 
                 // todo: Download in parallel?
-                await blob.DownloadToFileAsync(Path.Combine(options.Path, blob.Name), FileMode.Create, ct);
+                var fullFileName = Path.Combine(resultTempDirectory, blob.Name);
+                await blob.DownloadToFileAsync(fullFileName, FileMode.Create, ct);
 
                 if (ct.IsCancellationRequested)
                     return;
             }
             ShowProgress(100);
 
-            if (options.ExtractResults)
+            // Extract any zip files.
+            foreach (var zipFileName in Directory.GetFiles(resultTempDirectory, "*.zip"))
             {
-                string archive = Path.Combine(options.Path, resultsFileName);
-                string resultsDir = Path.Combine(options.Path, "results");
-                if (File.Exists(archive))
+                if (Path.GetFileName(zipFileName) != "model.zip")
                 {
                     // Extract the result files.
-                    using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
-                        zip.ExtractToDirectory(resultsDir);
-
-                    try
-                    {
-                        // Merge results into a single .db file.
-                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, "combined.db");
-                    }
-                    catch (Exception err)
-                    {
-                        throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
-                    }
-
-                    // TBI: merge into csv file.
-                    if (options.ExportToCsv)
-                        throw new NotImplementedException();
+                    using (ZipArchive zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read, Encoding.UTF8))
+                        zip.ExtractToDirectory(resultTempDirectory);
                 }
+            }
+
+            try
+            {
+                // Merge results into a single .db file.
+                var dbFiles = Directory.GetFiles(resultTempDirectory, "*.db");
+                var resultsDB = Path.Combine(resultTempDirectory, "Results.db");
+                DBMerger.MergeFiles(Path.Combine(resultTempDirectory, "*.db"), false, resultsDB);
+                if (File.Exists(resultsDB))
+                {
+                    // Remove the individual .db files.
+                    foreach (string dbFileName in dbFiles)
+                        File.Delete(dbFileName);
+
+                    // Delete the zip file containing the .db files.
+                    foreach (var zipFileName in Directory.GetFiles(resultTempDirectory, "*.zip"))
+                        if (Path.GetFileName(zipFileName) != "model.zip")
+                            File.Delete(zipFileName);
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Results were successfully extracted to {resultTempDirectory} but an error wasn encountered while attempting to merge the individual .db files", err);
             }
         }
 
@@ -466,39 +496,45 @@ namespace ApsimNG.Cloud
         /// <param name="ct">Cancellation token.</param>
         private async Task<JobDetails> GetJobDetails(CloudJob cloudJob, CancellationToken ct)
         {
-            if (!await storageClient.GetContainerReference($"job-{cloudJob.Id}").ExistsAsync(ct))
+            try
             {
-                await DeleteJobAsync(cloudJob.Id, ct);
+                if (!await storageClient.GetContainerReference($"job-{cloudJob.Id}").ExistsAsync(ct))
+                {
+                    await DeleteJobAsync(cloudJob.Id, ct);
+                    return null;
+                }
+                string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner", ct);
+
+                TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct);
+                int numTasks = tasks.Active + tasks.Running + tasks.Completed;
+
+                // If there are no tasks, set progress to 100%.
+                double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+
+                // If cpu time is unavailable, set this field to 0.
+                TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
+                JobDetails job = new JobDetails
+                {
+                    Id = cloudJob.Id,
+                    DisplayName = cloudJob.DisplayName,
+                    State = cloudJob.State.ToString(),
+                    Owner = owner,
+                    NumSims = numTasks - 1, // subtract one because one of these is the job manager
+                    Progress = jobProgress,
+                    CpuTime = cpu
+                };
+
+                if (cloudJob.ExecutionInformation != null)
+                {
+                    job.StartTime = cloudJob.ExecutionInformation.StartTime;
+                    job.EndTime = cloudJob.ExecutionInformation.EndTime;
+                }
+                return job;
+            }
+            catch (Exception)
+            {
                 return null;
             }
-            string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner", ct);
-
-            TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct);
-            int numTasks = tasks.Active + tasks.Running + tasks.Completed;
-
-            // If there are no tasks, set progress to 100%.
-            double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
-
-            // If cpu time is unavailable, set this field to 0.
-            TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
-            JobDetails job = new JobDetails
-            {
-                Id = cloudJob.Id,
-                DisplayName = cloudJob.DisplayName,
-                State = cloudJob.State.ToString(),
-                Owner = owner,
-                NumSims = numTasks - 1, // subtract one because one of these is the job manager
-                Progress = jobProgress,
-                CpuTime = cpu
-            };
-
-            if (cloudJob.ExecutionInformation != null)
-            {
-                job.StartTime = cloudJob.ExecutionInformation.StartTime;
-                job.EndTime = cloudJob.ExecutionInformation.EndTime;
-            }
-
-            return job;
         }
 
         /// <summary>
@@ -639,7 +675,9 @@ namespace ApsimNG.Cloud
         {
             try
             {
-                string bin = Path.Combine(srcPath, "Bin");
+                string bin = srcPath;
+                if (!bin.EndsWith("Bin"))
+                    bin = Path.Combine(srcPath, "Bin");
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
@@ -687,41 +725,43 @@ namespace ApsimNG.Cloud
         /// <param name="job">Job parameters.</param>
         private PoolInformation GetPoolInfo(JobParameters job)
         {
-            return new PoolInformation
+            var autoPoolSpecification = new AutoPoolSpecification
             {
-                AutoPoolSpecification = new AutoPoolSpecification
+                PoolLifetimeOption = PoolLifetimeOption.Job,
+                PoolSpecification = new PoolSpecification
                 {
-                    PoolLifetimeOption = PoolLifetimeOption.Job,
-                    PoolSpecification = new PoolSpecification
-                    {
-                        ResizeTimeout = TimeSpan.FromMinutes(15),
+                    ResizeTimeout = TimeSpan.FromMinutes(15),
 
-                        // todo: look into using ComputeNodeFillType.Pack
-                        TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread),
+                    // todo: look into using ComputeNodeFillType.Pack
+                    TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread),
 
-                        // This specifies the OS that our VM will be running.
-                        // OS Family 5 means .NET 4.6 will be installed.
-                        // For more info see:
-                        // https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
-                        CloudServiceConfiguration = new CloudServiceConfiguration("5"),
+                    // This specifies the OS that our VM will be running.
+                    // OS Family 5 means .NET 4.6 will be installed.
+                    // For more info see:
+                    // https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
+                    CloudServiceConfiguration = new CloudServiceConfiguration("5"),
 
-                        // For now, always use standard_d5_v2 VM type.
-                        // This VM has 16 vCPUs, 56 GiB of memory and 800 GiB temp (SSD) storage.
-                        // todo: should make this user-controllable
-                        // For other VM sizes, see:
-                        // https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes
-                        // https://docs.microsoft.com/azure/virtual-machines/windows/sizes-general
-                        VirtualMachineSize = "standard_d5_v2",
+                    // For now, always use standard_d5_v2 VM type.
+                    // This VM has 16 vCPUs, 56 GiB of memory and 800 GiB temp (SSD) storage.
+                    // todo: should make this user-controllable
+                    // For other VM sizes, see:
+                    // https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes
+                    // https://docs.microsoft.com/azure/virtual-machines/windows/sizes-general
+                    VirtualMachineSize = "standard_d5_v2",
 
-                        // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
-                        MaxTasksPerComputeNode = 16,
-
-                        // We only use one pool, so number of nodes per pool will be total number of vCPUs (as specified by the user)
-                        // divided by number of vCPUs per VM. We've hardcoded VM size to standard_d5_v2, which has 16 vCPUs.
-                        TargetDedicatedComputeNodes = job.CpuCount / 16,
-                    }
+                    // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
+                    MaxTasksPerComputeNode = 16
                 }
             };
+
+            // We only use one pool, so number of nodes per pool will be total number of vCPUs (as specified by the user)
+            // divided by number of vCPUs per VM. We've hardcoded VM size to standard_d5_v2, which has 16 vCPUs.
+            if (job.LowPriority)
+                autoPoolSpecification.PoolSpecification.TargetLowPriorityComputeNodes = job.CpuCount / 16;
+            else
+                autoPoolSpecification.PoolSpecification.TargetDedicatedComputeNodes = job.CpuCount / 16;
+
+            return new PoolInformation { AutoPoolSpecification = autoPoolSpecification};
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -16,9 +14,11 @@ namespace Models.Functions
     [Description("Urea hydrolysis model from CERES-Maize")]
     public class CERESUreaHydrolysisModel : Model, IFunction, ICustomDocumentation
     {
+        [Link]
+        Sample initial = null;
 
         [Link]
-        Soil soil = null;
+        ISoilTemperature soilTemperature = null;
 
         [Link(Type = LinkType.Child)]
         CERESMineralisationWaterFactor CERESWF = null;
@@ -31,11 +31,11 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Urea Hydrolysis Model");
 
-            double potentialRate = -1.12 + 1.31 * soil.Initial.OC[arrayIndex] + 0.203 * soil.Initial.PH[arrayIndex] - 0.155 * soil.Initial.OC[arrayIndex] * soil.Initial.PH[arrayIndex];
+            double potentialRate = -1.12 + 1.31 * initial.OC[arrayIndex] + 0.203 * initial.PH[arrayIndex] - 0.155 * initial.OC[arrayIndex] * initial.PH[arrayIndex];
             potentialRate = MathUtilities.Bound(potentialRate, 0, 1);
 
             double WF = MathUtilities.Bound(CERESWF.Value(arrayIndex) + 0.2,0,1);
-            double TF = MathUtilities.Bound(soil.Temperature[arrayIndex] / 40 + 0.2,0,1);
+            double TF = MathUtilities.Bound(soilTemperature.Value[arrayIndex] / 40 + 0.2,0,1);
             double rateModifer = Math.Min(WF, TF);
 
             return potentialRate * rateModifer;
@@ -53,7 +53,7 @@ namespace Models.Functions
 
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in this.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

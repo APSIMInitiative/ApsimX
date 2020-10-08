@@ -1,8 +1,8 @@
 [weather.met.weather]										
 !station	number	=	94008							
 !station	name	=	HOBART	AIRPORT						
-latitude	=	-41.2286	(DECIMAL	DEGREES)						
-longitude	=	148.499	(DECIMAL	DEGREES)						
+latitude	=	-42.8893	(DECIMAL	DEGREES)						
+longitude	=	147.3177	(DECIMAL	DEGREES)						
 tav	=	12.75	(oC)	!	Annual	average	ambient	temperature		
 amp	=	9.48	(oC)	!	Annual	amplitude	in	mean	monthly	temperature
 year	day	radn	maxt	mint	rain					

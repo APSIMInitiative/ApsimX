@@ -9,7 +9,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
@@ -36,7 +35,7 @@
         {
             get
             {
-                if (Apsim.Ancestor<Replacements>(this) != null)
+                if (this.FindAncestor<Replacements>() != null)
                     return true;
 
                 if (string.IsNullOrEmpty(ResourceName))
@@ -84,13 +83,14 @@
         /// </summary>
         public override void OnCreated()
         {
+            // If the model is not under replacements and a resource name is provided,
             // lookup the resource get the xml and then deserialise to a model.
-            if (!string.IsNullOrEmpty(ResourceName))
+            if (!string.IsNullOrEmpty(ResourceName) && (Children.Count == 0 || FindAncestor<Replacements>() == null))
             {
                 var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
-                    Model modelFromResource = GetResourceModel();
+                    IModel modelFromResource = GetResourceModel();
                     modelFromResource.Enabled = Enabled;
                     
                     Children.RemoveAll(c => modelFromResource.Children.Contains(c, new ModelComparer()));
@@ -99,8 +99,8 @@
                     CopyPropertiesFrom(modelFromResource);
 
                     // Make the model readonly if it's not under replacements.
-                    SetNotVisible(modelFromResource, Apsim.Ancestor<Replacements>(this) == null);
-                    Apsim.ParentAllChildren(this);
+                    SetNotVisible(modelFromResource, this.FindAncestor<Replacements>() == null);
+                    this.ParentAllDescendants();
                 }
             }
         }
@@ -155,7 +155,7 @@
             }
         }
 
-        private Model GetResourceModel()
+        private IModel GetResourceModel()
         {
             if (string.IsNullOrEmpty(FullResourceName))
                 return null;
@@ -164,14 +164,14 @@
             if (string.IsNullOrEmpty(contents))
                 return null;
 
-            Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out List<Exception> errors);
+            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
             if (this.GetType() != modelFromResource.GetType())
             {
                 // Top-level model may be a simulations node. Search for a child of the correct type.
-                Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
+                IModel child = modelFromResource.FindAllChildren().FirstOrDefault(c => GetType().IsAssignableFrom(c.GetType()));
                 if (child != null)
                     modelFromResource = child;
             }
@@ -183,7 +183,7 @@
         /// Copy all properties from the specified resource.
         /// </summary>
         /// <param name="from">Model to copy from</param>
-        private void CopyPropertiesFrom(Model from)
+        private void CopyPropertiesFrom(IModel from)
         {
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
@@ -196,9 +196,9 @@
                     property.Name != "ResourceName")
                 {
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
+                    var JsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
                     var jsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
-                    if (description == null && xmlIgnore == null && jsonIgnore == null)
+                    if (description == null && JsonIgnore == null && jsonIgnore == null)
                     {
                         try
                         {
@@ -224,7 +224,7 @@
         /// <summary>Sets the not visible.</summary>
         /// <param name="ModelFromResource">The model from resource.</param>
         /// <param name="invisible">If true, make model invisible. Else make model visible.</param>
-        private static void SetNotVisible(Model ModelFromResource, bool invisible)
+        private static void SetNotVisible(IModel ModelFromResource, bool invisible)
         {
             foreach (Model child in ModelFromResource.Children)
             {

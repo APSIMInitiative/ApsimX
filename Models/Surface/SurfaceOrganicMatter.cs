@@ -6,6 +6,7 @@
     using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -21,9 +22,13 @@
     [ValidParent(ParentType=typeof(Zone))]
     public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
     {
-        /// <summary>Link to the soil component</summary>
+        /// <summary>The water balance model</summary>
         [Link]
-        private Soil soil = null;
+        ISoilWater waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>Link to the summary component</summary>
         [Link]
@@ -61,6 +66,12 @@
 
         /// <summary>The cumeos</summary>
         private double cumeos;
+
+        /// <summary>The potential decomposition</summary>
+        private SurfaceOrganicMatterDecompType potentialDecomposition;
+
+        /// <summary>Has potential decomposition been calculated?</summary>
+        private bool calculatedPotentialDecomposition;
 
         /// <summary>The determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)</summary>
         private int[] cf_contrib = new int[0];
@@ -346,19 +357,27 @@
         /// <summary>Return the potential residue decomposition for today.</summary>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            double precip = weather.Rain + irrig;
-            if (precip > 4.0)
-                cumeos = soil.SoilWater.Eos - precip;
-            else
-                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
-            cumeos = Math.Max(cumeos, 0.0);
+            // This method can be called multiple times when nutrient patching is running. Each
+            // patch will call this method. Because of the cumeos accumulation below we only
+            // want to do this once per timestep, hence the flag on the line below.
+            if (!calculatedPotentialDecomposition)
+            {
+                calculatedPotentialDecomposition = true;
+                double precip = weather.Rain + irrig;
+                if (precip > 4.0)
+                    cumeos = waterBalance.Eos - precip;
+                else
+                    cumeos = this.cumeos + waterBalance.Eos - precip;
+                cumeos = Math.Max(cumeos, 0.0);
 
-            if (precip >= minRainToLeach)
-                Leach(precip);
+                if (precip >= minRainToLeach)
+                    Leach(precip);
 
-            irrig = 0.0; // reset irrigation log now that we have used that information;
+                irrig = 0.0; // reset irrigation log now that we have used that information;
 
-            return SendPotDecompEvent();
+                potentialDecomposition = SendPotDecompEvent();
+            }
+            return potentialDecomposition;
         }
 
         /// <summary>
@@ -446,9 +465,18 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
+            NO3Solute = this.FindInScope("NO3") as ISolute;
+            NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
+        }
+
+        /// <summary>Called at start of each day.</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            calculatedPotentialDecomposition = false;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -732,7 +760,7 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                var delta = new double[soil.Thickness.Length];
+                var delta = new double[soilPhysical.Thickness.Length];
                 delta[0] = no3Incorp;
                 NO3Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
 
@@ -872,7 +900,7 @@
         private void Incorp(double fIncorp, double tillageDepth)
         {            
             int deepestLayer;
-            int nLayers = soil.Thickness.Length;
+            int nLayers = soilPhysical.Thickness.Length;
             double F_incorp_layer = 0;
             double[] residueIncorpFraction = new double[nLayers];
             double layerIncorpDepth;
@@ -887,7 +915,7 @@
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
-            deepestLayer = soil.LayerIndexOfDepth(tillageDepth);
+            deepestLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, tillageDepth);
 
             double cumDepth = 0.0;
 
@@ -896,7 +924,7 @@
                 for (int residue = 0; residue < numSurfom; residue++)
                 {
                     double depthToGo = tillageDepth - cumDepth;
-                    layerIncorpDepth = Math.Min(depthToGo, soil.Thickness[layer]);
+                    layerIncorpDepth = Math.Min(depthToGo, soilPhysical.Thickness[layer]);
                     F_incorp_layer = MathUtilities.Divide(layerIncorpDepth, tillageDepth, 0.0);
                     for (int i = 0; i < maxFr; i++)
                     {
@@ -908,7 +936,7 @@
                     nh4[layer] += SurfOM[residue].nh4 * fIncorp * F_incorp_layer;
                     po4[layer] += SurfOM[residue].po4 * fIncorp * F_incorp_layer;
                 }
-                cumDepth = cumDepth + soil.Thickness[layer];
+                cumDepth = cumDepth + soilPhysical.Thickness[layer];
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
             
@@ -918,7 +946,7 @@
             {
                 FPoolProfile.Layer[layer] = new FOMPoolLayerType()
                 {
-                    thickness = soil.Thickness[layer],
+                    thickness = soilPhysical.Thickness[layer],
                     no3 = no3[layer],
                     nh4 = nh4[layer],
                     po4 = po4[layer],

@@ -17,6 +17,11 @@
         private IEnumerable<string> namesOfFilesToStore;
 
         /// <summary>
+        /// Name of the job.
+        /// </summary>
+        public string Name { get { return "Add Checkpoint"; } }
+
+        /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
         public double Progress { get { return 0; } }

@@ -219,8 +219,11 @@
         /// <summary>The simulation names for each point.</summary>
         public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
 
-        /// <summary>Gets the error values</summary>
-        public IEnumerable<double> Error { get; private set; }
+        /// <summary>Gets the error values for the x series</summary>
+        public IEnumerable<double> XError { get; private set; }
+
+        /// <summary>Gets the error values for the y series</summary>
+        public IEnumerable<double> YError { get; private set; }
 
         /// <summary>Add a clause to the filter.</summary>
         /// <param name="filter">The filter to add to.</param>
@@ -328,7 +331,7 @@
                 fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
                 // Add any fields from child graphable models.
-                foreach (IGraphable series in Apsim.Children(series, typeof(IGraphable)))
+                foreach (IGraphable series in series.FindAllChildren<IGraphable>())
                     fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
 
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
@@ -351,7 +354,8 @@
                     Y = GetDataFromTable(Data, YFieldName);
                     X2 = GetDataFromTable(Data, X2FieldName);
                     Y2 = GetDataFromTable(Data, Y2FieldName);
-                    Error = GetErrorDataFromTable(Data, YFieldName);
+                    XError = GetErrorDataFromTable(Data, XFieldName);
+                    YError = GetErrorDataFromTable(Data, YFieldName);
                     if (series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (series.CumulativeX)
@@ -423,44 +427,7 @@
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            if (fieldName != null && fieldName.StartsWith("["))
-            {
-                int posCloseBracket = fieldName.IndexOf(']');
-                if (posCloseBracket == -1)
-                    throw new Exception("Invalid graph field name: " + fieldName);
-
-                string modelName = fieldName.Substring(1, posCloseBracket - 1);
-                string namePath = fieldName.Remove(0, posCloseBracket + 2);
-
-                IModel modelWithData = Apsim.Find(series, modelName) as IModel;
-                if (modelWithData == null)
-                {
-                    // Try by assuming the name is a type.
-                    Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
-                    if (t != null)
-                    {
-                        IModel parentOfGraph = series.Parent.Parent;
-                        if (t.IsAssignableFrom(parentOfGraph.GetType()))
-                            modelWithData = parentOfGraph;
-                        else
-                            modelWithData = Apsim.Find(parentOfGraph, t);
-                    }
-                }
-
-                if (modelWithData != null)
-                {
-                    // Use reflection to access a property.
-                    object obj = Apsim.Get(modelWithData, namePath);
-                    if (obj != null && obj.GetType().IsArray)
-                        return obj as Array;
-                }
-            }
-            else
-            {
-                return Apsim.Get(series, fieldName) as IEnumerable;
-            }
-
-            return null;
+            return series.FindByPath(fieldName)?.Value as IEnumerable;
         }
 
         /// <summary>Gets a column of data from a table.</summary>

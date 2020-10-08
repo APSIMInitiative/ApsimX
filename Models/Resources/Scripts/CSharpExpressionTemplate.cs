@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 using Models;

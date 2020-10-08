@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity processes one resource into another resource with associated labour and costs.")]
-    [HelpUri(@"Content/Features/activities/All resources/ProcessResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/ProcessResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityProcess : CLEMActivityBase
     {
@@ -58,13 +58,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Resource to process
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private IResourceType resourceTypeProcessModel { get; set; }
 
         /// <summary>
         /// Resource created
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private IResourceType resourceTypeCreatedModel { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
             }
 
             // get finances required.
-            foreach (ResourceActivityFee item in Apsim.Children(this, typeof(ResourceActivityFee)))
+            foreach (ResourceActivityFee item in this.FindAllChildren<ResourceActivityFee>())
             {
                 if (ResourceRequestList == null)
                 {

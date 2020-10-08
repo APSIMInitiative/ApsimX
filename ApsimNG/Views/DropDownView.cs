@@ -16,7 +16,7 @@
         string SelectedValue { get; set; }
 
         /// <summary>Gets or sets a value indicating if the dropdown is visible.</summary>
-        bool IsVisible { get; set; }
+        bool Visible { get; set; }
 
         /// <summary>Gets or sets whether the control should be editable.</summary>
         bool IsEditable { get; set; }
@@ -139,13 +139,16 @@
                 try
                 {
                     comboModel.Clear();
-                    foreach (string text in value)
-                        comboModel.AppendValues(text);
+                    if (value != null)
+                    {
+                        foreach (string text in value)
+                            comboModel.AppendValues(text);
 
-                    // if (comboModel.IterNChildren() > 0)
-                    //     combobox1.Active = 0;
-                    // else
-                    combobox1.Active = 1;
+                        // if (comboModel.IterNChildren() > 0)
+                        //     combobox1.Active = 0;
+                        // else
+                        combobox1.Active = 1;
+                    }
                 }
                 finally
                 {
@@ -201,7 +204,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether the combobox is visible.
         /// </summary>
-        public bool IsVisible
+        public bool Visible
         {
             get
             {

@@ -21,6 +21,7 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
             var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
@@ -42,6 +43,7 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
             var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
@@ -100,7 +102,7 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
-                                NO3N = new double[] { 23, 7, 2, 1, 1, 1 },
+                                NO3 = new double[] { 23, 7, 2, 1, 1, 1 },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },
@@ -123,6 +125,9 @@
                             {
                                 Children = new List<IModel>()
                                 {
+                                    new MockNutrientPool() { Name = "Inert" },
+                                    new MockNutrientPool() { Name = "Microbial" },
+                                    new MockNutrientPool() { Name = "Humic" },
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
                                     new MockNutrientPool() { Name = "FOMLignin" },
@@ -156,8 +161,9 @@
                 }
             };
 
-            Apsim.ParentAllChildren(zone);
-            Apsim.ChildrenRecursively(zone).ForEach(m => m.OnCreated());
+            zone.ParentAllDescendants();
+            foreach (IModel model in zone.FindAllDescendants())
+                model.OnCreated();
             var links = new Links();
             links.Resolve(zone, true);
             var events = new Events(zone);
