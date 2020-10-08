@@ -271,7 +271,12 @@ namespace Models.PMF.Struct
 
                     if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
-                        NextLeafProportion = Math.Max(0.001,1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
+                        // fixme - this guard is really a bandaid over some problems in the leaf cohort code
+                        // which seems to assume that growth duration is never 0. Can't set NextLeafProp to
+                        // 0, because then GrowthDuration will be 0. However it can be close to 0 if final leaf #
+                        // happens to have a very small fractional part (e.g. 14.00001).
+                        // If your crop is never progressing to flag leaf, this might be why (try reducing epsilon).
+                        NextLeafProportion = Math.Max(1e-10,1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
                     }
                     else
                     {
