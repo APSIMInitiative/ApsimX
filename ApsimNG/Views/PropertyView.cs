@@ -101,6 +101,8 @@ namespace UserInterface.Views
             int entryPos = -1;
             int entrySelectionStart = 0;
             int entrySelectionEnd = 0;
+#if NETFRAMEWORK
+            // fixme - calls to propertyTable.ChildGetProperty result in a segfault on gtk3 builds.
             if (propertyTable.FocusChild != null)
             {
                 object topAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "top-attach").Val;
@@ -122,6 +124,7 @@ namespace UserInterface.Views
                     }
                 }
             }
+#endif
             box.Remove(propertyTable);
             box.Label = $"{properties.Name} Properties";
             propertyTable.Cleanup();
