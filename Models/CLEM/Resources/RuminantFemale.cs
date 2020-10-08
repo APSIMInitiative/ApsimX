@@ -89,11 +89,6 @@ namespace Models.CLEM.Resources
         public double PreviousConceptionRate { get; set; }
 
         /// <summary>
-        /// Weight lost at birth due to calf
-        /// </summary>
-        public double WeightLossDueToCalf { get; set; }
-
-        /// <summary>
         /// Months since minimum breeding age or entering the population
         /// </summary>
         public double NumberOfBreedingMonths

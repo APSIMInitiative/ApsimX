@@ -434,6 +434,8 @@
             {
                 TreePath path;
                 TreeViewColumn col;
+                if (!Grid.IsRealized && !fixedColView.IsRealized)
+                    return null;
                 if (Grid.HasFocus || !fixedColView.Visible)
                 {
                     Grid.GetCursor(out path, out col);
@@ -1085,6 +1087,7 @@
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
                             (w as MenuItem).Activated -= handler;
+                            (w as MenuItem).AccelCanActivate -= CanActivateAccel;
                         }
                     }
                 }
@@ -2134,9 +2137,34 @@
                 {
                 }
             }
+            item.AccelCanActivate += CanActivateAccel;
             item.Activated += onClick;
             popupMenu.Append(item);
             popupMenu.ShowAll();
+        }
+
+        /// <summary>
+        /// Override the default widget handler for the can-activate-accel signal.
+        /// </summary>
+        /// <param name="sender">Sending object (the MenuItem).</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>
+        /// This is an attempt to isolate the cause of the crashes in the gui,
+        /// which are caused by a segfault in gtk_widget_can_activate_accel().
+        /// No idea if it has an effect, as the crashes do not occur consistently.
+        /// </remarks>
+        [GLib.ConnectBefore]
+        private void CanActivateAccel(object sender, AccelCanActivateArgs args)
+        {
+            try
+            {
+                if (sender is Widget w)
+                    args.RetVal = w.Sensitive && w.IsMapped;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -2596,6 +2624,9 @@
             TreeViewColumn col = view.GetColumn(column);
             if (path == null || col == null)
                 return;
+            if (!view.IsRealized)
+                Console.WriteLine($"Unable to select cell: treeview has not been realized");
+            Console.WriteLine($"Selecting cell ({row}, {column}) in {(startEdit ? "Edit" : "Read")} mode");
             view.SetCursor(path, col, startEdit);
             view.ScrollToCell(path, col, false, 0, 1);
             selectedCellRowIndex = row;

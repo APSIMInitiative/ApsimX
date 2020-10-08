@@ -30,6 +30,8 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private PropertyPresenter propertyPresenter;
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -44,6 +46,9 @@
 
             if (view != null)
             {
+                propertyPresenter = new PropertyPresenter();
+                propertyPresenter.Attach(model, this.view.Grid, this.explorerPresenter);
+
                 // Tell the view to populate the axis.
                 this.PopulateView();
                 this.view.Zoom = this.map.Zoom;

@@ -559,7 +559,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
             }
 
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ";
+            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ";
             if (AmountColumnName is null || AmountColumnName == "")
             {
                 html += "<span class=\"errorlink\">NOT SET</span></div>";

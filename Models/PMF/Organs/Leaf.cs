@@ -1927,30 +1927,6 @@ namespace Models.PMF.Organs
                 throw new Exception(Name + "Some Leaf N was not allocated.");
         }
 
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double totalResLeaf = MaintenanceRespiration;
-
-            foreach (LeafCohort L in Leaves)
-            {
-                double totalBMLeafCohort = L.Live.MetabolicWt + L.Live.StorageWt;
-                double resLeafCohort = respiration * L.MaintenanceRespiration / totalResLeaf;
-
-                if (resLeafCohort > Double.Epsilon && resLeafCohort - totalBMLeafCohort > 0.00001)
-                    throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-
-                if (resLeafCohort > 0 && (L.Live.MetabolicWt + L.Live.StorageWt) > 0)
-                {
-                    L.Live.MetabolicWt -= (resLeafCohort * L.Live.MetabolicWt / totalBMLeafCohort);
-                    L.Live.StorageWt -= (resLeafCohort * L.Live.StorageWt / totalBMLeafCohort);
-                    needToRecalculateLiveDead = true;
-                }
-            }
-        }
-
-
         /// <summary>Gets or sets the minimum nconc.</summary>
         public double MinNconc
         {

@@ -92,6 +92,18 @@ namespace Models.CLEM.Activities
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);
+
+            switch (CutStyle)
+            {
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    InitialiseHerd(true, true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>An event handler for a Cut and Carry</summary>

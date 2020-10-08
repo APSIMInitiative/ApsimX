@@ -147,6 +147,7 @@
                 typeof(MathNet.Numerics.Fit).Assembly.Location,
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
                 typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location,
+                typeof(System.Drawing.Color).Assembly.Location,
             };
 
             if (previousCompilations != null)
@@ -302,7 +303,9 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
-               MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location)
+               MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
             };
 
             if (previousCompilations != null)

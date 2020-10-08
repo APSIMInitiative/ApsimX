@@ -290,10 +290,10 @@
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
-                                                  text, 
-                                                  explorerPresenter);
+                IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+                ICommand command = new AddModelCommand(currentNode, text);
                 explorerPresenter.CommandHistory.Add(command, true);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {

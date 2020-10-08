@@ -575,7 +575,7 @@
                 {
                     ep.EmergenceDate=emergencedate;
                 }
-            SetGerminationDate(SowingDate.ToString("d-MMM"));
+            SetGerminationDate(SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
         }
 
         /// <summary>

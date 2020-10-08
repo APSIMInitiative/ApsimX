@@ -90,6 +90,14 @@ namespace Models.PMF
         [Link]
         Soils.Soil Soil = null;
 
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
+        /// <summary>The soil</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
         /// <summary>NO3 solute.</summary>
         [Link(ByName = true)]
         private ISolute NO3 = null;
@@ -97,6 +105,9 @@ namespace Models.PMF
         /// <summary>NH4 solute.</summary>
         [Link(ByName = true)]
         private ISolute NH4 = null;
+
+        /// <summary>Soil crop parameterisation.</summary>
+        private SoilCrop soilCrop;
 
         /// <summary>
         /// Is the plant alive?
@@ -176,6 +187,11 @@ namespace Models.PMF
         {
             Uptakes = new List<ZoneWaterAndN>();
             EP = 0;
+
+            soilCrop = Soil.FindDescendant<SoilCrop>(Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {Name}Soil");
+
         }
 
         /// <summary>Run at start of day</summary>
@@ -198,17 +214,15 @@ namespace Models.PMF
                     MyZone = Z;
 
 
-            double[] PotSWUptake = new double[Soil.LL15.Length];
-            SWUptake = new double[Soil.LL15.Length];
+            double[] PotSWUptake = new double[soilPhysical.LL15.Length];
+            SWUptake = new double[soilPhysical.LL15.Length];
 
-            SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
-
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.LL15mm[j]));
+            for (int j = 0; j < soilPhysical.LL15.Length; j++)
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - soilPhysical.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.LL15.Length; j++)
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
@@ -237,8 +251,7 @@ namespace Models.PMF
             NO3Uptake = new double[MyZone.NO3N.Length];
             NH4Uptake = new double[MyZone.NH4N.Length];
 
-            var soilCrop = Soil.Crop(Name);
-            for (int j = 0; j < Soil.LL15mm.Length; j++)
+            for (int j = 0; j < soilPhysical.Thickness.Length; j++)
             {
                 PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
                 PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NH4N[j]);
@@ -267,7 +280,7 @@ namespace Models.PMF
             SWUptake = info[0].Water;
             EP = MathUtilities.Sum(SWUptake);
 
-            Soil.SoilWater.RemoveWater(SWUptake);
+            waterBalance.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today
@@ -317,12 +330,12 @@ namespace Models.PMF
             double depth_of_root_in_layer = 0;  // depth of root within layer (mm)
             // Implementation Section ----------------------------------
             for (int i = 0; i <= layer; i++)
-                depth_to_layer_bottom += Soil.Thickness[i];
-            depth_to_layer_top = depth_to_layer_bottom - Soil.Thickness[layer];
+                depth_to_layer_bottom += soilPhysical.Thickness[i];
+            depth_to_layer_top = depth_to_layer_bottom - soilPhysical.Thickness[layer];
             depth_to_root = Math.Min(depth_to_layer_bottom, root_depth);
             depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
 
-            return depth_of_root_in_layer / Soil.Thickness[layer];
+            return depth_of_root_in_layer / soilPhysical.Thickness[layer];
         }
     }
 }

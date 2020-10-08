@@ -222,5 +222,19 @@ namespace UserInterface.Extensions
 #endif
             return imageItem;
         }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Gets the child of grid whose area covers the grid cell whose upper left corner is at (left, top).
+        /// </summary>
+        /// <param name="grid">The grid.</param>
+        /// <param name="left">Column index.</param>
+        /// <param name="top">Row index.</param>
+        /// <remarks>Provided for compatibility with gtk2 builds which use GtkTable.</remarks>
+        public static Widget GetChild(this Grid grid, int left, int top)
+        {
+                return grid.GetChildAt(left, top);
+        }
+#endif
     }
 }

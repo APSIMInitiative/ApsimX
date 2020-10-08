@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
+    [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
@@ -41,9 +42,9 @@ namespace Models.CLEM.Activities
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Proportion wastage through trampling (feed trough = 0)
+        /// Proportion wasted (e.g. trampling, 0 = feed trough present)
         /// </summary>
-        [Description("Proportion wastage through trampling (feed trough = 0)")]
+        [Description("Proportion wasted (e.g. trampling, 0 = feed trough present)")]
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
 
@@ -53,7 +54,16 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public IFeedType FeedType { get; set; }
 
-        private double feedRequired = 0;
+        // amount requested
+        private double feedEstimated = 0;
+        // amount actually needed to satisfy animals
+        private double feedToSatisfy = 0;
+        // amount actually needed to satisfy animals allowing for overfeeding
+        private double feedToOverSatisfy = 0;
+        // does this feeding style need a potential intake modifier
+        private bool usingPotentialintakeMultiplier = false;
+
+        private double overfeedProportion = 1;
 
         /// <summary>
         /// Feeding style to use
@@ -83,7 +93,7 @@ namespace Models.CLEM.Activities
             if (FindAllChildren<RuminantFeedGroup>().Count() + this.FindAllChildren<RuminantFeedGroupMonthly>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant feed group" };
-                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present", memberNames));
+                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] is required to define the animals and amount fed", memberNames));
             }
             return results;
         }
@@ -108,13 +118,30 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<Ruminant> herd = CurrentHerd(false);
+            feedEstimated = 0;
+            feedToSatisfy = 0;
+            feedToOverSatisfy = 0;
 
-            feedRequired = 0;
-
-            bool firstGroup = true;
             // get list from filters
             foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
+                var selectedIndividuals = herd.Filter(child);
+
+                switch (FeedStyle)
+                {
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    case RuminantFeedActivityTypes.ProportionOfWeight:
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                        usingPotentialintakeMultiplier = true;
+                        break;
+                }
+
+                // get the amount that can be eaten. Does not account for individuals in multiple filters
+                // accounts for some feeding style allowing overeating to the user declared value in ruminant 
+                feedToSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
+                feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
+
                 double value = 0;
                 if (child is RuminantFeedGroup)
                 {
@@ -127,38 +154,29 @@ namespace Models.CLEM.Activities
 
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
                 {
-                    if(firstGroup)
-                    {
-                        feedRequired += (value * (1.0 - this.ProportionTramplingWastage)) * 30.4;
-                        firstGroup = false;
-                    }
+                    feedEstimated += value * 30.4;
                 }
                 else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
                 {
-                    if (firstGroup)
-                    {
-                        feedRequired += value * FeedType.Amount;
-                        firstGroup = false;
-                    }
+                    feedEstimated += value * FeedType.Amount;
                 }
                 else
                 {
-                    foreach (Ruminant ind in herd.Filter(child))
+                    foreach (Ruminant ind in selectedIndividuals)
                     {
                         switch (FeedStyle)
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                feedRequired += value * 30.4;
+                                feedEstimated += value * 30.4;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
-                                feedRequired += value * ind.Weight * 30.4;
+                                feedEstimated += value * ind.Weight * 30.4;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                // allow setting of model defined overfeed of 1.2 x potential
-                                feedRequired += Math.Min(1.2,value) * ind.PotentialIntake;
+                                feedEstimated += value * ind.PotentialIntake;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                feedRequired += value * ((ind.PotentialIntake*1.2) - ind.Intake);
+                                feedEstimated += value * (ind.PotentialIntake - ind.Intake);
                                 break;
                             default:
                                 throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -167,19 +185,20 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if (feedRequired > 0)
+            if (feedEstimated > 0)
             {
-                //FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
-                string feedItemName = FeedTypeName.Split('.').Last(); 
+                // FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
+                string feedItemName = FeedTypeName.Split('.').Last();
                 return new List<ResourceRequest>()
                 {
                     new ResourceRequest()
                     {
                         AllowTransmutation = true,
-                        Required = feedRequired,
+                        Required = feedEstimated,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
-                        ActivityModel = this
+                        ActivityModel = this,
+                        Reason = "Feed"
                     }
                 };
             }
@@ -219,7 +238,6 @@ namespace Models.CLEM.Activities
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
-
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
@@ -228,19 +246,17 @@ namespace Models.CLEM.Activities
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
-
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    daysNeeded = feedRequired * requirement.LabourPerUnit;
+                    daysNeeded = feedEstimated * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    numberUnits = feedRequired / requirement.UnitSize;
+                    numberUnits = feedEstimated / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
-
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -254,13 +270,72 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void AdjustResourcesNeededForActivity()
         {
-            //add limit to amout collected based on labour shortfall
+            // labour shortfall if any
             double labourLimit = this.LabourLimitProportion;
-            foreach (ResourceRequest item in ResourceRequestList)
+            overfeedProportion = 0;
+
+            // TODO: adjust if multiple animal food stores included in future.
+            // FirstOrDefault() is still known to be food store request. After this call it will be last in list with wasted and excess at start of list
+            ResourceRequest item = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
+
+            if(item != null)
             {
-                if(item.ResourceType != typeof(LabourType))
+                //add limits to amout collected based on labour shortfall
+                item.Required *= labourLimit;
+
+                // account for any wastage
+                // removed from food resource provided and then will be handled if required if less than provided in next section (DoActivity).
+                if (ProportionTramplingWastage > 0)
                 {
-                    item.Required *= labourLimit;
+                    double wasted = Math.Min(item.Available, item.Required) * ProportionTramplingWastage;
+                    if (wasted > 0)
+                    {
+                        ResourceRequest wastedRequest = new ResourceRequest()
+                        {
+                            AllowTransmutation = false,
+                            Required = wasted,
+                            Available = wasted,
+                            ResourceType = typeof(AnimalFoodStore),
+                            ResourceTypeName = item.ResourceTypeName,
+                            ActivityModel = this,
+                            Reason = "Wastage"
+                        };
+                        ResourceRequestList.Insert(0, wastedRequest);
+                        item.Required -= wasted;
+                        // adjust the food known available for the actual feed
+                        item.Available -= wasted;
+                    }
+                }
+
+                // report any excess fed above feed needed to fill animals itake (including potential multiplier if required for overfeeding)
+                double excess = 0;
+                if (item.Required >= feedToOverSatisfy)
+                {
+                    excess = item.Required - feedToOverSatisfy;
+                    if(feedToOverSatisfy > feedToSatisfy)
+                    {
+                        overfeedProportion = 1;
+                    }
+                }
+                else if(feedToOverSatisfy > feedToSatisfy && item.Required > feedToSatisfy)
+                {
+                    overfeedProportion = (item.Required - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
+                }
+                if (excess > 0)
+                {
+                    ResourceRequest excessRequest = new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = excess,
+                        Available = excess,
+                        ResourceType = typeof(AnimalFoodStore),
+                        ResourceTypeName = item.ResourceTypeName,
+                        ActivityModel = this,
+                        Reason = "Overfed wastage"
+                    };
+                    ResourceRequestList.Insert(0, excessRequest);
+                    item.Required -= excess;
+                    item.Available -= excess;
                 }
             }
             return;
@@ -274,12 +349,9 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = CurrentHerd(false);
             if (herd != null && herd.Count > 0)
             {
-                // calculate feed limit
                 double feedLimit = 0.0;
-                double dailyAmountShortfall = 1.0;
-                double wastage = 1.0 - this.ProportionTramplingWastage;
 
-                ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
+                ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).LastOrDefault();
                 FoodResourcePacket details = new FoodResourcePacket();
                 if (feedRequest != null)
                 {
@@ -288,24 +360,10 @@ namespace Models.CLEM.Activities
                 }
 
                 // feed animals
-
                 if(feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
                 {
                     Status = ActivityStatus.NotNeeded;
                     return;
-                }
-
-                // if feed style is fixed daily amount compare amount received against herd requirement.
-                // this produces a reduction from potential intake (up to 1.2x) for each individual.
-                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount | FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                {
-                    double herdRequirement = 0;
-                    foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
-                    {
-                        // allow slight model set overfeed of 1.2xpotential
-                        herdRequirement += herd.Filter(child).Sum(a => (a.PotentialIntake*1.2) - a.Intake);
-                    }
-                    dailyAmountShortfall = Math.Min(1.0, feedRequest.Provided / herdRequirement);
                 }
 
                 // get list from filters
@@ -327,33 +385,37 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.PotentialIntake * 1.2) - ind.Intake);
-                                details.Amount *= dailyAmountShortfall;
-                                ind.AddIntake(details);
+                                details.Amount = ((ind.PotentialIntake * (usingPotentialintakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake);
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                                 details.Amount = value * 30.4;
-                                details.Amount *= feedLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
                                 details.Amount = value * ind.Weight * 30.4;
-                                details.Amount *= feedLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = Math.Min(1.2,value) * ind.PotentialIntake;
-                                details.Amount *= feedLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount = value * ind.PotentialIntake;
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = value * ((ind.PotentialIntake * 1.2) - ind.Intake); 
-                                details.Amount *= feedLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount = value * (ind.PotentialIntake - ind.Intake); 
+                                details.Amount *= feedLimit;
                                 break;
                             default:
                                 throw new Exception("Feed style used [" + FeedStyle + "] not implemented in [" + this.Name + "]");
                         }
+                        // check amount meets intake limits
+                        if (usingPotentialintakeMultiplier)
+                        {
+                            if (details.Amount > (ind.PotentialIntake + (Math.Max(0,ind.BreedParams.OverfeedPotentialIntakeModifier-1)*overfeedProportion*ind.PotentialIntake)) - ind.Intake)
+                            {
+                                details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
+                            }
+                        }
+                        ind.AddIntake(details);
 
                     }
                 }

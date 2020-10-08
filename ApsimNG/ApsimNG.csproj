@@ -58,6 +58,10 @@
     <PackageReference Include="Webview.Core" Version="0.0.3" />
     <PackageReference Include="Markdig.Signed" Version="0.20.0" />
     <PackageReference Include="ISO3166" Version="1.0.3" />
+    <!--<PackageReference Include="System.Drawing.Common" Version="5.0.0-rc.1.20451.14" />-->
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
+    <PackageReference Include="SharpMap" Version="1.2.0-pre.185420022" />
+    <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->

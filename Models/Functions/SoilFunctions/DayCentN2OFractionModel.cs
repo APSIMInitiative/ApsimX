@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -14,9 +15,12 @@ namespace Models.Functions
     [Description("Denitrification N2O fraction model from DayCent")]
     public class DayCentN2OFractionModel : Model, IFunction, ICustomDocumentation
     {
-
         [Link]
-        Soil soil = null;
+        IPhysical soilPhysical = null;
+        
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
 
         [Link(ByName = true)]
         Solute NO3 = null;
@@ -31,7 +35,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Nitrification Model");
 
-            double WFPS = MathUtilities.Divide(soil.SoilWater.SW[arrayIndex], soil.SAT[arrayIndex], 0)*100;
+            double WFPS = MathUtilities.Divide(waterBalance.SW[arrayIndex], soilPhysical.SAT[arrayIndex], 0)*100;
             double WF = 0;
             if (WFPS > 21.3)
                 WF = 1.18 * (WFPS - 21.3) / (100 - 21.3);
