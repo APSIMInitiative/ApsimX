@@ -104,7 +104,7 @@
             mainWindow.Add(container);
             mainWindow.Resizable = false;
             mainWindow.Destroyed += OnDestroyed;
-            Window masterWindow = (MasterView as ViewBase).MainWidget.Toplevel as Window;
+            Window masterWindow = (MasterView as ViewBase)?.MainWidget?.Toplevel as Window;
             if (masterWindow != null)
             {
                 masterWindow.KeyPressEvent += OnKeyPress;
