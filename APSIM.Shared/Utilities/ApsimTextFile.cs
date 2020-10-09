@@ -405,9 +405,9 @@ namespace APSIM.Shared.Utilities
         {
             string PreviousLine = "";
 
-            string Line = inData.ReadLine();
             while (!inData.EndOfStream)
             {
+                string Line = inData.ReadLine();
                 int PosEquals = Line.IndexOf('=');
                 if (PosEquals != -1)
                 {
@@ -432,7 +432,6 @@ namespace APSIM.Shared.Utilities
                     }
                 }
                 PreviousLine = Line;
-                Line = inData.ReadLine();
             }
 
         }
@@ -632,7 +631,6 @@ namespace APSIM.Shared.Utilities
 
             return true;
         }
-
 
         /// <summary>
         /// Looks the ahead for non missing value.
