@@ -22,6 +22,8 @@ Any recent PC with a minimum of 2Gb of RAM.
 
 ### Installation
 
+Binary releases are available via our [registration system](https://apsimdev.apsim.info/APSIM.Registration.Portal/Main.aspx).
+
 ## Contributing
 
 Any individual or organisation (a 3rd party outside of the AI) who uses APSIM must be licensed do so by the AI. On download of APSIM, the terms and conditions of a standard Non-Commercial R&D Licence are agreed to and binds the user.
