@@ -271,7 +271,10 @@ namespace APSIM.Shared.Utilities
         /// <returns>Returns a constant as double.</returns>
         public double ConstantAsDouble(string constantName)
         {
-            return Convert.ToDouble(Constant(constantName).Value, CultureInfo.InvariantCulture);
+            ApsimConstant constant = Constant(constantName);
+            if (constant == null)
+                throw new Exception($"Constant {constantName} does not exist");
+            return Convert.ToDouble(constant.Value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
