@@ -124,8 +124,8 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The phenology model starts from endodormancy instead of emergence in annual crops. \n\nIt assume the Endodormancy starts when a critical photoperiod (~13.1h) is reached. The following developments was regulated by temperature. Ecodormancy is induced when the chilling requirement is satisfied, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).\n\nThe phenology model go through phases of Endodormancy,Ecodormancy,BudBurst,Flowering,FruitSet,Veraison, LeafFall. After one cycle, bud goes to dormancy at 314 days after winter solstice by the pruning method.\n\n\n\n\r\n\r\n\r\n\r\n",
-                  "Name": "Memo",
+                  "Text": "The phenology model starts from endodormancy instead of emergence in annual crops. \n\nThe phenology module goes through phases of Endodormancy, Ecodormancy, BudBurst, Flowering, FruitSet, Veraison and LeafFall. Except the LeafFall phase, which is a leaf death phase class, all other phases are parameterised using the generic phase class. The generic phase class has two main properties: target and progression. Progression defines how units were accumulated to achieve the target of the phase on daily time step. It can be defined by any function in the UI. \nThe phenology module assumes the endodormancy starts when a critical photoperiod is reached. Endodormancy is defined as the period when buds are dormant due to physiological conditions, and ecodormancy is defined when buds remain dormant due to unfavourable environmental conditions (Sarvaš, 1974).\n\nThree budburst modelling approaches were tested based on our phenology dataset (Parker et al. 2021): 1) forcing-only approach, which only describes the ecodormancy; 2) chilling-forcing, which describes the endo- and ecodormancy in sequence; 3) chilling-forcing-overlap, which describes the endo- and ecodormancy in sequence plus the effect of chilling units on forcing accumulation through implementation of an exponential decrease function. Chilling-forcing approach was selected in the current grapevine model but users can change to different approaches in the UI. In this approach, ecodormancy is induced when the chilling requirement is satisfied, and then followed by a period with forcing temperatures calculated by growing degree day until bud burst (Chuine, 2000). A negative sigmoid function was selected for simulating the responses of chilling units to different temperatures (Eq. 1) and a growing degree day approach was used for the forcing unit (Eq. 2). \n\t\tR_c (Ta)=1/〖1+e〗^((-((Ta-a))/b)) \t\t\t\t\tEq. 1\n\t\tR_f (Ta)={█(         0,■(&      Ta<Tb) @Ta-Tb,■(&  Ta≥ Tb))┤\t\t\tEq. 2\nRc(Ta) is the rate of chilling accumulation at hourly air temperature Ta. The rate is further divided by 24 to scale to daily step. a (equal to 12.4°C) and b (-3.8) are fitted parameters. Rf(Ta) is the rate of forcing accumulation. Tb (0°C) is the fitted base temperature. In APSIM, hourly temperature is interpolated based on the method described in Goudriaan and Van Laar (1994). \n\nThe flowering, fruit set and véraison phase was simulated using a thermal day (td) target. The thermal day unit was calculated by the Wang-Engle temperature response function (Eq. 3 to 5), which returns values from zero to one (Wang and Engel, 1998). Thermal day was used for all other time-dependent events and function as well, e.g. leaf appearance and expansion. \nf_T=(2〖(T_ -T_min)〗^α 〖(T_opt-T_min)〗^α-〖(T_ -T_min)〗^2α)/〖(T_opt-T_min)〗^2α    ■(&T_min≤T≤T_max )\t    \tEq. 3 \nα=ln2⁄(ln⁡[((T_max-T_min))⁄((T_opt-T_min))])\t\t\t\t\tEq. 4\nf_Tref=(2〖(T_ref-T_min)〗^α 〖(T_opt-T_min)〗^α-〖(T_ref-T_min)〗^2α)/〖(T_opt-T_min)〗^2α    ■(&T_min≤T_ref≤T_max )\tEq. 5 \n\nThe ratio between f_T  and f_Tref was returned as the final Wang-Engle thermal day unit. T is the hourly interpolated air temperature. Tmin is the minimum temperature, 4°C. Topt is the optimum temperature, 29°C. Tmax is the maximum temperature, 38°C. Tref is the reference temperature, 25°C. Hourly interpolated values were averaged to get the Wang-Engle thermal day unit for a given day. Parameters were optimized for achieving the best prediction for flowering and véraison simultaneously. \n\nAfter summer solstice, the photoperiod decreases. When photoperiod decreases to a critical value (depends on variety and was set to 13.1 h in current model based on Camargo-Alvarez et al. (2020)), the bud for the growth of the following season enter into endodormancy. However, we could not reset the whole plant phenology into endodormancy at this time, as berries are still growing. Although it would be tidy to develop two different phenological clocks, one for the bud and one for the plant in growth, we decide to work around it by resetting the plant phenology phase into endodormancy at winter pruning which was defined in the management script. The chilling accumulation between the critical photoperiod and the pruning event was captured in another function and then added to the total chill accumulation in the endodormancy phase. \n\n\n\n\r\n\r\n\r\n\r\n",
+                  "Name": "Phenology",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -891,6 +891,15 @@
               "Name": "Structure",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The structure module defines the bud number per vine, rate of main stem primordia initiation rate, phyllochron (thermal day interval between two successive leaf appearance, 1.823 td in this model), branching rate and branching mortality, final leaf number and canopy height. \nPhyllochron was defined by a phase look up function in combination with a linear interpolation function. The phase look up function defines when new leaf appearance will happen, which is currently defined between budburst and véraison. The linear interpolation function defines how phyllochron changes with leaf rank based on the data presented in (Greer and Weston, 2010). \nBranching rate was calculated as the product of three components: potential branching rate, the effect of leaf area per vine, and the effects of retained bud number per meter row\n",
+                  "Name": "Structure",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.HourlyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
@@ -1296,15 +1305,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "The structure module defines the bud number per vine, rate of main stem primordia initiation rate, phyllochron (leaf appearance rate), branching rate and branching mortality, final leaf number and canopy height. \nDifferent functions can be used in combination to parameterise the properties that are mentioned above. For example, phyllochron was defined by a phase look up function in combination with a linear interpolation function. The phase look up function defines when new leaf appearance will happen, which is currently defined between budburst and véraison. The linear interpolation function defines how phyllochron changes with leaf rank based on the data presented in (Greer and Weston, 2010). \n",
-                  "Name": "Structure",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1944,7 +1944,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 10000.0,
+                      "FixedValue": 15000.0,
                       "Units": "mm2/g",
                       "Name": "SpecificLeafAreaMin",
                       "Children": [],
@@ -2948,6 +2948,15 @@
               "Name": "Shoot",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Shoot was represented by a Generic Organ class. \n\nThe structural biomass demand of the shoot module was calculated by a delta function that takes the difference of yesterday and today’s value of a fitted biomass growth curve. The structural biomass growth curve was represented by a beta growth function (Yin et al., 2003) fitted on individual shoot weight over time and times the shoot population per square meter. Shoot population per square meter was calculated internally based on shoot number per vine and vine density. \nDMs(t)=〖SP*DM〗_max (1+ (t_e-t)/(t_e-t_m )) (t/t_e )^(t_e/(t_e-t_m ))              0≤t_m<t_e\t(Eq. 8)\nDMs(t) is the DM of all shoots (g m-2) at time t from budburst. SP the shoot population per square meter. DMmax is the fitted maximum DM per shoot under four-cane pruned vines (g). t_e is the time when DMmax was reached (79.2 td), t_m is the time at maximum growth rate (43 td). \n\nNote the shoot dry matter including both the primary and secondary shoots. For capturing the reduction of shoot biomass under high retained bud number per meter row caused both by smaller primary shoot and less lateral shoots (Greven et al., 2014), the priority factor for shoot DM demand was set to a very low value (4e-3). \n\nParameters for shoot non-structural DM demand, e.g. priority factors were set as half of the trunk and root. \n",
+                  "Name": "Shoot",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": "percentage",
@@ -2959,7 +2968,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.1,
                   "Units": "percentage",
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -3602,15 +3611,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Shoot was represented by a Generic Organ class. \n\nThe structural biomass demand of the shoot module was calculated by a delta function that takes the difference of yesterday and today’s value of a fitted biomass growth curve. The structural biomass growth curve was represented by a beta growth function (Yin et al., 2003) fitted on individual shoot weight over time and times the shoot population per square meter. Shoot population per square meter was calculated internally based on shoot number per vine and vine density. \nDMs(t)=〖SP*DM〗_max (1+ (t_e-t)/(t_e-t_m )) (t/t_e )^(t_e/(t_e-t_m ))              0≤t_m<t_e\t(Eq. 8)\nDMs(t) is the DM of all shoots (g m-2) at time t from budburst. SP the shoot population per square meter. DMmax is the fitted maximum DM per shoot under four-cane pruned vines (g). t_e is the time when DMmax was reached (79.2 td), t_m is the time at maximum growth rate (43 td). \n\nNote the shoot dry matter including both the primary and secondary shoots. For capturing the reduction of shoot biomass under high retained bud number per meter row caused both by smaller primary shoot and less lateral shoots (Greven et al., 2014), the priority factor for shoot DM demand was set to a very low value (4e-3). \n\nParameters for shoot non-structural DM demand, e.g. ksyn and priority factors were set as half of the trunk and root. \n",
-                  "Name": "Shoot",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3630,275 +3630,10 @@
               "Name": "Cordon",
               "Children": [
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "StructuralWt",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Cordon.Live.StructuralWt",
-                                      "Name": "StructuralWt",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.26,
-                                      "Units": "gStorageDM/gStructureDM",
-                                      "Name": "MaxConcentration",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Cordon.Live.StorageWt",
-                                  "Name": "StorageWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 21.0,
-                              "te": 54.0,
-                              "Name": "DailySynthesis",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.05,
-                                  "Units": null,
-                                  "Name": "Ymax",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.0,
-                          "Units": null,
-                          "Name": "2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 3.1415926,
-                          "Units": null,
-                          "Name": "PI",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PowerFunction, Models",
-                          "Exponent": 0.5,
-                          "Name": "Radius",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "RadiusSquare",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cordon].Live.Wt",
-                                  "Name": "Wt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Population",
-                                  "Name": "population",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cordon].CordonNumber",
-                                  "Name": "CordonNumber",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 500000.0,
-                                  "Units": "g/m3",
-                                  "Name": "Density",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cordon].CordonLength",
-                                  "Name": "Length",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 3.1415926,
-                                  "Units": null,
-                                  "Name": "PI",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 400000.0,
-                          "Units": "g/m3",
-                          "Name": "Density",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 9E-06,
-                          "Units": "meter",
-                          "Name": "RadiusGR",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].CordonLength",
-                          "Name": "Length",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Population",
-                          "Name": "Population",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].CordonNumber",
-                          "Name": "CordonNumber",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Memo, Models",
+                  "Text": "Cordon, Trunk and Structural root module were all represented by the Generic Organ class, which has properties of biomass status and daily biomass demand and supply. The structural DM demand of cordon and trunk (Eq. 6) were calculated by their radius (r, unit m) derived from their DM and length, daily growth rate of the radius (dr/dt, m d-1), length (l, m) and wood density (ρ, g m-3) (Cieslak et al., 2011). \n〖dStructuralDM〗_i/dt=q_(str,i) 2πrlρ dr/dt\t\tEq. 6\nwhere i was organ type. Qstr,i was the priority factor for structural DM demand for a certain organ, determined as 0.7 for all three organs see model calibration methods. Daily growth rate of the radius were calculated based on the trunk circumference measurements on the same eight hundreds vines with 14 years’ interval. \nThe structural carbon demand of the structural root was calculated by the structural demand of the trunk times the structural root/trunk ratio (set to one in this model). The structural root/trunk ratio may vary between vineyards and training systems. \n\nThe non-structural DM demand was modelled as an active competing sink (Cieslak et al., 2011), and the parameters were kept the same for those three organs. The rate of non-structural DM synthesis depended on organ size and limited by overloading. \n〖dNonStructuralDM〗_i/dt=q_(NSC,i)*k_syn*\n(C_(max,NSC)*〖StructuralDM〗_i-〖NonStructuralDM〗_i )\tEq. 7\nThe equation limited carbon storage owing to non-structural DM overloading and the organ storage capacity, which was proportional to the current organ structural biomass, Cmax,NSC was the maximum non-structural DM per unit of structural DM, set as 0.26 based on our field trunk and root samples (Greven et al., 2016). qNSC was set to 0.61 throughout the growing season. ksyn was daily non-structural DM synthesis rate, which was represented by a beta growth function Eq. 8 (Yin et al., 2003) for capturing the fast recovery of carbon reserves after flowering (Greven et al., 2016; Seleznyova et al., 2018). \n\nParameters were optimized based on the measured dynamics of non-structural carbon in trunk and root by Greven et al. (2016), see model calibration methods.\nk_syn=k_max (1+ (t_e-t)/(t_e-t_m )) (t/t_e )^(t_e/(t_e-t_m ))              0≤t_m<t_e\t(Eq. 8)\nk_max was the maximum non-structural DM synthesis rate, 0.03 g g-1. t_e was the thermal day after budburst when kmax was reached, 54 td (around véraison). t_m was the time when maximum increase rate occurred, 34.4 td.\nFor potential carbon retranslocation by those storage organs, a value of 3.7% each day (DMRetranslocationFactor) was obtained through optimization. Actual retranslocation depends on the daily carbon supply and demand differences. \nThe biomass of retained cane for following season was reset by the pruning events based on input cane diameter in the UI each year for the cane-pruned vines. The biomass of trunk and fibrous root keep growing each year. \n",
+                  "Name": "Cordon",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3935,7 +3670,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.037,
                   "Units": "percentage",
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -4384,45 +4119,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Cordon, Trunk and Fibrous root module were all represented by the Generic Organ class, which has properties of biomass status and daily biomass demand and supplies. \n\nThe structural DM demand of cordon and trunk (Eq. 6) were calculated by their radius (r, unit m) derived from daily DM, daily growth rate of the radius (dr/dt, m d-1), length (l, m) and wood density (ρ, g m-3) (Cieslak et al., 2011). \n〖dStructuralDM〗_i/dt=q_(str,i) 2πrlρ dr/dt\t\tEq. 6\nwhere i is organ type. Qstr,i is the priority factor for structural DM demand for a certain organ, which was set as 0.7 for all three organs.\nThe structural carbon demand of the fibrous root was calculated by a fibrous root/trunk ratio (set to one in this model) times the structural demand of the trunk. \n\nThe non-structural DM demand was modelled as an active competing sink (Cieslak et al., 2011), and the parameters were kept the same for those three organs. The rate of non-structural DM synthesis depended on organ size and limited by overloading. \n〖dNonStructuralDM〗_i/dt=q_(NSC,i)*k_syn*\n(C_(max,NSC)*〖StructuralDM〗_i-〖NonStructuralDM〗_i )\tEq. 7\n\nwhere i is organ type. The equation limits carbon storage owing to non-structural DM overloading and the organ storage capacity, which is proportional to the current organ structural biomass, Cmax,NSC is the maximum non-structural DM per unit of structural DM, set as 0.26 based on our field trunk and root samples (Greven et al., 2016). ksyn is daily non-structural DM synthesis rate, which is set as 0.02 between budburst to véraison and 0.04 between véraison to leaf fall. qnsc,i is the priority factor for non-structural DM demand for a certain organ, which was set as 0.7 between budburst to véraison and 1.3 between véraison to leaf fall for all organs. \n\nFor carbon supply by those storage organs, at each day we set 7% of the total non-structural DM can be translocated to other organs. This value was optimized based on the measured dynamics of non-structural carbon in trunk and root by (Greven et al., 2016) see detail description of the optimization procedure in Model calibration and validation. \n\nThe biomass of cordon was reset by the pruning events based on cane diameter in the UI each year for the cane-pruned vines. The biomass of trunk and fibrous root keep growing every year. \n",
-                  "Name": "Cordon",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "StartLive": null,
-              "DMSupply": null,
-              "NSupply": null,
-              "DMDemand": null,
-              "DMDemandPriorityFactor": null,
-              "NDemand": null,
-              "potentialDMAllocation": null,
-              "IsAboveGround": true,
-              "Name": "Trunk",
-              "Children": [
-                {
                   "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "InitialWt",
+                  "Name": "DMDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 280.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
@@ -4433,25 +4132,6 @@
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 200.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
                     {
                       "$type": "Models.Functions.MaximumFunction, Models",
                       "Name": "Storage",
@@ -4470,7 +4150,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Trunk.Live.StructuralWt",
+                                      "VariableName": "[Grapevine].Cordon.Live.StructuralWt",
                                       "Name": "StructuralWt",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -4494,7 +4174,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Trunk.Live.StorageWt",
+                                  "VariableName": "[Grapevine].Cordon.Live.StorageWt",
                                   "Name": "StorageWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4508,13 +4188,13 @@
                             },
                             {
                               "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 21.0,
+                              "tm": 34.4,
                               "te": 54.0,
                               "Name": "DailySynthesis",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.05,
+                                  "FixedValue": 0.03,
                                   "Units": null,
                                   "Name": "Ymax",
                                   "Children": [],
@@ -4591,7 +4271,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Trunk].Live.Wt",
+                                  "VariableName": "[Cordon].Live.Wt",
                                   "Name": "Wt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4608,19 +4288,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 3.1415926,
-                                  "Units": null,
-                                  "Name": "PI",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Trunk].TrunkLength",
-                                  "Name": "Length",
+                                  "VariableName": "[Cordon].CordonNumber",
+                                  "Name": "CordonNumber",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4631,6 +4301,25 @@
                                   "FixedValue": 500000.0,
                                   "Units": "g/m3",
                                   "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cordon].CordonLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4647,17 +4336,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].TrunkLength",
-                          "Name": "Length",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 500000.0,
+                          "FixedValue": 400000.0,
                           "Units": "g/m3",
                           "Name": "Density",
                           "Children": [],
@@ -4667,7 +4347,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 8E-06,
+                          "FixedValue": 9E-06,
                           "Units": "meter",
                           "Name": "RadiusGR",
                           "Children": [],
@@ -4677,58 +4357,68 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Population",
-                          "Name": "population",
+                          "VariableName": "[Cordon].CordonLength",
+                          "Name": "Length",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "Age",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                5.0,
-                                10.0,
-                                20.0,
-                                30.0,
-                                40.0,
-                                80.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.9,
-                                0.5,
-                                0.25,
-                                0.14,
-                                0.02
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Age.Years",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Cordon].CordonNumber",
+                          "Name": "CordonNumber",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
+              "DMSupply": null,
+              "NSupply": null,
+              "DMDemand": null,
+              "DMDemandPriorityFactor": null,
+              "NDemand": null,
+              "potentialDMAllocation": null,
+              "IsAboveGround": true,
+              "Name": "Trunk",
+              "Children": [
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 280.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4742,6 +4432,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 200.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4750,7 +4450,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.037,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -5178,62 +4878,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "StartLive": null,
-              "DMSupply": null,
-              "NSupply": null,
-              "DMDemand": null,
-              "DMDemandPriorityFactor": null,
-              "NDemand": null,
-              "potentialDMAllocation": null,
-              "IsAboveGround": false,
-              "Name": "Fibrousroot",
-              "Children": [
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "InitialWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 280.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 200.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
@@ -5257,7 +4901,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Fibrousroot.Live.StructuralWt",
+                                      "VariableName": "[Grapevine].Trunk.Live.StructuralWt",
                                       "Name": "StructuralWt",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -5281,7 +4925,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Fibrousroot.Live.StorageWt",
+                                  "VariableName": "[Grapevine].Trunk.Live.StorageWt",
                                   "Name": "StorageWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5295,13 +4939,13 @@
                             },
                             {
                               "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 21.0,
+                              "tm": 34.4,
                               "te": 54.0,
                               "Name": "DailySynthesis",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.05,
+                                  "FixedValue": 0.03,
                                   "Units": null,
                                   "Name": "Ymax",
                                   "Children": [],
@@ -5339,16 +4983,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5482,16 +5116,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "RootTrunkRatio",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "Age",
                           "Children": [
@@ -5539,6 +5163,81 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
+              "DMSupply": null,
+              "NSupply": null,
+              "DMDemand": null,
+              "DMDemandPriorityFactor": null,
+              "NDemand": null,
+              "potentialDMAllocation": null,
+              "IsAboveGround": false,
+              "Name": "Fibrousroot",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Note this represents the structural roots of all the plant in the population. The structural root are primarily considered as storage organs, its researves can be made available to boost plant growth in spring and/or following a defoliation.\n\nThe structural root is separated from the mian root class because the current root class can not handle the biomass retranslocation while a generic organ can. The biomass of the structural root is expressed as gram per square meter, while the initial dry mass for the root class is expressed at per plant level. \n\nstructural roots in grapevine are perennial. It can grow in diamention and biomass. Its structural growth rate was calculated based on the the trunk demand times structural root and trunk ratio in this model. Its storage biomass typicall decrease in spring and refill after veraison. ",
+                  "Name": "StructuralRoot",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 280.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 200.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -5547,7 +5246,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
+                  "FixedValue": 0.037,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -5859,15 +5558,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Note this represents the structural roots of all the plant in the population. The structural root are primarily considered as storage organs, its researves can be made available to boost plant growth in spring and/or following a defoliation.\n\nThe structural root is separated from the mian root class because the current root class can not handle the biomass retranslocation while a generic organ can. The biomass of the structural root is expressed as gram per square meter, while the initial dry mass for the root class is expressed at per plant level. \n\nstructural roots in grapevine are perennial. It can grow in diamention and biomass. Its structural growth rate was calculated based on the the trunk demand times structural root and trunk ratio in this model. Its storage biomass typicall decrease in spring and refill after veraison. ",
-                  "Name": "StructuralRoot",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "DMDemandPriorityFactors",
                   "Children": [
@@ -5945,6 +5635,316 @@
                               "FixedValue": 20.0,
                               "Units": null,
                               "Name": "RefT",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Storage",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "StructuralWt",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Fibrousroot.Live.StructuralWt",
+                                      "Name": "StructuralWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.26,
+                                      "Units": "gStorageDM/gStructureDM",
+                                      "Name": "MaxConcentration",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Fibrousroot.Live.StorageWt",
+                                  "Name": "StorageWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.BetaGrowthFunction, Models",
+                              "tm": 34.4,
+                              "te": 54.0,
+                              "Name": "DailySynthesis",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.03,
+                                  "Units": null,
+                                  "Name": "Ymax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 2.0,
+                          "Units": null,
+                          "Name": "2",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 3.1415926,
+                          "Units": null,
+                          "Name": "PI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PowerFunction, Models",
+                          "Exponent": 0.5,
+                          "Name": "Radius",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "RadiusSquare",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].Live.Wt",
+                                  "Name": "Wt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Population",
+                                  "Name": "population",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Trunk].TrunkLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 500000.0,
+                                  "Units": "g/m3",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Trunk].TrunkLength",
+                          "Name": "Length",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 500000.0,
+                          "Units": "g/m3",
+                          "Name": "Density",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 8E-06,
+                          "Units": "meter",
+                          "Name": "RadiusGR",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Population",
+                          "Name": "population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "RootTrunkRatio",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "Age",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                5.0,
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                80.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.9,
+                                0.5,
+                                0.25,
+                                0.14,
+                                0.02
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Age.Years",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14304,6 +14304,10 @@
                           "Code": "using Models.PMF.Phen;\r\nusing Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Struct;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link]\r\n        private Structure structure;\r\n        [Link]\r\n        private Phenology phenology;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n                //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n                double woodDensity = 0.4; //g/mm2/m\r\n                double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n                double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n                double cordonNSC = cordonBiomass * CordonNSC;\r\n                zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n                zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n                zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC);                \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n                zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n                \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].Fibrousroot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
+                              "Key": "BudNumber",
+                              "Value": "48"
+                            },
+                            {
                               "Key": "CultivarName",
                               "Value": "SauvignonBlanc"
                             },
@@ -14314,10 +14318,6 @@
                             {
                               "Key": "VineDistance",
                               "Value": "1.8"
-                            },
-                            {
-                              "Key": "BudNumber",
-                              "Value": "48"
                             },
                             {
                               "Key": "CordonNumber",
@@ -18417,6 +18417,10 @@
                           "Code": "using Models.PMF.Phen;\r\nusing Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Struct;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link]\r\n        private Structure structure;\r\n        [Link]\r\n        private Phenology phenology;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n                //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n                double woodDensity = 0.4; //g/mm2/m\r\n                double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n                double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n                double cordonNSC = cordonBiomass * CordonNSC;\r\n                zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n                zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n                zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC);                \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n                zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n                \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].Fibrousroot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Fibrousroot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
+                              "Key": "BudNumber",
+                              "Value": "40"
+                            },
+                            {
                               "Key": "CultivarName",
                               "Value": "SauvignonBlanc"
                             },
@@ -18427,10 +18431,6 @@
                             {
                               "Key": "VineDistance",
                               "Value": "1.8"
-                            },
-                            {
-                              "Key": "BudNumber",
-                              "Value": "44"
                             },
                             {
                               "Key": "CordonNumber",
