@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 122,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -87,7 +87,7 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil soil;\r\n        [Link] private Swim3 swim3;\r\n              \r\n        //User inputs for the Parameters tab\r\n        [Description(\"Set the lower BC to seepage?\")] public bool SetSeepage { get; set; }\r\n\r\n        //Not on the UI but available to other models\r\n        //[XmlIgnore] public double HereIsAParameterNotOnTheUI { get; set; }\r\n\r\n        //Not on the UI and not available to other models\r\n        //private double HereIsAPrivateParameter { get; set; }\r\n    \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n      \t// code executed only at the start of the simulation\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n        \tif (SetSeepage)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"setting seepage\");\r\n        \t\tswim3.bbc_seepage_potential = 0.0;\r\n        \t}\r\n        }\r\n             \r\n        /*/Code executed pretty much at beginning of each day before the other models do their thing\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        //Code executed at the end of each day after the other models do their thing but before reporting\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n        } */\r\n\r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil soil;\r\n        [Link] private Swim3 swim3;\r\n              \r\n        //User inputs for the Parameters tab\r\n        [Description(\"Set the lower BC to seepage?\")] public bool SetSeepage { get; set; }\r\n\r\n        //Not on the UI but available to other models\r\n        //[XmlIgnore] public double HereIsAParameterNotOnTheUI { get; set; }\r\n\r\n        //Not on the UI and not available to other models\r\n        //private double HereIsAPrivateParameter { get; set; }\r\n    \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n      \t// code executed only at the start of the simulation\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n        \tif (SetSeepage)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"setting seepage\");\r\n        \t\tswim3.bbc_seepage_potential = 0.0;\r\n        \t}\r\n        }\r\n             \r\n        //Code executed pretty much at beginning of each day before the other models do their thing\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tif (Clock.Today == )\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"setting seepage\");\r\n        \t\tswim3.bbc_seepage_potential = 0.0;\r\n        \t}\r\n        }\r\n        \r\n        /*/Code executed at the end of each day after the other models do their thing but before reporting\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n        } */\r\n\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "SetSeepage",
@@ -1157,7 +1157,8 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Soil].Swim3.psi[14]"
+                "[Soil].Swim3.Drainage",
+                "[Soil].Swim3.psi"
               ],
               "EventNames": [
                 "[Clock].DoReport"
