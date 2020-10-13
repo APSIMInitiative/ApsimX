@@ -346,6 +346,7 @@
             }
 
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP       : " + string.Format("{0, 2:f2}", this.weatherData.Amp));
             summary.AppendLine("Start     : " + this.dataStartDate.ToShortDateString());
