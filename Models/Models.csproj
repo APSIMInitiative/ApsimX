@@ -342,6 +342,7 @@
     <Compile Include="PMF\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="PMF\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\BlankManager.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="PMF\Phenology\Scales\ZadokPMFWheat.cs" />
     <Compile Include="PMF\Structure\Culm.cs" />
