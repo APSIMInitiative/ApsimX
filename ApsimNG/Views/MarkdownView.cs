@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Security.Policy;
 using APSIM.Shared.Utilities;
 using Cairo;
@@ -32,9 +33,8 @@ namespace UserInterface.Views
     public class MarkdownView : ViewBase
     {
         private TextView textView;
-
-        private Gdk.Cursor handCursor;
-		private Gdk.Cursor regularCursor;
+        private Cursor handCursor;
+		private Cursor regularCursor;
         private Container parentContainer;
 
         /// <summary>Constructor</summary>
@@ -113,6 +113,13 @@ namespace UserInterface.Views
         /// <summary>Gets or sets the base path that images should be relative to.</summary>
         public string ImagePath { get; set; }
 
+        /// <summary>
+        /// Process a collection of markdown blocks.
+        /// </summary>
+        /// <param name="blocks">The blocks to process.</param>
+        /// <param name="insertPos">The insert position.</param>
+        /// <param name="indent">The indent level.</param>
+        /// <returns></returns>
         private TextIter ProcessMarkdownBlocks(IList<MarkdownBlock> blocks, ref TextIter insertPos, int indent)
         {
             foreach (var block in blocks)
@@ -166,6 +173,12 @@ namespace UserInterface.Views
             return insertPos;
         }
 
+        /// <summary>
+        /// Process a collection of markdown inlines.
+        /// </summary>
+        /// <param name="inlines">The inlines to process.</param>
+        /// <param name="insertPos">The insert position.</param>
+        /// <param name="indent">The indent level.</param>
         private void ProcessMarkdownInlines(IList<MarkdownInline> inlines, ref TextIter insertPos, int indent)
         {
             foreach (var inline in inlines)
@@ -191,6 +204,11 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Display an image
+        /// </summary>
+        /// <param name="url">The url of the image.</param>
+        /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, ref TextIter insertPos)
         {
             // Look for parent container.
@@ -204,12 +222,22 @@ namespace UserInterface.Views
                 // Convert relative paths in url to absolute.
                 string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
 
+                Gtk.Image image = null;
                 if (System.IO.File.Exists(absolutePath))
                 {
-                    Container parentContainer = (Container)parent;
-
                     var pix = new Pixbuf(absolutePath);
-                    Gtk.Image image = new Gtk.Image(pix);
+                    image = new Gtk.Image(pix);
+                }
+                else
+                {
+                    string imagePath = "ApsimNG.Resources." + url;
+                    foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                        if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
+                            image = new Gtk.Image(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
+                }
+
+                if (image != null)
+                { 
                     image.SetAlignment(0, 0);
 
                     var eventBox = new EventBox();
@@ -217,6 +245,7 @@ namespace UserInterface.Views
                     eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
                     eventBox.Add(image);
 
+                    Container parentContainer = (Container)parent;
                     parentContainer.Add(eventBox);
                     image.Visible = true;
 
@@ -230,6 +259,13 @@ namespace UserInterface.Views
 
         }
 
+        /// <summary>
+        /// Get markdown 'tags' for a given style.
+        /// </summary>
+        /// <param name="styleName">The name of the style.</param>
+        /// <param name="indent">The indent level.</param>
+        /// <param name="url">The link url.</param>
+        /// <returns></returns>
         private TextTag[] GetTags(string styleName, int indent, string url = null)
         {
             var tags = new List<TextTag>();
@@ -342,44 +378,75 @@ namespace UserInterface.Views
         /// <param name="args">Event arguments.</param>
         private void OnWidgetEventAfter(object sender, WidgetEventAfterArgs args)
         {
-            if (args.Event.Type == Gdk.EventType.ButtonRelease)
+            try
             {
-                Gdk.EventButton evt = (Gdk.EventButton)args.Event;
-
-                if (evt.Button == 1)
+                if (args.Event.Type == Gdk.EventType.ButtonRelease)
                 {
-                    // we shouldn't follow a link if the user has selected something
-                    textView.Buffer.GetSelectionBounds(out TextIter start, out TextIter end);
-                    if (start.Offset == end.Offset)
-                    {
-                        textView.WindowToBufferCoords(TextWindowType.Widget, (int)evt.X, (int)evt.Y, out int x, out int y);
-                        TextIter iter = textView.GetIterAtLocation(x, y);
+                    Gdk.EventButton evt = (Gdk.EventButton)args.Event;
 
-                        foreach (var tag in iter.Tags)
+                    if (evt.Button == 1)
+                    {
+                        // we shouldn't follow a link if the user has selected something
+                        textView.Buffer.GetSelectionBounds(out TextIter start, out TextIter end);
+                        if (start.Offset == end.Offset)
                         {
-                            if (tag is LinkTag linkTag)
-                                Process.Start(linkTag.URL);
+                            textView.WindowToBufferCoords(TextWindowType.Widget, (int)evt.X, (int)evt.Y, out int x, out int y);
+                            TextIter iter = textView.GetIterAtLocation(x, y);
+
+                            foreach (var tag in iter.Tags)
+                            {
+                                if (tag is LinkTag linkTag)
+                                    Process.Start(linkTag.URL);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
+        /// <summary>
+        /// Invoked when the mouse is moved.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="args">Event arguments.</param>
         private void OnMotionNotify(object sender, MotionNotifyEventArgs args)
         {
-            var textViewWithMouseCursor = (TextView)sender;
-            textViewWithMouseCursor.WindowToBufferCoords(TextWindowType.Widget, 
-                                                         (int)args.Event.X, (int)args.Event.Y,
-                                                         out int x, out int y);
-            SetCursorIfAppropriate(textViewWithMouseCursor, x, y);
+            try
+            {
+                var textViewWithMouseCursor = (TextView)sender;
+                textViewWithMouseCursor.WindowToBufferCoords(TextWindowType.Widget,
+                                                             (int)args.Event.X, (int)args.Event.Y,
+                                                             out int x, out int y);
+                SetCursorIfAppropriate(textViewWithMouseCursor, x, y);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
+        /// <summary>
+        /// Invoked when widget becomes visible.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="args">Event arguments.</param>
         private void OnVisibilityNotify(object sender, VisibilityNotifyEventArgs args)
         {
-            textView.GetPointer(out int wx, out int wy);
-            textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
-                                          out int bx, out int by);
-            SetCursorIfAppropriate(textView, bx, by);
+            try
+            {
+                textView.GetPointer(out int wx, out int wy);
+                textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
+                                              out int bx, out int by);
+                SetCursorIfAppropriate(textView, bx, by);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Widget is destroyed.</summary>
@@ -389,6 +456,9 @@ namespace UserInterface.Views
         {
             try
             {
+                textView.VisibilityNotifyEvent -= OnVisibilityNotify;
+                textView.MotionNotifyEvent -= OnMotionNotify;
+                textView.WidgetEventAfter -= OnWidgetEventAfter;
                 mainWidget.Destroyed -= OnDestroyed;
                 owner = null;
             }
