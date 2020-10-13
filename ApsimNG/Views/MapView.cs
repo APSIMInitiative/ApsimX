@@ -33,12 +33,6 @@
         /// </summary>
         event EventHandler ViewChanged;
 
-        /// <summary>
-        /// Invoked when the user wants to preview the map as it will appear
-        /// in the autodocs.
-        /// </summary>
-        event EventHandler PreviewDocs;
-
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 
@@ -142,14 +136,6 @@
         /// Called when the view is changed by the user.
         /// </summary>
         public event EventHandler ViewChanged;
-
-        /// <summary>
-        /// Called when the user wants to preview docs.
-        /// </summary>
-        /// <remarks>
-        /// Could be refactored out?
-        /// </remarks>
-        public event EventHandler PreviewDocs;
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world

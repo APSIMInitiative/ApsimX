@@ -5,8 +5,10 @@
     using System.Data;
     using System.Drawing;
     using System.Globalization;
+    using System.IO;
     using System.Text;
     using APSIM.Shared.Utilities;
+    using Commands;
     using Models;
     using Models.Climate;
     using Models.Core;
@@ -62,8 +64,10 @@
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            this.weatherDataView.ConstantsFileSelected += OnConstantsFileSelected;
             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
+            this.weatherDataView.ShowConstantsFile(Path.GetExtension(weatherData.FullFileName) == ".csv");
             this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
             this.weatherDataView.TabIndex = this.weatherData.ActiveTabIndex;
             if (this.weatherData.StartYear >= 0)
@@ -80,12 +84,15 @@
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
             this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+            this.weatherDataView.ConstantsFileSelected -= OnConstantsFileSelected;
         }
 
         /// <summary>Called after the user has selected a new met file.</summary>
         /// <param name="fileName">Name of the file.</param>
         public void OnBrowse(string fileName)
         {
+            bool isCsv = Path.GetExtension(fileName) == ".csv";
+            this.weatherDataView.ShowConstantsFile(isCsv);
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
                 if (ExcelUtilities.IsExcelFile(fileName))
@@ -109,6 +116,13 @@
                     this.WriteTableAndSummary(fileName);
                 }
             }
+        }
+
+        private void OnConstantsFileSelected(string fileName)
+        {
+            ICommand changeConstantsFile = new ChangeProperty(weatherData, nameof(weatherData.ConstantsFile), fileName);
+            explorerPresenter.CommandHistory.Add(changeConstantsFile);
+            WriteTableAndSummary(weatherData.FileName);
         }
 
         /// <summary>
@@ -206,7 +220,14 @@
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(weatherData, "FullFileName", PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName)));
+                        string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        var changes = new List<ChangeProperty.Property>();
+                        changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        // Set constants file name to null iff the new file name is not a csv file.
+                        if (Path.GetExtension(newFileName) != ".csv")
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));
+                        ICommand changeFileName = new ChangeProperty(changes);
+                        explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
 
                         using (DataTable data = this.weatherData.GetAllData())
                         {
@@ -239,6 +260,7 @@
 
             // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.ConstantsFileName = weatherData.ConstantsFile;
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
 
@@ -324,6 +346,7 @@
             }
 
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP       : " + string.Format("{0, 2:f2}", this.weatherData.Amp));
             summary.AppendLine("Start     : " + this.dataStartDate.ToShortDateString());
