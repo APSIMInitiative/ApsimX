@@ -75,11 +75,11 @@ namespace UserInterface.Presenters
             markdown.AppendLine("### Variable Parameters");
             markdown.AppendLine();
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToHTML(functionTable, true));
+            markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
 
             markdown.AppendLine("### Other dependencies");
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToHTML(depsTable, true));
+            markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
             markdown.AppendLine();
 
             DataTable publicMethods = GetPublicMethods(model);
@@ -87,7 +87,7 @@ namespace UserInterface.Presenters
             {
                 markdown.AppendLine("## Public Methods");
                 markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToHTML(publicMethods, true));
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
                 markdown.AppendLine();
             }
 
@@ -96,7 +96,7 @@ namespace UserInterface.Presenters
             {
                 markdown.AppendLine("## Events");
                 markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToHTML(events, true));
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
                 markdown.AppendLine();
             }
 
@@ -105,7 +105,7 @@ namespace UserInterface.Presenters
             {
                 markdown.AppendLine("## Model Outputs");
                 markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToHTML(outputs, true));
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
                 markdown.AppendLine();
             }
 

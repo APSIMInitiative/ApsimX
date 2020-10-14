@@ -161,9 +161,11 @@ namespace UserInterface.Views
                 {
                     textView.Buffer.InsertWithTags(ref insertPos, code.Text, GetTags("Code", indent + 1));
                 }
+                else if (block is TableBlock table)
+                    DisplayTable(ref insertPos, table);
                 else
                 {
-
+                    Console.WriteLine($"Unknown text inline type: {block.GetType().Name}");
                 }
             }
 
@@ -198,7 +200,43 @@ namespace UserInterface.Views
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
                 else if (inline is SuperscriptTextInline superscript)
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Superscript", indent));
+                else if (inline is LinkAnchorInline anchor)
+                    textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
+                else
+                {
+                    Console.WriteLine($"Unknown text inline type: {inline.GetType().Name}");
+                }
             }
+        }
+
+        /// <summary>
+        /// Display a table.
+        /// </summary>
+        /// <param name="insertPos"></param>
+        /// <param name="table"></param>
+        private void DisplayTable(ref TextIter insertPos, TableBlock table)
+        {
+            Table tableWidget = new Table((uint)table.Rows.Count(), (uint)table.ColumnDefinitions.Count(), false);
+            for (uint i = 0; i < table.Rows.Count(); i++)
+                for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
+                {
+                    var cell = table.Rows[(int)i].Cells[(int)j];
+                    string text = cell.Inlines.FirstOrDefault()?.ToString();
+                    if (i == 0)
+                        text = $"<b>{text}</b>";
+                    tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
+                }
+
+            // Add table to gtk container.
+            tableWidget.ShowAll();
+            container.PackStart(tableWidget, true, true, 10);
+
+            // Insert a new textview beneath the previous one.
+            textView = new TextView();
+            textView.ShowAll();
+            container.Add(textView);
+            insertPos = textView.Buffer.GetIterAtOffset(0);
+            CreateStyles(textView);
         }
 
         /// <summary>
