@@ -196,8 +196,8 @@ namespace UserInterface.Views
                     DisplayImage(imageInline.Url, ref insertPos);
                 else if (inline is SubscriptTextInline subscript)
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
-                else if (inline is SubscriptTextInline superscript)
-                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
+                else if (inline is SuperscriptTextInline superscript)
+                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Superscript", indent));
             }
         }
 
@@ -329,14 +329,14 @@ namespace UserInterface.Views
             textView.Buffer.TagTable.Add(indent3);
 
             var subscript = new TextTag("Subscript");
-            subscript.Rise = -1;
+            subscript.Rise = 0;
             subscript.Scale = Pango.Scale.XSmall;
             textView.Buffer.TagTable.Add(subscript);
 
             var superscript = new TextTag("Superscript");
-            subscript.Rise = 1;
-            subscript.Scale = Pango.Scale.XSmall;
-            textView.Buffer.TagTable.Add(subscript);
+            superscript.Rise = 8192;
+            superscript.Scale = Pango.Scale.XSmall;
+            textView.Buffer.TagTable.Add(superscript);
         }
 
         // Looks at all tags covering the position (x, y) in the text view,
