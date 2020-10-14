@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 121; } }
+        public static int LatestVersion { get { return 122; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -113,9 +113,12 @@
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    if (sample == null && initWater == null)
+                    bool res = false;
+                    if (initWater == null)
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
@@ -125,7 +128,10 @@
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
-
+                        res = true;
+                    }
+                    if (sample == null)
+                    {
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
                         JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
@@ -134,8 +140,9 @@
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["SWUnits"] = "Volumetric";
                         soilChildren.Add(sample);
-                        return true;
+                        res = true;
                     }
+                    return res;
                 }
             }
 
@@ -3185,6 +3192,21 @@
                 Constant value = new Constant();
                 value.FixedValue = 1;
                 JsonUtilities.AddModel(phaseSwitch, value);
+            }
+        }
+
+        /// <summary>
+        /// Set maps' default zoom level to 360.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion122(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            {
+                map["Zoom"] = 360;
+                map["Center"]["Latitude"] = 0;
+                map["Center"]["Longitude"] = 0;
             }
         }
 

@@ -16,6 +16,13 @@ namespace Models.Core
         None,
 
         /// <summary>
+        /// Allows the user to select from a preset list of values.
+        /// If this is used, the Values property of DisplayAttribute
+        /// must also be set.
+        /// </summary>
+        DropDown,
+
+        /// <summary>
         /// Use the table name editor.
         /// </summary>
         TableName,

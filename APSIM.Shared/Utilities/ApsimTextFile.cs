@@ -271,7 +271,10 @@ namespace APSIM.Shared.Utilities
         /// <returns>Returns a constant as double.</returns>
         public double ConstantAsDouble(string constantName)
         {
-            return Convert.ToDouble(Constant(constantName).Value, CultureInfo.InvariantCulture);
+            ApsimConstant constant = Constant(constantName);
+            if (constant == null)
+                throw new Exception($"Constant {constantName} does not exist");
+            return Convert.ToDouble(constant.Value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -402,9 +405,9 @@ namespace APSIM.Shared.Utilities
         {
             string PreviousLine = "";
 
-            string Line = inData.ReadLine();
             while (!inData.EndOfStream)
             {
+                string Line = inData.ReadLine();
                 int PosEquals = Line.IndexOf('=');
                 if (PosEquals != -1)
                 {
@@ -429,7 +432,6 @@ namespace APSIM.Shared.Utilities
                     }
                 }
                 PreviousLine = Line;
-                Line = inData.ReadLine();
             }
 
         }
@@ -629,7 +631,6 @@ namespace APSIM.Shared.Utilities
 
             return true;
         }
-
 
         /// <summary>
         /// Looks the ahead for non missing value.
