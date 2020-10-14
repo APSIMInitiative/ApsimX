@@ -30,12 +30,12 @@ namespace UserInterface.Views
     }
 
     /// <summary>A rich text view.</summary>
-    public class MarkdownView : ViewBase
+    public class MarkdownView : ViewBase, IMarkdownView
     {
         private TextView textView;
+        private VBox container;
         private Cursor handCursor;
 		private Cursor regularCursor;
-        private Container parentContainer;
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -43,7 +43,10 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new TextView());
+            VBox box = new VBox();
+            TextView child = new TextView();
+            box.PackStart(child);
+            Initialise(owner, box);
         }
 
         /// <summary>Constructor</summary>
@@ -57,23 +60,17 @@ namespace UserInterface.Views
         /// <param name="gtkControl">The raw gtk control.</param>
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            textView = (TextView)gtkControl;
+            container = (VBox)gtkControl;
+            textView = (TextView)container.Children[0];
 
-            // Look for parent container.
-            var parent = textView.Parent;
-            while (parent != null && !(parent is Container))
-                parent = textView.Parent;
-            if (parent != null)
-            {
-                parentContainer = (Container)parent;
-            }
             textView.Editable = false;
             textView.WrapMode = WrapMode.Word;
             textView.VisibilityNotifyEvent += OnVisibilityNotify;
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = textView;
+            mainWidget = container;
+            container.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
@@ -97,9 +94,9 @@ namespace UserInterface.Views
             set
             {
                 // Only keep first child.
-                while (parentContainer.Children.Length > 1)
-                    parentContainer.Remove(parentContainer.Children[1]);
-                textView = (TextView)parentContainer.Children[0];
+                while (container.Children.Length > 1)
+                    container.Remove(container.Children[1]);
+                textView = (TextView)container.Children[0];
                 
                 var document = new MarkdownDocument();
                 document.Parse(value.Replace("~~~", "```"));
@@ -211,52 +208,41 @@ namespace UserInterface.Views
         /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, ref TextIter insertPos)
         {
-            // Look for parent container.
-            var parent = textView.Parent;
-            while (parent != null && !(parent is Container))
-                parent = textView.Parent;
+            // Convert relative paths in url to absolute.
+            string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
 
-            // Only add an image if parent container found 
-            if (parent != null)
+            Gtk.Image image = null;
+            if (System.IO.File.Exists(absolutePath))
             {
-                // Convert relative paths in url to absolute.
-                string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
-
-                Gtk.Image image = null;
-                if (System.IO.File.Exists(absolutePath))
-                {
-                    var pix = new Pixbuf(absolutePath);
-                    image = new Gtk.Image(pix);
-                }
-                else
-                {
-                    string imagePath = "ApsimNG.Resources." + url;
-                    foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
-                        if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
-                            image = new Gtk.Image(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
-                }
-
-                if (image != null)
-                { 
-                    image.SetAlignment(0, 0);
-
-                    var eventBox = new EventBox();
-                    eventBox.Visible = true;
-                    eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-                    eventBox.Add(image);
-
-                    Container parentContainer = (Container)parent;
-                    parentContainer.Add(eventBox);
-                    image.Visible = true;
-
-                    textView = new TextView();
-                    parentContainer.Add(textView);
-                    textView.Visible = true;
-                    insertPos = textView.Buffer.GetIterAtOffset(0);
-                    CreateStyles(textView);
-                }
+                var pix = new Pixbuf(absolutePath);
+                image = new Gtk.Image(pix);
+            }
+            else
+            {
+                string imagePath = "ApsimNG.Resources." + url;
+                foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                    if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
+                        image = new Gtk.Image(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
             }
 
+            if (image != null)
+            { 
+                image.SetAlignment(0, 0);
+
+                var eventBox = new EventBox();
+                eventBox.Visible = true;
+                eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+                eventBox.Add(image);
+
+                container.Add(eventBox);
+                image.Visible = true;
+
+                textView = new TextView();
+                container.Add(textView);
+                textView.Visible = true;
+                insertPos = textView.Buffer.GetIterAtOffset(0);
+                CreateStyles(textView);
+            }
         }
 
         /// <summary>
