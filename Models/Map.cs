@@ -6,12 +6,23 @@ using System.Xml;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Climate;
+using System.Drawing;
+using SharpMap.Styles;
+using SharpMap.Layers;
+using SharpMap.Data.Providers;
+using System.Drawing.Imaging;
+using GeoAPI.Geometries;
+using GeoAPI;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using System.Reflection;
+using System.IO;
+using System.Linq;
 
 namespace Models
 {
     /// <summary>
     /// # [Name]
-    /// [DocumentView]
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.MapView")]
@@ -83,6 +94,59 @@ namespace Models
             }
 
             return coordinates;
+        }
+
+        /// <summary>
+        /// Export the map to an image.
+        /// </summary>
+        public Image Export()
+        {
+            var map = new SharpMap.Map();
+            map.Size = new Size(700, 700);
+            map.MaximumZoom = 720;
+            map.BackColor = Color.LightBlue;
+            map.Center = new GeoAPI.Geometries.Coordinate(0, 0);
+            map.Zoom = map.MaximumZoom;
+            
+            // Read shapefile.
+            VectorLayer layWorld = new VectorLayer("Countries");
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimx = Directory.GetParent(bin).FullName;
+            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
+            layWorld.DataSource = new ShapeFile(shapeFileName, true);
+            layWorld.Style = new VectorStyle();
+            layWorld.Style.EnableOutline = true;
+            //layWorld.Style.Fill = new SolidBrush(background);
+            //layWorld.Style.Outline.Color = foreground;
+            map.Layers.Add(layWorld);
+
+            // Add country names to map.
+            // Note this doesn't appear to work under mono for now.
+            LabelLayer countryNames = new LabelLayer("Country labels");
+			countryNames.DataSource = layWorld.DataSource;
+            //countryNames.Enabled = true;
+            countryNames.LabelColumn = "Name";
+            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
+            countryNames.Style = new LabelStyle();
+            //^countryNames.Style.BackColor = new SolidBrush(foreground);
+            //countryNames.Style.ForeColor = foreground;
+            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
+            //countryNames.MaxVisible = 90;
+            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
+            map.Layers.Add(countryNames);
+
+            // Add the markers to the map.
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            List<IGeometry> locations = GetCoordinates().Select(c => gf.CreatePoint(new GeoAPI.Geometries.Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
+            VectorLayer markerLayer = new VectorLayer("Markers");
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.Marker.png"))
+                markerLayer.Style.Symbol = System.Drawing.Image.FromStream(stream);
+            markerLayer.DataSource = new GeometryProvider(locations);
+            map.Layers.Add(markerLayer);
+            map.Zoom = Zoom;
+            map.Center = new GeoAPI.Geometries.Coordinate(Center.Longitude, Center.Latitude);
+            
+            return map.GetMap();
         }
 
         /// <summary>

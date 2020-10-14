@@ -120,6 +120,28 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp.Charting-gdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\packages\SharpMap.1.1.0\lib\net40-client\SharpMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET4GeoAPI">
+      <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.3\lib\net40-client\ProjNet.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile.Desktop">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -341,6 +363,7 @@
     <Compile Include="PMF\Phenology\CAMP\CAMP.cs" />
     <Compile Include="PMF\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="PMF\Phenology\Scales\Age.cs" />
+    <EmbeddedResource Include="Resources\Marker.png" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="PMF\Phenology\Scales\ZadokPMFWheat.cs" />

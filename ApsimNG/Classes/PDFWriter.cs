@@ -401,20 +401,13 @@
                     graphPresenter.Detach();
                     graphView.MainWidget.Destroy();
                 }
-                else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
+                else if (tag is Map map && map.GetCoordinates().Count > 0)
                 {
-                    MapPresenter mapPresenter = new MapPresenter();
-                    MapView mapView = new MapView(null);
-                    mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    Image map = mapView.Export();
                     string pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-                    if (map.Width > section.PageSetup.PageWidth)
-                        map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
-                    map.Save(pngFileName);
+                    Image image = map.Export();
+                    image.Save(pngFileName);
                     if (!String.IsNullOrEmpty(pngFileName))
                         section.AddImage(pngFileName);
-                    mapPresenter.Detach();
-                    mapView.MainWidget.Destroy();
                 }
                 else if (tag is AutoDocumentation.Image)
                 {
@@ -436,9 +429,6 @@
                         if (viewName != null && presenterName != null)
                         {
                             ViewBase owner = ViewBase.MasterView as ViewBase;
-                            if (viewName.ToString() == "UserInterface.Views.MapView")
-                                owner = null;
-
                             ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
                             IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
@@ -451,9 +441,6 @@
                                 popupWin.SetSizeRequest(700, 700);
                                 popupWin.Add(view.MainWidget);
 
-                                if (view is IMapView map)
-                                    map.HideZoomControls();
-
                                 popupWin.ShowAll();
 
                                 while (Gtk.Application.EventsPending())
@@ -462,21 +449,7 @@
                                 // From MapView:
                                 // With WebKit, it appears we need to give it time to actually update the display
                                 // Really only a problem with the temporary windows used for generating documentation
-                                string pngFileName;
-                                if (view is MapView mapView)
-                                {
-                                    var watch = new System.Diagnostics.Stopwatch();
-                                    watch.Start();
-                                    while (watch.ElapsedMilliseconds < 1000)
-                                        Gtk.Application.RunIteration();
-                                    Image img = mapView.Export();
-                                    pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-                                    if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
-                                        img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
-                                    img.Save(pngFileName);
-                                }
-                                else
-                                    pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+                                string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                                 section.AddImage(pngFileName);
                                 presenter.Detach();
                                 view.MainWidget.Destroy();

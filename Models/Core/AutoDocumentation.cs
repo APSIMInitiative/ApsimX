@@ -303,6 +303,9 @@
 
             StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
 
+            if (model is ITag tag)
+                tags.Add(tag);
+
             if (documentAllChildren)
             {
                 // write children.
