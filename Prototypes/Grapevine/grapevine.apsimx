@@ -6875,6 +6875,96 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "BEN_CarbonIni",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.AccumulateByNumericPhase, Models",
+                          "StartStageName": 4.0,
+                          "EndStageName": 5.85,
+                          "ResetStageName": "BudBurst",
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "FDMIni",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grapevine].Arbitrator.FDM",
+                              "Name": "FDM",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateByNumericPhase, Models",
+                          "StartStageName": 4.0,
+                          "EndStageName": 5.85,
+                          "ResetStageName": "BudBurst",
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Time",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": "days/day",
+                              "Name": "Days",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Ecodormancy",
+                      "ReSetEvent": null,
+                      "Name": "BEN_CarbonIni1",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7634,6 +7724,82 @@
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LessThanFunction, Models",
+                                      "Name": "CarbonIni",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.1,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "PreValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "FDMIni",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                              "Name": "XValue",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                0.0,
+                                                0.5,
+                                                1.0,
+                                                2.0
+                                              ],
+                                              "Y": [
+                                                0.0,
+                                                0.67,
+                                                1.0,
+                                                1.0
+                                              ],
+                                              "Name": "XYPairs",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
