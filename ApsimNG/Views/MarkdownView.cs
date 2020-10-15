@@ -163,6 +163,14 @@ namespace UserInterface.Views
                 }
                 else if (block is TableBlock table)
                     DisplayTable(ref insertPos, table);
+                else if (block is HorizontalRuleBlock hr)
+                {
+                    // do we want these separators appearing everywhere?
+                    //container.Add(new HSeparator());
+                    //textView = new TextView();
+                    //container.Add(textView);
+                    //insertPos = textView.Buffer.GetIterAtOffset(0);
+                }
                 else
                 {
                     Console.WriteLine($"Unknown text inline type: {block.GetType().Name}");
