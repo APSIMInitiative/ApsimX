@@ -876,7 +876,6 @@ namespace APSIM.Shared.Utilities
 
             result.AppendLine(new string('-', tableWidth));
             
-            Console.WriteLine(result.ToString());
             return result.ToString();
         }
 

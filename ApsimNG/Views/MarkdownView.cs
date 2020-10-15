@@ -294,12 +294,14 @@ namespace UserInterface.Views
         {
             var tags = new List<TextTag>();
             var styleTag = textView.Buffer.TagTable.Lookup(styleName);
-            tags.Add(styleTag);
+            if (styleTag != null)
+                tags.Add(styleTag);
 
             if (indent > 0)
             {
                 var indentTag = textView.Buffer.TagTable.Lookup($"Indent{indent}");
-                tags.Add(indentTag);
+                if (indentTag != null)
+                    tags.Add(indentTag);
             }
             if (url != null)
             {

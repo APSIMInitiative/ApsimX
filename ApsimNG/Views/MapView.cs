@@ -369,7 +369,6 @@
                     double dx = lon - mouseAtDragStart.Longitude;
 
                     map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
-                    Console.WriteLine($"Moving to (lat={map.Center.Y}, lon={map.Center.X})");
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }
