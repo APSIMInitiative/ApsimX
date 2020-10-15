@@ -23,7 +23,7 @@
         public DropDownView SimulationDropDown { get; private set; }
 
         /// <summary>View which displays the summary data.</summary>
-        public HTMLView HtmlView { get; }
+        public IMarkdownView SummaryDisplay { get; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -48,8 +48,8 @@
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
-            HtmlView = new HTMLView(this);
-            mainControl.PackEnd(HtmlView.MainWidget, true, true, 0);
+            SummaryDisplay = new MarkdownView(this);
+            mainControl.PackEnd(((ViewBase)SummaryDisplay).MainWidget, true, true, 0);
 
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -68,7 +68,7 @@
                 middleBox.Destroy();
                 SimulationDropDown.MainWidget.Destroy();
                 mainControl.Destroy();
-                HtmlView.MainWidget.Destroy();
+                ((ViewBase)SummaryDisplay).MainWidget.Destroy();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }
