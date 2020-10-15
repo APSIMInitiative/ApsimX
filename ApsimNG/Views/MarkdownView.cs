@@ -303,9 +303,16 @@ namespace UserInterface.Views
             }
             if (url != null)
             {
-                var linkTag = new LinkTag(url);
-                linkTag.SizePoints = 12;
-                textView.Buffer.TagTable.Add(linkTag);
+                // Only add the tag to the tag table if it doesn't already exist.
+                // This does actually occur from time to time if a description
+                // contains multiple links to the same target.
+                var linkTag = textView.Buffer.TagTable.Lookup(url) as LinkTag;
+                if (linkTag == null)
+                {
+                    linkTag = new LinkTag(url);
+                    linkTag.SizePoints = 12;
+                    textView.Buffer.TagTable.Add(linkTag);
+                }
                 tags.Add(linkTag);
             }
             return tags.ToArray();
