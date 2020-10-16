@@ -40,7 +40,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <remarks>
         /// The table is destroyed and rebuilt from scratch when
-        /// <see cref="DisplayProperties()" /> is called.
+        /// <see cref="DisplayProperties(PropertyGroup)" /> is called.
         /// </remarks>
 #if NETFRAMEWORK
         private Table propertyTable;
@@ -57,8 +57,10 @@ namespace UserInterface.Views
         /// Used to check which entries are 'dirty' by keeping track
         /// of their original text.
         /// </summary>
-        /// <typeparam name="Guid">ID of the entry/property.</typeparam>
-        /// <typeparam name="string">Original text of the entry/value of the property.</typeparam>
+        /// <remarks>
+        /// The Guid is the ID of the entry/property.
+        /// The string is the original text of the entry/value of the property.
+        /// </remarks>
         private Dictionary<Guid, string> originalEntryText = new Dictionary<Guid, string>();
 
         /// <summary>

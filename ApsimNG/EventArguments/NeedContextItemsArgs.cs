@@ -85,7 +85,8 @@
         /// <param name="atype">Data type for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published event suggestions will be generated.</param>
+        /// <param name="subscribedEvents">If true, subscribed event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
         public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
@@ -203,7 +204,8 @@
         /// <param name="o">Fully- or partially-qualified object name for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published event suggestions will be generated.</param>
+        /// <param name="subscribedEvents">If true, subscribed event suggestions will be generated.</param>
         /// <returns>List of completion options.</returns>
         private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {

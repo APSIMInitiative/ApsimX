@@ -53,9 +53,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
-        /// <param name="_model">The model</param>
-        /// <param name="_view">The view to attach</param>
-        /// <param name="_presenter">The explorer presenter being used</param>
+        /// <param name="model">The model</param>
+        /// <param name="view">The view to attach</param>
+        /// <param name="presenter">The explorer presenter being used</param>
         public void Attach(object model, object view, ExplorerPresenter presenter)
         {
             this.view = view as IBubbleChartView;
@@ -260,9 +260,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Editor that the user is typing in.</param>
         /// <param name="e">Event Arguments.</param>
-        /// <param name="properties">Whether or not property suggestions should be generated.</param>
-        /// <param name="methods">Whether or not method suggestions should be generated.</param>
-        /// <param name="events">Whether or not event suggestions should be generated.</param>
+        /// <param name="rules">Are we fetching context items for rules?</param>
         private void GetCompletionOptions(object sender, NeedContextItemsArgs e, bool rules)
         {
             try
