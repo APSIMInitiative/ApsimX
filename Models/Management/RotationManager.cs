@@ -8,6 +8,7 @@ namespace Models.Management
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Newtonsoft.Json;
+    using System.Linq;
 
     /// <summary>
     /// The rotation manager model
@@ -60,13 +61,17 @@ namespace Models.Management
         /// <summary>
         /// Initial state of the rotation.
         /// </summary>
+        [Description("Initial State")]
+        [Tooltip("Initial state of the rotation")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(States))]
         public string InitialState { get; set; }
 
         /// <summary>
         /// Iff true, the rotation manager will print debugging diagnostics
         /// to the summary file during execution.
         /// </summary>
-        /// <value></value>
+        [Description("Verbose Mode")]
+        [Tooltip("When enabled, the rotation manager will print debugging diagnostics to the summary file during execution")]
         public bool Verbose { get; set; }
 
         /// <summary>
@@ -99,6 +104,11 @@ namespace Models.Management
         /// Called when transitioning between states.
         /// </summary>
         public event EventHandler Transition;
+
+        private string[] States()
+        {
+            return Nodes.Select(n => n.Name).ToArray();
+        }
 
         /// <summary>
         /// Called when a simulation commences. Performs one-time initialisation.

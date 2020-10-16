@@ -50,6 +50,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private IEditorView currentEditor;
 
+        private SimplePropertyPresenter propertiesPresenter = new SimplePropertyPresenter();
+
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
@@ -63,19 +65,16 @@ namespace UserInterface.Presenters
             this.model = model as IBubbleChart;
 
             this.view.OnGraphChanged += OnViewChanged;
-            this.view.OnInitialStateChanged += OnInitialStateChanged;
             this.view.AddNode += OnAddNode;
             this.view.DelNode += OnDelNode;
             this.view.AddArc += OnAddArc;
             this.view.DelArc += OnDelArc;
-            this.view.ToggleVerboseMode += OnToggleVerboseMode;
 
             this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
             //view.RuleList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
 
-            this.view.InitialState = this.model.InitialState;
-            this.view.Verbose = this.model.Verbose;
+            propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
             //view.ActionList.TextHasChangedByUser += OnEventNamesChanged;
 
             intellisense = new IntellisensePresenter(view as ViewBase);
@@ -92,7 +91,6 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             view.OnGraphChanged -= OnViewChanged;
-            view.OnInitialStateChanged -= OnInitialStateChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
             view.AddArc -= OnAddArc;
@@ -102,6 +100,7 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
             view.RuleList.ContextItemsNeeded -= OnNeedVariableNames;
             view.ActionList.ContextItemsNeeded -= OnNeedEventNames;
+            propertiesPresenter.Detach();
 
             // Shouldn't need to manually update the model at this point.
             // All changes are applied immediately upon user input.
@@ -124,7 +123,7 @@ namespace UserInterface.Presenters
         private void RefreshView()
         {
             view.SetGraph(model.Nodes, model.Arcs);
-            view.InitialState = this.model.InitialState;
+            propertiesPresenter.RefreshView(model);
         }
 
         /// <summary>
@@ -229,28 +228,6 @@ namespace UserInterface.Presenters
             newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
             ICommand deleteArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(deleteArc);
-        }
-
-        /// <summary>
-        /// The view has changed the Verbose setting.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnToggleVerboseMode(object sender, ChangeVerboseModeEventArgs args)
-        {
-            ICommand changeVerbose = new ChangeProperty(model, "Verbose", args.Verbose);
-            presenter.CommandHistory.Add(changeVerbose);
-        }
-
-        /// <summary>
-        /// The view has changed the initial state
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnInitialStateChanged(object sender, InitialStateEventArgs e)
-        {
-            ICommand changeProperty = new ChangeProperty(model, nameof(model.InitialState), e.initialState);
-            presenter.CommandHistory.Add(changeProperty);
         }
 
         /// <summary>
