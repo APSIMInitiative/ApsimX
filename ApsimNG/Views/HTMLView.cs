@@ -34,12 +34,6 @@ namespace UserInterface.Views
         void SetContents(string contents, bool allowModification, bool isURI);
 
         /// <summary>
-        /// Return the edited markdown.
-        /// </summary>
-        /// <returns></returns>
-        string GetMarkdown();
-
-        /// <summary>
         /// Tells view to use a mono spaced font.
         /// </summary>
         void UseMonoSpacedFont();
@@ -791,16 +785,6 @@ namespace UserInterface.Views
         protected IBrowserWidget browser = null;
 
         /// <summary>
-        /// Memo view used to display markdown content.
-        /// </summary>
-        private MemoView memo;
-
-        /// <summary>
-        /// In edit mode
-        /// </summary>
-        private bool editing = false;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
@@ -811,20 +795,13 @@ namespace UserInterface.Views
             frame1 = (Frame)builder.GetObject("frame1");
             hbox1 = (HBox)builder.GetObject("hbox1");
             mainWidget = vpaned1;
-            memo = new MemoView(this);
-            hbox1.PackStart(memo.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
             vpaned1.Position = 0;
             hbox1.Visible = false;
             hbox1.NoShowAll = true;
-            memo.ReadOnly = false;
-            memo.WordWrap = true;
-            memo.MemoChange += this.TextUpdate;
-            memo.StartEdit += this.ToggleEditing;
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
-            hbox1.SizeAllocated += Hbox1_SizeAllocated;
             vbox2.SizeAllocated += OnBrowserSizeAlloc;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -851,9 +828,7 @@ namespace UserInterface.Views
             TurnEditorOn(allowModification);
             if (contents != null)
             {
-                if (allowModification)
-                    memo.MemoText = contents;
-                else
+                if (!allowModification)
                     PopulateView(contents, isURI);
             }
         }
@@ -890,15 +865,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Return the edited markdown.
-        /// </summary>
-        /// <returns></returns>
-        public string GetMarkdown()
-        {
-            return memo.MemoText;
-        }
-
-        /// <summary>
         /// Tells view to use a mono spaced font.
         /// </summary>
         public void UseMonoSpacedFont()
@@ -919,13 +885,11 @@ namespace UserInterface.Views
         {
             try
             {
-                memo.MemoChange -= this.TextUpdate;
                 vbox2.SizeAllocated -= OnBrowserSizeAlloc;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
                 frame1.ExposeEvent -= OnWidgetExpose;
                 hbox1.Realized -= Hbox1_Realized;
-                hbox1.SizeAllocated -= Hbox1_SizeAllocated;
                 if ((browser as TWWebBrowserIE) != null)
                 {
                     if (vbox2.Toplevel is Window)
@@ -935,9 +899,6 @@ namespace UserInterface.Views
                 }
                 if (browser != null)
                     browser.Dispose();
-                memo.StartEdit -= this.ToggleEditing;
-                memo.MainWidget.Destroy();
-                memo = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -956,7 +917,6 @@ namespace UserInterface.Views
             try
             {
                 vpaned1.Position = 30; 
-                memo.LabelText = "Edit text";
             }
             catch (Exception err)
             {
@@ -988,24 +948,6 @@ namespace UserInterface.Views
                 // the browser.
                 mainWidget.HeightRequest = args.Allocation.Height;
                 mainWidget.WidthRequest = args.Allocation.Width;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// When the hbox changes size ensure that the panel below follows correctly
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Hbox1_SizeAllocated(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!this.editing)
-                    vpaned1.Position = memo.HeaderHeight();
             }
             catch (Exception err)
             {
@@ -1085,8 +1027,6 @@ namespace UserInterface.Views
                 if (vbox2.Toplevel is Window)
                     (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
                 frame1.Unrealized += Frame1_Unrealized;
-                if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                    ieBrowser.Browser.ScrollBarsEnabled = false;
             }
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
@@ -1176,48 +1116,6 @@ namespace UserInterface.Views
             try
             {
                 TurnEditorOn(true);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Text has been changed.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event argument.</param>
-        private void TextUpdate(object sender, EventArgs e)
-        {
-            try
-            {
-                MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-                markDown.ExtraMode = true;
-                string html = markDown.Transform(memo.MemoText);
-                html = ParseHtmlImages(html);
-                PopulateView(html);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Used to show or hide the editor panel. Used by the memo editing link label.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ToggleEditing(object sender, EventArgs e)
-        {
-            try
-            {
-                if (editing)
-                    vpaned1.Position = memo.HeaderHeight();
-                else
-                    vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
-                editing = !editing;
             }
             catch (Exception err)
             {

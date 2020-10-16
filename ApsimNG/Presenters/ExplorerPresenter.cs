@@ -698,6 +698,20 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
 
+                    if (Configuration.Settings.UseNewPropertyPresenter && presenterName != null)
+                    {
+                        if (presenterName.ToString().Contains(".PropertyPresenter"))
+                        {
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
+                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
+                        }
+                        else if (presenterName.ToString().Contains(".BiomassRemovalPresenter"))
+                        {
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.CompositePropertyPresenter");
+                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
+                        }
+                    }
+
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
                     if (!model.GetType().Namespace.Contains("CLEM"))
                     {
@@ -810,7 +824,8 @@
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
-                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath)?.Value as IModel;
+                dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }
         }
 
@@ -913,10 +928,9 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(toParentPath,
-                                                          modelString,
-                                                          this);
+                        var command = new AddModelCommand(toParent, modelString);
                         CommandHistory.Add(command, true);
+                        Refresh();
                     }
                     else if (e.Moved)
                     {
@@ -927,6 +941,7 @@
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
                                 CommandHistory.Add(cmd);
+                                Refresh();
                             }
                         }
                     }

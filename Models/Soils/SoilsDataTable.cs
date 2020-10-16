@@ -37,7 +37,7 @@
                 soil.State = GetStringValue(table, row, "State");
                 soil.Region = GetStringValue(table, row, "Region");
                 soil.NearestTown = GetStringValue(table, row, "NearestTown");
-                //soil.Site = GetStringValue(table, row, "Site");
+                soil.Site = GetStringValue(table, row, "Site");
                 soil.ApsoilNumber = GetStringValue(table, row, "APSoilNumber");
                 soil.SoilType = GetStringValue(table, row, "Texture");
                 soil.LocalName = GetStringValue(table, row, "LocalName");
@@ -121,6 +121,7 @@
 
                 // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
+                soilTemp.Name = "Temperature";
                 soil.Children.Add(soilTemp);
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
@@ -191,7 +192,7 @@
                 SetStringValue(table, "State", soil.State, startRow, numValues);
                 SetStringValue(table, "Region", soil.Region, startRow, numValues);
                 SetStringValue(table, "NearestTown", soil.NearestTown, startRow, numValues);
-                //SetStringValue(table, "Site", soil.Site, startRow, numValues);
+                SetStringValue(table, "Site", soil.Site, startRow, numValues);
                 SetStringValue(table, "APSoilNumber", soil.ApsoilNumber, startRow, numValues);
                 SetStringValue(table, "Soil type texture or other descriptor", soil.SoilType, startRow, numValues);
                 SetStringValue(table, "Local name", soil.LocalName, startRow, numValues);
@@ -206,7 +207,7 @@
                 SetStringValue(table, "NaturalVegetation", soil.NaturalVegetation, startRow, numValues);
                 SetStringValue(table, "MunsellColour", null, startRow, numValues);
                 SetStringValue(table, "MunsellColourCode", null, startRow, numValues);
-                //SetDoubleValues(table, "LayerNo", layerNo, startRow);
+                SetDoubleValues(table, "LayerNo", layerNo, startRow);
                 SetDoubleValues(table, "Thickness (mm)", physical.Thickness, startRow);
                 SetDoubleValues(table, "BD (g/cc)", physical.BD, startRow);
                 SetCodeValues(table, "BDCode", physical.BDMetadata, startRow);
@@ -238,8 +239,8 @@
                 SetDoubleValue(table, "RootCN", organic.FOMCNRatio, startRow, numValues);
                 SetDoubleValues(table, "RootWT", organic.FOM, startRow);
                 SetDoubleValues(table, "SoilCN", organic.SoilCNRatio, startRow);
-                SetDoubleValues(table, "EnrACoeff", null, startRow);
-                SetDoubleValues(table, "EnrBCoeff", null, startRow);
+                SetDoubleValue(table, "EnrACoeff", 7.4, startRow, numValues);
+                SetDoubleValue(table, "EnrBCoeff", 0.2, startRow, numValues);
                 SetDoubleValues(table, "SWCON (0-1)", waterBalance.SWCON, startRow);
                 SetDoubleValues(table, "MWCON (0-1)", null, startRow);
                 SetDoubleValues(table, "FBIOM (0-1)", organic.FBiom, startRow);
@@ -284,7 +285,8 @@
                 SetDoubleValues(table, "ParticleSizeClay (%)", physical.ParticleSizeClay, startRow);
                 SetCodeValues(table, "ParticleSizeClayCode", physical.ParticleSizeClayMetadata, startRow);
 
-                foreach (var soilCrop in soil.Crops)
+                var crops = soil.FindAllDescendants<SoilCrop>();
+                foreach (var soilCrop in crops)
                     SetCropValues(table, soilCrop, startRow);
             }
 
@@ -406,20 +408,13 @@
             if (!table.Columns.Contains(variableName))
                 return null;
 
-            string[] codes = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row);
-            for (int i = 0; i != codes.Length; i++)
-                StringUtilities.SplitOffBracketedValue(ref codes[i], '(', ')');
-            codes = CodeToMetaData(codes);
-            if (MathUtilities.ValuesInArray(codes))
-                return codes;
-            return null;
+            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row);
         }
 
         /// <summary>Set a column of metadata values for the specified column.</summary>
         private static void SetCodeValues(DataTable table, string columnName, string[] metadata, int startRow)
         {
-            string[] Codes = MetaDataToCode(metadata);
-            SetStringValues(table, columnName, Codes, startRow);
+            SetStringValues(table, columnName, metadata, startRow);
         }
 
         /// <summary>Convert an APSoil code into metadata string.</summary>

@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using UserInterface.Commands;
 using UserInterface.Views;
 using Utility;
 
@@ -184,6 +186,7 @@ namespace UserInterface.Presenters
 
                 foreach (var soilInfo in allSoils)
                 {
+                    var soilPhysical = soilInfo.Soil.FindChild<Physical>();
                     var row = soilData.NewRow();
                     row["Name"] = soilInfo.Soil.Name;
                     row["Data source"] = soilInfo.DataSource;
@@ -193,11 +196,11 @@ namespace UserInterface.Presenters
                                                                  soilInfo.Soil.Latitude,
                                                                  soilInfo.Soil.Longitude).ToString("F1");
 
-                    var pawc = soilInfo.Soil.PAWCmm;
+                    var pawc = soilPhysical.PAWCmm;
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
-                    var pawcConcentration = MathUtilities.Divide(pawc, soilInfo.Soil.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilInfo.Soil.Thickness, pawcmappingLayerStructure, 0);
+                    var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
+                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
@@ -228,9 +231,12 @@ namespace UserInterface.Presenters
             {
                 var values = dataView.GetRow(selectedIndex);
                 var soilName = (string)values[0];
-                var matchingSoil = allSoils.First(s => s.Soil.Name == soilName).Soil as IModel;
-                if (matchingSoil != null)
-                    Structure.Add(matchingSoil as IModel, model);
+                Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
+
+                if (!matchingSoil.Children.Any(c => c is INutrient))
+                    matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
+                ICommand addSoil = new AddModelCommand(model, matchingSoil);
+                explorerPresenter.CommandHistory.Add(addSoil);
             }
             explorerPresenter.Refresh();
         }
@@ -659,8 +665,8 @@ namespace UserInterface.Presenters
 
                 // Initialise nitrogen to 0.0
                 initialNitrogen.Name = "Initial nitrogen";
-                initialNitrogen.NH4N = new double[layerCount];
-                initialNitrogen.NO3N = new double[layerCount];
+                initialNitrogen.NH4 = new double[layerCount];
+                initialNitrogen.NO3 = new double[layerCount];
 
                 double tAvg = (maxTemp + minTemp) / 2.0;
                 soilWater.CNCov = 0.0;

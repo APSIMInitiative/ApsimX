@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTests</RootNamespace>
     <AssemblyName>UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -144,6 +144,7 @@
     <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
     <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
     <Compile Include="APSIMShared\MockJob.cs" />
+    <Compile Include="APSIMShared\ReflectionUtilitiesTests.cs" />
     <Compile Include="CommandLineArgsTests.cs" />
     <Compile Include="Core\ApsimFile\EditFileTests.cs" />
     <Compile Include="Core\ModelTests.cs" />

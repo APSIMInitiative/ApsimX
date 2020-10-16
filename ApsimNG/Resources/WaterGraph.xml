@@ -20,10 +20,10 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-3479297</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].LL15</XFieldName>
-          <YFieldName>[Soil].DepthMidPoints</YFieldName>
-          <X2FieldName>[Soil].DUL</X2FieldName>
-          <Y2FieldName>[Soil].DepthMidPoints</Y2FieldName>
+          <XFieldName>[Soil].Physical.LL15</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
+          <X2FieldName>[Soil].Physical.DUL</X2FieldName>
+          <Y2FieldName>[Soil].Physical.DepthMidPoints</Y2FieldName>
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
@@ -35,8 +35,8 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-65536</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].AirDry</XFieldName>
-          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <XFieldName>[Soil].Physical.AirDry</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
@@ -48,8 +48,8 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].LL15</XFieldName>
-          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <XFieldName>[Soil].Physical.LL15</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
@@ -61,8 +61,8 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].DUL</XFieldName>
-          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <XFieldName>[Soil].Physical.DUL</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
@@ -74,8 +74,8 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-16760704</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].SAT</XFieldName>
-          <YFieldName>[Soil].DepthMidPoints</YFieldName>
+          <XFieldName>[Soil].Physical.SAT</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
           <SplitOn>*</SplitOn>
         </Series>
         <Series>
@@ -87,8 +87,8 @@
           <YAxis>Left</YAxis>
           <ColourArgb>-32768</ColourArgb>
           <Marker>None</Marker>
-          <XFieldName>[Soil].LL15</XFieldName>
-          <YFieldName>[Soil]l.DepthMidPoints</YFieldName>
+          <XFieldName>[Soil].Physical.LL15</XFieldName>
+          <YFieldName>[Soil].Physical.DepthMidPoints</YFieldName>
           <SplitOn>*</SplitOn>
         </Series>
       </Graph>

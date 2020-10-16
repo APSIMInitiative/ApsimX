@@ -53,10 +53,10 @@
         /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
-
-        /// <summary>The surface organic matter</summary>
-        [Link]
-        private Soil Soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>The inert pool.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -476,7 +476,7 @@
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;
-            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / Soil.Thickness[0]),0.0);
+            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]),0.0);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 surfaceResiduePool.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;

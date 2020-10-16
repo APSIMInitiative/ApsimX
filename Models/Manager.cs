@@ -31,7 +31,7 @@
         private ScriptCompiler scriptCompiler = null;
 
         /// <summary>The code to compile.</summary>
-        private string cSharpCode;
+        private string cSharpCode = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
@@ -143,16 +143,13 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
-                    if (Children.Count == 0 || results.WasCompiled)
+                    if (Children.Count != 0)
+                        Children.Clear();
+                    var newModel = results.Instance as IModel;
+                    if (newModel != null)
                     {
-                        if (Children.Count != 0)
-                            Children.Clear();
-                        var newModel = results.Instance as IModel;
-                        if (newModel != null)
-                        {
-                            newModel.IsHidden = true;
-                            Structure.Add(newModel, this);
-                        }
+                        newModel.IsHidden = true;
+                        Structure.Add(newModel, this);
                     }
                 }
                 else

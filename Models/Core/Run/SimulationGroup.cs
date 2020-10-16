@@ -248,10 +248,10 @@
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
         private IEnumerable<IRunnable> FindListOfSimulationsToRun(IModel relativeTo, IEnumerable<string> simulationNamesToRun)
         {
-            if (relativeTo is Simulation)
+            if (relativeTo is Simulation sim)
             {
                 if (SimulationNameIsMatched(relativeTo.Name))
-                    yield return new SimulationDescription(relativeTo as Simulation);
+                    yield return sim.GenerateSimulationDescriptions().FirstOrDefault();
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {

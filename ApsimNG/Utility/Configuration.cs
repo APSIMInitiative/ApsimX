@@ -53,6 +53,9 @@ namespace Utility
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         public bool Muted { get; set; }
 
+        /// <summary>Use the new property presenter?</summary>
+        public bool UseNewPropertyPresenter { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {

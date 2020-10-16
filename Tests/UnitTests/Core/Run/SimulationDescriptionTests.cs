@@ -237,7 +237,7 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3N = new double[] { 27 },
+                                NO3 = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
                             },

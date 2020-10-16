@@ -6,7 +6,7 @@ using System.IO;
 using Models.Soils;
 using Models.Functions;
 using APSIM.Shared.Utilities;
-
+using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
@@ -21,7 +21,11 @@ namespace Models.PMF.Phen
         //----------------------------------------------------------------------------------------------------------------
 
         [Link]
-        private Soils.Soil soil = null;
+        private IPhysical soilPhysical = null;
+
+        /// <summary>Link to the soil water balance.</summary>
+        [Link]
+        private ISoilWater waterBalance = null;
 
         [Link]
         private Plant plant = null;
@@ -80,7 +84,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer])
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }
@@ -106,7 +110,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {
-            SowLayer = soil.LayerIndexOfDepth(plant.SowingData.Depth);
+            SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
         }
 
         /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>

@@ -49,7 +49,7 @@ namespace Models.Optimisation
     /// https://github.com/hol430/ApsimOnR
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.DualGridView")]
+    [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
@@ -147,7 +147,6 @@ namespace Models.Optimisation
         /// </summary>
         [Description("Optimization method")]
         [Display(Type = DisplayType.SubModel)]
-        [Separator("Optimization method-specific parameters")]
         public IOptimizationMethod OptimizationMethod { get; set; } = new Simplex();
 
         /// <summary>

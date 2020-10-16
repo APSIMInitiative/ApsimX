@@ -97,6 +97,44 @@
         public event EventHandler PreparingNewWeatherData;
 
         /// <summary>
+        /// Optional constants file name. This should only be accessed via
+        /// <see cref="ConstantsFile" />, which handles conversion between
+        /// relative/absolute paths.
+        /// </summary>
+        private string constantsFile;
+
+        /// <summary>
+        /// Allows to specify a second file which contains constants such as lat, long,
+        /// tav, amp, etc. Really only used when the actual met data is in a .csv file.
+        /// </summary>
+        [Description("Constants file")]
+        public string ConstantsFile
+        {
+            get
+            {
+                Simulation simulation = FindAncestor<Simulation>();
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.constantsFile, simulation.FileName);
+                else
+                {
+                    Simulations simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.constantsFile, simulations.FileName);
+                    else
+                        return this.constantsFile;
+                }
+            }
+            set
+            {
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null)
+                    this.constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.constantsFile = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
@@ -801,6 +839,15 @@
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+
+                    if (!string.IsNullOrEmpty(ConstantsFile))
+                    {
+                        ApsimTextFile constantsReader = new ApsimTextFile();
+                        constantsReader.Open(ConstantsFile);
+                        if (constantsReader.Constants != null)
+                            foreach (ApsimConstant constant in constantsReader.Constants)
+                                this.reader.AddConstant(constant.Name, constant.Value, constant.Units, constant.Comment);
+                    }
 
                     if (this.maximumTemperatureIndex == -1)
                         if (this.reader == null || this.reader.Constant("maxt") == null)

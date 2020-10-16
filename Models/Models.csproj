@@ -30,7 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -127,7 +127,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
@@ -304,7 +303,10 @@
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
     <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Management\RotationManager.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Interfaces\IBubbleChart.cs" />
+    <Compile Include="Core\IPublisher.cs" />
     <Compile Include="PMF\Arbitrator\BiomassTypeArbitrator.cs" />
     <Compile Include="Interfaces\IRootShape.cs" />
     <Compile Include="PMF\Arbitrator\IArbitrationMethod.cs" />
@@ -339,6 +341,7 @@
     <Compile Include="PMF\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="PMF\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\BlankManager.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="PMF\Phenology\Scales\ZadokPMFWheat.cs" />
     <Compile Include="PMF\Structure\Culm.cs" />
@@ -354,6 +357,7 @@
     <Compile Include="Optimisation\IOptimizationMethod.cs" />
     <Compile Include="Optimisation\Likelihood.cs" />
     <Compile Include="Optimisation\Simplex.cs" />
+    <Compile Include="Soils\IPhysical.cs" />
     <Compile Include="Soils\NutrientPatching\INutrientPatchManager.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatch.cs" />
     <Compile Include="Soils\NutrientPatching\NutrientPatchManager.cs" />
@@ -437,7 +441,6 @@
     <Compile Include="PMF\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="PMF\Phenology\Scales\BBCH.cs" />
     <Compile Include="PMF\Structure\BudNumberFunction.cs" />
-    <Compile Include="Soils\Nutrients\Chloride.cs" />
     <Compile Include="PMF\Structure\ApexBase.cs" />
     <Compile Include="Storage\DataStoreReader.cs" />
     <Compile Include="Storage\RevertCheckpointCommand.cs" />
@@ -463,7 +466,6 @@
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
-    <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
@@ -631,7 +633,6 @@
     <Compile Include="Functions\MinimumFunction.cs" />
     <Compile Include="Functions\MultiplyFunction.cs" />
     <Compile Include="Functions\OnEventFunction.cs" />
-    <Compile Include="Functions\PhaseBasedSwitch.cs" />
     <Compile Include="Functions\PhaseLookup.cs" />
     <Compile Include="Functions\PhaseLookupValue.cs" />
     <Compile Include="Functions\PhotoperiodDeltaFunction.cs" />

@@ -32,5 +32,16 @@ namespace Models.Core
         {
             this.model = model;
         }
+        
+        /// <summary>Initializes a new instance of the <see cref="ApsimXException"/> class.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="innerException">The inner exception</param>
+        public ApsimXException(IModel model, string message, Exception innerException)
+            : base(message, innerException)
+        {
+            this.model = model;
+        }
+        
     }
 }

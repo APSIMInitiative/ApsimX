@@ -74,7 +74,7 @@ namespace Models
     public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
-        [Link] private ISoil Soil = null;
+        [Link] private IPhysical soilPhysical = null;
         
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
@@ -174,7 +174,7 @@ namespace Models
             if (Amount > 0)
             {
                 // find the layer that the fertilizer is to be added to.
-                int layer = GetLayerDepth(Depth, Soil.Thickness);
+                int layer = GetLayerDepth(Depth, soilPhysical.Thickness);
 
                 FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
                 if (fertiliserType == null)

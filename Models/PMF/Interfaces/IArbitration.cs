@@ -73,13 +73,6 @@
 
         /// <summary>Gets the live biomass</summary>
         Biomass Live { get; }
-
-        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        double MaintenanceRespiration { get; }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        void RemoveMaintenanceRespiration(double respiration);
-
     }
 
 

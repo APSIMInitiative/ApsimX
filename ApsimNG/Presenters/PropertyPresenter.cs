@@ -21,6 +21,7 @@
     using System.Globalization;
     using Models.LifeCycle;
     using Models.PMF;
+    using global::UserInterface.Classes;
 
     /// <summary>
     /// <para>
@@ -392,7 +393,7 @@
                             crop = GetCrop(properties);
                         if (crop != null)
                         {
-                            cell.DropDownStrings = GetCultivarNames(crop);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetCultivarNames(crop);
                         }
                     }
 
@@ -402,7 +403,7 @@
                         Zone zone = model.FindInScope<Zone>();
                         if (zone != null)
                         {
-                            cell.DropDownStrings = GetLifeCycleNames(zone);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                         }
                     }
 
@@ -416,7 +417,7 @@
                             lifeCycle = GetLifeCycle(properties);
                         if (lifeCycle != null)
                         {
-                            cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetPhaseNames(lifeCycle);
                         }
                     }
                     else if (properties[i].Display != null &&
@@ -439,7 +440,7 @@
             {
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
@@ -524,7 +525,7 @@
                         crop = GetCrop(properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = GetCultivarNames(crop);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetCultivarNames(crop);
                     }
                 }
 
@@ -535,7 +536,7 @@
                     Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
-                        cell.DropDownStrings = GetLifeCycleNames(zone);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                     }
                 }
 
@@ -546,7 +547,7 @@
                     LifeCycle lifeCycle = GetLifeCycle(properties);
                     if (lifeCycle != null)
                     {
-                        cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -694,101 +695,6 @@
 
             IGridColumn valueColumn = grid.GetColumn(1);
             valueColumn.Width = -1;
-        }
-
-        /// <summary>Get a list of cultivars for crop.</summary>
-        /// <param name="crop">The crop.</param>
-        /// <returns>A list of cultivars.</returns>
-        private string[] GetCultivarNames(IPlant crop)
-        {
-            Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-            Replacements replacements = simulations.FindChild<Replacements>();
-
-            if (replacements == null)
-                return crop.CultivarNames;
-
-            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
-            if (replacementCrop != null)
-                return replacementCrop.CultivarNames;
-
-            // Check for cultivar folders under replacements.
-            List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (IModel cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
-            {
-                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
-                if (replacementFolder != null)
-                {
-                    // If we find a matching cultivar folder under replacements, remove
-                    // all cultivar names added by this folder in the official plant
-                    // model, and add the cultivar names added by the matching cultivar
-                    // folder under replacements.
-                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
-                    {
-                        cultivarNames.Remove(cultivar.Name);
-
-                        // If the cultivar has memo children, then the memo text will
-                        // be appended to the cultivar name after a vertical bar |.
-                        // Technically, there could be a cultivar x and x|y, but the UI
-                        // will prevent users from doing this, so the user would really
-                        // just be digging their own hole at this point.
-                        cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
-                    }
-
-                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
-                        cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
-
-                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
-                        cultivarNames.Add(cultivar.Name);
-                }
-            }
-
-            return cultivarNames.ToArray();
-        }
-
-        /// <summary>Get a list of life cycles in the zone.</summary>
-        /// <param name="zone">The zone.</param>
-        /// <returns>A list of life cycles.</returns>
-        private string[] GetLifeCycleNames(Zone zone)
-        {
-            List<LifeCycle> LifeCycles = zone.FindAllInScope<LifeCycle>().ToList();
-            if (LifeCycles.Count > 0)
-            {
-                string[] Namelist = new string[LifeCycles.Count];
-                int i = 0;
-                foreach (IModel LC in LifeCycles)
-                {
-                    Namelist[i] = LC.Name;
-                    i++;
-                }
-                return Namelist;
-            }
-            return new string[0];
-        }
-
-        /// <summary>Get a list of phases for lifecycle.</summary>
-        /// <param name="lifecycle">The lifecycle.</param>
-        /// <returns>A list of phases.</returns>
-        private string[] GetPhaseNames(LifeCycle lifeCycle)
-        {
-            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
-            {
-                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Replacements replacements = simulations.FindChild<Replacements>();
-                if (replacements != null)
-                {
-                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
-                    if (replacementLifeCycle != null)
-                    {
-                        return replacementLifeCycle.LifeCyclePhaseNames;
-                    }
-                }
-            }
-            else
-            {
-                return lifeCycle.LifeCyclePhaseNames;
-            }
-
-            return new string[0];
         }
 
         /// <summary>Get a list of database fieldnames. 
@@ -1132,7 +1038,7 @@
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-                PopulateGrid(model);
+                Refresh();
         }
 
         /// <summary>

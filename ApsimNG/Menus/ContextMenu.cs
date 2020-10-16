@@ -290,10 +290,10 @@
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
-                                                  text, 
-                                                  explorerPresenter);
+                IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+                ICommand command = new AddModelCommand(currentNode, text);
                 explorerPresenter.CommandHistory.Add(command, true);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -755,14 +755,23 @@
                 IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
+                    // Toggle the enabled property on the model, and change the enabled property
+                    // on all descendants to the new value of the model's enabled property.
                     List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                     changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
-
                     foreach (IModel child in model.FindAllDescendants())
                         changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
 
                     ChangeProperty command = new ChangeProperty(changes);
                     explorerPresenter.CommandHistory.Add(command);
+
+                    // Now call OnCreated() for all changed models. Note ToList() to force greedy evaluation.
+                    if (model.Enabled)
+                    {
+                        model.OnCreated();
+                        foreach (IModel descendant in model.FindAllDescendants().ToList())
+                            descendant.OnCreated();
+                    }
 
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
