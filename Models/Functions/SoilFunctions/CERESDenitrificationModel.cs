@@ -47,6 +47,22 @@ namespace Models.Functions
             return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
         }
 
+        /// <summary>
+        /// Get the values for all soil layers.
+        /// </summary>
+        public double[] Values
+        {
+            get
+            {
+                if (soilPhysical == null)
+                    return null;
+                double[] result = new double[soilPhysical.Thickness.Length];
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = Value(i);
+                return result;
+            }
+        }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
