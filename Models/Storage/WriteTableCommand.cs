@@ -67,7 +67,6 @@
                 finally
                 {
                     connection.EndTransaction();
-                    query.Close(connection);
                 }
             }
         }
