@@ -712,12 +712,6 @@
         /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
         private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document)
         {
-            if (outtype == OutputType.Markdown)
-            {
-                writer.WriteLine(DataTableUtilities.ToMarkdown(table, includeHeadings));
-                writer.WriteLine();
-                return;
-            }
             foreach (DataRow row in table.Rows)
             {
                 if (outtype == OutputType.html)
