@@ -568,7 +568,7 @@ namespace Models.CLEM
                     break;
                 case "LandCondition":
                     valuesToUse = distinctLandConditions;
-                    if (valuesToUse.Max() > 11 | valuesToUse.Min() <= 0)
+                    if (valuesToUse.Max() > 11 | valuesToUse.Min() < 0)
                     {
                         // add warning
                         string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
