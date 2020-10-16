@@ -2,6 +2,9 @@
 {
     using Gtk;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Utility;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
@@ -25,6 +28,8 @@
         /// <summary>View which displays the summary data.</summary>
         public IMarkdownView SummaryDisplay { get; }
 
+        private Button btnJumpToSimLog;
+
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
@@ -44,14 +49,35 @@
             middleBox.PackStart(new Label("Simulation:"), false, false, 10);
             middleBox.PackStart(SimulationDropDown.MainWidget, true, true, 10);
 
+            btnJumpToSimLog = new Button("Jump to simulation log");
+            HBox buttonContainer = new HBox();
+            buttonContainer.PackStart(btnJumpToSimLog, false, false, 0);
+            btnJumpToSimLog.Clicked += OnJumpToSimulationLog;
+
             mainControl = new VBox();
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
+            mainControl.PackStart(buttonContainer, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
             mainControl.PackEnd(((ViewBase)SummaryDisplay).MainWidget, true, true, 0);
 
             mainWidget.Destroyed += MainWidgetDestroyed;
+        }
+
+        private void OnJumpToSimulationLog(object sender, EventArgs e)
+        {
+            try
+            {
+                Widget target = mainWidget.Descendants().OfType<TextView>().FirstOrDefault(l => l.Buffer.Text.Contains("Simulation log"));
+                ScrolledWindow scroller = mainWidget.Ancestors().OfType<ScrolledWindow>().FirstOrDefault();
+                if (scroller != null)
+                    scroller.Vadjustment.Value = target.Allocation.Y;
+            }
+            catch (Exception error)
+            {
+                ShowError(error);
+            }
         }
 
         /// <summary>Main widget destroyed handler</summary>
@@ -61,6 +87,7 @@
         {
             try
             {
+                btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
                 topBox.Destroy();
                 SummaryCheckBox.MainWidget.Destroy();
                 WarningCheckBox.MainWidget.Destroy();
