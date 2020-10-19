@@ -564,6 +564,7 @@
                 writer.WriteLine("```");
                 writer.WriteLine(st);
                 writer.WriteLine("```");
+                writer.WriteLine();
             }
             else
             {
@@ -694,7 +695,12 @@
                 document.LastSection.AddParagraph(); // Just to give a bit of spacing
             }
             else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
                 writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
+                writer.WriteLine("```");
+                writer.WriteLine();
+            }
             else
             {
                 DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
