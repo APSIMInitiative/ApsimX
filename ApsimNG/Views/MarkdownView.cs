@@ -173,7 +173,6 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown text inline type: {block.GetType().Name}");
                 }
             }
 
@@ -212,7 +211,6 @@ namespace UserInterface.Views
                     textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
                 else
                 {
-                    Console.WriteLine($"Unknown text inline type: {inline.GetType().Name}");
                 }
             }
         }
