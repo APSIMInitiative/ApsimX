@@ -293,7 +293,7 @@
                 // for a variableName of [3:], columnName = [3]
                 // for a variableName of [:5], columnNamne = [0]
 
-                Regex regex = new Regex("\\[([0-9]):*[0-9]*\\]");
+                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
 
                 Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
 
