@@ -76,6 +76,6 @@ public class Script
 		
 		Runner runner = new Runner(presenter.ApsimXFile, runType: Runner.RunTypeEnum.MultiThreaded);
 		RunCommand command = new RunCommand("Simulations", runner, presenter);
-		command.Do(null);
+		command.Do();
 	}
 }
