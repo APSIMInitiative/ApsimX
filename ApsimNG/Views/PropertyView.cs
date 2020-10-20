@@ -170,8 +170,15 @@ namespace UserInterface.Views
             Widget component;
             switch (property.DisplayMethod)
             {
+                case PropertyType.MultiLineText:
+                    TextView editor = new TextView();
+                    string text = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.CurrentCulture);
+                    editor.Buffer.Text = text ?? "";
+                    originalEntryText[property.ID] = text;
+                    component = editor;
+                    editor.FocusOutEvent += OnEntryFocusOut;
+                    break;
                 case PropertyType.SingleLineText:
-                case PropertyType.MultiLineText: // fixme
                     string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
                     Entry textInput = new Entry(entryValue ?? "");
                     textInput.FocusOutEvent += OnEntryFocusOut;
@@ -239,8 +246,8 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Called when an entry widget loses focus.
-        /// Fires a chagned event if the entry widget's text has been modified.
+        /// Called when an entry or textview widget loses focus.
+        /// Fires a chagned event if the widget's text has been modified.
         /// </summary>
         /// <param name="sender">The entry which has been modified.</param>
         /// <param name="e">Event data.</param>
@@ -249,14 +256,21 @@ namespace UserInterface.Views
         {
             try
             {
-                if (sender is Entry component)
+                if (sender is Widget widget)
                 {
-                    Guid id = Guid.Parse(component.Name);
-                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], component.Text, StringComparison.CurrentCulture))
+                    Guid id = Guid.Parse(widget.Name);
+                    string text;
+                    if (widget is Entry entry)
+                        text = entry.Text;
+                    else if (widget is TextView editor)
+                        text = editor.Buffer.Text;
+                    else
+                        throw new Exception($"Unknown widget type {sender.GetType().Name}");
+                    if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
                     {
-                        var args = new PropertyChangedEventArgs(id, component.Text);
+                        var args = new PropertyChangedEventArgs(id, text);
                         PropertyChanged?.Invoke(this, args);
-                        originalEntryText[id] = component.Text;
+                        originalEntryText[id] = text;
                     }
                 }
             }
