@@ -97,7 +97,6 @@ namespace UserInterface.Views
                     }
                 }
             }
-            box.Remove(propertyTable);
             box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
             propertyTable = new Table((uint)properties.Count(), 2, false);
@@ -269,8 +268,8 @@ namespace UserInterface.Views
                     if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
                     {
                         var args = new PropertyChangedEventArgs(id, text);
-                        PropertyChanged?.Invoke(this, args);
                         originalEntryText[id] = text;
+                        PropertyChanged?.Invoke(this, args);
                     }
                 }
             }
