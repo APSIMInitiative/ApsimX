@@ -71,6 +71,7 @@
                 // TextView functionality (scroll_to_iter()) will not work.
                 summaryWidget = new ScrolledWindow();
                 editor.Reparent(summaryWidget);
+                editor.WrapMode = WrapMode.None;
             }
             mainControl.PackEnd(summaryWidget, true, true, 0);
 
@@ -83,12 +84,15 @@
             try
             {
                 TextView target = mainWidget.Descendants().OfType<TextView>().FirstOrDefault(l => l.Buffer.Text.Contains("Simulation log"));
-                TextIter iter = target.Buffer.GetIterAtOffset(target.Buffer.Text.IndexOf("Simulation log", StringComparison.CurrentCultureIgnoreCase));
+                if (target != null)
+                {
+                    TextIter iter = target.Buffer.GetIterAtOffset(target.Buffer.Text.IndexOf("Simulation log", StringComparison.CurrentCultureIgnoreCase));
 
-                TextMark mark = target.Buffer.GetMark("simLog");
-                if (mark == null)
-                    mark = target.Buffer.CreateMark("simLog", iter, true);
-                target.ScrollToMark(mark, 0, true, 0, 0);
+                    TextMark mark = target.Buffer.GetMark("simLog");
+                    if (mark == null)
+                        mark = target.Buffer.CreateMark("simLog", iter, true);
+                    target.ScrollToMark(mark, 0, true, 0, 0);
+                }
             }
             catch (Exception error)
             {
