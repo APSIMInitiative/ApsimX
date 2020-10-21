@@ -21,6 +21,12 @@
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter presenter;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => fromModel;
+
         /// <summary>Constructor.</summary>
         public MoveModelCommand(Model model, Model newParent, TreeViewNode treeNodeDescription, ExplorerPresenter explorerPresenter)
         {

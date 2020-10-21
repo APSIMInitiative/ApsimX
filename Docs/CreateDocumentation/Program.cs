@@ -207,7 +207,7 @@
 
                         // Whole of simulation document.
                         var createDoc = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                        createDoc.Do(null);
+                        createDoc.Do();
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
                     else
@@ -221,7 +221,7 @@
                             return null;
                         var outputFileName = documentObject["OutputFileName"]?.ToString();
                         var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder, outputFileName);
-                        createDoc.Do(null);
+                        createDoc.Do();
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
 

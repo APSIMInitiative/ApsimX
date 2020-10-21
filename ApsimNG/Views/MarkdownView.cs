@@ -98,12 +98,14 @@ namespace UserInterface.Views
                     container.Remove(container.Children[1]);
                 textView = (TextView)container.Children[0];
                 
-                var document = new MarkdownDocument();
-                document.Parse(value.Replace("~~~", "```"));
-                int pos = 0;
-                textView.Buffer.Text = string.Empty;
-                TextIter insertPos = textView.Buffer.GetIterAtOffset(pos);
-                insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                if (value != null)
+                {
+                    var document = new MarkdownDocument();
+                    document.Parse(value.Replace("~~~", "```"));
+                    textView.Buffer.Text = string.Empty;
+                    TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
+                    insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                }
             }
         }
 
