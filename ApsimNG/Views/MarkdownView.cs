@@ -96,8 +96,9 @@ namespace UserInterface.Views
                 // Only keep first child.
                 while (container.Children.Length > 1)
                     container.Remove(container.Children[1]);
-                textView = (TextView)container.Children[0];
-                
+                if (container.Children.Length > 0)
+                    textView = (TextView)container.Children[0];
+
                 var document = new MarkdownDocument();
                 document.Parse(value.Replace("~~~", "```"));
                 int pos = 0;
