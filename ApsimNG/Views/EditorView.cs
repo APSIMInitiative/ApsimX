@@ -382,6 +382,11 @@
         private void InitialiseWidget()
         { 
             scroller = new ScrolledWindow();
+            if (textEditor.Parent is Container container)
+            {
+                container.Remove(textEditor);
+                container.Add(scroller);
+            }
             scroller.Add(textEditor);
             mainWidget = scroller;
             CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
