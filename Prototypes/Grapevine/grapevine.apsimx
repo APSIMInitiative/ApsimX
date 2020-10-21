@@ -18837,6 +18837,164 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "PreRootNSC",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.total.NSC.concentration.root",
+                      "YFieldName": "Predicted.total.NSC.concentration.root",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "PreTrunkNSC",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.total.NSC.concentration.trunk",
+                      "YFieldName": "Predicted.total.NSC.concentration.trunk",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
