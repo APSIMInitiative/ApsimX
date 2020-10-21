@@ -87,11 +87,7 @@
                 if (target != null)
                 {
                     TextIter iter = target.Buffer.GetIterAtOffset(target.Buffer.Text.IndexOf("Simulation log", StringComparison.CurrentCultureIgnoreCase));
-
-                    TextMark mark = target.Buffer.GetMark("simLog");
-                    if (mark == null)
-                        mark = target.Buffer.CreateMark("simLog", iter, true);
-                    target.ScrollToMark(mark, 0, true, 0, 0);
+                    target.ScrollToIter(iter, 0, true, 0, 0);
                 }
             }
             catch (Exception error)
