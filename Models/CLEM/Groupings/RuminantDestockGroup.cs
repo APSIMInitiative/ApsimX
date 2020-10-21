@@ -55,8 +55,8 @@ namespace Models.CLEM.Groupings
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            string[] memberNames = new string[] { "Ruminant destock filter group" };
-            results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantFilterGroup]", memberNames));
+            string[] memberNames = new string[] { "Ruminant destock group" };
+            results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantGroup]", memberNames));
             return results;
         }
 
@@ -67,7 +67,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "NO LONGER SUPPORTED! Please change to [f=RuminantFilterGroup]";
+            string html = "NO LONGER SUPPORTED! Please change to [f=RuminantGroup]";
             return html;
         }
 

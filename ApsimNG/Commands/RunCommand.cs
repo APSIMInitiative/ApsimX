@@ -11,7 +11,7 @@
     using System.Timers;
     using Utility;
 
-    public sealed class RunCommand : ICommand, IDisposable
+    public sealed class RunCommand : IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -47,7 +47,7 @@
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>Perform the command</summary>
-        public void Do(CommandHistory commandHistory)
+        public void Do()
         {
             IsRunning = true;
             jobRunner.Run();
@@ -61,9 +61,6 @@
                 timer.Start();
             }
         }
-
-        /// <summary>Undo the command</summary>
-        public void Undo(CommandHistory commandHistory) { }
 
         /// <summary>All jobs have completed</summary>
         private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)

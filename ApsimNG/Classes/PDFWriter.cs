@@ -465,10 +465,6 @@
                                 string pngFileName;
                                 if (view is MapView mapView)
                                 {
-                                    var watch = new System.Diagnostics.Stopwatch();
-                                    watch.Start();
-                                    while (watch.ElapsedMilliseconds < 1000)
-                                        Gtk.Application.RunIteration();
                                     Image img = mapView.Export();
                                     pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
                                     if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)

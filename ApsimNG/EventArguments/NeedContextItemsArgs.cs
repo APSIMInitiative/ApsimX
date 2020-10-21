@@ -117,7 +117,8 @@
                 {
                     foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
-                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
+                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_") &&
+                            !method.Name.StartsWith("add_") && !method.Name.StartsWith("remove_"))
                         {
                             ContextItem item = new ContextItem
                             {
@@ -141,7 +142,7 @@
                                     ParameterInfo parameter = allparams[p];
                                     paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
                                     if (parameter.DefaultValue != DBNull.Value)
-                                        paramText.Append(" = " + parameter.DefaultValue.ToString());
+                                        paramText.Append(" = " + parameter.DefaultValue?.ToString() ?? "null");
                                     if (p < allparams.Count() - 1)
                                         paramText.Append(", ");
                                 }

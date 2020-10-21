@@ -1964,7 +1964,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.12,
+                      "FixedValue": 0.05,
                       "Units": "g/g",
                       "Name": "MaximumNConc",
                       "Children": [],
@@ -1984,7 +1984,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.15,
+                      "FixedValue": 0.05,
                       "Units": "g/g",
                       "Name": "InitialNConc",
                       "Children": [],
@@ -2014,7 +2014,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.03,
+                      "FixedValue": 0.0001,
                       "Units": "g/g",
                       "Name": "CriticalNConc",
                       "Children": [],
@@ -6875,6 +6875,96 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "BEN_CarbonIni",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.AccumulateByNumericPhase, Models",
+                          "StartStageName": 4.0,
+                          "EndStageName": 5.85,
+                          "ResetStageName": "BudBurst",
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "FDMIni",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grapevine].Arbitrator.FDM",
+                              "Name": "FDM",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateByNumericPhase, Models",
+                          "StartStageName": 4.0,
+                          "EndStageName": 5.85,
+                          "ResetStageName": "BudBurst",
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Time",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": "days/day",
+                              "Name": "Days",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Ecodormancy",
+                      "ReSetEvent": null,
+                      "Name": "BEN_CarbonIni1",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7642,6 +7732,82 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LessThanFunction, Models",
+                                      "Name": "CarbonIni",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.1,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "PreValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "FDMIni",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                              "Name": "XValue",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                0.0,
+                                                0.5,
+                                                1.0,
+                                                2.0
+                                              ],
+                                              "Y": [
+                                                0.0,
+                                                0.67,
+                                                1.0,
+                                                1.0
+                                              ],
+                                              "Name": "XYPairs",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "IncludeInDocumentation": true,
@@ -8072,6 +8238,45 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "SingleBerryDW",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.BetaGrowthFunction, Models",
+                      "tm": 47.8,
+                      "te": 70.0,
+                      "Name": "BetaGrowthFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.56,
+                          "Units": "g",
+                          "Name": "Ymax",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "WaterContent",
                   "Children": [
@@ -8138,6 +8343,169 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DMDemandFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LessThanFunction, Models",
+                      "Name": "LessThanFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "DAWS",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 305.0,
+                          "Units": null,
+                          "Name": "HarvestTime",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Flowering",
+                          "End": "LeafFall",
+                          "Name": "AfterFruitSet",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "MaximumFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.DeltaFunction, Models",
+                                  "StartStageName": null,
+                                  "Name": "DeltaFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "Integral",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].NumberFunction",
+                                          "Name": "BerryNumber",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].SingleBerryDW",
+                                          "Name": "BerryDM",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": "g",
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": "g",
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.07758,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.001,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.001,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -8230,9 +8598,9 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 308.0,
+                              "FixedValue": 305.0,
                               "Units": null,
-                              "Name": "Constant",
+                              "Name": "HarvestTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -8325,7 +8693,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 5.0,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Zero",
                               "Children": [],
@@ -8610,45 +8978,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemandPriorityFactors",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.07758,
-                      "Units": null,
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [
@@ -8693,169 +9022,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DMDemandFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LessThanFunction, Models",
-                      "Name": "LessThanFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].DaysSinceWinterSolstice",
-                          "Name": "DAWS",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 305.0,
-                          "Units": null,
-                          "Name": "HarvestTime",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
-                          "End": "LeafFall",
-                          "Name": "AfterFruitSet",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "MaximumFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.DeltaFunction, Models",
-                                  "StartStageName": null,
-                                  "Name": "DeltaFunction",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "Integral",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].NumberFunction",
-                                          "Name": "BerryNumber",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].SingleBerryDW",
-                                          "Name": "BerryWt",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": "g",
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "g",
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "SingleBerryDW",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.BetaGrowthFunction, Models",
-                      "tm": 49.9,
-                      "te": 70.0,
-                      "Name": "BetaGrowthFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.55,
-                          "Units": "g",
-                          "Name": "Ymax",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Berry].ThermalTimeAfterFlowering",
-                          "Name": "XValue",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -10240,7 +10406,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2003-02-25T00:00:00",
-              "End": "2006-05-01T00:00:00",
+              "End": "2020-05-01T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -14521,7 +14687,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n               zone.Set(\"[Grapevine].Berry.Brix.AfterVeraison.LessThanFunction.HarvestTime.FixedValue\",HarvestDAWS); \r\n\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
@@ -18513,7 +18679,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
-                      "FileName": "Site1003_SEA.met",
+                      "FileName": "Site1002_OYB.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
@@ -19318,7 +19484,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n               zone.Set(\"[Grapevine].Berry.Brix.AfterVeraison.LessThanFunction.HarvestTime.FixedValue\",HarvestDAWS); \r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
@@ -21751,6 +21917,219 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "PreBerryBiomass",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObserved",
+                          "XFieldName": "Observed.TotalBerryDW",
+                          "YFieldName": "Predicted.TotalBerryDW",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BerryTotalDM",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Climate",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Grapevine.Berry.Live.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Sim",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "TrunkNSC",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Climate",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Zone",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "total.NSC.concentration.trunk",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -22598,7 +22977,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n               zone.Set(\"[Grapevine].Berry.Brix.AfterVeraison.LessThanFunction.HarvestTime.FixedValue\",HarvestDAWS); \r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
@@ -25878,7 +26257,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n            zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\", PruningDAWS);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                //int TargetLeafRank = 20;    \r\n                //int LeafTipsAppeared = 25;//(int)structure.LeafTipsAppeared;\r\n\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.2;//1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.1, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Fibrousroot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n               zone.Set(\"[Grapevine].Berry.Brix.AfterVeraison.LessThanFunction.HarvestTime.FixedValue\",HarvestDAWS); \r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Fibrousroot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double budNumber = (double)zone.Get(\"Grapevine.Structure.BudsPerMeterRow.FixedValue\"); \r\n                double cordonNum = budNumber*1.8/12;\r\n                double cordonBiomass = 17.5 * cordonNum; //g/m2 reset the cordon biomass to the original value \r\n                double cordonNSC = cordonBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n                zone.Set(\"[Grapevine].Phenology.AccChillBefPrune.LessThanFunction.PruningTime.FixedValue\",PruningDAWS); \r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              //zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Fibrousroot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
@@ -28309,6 +28688,85 @@
                         }
                       ],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "PreBerryBiomass",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObserved",
+                          "XFieldName": "Observed.TotalBerryDW",
+                          "YFieldName": "Predicted.TotalBerryDW",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -34176,7 +34634,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Irri",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 4,
@@ -34334,7 +34792,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Irri",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 4,
@@ -41481,7 +41939,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Irri",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 4,
@@ -41494,7 +41952,7 @@
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
+                      "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,

@@ -38,10 +38,6 @@ namespace UserInterface.EventArguments.DirectedGraph
     {
         public string arcNameToDelete { get; set; }
     }
-    public class InitialStateEventArgs : EventArgs
-    {
-        public string initialState { get; set; }
-    }
     public class ObjectMovedArgs : EventArgs
     {
         /// <summary>
