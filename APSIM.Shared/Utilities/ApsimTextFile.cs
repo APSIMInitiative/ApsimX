@@ -938,19 +938,16 @@ namespace APSIM.Shared.Utilities
                         for (int i = 0; i < resultDt.Columns.Count; i++)
                         {
                             value = resultDt.Rows[rowCount][i].ToString();
-                            if (value.Length > 0)
-                            {
-                                //extract the measurment if it exists, else need to create blank, and add to Units collection
-                                unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
-                                if (unit.Length <= 0)
-                                    unit = "()";
-                                else
-                                    unitsFound = true;
-                                Units.Add(unit.Trim());
 
-                                //add the title(name to Units collection
-                                Headings.Add(value.Trim());
-                            }
+                            unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
+                            if (unit.Length <= 0)
+                                unit = "()";
+                            else
+                                unitsFound = true;
+                            Units.Add(unit.Trim());
+
+                            //add the title(name) to Headings collection
+                            Headings.Add(value.Trim());
                         }
 
                         resultDt.Rows[rowCount].Delete();
@@ -997,7 +994,22 @@ namespace APSIM.Shared.Utilities
                 //now do the column names, need to have data loaded before we rename columns, else the above won't work.
                 for (int i = 0; i < resultDt.Columns.Count; i++)
                 {
-                    _excelData.Columns[i].ColumnName = Headings[i];
+                    // set to identifyable value if blank
+                    _excelData.Columns[i].ColumnName = (Headings[i]==""?$"_BLANKCOLUMN_{i}":Headings[i]);
+                }
+
+                // delete all columns identified as blank (no column name previously provided)
+                int w = 0;
+                while (_excelData.Columns.Count > w)
+                {
+                    if (_excelData.Columns[w].ColumnName.StartsWith("_BLANKCOLUMN_"))
+                    {
+                        _excelData.Columns.RemoveAt(w);
+                    }
+                    else
+                    {
+                        w++;
+                    }
                 }
 
                 _FirstDate = GetDateFromValues(_excelData, 0);
@@ -1009,7 +1021,7 @@ namespace APSIM.Shared.Utilities
             }
             catch (Exception e)
             {
-                throw new Exception(string.Format("The excel Sheet {0} is not in a recognised Weather file format." + e.Message.ToString(), _SheetName));
+                throw new Exception($"Problem reading Excel Sheet {_SheetName} in {_FileName}. Error: {e.Message.ToString()}");
             }
         }
 
