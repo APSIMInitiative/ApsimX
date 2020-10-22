@@ -831,12 +831,7 @@ namespace APSIM.Shared.Utilities
             // Add 1 to all column widths.
             columnWidths = columnWidths.Select(x => x + 1).ToArray();
 
-            // Compute total table width - sum of individual column widths
-            // + 1 char per column (| separator) + 1 (| at end of line).
-            int tableWidth = columnWidths.Sum() + table.Columns.Count + 1;
-
             // Write table headings.
-            result.AppendLine(new string('-', tableWidth));
             if (writeHeaders)
             {
                 result.Append("|");
@@ -874,8 +869,6 @@ namespace APSIM.Shared.Utilities
                 result.AppendLine();
             }
 
-            result.AppendLine(new string('-', tableWidth));
-            
             return result.ToString();
         }
 

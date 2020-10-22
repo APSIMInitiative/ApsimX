@@ -96,8 +96,9 @@ namespace UserInterface.Views
                 // Only keep first child.
                 while (container.Children.Length > 1)
                     container.Remove(container.Children[1]);
-                textView = (TextView)container.Children[0];
-                
+                if (container.Children.Length > 0)
+                    textView = (TextView)container.Children[0];
+
                 if (value != null)
                 {
                     var document = new MarkdownDocument();
@@ -105,6 +106,7 @@ namespace UserInterface.Views
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                    container.ShowAll();
                 }
             }
         }
@@ -162,16 +164,22 @@ namespace UserInterface.Views
                 else if (block is CodeBlock code)
                 {
                     textView.Buffer.InsertWithTags(ref insertPos, code.Text, GetTags("Code", indent + 1));
+                    textView.Buffer.InsertWithTags(ref insertPos, Environment.NewLine);
                 }
                 else if (block is TableBlock table)
                     DisplayTable(ref insertPos, table);
                 else if (block is HorizontalRuleBlock hr)
                 {
-                    // do we want these separators appearing everywhere?
-                    //container.Add(new HSeparator());
-                    //textView = new TextView();
-                    //container.Add(textView);
-                    //insertPos = textView.Buffer.GetIterAtOffset(0);
+                    if (string.IsNullOrWhiteSpace(textView.Buffer.Text))
+                    {
+                        container.Remove(textView);
+                        container.Add(new HSeparator());
+                        textView = new TextView();
+                        container.Add(textView);
+                        insertPos = textView.Buffer.GetIterAtOffset(0);
+                    }
+                    else
+                        textView.Buffer.Insert(ref insertPos, Environment.NewLine + Environment.NewLine);
                 }
                 else
                 {
@@ -210,7 +218,12 @@ namespace UserInterface.Views
                 else if (inline is SuperscriptTextInline superscript)
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Superscript", indent));
                 else if (inline is LinkAnchorInline anchor)
-                    textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
+                {
+                    if (anchor.Link != null)
+                        textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
+                    else
+                        textView.Buffer.Insert(ref insertPos, anchor.ToString());
+                }
                 else
                 {
                 }
@@ -237,7 +250,10 @@ namespace UserInterface.Views
 
             // Add table to gtk container.
             tableWidget.ShowAll();
-            container.PackStart(tableWidget, true, true, 10);
+            Alignment alignment = new Alignment(0f, 0f, 1f, 1f);
+            alignment.BottomPadding = 10;
+            alignment.Add(tableWidget);
+            container.PackStart(alignment, true, true, 0);
 
             // Insert a new textview beneath the previous one.
             textView = new TextView();

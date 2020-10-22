@@ -59,7 +59,12 @@
             /// <summary>
             /// RTF format
             /// </summary>
-            rtf
+            rtf,
+
+            /// <summary>
+            /// Markdown format
+            /// </summary>
+            Markdown
         }
 
         /// <summary>Capture and store error messages?</summary>
@@ -518,6 +523,11 @@
                 Section section = document.LastSection;
                 Paragraph paragraph = section.AddParagraph(heading, "Heading2");
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine($"## {heading}");
+                writer.WriteLine();
+            }
             else
             {
                 writer.WriteLine(heading.ToUpper());
@@ -548,6 +558,13 @@
             else if (outtype == OutputType.rtf)
             {
                 Paragraph paragraph = document.LastSection.AddParagraph(st, "Monospace");
+            }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
+                writer.WriteLine(st);
+                writer.WriteLine("```");
+                writer.WriteLine();
             }
             else
             {
@@ -677,6 +694,13 @@
                 document.LastSection.Add(tabl);
                 document.LastSection.AddParagraph(); // Just to give a bit of spacing
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
+                writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
+                writer.WriteLine("```");
+                writer.WriteLine();
+            }
             else
             {
                 DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
@@ -705,6 +729,8 @@
                     Section section = document.LastSection;
                     Paragraph paragraph = section.AddParagraph(row[0].ToString(), "Heading3");
                 }
+                else if (outtype == OutputType.Markdown)
+                    writer.WriteLine($"### {row[0]}");
                 else
                 {
                     writer.WriteLine();
@@ -731,6 +757,13 @@
                         paragraph.Format.Font.Color = Colors.OrangeRed;
                     else if (st.Contains("ERROR:"))
                         paragraph.Format.Font.Color = Colors.Red;
+                }
+                else if (outtype == OutputType.Markdown)
+                {
+                    writer.WriteLine("```");
+                    writer.WriteLine(st);
+                    writer.WriteLine("```");
+                    writer.WriteLine();
                 }
                 else
                 {
