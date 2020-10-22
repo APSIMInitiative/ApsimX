@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 122; } }
+        public static int LatestVersion { get { return 123; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3207,6 +3207,34 @@
                 map["Zoom"] = 360;
                 map["Center"]["Latitude"] = 0;
                 map["Center"]["Longitude"] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Remove all references to Arbitrator.WDemand, Arbitrator.WSupply, and Arbitrator.WAllocated.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion123(JObject root, string fileName)
+        {
+            string[] patterns = new[]
+            {
+                "Arbitrator.WSupply",
+                "[Arbitrator].WSupply",
+                "Arbitrator.WDemand",
+                "[Arbitrator].WDemand",
+                "Arbitrator.WAllocated",
+                "[Arbitrator].WAllocated",
+            };
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, typeof(Report).Name))
+            {
+                if (report["VariableNames"] is JArray variables)
+                {
+                    for (int i = variables.Count - 1; i >= 0; i--)
+                        if (patterns.Any(p => variables[i].ToString().Contains(p)))
+                            variables.RemoveAt(i);
+                    report["VariableNames"] = variables;
+                }
             }
         }
 
