@@ -1021,7 +1021,7 @@ namespace APSIM.Shared.Utilities
             }
             catch (Exception e)
             {
-                throw new Exception(string.Format("Unable to read data from excel Sheet {0}: " + e.Message.ToString(), _SheetName));
+                throw new Exception($"Problem reading Excel Sheet {_SheetName} in {_FileName}. Error: {e.Message.ToString()}");
             }
         }
 
