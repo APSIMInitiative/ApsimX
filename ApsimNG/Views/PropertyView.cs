@@ -174,7 +174,10 @@ namespace UserInterface.Views
                     string text = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.CurrentCulture);
                     editor.Buffer.Text = text ?? "";
                     originalEntryText[property.ID] = text;
-                    component = editor;
+                    editor.Name = property.ID.ToString();
+                    Frame outline = new Frame();
+                    outline.Add(editor);
+                    component = outline;
                     editor.FocusOutEvent += OnEntryFocusOut;
                     break;
                 case PropertyType.SingleLineText:
