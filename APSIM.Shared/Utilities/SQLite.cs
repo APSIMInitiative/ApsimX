@@ -115,6 +115,8 @@ namespace APSIM.Shared.Utilities
                         result.Load(reader, LoadOption.OverwriteChanges);
                         tmpDs.Tables.Remove(result);
                     }
+                    while (result.Constraints.Count > 0)
+                        result.Constraints.RemoveAt(0);
                     return result;
                 }
             }
