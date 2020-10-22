@@ -2563,7 +2563,6 @@
                 return;
             if (!view.IsRealized)
                 Console.WriteLine($"Unable to select cell: treeview has not been realized");
-            Console.WriteLine($"Selecting cell ({row}, {column}) in {(startEdit ? "Edit" : "Read")} mode");
             view.SetCursor(path, col, startEdit);
             view.ScrollToCell(path, col, false, 0, 1);
             selectedCellRowIndex = row;

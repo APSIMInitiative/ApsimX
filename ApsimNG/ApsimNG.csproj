@@ -239,9 +239,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
-    <Compile Include="Commands\ReplaceModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
-    <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\BubbleChartArgs.cs" />

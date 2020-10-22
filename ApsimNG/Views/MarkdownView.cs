@@ -30,12 +30,12 @@ namespace UserInterface.Views
     }
 
     /// <summary>A rich text view.</summary>
-    public class MarkdownView : ViewBase
+    public class MarkdownView : ViewBase, IMarkdownView
     {
         private TextView textView;
+        private VBox container;
         private Cursor handCursor;
 		private Cursor regularCursor;
-        private Container parentContainer;
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -43,7 +43,10 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new TextView());
+            VBox box = new VBox();
+            TextView child = new TextView();
+            box.PackStart(child);
+            Initialise(owner, box);
         }
 
         /// <summary>Constructor</summary>
@@ -57,23 +60,17 @@ namespace UserInterface.Views
         /// <param name="gtkControl">The raw gtk control.</param>
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            textView = (TextView)gtkControl;
+            container = (VBox)gtkControl;
+            textView = (TextView)container.Children[0];
 
-            // Look for parent container.
-            var parent = textView.Parent;
-            while (parent != null && !(parent is Container))
-                parent = textView.Parent;
-            if (parent != null)
-            {
-                parentContainer = (Container)parent;
-            }
             textView.Editable = false;
             textView.WrapMode = WrapMode.Word;
             textView.VisibilityNotifyEvent += OnVisibilityNotify;
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = textView;
+            mainWidget = container;
+            container.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
@@ -97,16 +94,18 @@ namespace UserInterface.Views
             set
             {
                 // Only keep first child.
-                while (parentContainer.Children.Length > 1)
-                    parentContainer.Remove(parentContainer.Children[1]);
-                textView = (TextView)parentContainer.Children[0];
+                while (container.Children.Length > 1)
+                    container.Remove(container.Children[1]);
+                textView = (TextView)container.Children[0];
                 
-                var document = new MarkdownDocument();
-                document.Parse(value.Replace("~~~", "```"));
-                int pos = 0;
-                textView.Buffer.Text = string.Empty;
-                TextIter insertPos = textView.Buffer.GetIterAtOffset(pos);
-                insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                if (value != null)
+                {
+                    var document = new MarkdownDocument();
+                    document.Parse(value.Replace("~~~", "```"));
+                    textView.Buffer.Text = string.Empty;
+                    TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
+                    insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                }
             }
         }
 
@@ -164,9 +163,18 @@ namespace UserInterface.Views
                 {
                     textView.Buffer.InsertWithTags(ref insertPos, code.Text, GetTags("Code", indent + 1));
                 }
+                else if (block is TableBlock table)
+                    DisplayTable(ref insertPos, table);
+                else if (block is HorizontalRuleBlock hr)
+                {
+                    // do we want these separators appearing everywhere?
+                    //container.Add(new HSeparator());
+                    //textView = new TextView();
+                    //container.Add(textView);
+                    //insertPos = textView.Buffer.GetIterAtOffset(0);
+                }
                 else
                 {
-
                 }
             }
 
@@ -197,11 +205,46 @@ namespace UserInterface.Views
                     textView.Buffer.InsertWithTags(ref insertPos, codeInline.Text, GetTags("Normal", indent + 1));
                 else if (inline is ImageInline imageInline)
                     DisplayImage(imageInline.Url, ref insertPos);
+                else if (inline is SubscriptTextInline subscript)
+                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
+                else if (inline is SuperscriptTextInline superscript)
+                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Superscript", indent));
+                else if (inline is LinkAnchorInline anchor)
+                    textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
                 else
                 {
-
                 }
             }
+        }
+
+        /// <summary>
+        /// Display a table.
+        /// </summary>
+        /// <param name="insertPos"></param>
+        /// <param name="table"></param>
+        private void DisplayTable(ref TextIter insertPos, TableBlock table)
+        {
+            Table tableWidget = new Table((uint)table.Rows.Count(), (uint)table.ColumnDefinitions.Count(), false);
+            for (uint i = 0; i < table.Rows.Count(); i++)
+                for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
+                {
+                    var cell = table.Rows[(int)i].Cells[(int)j];
+                    string text = cell.Inlines.FirstOrDefault()?.ToString();
+                    if (i == 0)
+                        text = $"<b>{text}</b>";
+                    tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
+                }
+
+            // Add table to gtk container.
+            tableWidget.ShowAll();
+            container.PackStart(tableWidget, true, true, 10);
+
+            // Insert a new textview beneath the previous one.
+            textView = new TextView();
+            textView.ShowAll();
+            container.Add(textView);
+            insertPos = textView.Buffer.GetIterAtOffset(0);
+            CreateStyles(textView);
         }
 
         /// <summary>
@@ -211,52 +254,41 @@ namespace UserInterface.Views
         /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, ref TextIter insertPos)
         {
-            // Look for parent container.
-            var parent = textView.Parent;
-            while (parent != null && !(parent is Container))
-                parent = textView.Parent;
+            // Convert relative paths in url to absolute.
+            string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
 
-            // Only add an image if parent container found 
-            if (parent != null)
+            Gtk.Image image = null;
+            if (System.IO.File.Exists(absolutePath))
             {
-                // Convert relative paths in url to absolute.
-                string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
-
-                Gtk.Image image = null;
-                if (System.IO.File.Exists(absolutePath))
-                {
-                    var pix = new Pixbuf(absolutePath);
-                    image = new Gtk.Image(pix);
-                }
-                else
-                {
-                    string imagePath = "ApsimNG.Resources." + url;
-                    foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
-                        if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
-                            image = new Gtk.Image(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
-                }
-
-                if (image != null)
-                { 
-                    image.SetAlignment(0, 0);
-
-                    var eventBox = new EventBox();
-                    eventBox.Visible = true;
-                    eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-                    eventBox.Add(image);
-
-                    Container parentContainer = (Container)parent;
-                    parentContainer.Add(eventBox);
-                    image.Visible = true;
-
-                    textView = new TextView();
-                    parentContainer.Add(textView);
-                    textView.Visible = true;
-                    insertPos = textView.Buffer.GetIterAtOffset(0);
-                    CreateStyles(textView);
-                }
+                var pix = new Pixbuf(absolutePath);
+                image = new Gtk.Image(pix);
+            }
+            else
+            {
+                string imagePath = "ApsimNG.Resources." + url;
+                foreach (string resourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                    if (string.Equals(imagePath, resourceName, StringComparison.InvariantCultureIgnoreCase))
+                        image = new Gtk.Image(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
             }
 
+            if (image != null)
+            { 
+                image.SetAlignment(0, 0);
+
+                var eventBox = new EventBox();
+                eventBox.Visible = true;
+                eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+                eventBox.Add(image);
+
+                container.Add(eventBox);
+                image.Visible = true;
+
+                textView = new TextView();
+                container.Add(textView);
+                textView.Visible = true;
+                insertPos = textView.Buffer.GetIterAtOffset(0);
+                CreateStyles(textView);
+            }
         }
 
         /// <summary>
@@ -270,18 +302,27 @@ namespace UserInterface.Views
         {
             var tags = new List<TextTag>();
             var styleTag = textView.Buffer.TagTable.Lookup(styleName);
-            tags.Add(styleTag);
+            if (styleTag != null)
+                tags.Add(styleTag);
 
             if (indent > 0)
             {
                 var indentTag = textView.Buffer.TagTable.Lookup($"Indent{indent}");
-                tags.Add(indentTag);
+                if (indentTag != null)
+                    tags.Add(indentTag);
             }
             if (url != null)
             {
-                var linkTag = new LinkTag(url);
-                linkTag.SizePoints = 12;
-                textView.Buffer.TagTable.Add(linkTag);
+                // Only add the tag to the tag table if it doesn't already exist.
+                // This does actually occur from time to time if a description
+                // contains multiple links to the same target.
+                var linkTag = textView.Buffer.TagTable.Lookup(url) as LinkTag;
+                if (linkTag == null)
+                {
+                    linkTag = new LinkTag(url);
+                    linkTag.SizePoints = 12;
+                    textView.Buffer.TagTable.Add(linkTag);
+                }
                 tags.Add(linkTag);
             }
             return tags.ToArray();
@@ -341,6 +382,16 @@ namespace UserInterface.Views
             var indent3 = new TextTag("Indent3");
             indent3.LeftMargin = 90;
             textView.Buffer.TagTable.Add(indent3);
+
+            var subscript = new TextTag("Subscript");
+            subscript.Rise = 0;
+            subscript.Scale = Pango.Scale.XSmall;
+            textView.Buffer.TagTable.Add(subscript);
+
+            var superscript = new TextTag("Superscript");
+            superscript.Rise = 8192;
+            superscript.Scale = Pango.Scale.XSmall;
+            textView.Buffer.TagTable.Add(superscript);
         }
 
         // Looks at all tags covering the position (x, y) in the text view,

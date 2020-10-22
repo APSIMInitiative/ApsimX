@@ -40,7 +40,6 @@ namespace UserInterface.Views
         public event EventHandler<DelArcEventArgs> DelArc;
 
         private Paned vpaned1 = null;
-        private ComboBox combobox1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 
@@ -55,17 +54,10 @@ namespace UserInterface.Views
         private Entry descEntry = null;
         private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
-        private CheckButton chkVerbose;
         private HPaned hpaned1;
         private HPaned hpaned2;
 
         private Box ctxBox = null;
-
-        /// <summary>
-        /// Contains the settings such as initial state,
-        /// paddocks for which the rotation is enabled, etc.
-        /// </summary>
-        private Table settingsBox = null;
         private Menu ContextMenu = new Menu();
 
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
