@@ -171,6 +171,7 @@ namespace UserInterface.Views
             {
                 case PropertyType.MultiLineText:
                     TextView editor = new TextView();
+                    editor.SizeAllocated += OnTextViewSizeAllocated;
                     string text = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.CurrentCulture);
                     editor.Buffer.Text = text ?? "";
                     originalEntryText[property.ID] = text;
@@ -245,6 +246,28 @@ namespace UserInterface.Views
             // the property changed event, despite the event handlers being
             // shared by multiple components.
             return component;
+        }
+
+        /// <summary>
+        /// Called when a TextView's size is allocated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnTextViewSizeAllocated(object sender, SizeAllocatedArgs args)
+        {
+            try
+            {
+                if (sender is TextView editor && propertyTable != null)
+                {
+                    Widget allocatedEntry = propertyTable.Children.FirstOrDefault(w => w is Entry && w.Allocation.Height > 0);
+                    if (allocatedEntry != null)
+                        editor.HeightRequest = Math.Max(editor.Allocation.Height, allocatedEntry.Allocation.Height);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
