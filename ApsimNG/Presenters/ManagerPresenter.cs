@@ -199,8 +199,6 @@
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
-                if (scriptModel != null)
-                    RefreshProperties();
             }
             catch (Exception err)
             {
@@ -220,6 +218,8 @@
             try
             {
                 BuildScript();
+                if (scriptModel != null)
+                    RefreshProperties();
             }
             catch (Exception err)
             {

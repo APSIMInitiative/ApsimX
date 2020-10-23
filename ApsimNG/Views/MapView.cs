@@ -28,6 +28,46 @@
     using ExposeEventArgs = Gtk.DrawnArgs;
     using StateType = Gtk.StateFlags;
 #endif
+    using SharpMap.Rendering;
+
+    /// <summary>
+    /// Describes an interface for an axis view.
+    /// </summary>
+    interface IMapView
+    {
+        /// <summary>
+        /// Invoked when the zoom level or map center is changed
+        /// </summary>
+        event EventHandler ViewChanged;
+
+        /// <summary>Show the map</summary>
+        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
+
+        /// <summary>Export the map to an image.</summary>
+        System.Drawing.Image Export();
+
+        /// <summary>
+        /// Get or set the zoom factor of the map
+        /// </summary>
+        double Zoom { get; set; }
+
+        /// <summary>
+        /// Get or set the center position of the map
+        /// </summary>
+        Models.Map.Coordinate Center { get; set; }
+
+        /// <summary>
+        /// Store current position and zoom settings
+        /// </summary>
+        void StoreSettings();
+
+        /// <summary>
+        /// Hide zoom controls.
+        /// </summary>
+        void HideZoomControls();
+
+        IGridView Grid { get; }
+    }
 
     public class MapView : ViewBase, IMapView
     {
@@ -105,28 +145,6 @@
         public event EventHandler ViewChanged;
 
         /// <summary>
-        /// Called when the user wants to preview docs.
-        /// </summary>
-        /// <remarks>
-        /// Could be refactored out?
-        /// </remarks>
-        public event EventHandler PreviewDocs;
-
-        static MapView()
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
-            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
-            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
-            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-            SharpMap.Session.Instance
-            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
-            .SetCoordinateSystemServices(css)
-            .SetCoordinateSystemRepository(css);
-        }
-
-        /// <summary>
         /// Constructor. Initialises the widget and will show a world
         /// map with no markers until <see cref="ShowMap" /> is called.
         /// </summary>
@@ -194,6 +212,9 @@
             countryNames.LabelColumn = "Name";
             countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
             countryNames.Style = new LabelStyle();
+            countryNames.Style.CollisionDetection = true;
+            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
+            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
             //^countryNames.Style.BackColor = new SolidBrush(foreground);
             countryNames.Style.ForeColor = foreground;
             //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
@@ -366,7 +387,6 @@
                     double dx = lon - mouseAtDragStart.Longitude;
 
                     map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
-                    Console.WriteLine($"Moving to (lat={map.Center.Y}, lon={map.Center.X})");
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }

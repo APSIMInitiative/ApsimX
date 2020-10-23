@@ -86,7 +86,7 @@ namespace UserInterface.Interfaces
         /// Gets or sets the current location of the caret (column and line)
         /// </summary>
         System.Drawing.Rectangle Location { get; set; }
-
+        
         /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
@@ -137,5 +137,8 @@ namespace UserInterface.Interfaces
         /// Redraws the text editor.
         /// </summary>
         void Refresh();
+
+        /// <summary>Gets or sets the widget visibility.</summary>
+        bool Visible { get; set; }
     }
 }

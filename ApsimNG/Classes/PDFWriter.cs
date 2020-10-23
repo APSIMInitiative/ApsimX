@@ -432,59 +432,61 @@
                 }
                 else if (tag is AutoDocumentation.ModelView)
                 {
-                    AutoDocumentation.ModelView modelView = tag as AutoDocumentation.ModelView;
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    if (viewName != null && presenterName != null)
+                    try
                     {
-                        ViewBase owner = ViewBase.MasterView as ViewBase;
-                        if (viewName.ToString() == "UserInterface.Views.MapView")
-                            owner = null;
-
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
-                        IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
-
-                        if (view != null && presenter != null)
+                        AutoDocumentation.ModelView modelView = tag as AutoDocumentation.ModelView;
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                        if (viewName != null && presenterName != null)
                         {
-                            explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                            presenter.Attach(modelView.model, view, explorerPresenter);
+                            ViewBase owner = ViewBase.MasterView as ViewBase;
+                            if (viewName.ToString() == "UserInterface.Views.MapView")
+                                owner = null;
 
-                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                            popupWin.SetSizeRequest(700, 700);
-                            popupWin.Add(view.MainWidget);
+                            ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
+                            IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
-                            if (view is IMapView map)
-                                map.HideZoomControls();
-
-                            popupWin.ShowAll();
-
-                            while (Gtk.Application.EventsPending())
-                                Gtk.Application.RunIteration();
-                            string pngFileName;
-#if NETFRAMEWORK
-                            // From MapView:
-                            // With WebKit, it appears we need to give it time to actually update the display
-                            // Really only a problem with the temporary windows used for generating documentation
-                            if (view is MapView mapView)
+                            if (view != null && presenter != null)
                             {
-                                var watch = new System.Diagnostics.Stopwatch();
-                                watch.Start();
-                                while (watch.ElapsedMilliseconds < 1000)
+                                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                                presenter.Attach(modelView.model, view, explorerPresenter);
+
+                                Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                                popupWin.SetSizeRequest(700, 700);
+                                popupWin.Add(view.MainWidget);
+
+                                if (view is IMapView map)
+                                    map.HideZoomControls();
+
+                                popupWin.ShowAll();
+
+                                while (Gtk.Application.EventsPending())
                                     Gtk.Application.RunIteration();
-                                Image img = mapView.Export();
-                                pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-                                if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
-                                    img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
-                                img.Save(pngFileName);
+
+                                // From MapView:
+                                // With WebKit, it appears we need to give it time to actually update the display
+                                // Really only a problem with the temporary windows used for generating documentation
+                                string pngFileName;
+                                if (view is MapView mapView)
+                                {
+                                    Image img = mapView.Export();
+                                    pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                                    if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
+                                        img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
+                                    img.Save(pngFileName);
+                                }
+                                else
+                                    pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+                                section.AddImage(pngFileName);
+                                presenter.Detach();
+                                view.MainWidget.Destroy();
+                                popupWin.Destroy();
                             }
-                            else
-#endif
-                                pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
-                            section.AddImage(pngFileName);
-                            presenter.Detach();
-                            view.MainWidget.Cleanup();
-                            popupWin.Cleanup();
                         }
+                    }
+                    catch (Exception err)
+                    {
+                        Console.WriteLine(err);
                     }
                 }
             }

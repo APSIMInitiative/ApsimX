@@ -125,6 +125,10 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.CommandHistory = new CommandHistory();
+            // When the user undoes/redoes something we want to select the affected
+            // model. Therefore we can use the same callback for both events.
+            this.CommandHistory.OnUndo += OnUndoRedo;
+            this.CommandHistory.OnRedo += OnUndoRedo;
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
@@ -147,6 +151,27 @@
         }
 
         /// <summary>
+        /// Called after undoing/redoing a command.
+        /// Selects the model which was affected by the command.
+        /// </summary>
+        /// <param name="affectedModel">The model which was affected by the command.</param>
+        /// <remarks>
+        /// When the user undoes/redoes something we want to select the affected
+        /// model. Therefore this callback is used for both undo and redo operations.
+        /// </remarks>
+        public void OnUndoRedo(IModel model)
+        {
+            Refresh();
+            if (model != null)
+            {
+                if (ApsimXFile.FindAllDescendants().Contains(model))
+                    SelectNode(model);
+                else if (model.Parent != null && ApsimXFile.FindAllDescendants().Contains(model.Parent))
+                    SelectNode(model.Parent);
+            }
+        }
+
+        /// <summary>
         /// Refresh the view.
         /// </summary>
         public void Refresh()
@@ -161,6 +186,8 @@
             {
                 if (File.Exists(ApsimXFile.FileName))
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+                CommandHistory.OnRedo -= OnUndoRedo;
+                CommandHistory.OnUndo -= OnUndoRedo;
             }
             catch
             {
@@ -333,6 +360,7 @@
         public void SelectNode(string nodePath)
         {
             this.view.Tree.SelectedNode = nodePath;
+            while (GLib.MainContext.Iteration());
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
         }
@@ -598,7 +626,7 @@
                         MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                         if (checkMethod != null)
                         {
-                            desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
+                                desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
@@ -727,7 +755,7 @@
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                     else
                     {
-                        var view = new HTMLView(this.view as ViewBase);
+                        var view = new MarkdownView(this.view as ViewBase);
                         var presenter = new DocumentationPresenter();
                         ShowInRightHandPanel(model, view, presenter);
                     }
@@ -886,9 +914,6 @@
             // If an exception is thrown while loding the view, this
             // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
-
-            Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            CommandHistory.Add(selectCommand, false);
         }
 
         /// <summary>A node has begun to be dragged.</summary>

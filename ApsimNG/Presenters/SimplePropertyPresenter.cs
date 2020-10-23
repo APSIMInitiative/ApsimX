@@ -1,6 +1,7 @@
 using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -168,18 +169,29 @@ namespace UserInterface.Presenters
             PropertyInfo property = propertyMap[args.ID].Property;
             object changedObject = propertyMap[args.ID].Model;
 
+            object newValue = args.NewValue;
+
+            // When using a multi-line text editor for an IEnumerable property, the
+            // new value returned from the view will contain the enumerable with one
+            // element per line. The 'canonical' form of an enumerable as recognised by
+            // the StringToObject function is csv. Therefore we need to convert from
+            // lf-separated elements to comma-separated elements. This should probably
+            // occur somewhere else.
+            DisplayAttribute attrib;
+            if (newValue is string str && property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && (attrib = property.GetCustomAttribute<DisplayAttribute>()) != null && attrib.Type == DisplayType.MultiLineText)
+                newValue = string.Join(",", str.Split(Environment.NewLine.ToCharArray()));
+
             // In some cases, the new value passed back from the view may be
             // already of the correct type. For example a boolean property
             // is editable via a checkbutton, so the view will return a bool.
             // However, most numbers are just rendered using an entry widget,
             // so the value from the view will be a string (e.g. 1e-6).
-            object newValue = args.NewValue;
             if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
             {
                 if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
                     newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
                 else
-                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue, CultureInfo.CurrentCulture);
+                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)newValue, CultureInfo.CurrentCulture);
             }
 
             // Update the model.

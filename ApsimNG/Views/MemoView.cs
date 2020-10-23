@@ -128,7 +128,10 @@ namespace UserInterface.Views
         public string MemoText
         {
             get { return TextView.Buffer.Text; }
-            set { TextView.Buffer.Text = value; }
+            set 
+            {
+                TextView.Buffer.Text = value;
+            }
         }
 
         /// <summary>

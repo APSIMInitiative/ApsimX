@@ -43,6 +43,9 @@ namespace Utility
         private IModel replaceNode;
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
+        private ScrolledWindow scroller;
+        private VBox vbox1;
+        VBox dialogVBox;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -56,6 +59,10 @@ namespace Utility
         {
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            dialogVBox = (VBox)builder.GetObject("dialog-vbox1");
+            scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
             radioWorld = (RadioButton)builder.GetObject("radioWorld");
             entryLatitude = (Entry)builder.GetObject("entryLatitude");
@@ -81,6 +88,23 @@ namespace Utility
             btnGetLocation.Clicked += BtnGetLocation_Clicked;
             btnGetPlacename.Clicked += BtnGetPlacename_Clicked;
             btnBrowse.Clicked += BtnBrowse_Clicked;
+        }
+
+        private void OnSizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            try
+            {
+                if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
+                {
+                    dialog1.DefaultHeight = vbox1.Allocation.Height + dialogVBox.Allocation.Height;
+                    dialog1.DefaultWidth = vbox1.Allocation.Width + 20;
+                    scroller.SizeAllocated -= OnSizeAllocated;
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         private void BtnBrowse_Clicked(object sender, EventArgs e)

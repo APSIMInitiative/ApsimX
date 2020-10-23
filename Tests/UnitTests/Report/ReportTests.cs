@@ -477,16 +477,18 @@
         [Test]
         public void TestArraySpecification()
         {
-            var model = new MockModel() { Z = new double[] { 1, 2, 3 } };
+            var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 } };
             simulation.Children.Add(model);
             Utilities.InitialiseModel(simulation);
 
-            report.VariableNames = new string[] { "[MockModel].Z[3]" };
+            report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
             Assert.IsNull(runner.Run());
 
             Assert.AreEqual(storage.Get<double>("MockModel.Z(3)"),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
+            Assert.AreEqual(storage.Get<double>("MockModel.Z(10)"),
+                            new double[] { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 });
         }
 
         /// <summary>

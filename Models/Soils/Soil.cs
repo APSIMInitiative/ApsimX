@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils
 {
     using Models.Core;
+    using Models.Soils.Standardiser;
     using System;
 
     /// <summary>
@@ -107,5 +108,14 @@
         [Summary]
         [Description("Comments")]
         public string Comments { get; set; }
+
+        /// <summary>Event handler to perform error checks at start of simulation.</summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Event data.</param>
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
+        {
+            SoilChecker.Check(this);
+        }
     }
 }

@@ -50,6 +50,12 @@
             xmlOrJson = textToAdd;
         }
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToAdd;
+
         /// <summary>Perform the command</summary>
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)

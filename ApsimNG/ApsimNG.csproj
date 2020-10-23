@@ -62,6 +62,7 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
     <PackageReference Include="SharpMap" Version="1.2.0-pre.185420022" />
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
+    <PackageReference Include="BruTile" Version="0.7.4.4" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->

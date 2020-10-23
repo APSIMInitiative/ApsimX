@@ -91,7 +91,14 @@ namespace Models.Core
         /// <summary>
         /// A CLEM pasture data reader.
         /// </summary>
-        CLEMPastureFileReader
+        CLEMPastureFileReader,
+
+        /// <summary>
+        /// Only valid on an array property. Uses an multi-line
+        /// text editor. Each line of input is treated as an
+        /// element in the array.
+        /// </summary>
+        MultiLineText,
     }
 
     /// <summary>

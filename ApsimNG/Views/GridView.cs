@@ -1629,7 +1629,7 @@
             // runs a message loop. This is normally desirable, but in this case, we have lots
             // of events associated with the grid data, and it's best to let them be handled in the 
             // main message loop. 
-            if (MasterView.MainWindow != null)
+            if (MasterView?.MainWindow != null)
                 MasterView.MainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedColView.Visible = false;
@@ -1752,7 +1752,7 @@
 
             UpdateControls();
 
-            if (MasterView.MainWindow != null)
+            if (MasterView?.MainWindow != null)
                 MasterView.MainWindow.Cursor = null;
         }
 
@@ -2626,7 +2626,6 @@
                 return;
             if (!view.IsRealized)
                 Console.WriteLine($"Unable to select cell: treeview has not been realized");
-            Console.WriteLine($"Selecting cell ({row}, {column}) in {(startEdit ? "Edit" : "Read")} mode");
             view.SetCursor(path, col, startEdit);
             view.ScrollToCell(path, col, false, 0, 1);
             selectedCellRowIndex = row;
