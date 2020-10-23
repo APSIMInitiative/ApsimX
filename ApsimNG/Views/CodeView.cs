@@ -14,7 +14,7 @@ namespace UserInterface.Views
     using Intellisense;
     using Interfaces;
     using GtkSource;
-    using global::UserInterface.Extensions;
+    using Extensions;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
@@ -239,6 +239,21 @@ namespace UserInterface.Views
             }
         }
 
+        public bool Visible
+        {
+            get
+            {
+                return textEditor.Visible;
+            }
+            set
+            {
+                if (value)
+                    textEditor.ShowAll();
+                else
+                    textEditor.Hide();
+            }
+        }
+
         public string Language
         {
             get
@@ -251,15 +266,28 @@ namespace UserInterface.Views
             }
         }
 
+        public EditorView() : base() { }
+
         /// <summary>
         /// Default constructor that configures the Completion form.
         /// </summary>
         /// <param name="owner">The owner view</param>
         public EditorView(ViewBase owner) : base(owner)
         {
+            textEditor = new SourceView();
+            InitialiseWidget();
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            base.Initialise(ownerView, gtkControl);
+            InitialiseWidget();
+        }
+
+        private void InitialiseWidget()
+        {
             scroller = new ScrolledWindow();
 
-            textEditor = new SourceView();
             textEditor.Monospace = true;
             textEditor.HighlightCurrentLine = true;
             textEditor.AutoIndent = true;

@@ -65,7 +65,6 @@
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             if (view != null)
             {
-                view.PreviewDocs -= OnPreviewDocs;
                 this.view.StoreSettings();
                 this.view.ViewChanged -= this.OnViewChanged;
             }

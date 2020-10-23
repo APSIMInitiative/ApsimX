@@ -26,6 +26,7 @@
   
   <ItemGroup>
     <Compile Remove="Importer\**" />
+    <Compile Remove="Resources\**\*.cs" />
     <EmbeddedResource Remove="Importer\**" />
     <None Remove="Importer\**" />
   </ItemGroup>

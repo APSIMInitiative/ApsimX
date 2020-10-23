@@ -14,12 +14,6 @@ namespace UserInterface.Interfaces
         /// </summary>
         event EventHandler ViewChanged;
 
-        /// <summary>
-        /// Invoked when the user wants to preview the map as it will appear
-        /// in the autodocs.
-        /// </summary>
-        event EventHandler PreviewDocs;
-
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 

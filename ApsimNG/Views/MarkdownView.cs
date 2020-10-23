@@ -13,6 +13,11 @@ using Microsoft.Toolkit.Parsers.Markdown;
 using Microsoft.Toolkit.Parsers.Markdown.Blocks;
 using Microsoft.Toolkit.Parsers.Markdown.Inlines;
 using Models.Core;
+using UserInterface.Extensions;
+
+#if NETCOREAPP
+using StateType = Gtk.StateFlags;
+#endif
 
 namespace UserInterface.Views
 {
@@ -45,7 +50,7 @@ namespace UserInterface.Views
         {
             VBox box = new VBox();
             TextView child = new TextView();
-            box.PackStart(child);
+            box.PackStart(child, true, true, 0);
             Initialise(owner, box);
         }
 
@@ -293,7 +298,9 @@ namespace UserInterface.Views
 
                 var eventBox = new EventBox();
                 eventBox.Visible = true;
+#if NETFRAMEWORK
                 eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+#endif
                 eventBox.Add(image);
 
                 container.Add(eventBox);
@@ -543,7 +550,7 @@ namespace UserInterface.Views
             public LinkTag(string url) : base(url)
             {
                 URL = url;
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.Style.Background(StateType.Selected);
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.GetBackgroundColour(StateType.Selected);
                 Underline = Pango.Underline.Single;
             }
         }
