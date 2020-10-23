@@ -91,7 +91,12 @@ namespace Models.Core
         /// <summary>
         /// A CLEM pasture data reader.
         /// </summary>
-        CLEMPastureFileReader
+        CLEMPastureFileReader,
+
+        /// <summary>
+        /// A CLEM resource data reader.
+        /// </summary>
+        CLEMResourceFileReader
     }
 
     /// <summary>
