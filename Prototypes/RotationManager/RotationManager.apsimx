@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 307,
-  "Version": 117,
+  "Version": 118,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -584,8 +584,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -826,6 +826,7 @@
                 }
               ],
               "InitialState": "initial",
+              "Verbose": true,
               "Name": "RotationManager",
               "Children": [],
               "IncludeInDocumentation": true,

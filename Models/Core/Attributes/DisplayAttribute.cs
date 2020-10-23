@@ -96,7 +96,13 @@ namespace Models.Core
         /// <summary>
         /// A CLEM resource data reader.
         /// </summary>
-        CLEMResourceFileReader
+        CLEMResourceFileReader,
+
+        /// Only valid on an array property. Uses an multi-line
+        /// text editor. Each line of input is treated as an
+        /// element in the array.
+        /// </summary>
+        MultiLineText
     }
 
     /// <summary>

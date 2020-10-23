@@ -20,6 +20,12 @@
         /// <summary>The model was moved</summary>
         private bool modelWasMoved;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToMove;
+
         /// <summary>Constructor.</summary>
         /// <param name="explorerView">The explorer view.</param>
         /// <param name="modelToMove">The model to move.</param>

@@ -1,10 +1,12 @@
 namespace UserInterface.Classes
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.LifeCycle;
@@ -184,7 +186,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
-                    MethodInfo method = model.GetType().GetMethod(methodName);
+                    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                    MethodInfo method = model.GetType().GetMethod(methodName, flags);
                     DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
@@ -255,6 +258,11 @@ namespace UserInterface.Classes
                     }
                     else
                         throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
+                case DisplayType.MultiLineText:
+                    DisplayMethod = PropertyType.MultiLineText;
+                    if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
+                        Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
+                    break;
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
                 default:

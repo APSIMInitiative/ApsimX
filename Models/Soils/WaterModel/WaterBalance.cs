@@ -179,16 +179,6 @@
         [Description("Cover for max curve number reduction")]
         public double CNCov { get; set; } = 0.8;
 
-        /// <summary>Slope of the catchment area for lateral flow calculations.</summary>
-        /// <remarks>
-        /// DSG: The units of slope are metres/metre.  Hence a slope = 0 means horizontal soil layers, and no lateral flows will occur.
-        /// A slope = 1 means basically a 45 degree angle slope, which we thought would be the most anyone would be wanting to simulate.  Hence the bounds 0-1.  I still think this is fine.
-        /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Caption("Slope")]
-        [Description("Slope of the catchment area for lateral flow calculations")]
-        public double Slope { get; set; } = 0.5;
-
         /// <summary>Basal width of the downslope boundary of the catchment for lateral flow calculations (m).</summary>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]
         [Units("m")]

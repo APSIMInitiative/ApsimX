@@ -86,15 +86,15 @@ namespace UserInterface.Presenters
         /// <summary>The variable names have changed in the view.</summary>
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
-            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
         }
 
         /// <summary>The event names have changed in the view.</summary>
         void OnEventNamesChanged(object sender, EventArgs e)
         {
-            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
         }
 
         /// <summary>The model has changed so update our view.</summary>

@@ -22,6 +22,7 @@
     using Gtk;
     using Utility;
     using SharpMap.Data;
+    using SharpMap.Rendering;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -202,6 +203,9 @@
             countryNames.LabelColumn = "Name";
             countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
             countryNames.Style = new LabelStyle();
+            countryNames.Style.CollisionDetection = true;
+            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
+            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
             //^countryNames.Style.BackColor = new SolidBrush(foreground);
             countryNames.Style.ForeColor = foreground;
             //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
@@ -369,7 +373,6 @@
                     double dx = lon - mouseAtDragStart.Longitude;
 
                     map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
-                    Console.WriteLine($"Moving to (lat={map.Center.Y}, lon={map.Center.X})");
                     RefreshMap();
                     ViewChanged?.Invoke(this, EventArgs.Empty);
                 }

@@ -22,6 +22,6 @@ namespace UserInterface.Views
         DropDownView SimulationDropDown { get; }
 
         /// <summary>View which displays the summary data.</summary>
-        HTMLView HtmlView { get; }
+        IMarkdownView SummaryDisplay { get; }
     }
 }

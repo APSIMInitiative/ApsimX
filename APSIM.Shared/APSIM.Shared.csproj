@@ -131,6 +131,7 @@
     <Compile Include="APSoil\APSoilUtilities.cs" />
     <Compile Include="APSoil\SoilWater.cs" />
     <Compile Include="APSoil\Water.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="JobRunning\AllCompleteArguments.cs" />
     <Compile Include="JobRunning\IRunnable.cs" />
     <Compile Include="JobRunning\IJobManager.cs" />

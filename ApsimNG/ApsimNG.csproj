@@ -239,9 +239,7 @@
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
-    <Compile Include="Commands\ReplaceModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
-    <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\BubbleChartArgs.cs" />
@@ -1077,6 +1075,14 @@
     </Reference>
     <Reference Include="SharpMap">
       <HintPath>..\packages\SharpMap.1.1.0\lib\net40-client\SharpMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BruTile">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BruTile.Desktop">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.Desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite">

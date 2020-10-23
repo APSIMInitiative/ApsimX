@@ -2,6 +2,7 @@ namespace Utility
 {
     using Gtk;
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     public static class GtkUtil
@@ -71,6 +72,30 @@ namespace Utility
             }
 
             return null;
+        }
+
+        public static IEnumerable<Widget> Descendants(this Widget widget)
+        {
+            List<Widget> descendants = new List<Widget>();
+            if (widget is Container container)
+            {
+                foreach (Widget child in container.Children)
+                {
+                    descendants.Add(child);
+                    descendants.AddRange(child.Descendants());
+                }
+            }
+            return descendants;
+        }
+
+        public static IEnumerable<Widget> Ancestors(this Widget widget)
+        {
+            Widget parent = widget?.Parent;
+            while (parent != null)
+            {
+                yield return parent;
+                parent = parent.Parent;
+            }
         }
     }
 }
