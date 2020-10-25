@@ -281,6 +281,7 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
+            textEditor = new SourceView();
             InitialiseWidget();
         }
 

@@ -63,7 +63,7 @@
             mainControl.PackStart(buttonContainer, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
             Widget summaryWidget = ((ViewBase)SummaryDisplay).MainWidget as Widget;
-            if (summaryWidget is Container container && container.Children != null && container.Children.Length == 1 && container.Children[0] is TextView editor)
+            if (summaryWidget is Container container && container.Children != null && container.Children.Length == 1 && container.Children[0] is TextView editor && editor.Parent is Container parent)
             {
                 // If possible, we want to generate a summary view which uses a single
                 // TextView widget, which will allow for easy selection/searching/copying
@@ -71,8 +71,10 @@
                 // want to add it directly to a ScrolledWindow; if we add it to another
                 // container (e.g. Box) then add the Box to the container, some of the
                 // TextView functionality (scroll_to_iter()) will not work.
-                summaryWidget = new ScrolledWindow();
-                editor.Reparent(summaryWidget);
+                ScrolledWindow scroller = new ScrolledWindow();
+                summaryWidget = scroller;
+                parent.Remove(editor);
+                scroller.Add(editor);
                 editor.WrapMode = WrapMode.None;
             }
             mainControl.PackEnd(summaryWidget, true, true, 0);

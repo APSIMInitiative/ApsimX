@@ -479,8 +479,8 @@
                                     pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                                 section.AddImage(pngFileName);
                                 presenter.Detach();
-                                view.MainWidget.Destroy();
-                                popupWin.Destroy();
+                                view.MainWidget.Cleanup();
+                                popupWin.Cleanup();
                             }
                         }
                     }

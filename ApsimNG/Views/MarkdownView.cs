@@ -242,9 +242,15 @@ namespace UserInterface.Views
         /// <param name="table"></param>
         private void DisplayTable(ref TextIter insertPos, TableBlock table)
         {
+#if NETFRAMEWORK
             Table tableWidget = new Table((uint)table.Rows.Count(), (uint)table.ColumnDefinitions.Count(), false);
-            for (uint i = 0; i < table.Rows.Count(); i++)
-                for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
+            uint i, j;
+#else
+            Grid tableWidget = new Grid();
+            int i, j;
+#endif
+            for (i = 0; i < table.Rows.Count(); i++)
+                for (j = 0; j < table.ColumnDefinitions.Count(); j++)
                 {
                     var cell = table.Rows[(int)i].Cells[(int)j];
                     string text = cell.Inlines.FirstOrDefault()?.ToString();
@@ -294,7 +300,10 @@ namespace UserInterface.Views
 
             if (image != null)
             { 
-                image.SetAlignment(0, 0);
+                image.Xalign = 0;
+                image.Yalign = 0;
+                // image.Halign = 0;
+                // image.Valign = 0;
 
                 var eventBox = new EventBox();
                 eventBox.Visible = true;

@@ -154,7 +154,7 @@
         /// Called after undoing/redoing a command.
         /// Selects the model which was affected by the command.
         /// </summary>
-        /// <param name="affectedModel">The model which was affected by the command.</param>
+        /// <param name="model">The model which was affected by the command.</param>
         /// <remarks>
         /// When the user undoes/redoes something we want to select the affected
         /// model. Therefore this callback is used for both undo and redo operations.
