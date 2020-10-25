@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
@@ -212,7 +213,7 @@ namespace UserInterface.Views
                 else if (inline is CodeInline codeInline)
                     textView.Buffer.InsertWithTags(ref insertPos, codeInline.Text, GetTags("Normal", indent + 1));
                 else if (inline is ImageInline imageInline)
-                    DisplayImage(imageInline.Url, ref insertPos);
+                    DisplayImage(imageInline.Url, imageInline.Tooltip, ref insertPos);
                 else if (inline is SubscriptTextInline subscript)
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
                 else if (inline is SuperscriptTextInline superscript)
@@ -268,17 +269,14 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="url">The url of the image.</param>
         /// <param name="insertPos">The text iterator insert position.</param>
-        private void DisplayImage(string url, ref TextIter insertPos)
+        private void DisplayImage(string url, string tooltip, ref TextIter insertPos)
         {
             // Convert relative paths in url to absolute.
             string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
 
             Gtk.Image image = null;
-            if (System.IO.File.Exists(absolutePath))
-            {
-                var pix = new Pixbuf(absolutePath);
-                image = new Gtk.Image(pix);
-            }
+            if (File.Exists(absolutePath))
+                image = new Gtk.Image(absolutePath);
             else
             {
                 string imagePath = "ApsimNG.Resources." + url;
@@ -290,6 +288,8 @@ namespace UserInterface.Views
             if (image != null)
             { 
                 image.SetAlignment(0, 0);
+                if (!string.IsNullOrWhiteSpace(tooltip))
+                    image.TooltipText = tooltip;
 
                 var eventBox = new EventBox();
                 eventBox.Visible = true;
