@@ -6,6 +6,7 @@
     using System;
     using System.Windows.Forms;
     using Microsoft.Azure.Batch.Protocol.BatchRequests;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -45,7 +46,7 @@
             textView = (view as ViewBase).GetControl<EditorView>("textEditor");
             editButton = (view as ViewBase).GetControl<ButtonView>("editButton");
             helpButton = (view as ViewBase).GetControl<ButtonView>("helpButton");
-
+            helpButton.Clicked += HelpBtnClicked;
             textView.Mode = EditorType.Other;
             textView.Visible = false;
             textView.Text = memoModel.Text;
@@ -55,6 +56,41 @@
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
             //this.memoViewer.SetContents(this.memoModel.Text, true);
+        }
+
+        private void HelpBtnClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                string url = "https://apsimnextgeneration.netlify.com/usage/memo/";
+                if (ProcessUtilities.CurrentOS.IsLinux)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.StartInfo.FileName = "xdg-open";
+                    process.StartInfo.Arguments = url;
+                    process.Start();
+                }
+                else if (ProcessUtilities.CurrentOS.IsMac)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = "open";
+                    process.StartInfo.Arguments = url;
+                    process.Start();
+                }
+                else
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.StartInfo.FileName = url;
+                    process.Start();
+                }
+                // Forms.HelpForm form = Forms.HelpForm.GetHelpForm();
+                // form.Show("https://apsimnextgeneration.netlify.com/usage/memo/");
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>User has changed the text.</summary>
@@ -88,6 +124,7 @@
         public void Detach()
         {
             editButton.Clicked -= OnEditButtonClick;
+            helpButton.Clicked -= HelpBtnClicked;
             memoModel.Text = textView.Text;
             //try
             //{
