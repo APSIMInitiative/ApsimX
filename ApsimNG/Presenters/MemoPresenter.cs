@@ -84,8 +84,6 @@
                     process.StartInfo.FileName = url;
                     process.Start();
                 }
-                // Forms.HelpForm form = Forms.HelpForm.GetHelpForm();
-                // form.Show("https://apsimnextgeneration.netlify.com/usage/memo/");
             }
             catch (Exception err)
             {
