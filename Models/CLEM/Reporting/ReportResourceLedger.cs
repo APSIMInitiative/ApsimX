@@ -136,8 +136,8 @@ namespace Models.CLEM.Reporting
                                 // add pricing
                                 if (pricingIncluded)
                                 {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$gain\",\"gain\") as Price_Gain");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$loss\",\"loss\") as Price_Loss");
                                 }
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
@@ -260,7 +260,7 @@ namespace Models.CLEM.Reporting
                     {
                         valuesToWrite.Add(columns[i].GetValue(groupIndex));
                     }
-                    catch// (Exception err)
+                    catch
                     {
                         // Should we include exception message?
                         invalidVariables.Add(columns[i].Name);
