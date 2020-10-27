@@ -20,6 +20,7 @@ namespace UserInterface.Views
     /// - use IDs not names?
     /// - refactor the mechanism used to generate a unique name for new nodes/arcs.
     /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
+    /// - should use property presenter rather than manually handle properties like InitialState.
     /// </remarks>
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
@@ -38,11 +39,7 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user deletes an arc</summary>
         public event EventHandler<DelArcEventArgs> DelArc;
 
-        /// <summary> Invoked when the user changes the initial state. </summary>
-        public event EventHandler<InitialStateEventArgs> OnInitialStateChanged;
-
         private Paned vpaned1 = null;
-        private ComboBox combobox1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 
@@ -57,22 +54,20 @@ namespace UserInterface.Views
         private Entry descEntry = null;
         private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
-
         private HPaned hpaned1;
         private HPaned hpaned2;
 
         private Box ctxBox = null;
-
-        /// <summary>
-        /// Contains the settings such as initial state,
-        /// paddocks for which the rotation is enabled, etc.
-        /// </summary>
-        private VBox settingsBox = null;
         private Menu ContextMenu = new Menu();
 
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
         private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Properties editor.
+        /// </summary>
+        public IPropertyView PropertiesView { get; private set; }
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
@@ -170,19 +165,24 @@ namespace UserInterface.Views
             //ctxBox.PackStart(infoWdgt, true, true, 0);
             //vbox1.PackStart(ctxBox, false, false, 0);
 
-            settingsBox = new VBox();
-            //settingsBox.PackStart(new Label("Initial State"), false, false, 0);
-            combobox1 = new ComboBox();
-            combobox1.PackStart(comboRender, false);
-            combobox1.AddAttribute(comboRender, "text", 0);
-            combobox1.Model = comboModel;
-            settingsBox.PackStart(combobox1, false, false, 0);
+            PropertiesView = new PropertyView(this);
+            // settingsBox = new Table(2, 2, false);
+            // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            // combobox1 = new ComboBox();
+            // combobox1.PackStart(comboRender, false);
+            // combobox1.AddAttribute(comboRender, "text", 0);
+            // combobox1.Model = comboModel;
+            // settingsBox.Attach(combobox1, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
+            // chkVerbose = new CheckButton();
+            // chkVerbose.Toggled += OnToggleVerboseMode;
+            // settingsBox.Attach(new Label("Verbose Mode"), 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            // settingsBox.Attach(chkVerbose, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             hpaned1 = new HPaned();
             hpaned2 = new HPaned();
-            Frame frame1 = new Frame("Initial State");
-            frame1.Add(settingsBox);
+            Frame frame1 = new Frame("Rotation Settings");
+            frame1.Add(((ViewBase)PropertiesView).MainWidget);
             frame1.ShadowType = ShadowType.In;
             Frame frame2 = new Frame();
             frame2.Add(hpaned2);
@@ -206,7 +206,7 @@ namespace UserInterface.Views
 
             graphView.OnGraphObjectSelected += OnGraphObjectSelected;
             graphView.OnGraphObjectMoved += OnGraphObjectMoved;
-            combobox1.Changed += OnComboBox1SelectedValueChanged;
+            //combobox1.Changed += OnComboBox1SelectedValueChanged;
 
             contextMenuHelper = new ContextMenuHelper(graphView.MainWidget);
             contextMenuHelper.ContextMenu += OnPopup;
@@ -251,42 +251,12 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The initial state of the simulation is in a combobox. Allow simple get/set access.
-        /// </summary>
-        public string InitialState
-        {
-            get
-            {
-                if (combobox1.GetActiveIter(out TreeIter iter))
-                    return (string)combobox1.Model.GetValue(iter, 0);
-                return null;
-            }
-            set
-            {
-                if (combobox1.Model.GetIterFirst(out TreeIter iter))
-                do
-                {
-                    GLib.Value thisRow = new GLib.Value();
-                    combobox1.Model.GetValue(iter, 0, ref thisRow);
-                    if ((thisRow.Val as string).Equals(value))
-                    {
-                        combobox1.Changed -= OnComboBox1SelectedValueChanged;
-                        combobox1.SetActiveIter(iter);
-                        combobox1.Changed += OnComboBox1SelectedValueChanged;
-                        break;
-                    }
-                } while (combobox1.Model.IterNext(ref iter));
-            }
-        }
-
-        /// <summary>
         /// Set the graph in the view.
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
         public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
         {
-            string lastSelected = InitialState;
             rules.Clear();
             actions.Clear();
             nodeDescriptions.Clear();
@@ -307,7 +277,6 @@ namespace UserInterface.Views
                 graph.AddArc(arc);
             });
             graphView.DirectedGraph = graph;
-            InitialState = lastSelected;
             graphView.MainWidget.QueueDraw();
         }
 
@@ -435,7 +404,6 @@ namespace UserInterface.Views
 
                 graphView.OnGraphObjectSelected -= OnGraphObjectSelected;
                 graphView.OnGraphObjectMoved -= OnGraphObjectMoved;
-                combobox1.Changed -= OnComboBox1SelectedValueChanged;
 
                 contextMenuHelper.ContextMenu -= OnPopup;
 
@@ -651,27 +619,6 @@ namespace UserInterface.Views
             try
             {
                 Select(args.Object1?.Name);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// The selected item in the combo box has changed.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnComboBox1SelectedValueChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (combobox1.GetActiveIter(out TreeIter iter))
-                {
-                    string selectedText = (string)combobox1.Model.GetValue(iter, 0);
-                    OnInitialStateChanged?.Invoke(sender, new InitialStateEventArgs() { initialState = selectedText } );
-                }
             }
             catch (Exception err)
             {

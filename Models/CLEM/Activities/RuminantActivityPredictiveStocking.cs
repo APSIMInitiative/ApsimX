@@ -104,8 +104,8 @@ namespace Models.CLEM.Activities
 
             if (!destockGroupFound)
             {
-                string[] memberNames = new string[] { "Ruminant destocking group" };
-                results.Add(new ValidationResult("At least one RuminantDestockGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("At least one RuminantGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
             }
             return results;
         }

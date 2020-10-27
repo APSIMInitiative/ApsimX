@@ -53,6 +53,9 @@ namespace Utility
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         public bool Muted { get; set; }
 
+        /// <summary>Use the new property presenter?</summary>
+        public bool UseNewPropertyPresenter { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {
@@ -126,6 +129,11 @@ namespace Utility
         /// </summary>
         /// <value></value>
         public string FontName { get; set; } = "Segoe UI 11";
+
+        /// <summary>
+        /// Stores the user's preferred font for the manager script text editor.
+        /// </summary>
+        public string EditorFontName { get; set; } = "monospace 10";
 
         /// <summary>
         /// Country name used in the download soil view.

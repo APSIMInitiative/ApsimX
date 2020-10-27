@@ -12,6 +12,7 @@ using Models.Core;
 using System.Reflection;
 using UnitTests.ApsimNG.Utilities;
 using UserInterface.Classes;
+using Models.Core.ApsimFile;
 
 namespace UnitTests.ApsimNG.Views
 {
@@ -20,11 +21,21 @@ namespace UnitTests.ApsimNG.Views
     {
         private ExplorerPresenter explorerPresenter;
 
+        [Serializable]
+        [ViewName("UserInterface.Views.GridView")]
+        [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+        private class SampleModel : Model
+        {
+            [Models.Core.Description("A property")]
+            public string Text { get; set; }
+        }
+
         [OneTimeSetUp]
         public void OpenTestFileInTab()
         {
             explorerPresenter = UITestUtilities.OpenResourceFileInTab(Assembly.GetExecutingAssembly(),
                                                     "UnitTests.ApsimNG.Resources.SampleFiles.BasicSimulation.apsimx");
+            Structure.Add(new SampleModel(), explorerPresenter.ApsimXFile);
         }
 
         [OneTimeTearDown]
@@ -41,12 +52,13 @@ namespace UnitTests.ApsimNG.Views
         public void EnsureKeyPressInitiatesEditing()
         {
             // Click on clock node.
-            explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
+            explorerPresenter.SelectNode(".Simulations.Simulation.Field.Soil.Physical");
             GtkUtilities.WaitForGtkEvents();
 
-            GridView grid = explorerPresenter.CurrentRightHandView as GridView;
-            if (grid == null)
-                throw new Exception("Clock view is not a GridView");
+            ProfileView profile = explorerPresenter.CurrentRightHandView as ProfileView;
+            if (profile == null)
+                throw new Exception($"Soil.Physical view is not a ProfileView - it is a {explorerPresenter.CurrentRightHandView.GetType().Name}");
+            GridView grid = profile.ProfileGrid as GridView;
 
             // Click on top-right cell - this will be in the value column, and so will be editable.
             GtkUtilities.GetTreeViewCoordinates(grid.Grid, 0, 1, out int x, out int y);
@@ -69,12 +81,13 @@ namespace UnitTests.ApsimNG.Views
         public void EnsureDoubleClickInitiatesEditing()
         {
             // Click on clock node.
-            explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
+            explorerPresenter.SelectNode(".Simulations.Simulation.Field.Soil.Physical");
             GtkUtilities.WaitForGtkEvents();
 
-            GridView grid = explorerPresenter.CurrentRightHandView as GridView;
-            if (grid == null)
-                throw new Exception("Clock view is not a GridView");
+            ProfileView profile = explorerPresenter.CurrentRightHandView as ProfileView;
+            if (profile == null)
+                throw new Exception($"Soil.Physical view is not a ProfileView - it is a {explorerPresenter.CurrentRightHandView.GetType().Name}");
+            GridView grid = profile.ProfileGrid as GridView;
 
             // Grid should not be in edit mode at this point.
             Assert.IsFalse(grid.IsUserEditingCell);
@@ -97,12 +110,13 @@ namespace UnitTests.ApsimNG.Views
         public void EnsureArrowKeysMoveCursorInsideCell()
         {
             // Click on clock node.
-            explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
+            explorerPresenter.SelectNode(".Simulations.Simulation.Field.Soil.Physical");
             GtkUtilities.WaitForGtkEvents();
 
-            GridView grid = explorerPresenter.CurrentRightHandView as GridView;
-            if (grid == null)
-                throw new Exception("Clock view is not a GridView");
+            ProfileView profile = explorerPresenter.CurrentRightHandView as ProfileView;
+            if (profile == null)
+                throw new Exception($"Soil.Physical view is not a ProfileView - it is a {explorerPresenter.CurrentRightHandView.GetType().Name}");
+            GridView grid = profile.ProfileGrid as GridView;
 
             GtkUtilities.ClickOnGridCell(grid, 0, 1, Gdk.EventType.TwoButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, wait: true);
 

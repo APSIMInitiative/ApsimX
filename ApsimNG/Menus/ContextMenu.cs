@@ -91,8 +91,8 @@
             try
             {
                 Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
-                ICommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
-                command.Do(null);
+                RunCommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                command.Do();
             }
             catch (Exception err)
             {
@@ -425,7 +425,7 @@
                 Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                 var runner = new Runner(model, runType:typeOfRun, wait: false);
                 this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                this.command.Do(null);
+                this.command.Do();
             }
         }
 
@@ -857,15 +857,13 @@
                     explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    ICommand command;
-                    string fileNameWritten;
                     var modelToDocument = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
 
                     var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
+                    CreateFileDocumentationCommand command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    string fileNameWritten = command.FileNameWritten;
 
-                    explorerPresenter.CommandHistory.Add(command, true);
+                    command.Do();
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.

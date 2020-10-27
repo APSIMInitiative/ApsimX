@@ -2,9 +2,11 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
+    using Models.Factorial;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.Soils;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -21,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 119; } }
+        public static int LatestVersion { get { return 122; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -111,9 +113,12 @@
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    if (sample == null && initWater == null)
+                    bool res = false;
+                    if (initWater == null)
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
@@ -123,7 +128,10 @@
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
-
+                        res = true;
+                    }
+                    if (sample == null)
+                    {
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
                         JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
@@ -132,8 +140,9 @@
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["SWUnits"] = "Volumetric";
                         soilChildren.Add(sample);
-                        return true;
+                        res = true;
                     }
+                    return res;
                 }
             }
 
@@ -3126,6 +3135,79 @@
             // Rename the CERESSoilTemperature model to SoilTemperature
             foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
                 JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+        }
+
+        /// <summary>
+        /// Remove empty samples from soils.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion120(JObject root, string fileName)
+        {
+            foreach (JObject sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                if ( (sample["NO3N"] == null || !sample["NO3N"].HasValues)
+                 &&  (sample["NH4N"] == null || !sample["NH4N"].HasValues)
+                 &&  (sample["SW"]   == null || !sample["SW"].HasValues)
+                 &&  (sample["OC"]   == null || !sample["OC"].HasValues)
+                 &&  (sample["EC"]   == null || !sample["EC"].HasValues)
+                 &&  (sample["CL"]   == null || !sample["CL"].HasValues)
+                 &&  (sample["ESP"]  == null || !sample["ESP"].HasValues)
+                 &&  (sample["PH"]   == null || !sample["PH"].HasValues) )
+                {
+                    // The sample is empty. If it is not being overridden by a factor
+                    // or replacements, get rid of it.
+                    JObject expt = JsonUtilities.Ancestor(sample, typeof(Experiment));
+                    if (expt != null)
+                    {
+                        // The sample is in an experiment. If it's being overriden by a factor,
+                        // ignore it.
+                        JObject factors = JsonUtilities.ChildWithName(expt, "Factors");
+                        if (factors != null && JsonUtilities.DescendantOfType(factors, typeof(Sample)) != null)
+                            continue;
+                    }
+
+                    JObject replacements = JsonUtilities.DescendantOfType(root, typeof(Replacements));
+                    if (replacements != null && JsonUtilities.DescendantOfType(replacements, typeof(Sample)) != null)
+                        continue;
+
+                    JObject parent = JsonUtilities.Parent(sample) as JObject;
+                    string name = sample["Name"]?.ToString();
+                    if (parent != null && !string.IsNullOrEmpty(name))
+                        JsonUtilities.RemoveChild(parent, name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace all instances of PhaseBasedSwitch with PhaseLookupValues.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion121(JObject root, string fileName)
+        {
+            foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+            {
+                phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
+                Constant value = new Constant();
+                value.FixedValue = 1;
+                JsonUtilities.AddModel(phaseSwitch, value);
+            }
+        }
+
+        /// <summary>
+        /// Set maps' default zoom level to 360.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion122(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            {
+                map["Zoom"] = 360;
+                map["Center"]["Latitude"] = 0;
+                map["Center"]["Longitude"] = 0;
+            }
         }
 
         /// <summary>

@@ -55,7 +55,7 @@
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
             // Subscribe to the view's copy event.
-            summaryView.HtmlView.Copy += OnCopy;
+            //summaryView.SummaryDisplay.Copy += OnCopy;
         }
 
         private void SetSimulationNamesInView()
@@ -98,7 +98,7 @@
         public void Detach()
         {
             summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
-            summaryView.HtmlView.Copy -= OnCopy;
+            //summaryView.SummaryDisplay.Copy -= OnCopy;
             summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
             summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
             summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
@@ -107,10 +107,11 @@
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
-            StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html, darkTheme : Configuration.Settings.DarkTheme);
-            summaryView.HtmlView.SetContents(writer.ToString(), false);
-            writer.Close();
+            using (StringWriter writer = new StringWriter())
+            {
+                Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.Markdown, darkTheme : Configuration.Settings.DarkTheme);
+                summaryView.SummaryDisplay.Text = writer.ToString();
+            }
         }
 
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>

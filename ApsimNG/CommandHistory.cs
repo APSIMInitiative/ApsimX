@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Models.Core;
 using UserInterface.Commands;
+using UserInterface.Presenters;
 
 namespace UserInterface
 {
+    public delegate void Changed(bool haveUnsavedChanges);
+    public delegate void ModelChangedDelegate(object changedModel);
+    public delegate void ModelStructureChangedDelegate(IModel model);
 
     /// <summary>
     /// Simple Command history class.
     /// </summary>
+    /// <remarks>
+    /// Based on http://www.catnapgames.com/blog/2009/03/19/simple-undo-redo-system-for-csharp.html
+    /// </remarks>
     public class CommandHistory
     {
-        // Based on http://www.catnapgames.com/blog/2009/03/19/simple-undo-redo-system-for-csharp.html
-
         private List<ICommand> commands = new List<ICommand>();
         private int lastExecuted = -1;
         private int lastSaved = -1;
         private bool inUndoRedo = false;
 
-        public delegate void Changed(bool haveUnsavedChanges);
         public event Changed OnChanged = (h) => { };
-
-        public delegate void ModelChangedDelegate(object changedModel);
         public event ModelChangedDelegate ModelChanged;
-
-        public delegate void ModelStructureChangedDelegate(IModel model);
+        public event ModelStructureChangedDelegate OnUndo;
+        public event ModelStructureChangedDelegate OnRedo;
         public event ModelStructureChangedDelegate ModelStructureChanged;
 
         public void Clear()
@@ -38,7 +38,6 @@ namespace UserInterface
             OnChanged(false);
         }
 
-
         public void Save()
         {
             lastSaved = lastExecuted;
@@ -46,24 +45,20 @@ namespace UserInterface
             OnChanged(false);
         }
 
-
         public bool Modified
         {
             get { return lastSaved != lastExecuted; }
         }
-
 
         public int Size
         {
             get { return commands.Count; }
         }
 
-
         public int LastExecuted
         {
             get { return lastExecuted; }
         }
-
 
         public void Limit(int numCommands)
         {
@@ -80,7 +75,6 @@ namespace UserInterface
                 }
             }
         }
-
 
         public void Add(ICommand command, bool execute = true)
         {
@@ -118,6 +112,7 @@ namespace UserInterface
                         commands[lastExecuted].Undo(this);
                         lastExecuted--;
                         OnChanged(lastExecuted != lastSaved);
+                        OnUndo(commands[lastExecuted + 1].AffectedModel);
                     }
                     finally
                     {
@@ -137,6 +132,7 @@ namespace UserInterface
                     commands[lastExecuted + 1].Do(this);
                     lastExecuted++;
                     OnChanged(lastExecuted != lastSaved);
+                    OnRedo(commands[lastExecuted].AffectedModel);
                 }
                 finally
                 {

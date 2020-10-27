@@ -547,8 +547,8 @@
                     return true;
                 else
                 {
-                    summary.WriteMessage(this, "Defoliation will not happend because there is not enough plant material.");
-                    DaysSinceGraze = -1;
+                    summary.WriteMessage(this, "Defoliation will not happen because there is not enough plant material.");
+                    DaysSinceGraze = 0;
                 }
             }
             return false;

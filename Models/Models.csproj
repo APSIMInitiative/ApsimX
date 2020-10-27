@@ -30,7 +30,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -127,7 +127,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
@@ -158,6 +157,8 @@
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
+    <Compile Include="CLEM\Activities\ResourceActivityManageExternal.cs" />
+    <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="PMF\Phenology\CAMP\IVrn1Expression.cs" />
     <Compile Include="PMF\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\BlankManager.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="PMF\Phenology\Scales\ZadokPMFWheat.cs" />
     <Compile Include="PMF\Structure\Culm.cs" />
@@ -633,7 +635,6 @@
     <Compile Include="Functions\MinimumFunction.cs" />
     <Compile Include="Functions\MultiplyFunction.cs" />
     <Compile Include="Functions\OnEventFunction.cs" />
-    <Compile Include="Functions\PhaseBasedSwitch.cs" />
     <Compile Include="Functions\PhaseLookup.cs" />
     <Compile Include="Functions\PhaseLookupValue.cs" />
     <Compile Include="Functions\PhotoperiodDeltaFunction.cs" />

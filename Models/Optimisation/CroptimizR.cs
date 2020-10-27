@@ -49,7 +49,7 @@ namespace Models.Optimisation
     /// https://github.com/hol430/ApsimOnR
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.DualGridView")]
+    [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
@@ -147,7 +147,6 @@ namespace Models.Optimisation
         /// </summary>
         [Description("Optimization method")]
         [Display(Type = DisplayType.SubModel)]
-        [Separator("Optimization method-specific parameters")]
         public IOptimizationMethod OptimizationMethod { get; set; } = new Simplex();
 
         /// <summary>
@@ -244,7 +243,8 @@ namespace Models.Optimisation
             // If we're reading from the PredictedObserved table, need to fix
             // Predicted./Observed. suffix for the observed variables.
             string[] sanitisedObservedVariables = GetObservedVariableName().Select(x => $"'{x.Trim()}'").ToArray();
-            contents.AppendLine($"observed_variable_names <- c({string.Join(", ", sanitisedObservedVariables)}, 'Clock.Today')");
+            string dateVariable = VariableNames.Any(v => v.StartsWith("Predicted.")) ? "Predicted.Clock.Today" : "Clock.Today";
+            contents.AppendLine($"observed_variable_names <- c({string.Join(", ", sanitisedObservedVariables)}, '{dateVariable}')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
             contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");

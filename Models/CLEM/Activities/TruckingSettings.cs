@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// Number of 450kg animals per truck load
         /// </summary>
         [Description("Number of 450kg animals per truck load")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double Number450kgPerTruck { get; set; }
 
         /// <summary>

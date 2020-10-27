@@ -174,7 +174,7 @@
             string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
-                return summaryNode.InnerXml;
+                return summaryNode.InnerXml.Trim();
             return null;
         }
 
@@ -201,7 +201,7 @@
             string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
-                return summaryNode.InnerXml;
+                return summaryNode.InnerXml.Trim();
             return null;
         }
 

@@ -14,6 +14,12 @@
         private string originalName;
 
         /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToRename;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenameModelCommand"/> class.
         /// </summary>
         /// <param name="modelToRename">The model to rename.</param>

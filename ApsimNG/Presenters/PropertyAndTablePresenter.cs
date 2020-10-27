@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using Utility;
     using Views;
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
@@ -18,10 +19,10 @@
         /// <summary>The underlying model</summary>
         private IModelAsTable tableModel;
         private IntellisensePresenter intellisense;
-        private IDualGridView view;
+        private IPropertyAndGridView view;
         private ExplorerPresenter explorerPresenter;
         private DataTable table;
-        private PropertyPresenter propertyPresenter;
+        private IPresenter propertyPresenter;
         private GridPresenter gridPresenter;
 
         /// <summary>
@@ -33,7 +34,7 @@
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
             explorerPresenter = parentPresenter;
-            view = v as IDualGridView;
+            view = v as IPropertyAndGridView;
             intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
             tableModel = model as IModelAsTable;
@@ -46,9 +47,12 @@
             view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            propertyPresenter = new PropertyPresenter();
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
-            propertyPresenter.Attach(model, view.Grid1, parentPresenter);
+            propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, view.Grid2, parentPresenter);
         }

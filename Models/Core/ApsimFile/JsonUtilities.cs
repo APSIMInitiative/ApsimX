@@ -118,6 +118,16 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns the descendant of a given node of the specified type.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="type">The type of model to search for.</param>
+        public static JObject DescendantOfType(JObject node, Type type)
+        {
+            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == type.Name);
+        }
+
+        /// <summary>
         /// Returns the first child model of a given node that has the specified name.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -128,6 +138,19 @@ namespace Models.Core.ApsimFile
         {
             StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
             return Children(node).Find(child => string.Equals(Name(child), name, comparisonType));
+        }
+
+        /// <summary>
+        /// Returns the first descendant model of a given node that has the specified name.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="name">The type of children to return.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        /// <returns>The found child or null if not found.</returns>
+        public static JObject DescendantWithName(JObject node, string name, bool ignoreCase = false)
+        {
+            StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+            return ChildrenRecursively(node).Find(child => string.Equals(Name(child), name, comparisonType));
         }
 
         /// <summary>
