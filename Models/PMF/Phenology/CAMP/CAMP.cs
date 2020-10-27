@@ -1,5 +1,7 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -123,6 +125,10 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class CAMP : Model, IVrn1Expression
     {
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary summary = null;
+
         // Other Model dependencies links
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction tt = null;
@@ -164,12 +170,14 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         private double CalcdPPVrn(double Pp, double baseUR, double maxUR, double dBP)
         {
-            if (Pp <= 8.0)
-                return baseUR * dBP;
-            else if ((Pp > 8.0) && (Pp < 16.0))
-                return (baseUR + (maxUR - baseUR) * (Pp - 8) / (16 - 8)) * dBP;
-            else // (Pp >= 16.0)
-                return maxUR * dBP;
+            double LowerPP = 12.0;
+                double UpperPp = 16.0;
+                if (Pp <= LowerPP)
+                    return baseUR * dBP;
+                else if ((Pp > LowerPP) && (Pp < UpperPp))
+                    return (baseUR + (maxUR - baseUR) * (Pp - LowerPP) / (UpperPp - LowerPP)) * dBP;
+                else // (Pp >= UpperPp)
+                    return maxUR * dBP; 
         }
 
         /// <summary>
@@ -371,7 +379,7 @@ namespace Models.PMF.Phen
                     ColdVrn1 = Math.Max(0.0, ColdVrn1 + dColdVrn1);
 
                     // Calculate daily methalation
-                    if (ColdVrn1 >= MethalationThreshold) // ColdVrn1 expressed to threshold required for methalation to occur
+                    if ((ColdVrn1 >= MethalationThreshold) && (MethColdVrn1 < Params.MaxMethColdVern1)) // ColdVrn1 expressed to threshold required for methalation to occur
                     { isMethalating = true; }
                     else
                     { isMethalating = false; }
@@ -451,11 +459,26 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("Sowing")]
-        private void OnSowing(object sender, EventArgs e)
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, EnvData);
+            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar);
+            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString());
+            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString());
+            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString());
+            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString());
+            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated" );
+            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString());
+            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString());
+            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString());
+            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString());
+            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString());
+            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString());
+            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString());
+            summary.WriteMessage(this, "BasePhyllochron  = " + Params.BasePhyllochron.ToString());
+            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString());
         }
 
         /// <summary>
