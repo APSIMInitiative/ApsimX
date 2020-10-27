@@ -137,6 +137,21 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] PAWC { get; set; }
 
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
@@ -213,6 +228,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] SWmm { get; set; }
+
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
 
