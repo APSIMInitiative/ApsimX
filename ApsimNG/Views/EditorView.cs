@@ -175,6 +175,11 @@
         private AccelGroup accel = new AccelGroup();
 
         /// <summary>
+        /// Dialog used to change the font.
+        /// </summary>
+        private FontSelectionDialog fontDialog;
+
+        /// <summary>
         /// Horizontal scroll position
         /// </summary>
         private int horizScrollPos = -1;
@@ -374,6 +379,7 @@
         {
             var parentContainer = (Container)gtkControl;
             textEditor = new TextEditor();
+            textEditor.Options.FontName = Utility.Configuration.Settings.FontName;
             parentContainer.Add(textEditor);
             InitialiseWidget();
         }
@@ -397,6 +403,7 @@
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
+            options.FontName = Utility.Configuration.Settings.EditorFontName;
             textEditor.Options = options;
             textEditor.Options.Changed += EditorOptionsChanged;
             textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
@@ -419,6 +426,7 @@
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Change Font", OnChangeFont, null);
             styleSeparator = AddContextSeparator();
             styleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
@@ -438,6 +446,87 @@
             styleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
+        }
+
+        private void OnChangeFont(object sender, EventArgs e)
+        {
+            try
+            {
+                if (fontDialog != null)
+                    fontDialog.Destroy();
+
+                fontDialog = new FontSelectionDialog("Select a font");
+
+                // Center the dialog on the main window.
+                fontDialog.TransientFor = MainWidget as Window;
+                fontDialog.WindowPosition = WindowPosition.CenterOnParent;
+
+                // Select the current font.
+                if (Utility.Configuration.Settings.FontName != null)
+                    fontDialog.SetFontName(Utility.Configuration.Settings.EditorFontName.ToString());
+
+                // Event handlers.
+                fontDialog.OkButton.Clicked += OnFontSelected;
+                fontDialog.OkButton.Clicked += OnDestroyFontDialog;
+                fontDialog.ApplyButton.Clicked += OnFontSelected;
+                fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+
+                // Show the dialog.
+                fontDialog.ShowAll();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks OK or Apply in the font selection
+        /// dialog. Changes the font on all widgets and saves the new font
+        /// in the config file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnFontSelected(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fontDialog != null)
+                {
+                    Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+                    Utility.Configuration.Settings.EditorFontName = newFont.ToString();
+                    textEditor.Options.FontName = Utility.Configuration.Settings.EditorFontName;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks cancel in the font selection dialog.
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnDestroyFontDialog(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fontDialog != null)
+                {
+                    fontDialog.OkButton.Clicked -= OnChangeFont;
+                    fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+                    fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                    fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+                    fontDialog.Destroy();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
