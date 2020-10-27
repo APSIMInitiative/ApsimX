@@ -17,7 +17,7 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
-    [Description("This component holds a Pasture database file for native pasture used in the CLEM simulation.")]
+    [Description("This component specifies a pasture database file for native pasture used in the CLEM simulation")]
     [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]

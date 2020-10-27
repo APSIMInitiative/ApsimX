@@ -137,7 +137,7 @@ namespace Models.CLEM.Resources
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported Add method in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
             }
             double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;

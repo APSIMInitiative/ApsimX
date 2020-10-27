@@ -513,6 +513,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileResource.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityManageExternal.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chloride.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimWaterTable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSubsurfaceDrain.png" />
