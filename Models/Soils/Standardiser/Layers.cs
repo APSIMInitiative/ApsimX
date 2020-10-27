@@ -209,7 +209,7 @@
             if (fromValues != null)
             {
                 if (fromValues.Length != fromThickness.Length)
-                    throw new Exception("In MapConcentraction, the number of values doesn't match the number of thicknesses.");
+                    throw new Exception($"In MapConcentraction, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
                 if (fromValues == null || fromThickness == null)
                     return null;
 
