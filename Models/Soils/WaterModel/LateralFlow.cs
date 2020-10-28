@@ -34,7 +34,11 @@
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private WaterBalance soil = null;
+        private WaterBalance soilWater = null;
+
+        /// <summary> The field. </summary>
+        [Link]
+        private Zone field = null;
         
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
@@ -55,7 +59,7 @@
             {
                 if (OutFlow.Length != InFlow.Length)
                     OutFlow = new double[InFlow.Length];
-                double[] SW = MathUtilities.Add(soil.Water, InFlow);
+                double[] SW = MathUtilities.Add(soilWater.Water, InFlow);
                 double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);
                 double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, soilPhysical.Thickness);
 
@@ -67,8 +71,11 @@
 
                     // Calculate out flow (mm)
                     double i, j;
-                    i = soil.KLAT[layer] * depthWaterTable * (soil.DischargeWidth / UnitConversion.mm2m) * soil.Slope;
-                    j = (soil.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(soil.Slope, 2)), 0.5));
+
+                    // Convert slope from degrees to m/m (proportion). Should we bound this to [0, 1]?
+                    double slope = Math.Tan(field.Slope * Math.PI / 180);
+                    i = soilWater.KLAT[layer] * depthWaterTable * (soilWater.DischargeWidth / UnitConversion.mm2m) * slope;
+                    j = (soilWater.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
                     OutFlow[layer] = MathUtilities.Divide(i, j, 0.0);
 
                     // Bound out flow to max flow

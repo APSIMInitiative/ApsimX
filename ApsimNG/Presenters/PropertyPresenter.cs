@@ -607,7 +607,7 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get crop file names
+                    // get crop file reader names
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
@@ -621,14 +621,27 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get Pasture file names
+                    // get Pasture file reader names
                     fieldNames.AddRange(clemParent.FindAllDescendants<FilePasture>().Select(a => a.Name).ToList());
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLitePasture>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
-                }				
+                }
+                else if (properties[i].Display != null &&
+                    (properties[i].Display.Type == DisplayType.CLEMResourceFileReader))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = model.FindAncestor<Simulation>();
+                    // get Resource file reader names
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileResource>().Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -759,7 +772,7 @@
             LifeCycle lc = null;
             foreach (IVariable property in properties)
                 if (lc == null)
-                    lc = model.FindInScope<LifeCycle>(property.Value.ToString());
+                    lc = model.FindInScope<LifeCycle>(property.Value?.ToString());
             return lc;
         }
 

@@ -8,6 +8,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Xml;
 
     /// <summary>
@@ -174,7 +175,11 @@
             string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
-                return summaryNode.InnerXml;
+            {
+                // Need to fix multiline comments - remove newlines and consecutive spaces.
+                string summary = summaryNode.InnerXml.Trim();
+                return Regex.Replace(summary, @"\n\s+", " ");
+            }
             return null;
         }
 
@@ -201,7 +206,11 @@
             string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
-                return summaryNode.InnerXml;
+            {
+                // Need to fix multiline remarks - trim newlines and consecutive spaces.
+                string remarks = summaryNode.InnerXml.Trim();
+                return Regex.Replace(remarks, @"\n\s+", " ");
+            }
             return null;
         }
 

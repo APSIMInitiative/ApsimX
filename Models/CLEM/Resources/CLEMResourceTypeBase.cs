@@ -87,14 +87,13 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
+                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
             }
 
             if (price == null)
             {
                 // does simulation have finance
-                ResourcesHolder resources = FindAncestor<ResourcesHolder>();
-                if (resources.FinanceResource() != null)
+                if (FindAncestor<ResourcesHolder>().FinanceResource() != null)
                 {
                     string market = "";
                     if((this.Parent.Parent as ResourcesHolder).MarketPresent)
@@ -139,29 +138,57 @@ namespace Models.CLEM.Resources
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
+                PurchaseOrSalePricingStyleType style;
                 switch (converterName)
                 {
-                    case "$+":
-                        price = Price(PurchaseOrSalePricingStyleType.Purchase);
+                    case "$gain":
+                        style = PurchaseOrSalePricingStyleType.Purchase;
                         break;
-                    case "$-":
-                        price = Price(PurchaseOrSalePricingStyleType.Sale);
+                    case "$loss":
+                        style = PurchaseOrSalePricingStyleType.Sale;
                         break;
                     default:
-                        price = Price(PurchaseOrSalePricingStyleType.Both);
+                        style = PurchaseOrSalePricingStyleType.Both;
                         break;
                 }
 
-                if(price.PricePerPacket > 0)
+                if (PricingExists(style))
                 {
-                    double packets = amount / price.PacketSize;
-                    // this does not include whole packet restriction as needs to report full value
-                    return packets * price.PricePerPacket;
+                    price = Price(style);
+                    if (price.PricePerPacket > 0)
+                    {
+                        double packets = amount / price.PacketSize;
+                        // this does not include whole packet restriction as needs to report full value
+                        return packets * price.PricePerPacket;
+                    }
                 }
                 else
                 {
-                    return null;
+                    if(FindAncestor<ResourcesHolder>().FinanceResource() != null && amount != 0)
+                    {
+                        string market = "";
+                        if ((this.Parent.Parent as ResourcesHolder).MarketPresent)
+                        {
+                            if (!(this.EquivalentMarketStore is null))
+                            {
+                                market = this.EquivalentMarketStore.CLEMParentName + ".";
+                            }
+                            else
+                            {
+                                market = this.CLEMParentName + ".";
+                            }
+                        }
+                        string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
+                        warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
+                        warn += $"\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
+                        if (!Warnings.Exists(warn) & Summary != null)
+                        {
+                            Summary.WriteWarning(this, warn);
+                            Warnings.Add(warn);
+                        }
+                    }
                 }
+                return null;
             }
             else
             {

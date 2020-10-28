@@ -811,6 +811,68 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Convert a data table to markdown syntax.
+        /// </summary>
+        /// <param name="table">The data table to convert to string.</param>
+        /// <param name="writeHeaders">Write the table headers to html?</param>
+        public static string ToMarkdown(DataTable table, bool writeHeaders)
+        {
+            StringBuilder result = new StringBuilder();
+
+            int[] columnWidths = new int[table.Columns.Count];
+            for (int i = 0; i < table.Columns.Count; i++)
+                columnWidths[i] = table.Columns[i].ColumnName.Length;
+            
+            foreach (DataRow row in table.Rows)
+                for (int i = 0; i < table.Columns.Count; i++)
+                    if (row[i] != null && row[i].ToString().Length > columnWidths[i])
+                        columnWidths[i] = row[i].ToString().Length;
+
+            // Add 1 to all column widths.
+            columnWidths = columnWidths.Select(x => x + 1).ToArray();
+
+            // Write table headings.
+            if (writeHeaders)
+            {
+                result.Append("|");
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    int padding = columnWidths[i] - table.Columns[i].ColumnName.Length;
+                    result.Append(table.Columns[i].ColumnName);
+                    result.Append(new string(' ', padding));
+                    result.Append("|");
+                }
+                result.AppendLine();
+
+                // Need a separator between headings and data.
+                // Needs to be hyphens (-) separated by a | at each column boundary.
+                result.Append('|');
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    result.Append(new string('-', columnWidths[i]));
+                    result.Append('|');
+                }
+                result.AppendLine();
+            }
+
+            // Write table rows.
+            foreach (DataRow row in table.Rows)
+            {
+                result.Append('|');
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    int padding = columnWidths[i] - row[i]?.ToString()?.Length ?? 0;
+                    result.Append(row[i]);
+                    result.Append(new string(' ', padding));
+                    result.Append("|");
+                }
+                result.AppendLine();
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
         /// Convert a data table to html snippet.
         /// </summary>
         /// <param name="table">The data table to convert to string.</param>
