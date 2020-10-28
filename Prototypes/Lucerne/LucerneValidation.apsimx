@@ -7950,7 +7950,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nIndexes from Xiumei Yang PhD Lincoln University 2021: Base resp coeff is assumed \"neglible\" here as retranslocation is doing nearly all seasonality of taproots as per Xiumei's 2021 approach. At a later stage calibration has to be done considering retranslocation, senescence and respiration in parallel.\r\n\r\nThe Q10 part is at:Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x \r\n",
+                      "Text": "\r\nIndexes from Xiumei Yang PhD Lincoln University 2021: Base resp coeff is assumed \"neglible\" here as retranslocation is doing nearly all seasonality of taproots as per Xiumei's 2021 approach.\r\n\r\nThe Q10 part is at:Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x \r\n",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
