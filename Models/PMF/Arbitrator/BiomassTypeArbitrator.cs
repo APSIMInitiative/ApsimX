@@ -8,7 +8,8 @@ using System.Linq;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for arbitrating Biomass - either DM or N/// </summary>
+    /// This class holds the functions for arbitrating Biomass - either DM or N
+    /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
     public class BiomassTypeArbitrator : Model
