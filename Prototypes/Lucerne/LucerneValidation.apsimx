@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 584,
-  "Version": 122,
+  "Version": 123,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -59,8 +59,8 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\r\n## References  \r\n\r\n### **Ayaz S, McKenzie BA, McNeil DL, Hill GD.2004**. Light interception and utilization of four grain legumes sown at different plant populations and depths. _Journal of Agricultural Science,_**142**: 297-308.  \r\n **Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004**. Variability in yield of four grain legume species in a subhumid temperate environment. II. Yield components. _Journal of Agricultural Science,_**142**: 21-28.  \r\n **Ayaz S, McKenzie BA, Hill GD, McNeil DL.2004**. Nitrogen distribution in four grain legumes. _Journal of Agricultural Science,_**142**: 309-317.  \r\n **Wilson DR, Robertson MJ.1996.**Pea phenology responses to temperature and photoperiod. _Australian Agronomy Society_.",
-              "Name": "Memo1",
+              "Text": "\r\nUnder development",
+              "Name": "References",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -10441,7 +10441,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -13897,7 +13896,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -16911,7 +16909,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -21694,7 +21691,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -24256,7 +24252,6 @@
                           "CN2Bare": 68.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -27394,7 +27389,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -32277,7 +32271,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -35501,7 +35494,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -38738,7 +38730,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -41024,7 +41015,6 @@
                           "CN2Bare": 72.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -43403,7 +43393,6 @@
                           "CN2Bare": 80.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -47226,7 +47215,6 @@
                           "CN2Bare": 68.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -48883,7 +48871,6 @@
                           "CN2Bare": 60.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -50191,7 +50178,6 @@
                           "CN2Bare": 72.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -51790,7 +51776,6 @@
                           "CN2Bare": 76.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -53658,7 +53643,6 @@
                           "CN2Bare": 70.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -55068,7 +55052,6 @@
                           "CN2Bare": 80.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -57109,7 +57092,6 @@
                           "CN2Bare": 70.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -59130,7 +59112,6 @@
                           "CN2Bare": 72.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -67913,7 +67894,6 @@
                           "CN2Bare": 60.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -69730,7 +69710,6 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -71613,7 +71592,6 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -73401,7 +73379,6 @@
                           "CN2Bare": 68.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -75416,7 +75393,6 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -77318,7 +77294,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.9,
                           "CNCov": 0.9,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -78502,7 +78477,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.9,
                           "CNCov": 0.9,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -80530,7 +80504,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.9,
                           "CNCov": 0.9,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -81714,7 +81687,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.9,
                           "CNCov": 0.9,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -83641,7 +83613,6 @@
                           "CN2Bare": 0.0,
                           "CNRed": 0.9,
                           "CNCov": 0.9,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -88106,7 +88077,6 @@
                           "CN2Bare": 68.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
