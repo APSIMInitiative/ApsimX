@@ -120,6 +120,8 @@
                 string fullPath;
                 if (String.IsNullOrEmpty(imagePath))
                     fullPath = srcAttribute.Value;
+                else if (File.Exists(srcAttribute.Value))
+                    fullPath = srcAttribute.Value;
                 else
                     fullPath = GetImagePath(srcAttribute.Value, imagePath);
 
