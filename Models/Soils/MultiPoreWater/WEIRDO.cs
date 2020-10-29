@@ -135,7 +135,8 @@ namespace Models.Soils
         public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [JsonIgnore]
-        public double[] PAWC { get; set; }
+        [Units("mm/mm")]
+        public double[] PAWC => PAW;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
