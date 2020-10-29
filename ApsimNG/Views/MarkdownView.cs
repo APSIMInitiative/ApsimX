@@ -242,8 +242,10 @@ namespace UserInterface.Views
             for (uint i = 0; i < table.Rows.Count(); i++)
                 for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
                 {
-                    var cell = table.Rows[(int)i].Cells[(int)j];
-                    string text = cell.Inlines.FirstOrDefault()?.ToString();
+                    string text = "";
+                    TableBlock.TableRow row = table.Rows[(int)i];
+                    if (row.Cells.Count > j)
+                        text = row.Cells[(int)j].Inlines.FirstOrDefault()?.ToString();
                     if (i == 0)
                         text = $"<b>{text}</b>";
                     tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);

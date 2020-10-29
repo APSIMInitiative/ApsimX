@@ -248,17 +248,20 @@
             {
                 if (sibling == node)
                 {
-                    Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
-                    if (node.Attributes.Contains("align"))
+                    if (row.Cells.Count > index)
                     {
-                        string alignment = node.Attributes["align"].Value;
-                        if (String.Compare(alignment, "right", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Right;
-                        else if (String.Compare(alignment, "center", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Center;
+                        Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
+                        if (node.Attributes.Contains("align"))
+                        {
+                            string alignment = node.Attributes["align"].Value;
+                            if (String.Compare(alignment, "right", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Right;
+                            else if (String.Compare(alignment, "center", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Center;
+                        }
+                        tableText.Style = "TableText";
+                        return section;
                     }
-                    tableText.Style = "TableText";
-                    return section;
                 }
                 else if (sibling.Name == "td")
                     index++;
