@@ -50,9 +50,6 @@ namespace Models.PMF.Arbitrator
         [JsonIgnore]
         public double WAllocated { get; protected set; }
 
-        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
-        public double SWAvailRatio { get; set; }
-
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
         public double SDRatio { get; set; }
 
@@ -194,18 +191,8 @@ namespace Models.PMF.Arbitrator
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply;
 
-                // Set reporting variables.
-                //Avail = myZone.AvailableSW;
-                //PotAvail = myZone.PotentialAvailableSW;
-
-                //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0), 0.0, 10.0);
-
                 //used for SWDef ExpansionStress table lookup
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
-
-                //used for SwDefPhoto Stress
-                //PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
     }
