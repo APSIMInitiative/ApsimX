@@ -72,6 +72,7 @@
                 summaryWidget = new ScrolledWindow();
                 editor.Reparent(summaryWidget);
                 editor.WrapMode = WrapMode.None;
+                (SummaryDisplay as MarkdownView).SetMainWidget(summaryWidget);
             }
             mainControl.PackEnd(summaryWidget, true, true, 0);
 

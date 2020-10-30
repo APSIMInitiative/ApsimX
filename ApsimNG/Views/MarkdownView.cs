@@ -14,6 +14,7 @@ using Microsoft.Toolkit.Parsers.Markdown;
 using Microsoft.Toolkit.Parsers.Markdown.Blocks;
 using Microsoft.Toolkit.Parsers.Markdown.Inlines;
 using Models.Core;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -37,6 +38,7 @@ namespace UserInterface.Views
         private VBox container;
         private Cursor handCursor;
 		private Cursor regularCursor;
+        private MarkdownFindView findView;
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -56,6 +58,11 @@ namespace UserInterface.Views
             Initialise(owner, e);
         }
 
+        public void SetMainWidget(Widget widget)
+        {
+            mainWidget = widget;
+        }
+
         /// <summary>Initialise widget.</summary>
         /// <param name="ownerView">The owner of the widget.</param>
         /// <param name="gtkControl">The raw gtk control.</param>
@@ -63,6 +70,9 @@ namespace UserInterface.Views
         {
             container = (VBox)gtkControl;
             textView = (TextView)container.Children[0];
+            textView.PopulatePopup += OnPopulatePopupMenu;
+
+            findView = new MarkdownFindView();
 
             textView.Editable = false;
             textView.WrapMode = WrapMode.Word;
@@ -76,6 +86,34 @@ namespace UserInterface.Views
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+        }
+
+        [GLib.ConnectBefore]
+        private void OnPopulatePopupMenu(object o, PopulatePopupArgs args)
+        {
+            try
+            {
+                MenuItem option = new MenuItem("Find Text");
+                option.ShowAll();
+                option.Activated += OnFindText;
+                args.Menu.Append(option);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        private void OnFindText(object sender, EventArgs e)
+        {
+            try
+            {
+                findView.ShowFor(this);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the visibility of the widget.</summary>
@@ -176,6 +214,7 @@ namespace UserInterface.Views
                         container.Remove(textView);
                         container.Add(new HSeparator());
                         textView = new TextView();
+                        textView.PopulatePopup += OnPopulatePopupMenu;
                         container.Add(textView);
                         insertPos = textView.Buffer.GetIterAtOffset(0);
                     }
@@ -260,6 +299,7 @@ namespace UserInterface.Views
 
             // Insert a new textview beneath the previous one.
             textView = new TextView();
+            textView.PopulatePopup += OnPopulatePopupMenu;
             textView.ShowAll();
             container.Add(textView);
             insertPos = textView.Buffer.GetIterAtOffset(0);
@@ -302,6 +342,7 @@ namespace UserInterface.Views
                 image.Visible = true;
 
                 textView = new TextView();
+                textView.PopulatePopup += OnPopulatePopupMenu;
                 container.Add(textView);
                 textView.Visible = true;
                 insertPos = textView.Buffer.GetIterAtOffset(0);
