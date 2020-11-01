@@ -250,9 +250,15 @@
             {
                 if (sibling == node)
                 {
-                    if (row.Cells.Count > index)
+                    // If there is whitespace at the end of the row, sometimes the HTML parser
+                    // will consider that whitespace to be an empty cell. This would normally
+                    // cause an argument out of range exception due to the row having more cells
+                    // than the table has columns. In such a scenario, we simply ignore the extra
+                    // cell.
+                    if (row.Table.Columns.Count > index)
                     {
-                        Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
+                        string text = node.InnerText == "&nbsp;" ? "" : node.InnerText;
+                        Paragraph tableText = row.Cells[index].AddParagraph(text);
                         if (node.Attributes.Contains("align"))
                         {
                             string alignment = node.Attributes["align"].Value;
@@ -262,8 +268,8 @@
                                 tableText.Format.Alignment = ParagraphAlignment.Center;
                         }
                         tableText.Style = "TableText";
-                        return section;
                     }
+                    return section;
                 }
                 else if (sibling.Name == "td")
                     index++;
