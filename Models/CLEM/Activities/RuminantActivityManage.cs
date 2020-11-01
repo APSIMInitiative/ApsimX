@@ -507,15 +507,17 @@ namespace Models.CLEM.Activities
                 int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
 
                 // Number of females
-                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
+                // weaned, >breeding age, female
+                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None && a.Weaned && a.Age >= a.BreedParams.MinimumAge1stMating ).Count();
+                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
                 int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.None & !a.Tags.Contains("GrowHeifer")).Count();
+                // AL removed [ & (a.Age - a.BreedParams.MinimumAge1stMating > -11)] to use definition of heifer only
+                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer && a.SaleFlag == HerdChangeReason.None && !a.Tags.Contains("GrowHeifer")).Count();
 
                 if (numberMaleSiresInHerd > SiresKept)
                 {
@@ -596,7 +598,7 @@ namespace Models.CLEM.Activities
 
                 // FEMALES
                 // Breeding herd sold as heifers only, purchased as breeders (>= minAge1stMating)
-                // Feb2020 - Added ability to provide desticking groups to try and sell non heifer breeders before reverting to heifer sales.
+                // Feb2020 - Added ability to provide destocking groups to try and sell non heifer breeders before reverting to heifer sales.
                 int excessBreeders = 0;
 
                 // get the mortality rate for the herd if available or assume zero
