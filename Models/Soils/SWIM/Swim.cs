@@ -1107,9 +1107,18 @@ namespace Models.Soils
         [EventSubscribe("StartOfSimulation")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            ErrorChecking();
             OnReset();
             initDone = true;
             Sum_Report();
+        }
+
+        private void ErrorChecking()
+        {
+            if (soilPhysical.KS == null
+                || !MathUtilities.ValuesInArray(soilPhysical.KS)
+                || soilPhysical.KS.All(ks => ks == 0))
+                throw new ApsimXException(this, "KS not provided. Check Soil.Physical configuration");
         }
 
         /// <summary>
