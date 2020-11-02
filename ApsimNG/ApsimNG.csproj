@@ -385,6 +385,7 @@
     <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\FindInBrowserForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\MarkdownFindView.cs" />
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
