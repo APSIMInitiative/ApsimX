@@ -3,6 +3,7 @@
     using HtmlAgilityPack;
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
+    using PdfSharp.Drawing;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -49,6 +50,35 @@
                 DocumentObject result = ParseNode(node, section, imagePath);
                 if (node.HasChildNodes)
                     ConvertNodes(node.ChildNodes, result ?? section, imagePath);
+                if (node.Name == "table" && result is Table table)
+                    FixTableSize(table);
+            }
+        }
+
+        private static void FixTableSize(Table table)
+        {
+            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+            var fontSize = table.Document.Styles["Table"].Font.Size.Value;
+            var gdiFont = new PdfSharp.Drawing.XFont("Arial", fontSize);
+
+            for (int j = 0; j < table.Columns.Count; j++)
+            {
+                double columnWidth = 0;
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    foreach (Paragraph paragraph in table[i, j].Elements.OfType<Paragraph>())
+                    {
+                        string contents = string.Empty;
+                        foreach (DocumentObject paragraphElement in paragraph.Elements)
+                            if (paragraphElement is MigraDoc.DocumentObjectModel.Text)
+                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Text).Content;
+                            else if (paragraphElement is MigraDoc.DocumentObjectModel.Hyperlink)
+                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Hyperlink).Name;
+                        XSize size = graphics.MeasureString(contents, gdiFont);
+                        columnWidth = Math.Max(columnWidth, size.Width);
+                    }
+                }
+                table.Columns[j].Width = Unit.FromPoint(columnWidth) + 5;
             }
         }
 
