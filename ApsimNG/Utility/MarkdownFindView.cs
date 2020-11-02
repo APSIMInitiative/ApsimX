@@ -58,10 +58,24 @@ namespace Utility
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
             AccelGroup agr = new AccelGroup();
+            
+            // Allow the text input widget to activate the default widget and make
+            // the 'find next instance' button the default widget for its toplevel.
+            // This means that when the user presses return while the text input
+            // has focus, it will activate the default widget (the 'find next' button).
+            btnFindNext.HasDefault = true;
+            txtLookFor.ActivatesDefault = true;
+
+            // Add some extra keyboard shortcuts for the various buttons:
+            // F3                               - find next
+            // Shift + F3, Shift + Return       - find previous
+            // Escape                           - Close the dialog
+            btnFindNext.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.F3, Gdk.ModifierType.None, AccelFlags.Visible));
+            btnFindPrevious.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.F3, Gdk.ModifierType.ShiftMask, AccelFlags.Visible));
+            btnFindPrevious.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Return, Gdk.ModifierType.ShiftMask, AccelFlags.Visible));
             btnCancel.AddAccelerator("activate", agr, new AccelKey(Gdk.Key.Escape, Gdk.ModifierType.None, AccelFlags.Visible));
             window1.AddAccelGroup(agr);
         }
-
 
         private void Window1_Destroyed(object sender, EventArgs e)
         {

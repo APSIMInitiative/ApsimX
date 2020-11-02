@@ -86,6 +86,26 @@ namespace UserInterface.Views
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+            
+            textView.KeyPressEvent += OnTextViewKeyPress;
+        }
+
+        /// <summary>
+        /// Trap keypress events - show the text search dialog on ctrl + f.
+        /// </summary>
+        /// <param name="sender">Sender widget.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnTextViewKeyPress(object sender, KeyPressEventArgs args)
+        {
+            try
+            {
+                if ( (args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
+                    findView.ShowFor(this);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         [GLib.ConnectBefore]
@@ -566,6 +586,7 @@ namespace UserInterface.Views
         {
             try
             {
+                textView.KeyPressEvent -= OnTextViewKeyPress;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;
