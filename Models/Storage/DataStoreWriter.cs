@@ -74,8 +74,8 @@
             if (dbConnection is SQLite && !(dbConnection as SQLite).IsInMemory)
             {
                 // For disk-based databases, these pragmas greatly improve performance
-                dbConnection.ExecuteQuery("PRAGMA journal_mode=WAL");
-                dbConnection.ExecuteQuery("PRAGMA synchronous=NORMAL");
+                dbConnection.ExecuteNonQuery("PRAGMA journal_mode=WAL");
+                dbConnection.ExecuteNonQuery("PRAGMA synchronous=NORMAL");
             }
         }
 

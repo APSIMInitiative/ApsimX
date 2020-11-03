@@ -109,17 +109,43 @@ namespace APSIM.Shared.Utilities
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
                     DataTable result = new DataTable();
+                    Dictionary<string, string> columnTypes = GetColumnTypes(reader);
                     using (DataSet tmpDs = new DataSet() { EnforceConstraints = false })
                     {
                         tmpDs.Tables.Add(result);
                         result.Load(reader, LoadOption.OverwriteChanges);
                         tmpDs.Tables.Remove(result);
                     }
+
                     while (result.Constraints.Count > 0)
                         result.Constraints.RemoveAt(0);
-                    return result;
+
+                    // Need to convert date strings to DateTime type.
+                    DataTable dtCloned = result.Clone();
+                    foreach (DataColumn col in dtCloned.Columns)
+                        if (columnTypes[col.ColumnName] == "date")
+                            col.DataType = typeof(DateTime);
+                    foreach (DataRow row in result.Rows) 
+                        dtCloned.ImportRow(row);
+
+                    while (dtCloned.Constraints.Count > 0)
+                        dtCloned.Constraints.RemoveAt(0);
+                    return dtCloned;
                 }
             }
+        }
+
+        private Dictionary<string, string> GetColumnTypes(SqliteDataReader reader)
+        {
+            Dictionary<string, string> types = new Dictionary<string, string>();
+            foreach (DataRow row in reader.GetSchemaTable().Rows)
+            {
+                string columnName = row["ColumnName"]?.ToString();
+                string type = row["DataTypeName"]?.ToString();
+                if (columnName != null && type != null)
+                    types[columnName] = type;
+            }
+            return types;
         }
 
         /// <summary>
