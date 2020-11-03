@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 120; } }
+        public static int LatestVersion { get { return 123; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -113,9 +113,12 @@
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    if (sample == null && initWater == null)
+                    bool res = false;
+                    if (initWater == null)
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
@@ -125,7 +128,10 @@
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
-
+                        res = true;
+                    }
+                    if (sample == null)
+                    {
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
                         JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
@@ -134,8 +140,9 @@
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["SWUnits"] = "Volumetric";
                         soilChildren.Add(sample);
-                        return true;
+                        res = true;
                     }
+                    return res;
                 }
             }
 
@@ -3168,6 +3175,65 @@
                     string name = sample["Name"]?.ToString();
                     if (parent != null && !string.IsNullOrEmpty(name))
                         JsonUtilities.RemoveChild(parent, name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace all instances of PhaseBasedSwitch with PhaseLookupValues.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion121(JObject root, string fileName)
+        {
+            foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+            {
+                phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
+                Constant value = new Constant();
+                value.FixedValue = 1;
+                JsonUtilities.AddModel(phaseSwitch, value);
+            }
+        }
+
+        /// <summary>
+        /// Set maps' default zoom level to 360.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion122(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            {
+                map["Zoom"] = 360;
+                map["Center"]["Latitude"] = 0;
+                map["Center"]["Longitude"] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Remove all references to Arbitrator.WDemand, Arbitrator.WSupply, and Arbitrator.WAllocated.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion123(JObject root, string fileName)
+        {
+            string[] patterns = new[]
+            {
+                "Arbitrator.WSupply",
+                "[Arbitrator].WSupply",
+                "Arbitrator.WDemand",
+                "[Arbitrator].WDemand",
+                "Arbitrator.WAllocated",
+                "[Arbitrator].WAllocated",
+            };
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, typeof(Report).Name))
+            {
+                if (report["VariableNames"] is JArray variables)
+                {
+                    for (int i = variables.Count - 1; i >= 0; i--)
+                        if (patterns.Any(p => variables[i].ToString().Contains(p)))
+                            variables.RemoveAt(i);
+                    report["VariableNames"] = variables;
                 }
             }
         }

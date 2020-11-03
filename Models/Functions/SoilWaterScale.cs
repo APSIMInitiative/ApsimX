@@ -14,7 +14,7 @@ namespace Models.Functions
     public class SoilWaterScale : Model, IFunction
     {
         [Link]
-        Physical physical = null;
+        IPhysical physical = null;
 
         [Link]
         ISoilWater soilwater = null;

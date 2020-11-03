@@ -18,7 +18,7 @@ namespace Models.Functions
         [Link]
         ISoilWater soilwater = null;
         [Link]
-        Physical physical = null;
+        IPhysical physical = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -29,6 +29,22 @@ namespace Models.Functions
 
             double WF = MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);     
             return MathUtilities.Bound(WF, 0, 1); 
+        }
+
+        /// <summary>
+        /// Get the values for all soil layers.
+        /// </summary>
+        public double[] Values
+        {
+            get
+            {
+                if (soilwater == null)
+                    return null;
+                double[] result = new double[soilwater.SW.Length];
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = Value(i);
+                return result;
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

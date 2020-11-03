@@ -73,12 +73,13 @@
                 return ConvertSlashes(path);
 
             // Make sure we have a relative directory 
-            string relativeDirectory = Path.GetDirectoryName(relativePath);
-            if (relativeDirectory != null)
-            {
-                if (!Path.IsPathRooted(path))
+            string relativeDirectory;
+            if (Directory.Exists(relativePath))
+                relativeDirectory = relativePath;
+            else
+                relativeDirectory = Path.GetDirectoryName(relativePath);
+            if (relativeDirectory != null && !Path.IsPathRooted(path))
                     path = Path.Combine(relativeDirectory, path);
-            }
 
             // Convert slashes.
             path = ConvertSlashes(path);

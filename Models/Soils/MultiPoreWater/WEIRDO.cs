@@ -17,6 +17,7 @@ using Models.Functions;
 using Models.Soils.Standardiser;
 using Models.Climate;
 using System.Linq;
+using APSIM.Shared.APSoil;
 
 namespace Models.Soils
 {
@@ -135,7 +136,29 @@ namespace Models.Soils
         public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [JsonIgnore]
-        public double[] PAWC { get; set; }
+        [Units("mm/mm")]
+        public double[] PAWC
+        {
+            get
+            {
+                return APSoilUtilities.CalcPAWC(Thickness, LL15, DUL, null);
+            }
+        }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
@@ -149,10 +172,7 @@ namespace Models.Soils
         {
             get
             {
-                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(Thickness,
-                                                                  LL15,
-                                                                  SW,
-                                                                  null);
+                return APSoilUtilities.CalcPAWC(Thickness, LL15, SW, null);
             }
         }
 
@@ -213,6 +233,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] SWmm { get; set; }
+
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
 

@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
@@ -232,6 +233,8 @@ namespace UserInterface.Presenters
                 var soilName = (string)values[0];
                 Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
 
+                if (!matchingSoil.Children.Any(c => c is INutrient))
+                    matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
                 ICommand addSoil = new AddModelCommand(model, matchingSoil);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }

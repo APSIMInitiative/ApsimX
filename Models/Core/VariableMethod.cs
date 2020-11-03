@@ -15,7 +15,7 @@
         private MethodInfo method;
 
         /// <summary>
-        /// A lit of arguments to pass to the method
+        /// A list of arguments to pass to the method
         /// </summary>
         private object[] arguments = null;
 

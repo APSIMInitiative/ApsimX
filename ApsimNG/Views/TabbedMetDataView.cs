@@ -29,6 +29,9 @@ namespace UserInterface.Views
         /// <summary>Occurs when browse button is clicked</summary>
         event BrowseDelegate BrowseClicked;
 
+        /// <summary>Occurs when a constants file is selected.</summary>
+        event BrowseDelegate ConstantsFileSelected;
+
         /// <summary>Occurs when the start year numericUpDown is clicked</summary>
         event GraphRefreshDelegate GraphRefreshClicked;
 
@@ -37,6 +40,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets the filename.</summary>
         string Filename { get; set; }
+
+        /// <summary>Gets or sets the filename.</summary>
+        string ConstantsFileName { get; set; }
 
         /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
         string ExcelWorkSheetName { get; set; }
@@ -71,6 +77,10 @@ namespace UserInterface.Views
         /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
         /// <param name="show"></param>
         void ShowExcelSheets(bool show);
+
+        /// <summary>Show or hide the constants file selector.</summary>
+        /// <param name="show">If true, the selector will be shown, otherwise it will be hidden.</param>
+        void ShowConstantsFile(bool show);
 
         /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
         int GraphShowYearsValue { get; set; }
@@ -114,6 +124,7 @@ namespace UserInterface.Views
         public event GraphRefreshDelegate GraphRefreshClicked;
 
         public event ExcelSheetDelegate ExcelSheetChangeClicked;
+        public event BrowseDelegate ConstantsFileSelected;
 
         private Label labelFileName = null;
         private VBox vbox1 = null;
@@ -137,6 +148,9 @@ namespace UserInterface.Views
         private HBox hbox2 = null;
         private Alignment alignment10 = null;
         private DropDownView worksheetCombo;
+        private Button constantsFileSelector;
+        private Container constantsFileSelectorContainer;
+        private Label labelConstantsFileName;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
@@ -163,6 +177,10 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             hbox2 = (HBox)builder.GetObject("hbox2");
             alignment10 = (Alignment)builder.GetObject("alignment10");
+            constantsFileSelector = (Button)builder.GetObject("button2");
+            constantsFileSelector.Clicked += OnChooseConstantsFile;
+            constantsFileSelectorContainer = (Container)builder.GetObject("hbox3");
+            labelConstantsFileName = (Label)builder.GetObject("labelFileName1");
             mainWidget = vbox1;
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
@@ -216,6 +234,14 @@ namespace UserInterface.Views
         {
             get { return labelFileName.Text; }
             set { labelFileName.Text = value; }
+        }
+
+        /// <summary>Gets or sets the filename.</summary>
+        /// <value>The filename.</value>
+        public string ConstantsFileName
+        {
+            get { return labelConstantsFileName.Text; }
+            set { labelConstantsFileName.Text = value; }
         }
 
         public string ExcelWorkSheetName
@@ -353,6 +379,27 @@ namespace UserInterface.Views
             worksheetCombo.Values = sheetNames.ToArray();
         }
 
+        private void OnChooseConstantsFile(object sender, EventArgs e)
+        {
+            try
+            {
+                string fileName = AskUserForFileName("Choose a constants file to open", Utility.FileDialog.FileActionType.Open, "Plain text file (*.txt)|*.txt");
+                if (!String.IsNullOrEmpty(fileName))
+                {
+                    ConstantsFileName = fileName;
+                    if (ConstantsFileSelected != null)
+                    {
+                        ConstantsFileSelected.Invoke(fileName);
+                        notebook1.CurrentPage = 0;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>Handles the Click event of the button1 control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -360,7 +407,7 @@ namespace UserInterface.Views
         {
             try
             {
-                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", labelFileName.Text);
+                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv", labelFileName.Text);
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     Filename = fileName;
@@ -491,6 +538,14 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        public void ShowConstantsFile(bool show)
+        {
+            if (show)
+                constantsFileSelectorContainer.ShowAll();
+            else
+                constantsFileSelectorContainer.Hide();
         }
     }
 }

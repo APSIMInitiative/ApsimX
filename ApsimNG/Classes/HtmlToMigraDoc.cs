@@ -3,6 +3,7 @@
     using HtmlAgilityPack;
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
+    using PdfSharp.Drawing;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -49,6 +50,35 @@
                 DocumentObject result = ParseNode(node, section, imagePath);
                 if (node.HasChildNodes)
                     ConvertNodes(node.ChildNodes, result ?? section, imagePath);
+                if (node.Name == "table" && result is Table table)
+                    FixTableSize(table);
+            }
+        }
+
+        private static void FixTableSize(Table table)
+        {
+            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+            var fontSize = table.Document.Styles["Table"].Font.Size.Value;
+            var gdiFont = new PdfSharp.Drawing.XFont("Arial", fontSize);
+
+            for (int j = 0; j < table.Columns.Count; j++)
+            {
+                double columnWidth = 0;
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    foreach (Paragraph paragraph in table[i, j].Elements.OfType<Paragraph>())
+                    {
+                        string contents = string.Empty;
+                        foreach (DocumentObject paragraphElement in paragraph.Elements)
+                            if (paragraphElement is MigraDoc.DocumentObjectModel.Text)
+                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Text).Content;
+                            else if (paragraphElement is MigraDoc.DocumentObjectModel.Hyperlink)
+                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Hyperlink).Name;
+                        XSize size = graphics.MeasureString(contents, gdiFont);
+                        columnWidth = Math.Max(columnWidth, size.Width);
+                    }
+                }
+                table.Columns[j].Width = Unit.FromPoint(columnWidth) + 5;
             }
         }
 
@@ -119,6 +149,8 @@
             {
                 string fullPath;
                 if (String.IsNullOrEmpty(imagePath))
+                    fullPath = srcAttribute.Value;
+                else if (File.Exists(srcAttribute.Value))
                     fullPath = srcAttribute.Value;
                 else
                     fullPath = GetImagePath(srcAttribute.Value, imagePath);
@@ -248,16 +280,25 @@
             {
                 if (sibling == node)
                 {
-                    Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
-                    if (node.Attributes.Contains("align"))
+                    // If there is whitespace at the end of the row, sometimes the HTML parser
+                    // will consider that whitespace to be an empty cell. This would normally
+                    // cause an argument out of range exception due to the row having more cells
+                    // than the table has columns. In such a scenario, we simply ignore the extra
+                    // cell.
+                    if (row.Table.Columns.Count > index)
                     {
-                        string alignment = node.Attributes["align"].Value;
-                        if (String.Compare(alignment, "right", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Right;
-                        else if (String.Compare(alignment, "center", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Center;
+                        string text = node.InnerText == "&nbsp;" ? "" : node.InnerText;
+                        Paragraph tableText = row.Cells[index].AddParagraph(text);
+                        if (node.Attributes.Contains("align"))
+                        {
+                            string alignment = node.Attributes["align"].Value;
+                            if (String.Compare(alignment, "right", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Right;
+                            else if (String.Compare(alignment, "center", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Center;
+                        }
+                        tableText.Style = "TableText";
                     }
-                    tableText.Style = "TableText";
                     return section;
                 }
                 else if (sibling.Name == "td")
