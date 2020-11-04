@@ -16,12 +16,12 @@ namespace UserInterface.Views
     /// </summary>
     public class HTMLView : ViewBase, IHTMLView
     {
-        private TextView textWidget = new TextView();
+        private MarkdownView markdownView;
 
         public HTMLView(ViewBase owner) : base(owner)
         {
-            textWidget.Editable = false;
-            mainWidget = textWidget;
+            markdownView = new MarkdownView(this);
+            mainWidget = markdownView.MainWidget;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         public string GetMarkdown()
         {
-            return textWidget.Buffer.Text;
+            return markdownView.Text;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace UserInterface.Views
         /// <param name="isURI"></param>
         public void SetContents(string contents, bool allowModification, bool isURI = false)
         {
-            textWidget.Buffer.Text = contents;
+            markdownView.Text = contents;
         }
 
         /// <summary>

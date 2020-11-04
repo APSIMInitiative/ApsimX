@@ -29,7 +29,7 @@
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -45,7 +45,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
+            this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
 
             // Just how much documentation do we want to generate?
@@ -71,10 +71,7 @@
                     FindImagesInParagraph(tag as AutoDocumentation.Paragraph);
                 }
             }
-
-            string html = MarkdownConverter.ToHtml(contents.ToString());
-
-            this.genericView.SetContents(html, false, false);
+            this.genericView.Text = contents.ToString();
         }
 
         /// <summary>

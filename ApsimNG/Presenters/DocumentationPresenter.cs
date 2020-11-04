@@ -70,15 +70,21 @@ namespace UserInterface.Presenters
             //html.AppendLine($"<h3>Fixed Parameters</h3>");
             //html.AppendLine("<p>todo - requires GridView</p>");
 
-            markdown.AppendLine("### Variable Parameters");
-            markdown.AppendLine();
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
+            if (functionTable.Rows.Count > 0)
+            {
+                markdown.AppendLine("### Variable Parameters");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
+            }
 
-            markdown.AppendLine("### Other dependencies");
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
-            markdown.AppendLine();
+            if (depsTable.Rows.Count > 0)
+            {
+                markdown.AppendLine("### Other dependencies");
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
+                markdown.AppendLine();
+            }
 
             DataTable publicMethods = GetPublicMethods(model);
             if (publicMethods.Rows.Count > 0)

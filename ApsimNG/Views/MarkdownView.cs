@@ -311,6 +311,8 @@ namespace UserInterface.Views
             uint i, j;
 #else
             Grid tableWidget = new Grid();
+            tableWidget.ColumnSpacing = 5;
+            tableWidget.RowSpacing = 5;
             int i, j;
 #endif
             for (i = 0; i < table.Rows.Count(); i++)
