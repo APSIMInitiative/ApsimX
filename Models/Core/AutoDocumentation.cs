@@ -177,8 +177,7 @@
             if (summaryNode != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                string summary = summaryNode.InnerXml.Trim();
-                return Regex.Replace(summary, @"\n\s+", " ");
+                return summaryNode.InnerXml.Trim().Replace("            ", "");
             }
             return null;
         }
@@ -208,8 +207,7 @@
             if (summaryNode != null)
             {
                 // Need to fix multiline remarks - trim newlines and consecutive spaces.
-                string remarks = summaryNode.InnerXml.Trim();
-                return Regex.Replace(remarks, @"\n\s+", " ");
+                return summaryNode.InnerXml.Trim().Replace("            ", "");
             }
             return null;
         }
