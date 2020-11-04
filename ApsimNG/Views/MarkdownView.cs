@@ -70,7 +70,6 @@ namespace UserInterface.Views
 
             textView.Editable = false;
             textView.WrapMode = WrapMode.Word;
-            textView.VisibilityNotifyEvent += OnVisibilityNotify;
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
@@ -431,7 +430,11 @@ namespace UserInterface.Views
         // typically used by web browsers.
         private void SetCursorIfAppropriate(TextView textView, int x, int y)
         {
+#if NETFRAMEWORK
             TextIter iter = textView.GetIterAtLocation(x, y);
+#else
+            textView.GetIterAtPosition(out TextIter iter, out int trailing, x, y);
+#endif
 
             var foundLink = false;
             foreach (TextTag tag in iter.Tags)
@@ -474,7 +477,11 @@ namespace UserInterface.Views
                         if (start.Offset == end.Offset)
                         {
                             textView.WindowToBufferCoords(TextWindowType.Widget, (int)evt.X, (int)evt.Y, out int x, out int y);
+#if NETFRAMEWORK
                             TextIter iter = textView.GetIterAtLocation(x, y);
+#else
+                            textView.GetIterAtPosition(out TextIter iter, out int trailing, x, y);
+#endif
 
                             foreach (var tag in iter.Tags)
                             {
@@ -500,31 +507,11 @@ namespace UserInterface.Views
         {
             try
             {
-                var textViewWithMouseCursor = (TextView)sender;
-                textViewWithMouseCursor.WindowToBufferCoords(TextWindowType.Widget,
+                var textView = (TextView)sender;
+                textView.WindowToBufferCoords(TextWindowType.Widget,
                                                              (int)args.Event.X, (int)args.Event.Y,
                                                              out int x, out int y);
-                SetCursorIfAppropriate(textViewWithMouseCursor, x, y);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Invoked when widget becomes visible.
-        /// </summary>
-        /// <param name="sender">Sender of the event.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnVisibilityNotify(object sender, VisibilityNotifyEventArgs args)
-        {
-            try
-            {
-                textView.GetPointer(out int wx, out int wy);
-                textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
-                                              out int bx, out int by);
-                SetCursorIfAppropriate(textView, bx, by);
+                SetCursorIfAppropriate(textView, x, y);
             }
             catch (Exception err)
             {
@@ -539,7 +526,6 @@ namespace UserInterface.Views
         {
             try
             {
-                textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;
                 mainWidget.Destroyed -= OnDestroyed;
