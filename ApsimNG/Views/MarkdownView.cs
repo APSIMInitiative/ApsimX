@@ -345,6 +345,7 @@ namespace UserInterface.Views
         /// Display an image
         /// </summary>
         /// <param name="url">The url of the image.</param>
+        /// <param name="tooltip">A tooltip to be displayed on the image.</param>
         /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, string tooltip, ref TextIter insertPos)
         {
