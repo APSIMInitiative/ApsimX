@@ -22,7 +22,7 @@ namespace Models.Functions
         ISoilWater soilwater = null;
 
         [Link]
-        Physical physical = null;
+        IPhysical physical = null;
 
         /// <summary>Boolean to indicate sandy soil</summary>
         private bool isSand = false;

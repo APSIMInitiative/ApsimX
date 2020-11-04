@@ -76,6 +76,7 @@
                 parent.Remove(editor);
                 scroller.Add(editor);
                 editor.WrapMode = WrapMode.None;
+                (SummaryDisplay as MarkdownView).SetMainWidget(summaryWidget);
             }
             mainControl.PackEnd(summaryWidget, true, true, 0);
 
