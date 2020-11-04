@@ -1849,7 +1849,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\n## Reference  \r\n\r\nhttps://www.sciencedirect.com/science/article/pii/037842909400090Y\r\n\r\nY.Luo; P.A.Meyerhoff; R.S.Loomis (1995) Seasonal patterns and vertical distributions of fine roots of alfalfa (Medicago sativa L.).Field Crops Research\r\nVolume 40, Issue 2, February 1995, Pages 119-127\r\n\r\n0.0012/h (page 122) converts into 0.028/day of MaxSenescRate\r\n\r\nTemp_Eff_root is effect of temperature from Figure 2 panel D\r\n\r\nChoEff_root is effect of soluble CHOs from Figure 2 Panel C - This is not functional yet.\r\n ",
+                      "Text": "\r\n## Reference  \r\n\r\nhttps://www.sciencedirect.com/science/article/pii/037842909400090Y\r\n\r\nY.Luo; P.A.Meyerhoff; R.S.Loomis (1995) Seasonal patterns and vertical distributions of fine roots of alfalfa (Medicago sativa L.).Field Crops Research\r\nVolume 40, Issue 2, February 1995, Pages 119-127\r\n\r\n0.0012/h (page 122) converts into 0.028/day of MaxSenescRate\r\n\r\nTemp_Eff_root is effect of temperature from Figure 2 panel D\r\n\r\nChoEff_root is effect of soluble CHOs from Figure 2 Panel C - This is not functional yet.\r\n\r\nNote: First attempt to have some dynamics of fine-roots, no data available for testing so based only in Luo et al 1995 at this initial stage.\r\n\r\nFIXME: Suggested that parameters are estimated by optmising [RUEtot + Resp + Translocation] in relation to [Shoot + Root] \r\n ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1978,7 +1978,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nIndexes from Xiumei Yang PhD Lincoln University 2021: Base resp coeff is assumed \"zero\" here as senescence is doing nearly all seasonality of taproots as per Xiumei's 2021 approach.\r\n\r\nThe Q10 part is at:Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x  \r\n",
+                      "Text": "\r\nIndexes from Xiumei Yang PhD Lincoln University 2021: Base resp coeff is assumed \"zero\" here as senescence is doing nearly all seasonality of taproots as per Xiumei's 2021 approach.\r\n\r\nThe Q10 part is at:Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x  \r\n\r\nFIXME: Suggested that parameters are estimated by optmising [RUEtot + Resp + Translocation] in relation to [Shoot + Root] ",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2578,7 +2578,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.1,
+                      "FixedValue": 1.6,
                       "Units": null,
                       "Name": "RUE",
                       "Children": [],
@@ -2692,7 +2692,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Brown et al 2006. European Journal of Agronomy Volume 25, Issue 4, November 2006, Pages 319-327",
+                      "Text": "Coefficients from Brown et al 2006. European Journal of Agronomy Volume 25, Issue 4, November 2006, Pages 319-327",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6931,7 +6931,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.05,
+                                  "FixedValue": 0.075,
                                   "Units": null,
                                   "Name": "Increasing",
                                   "Children": [],
@@ -6956,8 +6956,8 @@
                                     350.0
                                   ],
                                   "Y": [
-                                    1.5,
-                                    1.5,
+                                    1.0,
+                                    1.0,
                                     0.0
                                   ],
                                   "Name": "XYPairs",
@@ -7013,8 +7013,8 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nThe extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover\r\n",
-                      "Name": "Description",
+                      "Text": "Logic and parameters from Xiumei's Lincoln University PhD Thesis 2021. Refactored to simplify interpretation.",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7950,7 +7950,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nIndexes from Xiumei Yang PhD Lincoln University 2021: Base resp coeff is assumed \"neglible\" here as retranslocation is doing nearly all seasonality of taproots as per Xiumei's 2021 approach.\r\n\r\nThe Q10 part is at:Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x \r\n",
+                      "Text": "\r\nCoefficients from Xiumei Yang PhD Lincoln University 2021.\r\n\r\nThe Q10 part is at: Modelling respiration of vegetation: evidence for a general temperature-dependent Q10. Global Change Biology (2001) 7, 223-230. https://onlinelibrary.wiley.com/doi/epdf/10.1046/j.1365-2486.2001.00397.x \r\n\r\nFIXME: Next step suggested is that parameters are estimated by optmising [RUEtot + Resp + Translocation] in relation to [Shoot + Root] - at the moment DMtranslocation is accounting for most of the seasonality so respiration is negligible.  ",
                       "Name": "Description",
                       "Children": [],
                       "IncludeInDocumentation": true,
