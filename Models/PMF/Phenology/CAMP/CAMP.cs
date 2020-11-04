@@ -156,6 +156,12 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         FLNParameterEnvironment EnvData = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction LowerCriticalPp = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction UpperCriticalPp = null;
+
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         Phenology phenology = null;
@@ -170,14 +176,12 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         private double CalcdPPVrn(double Pp, double baseUR, double maxUR, double dBP)
         {
-            double LowerPP = 12.0;
-                double UpperPp = 16.0;
-                if (Pp <= LowerPP)
-                    return baseUR * dBP;
-                else if ((Pp > LowerPP) && (Pp < UpperPp))
-                    return (baseUR + (maxUR - baseUR) * (Pp - LowerPP) / (UpperPp - LowerPP)) * dBP;
-                else // (Pp >= UpperPp)
-                    return maxUR * dBP; 
+            if (Pp <= LowerCriticalPp.Value())
+                return baseUR * dBP;
+            else if ((Pp > LowerCriticalPp.Value()) && (Pp < UpperCriticalPp.Value()))
+                return (baseUR + (maxUR - baseUR) * (Pp - LowerCriticalPp.Value()) / (UpperCriticalPp.Value() - LowerCriticalPp.Value())) * dBP;
+            else // (Pp >= UpperPp)
+                return maxUR * dBP; 
         }
 
         /// <summary>
