@@ -263,7 +263,6 @@ namespace Utility
                 text = start.Buffer.GetText(end, start, false);
             else
                 text = start.Buffer.GetText(start, end, false);
-            Console.WriteLine($"Searching from {start.Offset} to {end.Offset}. Total buffer length = {start.Buffer.Text.Length}");
 
             if (searchKind == SearchType.Regex)
                 throw new NotImplementedException();
@@ -289,7 +288,6 @@ namespace Utility
                         netOffset = end.Offset + index;
                     else
                         netOffset = start.Offset + index;
-                    Console.WriteLine($"Found {lookFor} at ({netOffset} - {netOffset + lookFor.Length})");
                     matchStart = start.Buffer.GetIterAtOffset(netOffset);
                     matchEnd = start.Buffer.GetIterAtOffset(netOffset + lookFor.Length);
                     return true;
