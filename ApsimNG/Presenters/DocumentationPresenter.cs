@@ -63,54 +63,62 @@ namespace UserInterface.Presenters
             }
 
             string typeName = model.GetType().Name;
-            markdown.AppendLine($"# {model.Name} Configuration");
-            markdown.AppendLine();
-            markdown.AppendLine("## Inputs");
-            markdown.AppendLine();
-            //html.AppendLine($"<h3>Fixed Parameters</h3>");
-            //html.AppendLine("<p>todo - requires GridView</p>");
-
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            if (functionTable.Rows.Count > 0)
-            {
-                markdown.AppendLine("### Variable Parameters");
-                markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
-            }
-
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            if (depsTable.Rows.Count > 0)
-            {
-                markdown.AppendLine("### Other dependencies");
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
-                markdown.AppendLine();
-            }
-
             DataTable publicMethods = GetPublicMethods(model);
-            if (publicMethods.Rows.Count > 0)
-            {
-                markdown.AppendLine("## Public Methods");
-                markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
-                markdown.AppendLine();
-            }
-
             DataTable events = GetEvents(model);
-            if (events.Rows.Count > 0)
-            {
-                markdown.AppendLine("## Events");
-                markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
-                markdown.AppendLine();
-            }
-
             DataTable outputs = GetOutputs(model);
-            if (outputs.Rows.Count > 0)
+
+            if (functionTable.Rows.Count > 0
+                || depsTable.Rows.Count > 0
+                || publicMethods.Rows.Count > 0
+                || events.Rows.Count > 0
+                || outputs.Rows.Count > 0)
             {
-                markdown.AppendLine("## Model Outputs");
+                markdown.AppendLine($"# {model.Name} Configuration");
                 markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                markdown.AppendLine("## Inputs");
                 markdown.AppendLine();
+                //html.AppendLine($"<h3>Fixed Parameters</h3>");
+                //html.AppendLine("<p>todo - requires GridView</p>");
+
+                if (functionTable.Rows.Count > 0)
+                {
+                    markdown.AppendLine("### Variable Parameters");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
+                }
+
+                if (depsTable.Rows.Count > 0)
+                {
+                    markdown.AppendLine("### Other dependencies");
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
+                    markdown.AppendLine();
+                }
+
+                if (publicMethods.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Public Methods");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
+                    markdown.AppendLine();
+                }
+
+                if (events.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Events");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
+                    markdown.AppendLine();
+                }
+
+                if (outputs.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Model Outputs");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                    markdown.AppendLine();
+                }
             }
 
             return markdown.ToString();
