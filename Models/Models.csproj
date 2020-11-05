@@ -802,7 +802,7 @@
     <Compile Include="CLEM\Activities\RuminantActivityFeed.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrow.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityManage.cs" />
-    <Compile Include="CLEM\Activities\RuminantActivityMuster.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMove.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityPredictiveStocking.cs" />
     <Compile Include="CLEM\Activities\RuminantActivitySellDryBreeders.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityTrade.cs" />

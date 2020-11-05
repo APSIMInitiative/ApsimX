@@ -62,10 +62,18 @@
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
         [JsonIgnore]
-        [Units("mm")]
+        [Units("mm/mm")]
         public double[] PAW
         {
-            get { return Layers.MapMass(waterBalance.PAW, soilPhysical.Thickness, Thickness); }
+            get { return Layers.MapConcentration(waterBalance.PAW, soilPhysical.Thickness, Thickness, double.NaN); }
+        }
+
+        ///<summary>Gets the plant available water amount of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get { return Layers.MapMass(waterBalance.PAWmm, soilPhysical.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the lower limit of each mapped layer</summary>
