@@ -154,11 +154,6 @@
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
 
-                // Standardise the soil.
-                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
-                foreach (Soils.Soil soil in soils)
-                    SoilStandardiser.Standardise(soil);
-
                 newSimulation.ClearCaches();
                 return newSimulation;
             }

@@ -115,6 +115,7 @@
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
+            SoilStandardiser.Standardise(this);
             SoilChecker.Check(this);
         }
     }
