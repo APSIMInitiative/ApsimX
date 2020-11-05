@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 120,
-  "ApsimVersion": "2020.9.28.5689",
+  "Version": 123,
+  "ApsimVersion": "2020.11.5.5833",
   "Name": "Simulations",
   "Children": [
     {
@@ -891,11 +891,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2752,11 +2763,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3306,11 +3328,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3570,7 +3603,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.443223*([Eucalyptus].IndividualTreeStemWt^0.310907)",
+                      "Expression": "0+0.443223*([Eucalyptus].IndividualTreeStemWt^0.310907)",
                       "Name": "DBHEquation",
                       "Children": [
                         {
@@ -4325,11 +4358,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4828,11 +4872,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6955,6 +7010,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "coffs.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -7185,7 +7241,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -12158,6 +12213,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "toolara8797.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -12388,7 +12444,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -15217,6 +15272,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "wwepp.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -15488,7 +15544,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -16560,6 +16615,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Aracruz.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -16799,7 +16855,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -17472,6 +17527,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Curvelo.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -17756,7 +17812,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -18577,6 +18632,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Itacambira.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -18816,7 +18872,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -19725,6 +19780,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Luisantonio.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -19945,7 +20001,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -20815,6 +20870,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Mogiguacu.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -21035,7 +21091,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -21596,6 +21651,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Montedourado.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -21816,7 +21872,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -22152,6 +22207,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Montedourado.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -22372,7 +22428,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -23007,6 +23062,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Paulistania.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -23227,7 +23283,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -23867,6 +23922,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Ribasdoriopardo.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -24087,7 +24143,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -25637,6 +25692,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "SantanadoParaiso.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -25865,7 +25921,6 @@
                                   "CN2Bare": 65.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -27936,6 +27991,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "ScottRiver.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -28218,7 +28274,6 @@
                                   "CN2Bare": 70.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.0,
-                                  "Slope": 0.437747359275818,
                                   "DischargeWidth": 10.0,
                                   "CatchmentArea": 2487.02197265625,
                                   "Thickness": [
@@ -30464,11 +30519,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -30979,11 +31045,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -31617,11 +31694,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -32120,11 +32208,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -35003,6 +35102,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Wellstead.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -35329,7 +35429,6 @@
                                   "CN2Bare": 70.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.0,
-                                  "Slope": 2.65824031829834,
                                   "DischargeWidth": 10.0,
                                   "CatchmentArea": 16398.919921875,
                                   "Thickness": [
@@ -37575,11 +37674,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -38090,11 +38200,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -38728,11 +38849,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -39231,11 +39363,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -42114,6 +42257,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "BoyupBrook.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -42440,7 +42584,6 @@
                                   "CN2Bare": 70.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.0,
-                                  "Slope": 10.8386077880859,
                                   "DischargeWidth": 10.0,
                                   "CatchmentArea": 5248.8134765625,
                                   "Thickness": [
@@ -44686,11 +44829,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -45201,11 +45355,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -45839,11 +46004,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -46342,11 +46518,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -51265,6 +51452,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Shepparton.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -51495,7 +51683,6 @@
                                   "CN2Bare": 75.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": 0.0,
                                   "DischargeWidth": 0.0,
                                   "CatchmentArea": 0.0,
                                   "Thickness": [
@@ -54010,11 +54197,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -54525,11 +54723,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -55163,11 +55372,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -55666,11 +55886,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -58940,6 +59171,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Westfield.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
@@ -59113,7 +59345,6 @@
                                   "CN2Bare": 90.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -61417,11 +61648,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -61932,11 +62174,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -62570,11 +62823,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -63073,11 +63337,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                                      "$type": "Models.Functions.PhaseLookupValue, Models",
                                       "Start": "Emergence",
                                       "End": "Old",
                                       "Name": "NitrogenDemandSwitch",
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -67367,6 +67642,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "MountWorth.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -67597,7 +67873,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": 0.0,
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "Thickness": [
@@ -67926,6 +68201,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Tostaree.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -68156,7 +68432,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": 0.0,
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "Thickness": [
@@ -68485,6 +68760,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "MountLofty.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -68715,7 +68991,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": 0.0,
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "Thickness": [
@@ -69044,6 +69319,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Stockdale.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -69274,7 +69550,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": 0.0,
                           "DischargeWidth": 0.0,
                           "CatchmentArea": 0.0,
                           "Thickness": [
@@ -69630,6 +69905,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Canungra.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Canungra",
@@ -69640,6 +69916,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Samford.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Samford",
@@ -69650,6 +69927,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Ipswich.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Ipswich",
@@ -69660,6 +69938,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Gatton.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Gatton",
@@ -69670,6 +69949,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Dalby.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Dalby",
@@ -69696,6 +69976,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "coffs.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -70031,7 +70312,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -70694,6 +70974,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Canungra.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -71029,7 +71310,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -71515,6 +71795,7 @@
                     },
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "wodonga.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -71735,7 +72016,6 @@
                               "CN2Bare": 75.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -72820,6 +73100,7 @@
                     },
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "coffs.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -73040,7 +73321,6 @@
                               "CN2Bare": 75.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -74004,6 +74284,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "8_COP_1980_2017_Inhambupe_BA.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "Inhambupe",
@@ -74197,7 +74478,6 @@
                                       "CN2Bare": 65.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.8,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -74471,6 +74751,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "10_DUB_1980_2017_Botucatu_SP.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "Botucatu",
@@ -74694,7 +74975,6 @@
                                       "CN2Bare": 65.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.8,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -75007,6 +75287,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "18_CMS_1980_2017_SaoGabriel_RS.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "SaoGabriel",
@@ -75230,7 +75511,6 @@
                                       "CN2Bare": 65.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.8,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -75543,6 +75823,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "30_VMT_1980_2017_Bocaiuva_MG.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "Bocaiuva",
@@ -75766,7 +76047,6 @@
                                       "CN2Bare": 65.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.8,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -76099,6 +76379,7 @@
                   "Children": [
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "coffs.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -76408,7 +76689,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -76840,12 +77120,12 @@
     },
     {
       "$type": "Models.Map, Models",
+      "Zoom": 360.0,
       "Center": {
         "$type": "Models.Map+Coordinate, Models",
-        "Latitude": -24.846565348219745,
-        "Longitude": 132.275390625
+        "Latitude": 0.0,
+        "Longitude": 0.0
       },
-      "Zoom": 4.0,
       "Name": "Map",
       "Children": [],
       "IncludeInDocumentation": true,
