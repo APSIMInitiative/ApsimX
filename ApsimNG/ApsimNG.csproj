@@ -385,6 +385,7 @@
     <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\FindInBrowserForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\MarkdownFindView.cs" />
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
@@ -690,7 +691,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityHerdCost.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMilking.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMuster.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMove.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStocking.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStockingENSO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivitySellDryBreeders.png" />
@@ -922,6 +923,19 @@
     <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\PhaseBasedSwitch.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\BiomassTypeArbitrator.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/ReallocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/AllocateFixationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/RetranslocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/SendPotentialDMAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/UpdateLeafAreaMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/DryMatterAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/ArbitrationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/C4RetranslocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/NitrogenAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/AllocateUptakesMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/WaterUptakeMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/NitrogenUptakeMethod.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Operations.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OnEventFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OilPalm.png" />

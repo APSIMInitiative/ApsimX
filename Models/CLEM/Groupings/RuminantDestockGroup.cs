@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]

@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
+    [Version(1, 0, 6, "Added ability to turn on/off marking max age breeders and sires and age/weight males for sale and allow this action in other activities")]
     [Version(1, 0, 5, "Renamed all 'bulls' to 'sires' in properties. Requires resetting of values")]
     [Version(1, 0, 4, "Allow sires to be placed in different pasture to breeders")]
     [Version(1, 0, 3, "Allows herd to be adjusted to sires and max breeders kept at startup")]
@@ -46,6 +47,14 @@ namespace Models.CLEM.Activities
         [Description("Minimum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MinimumBreedersKept { get; set; }
+
+        /// <summary>
+        /// Include the marking for sale of old breeders in this activity
+        /// </summary>
+        [Category("Destock", "Breeding females")]
+        [Description("Mark old breeding females for sale")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool MarkOldBreedersForSale { get; set; }
 
         /// <summary>
         /// Maximum breeder age (months) for removal
@@ -96,6 +105,14 @@ namespace Models.CLEM.Activities
         public int SiresKept { get; set; }
 
         /// <summary>
+        /// Include the marking for sale of sires in this activity
+        /// </summary>
+        [Category("Destock", "Breeding males")]
+        [Description("Mark old sires for sale")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool MarkOldSiresForSale { get; set; }
+
+        /// <summary>
         /// Maximum sire age (months) for removal
         /// </summary>
         [Category("Destock", "Breeding males")]
@@ -135,6 +152,14 @@ namespace Models.CLEM.Activities
         [Category("Start up", "Breeding males")]
         [Description("Adjust breeding sires to number kept at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
+
+        /// <summary>
+        /// Include the marking for sale of males reaching age or weight
+        /// </summary>
+        [Category("Destock", "Breeding males")]
+        [Description("Mark males reaching age/weight for sale")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool MarkAgeWeightMalesForSale { get; set; }
 
         /// <summary>
         /// Male selling age (months)
@@ -184,7 +209,7 @@ namespace Models.CLEM.Activities
         /// Perform selling of young females the same as males
         /// </summary>
         [Category("Destock", "Breeding females")]
-        [Description("Perform selling of young females the same as males")]
+        [Description("Mark young females for sale with age/weight males")]
         [Required]
         public bool SellFemalesLikeMales { get; set; }
 
@@ -192,7 +217,7 @@ namespace Models.CLEM.Activities
         /// Identify males for sale every time step
         /// </summary>
         [Category("Destock", "Males")]
-        [Description("Identify males for sale every time step")]
+        [Description("Mark males reaching age/weight for sale every time step")]
         [Required]
         public bool ContinuousMaleSales { get; set; }
 
@@ -399,7 +424,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if(ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Breeders purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Breeders purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
@@ -417,7 +442,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Sires purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Sires purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
         }
@@ -507,15 +532,17 @@ namespace Models.CLEM.Activities
                 int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
 
                 // Number of females
-                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
-                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Count();
+                // weaned, >breeding age, female
+                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None && a.Weaned && a.Age >= a.BreedParams.MinimumAge1stMating ).Count();
+                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
                 int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.None & !a.Tags.Contains("GrowHeifer")).Count();
+                // AL removed [ & (a.Age - a.BreedParams.MinimumAge1stMating > -11)] to use definition of heifer only
+                int numberFemaleHeifersInHerd = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer && a.SaleFlag == HerdChangeReason.None && !a.Tags.Contains("GrowHeifer")).Count();
 
                 if (numberMaleSiresInHerd > SiresKept)
                 {
@@ -596,7 +623,7 @@ namespace Models.CLEM.Activities
 
                 // FEMALES
                 // Breeding herd sold as heifers only, purchased as breeders (>= minAge1stMating)
-                // Feb2020 - Added ability to provide desticking groups to try and sell non heifer breeders before reverting to heifer sales.
+                // Feb2020 - Added ability to provide destocking groups to try and sell non heifer breeders before reverting to heifer sales.
                 int excessBreeders = 0;
 
                 // get the mortality rate for the herd if available or assume zero
