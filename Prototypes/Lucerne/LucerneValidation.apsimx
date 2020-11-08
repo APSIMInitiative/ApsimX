@@ -7,7 +7,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "Issues to be tackled in this prototype:\r\n\r\n- Node number estimates are unrealistically high in FD5 New Zealand datasets (check Basalbuds potential bug)\r\n- Test NSE threshold is low (0.5) given model not yet stable\r\n- Taproot maintenence respiration is negligible at the moment as DMRetraslocation is doing nearly all of its seasonality - may need an optimisation of many parameters (RUEt, resp,retr) together\r\n- Senescence in fine-roots (Root) is only partially implemented based on literature - no data available\r\n- Leaf N% estimates have too narrow range (4-5%) compared to observed (3 to 6%)\r\n- Stem N% estimates have too narrow range, particularly not capturing low values <1%",
+      "Text": "Issues to be tackled in this prototype:\r\n\r\n- Node number estimates were unrealistically high - action: temporarily set BasalBudFactor to 0. Needs revision if used.\r\n- Thresholds in NSE tests are low as model is not yet stable (raising them as fits improve)\r\n- Taproot maintenence respiration is negligible at the moment. Reason is that DMRetraslocation is doing nearly all of taproot seasonality - may need an optimisation of multiple parameters all together (RUEt, resp,retr) \r\n- Senescence of fine-roots (Root) is only partially implemented based on literature - no data available\r\n- Leaf N% estimates have too narrow range (4-5%) compared to observed (3 to 6%)- no action so far\r\n- Stem N% estimates have too narrow range, particularly not capturing low values <1% - no action so far",
       "Name": "Issues",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -1858,7 +1858,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\n## Reference  \r\n\r\nNote: First attempt to have some seasonnal dynamics of fine-roots, no data available for testing so based only in Luo et al 1995 at this initial stage.\r\n\r\nhttps://www.sciencedirect.com/science/article/pii/037842909400090Y\r\n\r\nY.Luo; P.A.Meyerhoff; R.S.Loomis (1995) Seasonal patterns and vertical distributions of fine roots of alfalfa (Medicago sativa L.).Field Crops Research\r\nVolume 40, Issue 2, February 1995, Pages 119-127\r\n\r\n0.0012/h (page 122) converts into 0.028/day of MaxSenescRate\r\n\r\nTemp_Eff_root is effect of temperature from Figure 2 panel D\r\n\r\nChoEff_root is effect of soluble CHOs from Figure 2 Panel C - This is not functional yet.\r\n\r\nSome sensible patterns:\r\n \r\n- Temperature adjusted turnover rates were assumed sensible if around 1%/day\r\n- Seasonality with lowest amounts in summer\r\n- Total amounts (40 cm depth) from 1 to 3 t DM/ha \r\n\r\nbased on Reid, J., Gray, R., Springett, J. and Crush, J. (2015), Root turnover in pasture species: chicory, lucerne, perennial ryegrass and white clover. Ann Appl Biol, 167: 327-342. doi:10.1111/aab.12228\r\n\r\nFIXME: Need data and suggested that parameters are estimated by optmising [RUEtot + Resp + Translocation] in relation to [Shoot + Root] ",
+                      "Text": "\r\n## Reference  \r\n\r\nNote: First attempt to have some seasonnal dynamics of fine-roots, no data available for testing so based only in Luo et al 1995 at this initial stage.\r\n\r\nhttps://www.sciencedirect.com/science/article/pii/037842909400090Y\r\n\r\nY.Luo; P.A.Meyerhoff; R.S.Loomis (1995) Seasonal patterns and vertical distributions of fine roots of alfalfa (Medicago sativa L.).Field Crops Research\r\nVolume 40, Issue 2, February 1995, Pages 119-127\r\n\r\n0.0012/h (page 122) converts into 0.028/day of MaxSenescRate\r\n\r\nTemp_Eff_root is effect of temperature from Figure 2 panel D\r\n\r\nChoEff_root is effect of soluble CHOs from Figure 2 Panel C - This is not functional yet.\r\n\r\nSome sensible patterns checked:\r\n \r\n- Temperature adjusted turnover rates were assumed sensible if around 1%/day\r\n- Seasonality with lowest amounts in summer\r\n- Total amounts (1.5 m depth) from 1 to 3 t DM/ha \r\n\r\nbased on Reid, J., Gray, R., Springett, J. and Crush, J. (2015), Root turnover in pasture species: chicory, lucerne, perennial ryegrass and white clover. Ann Appl Biol, 167: 327-342. doi:10.1111/aab.12228\r\n\r\nhttps://onlinelibrary.wiley.com/doi/abs/10.1111/aab.12228\r\n\r\nFIXME: Need data and suggested that parameters are estimated by optmising [RUEtot + Resp + Translocation] in relation to [Shoot + Root] ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3009,7 +3009,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.2,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "BasalBudFactor",
                                   "Children": [],
@@ -3057,7 +3057,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "BasalBudFactor",
                                   "Children": [],
@@ -3076,6 +3076,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\r\nFIXME: Note, opted to set both \"BasalBudFactor\" coefficients to zero (i.e. turned off) as these were causing unrealistically high estimates of node number. Needs revision of logic + refs if opted to be used.",
+                      "Name": "Description",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -89712,7 +89721,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n\r\n     public string[] Components = {\"Leaf\",\"Stem\",\"Root\"};\r\n     public double[] Tresholds = {0.67,0.63,0.57}; // Aim for NSE > 0.7 once prototype is stable\r\n           \r\n        public void Run()\r\n        {\r\n            DataStore store = this.FindInScope<DataStore>() as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");   \r\n\r\n            for (int c = 0; c < 3; c++)\r\n            {\r\n                 var predictedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.\"+Components[c]+\"Wt\");\r\n                 var observedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.\"+Components[c]+\"Wt\");\r\n                 var stats = MathUtilities.CalcRegressionStats(Components[c]+\"Wt\", predictedWt, observedWt);\r\n                 if (stats.NSE < Tresholds[c])\r\n                \tthrow new Exception(\"Test failed. NSE for \"+Components[c]+\"Wt is below threshold. NSE=\" + stats.NSE);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n\r\n     //public string[] Components = {\"Leaf\",\"Stem\",\"Root\"};\r\n     public string[] Components = {\"LeafWt\",\"StemWt\",\"RootWt\",\"NodeNumber\"};\r\n     public double[] Tresholds = {0.65,0.55,0.55,0.8}; // Aim for NSE > 0.7 for all once prototype is stable\r\n           \r\n        public void Run()\r\n        {\r\n            DataStore store = this.FindInScope<DataStore>() as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");   \r\n\r\n            for (int c = 0; c < 3; c++)\r\n            {\r\n                 //var predictedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.\"+Components[c]+\"Wt\");\r\n                 //var observedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.\"+Components[c]+\"Wt\");\r\n                 var predictedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.\"+Components[c]);\r\n                 var observedWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.\"+Components[c]);\r\n                 var stats = MathUtilities.CalcRegressionStats(Components[c]+\"Wt\", predictedWt, observedWt);\r\n                 if (stats.NSE < Tresholds[c])\r\n                \tthrow new Exception(\"Test failed. NSE for \"+Components[c]+\"Wt is below threshold. NSE=\" + stats.NSE);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
       "Parameters": [],
       "Name": "Test",
       "IncludeInDocumentation": true,
