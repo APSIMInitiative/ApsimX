@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ForestryView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
@@ -14,6 +9,8 @@ namespace UserInterface.Views
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
     using Interfaces;
+    using System.Drawing;
+    using EventArguments;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -155,6 +152,7 @@ namespace UserInterface.Views
                 List<DateTime> dates = new List<DateTime>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[0] as string))
+                        // Use the current culture
                         dates.Add(DateTime.Parse((string)row[0]));
                 return dates.ToArray();
             }
@@ -191,39 +189,24 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets the canopy widths shown in the temporal data grid.
+        /// Gets the shade modifiers shown in the temporal data grid.
         /// </summary>
-        public double[] CanopyWidths
+        public double[] ShadeModifiers
         {
             get
             {
-                List<double> canopyWidths = new List<double>();
+                List<double> shadeModifiers = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[3] as string))
-                        canopyWidths.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
-                return canopyWidths.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets the tree leaf areas shown in the temporal data grid.
-        /// </summary>
-        public double[] TreeLeafAreas
-        {
-            get
-            {
-                List<double> treeLeafAreas = new List<double>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[4] as string))
-                        treeLeafAreas.Add(Convert.ToDouble((string)row[4], System.Globalization.CultureInfo.InvariantCulture));
-                return treeLeafAreas.ToArray();
+                        shadeModifiers.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
+                return shadeModifiers.ToArray();
             }
         }
 
         /// <summary>
         /// Invoked when the user finishes editing a cell.
         /// </summary>
-        public event EventHandler OnCellEndEdit;
+        public event EventHandler<GridCellsChangedArgs> OnCellEndEdit;
 
         /// <summary>
         /// Setup the spatial data grid.
@@ -231,25 +214,23 @@ namespace UserInterface.Views
         /// <param name="dates">Dates to be displayed in the dates column.</param>
         /// <param name="heights">Heights to be displayed in the heights column.</param>
         /// <param name="nDemands">N Demands to be displayed in the N Demands column.</param>
-        /// <param name="canopyWidths">Canopy widths to be displayed in the canopy widths column.</param>
-        /// <param name="treeLeafAreas">Tree leaf areas to be displayed in the leaf areas column.</param>
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] canopyWidths, double[] treeLeafAreas)
+        /// <param name="shadeModifiers">Shade Modifiers to be displayed in the shade modifiers column.</param>
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] shadeModifiers)
         {
-            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
+            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Shade Modifier (>=0)" };
             DataTable table = new DataTable("Height Data");
 
             // Use the string column type for everything.
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
                 table.Columns.Add(colLabels[i], typeof(string));
 
             for (int i = 0; i < dates.Length; i++)
             {
-                string date = dates.Length > i ? dates[i].ToShortDateString() : null;
-                string height = heights.Length > i ? (heights[i] / 1000).ToString() : null;
-                string nDemand = nDemands.Length > i ? nDemands[i].ToString() : null;
-                string canopyWidth = canopyWidths.Length > i ? canopyWidths[i].ToString() : null;
-                string treeLeafArea = treeLeafAreas.Length > i ? treeLeafAreas[i].ToString() : null;
-                table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
+                string date = dates?.Length > i ? dates[i].ToShortDateString() : null;
+                string height = heights?.Length > i ? (heights[i] / 1000).ToString() : null;
+                string nDemand = nDemands?.Length > i ? nDemands[i].ToString() : null;
+                string shadeModifier = shadeModifiers?.Length > i ? shadeModifiers[i].ToString() : null;
+                table.Rows.Add(date, height, nDemand, shadeModifier);
             }
 
             TemporalDataGrid.DataSource = table;
@@ -268,7 +249,6 @@ namespace UserInterface.Views
                 belowGroundGraph.Model.Axes.Clear();
                 belowGroundGraph.Model.Series.Clear();
                 aboveGroundGraph.Model.Title = "Above Ground";
-                aboveGroundGraph.Model.PlotAreaBorderColor = OxyColors.White;
                 aboveGroundGraph.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis agxAxis = new LinearAxis();
                 agxAxis.Title = "Multiple of Tree Height";
@@ -304,6 +284,10 @@ namespace UserInterface.Views
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
+                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                SetForegroundColour(aboveGroundGraph, foregroundColour);
+                SetBackgroundColour(aboveGroundGraph, backgroundColour);
             }
             //don't draw the series if the format is wrong
             catch (FormatException)
@@ -315,7 +299,6 @@ namespace UserInterface.Views
             try
             {
                 belowGroundGraph.Model.Title = "Below Ground";
-                belowGroundGraph.Model.PlotAreaBorderColor = OxyColors.White;
                 belowGroundGraph.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
@@ -357,6 +340,10 @@ namespace UserInterface.Views
                     series.ItemsSource = points;
                     belowGroundGraph.Model.Series.Add(series);
                 }
+                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                SetForegroundColour(belowGroundGraph, foregroundColour);
+                SetBackgroundColour(belowGroundGraph, backgroundColour);
             }
             // Don't draw the series if the format is wrong.
             catch (FormatException)
@@ -368,6 +355,33 @@ namespace UserInterface.Views
                 aboveGroundGraph.InvalidatePlot(true);
                 belowGroundGraph.InvalidatePlot(true);
             }
+        }
+
+        private void SetBackgroundColour(PlotView graph, Color colour)
+        {
+            OxyColor backgroundColour = Utility.Colour.ToOxy(colour);
+        }
+
+        private void SetForegroundColour(PlotView graph, Color colour)
+        {
+            OxyColor foregroundColour = Utility.Colour.ToOxy(colour);
+            foreach (Axis oxyAxis in graph.Model.Axes)
+            {
+                oxyAxis.AxislineColor = foregroundColour;
+                oxyAxis.ExtraGridlineColor = foregroundColour;
+                oxyAxis.MajorGridlineColor = foregroundColour;
+                oxyAxis.MinorGridlineColor = foregroundColour;
+                oxyAxis.TicklineColor = foregroundColour;
+                oxyAxis.MinorTicklineColor = foregroundColour;
+                oxyAxis.TitleColor = foregroundColour;
+                oxyAxis.TextColor = foregroundColour;
+
+            }
+            graph.Model.TextColor = foregroundColour;
+            graph.Model.LegendTextColor = foregroundColour;
+            graph.Model.LegendTitleColor = foregroundColour;
+            graph.Model.SubtitleColor = foregroundColour;
+            graph.Model.PlotAreaBorderColor = foregroundColour;
         }
 
         /// <summary>
@@ -399,11 +413,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void GridCellEdited(object sender, EventArgs args)
+        private void GridCellEdited(object sender, GridCellsChangedArgs args)
         {
             try
             {
-                OnCellEndEdit?.Invoke(this, EventArgs.Empty);
+                OnCellEndEdit?.Invoke(sender, args);
             }
             catch (Exception err)
             {

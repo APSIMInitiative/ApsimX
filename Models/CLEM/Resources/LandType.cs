@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double LandArea { get; set; }
 
         /// <summary>
@@ -47,20 +47,20 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
-        [Required, Proportion]
+        [Required, Proportion, GreaterThanValue(0)]
         public double ProportionOfTotalArea { get; set; }
 
         /// <summary>
         /// Soil Type (1-5) 
         /// </summary>
-        [Description("Soil type index")]
+        [Description("Land type id")]
         [Required]
         public string SoilType { get; set; }
 
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
         private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
         private double roundedAreaAvailable;
@@ -68,13 +68,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The total area available 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
 
         /// <summary>
         /// List of currently allocated land
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LandActivityAllocation> AllocatedActivitiesList;
 
         private CLEMModel ActivityRequestingRemainingLand;
@@ -137,7 +137,7 @@ namespace Models.CLEM.Resources
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported Add method in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
             }
             double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;
@@ -287,7 +287,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
@@ -300,17 +300,28 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
-            string units = (this as IResourceType).Units;
-            if (units != "NA")
+            if (LandArea == 0)
             {
-                if (units == null || units == "")
+                html += "<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land";
+            }
+            else if (ProportionOfTotalArea == 0)
+            {
+                html += "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned";
+            }
+            else
+            {
+                html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
+                string units = (this as IResourceType).Units;
+                if (units != "NA")
                 {
-                    html += "";
-                }
-                else
-                {
-                    html += " <span class=\"setvalue\">" + units + "</span>";
+                    if (units == null || units == "")
+                    {
+                        html += "";
+                    }
+                    else
+                    {
+                        html += " <span class=\"setvalue\">" + units + "</span>";
+                    }
                 }
             }
 
@@ -320,7 +331,7 @@ namespace Models.CLEM.Resources
             }
             html += "</div>";
             html += "\n<div class=\"activityentry\">";
-            html += "This land has soil of index <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
+            html += "This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
             html += "\n</div>";
             return html;
         }

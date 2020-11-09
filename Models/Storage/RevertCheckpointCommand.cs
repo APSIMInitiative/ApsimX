@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
@@ -13,6 +14,13 @@
     {
         private DataStoreWriter writer;
         private int checkpointIDToRevertTo;
+
+        public string Name { get { return "Revert Checkpoint"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
 
         /// <summary>Constructor</summary>
         /// <param name="dataStoreWriter">The datastore writer that called this constructor.</param>

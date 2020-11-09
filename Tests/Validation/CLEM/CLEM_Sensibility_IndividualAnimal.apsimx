@@ -1,11 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 54,
+  "Version": 90,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -27,8 +30,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "1995-01-01T00:00:00",
-          "EndDate": "2009-12-31T00:00:00",
+          "Start": "1995-01-01T00:00:00",
+          "End": "2009-12-31T00:00:00",
           "Name": "clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -47,22 +50,32 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "Seed": 0,
+          "Iteration": 0,
+          "Name": "RandomNumbers",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.CLEM.ZoneCLEM, Models",
-          "RandomSeed": 0,
+          "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
           "EcologicalIndicatorsCalculationMonth": 12,
           "Area": 0.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "CLEM",
           "Children": [
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
-              "SelectedTab": null,
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
-                  "SelectedTab": null,
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -96,8 +109,6 @@
                       "GreenDietMax": 0.98,
                       "GreenDietCoefficient": 0.15,
                       "GreenDietZero": 0.04,
-                      "IntakeTropicalQuality": 0.16,
-                      "IntakeCoefficientQuality": 1.7,
                       "IntakeCoefficientBiomass": 0.006,
                       "StrictFeedingLimits": true,
                       "MilkIntakeCoefficient": 0.1206,
@@ -126,28 +137,24 @@
                       "MilkPeakYield": 20.0,
                       "MilkOffsetDay": 4.0,
                       "MilkPeakDay": 45.0,
+                      "ProportionOffspringMale": 0.0,
                       "InterParturitionIntervalIntercept": 10.847,
                       "InterParturitionIntervalCoefficient": -0.7994,
                       "GestationLength": 9.0,
                       "MinimumAge1stMating": 24.0,
+                      "MaximumAgeMating": 120.0,
                       "MinimumSize1stMating": 0.5,
                       "MinimumDaysBirthToConception": 61.0,
                       "MultipleBirthRate": null,
                       "CriticalCowWeight": 0.5,
-                      "ConceptionRateCoefficent": -14.247,
-                      "ConceptionRateIntercept": 5.182,
-                      "ConceptionRateAsymptote": 90.0,
                       "MaximumMaleMatingsPerDay": 30.0,
                       "PrenatalMortality": 0.079,
-                      "MaximumConceptionUncontrolledBreeding": 0.7,
                       "MethaneProductionCoefficient": 35.16,
-                      "Units": null,
-                      "SelectedTab": null,
                       "Name": "Bos indicus",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
-                          "SelectedTab": null,
+                          "WeightWarningOccurred": false,
                           "Name": "Initial cohorts",
                           "Children": [
                             {
@@ -159,7 +166,6 @@
                               "WeightSD": 0.0,
                               "Suckling": false,
                               "Sire": false,
-                              "SelectedTab": null,
                               "Name": "WeanerF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -183,22 +189,19 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
-                  "SelectedTab": null,
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
                       "$type": "Models.CLEM.Resources.AnimalFoodStoreType, Models",
+                      "Units": "kg",
                       "DMD": 45.0,
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
-                      "Units": null,
-                      "SelectedTab": null,
                       "Name": "RiceStraw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Transmutation, Models",
                           "AmountPerUnitPurchase": 10000.0,
-                          "SelectedTab": null,
                           "Name": "Purchase",
                           "Children": [
                             {
@@ -206,7 +209,6 @@
                               "ResourceType": null,
                               "ResourceTypeName": "Finances.General account",
                               "CostPerUnit": 100.0,
-                              "SelectedTab": null,
                               "Name": "Money",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -231,7 +233,6 @@
                 {
                   "$type": "Models.CLEM.Resources.Finance, Models",
                   "CurrencyName": "Dollars",
-                  "SelectedTab": null,
                   "Name": "Finances",
                   "Children": [
                     {
@@ -241,8 +242,6 @@
                       "WithdrawalLimit": 0.0,
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
-                      "Units": null,
-                      "SelectedTab": null,
                       "Name": "General account",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -263,13 +262,11 @@
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
               "LastShortfallResourceRequest": null,
               "LastActivityPerformed": null,
-              "SelectedTab": null,
               "Name": "Activities",
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                   "OnPartialResourcesAvailableAction": 0,
-                  "SelectedTab": null,
                   "Name": "Manage herd",
                   "Children": [
                     {
@@ -281,13 +278,11 @@
                       "PredictedHerdName": null,
                       "PredictedHerdBreed": null,
                       "OnPartialResourcesAvailableAction": 2,
-                      "SelectedTab": null,
                       "Name": "Feed rice straw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                           "Value": 1.0,
-                          "SelectedTab": null,
                           "Name": "Feed all",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -303,7 +298,6 @@
                       "$type": "Models.CLEM.Activities.RuminantActivityGrow, Models",
                       "EnergyGross": 18.8,
                       "OnPartialResourcesAvailableAction": 0,
-                      "SelectedTab": null,
                       "Name": "Grow all ruminants",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -318,7 +312,6 @@
                 {
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
                   "HerdFilters": null,
-                  "SelectedTab": null,
                   "Name": "SummariseHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -327,7 +320,6 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
-                  "SelectedTab": null,
                   "Name": "ReportHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -345,9 +337,7 @@
               "Name": "Reports and Graphs",
               "Children": [
                 {
-                  "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Activities].SummariseHerd.ReportDetails.Breed as Breed",
@@ -365,6 +355,7 @@
                   "EventNames": [
                     "[Activities].SummariseHerd.OnReportItemGenerated"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdSummary",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -372,9 +363,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Activities].ReportHerd.ReportDetails.Individual.ID as UID",
@@ -383,6 +372,7 @@
                   "EventNames": [
                     "[Activities].ReportHerd.OnReportItemGenerated"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdReport",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -390,9 +380,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today as Date",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
@@ -407,6 +395,7 @@
                   "EventNames": [
                     "[Resources].Ruminants.TransactionOccurred"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdLedger",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -415,12 +404,11 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "Finances"
                   ],
                   "EventNames": null,
+                  "GroupByVariableName": null,
                   "Name": "FinancesLedger",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -428,23 +416,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
-                  "VariableNames": [
-                    "AnimalFoodStore"
-                  ],
-                  "EventNames": null,
-                  "Name": "AnimalFoodStoreLedger",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "AnimalFoodStore",
@@ -454,6 +426,7 @@
                   "EventNames": [
                     "[Clock].CLEMEndOfTimeStep"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "ReportResourceBalances",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -462,10 +435,9 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": null,
                   "EventNames": null,
+                  "GroupByVariableName": null,
                   "Name": "ReportActivitiesPerformed",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -473,11 +445,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -488,7 +460,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Rice straw (kg)",
                       "Inverted": false,
@@ -500,11 +472,13 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AnimalFoodStoreBalance",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -516,12 +490,11 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "RiceStraw",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -539,11 +512,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -554,7 +527,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Liveweight (kg)",
                       "Inverted": false,
@@ -566,11 +539,13 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Liveweight_Individual",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -582,12 +557,11 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "HerdReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Weight",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -605,11 +579,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -620,7 +594,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Weight gain (kg/month)",
                       "Inverted": false,
@@ -632,11 +606,13 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "WeightGain_Individual",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -648,12 +624,11 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "HerdSummary",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "AvgWtGn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -671,11 +646,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -686,7 +661,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Bank balance ($)",
                       "Inverted": false,
@@ -698,11 +673,13 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "BankBalance",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -714,12 +691,11 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "General account",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,

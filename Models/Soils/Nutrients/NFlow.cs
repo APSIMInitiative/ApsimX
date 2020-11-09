@@ -17,16 +17,18 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.GridView")]
     public class NFlow : Model
     {
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction rate = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction NLoss = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction N2OFraction = null;
 
+        [NonSerialized]
         private ISolute sourceSolute = null;
+        [NonSerialized]
         private ISolute destinationSolute = null;
 
         /// <summary>
@@ -55,16 +57,6 @@ namespace Models.Soils.Nutrients
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
 
-        /// <summary>Invoked when the simulation starts.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            sourceSolute = Apsim.Find(this, Parent.Name) as ISolute;
-            destinationSolute = Apsim.Find(this, destinationName) as ISolute;
-        }
-
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
@@ -72,8 +64,15 @@ namespace Models.Soils.Nutrients
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
-        {            
+        {
+            if (sourceSolute == null)
+            {
+                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                destinationSolute = FindInScope<ISolute>(destinationName);
+            }
+
             double[] source = sourceSolute.kgha;
+            int numLayers = source.Length;
             if (Value == null)
                 Value = new double[source.Length];
             if (Natm == null)
@@ -86,7 +85,7 @@ namespace Models.Soils.Nutrients
             if (destinationName !=null)
                 destination = destinationSolute.kgha;
 
-            for (int i= 0; i < source.Length; i++)
+            for (int i= 0; i < numLayers; i++)
             {
                 double nitrogenFlow = 0;
                 if (source[i]>0)

@@ -47,8 +47,8 @@
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Clock, Models\""));
-            Assert.IsTrue(json.Contains("\"StartDate\": \"2015-01-01T00:00:00\""));
-            Assert.IsTrue(json.Contains("\"EndDate\": \"2015-12-31T00:00:00\""));
+            Assert.IsTrue(json.Contains("\"Start\": \"2015-01-01T00:00:00\""));
+            Assert.IsTrue(json.Contains("\"End\": \"2015-12-31T00:00:00\""));
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Summary, Models\""));
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Manager, Models\""));
         }
@@ -102,7 +102,7 @@
             List<Exception> creationExceptions;
             var simulations = FileFormat.ReadFromString<Simulations>(json, out creationExceptions);
             Assert.AreEqual(creationExceptions.Count, 1);
-            Assert.IsTrue(creationExceptions[0].Message.StartsWith("Unable to compile"));
+            Assert.IsTrue(creationExceptions[0].Message.StartsWith("Errors found"));
 
             // Even though the manager model threw an exception we should still have
             // a valid simulation.
@@ -127,7 +127,7 @@
             sim.Children.Add(new ModelWithIDontSerialiseChildren()
             {
                 Name = "ModelImplementingIDontSerialiseChildren",
-                Children = new List<Model>() { new Clock() }
+                Children = new List<IModel>() { new Clock() }
             });
 
             Simulations simulations = new Simulations();

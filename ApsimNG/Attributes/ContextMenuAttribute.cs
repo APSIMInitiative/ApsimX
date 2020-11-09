@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ContextMenuAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
 
@@ -23,6 +18,11 @@ namespace Models.Core
         /// Gets or sets the model types that this menu applies to.
         /// </summary>
         public Type[] AppliesTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the model types that this menu DOES NOT apply to.
+        /// </summary>
+        public Type[] Excluding { get; set; }
 
         /// <summary>
         /// Key to be treated as a shortcut for the menu item.

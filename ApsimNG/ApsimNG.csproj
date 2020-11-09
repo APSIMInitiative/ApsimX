@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -68,14 +68,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Cloud\AzureSettings.settings">
+    <None Include="Cloud\Azure\AzureSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AzureSettings.Designer.cs</LastGenOutput>
     </None>
@@ -115,7 +115,6 @@
     <EmbeddedResource Include="Resources\Glade\ModelDetailsWrapperView.glade" />
     <EmbeddedResource Include="Resources\Glade\ReportActivityLedgerView.glade" />
     <EmbeddedResource Include="Resources\Glade\InputNextBackView.glade" />
-    <EmbeddedResource Include="Resources\Glade\StockView.glade" />
     <EmbeddedResource Include="Resources\Glade\BrowserFind.glade" />
     <EmbeddedResource Include="Resources\Glade\DualGridView.glade" />
     <EmbeddedResource Include="Resources\dark.gtkrc" />
@@ -124,6 +123,16 @@
     <EmbeddedResource Include="Resources\Glade\SoilDownload.glade" />
     <EmbeddedResource Include="Resources\Glade\ExperimentView.glade" />
     <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
+    <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
+    <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CloudJobView.glade" />
+    <EmbeddedResource Include="Resources\Glade\RunOnCloudView.glade" />
+    <EmbeddedResource Include="Resources\Glade\DownloadSoilView.glade" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -137,6 +146,23 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Resources\Test.xshd" />
+    <None Include="Web References\ApsoilWeb\PAWCByCrop.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\ApsoilWeb\Service.wsdl" />
+    <None Include="Web References\ApsoilWeb\SoilAnalysisInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\SoilBasicInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\ApsoilWeb\SoilInfo.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Models\Properties\AssemblyVersion.cs">
@@ -145,6 +171,8 @@
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\CustomMenuToolButton.cs" />
+    <Compile Include="Classes\PDFWriter.cs" />
+    <Compile Include="Classes\PropertyPresenterHelpers.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -171,43 +199,54 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
-    <Compile Include="Cloud\APSIMJob.cs" />
-    <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
-    <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
-    <Compile Include="Cloud\AzureCredentialsSetup.cs" />
-    <Compile Include="Cloud\AzureResultsDownloader.cs" />
-    <Compile Include="Cloud\AzureSettings.Designer.cs">
+    <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
+    <Compile Include="Cloud\Azure\AzureExtensions.cs" />
+    <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AzureSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Cloud\BatchConstants.cs" />
-    <Compile Include="Cloud\BatchCredentials.cs" />
-    <Compile Include="Cloud\DownloadWindow.cs" />
-    <Compile Include="Cloud\FileUploader.cs" />
-    <Compile Include="Cloud\ICloudJobPresenter.cs" />
+    <Compile Include="Cloud\Azure\AzureInterface.cs" />
+    <Compile Include="Cloud\Azure\BatchConstants.cs" />
+    <Compile Include="Cloud\Azure\Licence.cs" />
+    <Compile Include="Cloud\DownloadOptions.cs" />
+    <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\DownloadPresenter.cs" />
+    <Compile Include="Presenters\DocumentationPresenter.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MarkdownView.cs" />
+    <Compile Include="Views\ProgressBarView.cs" />
+    <Compile Include="Views\PropertyAndGridView.cs" />
+    <Compile Include="Views\PropertyView.cs" />
+    <Compile Include="Classes\ContextMenuHelper.cs" />
+    <Compile Include="Classes\Property.cs" />
+    <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
-    <Compile Include="Cloud\PoolSettings.cs" />
-    <Compile Include="Cloud\StorageConstants.cs" />
-    <Compile Include="Cloud\StorageCredentials.cs" />
+    <Compile Include="Cloud\Azure\StorageConstants.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
+    <Compile Include="Commands\CreateParamsInputsOutputsDocCommand.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />
-    <Compile Include="Commands\ExportNodeCommand.cs" />
+    <Compile Include="Commands\CreateFileDocumentationCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
     <Compile Include="Commands\RenameModelCommand.cs" />
-    <Compile Include="Commands\ReplaceModelCommand.cs" />
     <Compile Include="Commands\RunCommand.cs" />
-    <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
-    <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="EventArguments\AsyncEventHandler.cs" />
+    <Compile Include="EventArguments\BubbleChartArgs.cs" />
+    <Compile Include="EventArguments\GraphObjectSelectedArgs.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
+    <Compile Include="EventArguments\GridCellChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
@@ -217,14 +256,18 @@
     <Compile Include="EventArguments\IntellisenseItemSelectedArgs.cs" />
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
+    <Compile Include="EventArguments\PropertyChangedEventArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Presenters\CompositePropertyPresenter.cs" />
+    <Compile Include="Interfaces\IBubbleChartView.cs" />
+    <Compile Include="Interfaces\IPropertyView.cs" />
+    <Compile Include="Interfaces\ICloudJobView.cs" />
+    <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
+    <Compile Include="Interfaces\ITernaryGraphView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
     <Compile Include="Presenters\CLEM\CustomQueryPresenter.cs" />
@@ -237,14 +280,23 @@
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Presenters\GraphPanelPresenter.cs" />
+    <Compile Include="Presenters\ProfileGridPresenter.cs" />
     <Compile Include="Presenters\PropertyAndTablePresenter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utility\ApsimFileMetadata.cs" />
+    <Compile Include="Utility\GtkUtilities.cs" />
+    <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
     <Compile Include="Presenters\CompositeFactorPresenter.cs" />
+    <Compile Include="Utility\ConfigurationConverter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
+    <Compile Include="Utility\WeatherDownloadDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
@@ -253,17 +305,19 @@
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
+    <Compile Include="Views\GraphPanelView.cs" />
+    <Compile Include="Views\HelpView.cs" />
     <Compile Include="Views\LabelView.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\MenuItemView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
+    <Compile Include="Views\TernaryGraphView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />
     <Compile Include="Interfaces\IButtonView.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\ICultivarView.cs" />
-    <Compile Include="Interfaces\IFileConverterView.cs" />
     <Compile Include="Interfaces\IFileDialog.cs" />
     <Compile Include="Interfaces\IExperimentView.cs" />
     <Compile Include="Interfaces\IMainView.cs" />
@@ -278,18 +332,16 @@
     <Compile Include="Interfaces\IInitialWaterView.cs" />
     <Compile Include="Interfaces\IModelDetailsWrapperView.cs" />
     <Compile Include="Interfaces\ISeriesView.cs" />
-    <Compile Include="Interfaces\IStockView.cs" />
     <Compile Include="Interfaces\ISummaryView.cs" />
     <Compile Include="Interfaces\ISupplementView.cs" />
     <Compile Include="Interfaces\ITestView.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
+    <Compile Include="Presenters\CloudJobPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -299,7 +351,6 @@
     <Compile Include="Presenters\GenericPresenter.cs" />
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
-    <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
@@ -312,48 +363,42 @@
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TablePresenter.cs" />
-    <Compile Include="Presenters\NewAzureJobPresenter.cs" />
+    <Compile Include="Presenters\RunOnCloudPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
     <Compile Include="Presenters\PropertyPresenter.cs" />
+    <Compile Include="Presenters\SimplePropertyPresenter.cs" />
     <Compile Include="Presenters\ReportPresenter.cs" />
     <Compile Include="Presenters\SeriesPresenter.cs" />
-    <Compile Include="Presenters\StockPresenter.cs" />
     <Compile Include="Presenters\SummaryPresenter.cs" />
     <Compile Include="Presenters\SupplementPresenter.cs" />
     <Compile Include="Presenters\DirectedGraphPresenter.cs" />
     <Compile Include="Presenters\TitlePresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
+    <Compile Include="Presenters\BubbleChartPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
     <Compile Include="Utility\FileDialog.cs" />
     <Compile Include="Utility\FindInBrowserForm.cs" />
     <Compile Include="Utility\FindAndReplaceForm.cs" />
+    <Compile Include="Utility\MarkdownFindView.cs" />
     <Compile Include="Utility\Graph.cs" />
     <Compile Include="Utility\LineSeriesWithTracker.cs" />
-    <Compile Include="Utility\SoilDownloadDialog.cs" />
     <Compile Include="Utility\StringEntryForm.cs" />
     <Compile Include="Views\AxisView.cs" />
+    <Compile Include="Views\BubbleChartView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CloudJobDisplayView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
-    <Compile Include="Views\EditBoxView.cs" />
+    <Compile Include="Views\EditView.cs" />
     <Compile Include="Views\EditorView.cs" />
     <Compile Include="Views\ErrorView.cs" />
-    <Compile Include="Views\FileConverterView.cs" />
     <Compile Include="Views\MenuView.cs" />
     <Compile Include="Views\ToolStripView.cs" />
     <Compile Include="Views\TreeView.cs" />
@@ -374,26 +419,30 @@
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
-    <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\NewAzureJobView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
-    <Compile Include="Views\StockView.cs" />
     <Compile Include="Views\SummaryView.cs" />
     <Compile Include="Views\SupplementView.cs" />
     <Compile Include="Views\TabbedMetDataView.cs" />
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\ViewBase.cs" />
+    <Compile Include="Views\WindowView.cs" />
     <Compile Include="Views\XYPairsView.cs" />
     <Compile Include="Utility\MacUtilities.cs" />
+    <Compile Include="Web References\ApsoilWeb\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Apsim.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\apsim_logo.png" />
+    <EmbeddedResource Include="Resources\Marker.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AutoDocumentation.css" />
@@ -459,15 +508,69 @@
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\notes.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileResource.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityManageExternal.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chloride.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimWaterTable.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SwimSubsurfaceDrain.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperature.png" />
+    <None Include="Web References\ApsoilWeb\Service.disco" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Filter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\TableExpression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SolutePatch.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NutrientPatchManager.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipRunningValue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\GrazeFoodStoreFertilityLimiter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HourlyInterpolation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ColdUpRegVrn1.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Stics.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimulationStats.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Draft.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Grapevine.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\HourlySinPpAdjusted.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GenotypeCross.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipTracker.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CalcCAMPVrnRates.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinalLeafNumberSet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VernalisationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CAMP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WaterBalance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DocumentCheck.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Document.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAERelationship.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPRyegrass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SlopeEffectsOnWeather.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTarget.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedToTargets.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMarkForSale.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CommonLandFoodStoreType.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeed.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
@@ -513,7 +616,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ReportResourceLedger.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityBuy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantDestockGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroupMonthly.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Sobol.png" />
@@ -521,7 +623,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
@@ -529,7 +630,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePastureHerd.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLitePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Equipment.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\EquipmentType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\WaterStore.png" />
@@ -554,7 +655,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageProduct.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityTask.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FilePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Finance.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityCalculateInterest.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityPayExpense.png" />
@@ -590,7 +691,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityHerdCost.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMilking.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMuster.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMove.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStocking.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStockingENSO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivitySellDryBreeders.png" />
@@ -598,7 +699,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityWean.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFeedGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilter.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantFilterGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantHerd.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantInitialCohorts.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantType.png" />
@@ -622,10 +723,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageReproductionProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCycle.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
@@ -742,11 +840,29 @@
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
+    <EmbeddedResource Include="Resources\RadInt.jpg" />
+    <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPBrowntop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPCocksfoot.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPKikuyu.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPPaspalum.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPPhalaris.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPRedClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPRhodes.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPTallFescue.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
+    <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
+    <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Genotype.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Animals.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <EmbeddedResource Include="Resources\success.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />
     <None Include="Resources\WaterGraph.xml" />
@@ -756,7 +872,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Physical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
@@ -774,7 +890,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Organic.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
@@ -792,6 +908,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Report.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Replacements.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\RotationManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Regression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\RectangularZone.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Probability.png" />
@@ -806,6 +923,19 @@
     <EmbeddedResource Include="Resources\TreeViewImages\PhaseLookup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\PhaseBasedSwitch.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OrganArbitrator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\BiomassTypeArbitrator.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/ReallocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/AllocateFixationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/RetranslocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/SendPotentialDMAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/UpdateLeafAreaMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/DryMatterAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/ArbitrationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/C4RetranslocationMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/NitrogenAllocationsMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/AllocateUptakesMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/WaterUptakeMethod.png" />
+    <EmbeddedResource Include="Resources/TreeViewImages/NitrogenUptakeMethod.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Operations.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OnEventFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\OilPalm.png" />
@@ -859,7 +989,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\BellCurveFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Axis.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ArrayBiomass.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Analysis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chemical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AirTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
@@ -873,13 +1003,9 @@
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models\Importer\Importer.csproj">
-      <Project>{075f2644-f14e-4010-ba52-35e4b0011835}</Project>
-      <Name>Importer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{a3e10705-f2bb-4182-a19c-7f63222584df}</Project>
@@ -953,16 +1079,43 @@
       <HintPath>..\packages\ICSharpCode.NRefactory.5.5.1\lib\Net40\ICSharpCode.NRefactory.Xml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ISO3166, Version=1.0.3.0, Culture=neutral, PublicKeyToken=8d672889792f7833, processorArchitecture=MSIL">
+      <HintPath>..\packages\ISO3166.1.0.3\lib\net20\ISO3166.dll</HintPath>
+    </Reference>
     <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\packages\SharpMap.1.1.0\lib\net40-client\SharpMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BruTile">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BruTile.Desktop">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\packages\NetTopologySuite.1.13.1\lib\net40-client\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ProjNET4GeoAPI">
+      <HintPath>..\packages\ProjNET4GeoAPI.1.3.0.3\lib\net40-client\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.Batch, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Azure.Batch.8.0.1\lib\net452\Microsoft.Azure.Batch.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Batch, Version=12.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Batch.12.0.0\lib\net452\Microsoft.Azure.Batch.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -973,15 +1126,17 @@
       <HintPath>..\Bin\Microsoft.Azure.Common.NetFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Management.Batch, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\Microsoft.Azure.Management.Batch.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.Management.Compute, Version=17.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Management.Compute.17.5.0\lib\net452\Microsoft.Azure.Management.Compute.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Storage.Blob, Version=11.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Storage.Blob.11.1.0\lib\net452\Microsoft.Azure.Storage.Blob.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Storage.Common, Version=11.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Storage.Common.11.1.0\lib\net452\Microsoft.Azure.Storage.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -994,10 +1149,16 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.10\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.20\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.10\lib\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.18\lib\net452\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Toolkit, Version=6.1.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Toolkit.6.1.1\lib\netstandard2.0\Microsoft.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Toolkit.Parsers, Version=6.1.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Toolkit.Parsers.6.1.1\lib\netstandard2.0\Microsoft.Toolkit.Parsers.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1046,7 +1207,9 @@
       <HintPath>Assemblies\MonoMac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.2.0.0-unstable0956\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
@@ -1057,7 +1220,7 @@
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin\pango-sharp.dll</HintPath>
+      <HintPath>..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -1069,6 +1232,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\netstandard1.1\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -1083,6 +1249,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.107.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -1091,9 +1258,27 @@
     <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
     </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\netstandard1.1\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.8.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.4\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
@@ -1104,7 +1289,25 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="https://apsimdev.apsim.info/ApsoilWebService/Service.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ApsoilWeb\</RelPath>
+      <UpdateFromURL>https://apsimdev.apsim.info/ApsoilWebService/Service.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>ApsimNG_ApsoilWeb_Service</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.107.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.107.0\build\net451\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -1114,4 +1317,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
+  </Target>
 </Project>

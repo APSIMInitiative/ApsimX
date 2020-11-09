@@ -158,7 +158,7 @@ namespace UnitTests.Core.ApsimFile
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
-            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
             List<JObject> descendatnsWithoutNamespace = JsonUtilities.ChildrenRecursively(rootNode, "Axis");
             List<JObject> children = JsonUtilities.Children(rootNode).Cast<JObject>().ToList();
             List<JObject> emptyList = new List<JObject>();
@@ -173,14 +173,14 @@ namespace UnitTests.Core.ApsimFile
             Assert.AreEqual(2, descendatnsWithoutNamespace.Count);
 
             // Ensure descendants of null is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Models.Graph.Axis"));
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Models.Axis"));
 
             // Ensure descendants of null is an empty list when filtering by type without namespace.
             Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(null, "Axis"));
 
             // Ensure descendants of a node with an empty children property
             // is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Models.Graph.Axis"));
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[1], "Models.Axis"));
 
             // Ensure descendants of a node with an empty children property
             // is an empty list when filtering by type without namespace.
@@ -188,7 +188,7 @@ namespace UnitTests.Core.ApsimFile
 
             // Ensure descendants of a node with no children property
             // is an empty list when filtering by type with namespace.
-            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Models.Graph.Axis"));
+            Assert.AreEqual(emptyList, JsonUtilities.ChildrenRecursively(children[2], "Models.Axis"));
 
             // Ensure descendants of a node with no children property
             // is an empty list when filtering by type without namespace.
@@ -206,7 +206,7 @@ namespace UnitTests.Core.ApsimFile
 
             Assert.IsNull(JsonUtilities.Parent(rootNode));
 
-            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            List<JObject> descendants = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
             var graph = JsonUtilities.Parent(descendants[0]);
             Assert.AreEqual(JsonUtilities.Name(graph), "Graph");
 
@@ -221,7 +221,7 @@ namespace UnitTests.Core.ApsimFile
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
-            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
 
             JsonUtilities.RenameProperty(axes[0], "Title", "Title2");
             Assert.IsNull(axes[0]["Title"]);
@@ -237,7 +237,7 @@ namespace UnitTests.Core.ApsimFile
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
             JObject rootNode = JObject.Parse(json);
 
-            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
+            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Axis");
 
             JsonUtilities.AddConstantFunctionIfNotExists(axes[0], "ConstantFunction", "1");
 

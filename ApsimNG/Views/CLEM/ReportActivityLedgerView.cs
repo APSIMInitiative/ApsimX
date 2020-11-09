@@ -6,7 +6,7 @@ namespace UserInterface.Views
     interface IReportActivityLedgerView
     {
         /// <summary>Provides access to the DataGrid.</summary>
-        IDataStoreView DataStoreView { get; }
+        ViewBase DataStoreView { get; }
 
         /// <summary>Provides access to the DataGrid.</summary>
         IActivityLedgerGridView DisplayView { get; }
@@ -18,7 +18,7 @@ namespace UserInterface.Views
         private Alignment alignment1 = null;
         private Alignment alignment2 = null;
 
-        private DataStoreView dataStoreView1;
+        private ViewBase dataStoreView1;
         private ActivityLedgerGridView displayView1;
 
         /// <summary>Constructor</summary>
@@ -30,7 +30,7 @@ namespace UserInterface.Views
             alignment2 = (Alignment)builder.GetObject("alignment2");
             mainWidget = notebook1;
 
-            dataStoreView1 = new DataStoreView(this);
+            dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
 
             displayView1 = new ActivityLedgerGridView(this);
@@ -47,7 +47,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Provides access to the DataGrid.</summary>
-        public IDataStoreView DataStoreView { get { return dataStoreView1; } }
+        public ViewBase DataStoreView { get { return dataStoreView1; } }
         /// <summary>Provides access to the display Grid.</summary>
         public IActivityLedgerGridView DisplayView { get { return displayView1; } }
     }

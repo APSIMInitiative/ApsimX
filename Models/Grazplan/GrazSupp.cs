@@ -8,6 +8,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Linq;
     using APSIM.Shared.Utilities;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Class containing some common routine for dealing with parameter sets
@@ -512,6 +513,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="attr">attibute to be retrieved or set</param>
         /// <returns>The value of the attribute chosen</returns>
+        [JsonIgnore]
         public double this[SuppAttribute attr]
         {
             get
@@ -1152,6 +1154,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="idx">The index.</param>
         /// <returns>The supplement object</returns>
+        [JsonIgnore]
         public SupplementItem this[int idx]
         {
             get
@@ -1289,12 +1292,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Computes a weighted average supplement composition
         /// </summary>
-        /// <param name="aveSupp">receives the average supplement composition</param>
-        public void AverageSuppt(out FoodSupplement aveSupp)
+        public FoodSupplement AverageSuppt()
         {
-            aveSupp = new FoodSupplement();
+            var aveSupp = new FoodSupplement();
             if (TotalAmount > 0.0)
                 aveSupp.MixMany(SuppArray);
+            return aveSupp;
         }
 
         /// <summary>
@@ -1428,6 +1431,11 @@ namespace Models.GrazPlan
         private const string ATTRHEADER = "R    DM    DMD    M/D     EE     CP     dg    ADIP     P        S       AA    MaxP Locales";
 
         /// <summary>
+        /// Lock object controlling access to GDefSupp
+        /// </summary>
+        protected readonly static object defSuppLock = new object();
+
+        /// <summary>
         /// Gets the default supp consts.
         /// </summary>
         /// <value>
@@ -1437,12 +1445,15 @@ namespace Models.GrazPlan
         {
             get
             {
-                if (GDefSupp == null)
+                lock (defSuppLock)
                 {
-                    GDefSupp = new SupplementLibrary();
-                    SetupDefaultSupplements();
+                    if (GDefSupp == null)
+                    {
+                        GDefSupp = new SupplementLibrary();
+                        SetupDefaultSupplements();
+                    }
+                    return GDefSupp;
                 }
-                return GDefSupp;
             }
         }
 
@@ -1605,7 +1616,7 @@ namespace Models.GrazPlan
                     while (transStr != string.Empty)
                     {
                         StringUtilities.TextToken(ref transStr, out language);
-                        if (transStr[0] == ':')
+                        if (transStr.Length > 0 && transStr[0] == ':')
                         {
                             transStr = transStr.Substring(1);
                             StringUtilities.TextToken(ref transStr, out transName, true);
@@ -1652,7 +1663,7 @@ namespace Models.GrazPlan
         /// <param name="locale">The locale.</param>
         public void ReadFromResource(string locale)
         {
-            string suppData = Properties.Resources.ResourceManager.GetString("Supplement");
+            string suppData = ReflectionUtilities.GetResourceAsString("Models.Resources.Supplement.txt");
             string[] suppStrings = suppData.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             this.ReadFromStrings(locale, suppStrings);
         }

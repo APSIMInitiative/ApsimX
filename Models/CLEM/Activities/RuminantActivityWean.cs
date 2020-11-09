@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -21,15 +22,25 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
+    [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
+        [Link]
+        Clock Clock = null;
+
+        /// <summary>
+        /// Style of weaning rule
+        /// </summary>
+        [Description("Weaning rule")]
+        public WeaningStyle Style { get; set; }
+
         /// <summary>
         /// Weaning age (months)
         /// </summary>
         [Description("Weaning age (months)")]
-        [Required, GreaterThanEqualValue(1)]
+        [Required, GreaterThanEqualValue(0)]
         public double WeaningAge { get; set; }
 
         /// <summary>
@@ -43,7 +54,7 @@ namespace Models.CLEM.Activities
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
         [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreName { get; set; }
         
         private string grazeStore; 
@@ -62,7 +73,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -72,10 +83,10 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
+                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
                 }
             }
         }
@@ -86,26 +97,49 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalManage")]
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
-            // if management month
+            // Weaning is performed in the Management event to ensure weaned individuals are treated as unweaned for their intake calculations
+            // and the mother is considered lactating for lactation energy demands otherwise IsLactating stops as soon as ind.wean() is performed.
+
+            // if wean month
             if (this.TimingOK)
             {
                 double labourlimit = this.LabourLimitProportion;
                 int weanedCount = 0;
                 ResourceRequest labour = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).FirstOrDefault<ResourceRequest>();
                 // Perform weaning
-                int count = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
-                foreach (var ind in this.CurrentHerd(true).Where(a => a.Weaned == false))
+                int count = this.CurrentHerd(false).Where(a => a.Weaned == false).Count();
+                foreach (var ind in this.CurrentHerd(false).Where(a => a.Weaned == false))
                 {
-                    if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
+                    bool readyToWean = false;
+                    switch (Style)
                     {
+                        case WeaningStyle.AgeOrWeight:
+                            readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
+                            break;
+                        case WeaningStyle.AgeOnly:
+                            readyToWean = (ind.Age >= WeaningAge);
+                            break;
+                        case WeaningStyle.WeightOnly:
+                            readyToWean = (ind.Weight >= WeaningWeight);
+                            break;
+                    }
+
+                    if (readyToWean)
+                    {
+                        this.Status = ActivityStatus.Success;
                         string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
+                        if (ind.Mother != null)
+                        {
+                            // report conception status changed when offspring weaned.
+                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                        }
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit))
+                    if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
                     {
                         this.Status = ActivityStatus.Partial;
                         break;
@@ -132,7 +166,7 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
-            int head = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
+            int head = herd.Where(a => a.Weaned == false).Count();
 
             double daysNeeded = 0;
             switch (requirement.UnitType)
@@ -229,8 +263,18 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Individuals are weaned at ";
-            html += "<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months or ";
-            html += "<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg";
+            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
+            {
+                html += "<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months";
+                if (Style == WeaningStyle.AgeOrWeight)
+                {
+                    html += " or  ";
+                }
+            }
+            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
+            {
+                html += "<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg";
+            }
             html += "</div>";
             html += "\n<div class=\"activityentry\">Weaned individuals will be placed in ";
             if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")

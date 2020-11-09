@@ -1,12 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ChangeProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
 
@@ -19,6 +15,12 @@ namespace UserInterface.Commands
         /// The list of all properties that need changing
         /// </summary>
         private IEnumerable<Property> properties = null;
+
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => properties.FirstOrDefault(p => p.Obj is IModel)?.Obj as IModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeProperty" /> class.
@@ -137,8 +139,8 @@ namespace UserInterface.Commands
             /// <param name="value">The new value of the property</param>
             public Property(object obj, string name, object value)
             {
-                if (obj is IModel && (obj as IModel).ReadOnly)
-                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", (obj as IModel).Name));
+                if (obj is IModel model && model.ReadOnly && name != nameof(model.ReadOnly) && name != nameof(model.Enabled))
+                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", model.FullPath));
                 this.Obj = obj;
                 this.Name = name;
                 this.NewValue = value;

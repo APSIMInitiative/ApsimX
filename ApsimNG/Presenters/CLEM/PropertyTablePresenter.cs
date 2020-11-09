@@ -1,4 +1,4 @@
-
+﻿
 namespace UserInterface.Presenters
 {
     using System;
@@ -17,6 +17,8 @@ namespace UserInterface.Presenters
     using Utility;
     using Views;
     using Models.Storage;
+    using System.Globalization;
+    using Models.LifeCycle;
 
     /// <summary>
     /// <para>
@@ -30,6 +32,12 @@ namespace UserInterface.Presenters
     /// the PropertyGrid. This is important when a PropertyGrid is embedded on
     /// a ProfileGrid and the ProfileGrid is displaying some properties as well.
     /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
+    /// </para>
+    /// <para>
+    /// This is similar to the <see cref="PropertyPresenter"/>, except that this
+    /// presenter shows properties for all children that have the same type in a single
+    /// table in the grid view. The rows will be the different properties, and the
+    /// columns will be the different values of that same property for each child.
     /// </para>
     /// </summary>
     public class PropertyTablePresenter : IPresenter
@@ -112,6 +120,7 @@ namespace UserInterface.Presenters
             }
 
             this.grid.NumericFormat = "G6";
+            grid.CanGrow = false;
             this.childrenWithSameType = this.GetChildModelsWithSameType(this.model);
             this.FindAllPropertiesForChildren();
             if (this.grid.DataSource == null)
@@ -182,10 +191,10 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.FirstOrDefault();
+                IModel firstChild = model.Children.FirstOrDefault();
                 if (firstChild != null)
                 {
-                    List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());
+                    List<IModel> sameTypeChildren = model.FindAllChildren().Where(c => firstChild.GetType().IsAssignableFrom(c.GetType())).ToList();
                     return sameTypeChildren;
                 }
             }
@@ -310,7 +319,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Updates the model (Just one column)
-        /// Updates the lists of Cultivar and Field names in the model.
+        /// Updates the lists of Cultivar, LifeCycle Phases and Field names in the model.
         /// This is used when the model has been changed. For example, when a 
         /// new crop has been selecled.
         /// </summary>
@@ -332,6 +341,22 @@ namespace UserInterface.Presenters
                     if (crop != null)
                     {
                         cell.DropDownStrings = this.GetCultivarNames(crop);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    Zone zone = model.FindInScope<Zone>();
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = this.GetLifeCycleNames(zone);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    LifeCycle lifeCycle = this.GetLifeCycle(this.properties[propListIndex]);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = this.GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (this.properties[propListIndex][i].Display.Type == DisplayType.FieldName)
@@ -431,6 +456,24 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = this.GetCultivarNames(crop);
                     }
                 }
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    Zone zone = model.FindInScope<Zone>();
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = this.GetLifeCycleNames(zone);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    LifeCycle lifeCycle = this.GetLifeCycle(this.properties[propListIndex]);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = this.GetPhaseNames(lifeCycle);
+                    }
+                }
                 else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
@@ -454,12 +497,12 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.CLEMResourceName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.CLEMResource)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
 
                     List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].Display.CLEMResourceNameResourceGroups) );
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].Display.CLEMResourceGroups) );
 
                     // add any extras elements provided to the list.
                     if(this.properties[propListIndex][i].Display.CLEMExtraEntries != null)
@@ -492,7 +535,7 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(this.model, typeof(IPlant)))
+                        foreach (Model crop in this.model.FindAllInScope<IPlant>())
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -501,7 +544,7 @@ namespace UserInterface.Presenters
                     }
                     else if (this.properties[propListIndex][i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(this.model, typeof(IPlant)).Select(m => m.Name).ToList();
+                        List<string> plantNames = this.model.FindAllInScope<IPlant>().OfType<IModel>().Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = plantNames.ToArray();
                     }
@@ -527,11 +570,11 @@ namespace UserInterface.Presenters
         {
             if (crop.CultivarNames.Length == 0)
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+                    IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
                     if (replacementCrop != null)
                     {
                         return replacementCrop.CultivarNames;
@@ -541,6 +584,40 @@ namespace UserInterface.Presenters
             else
             {
                 return crop.CultivarNames;
+            }
+
+            return new string[0];
+        }
+
+        /// <summary>Get a list of life cycles in the zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of life cycles.</returns>
+        private string[] GetLifeCycleNames(Zone zone)
+        {
+            return zone.FindAllChildren<LifeCycle>().Select(lc => lc.Name).ToArray();
+        }
+
+        /// <summary>Get a list of Phase Names for life Cycle</summary>
+        /// <param name="crop">The crop.</param>
+        /// <returns>A list of Phase Names.</returns>
+        private string[] GetPhaseNames(LifeCycle lifeCycle)
+        {
+            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
+            {
+                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
+                Replacements replacements = simulations.FindChild<Replacements>();
+                if (replacements != null)
+                {
+                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
+                    if (replacementLifeCycle != null)
+                    {
+                        return replacementLifeCycle.LifeCyclePhaseNames;
+                    }
+                }
+            }
+            else
+            {
+                return lifeCycle.LifeCyclePhaseNames;
             }
 
             return new string[0];
@@ -591,7 +668,31 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+            return this.model.FindInScope<IPlant>();
+        }
+
+        /// <summary>
+        /// Go find a LifeCycle property in the specified list of properties or if not
+        /// found, find the Life cycle in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found crop or null if none found.</returns>
+        private LifeCycle GetLifeCycle(List<VariableProperty> properties)
+        {
+            foreach (VariableProperty property in properties)
+            {
+                if (property.DataType == typeof(LifeCycle))
+                {
+                    LifeCycle lifeCycle = property.Value as LifeCycle;
+                    if (lifeCycle != null)
+                    {
+                        return lifeCycle;
+                    }
+                }
+            }
+
+            // Not found so look for one in scope.
+            return this.model.FindInScope<LifeCycle>();
         }
 
         private string[] GetResidueNames()
@@ -621,12 +722,14 @@ namespace UserInterface.Presenters
         private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
         {
             List<string> result = new List<string>();
-            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            ZoneCLEM zoneCLEM = model as ZoneCLEM;
+            if (zoneCLEM == null)
+                zoneCLEM = model.FindAncestor<ZoneCLEM>();
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
 
             foreach (Type resGroupType in resourceNameResourceGroups)
             {
-                IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                IModel resGroup = resHolder.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
                 if (resGroup != null)  //see if this group type is included in this particular simulation.
                 {
                     foreach (IModel item in resGroup.Children)
@@ -647,17 +750,20 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
-                if (e.InvalidValue)
-                {
-                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
                 try
                 {
                     //need to subtract one for column index of the cell due to description column
-                    Model childmodel = this.childrenWithSameType[cell.ColumnIndex - 1] as Model;
-                    this.SetPropertyValue(childmodel, this.properties[cell.ColumnIndex -1][cell.RowIndex], cell.Value);
+                    Model childmodel = this.childrenWithSameType[cell.ColIndex - 1] as Model;
+                    VariableProperty property = properties[cell.ColIndex - 1][cell.RowIndex];
+
+                    object newValue = GetNewCellValue(property, cell.NewValue);
+                    this.SetPropertyValue(childmodel, property, newValue);
+                    if (newValue.GetType().IsEnum)
+                        newValue = VariableProperty.GetEnumDescription(newValue as Enum);
+                    grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
                 }
                 catch (Exception ex)
                 {
@@ -669,45 +775,35 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Gets the new value of the cell from a string containing the
+        /// cell's new contents.
+        /// </summary>
+        /// <param name="cell">Cell which has been changed.</param>
+        private object GetNewCellValue(IVariable property, string newValue)
+        {
+            if (typeof(IPlant).IsAssignableFrom(property.DataType))
+                return (property.Object as IModel).FindInScope(newValue);
+
+            if (property.Display != null && property.Display.Type == DisplayType.Model)
+                return (property.Object as IModel).FindByPath(newValue)?.Value;
+
+            try
+            {
+                return ReflectionUtilities.StringToObject(property.DataType, newValue, CultureInfo.CurrentCulture);
+            }
+            catch (FormatException err)
+            {
+                throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
+            }
+        }
+
+        /// <summary>
         /// Set the value of the specified property
         /// </summary>
         /// <param name="property">The property to set the value of</param>
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(Model childmodel, VariableProperty property, object value)
         {
-            if (property.DataType.IsArray && value != null)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(int[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(string[]))
-                {
-                    value = stringValues;
-                }
-                else
-                {
-                    throw new ApsimXException(childmodel, "Invalid property type: " + property.DataType.ToString());
-                }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(childmodel, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = Enum.Parse(property.DataType, value.ToString());
-            }
-
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(childmodel, property.Name, value);
             this.explorerPresenter.CommandHistory.Add(cmd, true);
         }
@@ -726,23 +822,23 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Called when user clicks on a file name.
-        /// Does creation of the dialog belong here, or in the view?
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
+        private void OnFileBrowseClick(object sender, GridCellChangedArgs e)
         {
             IFileDialog fileChooser = new FileDialog()
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].Value.ToString()
+                InitialDirectory = e.OldValue
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
+
+            if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {
-                e.ChangedCells[0].Value = fileName;
-                OnCellValueChanged(sender, e);
+                e.NewValue = fileName;
+                OnCellValueChanged(sender, new GridCellsChangedArgs(e));
                 PopulateGrid(model);
             }
         }

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading;
     using System.Linq;
+    using APSIM.Shared.JobRunning;
 
     /// <summary>Encapsulates a command to delete rows from a table for a given checkpoint / simulation.</summary>
     class DeleteRowsCommand : IRunnable
@@ -12,6 +13,13 @@
         private string table;
         private IEnumerable<int> simIds;
         private int checkId;
+
+        public string Name { get { return "Delete rows"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
 
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database to cleanup.</param>

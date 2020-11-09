@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -21,7 +22,7 @@ namespace Models.Functions
         private double AccumulatedValue = 0;
 
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         /// <summary>The Clock</summary>
         [Link]
@@ -55,7 +56,7 @@ namespace Models.Functions
         private void OnStartOfDay(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))
             {

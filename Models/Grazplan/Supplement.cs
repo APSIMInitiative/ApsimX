@@ -5,7 +5,8 @@
 namespace Models.GrazPlan
 {
     using System;
-    using System.Xml.Serialization;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
     using Models.Core;
 
     /// <summary>
@@ -133,7 +134,7 @@ namespace Models.GrazPlan
             if (paddIdx >= 0 && paddIdx < Paddocks.Length)
             {
                 amount = Paddocks[paddIdx].SupptFed.TotalAmount;
-                Paddocks[paddIdx].SupptFed.AverageSuppt(out this.currPaddSupp);
+                currPaddSupp = Paddocks[paddIdx].SupptFed.AverageSuppt();
             }
             else
                 amount = 0.0;
@@ -536,7 +537,7 @@ namespace Models.GrazPlan
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets or sets the amount of supplement.
         /// </summary>
         /// <value>
         /// The description.
@@ -790,7 +791,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Used to keep track of the selected SupplementItem in the user interface
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int CurIndex = 0;
 
         /// <summary>
@@ -802,6 +803,19 @@ namespace Models.GrazPlan
         /// The paddocks given
         /// </summary>
         private bool paddocksGiven;
+
+        /// <summary>
+        /// Has this model received it's DoManagement event today.
+        /// This is needed to ensure the feeding schedule happens on
+        /// the first day when FeedBegin is called after this model
+        /// has already received it's DoManagement.
+        /// </summary>
+        private bool haveReceivedDoManagementToday = false;
+
+        /// <summary>
+        /// A list of feeding instances to be applied every day.
+        /// </summary>
+        private List<SupplementFeeding> feedingSchedule = new List<SupplementFeeding>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Supplement" /> class.
@@ -983,12 +997,19 @@ namespace Models.GrazPlan
         {
             get
             {
+                double amount;
                 double[] result = new double[theModel.PaddockCount];
                 for (int i = 0; i < theModel.PaddockCount; i++)
-                    result[i] = theModel[i].Amount;
+                {
+                    amount = 0;
+                    theModel.GetFedSuppt(i, ref amount);
+                    result[i] = amount;
+                }
+
                 return result;
             }
         }
+
 
         /// <summary>
         /// Gets the amount and attributes of supplementary feed present in each paddock
@@ -1094,7 +1115,7 @@ namespace Models.GrazPlan
             {
                 theModel.AddPaddock(-1, string.Empty);
                 int paddId = 0;
-                foreach (Zone zone in Apsim.FindAll(simulation, typeof(Zone)))
+                foreach (Zone zone in simulation.FindAllInScope<Zone>())
                     if (zone.Area > 0.0)
                         theModel.AddPaddock(paddId++, zone.Name);
             }
@@ -1202,9 +1223,61 @@ namespace Models.GrazPlan
         /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
         public void Feed(string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
+            if (feedSuppFirst)
+                throw new NotImplementedException("The feedSuppFirst argument to Supplement.Feed is not yet implemented. See GitHub issue #4440.");
+
             string firstly = feedSuppFirst ? " (Feeding supplement before pasture)" : string.Empty;
             OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly);
             theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);
+        }
+
+
+        /// <summary>
+        /// Begin feeding the specified supplement every day.
+        /// </summary>
+        /// <param name="name">Feeding name. Used to end feeding.</param>
+        /// <param name="supplement">The supplement.</param>
+        /// <param name="amount">The amount.</param>
+        /// <param name="paddock">The paddock.</param>
+        /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
+        public void FeedBegin(string name, string supplement, double amount, string paddock, bool feedSuppFirst = false)
+        {
+            OutputSummary.WriteMessage(this, "Beginning feed schedule: " + name);
+            var feeding = new SupplementFeeding(name, supplement, amount, paddock, feedSuppFirst);
+            feedingSchedule.Add(feeding);
+            if (haveReceivedDoManagementToday)
+                feeding.Feed(this);
+        }
+
+        /// <summary>
+        /// End feeding the specified supplement every day.
+        /// </summary>
+        /// <param name="name">Feeding name. Matches name passed into FeedBegin.</param>
+        public void FeedEnd(string name)
+        {
+            OutputSummary.WriteMessage(this, "Ending feed schedule: " + name);
+            feedingSchedule.RemoveAll(feed => feed.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>Invoked by clock at the start of every day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            haveReceivedDoManagementToday = false;
+        }
+
+        /// <summary>
+        /// Invoked by Clock to do our management for the day.
+        /// </summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event arguments.</param>
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            haveReceivedDoManagementToday = true;
+            feedingSchedule.ForEach(f => f.Feed(this));
         }
 
         /// <summary>
@@ -1276,6 +1349,46 @@ namespace Models.GrazPlan
         public int IndexOf(string suppName)
         {
             return theModel.IndexOf(suppName);
+        }
+
+
+        /// <summary>
+        /// This class encapsulates an amount of feed of a particular type that will
+        /// be fed each day.
+        /// </summary>
+        [Serializable]
+        private class SupplementFeeding
+        {
+            private string supplement;
+            private double amount;
+            private string paddock;
+            private bool feedSuppFirst;
+
+            /// <summary>Constructor.</summary>
+            /// <param name="nam">Name of feed schedule.</param>
+            /// <param name="sup">The supplement.</param>
+            /// <param name="amt">The amount.</param>
+            /// <param name="pad">The paddock.</param>
+            /// <param name="feedSupFirst">Feed supplement before pasture. Bail feeding.</param>
+            public SupplementFeeding(string nam, string sup, double amt, string pad, bool feedSupFirst)
+            {
+                Name = nam;
+                supplement = sup;
+                amount = amt;
+                paddock = pad;
+                feedSuppFirst = feedSupFirst;
+            }
+
+            /// <summary>Name of feeding.</summary>
+            public string Name { get; }
+
+            /// <summary>
+            /// Tell supplement to do a feed.
+            /// </summary>
+            public void Feed(Supplement supp)
+            {
+                supp.Feed(supplement, amount, paddock, feedSuppFirst);
+            }
         }
     }
 }

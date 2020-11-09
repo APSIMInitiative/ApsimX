@@ -16,7 +16,7 @@
           "Value": "wheat"
         }
       ],
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n    }\r\n}\r\n"
+      "Code": "using System;"
     }
   ]
 }

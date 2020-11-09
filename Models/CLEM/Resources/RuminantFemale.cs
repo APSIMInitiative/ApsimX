@@ -14,9 +14,39 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
+        /// Is female of breeing age
+        /// </summary>
+        public bool IsBreeder
+        {
+            get
+            {
+                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
+            }
+        }
+
+        /// <summary>
         /// The age of female at last birth
         /// </summary>
         public double AgeAtLastBirth { get; set; }
+
+        /// <summary>
+        /// The time (months) passed since last birth
+        /// Returns 0 for pre-first birth females
+        /// </summary>
+        public double MonthsSinceLastBirth 
+        { 
+            get 
+            {
+                if (AgeAtLastBirth > 0)
+                {
+                    return Age - AgeAtLastBirth;
+                }
+                else
+                {
+                    return 0;
+                }
+            } 
+        }
 
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
@@ -34,7 +64,7 @@ namespace Models.CLEM.Resources
         public int NumberOfWeaned { get; set; }
 
         /// <summary>
-        /// Number of weaned offspring for the female
+        /// Number of conceptions for the female
         /// </summary>
         public int NumberOfConceptions { get; set; }
 
@@ -59,12 +89,7 @@ namespace Models.CLEM.Resources
         public double PreviousConceptionRate { get; set; }
 
         /// <summary>
-        /// Weight lost at birth due to calf
-        /// </summary>
-        public double WeightLossDueToCalf { get; set; }
-
-        /// <summary>
-        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// Months since minimum breeding age or entering the population
         /// </summary>
         public double NumberOfBreedingMonths
         {
@@ -83,7 +108,9 @@ namespace Models.CLEM.Resources
             get
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                return (this.Weaned && this.NumberOfBirths == 0 && this.Age < this.BreedParams.MinimumAge1stMating);
+                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (this.Weaned && this.NumberOfBirths == 0);
             }
         }
 
@@ -96,7 +123,7 @@ namespace Models.CLEM.Resources
             int birthCount = 1;
             if (this.BreedParams.MultipleBirthRate != null)
             {
-                double rnd = ZoneCLEM.RandomGenerator.NextDouble();
+                double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
                 foreach (double i in this.BreedParams.MultipleBirthRate)
                 {
@@ -121,9 +148,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(SuccessfulPregnancy)
+                if (IsPregnant)
                 {
-                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength && this.AgeAtLastConception > this.AgeAtLastBirth;
+                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
                 }
                 else
                 {
@@ -137,13 +164,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateBirthDetails()
         {
-            if (SuccessfulPregnancy)
+            if (CarryingCount > 0)
             {
                 NumberOfBirths++;
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
             AgeAtLastBirth = this.Age;
+            CarryingCount = 0;
             MilkingPerformed = false;
         }
 
@@ -154,7 +182,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength && this.SuccessfulPregnancy);
+                return (CarryingCount > 0);
             }
         }
 
@@ -171,15 +199,25 @@ namespace Models.CLEM.Resources
             CarryingCount--;
             if(CarryingCount <= 0)
             {
-                SuccessfulPregnancy = false;
                 AgeAtLastBirth = this.Age;
+            }
+        }
+
+        /// <summary>
+        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// </summary>
+        public bool SuccessfulPregnancy
+        {
+            get
+            {
+                return this.AgeAtLastBirth - this.AgeAtLastConception == this.BreedParams.GestationLength;
             }
         }
 
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(int number, double rate, int ageOffsett)
+        public void UpdateConceptionDetails(int number, double rate, int ageOffset)
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
@@ -188,9 +226,9 @@ namespace Models.CLEM.Resources
             }
             PreviousConceptionRate = rate;
             CarryingCount = number;
-            WeightAtConception = this.Weight;
-            AgeAtLastConception = this.Age + ageOffsett;
-            SuccessfulPregnancy = true;
+            AgeAtLastConception = this.Age + ageOffset;
+            // use normalised weight for age if offset provided for pre simulation allocation
+            WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
             NumberOfConceptions++;
         }
 
@@ -211,8 +249,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                // removed the previous SuccessfulPregnancy and BirthAge > ConceptionAge to allow new ability to conceive while lactating.
-                return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
+                return ((this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
             }            
         }
 
@@ -299,16 +336,10 @@ namespace Models.CLEM.Resources
         public List<Ruminant> SucklingOffspringList { get; set; }
 
         /// <summary>
-        /// Used to track successful preganacy
-        /// </summary>
-        public bool SuccessfulPregnancy { get; set; }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
         {
-            SuccessfulPregnancy = false;
             SucklingOffspringList = new List<Ruminant>();
         }
     }

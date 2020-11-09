@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -24,24 +25,23 @@
         /// <summary>Connect all events in the specified simulation.</summary>
         public void ConnectEvents()
         {
-            // Get a complete list of all models in simulation (including the simulation itself).
-            List<IModel> allModels = new List<IModel>();
-            allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            // Get a list of all models that need to have event subscriptions resolved in.
+            var modelsToInspectForSubscribers = new List<IModel>();
+            modelsToInspectForSubscribers.Add(relativeTo);
+            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
 
-            var publishers = Publisher.FindAll(allModels);
-            var subscribers = Subscriber.FindAll(allModels);
+            // Get a list of models in scope that publish events.
+            var modelsToInspectForPublishers = scope.FindAll(relativeTo).ToList();
 
-            // Connect publishers to subscribers.
+            // Get a complete list of all models in scope
+            var publishers = Publisher.FindAll(modelsToInspectForPublishers);
+            var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
+
             foreach (Publisher publisher in publishers)
-            {
-                var modelsInScope = scope.FindAll(publisher.Model as IModel).ToList();
-                var subscribersForEvent = subscribers.Where(s => modelsInScope.Contains(s.Model) &&
-                                                                 s.Name.Equals(publisher.Name, StringComparison.InvariantCultureIgnoreCase));
-                //var subscribers = Subscriber.FindAll(publisher.Name, publisher.Model as IModel, scope);
-                foreach (var subscriber in subscribersForEvent)
-                    publisher.ConnectSubscriber(subscriber);
-            }
+                if (subscribers.ContainsKey(publisher.Name))
+                    foreach (var subscriber in subscribers[publisher.Name])
+                        if (scope.InScopeOf(subscriber.Model, publisher.Model))
+                            publisher.ConnectSubscriber(subscriber);
         }
 
         /// <summary>Connect all events in the specified simulation.</summary>
@@ -49,7 +49,7 @@
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
+            allModels.AddRange(relativeTo.FindAllDescendants());
             List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -69,9 +69,9 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);
@@ -79,7 +79,8 @@
                 throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
 
             // Subscribe to the event.
-            componentEvent.AddEventHandler(component, handler);
+            Delegate target = Delegate.CreateDelegate(componentEvent.EventHandlerType, handler.Target, handler.Method);
+            componentEvent.AddEventHandler(component, target);
         }
 
         /// <summary>
@@ -96,9 +97,9 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);
@@ -106,11 +107,12 @@
                 throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
 
             // Unsubscribe to the event.
-            componentEvent.RemoveEventHandler(component, handler);
+            Delegate target = Delegate.CreateDelegate(componentEvent.EventHandlerType, handler.Target, handler.Method);
+            componentEvent.RemoveEventHandler(component, target);
         }
 
         /// <summary>
-        /// Call the specified event on the specified model and all child models.
+        /// Publish the specified event to the specified model and all models in scope.
         /// </summary>
         /// <param name="eventName">The name of the event</param>
         /// <param name="args">The event arguments. Can be null</param>
@@ -121,18 +123,97 @@
             foreach (Subscriber subscriber in subscribers)
                 subscriber.Invoke(args);
         }
-        
+
+        /// <summary>
+        /// Publish the specified event to the specified model and all child models.
+        /// </summary>
+        /// <param name="eventName">The name of the event</param>
+        /// <param name="args">The event arguments. Can be null</param>
+        public void PublishToModelAndChildren(string eventName, object[] args)
+        {
+            var modelsToInspectForSubscribers = new List<IModel>();
+            modelsToInspectForSubscribers.Add(relativeTo);
+            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
+
+            var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
+
+            foreach (var subscriber in subscribers.Where(sub => sub.Key == eventName))
+                foreach (var subscriberMethod in subscriber.Value)
+                    subscriberMethod.Invoke(args);
+        }
+
+
         /// <summary>A wrapper around an event subscriber MethodInfo.</summary>
         internal class Subscriber
         {
             /// <summary>The model instance containing the event hander.</summary>
-            public object Model { get; set; }
+            public IModel Model { get; set; }
 
             /// <summary>The method info for the event handler.</summary>
             private MethodInfo methodInfo { get; set; }
 
             /// <summary>Gets or sets the name of the event.</summary>
             public string Name { get; private set; }
+
+            public Subscriber(string name, IModel model, MethodInfo method)
+            {
+                Name = name;
+                Model = model;
+                methodInfo = method;
+            }
+
+            internal static Dictionary<string, List<Subscriber>> GetAll(List<IModel> allModels)
+            {
+                Dictionary<string, List<Subscriber>> subscribers = new Dictionary<string, List<Subscriber>>();
+
+                foreach (IModel modelNode in allModels)
+                {
+                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute attribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (attribute != null)
+                        {
+                            string eventName = attribute.ToString();
+                            Subscriber subscriber = new Subscriber(eventName, modelNode, method);
+
+                            if (!subscribers.ContainsKey(eventName))
+                                subscribers.Add(eventName, new List<Subscriber>());
+                            subscribers[eventName].Add(subscriber);
+                        }
+                    }
+                }
+
+                return subscribers;
+            }
+
+            internal static Dictionary<string, List<Subscriber>> GetAll(string name, IModel relativeTo, ScopingRules scope)
+            {
+                IModel[] allModels = scope.FindAll(relativeTo);
+                Dictionary<string, List<Subscriber>> subscribers = new Dictionary<string, List<Subscriber>>();
+
+                foreach (IModel modelNode in allModels)
+                {
+                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute attribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (attribute != null)
+                        {
+                            string eventName = attribute.ToString();
+
+                            if (!eventName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                                continue;
+
+                            Subscriber subscriber = new Subscriber(eventName, modelNode, method);
+
+                            if (subscribers[eventName] == null)
+                                subscribers[eventName] = new List<Subscriber>();
+                            subscribers[eventName].Add(subscriber);
+                        }
+                    }
+                }
+
+                return subscribers;
+            }
 
             /// <summary>Find all event subscribers in the specified models.</summary>
             /// <param name="allModels">A list of all models in simulation.</param>
@@ -146,12 +227,7 @@
                     {
                         EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                         if (subscriberAttribute != null)
-                            subscribers.Add(new Subscriber()
-                            {
-                                Name = subscriberAttribute.ToString(),
-                                methodInfo = method,
-                                Model = modelNode
-                            });
+                            subscribers.Add(new Subscriber(subscriberAttribute.ToString(), modelNode, method));
                     }
                 }
 
@@ -166,18 +242,13 @@
             internal static List<Subscriber> FindAll(string name, IModel relativeTo, ScopingRules scope)
             {
                 List<Subscriber> subscribers = new List<Subscriber>();
-                foreach (IModel modelNode in scope.FindAll(relativeTo as IModel))
+                foreach (IModel modelNode in scope.FindAll(relativeTo))
                 {
                     foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
                     {
                         EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                         if (subscriberAttribute != null && subscriberAttribute.ToString() == name)
-                            subscribers.Add(new Subscriber()
-                            {
-                                Name = subscriberAttribute.ToString(),
-                                methodInfo = method,
-                                Model = modelNode
-                            });
+                            subscribers.Add(new Subscriber(subscriberAttribute.ToString(), modelNode, method));
                     }
                 }
 
@@ -206,22 +277,22 @@
         /// <summary>
         /// A wrapper around an event publisher EventInfo.
         /// </summary>
-        internal class Publisher
+        public class Publisher
         {
             /// <summary>The model instance containing the event hander.</summary>
-            public object Model { get; set; }
+            public IModel Model { get; private set; }
 
             /// <summary>The reflection event info instance.</summary>
-            private EventInfo eventInfo;
+            public EventInfo EventInfo { get; private set; }
 
             /// <summary>Return the event name.</summary>
-            public string Name {  get { return eventInfo.Name; } }
+            public string Name {  get { return EventInfo.Name; } }
 
             internal void ConnectSubscriber(Subscriber subscriber)
             {
                 // connect subscriber to the event.
-                Delegate eventDelegate = subscriber.CreateDelegate(eventInfo.EventHandlerType);
-                eventInfo.AddEventHandler(Model, eventDelegate);
+                Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
+                EventInfo.AddEventHandler(Model, eventDelegate);
             }
 
             internal void DisconnectAll()
@@ -249,18 +320,17 @@
             /// <summary>Find all event publishers in the specified models.</summary>
             /// <param name="models">The models to scan for event publishers</param>
             /// <returns>The list of event publishers</returns>
-            internal static List<Publisher> FindAll(List<IModel> models)
+            public static List<Publisher> FindAll(IEnumerable<IModel> models)
             {
                 List<Publisher> publishers = new List<Publisher>();
                 foreach (IModel modelNode in models)
                 {
                     foreach (EventInfo eventInfo in modelNode.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                        publishers.Add(new Publisher() { eventInfo = eventInfo, Model = modelNode });
+                        publishers.Add(new Publisher() { EventInfo = eventInfo, Model = modelNode });
                 }
 
                 return publishers;
             }
         }
-
     }
 }

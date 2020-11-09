@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -47,14 +47,6 @@ namespace Models.CLEM.Resources
         [Description("Conception rate assymtote (<12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required, ArrayItemCount(4)]
         public double[] ConceptionRateAsymptote { get; set; }
-
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

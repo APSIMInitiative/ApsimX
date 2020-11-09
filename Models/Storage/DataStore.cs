@@ -12,14 +12,13 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.DataStoreView")]
+    [ViewName("ApsimNG.Resources.Glade.DataStoreView.glade")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model, IDataStore, IDisposable
@@ -175,13 +174,21 @@
         /// </summary>
         public void UpdateFileName()
         {
-            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            if (simulations == null || simulations.FileName == null)
-                FileName = ":memory:";
-            else if (useFirebird)
-                FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+            string extension = useFirebird ? ".fdb" : ".db";
+
+            Simulations simulations = FindAncestor<Simulations>();
+
+            // If we have been cloned prior to a run, then we won't be able to locate
+            // the simulations object. In this situation we can fallback to using the
+            // parent simulation's filename (which should be the same anyway).
+            Simulation simulation = FindAncestor<Simulation>();
+
+            if (simulations != null && simulations.FileName != null)
+                FileName = Path.ChangeExtension(simulations.FileName, extension);
+            else if (simulation != null && simulation.FileName != null)
+                FileName = Path.ChangeExtension(simulation.FileName, extension);
             else
-                FileName = Path.ChangeExtension(simulations.FileName, ".db");
+                FileName = ":memory:";
         }
 
         /// <summary>Open the database.</summary>
@@ -225,6 +232,27 @@
             {
                 connection.CloseDatabase();
                 connection = null;
+            }
+        }
+
+        /// <summary>
+        /// Add a select based view to the data table for SQLite datastores
+        /// </summary>
+        /// <param name="name">name of the view</param>
+        /// <param name="selectSQL">select SQL statement</param>
+        public void AddView(string name, string selectSQL)
+        {
+            if (connection is SQLite)
+            {
+                if (connection.ViewExists(name))
+                {
+                    connection.ExecuteNonQuery($"DROP VIEW {name}");
+                }
+                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
     }

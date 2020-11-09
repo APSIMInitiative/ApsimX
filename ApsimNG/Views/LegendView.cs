@@ -11,6 +11,7 @@ namespace UserInterface.Views
     /// </summary>
     interface ILegendView
     {
+        bool LegendInsideGraph { get; }
         event PositionChangedDelegate OnPositionChanged;
         void Populate(string title, string[] values);
 
@@ -18,7 +19,7 @@ namespace UserInterface.Views
         void SetDisabledSeriesNames(string[] seriesNames);
         string[] GetDisabledSeriesNames();
         event EventHandler DisabledSeriesChanged;
-        
+        event EventHandler LegendInsideGraphChanged;
     }
 
     /// <summary>
@@ -30,8 +31,9 @@ namespace UserInterface.Views
 
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
+        public event EventHandler LegendInsideGraphChanged;
 
-        private ComboBox combobox1 = null;
+        private ComboBox combobox1 = null; // fixme - should use IDropDownView, and make public.
         private HBox hbox1 = null;
         private Gtk.TreeView listview = null;
 
@@ -41,6 +43,8 @@ namespace UserInterface.Views
         private ListStore listModel = new ListStore(typeof(Boolean), typeof(string));
         private CellRendererText listRender = new CellRendererText();
         private CellRendererToggle listToggle = new CellRendererToggle();
+
+        private CheckButton chkLegendInsideGraph;
 
         /// <summary>
         /// Construtor
@@ -56,7 +60,10 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnPositionComboChanged;
-            combobox1.Focused += OnTitleTextBoxEnter; 
+            combobox1.Focused += OnTitleTextBoxEnter;
+
+            chkLegendInsideGraph = (CheckButton)builder.GetObject("chkLegendInsideGraph");
+            chkLegendInsideGraph.Toggled += OnToggleLegendInsideGraph;
 
             listview.Model = listModel;
             TreeViewColumn column = new TreeViewColumn();
@@ -72,21 +79,53 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        private void OnToggleLegendInsideGraph(object sender, EventArgs e)
+        {
+            try
+            {
+                LegendInsideGraphChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnPositionComboChanged;
-            combobox1.Focused -= OnTitleTextBoxEnter;
-            listToggle.Toggled -= OnItemChecked;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            listModel.Dispose();
-            listRender.Destroy();
-            listToggle.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
+                combobox1.Changed -= OnPositionComboChanged;
+                combobox1.Focused -= OnTitleTextBoxEnter;
+                listToggle.Toggled -= OnItemChecked;
+                comboModel.Dispose();
+                comboRender.Destroy();
+                listModel.Dispose();
+                listRender.Destroy();
+                listToggle.Destroy();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private bool settingCombo = false;
+
+        /// <summary>
+        /// Returns whether or not the check button to show the legend inside the graph is checked.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return chkLegendInsideGraph.Active;
+            }
+        }
+
         /// <summary>
         /// Populate the view with the specified title.
         /// </summary>
@@ -116,11 +155,18 @@ namespace UserInterface.Views
         /// </summary>
         private void OnTitleTextBoxEnter(object sender, FocusedArgs e)
         {
-            TreeIter iter;
-            if (combobox1.GetActiveIter(out iter))
-                originalText = (string)combobox1.Model.GetValue(iter, 0);
-            else
-                originalText = null;
+            try
+            {
+                TreeIter iter;
+                if (combobox1.GetActiveIter(out iter))
+                    originalText = (string)combobox1.Model.GetValue(iter, 0);
+                else
+                    originalText = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -129,17 +175,24 @@ namespace UserInterface.Views
         /// </summary>
         private void OnPositionComboChanged(object sender, EventArgs e)
         {
-            if (settingCombo) return;
-            TreeIter iter;
-            string curText = null;
-            if (combobox1.GetActiveIter(out iter))
-                curText = (string)combobox1.Model.GetValue(iter, 0);
-            if (originalText == null)
-                originalText = curText;
-            if (curText != originalText && OnPositionChanged != null)
+            try
             {
-                originalText = curText;
-                OnPositionChanged.Invoke(curText);
+                if (settingCombo) return;
+                TreeIter iter;
+                string curText = null;
+                if (combobox1.GetActiveIter(out iter))
+                    curText = (string)combobox1.Model.GetValue(iter, 0);
+                if (originalText == null)
+                    originalText = curText;
+                if (curText != originalText && OnPositionChanged != null)
+                {
+                    originalText = curText;
+                    OnPositionChanged.Invoke(curText);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -202,16 +255,22 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
-            TreeIter iter;
-
-            if (listModel.GetIter(out iter, new TreePath(e.Path)))
+            try
             {
-                bool old = (bool)listModel.GetValue(iter, 0);
-                listModel.SetValue(iter, 0, !old);
+                TreeIter iter;
+
+                if (listModel.GetIter(out iter, new TreePath(e.Path)))
+                {
+                    bool old = (bool)listModel.GetValue(iter, 0);
+                    listModel.SetValue(iter, 0, !old);
+                }
+                if (DisabledSeriesChanged != null)
+                    DisabledSeriesChanged.Invoke(this, new EventArgs());
             }
-            if (DisabledSeriesChanged != null)
-                DisabledSeriesChanged.Invoke(this, new EventArgs());
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-        
     }
 }

@@ -1,0 +1,125 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 296,
+  "Version": 100,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Factorial.Experiment, Models",
+      "DisabledSimNames": null,
+      "Name": "Experiment",
+      "Children": [
+        {
+          "$type": "Models.Factorial.Factors, Models",
+          "Name": "Factors",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Manager].Script.X = true",
+                  "Name": "X",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Manager].Script.Y = true",
+                  "Name": "Y",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Manager].Script.Z = true",
+                  "Name": "Z",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "Name": "Simulation",
+          "Children": [
+            {
+              "$type": "Models.Clock, Models",
+              "Start": "2020-01-01T00:00:00",
+              "End": "2020-01-02T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "SummaryFile",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Description(\"X\")]\r\n\t\tpublic bool X { get; set; }\r\n\r\n\t\tpublic bool Y { get; set; }\r\n\r\n\t\t[XmlIgnore]\r\n\t\tpublic bool Z { get; set ; }\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void Test(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tif (!X)\r\n\t\t\t\tthrow new Exception(\"X was not set to true\");\r\n\t\t\tif (!Y)\r\n\t\t\t\tthrow new Exception(\"Y was not set to true\");\r\n\t\t\tif (!Z)\r\n\t\t\t\tthrow new Exception(\"Z was not set to true\");\r\n\t\t}\r\n\t}\r\n}",
+              "Parameters": [
+                {
+                  "Key": "X",
+                  "Value": "False"
+                },
+                {
+                  "Key": "Y",
+                  "Value": "False"
+                }
+              ],
+              "Name": "Manager",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

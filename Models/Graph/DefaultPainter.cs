@@ -1,5 +1,6 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
+    using APSIM.Shared.Utilities;
     using System.Drawing;
 
     /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
@@ -23,7 +24,7 @@
         /// <param name="seriesDefinition">The definition to paint.</param>
         public void Paint(SeriesDefinition seriesDefinition)
         {
-            seriesDefinition.Colour = colour;
+            seriesDefinition.Colour = ColourUtilities.ChangeColorBrightness(seriesDefinition.Colour, seriesDefinition.ColourModifier);
             seriesDefinition.Line = lineType;
             seriesDefinition.Marker = markerType;
         }

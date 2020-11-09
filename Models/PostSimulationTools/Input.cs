@@ -4,12 +4,13 @@
     using Models.Core;
     using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.IO;
     using System.Threading;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -24,7 +25,7 @@
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IRunnable, IReferenceExternalFiles
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// The DataStore.
@@ -35,122 +36,89 @@
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        public string FileName { get; set; }
+        public string[] FileNames { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("EXCEL file name")]
-        public string FullFileName
+        public string[] FullFileNames
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                return null;
+                if (FileNames == null)
+                    return null;
+
+                if (storage == null)
+                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, FindAncestor<Simulations>().FileName)).ToArray();
+                return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, storage.FileName)).ToArray();
             }
 
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                Simulations simulations = FindAncestor<Simulations>();
+                this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return FileNames;
         }
 
-        /// <summary>
-        /// Gets the parent simulation or null if not found
-        /// </summary>
-        private IStorageWriter StorageWriter
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
         {
-            get
-            {
-                // The JobRunnerAsync will not resolve links, so we need to
-                // go looking for the data store ourselves. This is an ugly
-                // hack, no doubt about it, but this infrastructure is about to
-                // be changed/refactored anyway, so hopefully this won't stay
-                // here for too long.
-                if (storage == null)
-                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-                if (storage == null)
-                    throw new Exception("Cannot find a datastore");
-                return storage.Writer;
-            }
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
         }
 
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="cancelToken">The cancel token.</param>
-        public void Run(CancellationTokenSource cancelToken)
+        public void Run()
         {
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
+            foreach (string fileName in FullFileNames)
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
 
-                DataTable data = GetTable();
+                DataTable data = GetTable(fileName);
                 if (data != null)
                 {
-                    data.TableName = this.Name;
-                    StorageWriter.WriteTable(data);
+                    data.TableName = Name;
+                    storage.Writer.WriteTable(data);
                 }
             }
         }
 
         /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// </summary>
-        public string ErrorMessage = string.Empty;
-
-        /// <summary>
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable()
+        public DataTable GetTable(string fileName)
         {
-            DataTable returnDataTable = null;
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
+            ApsimTextFile textFile = new ApsimTextFile();
+            try
             {
-                if (File.Exists(fullFileName))
+                if (File.Exists(fileName))
                 {
-                    ApsimTextFile textFile = new ApsimTextFile();
-                    try
-                    {
-                        textFile.Open(fullFileName);
-                    }
-                    catch (Exception err)
-                    {
-                        ErrorMessage = err.Message;
-                        return null;
-                    }
-                    DataTable table = textFile.ToTable();
-                    textFile.Close();
-
-                    if (returnDataTable == null)
-                        returnDataTable = table;
-                    else
-                        returnDataTable.Merge(table);
+                    textFile.Open(fileName);
+                    return textFile.ToTable();
                 }
                 else
-                {
-                    ErrorMessage = "The specified file does not exist.";
-                }
+                    throw new Exception($"The specified file '{fileName}' does not exist.");
             }
-            else
+            catch (Exception err)
             {
-                ErrorMessage = "Please select a file to use.";
+                throw new Exception($"Error in input file {Name} while reading file {fileName}", err);
             }
-
-            return returnDataTable;
+            finally
+            {
+                textFile?.Close();
+            }
         }       
     }
 }

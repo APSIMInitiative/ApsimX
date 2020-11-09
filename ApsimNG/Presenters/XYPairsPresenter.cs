@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="XYPairsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +8,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Functions;
     using Views;
 
@@ -71,8 +66,8 @@ namespace UserInterface.Presenters
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
             this.xYPairs.Children.Add(this.graph);
             this.graph.Parent = this.xYPairs;
-            (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
-            (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
+            (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
+            (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";
             this.graphPresenter = new GraphPresenter();
             this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
@@ -130,7 +125,7 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = Apsim.GetVariableObject(xYPairs, propertyName);
+                IVariable variable = xYPairs.FindByPath(propertyName);
                 if (variable != null && variable.UnitsLabel != null)
                 {
                     return propertyName + " " + variable.UnitsLabel;
@@ -138,13 +133,9 @@ namespace UserInterface.Presenters
 
                 return propertyName;
             }
-            else if (xYPairs.Parent is AirTemperatureFunction)
+            else if (xYPairs.Parent is HourlyInterpolation)
             {
-                return "Mean air temperature (oC)";
-            }
-            else if (xYPairs.Parent is SoilTemperatureFunction)
-            {
-                return "Mean soil temperature (oC)";
+                return "Air temperature (oC)";
             }
             else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
             {
@@ -285,6 +276,10 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnVariablesGridCellValueChanged(object sender, GridCellsChangedArgs e)
         {
+            // Apply the changes to the grid.
+            ApplyChangesToGrid(e);
+
+            // Save the changed data back to the model.
             this.SaveGrid();
 
             // Refresh all calculated columns.
@@ -294,6 +289,21 @@ namespace UserInterface.Presenters
             if (this.graph != null)
             {
                 this.graphPresenter.DrawGraph();
+            }
+        }
+
+        /// <summary>
+        /// Updates the contents of the grid to reflect changes made by
+        /// the user.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        private void ApplyChangesToGrid(GridCellsChangedArgs e)
+        {
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
+            {
+                // Each cell in the grid is a number (of type double).
+                object newValue = ReflectionUtilities.StringToObject(typeof(double), cell.NewValue);
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
             }
         }
 

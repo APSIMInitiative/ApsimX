@@ -55,22 +55,30 @@ namespace Models.Functions
         /// <returns></returns>
         public double Value(int arrayIndex = -1)
         {
-            string PropertyName = XProperty;
-            object v = Apsim.Get(this, PropertyName);
+            object v = this.FindByPath(XProperty)?.Value;
             if (v == null)
-                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-            double XValue;
+                throw new Exception($"Cannot find value for {FullPath} XProperty: {XProperty}");
+            double x;
             if (v is Array)
-                XValue = (double)(v as Array).GetValue(arrayIndex);
+                x = (double)(v as Array).GetValue(arrayIndex);
             else if (v is IFunction)
-                XValue = (v as IFunction).Value(arrayIndex);
+                x = (v as IFunction).Value(arrayIndex);
             else
-                XValue = (double)v;
+                x = (double)v;
 
-            if (XValue <= XTrigger)
+            return ValueForX(x);
+        }
+
+        /// <summary>
+        /// Gets the value of the function for a given value of the x property.
+        /// </summary>
+        /// <param name="x">An x-value.</param>
+        public double ValueForX(double x)
+        {
+            if (x <= XTrigger)
                 return 0;
             else
-                return Math.Max(0.0, (XValue - XTrigger)) * Slope;
+                return Math.Max(0.0, (x - XTrigger)) * Slope;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -82,7 +90,7 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // get description and units.

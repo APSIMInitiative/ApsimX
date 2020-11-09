@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SupplementView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
@@ -137,134 +131,183 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            lblDefaultNames.ItemActivated -= LbDefaultNames_Click;
-            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
-            tbName.Changed -= TbName_Validating;
-            tbDM.Changed -= RealEditValidator;
-            tbDMD.Changed -= RealEditValidator;
-            tbME.Changed -= RealEditValidator;
-            tbEE.Changed -= RealEditValidator;
-            tbCP.Changed -= RealEditValidator;
-            tbProtDegrad.Changed -= RealEditValidator;
-            tbADIP2CP.Changed -= RealEditValidator;
-            tbPhos.Changed -= RealEditValidator;
-            tbSulph.Changed -= RealEditValidator;
-            tbAmount.Changed -= TbAmount_Validating;
-            btnAdd.Clicked -= BtnAdd_Click;
-            btnDelete.Clicked -= BtnDelete_Click;
-            btnReset.Clicked -= BtnReset_Click;
-            btnResetAll.Clicked -= BtnResetAll_Click;
-            cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
-            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
-            lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                lblDefaultNames.ItemActivated -= LbDefaultNames_Click;
+                lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+                tbName.Changed -= TbName_Validating;
+                tbDM.Changed -= RealEditValidator;
+                tbDMD.Changed -= RealEditValidator;
+                tbME.Changed -= RealEditValidator;
+                tbEE.Changed -= RealEditValidator;
+                tbCP.Changed -= RealEditValidator;
+                tbProtDegrad.Changed -= RealEditValidator;
+                tbADIP2CP.Changed -= RealEditValidator;
+                tbPhos.Changed -= RealEditValidator;
+                tbSulph.Changed -= RealEditValidator;
+                tbAmount.Changed -= TbAmount_Validating;
+                btnAdd.Clicked -= BtnAdd_Click;
+                btnDelete.Clicked -= BtnDelete_Click;
+                btnReset.Clicked -= BtnReset_Click;
+                btnResetAll.Clicked -= BtnResetAll_Click;
+                cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
+                lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+                lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void RealEditValidator(object sender, EventArgs e)
         {
-            Entry tb = sender as Entry;
-            if (tb != null)
+            try
             {
-                FoodSupplement.SuppAttribute tagEnum;
-                if (entryLookup.TryGetValue(tb, out tagEnum))
+                Entry tb = sender as Entry;
+                if (tb != null)
                 {
-                    double maxVal = 0.0;
-                    double scale = 1.0;
-                    switch (tagEnum)
+                    FoodSupplement.SuppAttribute tagEnum;
+                    if (entryLookup.TryGetValue(tb, out tagEnum))
                     {
-                        case FoodSupplement.SuppAttribute.spaDMP:
-                        case FoodSupplement.SuppAttribute.spaDMD:
-                        case FoodSupplement.SuppAttribute.spaEE:
-                        case FoodSupplement.SuppAttribute.spaDG:
-                            maxVal = 100.0;
-                            scale = 0.01;
-                            break;
-                        case FoodSupplement.SuppAttribute.spaMEDM:
-                            maxVal = 20.0;
-                            break;
-                        case FoodSupplement.SuppAttribute.spaCP:
-                            maxVal = 300.0;
-                            scale = 0.01;
-                            break;
-                        case FoodSupplement.SuppAttribute.spaPH:
-                        case FoodSupplement.SuppAttribute.spaSU:
-                        case FoodSupplement.SuppAttribute.spaADIP:
-                            maxVal = 100.0;  
-                            scale = 0.01;
-                            break;
-                        default:
-                            maxVal = 100.0;
-                            break;
-                    }
-                    double value;
-                    bool cancel = false;
-                    if (string.IsNullOrWhiteSpace(tb.Text)) // Treat blank as a value of 0.
-                        value = 0.0;
-                    else if (!Double.TryParse(tb.Text, out value) || value < 0.0 || value > maxVal)
-                    {
-                        /// e.Cancel = true;
-                        cancel = true;
-                        MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
-                                           String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
-                        md.Title = "Invalid entry";
-                        md.Run();
-                        md.Destroy();
-                    }
-                    if (!cancel)
-                    {
-                        if (SuppAttrChanged != null)
+                        double maxVal = 0.0;
+                        double scale = 1.0;
+                        switch (tagEnum)
                         {
-                            TSuppAttrArgs args = new TSuppAttrArgs();
-                            args.Attr = (int)tagEnum;
-                            args.AttrVal = value * scale;
+                            case FoodSupplement.SuppAttribute.spaDMP:
+                            case FoodSupplement.SuppAttribute.spaDMD:
+                            case FoodSupplement.SuppAttribute.spaEE:
+                            case FoodSupplement.SuppAttribute.spaDG:
+                                maxVal = 100.0;
+                                scale = 0.01;
+                                break;
+                            case FoodSupplement.SuppAttribute.spaMEDM:
+                                maxVal = 20.0;
+                                break;
+                            case FoodSupplement.SuppAttribute.spaCP:
+                                maxVal = 300.0;
+                                scale = 0.01;
+                                break;
+                            case FoodSupplement.SuppAttribute.spaPH:
+                            case FoodSupplement.SuppAttribute.spaSU:
+                            case FoodSupplement.SuppAttribute.spaADIP:
+                                maxVal = 100.0;  
+                                scale = 0.01;
+                                break;
+                            default:
+                                maxVal = 100.0;
+                                break;
+                        }
+                        double value;
+                        bool cancel = false;
+                        if (string.IsNullOrWhiteSpace(tb.Text)) // Treat blank as a value of 0.
+                            value = 0.0;
+                        else if (!Double.TryParse(tb.Text, out value) || value < 0.0 || value > maxVal)
+                        {
+                            /// e.Cancel = true;
+                            cancel = true;
+                            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
+                                               String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
+                            md.Title = "Invalid entry";
+                            md.Run();
+                            md.Destroy();
+                        }
+                        if (!cancel)
+                        {
                             if (SuppAttrChanged != null)
-                                SuppAttrChanged.Invoke(sender, args);
+                            {
+                                TSuppAttrArgs args = new TSuppAttrArgs();
+                                args.Attr = (int)tagEnum;
+                                args.AttrVal = value * scale;
+                                if (SuppAttrChanged != null)
+                                    SuppAttrChanged.Invoke(sender, args);
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            TreeIter first;
-            if (defNameList.GetIterFirst(out first))
-                lblDefaultNames.SelectPath(defNameList.GetPath(first));
-            lblDefaultNames.Visible = true;
-            lblDefaultNames.GrabFocus();
+            try
+            {
+                TreeIter first;
+                if (defNameList.GetIterFirst(out first))
+                    lblDefaultNames.SelectPath(defNameList.GetPath(first));
+                lblDefaultNames.Visible = true;
+                lblDefaultNames.GrabFocus();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            if (SupplementDeleted != null)
-                SupplementDeleted.Invoke(sender, e);
+            try
+            {
+                if (SupplementDeleted != null)
+                    SupplementDeleted.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void BtnReset_Click(object sender, EventArgs e)
         {
-            if (SupplementReset != null)
-                SupplementReset.Invoke(sender, e);
+            try
+            {
+                if (SupplementReset != null)
+                    SupplementReset.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void BtnResetAll_Click(object sender, EventArgs e)
         {
-            if (AllSupplementsReset != null)
-                AllSupplementsReset.Invoke(sender, e);
+            try
+            {
+                if (AllSupplementsReset != null)
+                    AllSupplementsReset.Invoke(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void LvSupps_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!internalSelect && SupplementSelected != null)
+            try
             {
-                TreePath selPath;
-                TreeViewColumn selCol;
-                lvSupps.GetCursor(out selPath, out selCol);
+                if (!internalSelect && SupplementSelected != null)
+                {
+                    TreePath selPath;
+                    TreeViewColumn selCol;
+                    lvSupps.GetCursor(out selPath, out selCol);
 
-                TIntArgs args = new TIntArgs();
-                args.Value = selPath.Indices[0];
-                if (SupplementSelected != null)
-                    SupplementSelected.Invoke(sender, args);
+                    TIntArgs args = new TIntArgs();
+                    args.Value = selPath.Indices[0];
+                    if (SupplementSelected != null)
+                        SupplementSelected.Invoke(sender, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -425,85 +468,119 @@ namespace UserInterface.Views
 
         private void CbxRoughage_CheckedChanged(object sender, EventArgs e)
         {
-            TSuppAttrArgs args = new TSuppAttrArgs();
-            args.Attr = -2;
-            args.AttrVal = cbxRoughage.Active ? 1 : 0;
-            if (SuppAttrChanged != null)
-                SuppAttrChanged.Invoke(sender, args);
+            try
+            {
+                TSuppAttrArgs args = new TSuppAttrArgs();
+                args.Attr = -2;
+                args.AttrVal = cbxRoughage.Active ? 1 : 0;
+                if (SuppAttrChanged != null)
+                    SuppAttrChanged.Invoke(sender, args);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void TbAmount_Validating(object sender, EventArgs e)
         {
-            double value;
-            bool cancel = false;
-            if (string.IsNullOrWhiteSpace(tbAmount.Text)) // Treat blank as a value of 0.
-                value = 0.0;
-            else if (!Double.TryParse(tbAmount.Text, out value) || value < 0.0)
+            try
             {
-                cancel = true;
-                MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
-                                   "Value should be a non-negative number");
-                md.Title = "Invalid entry";
-                md.Run();
-                md.Destroy();
-            }
-            if (!cancel)
-            {
-                if (SuppAttrChanged != null)
+                double value;
+                bool cancel = false;
+                if (string.IsNullOrWhiteSpace(tbAmount.Text)) // Treat blank as a value of 0.
+                    value = 0.0;
+                else if (!Double.TryParse(tbAmount.Text, out value) || value < 0.0)
                 {
-                    TSuppAttrArgs args = new TSuppAttrArgs();
-                    args.Attr = -1;
-                    args.AttrVal = value;
-                    if (SuppAttrChanged != null)
-                        SuppAttrChanged.Invoke(sender, args);
+                    cancel = true;
+                    MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
+                                       "Value should be a non-negative number");
+                    md.Title = "Invalid entry";
+                    md.Run();
+                    md.Destroy();
                 }
+                if (!cancel)
+                {
+                    if (SuppAttrChanged != null)
+                    {
+                        TSuppAttrArgs args = new TSuppAttrArgs();
+                        args.Attr = -1;
+                        args.AttrVal = value;
+                        if (SuppAttrChanged != null)
+                            SuppAttrChanged.Invoke(sender, args);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void TbName_Validating(object sender, EventArgs e)
         {
-            bool cancel = false;
-            if (string.IsNullOrWhiteSpace(tbName.Text) && SupplementNames.Length > 0)
+            try
             {
-                cancel = true;
-                MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
-                                   "You must provide a name for the supplement");
-                md.Title = "Invalid entry";
-                md.Run();
-                md.Destroy();
-            }
-            if (!cancel)
-            {
-                if (SuppAttrChanged != null)
+                bool cancel = false;
+                if (string.IsNullOrWhiteSpace(tbName.Text) && SupplementNames.Length > 0)
                 {
-                    TStringArgs args = new TStringArgs();
-                    args.Name = tbName.Text;
-                    if (SuppNameChanged != null)
-                        SuppNameChanged.Invoke(sender, args);
+                    cancel = true;
+                    MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
+                                       "You must provide a name for the supplement");
+                    md.Title = "Invalid entry";
+                    md.Run();
+                    md.Destroy();
                 }
+                if (!cancel)
+                {
+                    if (SuppAttrChanged != null)
+                    {
+                        TStringArgs args = new TStringArgs();
+                        args.Name = tbName.Text;
+                        if (SuppNameChanged != null)
+                            SuppNameChanged.Invoke(sender, args);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void LbDefaultNames_Click(object sender, ItemActivatedArgs e)
         {
-            if (SupplementAdded != null && e.Path.Indices[0] > 0)
+            try
             {
-                TreeIter iter;
-                if (defNameList.GetIter(out iter, e.Path))
+                if (SupplementAdded != null && e.Path.Indices[0] > 0)
                 {
-                    TStringArgs args = new TStringArgs();
-                    args.Name = (string)defNameList.GetValue(iter, 0);
-                    if (SupplementAdded != null)
-                        SupplementAdded.Invoke(sender, args);
+                    TreeIter iter;
+                    if (defNameList.GetIter(out iter, e.Path))
+                    {
+                        TStringArgs args = new TStringArgs();
+                        args.Name = (string)defNameList.GetValue(iter, 0);
+                        if (SupplementAdded != null)
+                            SupplementAdded.Invoke(sender, args);
+                    }
                 }
+                lblDefaultNames.Visible = false;
             }
-            lblDefaultNames.Visible = false;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void LbDefaultNames_Leave(object sender, EventArgs e)
         {
-            lblDefaultNames.Visible = false;
+            try
+            {
+                lblDefaultNames.Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-
     }
 }

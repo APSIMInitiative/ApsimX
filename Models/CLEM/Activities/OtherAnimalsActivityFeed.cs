@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Name of Feed to use
         /// </summary>
         [Description("Feed store to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type to use required")]
         public string FeedTypeName { get; set; }
 
@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IFeedType FeedType { get; set; }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
             int month = Clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
-            foreach (OtherAnimalsFilterGroup filtergroup in Apsim.Children(this, typeof(OtherAnimalsFilterGroup)))
+            foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
             {
                 double total = 0;
                 foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))
@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
-            foreach (OtherAnimalsFilterGroup filtergroup in Apsim.Children(this, typeof(OtherAnimalsFilterGroup)))
+            foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
             {
                 double total = 0;
                 foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))

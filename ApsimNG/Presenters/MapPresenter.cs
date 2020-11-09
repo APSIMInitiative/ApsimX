@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MapPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -34,6 +29,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private PropertyPresenter propertyPresenter;
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -45,6 +42,9 @@ namespace UserInterface.Presenters
             this.map = model as Map;
             this.view = view as MapView;
             this.explorerPresenter = explorerPresenter;
+
+            propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, this.view.Grid, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -69,7 +69,7 @@ namespace UserInterface.Presenters
         /// <returns>The filename string</returns>
         public string ExportToPNG(string folder)
         {
-            string path = Apsim.FullPath(this.map).Replace(".Simulations.", string.Empty);
+            string path = this.map.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
 
             Image rawImage = this.view.Export();
@@ -83,8 +83,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            List<string> files = new List<string>();
-            this.view.ShowMap(this.map.GetCoordinates(files), files, this.map.Zoom, this.map.Center);
+            List<string> names = new List<string>();
+            this.view.ShowMap(this.map.GetCoordinates(names), names, this.map.Zoom, this.map.Center);
         }
 
         /// <summary>

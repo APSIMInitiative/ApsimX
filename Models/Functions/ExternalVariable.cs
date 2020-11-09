@@ -27,7 +27,7 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            object val = Apsim.Get(this, VariableName);
+            object val = this.FindByPath(VariableName)?.Value;
 
             if (val != null)
             {

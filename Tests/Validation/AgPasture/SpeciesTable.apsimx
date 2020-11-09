@@ -1,0 +1,847 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 103,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Name": "SpeciesTable",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "Listed in the table below are the default values for all parameters for all AgPasture species.",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1972-01-01T00:00:00",
+          "End": "1972-01-01T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 0.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "soil_albedo": 0.23,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "InitialResidueName": "Sward",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 15.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "Umbric Andosol (ANu)",
+              "LocalName": null,
+              "Site": null,
+              "NearestTown": null,
+              "Region": null,
+              "State": null,
+              "Country": "New Zealan",
+              "NaturalVegetation": null,
+              "ApsoilNumber": null,
+              "Latitude": -37.967,
+              "Longitude": 175.767,
+              "LocationAccuracy": null,
+              "DataSource": "Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling & Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.",
+              "Comments": "You will need to add crops to this soil before running simulations.",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-18",
+                    "18-30",
+                    "30-51",
+                    "51-74"
+                  ],
+                  "Thickness": [
+                    180.0,
+                    120.0,
+                    210.0,
+                    230.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "BD": [
+                    0.73,
+                    0.7,
+                    0.69,
+                    0.77
+                  ],
+                  "AirDry": [
+                    0.05,
+                    0.05,
+                    0.03,
+                    0.03
+                  ],
+                  "LL15": [
+                    0.148,
+                    0.147,
+                    0.088,
+                    0.1
+                  ],
+                  "DUL": [
+                    0.35,
+                    0.35,
+                    0.25,
+                    0.2
+                  ],
+                  "SAT": [
+                    0.656,
+                    0.691,
+                    0.699,
+                    0.672
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "RyegrassSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WhiteCloverSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "BrowntopSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "CocksfootSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "KikuyuSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "LucerneSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "PaspalumSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "PhalarisSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "RedCloverSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "RhodesSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "TallFescueSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 9.12,
+                  "SummerCona": 3.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 9.12,
+                  "WinterCona": 3.0,
+                  "DiffusConst": 0.0,
+                  "DiffusSlope": 0.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 73.0,
+                  "CNRed": 0.0,
+                  "CNCov": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "Thickness": [
+                    180.0,
+                    120.0,
+                    210.0,
+                    230.0
+                  ],
+                  "SWCON": [
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.7
+                  ],
+                  "KLAT": null,
+                  "ResourceName": "WaterBalance",
+                  "Name": "SoilWater",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-18",
+                    "18-30",
+                    "30-51",
+                    "51-74"
+                  ],
+                  "FOMCNRatio": 0.0,
+                  "Thickness": [
+                    180.0,
+                    120.0,
+                    210.0,
+                    230.0
+                  ],
+                  "Carbon": [
+                    7.9,
+                    2.0,
+                    1.0,
+                    0.5
+                  ],
+                  "SoilCNRatio": [
+                    11.01,
+                    11.01,
+                    11.01,
+                    11.01
+                  ],
+                  "FBiom": [
+                    0.02,
+                    0.02,
+                    0.02,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.26,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FOM": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-18",
+                    "18-30",
+                    "30-51",
+                    "51-74"
+                  ],
+                  "Thickness": [
+                    180.0,
+                    120.0,
+                    210.0,
+                    230.0
+                  ],
+                  "NO3N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "PH": [
+                    5.6,
+                    6.2,
+                    6.2,
+                    6.4
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 0,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "Initial Water",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-18",
+                    "18-30",
+                    "30-51",
+                    "51-74"
+                  ],
+                  "Thickness": [
+                    180.0,
+                    120.0,
+                    210.0,
+                    230.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": null,
+                  "OC": null,
+                  "EC": null,
+                  "CL": null,
+                  "ESP": null,
+                  "PH": null,
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "Initial nitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 450.0,
+              "InitialRootDepth": 400.0,
+              "ResourceName": "AGPRyegrass",
+              "Name": "Ryegrass",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 150.0,
+              "InitialRootDepth": 200.0,
+              "ResourceName": "AGPWhiteClover",
+              "Name": "WhiteClover",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPBrowntop",
+              "Name": "Browntop",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPCocksfoot",
+              "Name": "Cocksfoot",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPKikuyu",
+              "Name": "Kikuyu",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPLucerne",
+              "Name": "Lucerne",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPPaspalum",
+              "Name": "Paspalum",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPPhalaris",
+              "Name": "Phalaris",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPRedClover",
+              "Name": "RedClover",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPRhodes",
+              "Name": "Rhodes",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "InitialShootDM": 0.0,
+              "InitialRootDM": 0.0,
+              "InitialRootDepth": 0.0,
+              "ResourceName": "AGPTallFescue",
+              "Name": "TallFescue",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing System.Text;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ICustomDocumentation\r\n    {\r\n\r\n        [Link]\r\n        List<AgPasture.PastureSpecies> models = new List<AgPasture.PastureSpecies>();\r\n\r\n        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>\r\n        /// <param name=\"tags\">The list of tags to add to.</param>\r\n        /// <param name=\"headingLevel\">The level (e.g. H2) of the headings.</param>\r\n        /// <param name=\"indent\">The level of indentation 1, 2, 3 etc.</param>\r\n        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)\r\n        {\r\n        \ttags.Add(new AutoDocumentation.PageSetup() { Portrait = false });\r\n\r\n        \tDataTable table = new DataTable();\r\n        \ttable.Columns.Add(\"Parameter name\");\r\n            if (models.Count > 0)\r\n            {\r\n                foreach (var model in models)\r\n                    table.Columns.Add(model.Name);\r\n\r\n                var parameterNames = models[0].GetModelParameterNames();\r\n\r\n                foreach (var parameterName in parameterNames)\r\n                {\r\n                    var row = table.NewRow();\r\n                    row[\"Parameter name\"] = parameterName;\r\n                    foreach (var model in models)\r\n                    {\r\n                        var value = Apsim.Get(model, parameterName);\r\n                        // ReflectionUtilities.GetValueOfFieldOrProperty(parameterName, model);\r\n                        if (value != null)\r\n                        {\r\n                            if (value is double[])\r\n                                value = StringUtilities.BuildString(value as double[], \"f4\");\r\n                            row[model.Name] = value.ToString();\r\n                        }\r\n                    }\r\n                    table.Rows.Add(row);\r\n                }\r\n            }\r\n            tags.Add(new AutoDocumentation.Table(table, indent, style:\"Small\"));\r\n        }\r\n    }\r\n}",
+              "Parameters": [],
+              "Name": "Manager",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

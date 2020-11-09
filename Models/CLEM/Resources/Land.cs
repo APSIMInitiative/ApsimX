@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Land allocation details for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandActivityAllocation ReportedLandAllocation { get; set; }
 
         private bool ChangeOccurred = false;
@@ -89,7 +89,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            foreach (LandType childModel in Apsim.Children(this, typeof(LandType)))
+            foreach (LandType childModel in this.FindAllChildren<LandType>())
             {
                 double total = 0;
                 if (childModel.AllocatedActivitiesList != null)

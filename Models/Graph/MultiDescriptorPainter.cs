@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     using System.Collections.Generic;
 
@@ -93,16 +93,19 @@
             if (descriptorName3 != null)
             {
                 var descriptor3 = seriesDefinition.Descriptors.Find(d => d.Name == descriptorName3);
-                var descriptorValue3 = descriptor3.Value;
-
-                var index3 = values3.IndexOf(descriptorValue3);
-                if (index3 == -1)
+                if(descriptor3 != null)
                 {
-                    values3.Add(descriptorValue3);
-                    index3 = values3.Count - 1;
+                    var descriptorValue3 = descriptor3.Value;
+
+                    var index3 = values3.IndexOf(descriptorValue3);
+                    if (index3 == -1)
+                    {
+                        values3.Add(descriptorValue3);
+                        index3 = values3.Count - 1;
+                    }
+                    index3 = index3 % maximumIndex3;
+                    setter3(seriesDefinition, index3);
                 }
-                index3 = index3 % maximumIndex3;
-                setter3(seriesDefinition, index3);
             }
         }
     }

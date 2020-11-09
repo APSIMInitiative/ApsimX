@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel
+    public class AnimalPriceGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Style of pricing animals
@@ -45,32 +46,23 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected AnimalPriceGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public AnimalPriceGroup Clone()
-        {
-            AnimalPriceGroup clone = new AnimalPriceGroup()
-            {
-                PricingStyle = this.PricingStyle,
-                PurchaseOrSale = this.PurchaseOrSale,
-                Value = this.Value
-            };
-
-            foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
         }
 
         /// <summary>
@@ -167,7 +159,7 @@ namespace Models.CLEM.Groupings
             if (formatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }
@@ -175,7 +167,7 @@ namespace Models.CLEM.Groupings
             else
             {
                 html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }

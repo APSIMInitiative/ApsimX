@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TreeProxyPresenter.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
@@ -15,6 +8,8 @@ namespace UserInterface.Presenters
     using Models.Soils;
     using Views;
     using Commands;
+    using EventArguments;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The tree proxy presenter
@@ -94,18 +89,17 @@ namespace UserInterface.Presenters
             if (!(forestryModel.Parent is AgroforestrySystem))
                 throw new ApsimXException(forestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
 
-            Soil soil;
-            List<IModel> zones = Apsim.ChildrenRecursively(forestryModel.Parent, typeof(Zone));
-            if (zones.Count == 0)
+            IEnumerable<Zone> zones = forestryModel.Parent.FindAllDescendants<Zone>();
+            if (!zones.Any())
                 return;
 
             // Setup tree heights.
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
-            soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
+            var physical = zones.First().FindInScope<Physical>();
 
-            forestryViewer.SoilMidpoints = soil.DepthMidPoints;
+            forestryViewer.SoilMidpoints = physical.DepthMidPoints;
             
             // Setup columns.
             List<string> colNames = new List<string>();
@@ -134,7 +128,7 @@ namespace UserInterface.Presenters
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in soil.Depth)
+                foreach (string s in SoilUtilities.ToDepthStrings(physical.Thickness))
                 {
                     rowNames.Add(s);
                 }
@@ -198,8 +192,7 @@ namespace UserInterface.Presenters
                 new ChangeProperty.Property(forestryModel, "Dates", forestryViewer.Dates.ToArray()),
                 new ChangeProperty.Property(forestryModel, "Heights", forestryViewer.Heights.ToArray()),
                 new ChangeProperty.Property(forestryModel, "NDemands", forestryViewer.NDemands.ToArray()),
-                new ChangeProperty.Property(forestryModel, "CanopyWidths", forestryViewer.CanopyWidths.ToArray()),
-                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.TreeLeafAreas.ToArray())
+                new ChangeProperty.Property(forestryModel, "ShadeModifiers", forestryViewer.ShadeModifiers.ToArray())
             });
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             presenter.CommandHistory.Add(changeTemporalData);
@@ -214,7 +207,7 @@ namespace UserInterface.Presenters
         {
             propertyPresenter.UpdateModel(forestryModel);
             forestryViewer.SpatialData = forestryModel.Table;
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
         }
 
         /// <summary>
@@ -222,8 +215,14 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">The sender object</param>
         /// <param name="e">Event arguments</param>
-        private void OnCellEndEdit(object sender, EventArgs e)
+        private void OnCellEndEdit(object sender, GridCellsChangedArgs e)
         {
+            GridView grid = sender as GridView;
+            // fixme - need some (any!) data validation but it will
+            // require a partial rewrite of TreeProxy.
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
+
             SaveTable();
             AttachData();
         }

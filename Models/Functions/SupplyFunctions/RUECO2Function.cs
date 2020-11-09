@@ -47,7 +47,7 @@ namespace Models.Functions.SupplyFunctions
                 if (temp >= 50.0)
                     throw new Exception("Average daily temperature too high for RUE CO2 Function");
 
-                if (MetData.CO2 < 350)
+                if (MetData.CO2 < 300)
                     throw new Exception("CO2 concentration too low for RUE CO2 Function");
                 else if (MetData.CO2 == 350)
                     return 1.0;
@@ -87,11 +87,11 @@ namespace Models.Functions.SupplyFunctions
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }

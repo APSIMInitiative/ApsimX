@@ -115,44 +115,8 @@
             var converter = Converter.DoConvert(fromXML, 7);
             Assert.IsTrue(converter.DidConvert);
 
-            string toXML = "<Simulation Version=\"7\">" +
-                             "<Manager>" +
-                             "<Code>"+
-                             "<![CDATA[using System;\r\n" +
-                             "using Models.Core;\r\n" +
-                             "using Models.PMF;\r\n" +
-                             "using APSIM.Shared.Utilities;\r\n" +
-                             "namespace Models\r\n" +
-                             "{\r\n" +
-                             "    [Serializable]\r\n" +
-                             "    public class Script : Model\r\n" +
-                             "    {\r\n" +
-                             "        [Link] Clock Clock;\r\n" +
-                             "        [Link] Fertiliser Fertiliser;\r\n" +
-                             "        [Link] Summary Summary;\r\n" +
-                             "        private void OnDoManagement(object sender, EventArgs e)\r\n" +
-                             "        {\r\n" +
-                             "            accumulatedRain.Update();\r\n" +
-                             "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n" +
-                             "                accumulatedRain.Sum > MinRain)\r\n" +
-                             "            {\r\n" +
-                             "                Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);\r\n" +
-                             "            }\r\n" +
-                             "        }\r\n" +
-                             "    }\r\n" +
-                             "}\r\n" +
-                             "]]></Code>" +
-                             "</Manager>" +
-                             "<Report>" +
-                                "<Name>Report</Name>" +
-                                "<VariableNames>" +
-                                    "<string>[Clock].Today</string>" +
-                                    "<string>sum([MySoil].SoilWater.ESW)</string>" +
-                                "</VariableNames>" +
-                             "</Report>" +
-                           "</Simulation>";
-            Assert.AreEqual(converter.RootXml.OuterXml, toXML);
+            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Version7.Expected.txt");
+            Assert.AreEqual(converter.RootXml.OuterXml, expected);
         }
 
         /// <summary>Test version 10</summary>
@@ -347,6 +311,54 @@
             {
                 converter.RootXml.Save(writer);
                 Assert.AreEqual(writer.ToString(), expectedXml);
+            }
+        }
+
+        [Test]
+        public void Version59()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 before.json");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 after.json");
+
+            var converter = Converter.DoConvert(xml, 59);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedXml);
+            }
+        }
+
+        [Test]
+        public void Version60()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 after.json");
+
+            var converter = Converter.DoConvert(json, 60);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedJson);
+            }
+        }
+
+        [Test]
+        public void Version63()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 after.json");
+
+            var converter = Converter.DoConvert(json, 63);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedJson);
             }
         }
 

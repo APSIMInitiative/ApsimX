@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Links.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -24,7 +19,7 @@ namespace Models.Core
         /// <param name="linkableServices">A collection of services that can be linked to</param>
         public Links(IEnumerable<object> linkableServices = null)
         {
-            if (linkableServices != null)
+            if (linkableServices != null && linkableServices.Count() > 0)
                 services = linkableServices.ToList();
             else
                 services = new List<object>();
@@ -36,17 +31,23 @@ namespace Models.Core
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
         /// <param name="allLinks">Unresolve all links or just the non child links?</param>
-        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
+            var scope = new ScopingRules();
+
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
-                allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
+                allModels.AddRange(rootNode.FindAllDescendants());
                 foreach (IModel modelNode in allModels)
-                    ResolveInternal(modelNode);
+                {
+                    if (modelNode.Enabled)
+                        ResolveInternal(modelNode, scope, throwOnFail);
+                }
             }
             else
-                ResolveInternal(rootNode);
+                ResolveInternal(rootNode, scope, throwOnFail);
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Models.Core
         public void Unresolve(IModel model, bool allLinks)
         {
             List<IModel> allModels = new List<IModel>() { model };
-            allModels.AddRange(Apsim.ChildrenRecursively(model));
+            allModels.AddRange(model.FindAllDescendants());
             foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s
@@ -103,8 +104,14 @@ namespace Models.Core
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
-        private void ResolveInternal(object obj)
+        /// <param name="scope">The scoping rules to use to resolve links.</param>
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
+            if (obj is Models.Management.RotationManager)
+            {
+
+            }
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
@@ -122,32 +129,33 @@ namespace Models.Core
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
                     if (matches.Count == 0 && obj is IModel)
                     {
-                        Simulation parentSimulation = Apsim.Parent(obj as IModel, typeof(Simulation)) as Simulation;
-                        if (fieldType.IsAssignableFrom(typeof(ILocator)) && parentSimulation != null)
+                        Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
+                        if (typeof(ILocator).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Locator(obj as IModel));
-                        else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
+                        else if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
                     if (matches.Count == 0)
                     {
-                        if (link is ParentLinkAttribute)
+                        if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
-                        else if (link is LinkByPathAttribute)
+                        else if (link.Type == LinkType.Path)
                         {
-                            object match = Apsim.Get(obj as IModel, (link as LinkByPathAttribute).Path);
+                            var locater = new Locater();
+                            object match = locater.Get(link.Path, obj as Model);
                             if (match != null)
                                 matches.Add(match);
                         }
-                        else if (link.IsScoped(field))
-                            matches = Apsim.FindAll(obj as IModel).Cast<object>().ToList();
+                        else if (link.Type == LinkType.Scoped)
+                            matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
                         else
                             matches = GetChildren(obj);
                     }
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
-                    if (link.UseNameToMatch(field))
+                    if (link.ByName)
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
                     if (field.DataType.IsArray)
                     {
@@ -165,12 +173,12 @@ namespace Models.Core
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0)
+                    else if (matches.Count == 0 && !throwOnFail)
                     {
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (matches.Count >= 2 && !link.IsScoped(field))
+                    else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
                         field.Value = GetModel(matches[0]);
@@ -212,8 +220,10 @@ namespace Models.Core
         /// <returns>The matching parent</returns>
         private object GetParent(object obj, Type type)
         {
-            if (obj is IModel)
-                return Apsim.Parent(obj as IModel, type);
+            // fixme - 1. shouldn't be reimplementing model.FindAncestor<T>()
+            //         2. obj should be of type IModel
+            if (obj is IModel model)
+                return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
             else
                 throw new NotImplementedException();
         }
@@ -226,7 +236,7 @@ namespace Models.Core
         private string GetFullName(object obj)
         {
             if (obj is IModel)
-                return Apsim.FullPath(obj as IModel);
+                return (obj as IModel).FullPath;
             else
                 return obj.GetType().FullName;
         }

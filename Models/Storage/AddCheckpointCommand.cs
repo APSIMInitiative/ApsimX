@@ -1,9 +1,10 @@
 ﻿namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
+    using APSIM.Shared.JobRunning;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Threading;
@@ -14,6 +15,16 @@
         private DataStoreWriter writer;
         private string newCheckpointName;
         private IEnumerable<string> namesOfFilesToStore;
+
+        /// <summary>
+        /// Name of the job.
+        /// </summary>
+        public string Name { get { return "Add Checkpoint"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
 
         /// <summary>Constructor</summary>
         /// <param name="dataStoreWriter">The datastore writer that called this constructor.</param>
@@ -36,7 +47,7 @@
             checkpointData.RowFilter = "Name='Current'";
             if (checkpointData.Count == 1)
             {
-                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
 
                 // Get the current version and the date time now to write to the checkpoint table.
                 string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -48,7 +59,7 @@
                 if (checkpointData.Count == 1)
                 {
                     // Yes checkpoint already exists - delete old data.
-                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
                     foreach (var tableName in writer.Connection.GetTableNames())
                     {
                         List<string> columnNames = writer.Connection.GetColumnNames(tableName);

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LineSeriesWithTracker.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Utility
+﻿namespace Utility
 {
     using System;
     using OxyPlot;
@@ -19,6 +14,16 @@ namespace Utility
         /// Invoked when the user hovers over a series point.
         /// </summary>
         public event EventHandler<HoverPointArgs> OnHoverOverPoint;
+
+        /// <summary>
+        /// Name of the variable behind the X data.
+        /// </summary>
+        public string XFieldName { get; set; }
+
+        /// <summary>
+        /// Name of the variable behind the Y data.
+        /// </summary>
+        public string YFieldName { get; set; }
 
         /// <summary>
         /// Tracker is calling to determine the nearest point.
@@ -42,9 +47,7 @@ namespace Utility
                 e.Y = hitResult.DataPoint.Y;
                 OnHoverOverPoint.Invoke(this, e);
                 if (e.HoverText != null)
-                {
-                    hitResult.Series.TrackerFormatString = e.HoverText + "\n{1}: {2}\n{3}: {4}";
-                }
+                    hitResult.Series.TrackerFormatString = e.HoverText + "\n" + XFieldName + ": {2}\n" + YFieldName + ": {4}";
             }
 
             return hitResult;

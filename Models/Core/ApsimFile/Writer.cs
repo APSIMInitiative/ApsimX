@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Writer.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
     using System.Collections.Generic;
     using System.IO;

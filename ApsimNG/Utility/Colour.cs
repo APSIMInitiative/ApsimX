@@ -51,6 +51,15 @@ namespace Utility
         }
 
         /// <summary>
+        /// Translates a System.Drawing.Color to a Gdk.Color.
+        /// </summary>
+        /// <param name="colour">Colour to be translated.</param>
+        public static Gdk.Color ToGdk(Color colour)
+        {
+            return new Gdk.Color(colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
         /// Translates a System.Drawing.Color to an OxyColor.
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
@@ -58,6 +67,16 @@ namespace Utility
         public static OxyColor ToOxy(Color colour)
         {
             return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+        }
+
+        internal static Cairo.Color ToCairo(Gdk.Color colour)
+        {
+            return ToCairo(FromGtk(colour));
+        }
+
+        internal static OxyColor ToOxy(Gdk.Color colour)
+        {
+            return ToOxy(FromGtk(colour));
         }
     }
 }

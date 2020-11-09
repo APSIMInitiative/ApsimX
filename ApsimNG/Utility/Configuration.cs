@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
@@ -25,10 +26,14 @@ namespace Utility
         public Boolean MainFormMaximized { get; set; }
 
         /// <summary>List of the most recently opened files</summary>
-        public List<string> MruList { get; set; }
+        public List<ApsimFileMetadata> MruList { get; set; }
 
         /// <summary>The maximum number of files allowed in the mru list</summary>
         public int FilesInHistory { get; set; }
+
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
@@ -36,8 +41,20 @@ namespace Utility
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
 
+        /// <summary>
+        /// The position of the splitter between the variables
+        /// and frequency text editors in the report UI.
+        /// </summary>
+        public int ReportSplitterPosition { get; set; }
+
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         public bool DarkTheme { get; set; }
+
+        /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        public bool Muted { get; set; }
+
+        /// <summary>Use the new property presenter?</summary>
+        public bool UseNewPropertyPresenter { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -62,6 +79,11 @@ namespace Utility
                 return summaryJpg;
             }
         }
+
+        /// <summary>
+        /// Version number of the configuration settings.
+        /// </summary>
+        public int Version { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -93,85 +115,115 @@ namespace Utility
         public double BaseFontSize { get; set; } = 12.5;
 
         /// <summary>
+        /// Simulation complete wav file.
+        /// </summary>
+        public string SimulationCompleteWavFileName { get; set; }
+
+        /// <summary>
+        /// Simulation complete with error wav file.
+        /// </summary>
+        public string SimulationCompleteWithErrorWavFileName { get; set; }
+
+        /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
         /// <value></value>
-        public Pango.FontDescription Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
+
+        /// <summary>
+        /// Stores the user's preferred font for the manager script text editor.
+        /// </summary>
+        public string EditorFontName { get; set; } = "monospace 10";
+
+        /// <summary>
+        /// Country name used in the download soil view.
+        /// </summary>
+        public string DownloadFromDataSourceCountry { get; set; }
+
+        public ApsimFileMetadata GetMruFile(string fileName)
+        {
+            return MruList.Find(f => f.FileName == fileName);
+        }
 
         /// <summary>Add a filename to the list.</summary>
         /// <param name="filename">File path</param>
-        public void AddMruFile(string filename)
+        public void AddMruFile(ApsimFileMetadata file)
         {
-            if (filename.Length > 0)
+            if (file.FileName.Length > 0) // Do we really need this check?
             {
                 if (MruList.Count > 0)
                 {
-                    if (MruList.IndexOf(filename) < 0)
+                    int index = MruList.FindIndex(f => f.FileName == file.FileName);
+                    if (index < 0)
                     {
                         // First time that filename has been added 
                         if (MruList.Count >= FilesInHistory)
-                            MruList.RemoveAt(MruList.Count - 1);  // Delete the last item 
+                            MruList.RemoveAt(MruList.Count - 1);  // Delete the last item
                     }
                     else
                     {
-                        // Item is in the history list => move to top 
-                        MruList.RemoveAt(MruList.IndexOf(filename));
+                        // Item is in the history list => move to top
+                        file = MruList[index];
+                        MruList.RemoveAt(index);
                     }
-                    MruList.Insert(0, filename);
+                    MruList.Insert(0, file);
                 }
                 else
-                    MruList.Add(filename);
+                    MruList.Add(file);
             }
         }
 
         /// <summary>Remove a specified file from the list</summary>
-        /// <param name="filename">The file name to delete</param>
-        public void DelMruFile(string filename)
+        /// <param name="fileName">The file name to delete</param>
+        public void DelMruFile(string fileName)
         {
-            if (filename.Length > 0)
+            if (string.IsNullOrEmpty(fileName) || MruList == null || MruList.Count < 1)
+                return;
+
+            int index = MruList.FindIndex(f => f.FileName == fileName);
+            if (index >= 0)
+                MruList.RemoveAt(index);
+        }
+
+        public void SetExpandedNodes(string fileName, TreeNode[] nodes)
+        {
+            ApsimFileMetadata file = GetMruFile(fileName);
+            if (file == null)
             {
-                if (MruList.Count > 0)
-                {
-                    if (MruList.IndexOf(filename) >= 0)
-                    {
-                        MruList.RemoveAt(MruList.IndexOf(filename));
-                    }
-                }
+                file = new ApsimFileMetadata(fileName, nodes);
+                AddMruFile(file);
             }
+            else
+                file.ExpandedNodes = nodes;
         }
 
         /// <summary>Rename a specified file in the list</summary>
-        /// <param name="filename">The file name to rename</param>
-        /// <param name="newname">The new file name</param>
-        public void RenameMruFile(string filename, string newname)
+        /// <param name="fileName">The file name to rename</param>
+        /// <param name="newName">The new file name</param>
+        public void RenameMruFile(string fileName, string newName)
         {
-            if (filename.Length > 0)
+            if (string.IsNullOrEmpty(fileName) || MruList == null || MruList.Count < 1)
+                return;
+
+            int index = MruList.FindIndex(f => f.FileName == fileName);
+            if (index >= 0)
             {
-                if (MruList.Count > 0)
-                {
-                    int idx = MruList.IndexOf(filename);
-                    if (idx >= 0)
-                    {
-                        MruList.RemoveAt(idx);
-                        MruList.Insert(idx, newname);
-                    }
-                }
+                MruList.RemoveAt(index);
+                MruList.Insert(index, new ApsimFileMetadata(newName));
             }
         }
 
         /// <summary>Clean the list by removing missing files</summary>
         public void CleanMruList()
         {
-            string filename;
-            int i = MruList.Count - 1;
-            while (i >= 0)
+            if (MruList == null || MruList.Count < 1)
+                return;
+
+            for (int i = MruList.Count - 1; i >= 0; i--)
             {
-                filename = MruList[i];
+                string filename = MruList[i].FileName;
                 if (!File.Exists(filename))
-                {
                     DelMruFile(filename);
-                }
-                i--;
             }
         }
 
@@ -209,24 +261,31 @@ namespace Utility
                 // deserialise the file
                 if (File.Exists(configurationFile))
                 {
-                    System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
-                    StreamReader filereader = null;
-
-                    // Dean (Oct 2014): I changed the class that is serialized from Settings to Configuration.
-                    // This will cause the code below to throw. When this happens just delete the old
-                    // configuration file.
                     try
                     {
-                        filereader = new StreamReader(configurationFile);
-                        instance = (Configuration)xmlreader.Deserialize(filereader);
-                        filereader.Close();
+                        instance = ConfigurationConverter.DoConvert(configurationFile);
                     }
-                    catch (Exception)
+                    catch
                     {
-                        filereader.Close();
-                        File.Delete(configurationFile);
+                        // Fallback to old method.
+                        System.Xml.Serialization.XmlSerializer xmlreader = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
+                        StreamReader filereader = null;
+
+                        // Dean (Oct 2014): I changed the class that is serialized from Settings to Configuration.
+                        // This will cause the code below to throw. When this happens just delete the old
+                        // configuration file.
+                        try
+                        {
+                            filereader = new StreamReader(configurationFile);
+                            instance = (Configuration)xmlreader.Deserialize(filereader);
+                            filereader.Close();
+                        }
+                        catch (Exception)
+                        {
+                            filereader.Close();
+                            //File.Delete(configurationFile);
+                        }
                     }
-                    
                 }
 
                 if (instance == null)
@@ -234,7 +293,7 @@ namespace Utility
                     instance = new Configuration();
                     instance.MainFormSize = new Size(640, 480);
                     instance.MainFormMaximized = true;
-                    instance.MruList = new List<string>();
+                    instance.MruList = new List<ApsimFileMetadata>();
                     instance.PreviousFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                     instance.FilesInHistory = 20;
                 }

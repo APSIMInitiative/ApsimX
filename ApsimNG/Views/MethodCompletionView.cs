@@ -104,7 +104,7 @@
             mainWindow.Add(container);
             mainWindow.Resizable = false;
             mainWindow.Destroyed += OnDestroyed;
-            Window masterWindow = (MasterView as ViewBase).MainWidget.Toplevel as Window;
+            Window masterWindow = (MasterView as ViewBase)?.MainWidget?.Toplevel as Window;
             if (masterWindow != null)
             {
                 masterWindow.KeyPressEvent += OnKeyPress;
@@ -213,6 +213,7 @@
                     masterWindow.FocusOutEvent -= OnFocusOut;
                     masterWindow.ButtonPressEvent -= OnFocusOut;
                 }
+                mainWindow.Destroyed -= OnDestroyed;
             }
             catch
             {
@@ -299,6 +300,11 @@
             lblArgumentSummaries.Markup = System.Text.RegularExpressions.Regex.Replace(completion.ParameterDocumentation, @"^([^:]+:)", @"<b>$1</b>", System.Text.RegularExpressions.RegexOptions.Multiline);
             lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
             lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
+        }
+
+        public void Destroy()
+        {
+            mainWindow.Destroy();
         }
     }
 }

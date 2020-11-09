@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -23,7 +24,7 @@
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
-        private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, Checkpoint> checkpointIDs = new Dictionary<string, Checkpoint>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// A copy of the units table.
@@ -75,7 +76,7 @@
         /// <returns>The units (with surrounding parentheses), or null if not available</returns>
         public string Units(string tableName, string columnHeading)
         {
-            if (units.Table != null)
+            if (units.Table != null && units.Table.Rows.Count > 0)
             {
                 units.RowFilter = string.Format("TableName='{0}' AND ColumnHeading='{1}'",
                                                 tableName, columnHeading);
@@ -96,12 +97,12 @@
             return Connection.GetColumnNames(tableName);
         }
 
-        /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
         /// <param name="tableName">The table name to return column names for.</param>
         /// <returns>Can return an empty list but never null.</returns>
-        public List<string> StringColumnNames(string tableName)
+        public List<Tuple<string, Type>> GetColumns(string tableName)
         {
-            return Connection.GetStringColumnNames(tableName);
+            return Connection.GetColumns(tableName);
         }
 
         /// <summary>
@@ -135,6 +136,12 @@
         /// <summary>Returns a list of table names</summary>
         public List<string> TableNames { get { return Connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 
+        /// <summary>Returns a list of table names</summary>
+        public List<string> ViewNames { get { return Connection.GetViewNames().FindAll(t => !t.StartsWith("_")); } }
+
+        /// <summary>Returns a list of table and view names</summary>
+        public List<string> TableAndViewNames { get { return Connection.GetTableAndViewNames().FindAll(t => !t.StartsWith("_")); } }
+
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         public void Refresh()
         {
@@ -147,7 +154,7 @@
             {
                 var data = Connection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
-                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
             }
 
             // Read in checkpoint ids.
@@ -155,7 +162,15 @@
             {
                 var data = Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                {
+                    checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
+                    {
+                        ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null &&
+                                       !Convert.IsDBNull(row["OnGraphs"]) &&
+                                       Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
+                    });
+                }
             }
 
             // For each table in the database, read in field names.
@@ -186,7 +201,7 @@
                                  string orderBy = null,
                                  bool distinct = false)
         {
-            if (!Connection.TableExists(tableName))
+            if (!Connection.TableExists(tableName) && !Connection.ViewExists(tableName))
                 return null;
 
             var fieldNamesInTable = Connection.GetColumnNames(tableName);
@@ -205,7 +220,7 @@
             else
                 fieldList = fieldNames.ToList();
 
-            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
+            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null || (filter != null && filter.Contains("SimulationName"));
             bool hasCheckpointName = fieldNamesInTable.Contains("CheckpointID") || fieldNamesInTable.Contains("CheckpointName") || checkpointName != null;
 
             sql.Append("SELECT ");
@@ -238,6 +253,7 @@
             }
 
             fieldList.Remove("CheckpointID");
+            fieldList.Remove("CheckpointName");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
 
@@ -249,7 +265,7 @@
                         sql.Append(", ");
                     firstField = false;
                     sql.Append("T.");
-                    sql.Append("[");
+                    sql.Append('"');
                     if (!(Connection is Firebird) || tableName.StartsWith("_")
                       || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
@@ -258,7 +274,7 @@
                         sql.Append(fieldName);
                     else
                         sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
-                    sql.Append(']');
+                    sql.Append('"');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
                 }
@@ -284,7 +300,7 @@
             sql.Append("[" + tableName);
             sql.Append("] T ");
 
-            if (hasCheckpointName || hasSimulationName || filter != null)
+            if (hasCheckpointName || hasSimulationName || !string.IsNullOrWhiteSpace(filter))
             {
                 bool firstWhere = true;
                 // Write WHERE clause
@@ -313,7 +329,7 @@
                     firstWhere = false;
                 }
 
-                if (filter != null)
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
                     string copyFilter = filter;
                     // For Firebird, we need to convert column names to their short form to perform the query
@@ -416,7 +432,17 @@
         /// <returns></returns>
         public int GetCheckpointID(string checkpointName)
         {
-            return checkpointIDs[checkpointName];
+            return checkpointIDs[checkpointName].ID;
+        }
+
+        /// <summary>
+        /// Return true if checkpoint is to be shown on graphs.
+        /// </summary>
+        /// <param name="checkpointName">The checkpoint name to look for.</param>
+        /// <returns></returns>
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            return checkpointIDs[checkpointName].ShowOnGraphs;
         }
 
         /// <summary>

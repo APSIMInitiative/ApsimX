@@ -9,7 +9,6 @@
     using System.Data;
     using System.IO;
     using Newtonsoft.Json;
-    using System.Xml.Serialization;
     using Utilities;
     using Models.Storage;
     using Models.Core.Run;
@@ -25,6 +24,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class FactorialAnova : Model, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// List of analysis outputs
         /// </summary>
@@ -55,7 +57,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get
@@ -116,9 +118,13 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
+            // Note - we seem to be assuming that the predicted data table is called Report.
+            // If the predicted table has not been modified during the most recent simulations run, don't do anything.
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains("Report"))
+                return;
+
             string sql = "SELECT * FROM [Report]";
             DataTable predictedData = dataStore.Reader.GetDataUsingSql(sql);
             if (predictedData != null)

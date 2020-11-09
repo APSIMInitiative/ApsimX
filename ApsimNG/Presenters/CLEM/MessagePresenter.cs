@@ -1,9 +1,10 @@
-using Models;
+﻿using Models;
 using Models.Core;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
+            int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
@@ -67,6 +69,7 @@ namespace UserInterface.Presenters
                 ".errorlink {color:white; font-weight:bold; background-color:red !important;border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".otherlink {font-weight:bold; color:#333333; background-color:#eeeeee !important;border-color:#999999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+                ".marketlink {font-weight:bold; color:#1785FF; background-color:#DCEEFF !important;border-color:#1785FF; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".messageentry {padding:5px 0px 5px 0px; line-height: 1.7em; }" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
@@ -102,9 +105,9 @@ namespace UserInterface.Presenters
             }
 
             // find IStorageReader of simulation
-            IModel simulation = Apsim.Parent(model, typeof(Simulation));
-            IModel simulations = Apsim.Parent(simulation, typeof(Simulations));
-            IDataStore ds = Apsim.Children(simulations, typeof(IDataStore)).FirstOrDefault() as IDataStore;
+            IModel simulation = model.FindAncestor<Simulation>();
+            IModel simulations = simulation.FindAncestor<Simulations>();
+            IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
             if (ds == null)
             {
                 return htmlString;
@@ -114,22 +117,22 @@ namespace UserInterface.Presenters
                 return htmlString;
             }
             DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
-            int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-            int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-            dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
-
-            foreach (DataRow dr in dataRows)
-            {
-                // convert invalid parameter warnings to errors
-                if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                {
-                    dr[errorCol] = "0";
-                }
-            }
-
             if (dataRows.Count() > 0)
             {
+                int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+                int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+                dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
                 foreach (DataRow dr in dataRows)
+                {
+                    // convert invalid parameter warnings to errors
+                    if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
+                    {
+                        dr[errorCol] = "0";
+                    }
+                }
+
+                foreach (DataRow dr in dataRows.Take(maxErrors))
                 {
                     bool ignore = false;
                     string msgStr = dr[msgCol].ToString();
@@ -154,7 +157,22 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
-                        msgStr = string.Join("\n", parts.ToArray());
+                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                        // remove starter text
+                        string[] starters = new string[]
+                        {
+                            "System.Exception: ",
+                            "Models.Core.ApsimXException: "
+                        };
+
+                        foreach (string start in starters)
+                        {
+                            if (msgStr.Contains(start))
+                            {
+                                msgStr = msgStr.Substring(start.Length);
+                            }
+                        }
 
                         string type = "Message";
                         string title = "Message";
@@ -210,12 +228,23 @@ namespace UserInterface.Presenters
                         msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
                         msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
                         msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
+                        msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
                         msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
                         htmlString += "\n<div class=\"messageentry\">" + msgStr;
                         htmlString += "\n</div>";
                         htmlString += "\n</div>";
                         htmlString += "\n</div>";
                     }
+                }
+                if(dataRows.Count() > maxErrors)
+                {
+                    htmlString += "\n<div class=\"holdermain\">";
+                    htmlString += "\n <div class=\"warningbanner\">Warning limit reached</div>";
+                    htmlString += "\n <div class=\"warningcontent\">";
+                    htmlString += "\n  <div class=\"activityentry\">In excess of "+maxErrors+" errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.";
+                    htmlString += "\n  </div>";
+                    htmlString += "\n </div>";
+                    htmlString += "\n</div>";
                 }
             }
             else

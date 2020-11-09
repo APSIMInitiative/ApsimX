@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
@@ -9,9 +9,7 @@ using Models.Factorial;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
-using Models.Core.Runners;
 using Models.Storage;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
@@ -26,28 +24,28 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ScopedModel]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine
     {
         [NonSerialized]
         private Links links;
-
-        private Checkpoints checkpoints;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
 
         /// <summary>Gets or sets the version.</summary>
-        [XmlAttribute("Version")]
+        [System.Xml.Serialization.XmlAttribute("Version")]
         public int Version { get; set; }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FileName { get; set; }
 
         /// <summary>Returns an instance of a links service</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Links Links
         {
             get
@@ -57,6 +55,9 @@ namespace Models.Core
                 return links;
             }
         }
+
+        /// <summary>Gets a c# script compiler.</summary>
+        public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
 
         /// <summary>Returns an instance of an events service</summary>
         /// <param name="model">The model the service is for</param>
@@ -76,7 +77,6 @@ namespace Models.Core
         public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -90,12 +90,39 @@ namespace Models.Core
 
             // Parent all models.
             newSimulations.Parent = null;
-            Apsim.ParentAllChildren(newSimulations);
+            newSimulations.ParentAllDescendants();
 
             // Call OnCreated in all models.
-            Apsim.ChildrenRecursively(newSimulations).ForEach(m => m.OnCreated());
+            foreach (IModel model in newSimulations.FindAllDescendants().ToList())
+                model.OnCreated();
 
             return newSimulations;
+        }
+
+        /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public string ApsimVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+            set
+            {
+                // Setter is provided so that this property gets serialized.
+            }
+        }
+
+        /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public static string GetApsimVersion()
+        {
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
+            return "Version " + version + ", built " + buildDate;
         }
 
         /// <summary>
@@ -107,9 +134,12 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            DataStore storage = this.FindInScope<DataStore>();
             if (storage != null)
+            {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Reader.Refresh();
+            }
         }
 
         /// <summary>
@@ -119,26 +149,15 @@ namespace Models.Core
         /// <returns>A new simulations object that represents the file on disk</returns>
         public Simulations RevertCheckpoint(string checkpointName)
         {
-            IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
+            IDataStore storage = this.FindInScope<DataStore>();
             if (storage != null)
+            {
                 storage.Writer.RevertCheckpoint(checkpointName);
+                storage.Reader.Refresh();
+            }
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
-
-
-        /// <summary>Run a simulation</summary>
-        /// <param name="simulation">The simulation to run</param>
-        /// <param name="doClone">Clone the simulation before running?</param>
-        public void Run(Simulation simulation, bool doClone)
-        {
-            Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation);
-            Links.Resolve(simulationRunner);
-            simulationRunner.Run(new System.Threading.CancellationTokenSource());
-        }
-
-
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
@@ -158,22 +177,10 @@ namespace Models.Core
             SetFileNameInAllSimulations();
         }
 
-        /// <summary>Find and return a list of duplicate simulation names.</summary>
-        public List<string> FindDuplicateSimulationNames()
-        {
-            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
-            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
-            var duplicates = allSimNames
-                .GroupBy(i => i)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-            return duplicates.ToList();
-        }
-
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in Apsim.ChildrenRecursively(this))
+            foreach (Model child in this.FindAllDescendants().ToList())
             {
                 if (child is Simulation)
                     (child as Simulation).FileName = FileName;
@@ -194,17 +201,25 @@ namespace Models.Core
         {
             links = null;
         }
+        
+        /// <summary>
+        /// Gets the services objects.
+        /// </summary>
+        public List<object> GetServices()
+        {
+            List<object> services = new List<object>();
+            var storage = this.FindInScope<IDataStore>();
+            if (storage != null)
+                services.Add(storage);
+            services.Add(ScriptCompiler);
+            return services;
+        }
 
         /// <summary>Create a links object</summary>
         private void CreateLinks()
         {
-            List<object> services = new List<object>();
-            var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-            if (storage != null)
-                services.Add(storage);
-            services.Add(this);
-            services.Add(checkpoints);
-            links = new Links(services);
+            if (links == null)
+                links = new Links(GetServices());
         }
 
         /// <summary>
@@ -216,7 +231,7 @@ namespace Models.Core
         {
             // Clears the locator caches for our Simulations.
             // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in Apsim.ChildrenRecursively(this))
+            foreach (Model simulation in this.FindAllDescendants().ToList())
                 if (simulation is Simulation)
                     (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
@@ -227,7 +242,7 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles()
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in Apsim.ChildrenRecursively(this, typeof(IReferenceExternalFiles)))
+            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>())
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
             
@@ -240,19 +255,19 @@ namespace Models.Core
         /// <param name="headingLevel">The starting heading level.</param>
         public void DocumentModel(string modelNameToDocument, List<AutoDocumentation.ITag> tags, int headingLevel)
         {
-            Simulation simulation = Apsim.Find(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = this.FindInScope<Simulation>();
             if (simulation != null)
             {
                 // Find the model of the right name.
-                IModel modelToDocument = Apsim.Find(simulation, modelNameToDocument);
+                IModel modelToDocument = simulation.FindInScope(modelNameToDocument);
 
                 // If not found then find a model of the specified type.
                 if (modelToDocument == null)
-                    modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
+                    modelToDocument = simulation.FindByPath("[" + modelNameToDocument + "]")?.Value as IModel;
 
                 // If the simulation has the same name as the model we want to document, dig a bit deeper
                 if (modelToDocument == simulation)
-                    modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
+                    modelToDocument = simulation.FindAllDescendants().Where(m => !m.IsHidden).ToList().FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
 
                 // If still not found throw an error.
                 if (modelToDocument != null)
@@ -260,16 +275,16 @@ namespace Models.Core
                     // Get the path of the model (relative to parentSimulation) to document so that 
                     // when replacements happen below we will point to the replacement model not the 
                     // one passed into this method.
-                    string pathOfSimulation = Apsim.FullPath(simulation) + ".";
-                    string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
+                    string pathOfSimulation = simulation.FullPath + ".";
+                    string pathOfModelToDocument = modelToDocument.FullPath.Replace(pathOfSimulation, "");
 
                     // Clone the simulation
                     SimulationDescription simDescription = new SimulationDescription(simulation);
 
-                    Simulation clonedSimulation = simDescription.ToSimulation(this);
+                    Simulation clonedSimulation = simDescription.ToSimulation();
 
                     // Now use the path to get the model we want to document.
-                    modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
+                    modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
@@ -278,14 +293,12 @@ namespace Models.Core
                     Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
-                    foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
-                        child.IncludeInDocumentation = true;
 
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation, allLinks: true);
+                    Links.Unresolve(clonedSimulation, true);
                 }
             }
         }

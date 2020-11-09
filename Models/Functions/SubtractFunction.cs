@@ -4,6 +4,8 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using APSIM.Shared.Utilities;
+using System.Globalization;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -15,13 +17,13 @@ namespace Models.Functions
     public class SubtractFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private List<IFunction> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             double returnValue = 0.0;
             if (ChildFunctions.Count > 0)
@@ -30,12 +32,13 @@ namespace Models.Functions
                 returnValue = F.Value(arrayIndex);
 
                 if (ChildFunctions.Count > 1)
+                {
                     for (int i = 1; i < ChildFunctions.Count; i++)
                     {
                         F = ChildFunctions[i] as IFunction;
                         returnValue = returnValue - F.Value(arrayIndex);
                     }
-
+                }
             }
             return returnValue;
         }
@@ -65,13 +68,13 @@ namespace Models.Functions
             tags.Add(new AutoDocumentation.Heading(function.Name, headingLevel));
 
             // write memos
-            foreach (IModel memo in Apsim.Children(function, typeof(Memo)))
+            foreach (IModel memo in function.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
             // create a string to display 'child1 - child2 - child3...'
             string msg = string.Empty;
             List<IModel> childrenToDocument = new List<IModel>();
-            foreach (IModel child in Apsim.Children(function, typeof(IFunction)))
+            foreach (IModel child in function.FindAllChildren<IFunction>())
             {
                 if (msg != string.Empty)
                     msg += " " + op + " ";
@@ -107,7 +110,7 @@ namespace Models.Functions
                 double doubleValue = (child as Constant).FixedValue;
                 if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
                 {
-                    int intValue = Convert.ToInt32(doubleValue);
+                    int intValue = Convert.ToInt32(doubleValue, CultureInfo.InvariantCulture);
                     string writtenInteger = Integer.ToWritten(intValue);
                     writtenInteger = writtenInteger.Replace(" ", "");  // don't want spaces.
                     if (writtenInteger.Equals(child.Name, StringComparison.CurrentCultureIgnoreCase))

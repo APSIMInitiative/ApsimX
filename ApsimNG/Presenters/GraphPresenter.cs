@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GraphPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections;
@@ -17,7 +11,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using Views;
     
@@ -41,17 +35,23 @@ namespace UserInterface.Presenters
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The current presenter</summary>
-        private IPresenter currentPresenter = null;
-
         /// <summary>The series definitions to show on graph.</summary>
-        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        public IEnumerable<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        {
+            Attach(model, view, explorerPresenter, null);
+        }
+
+        /// <summary>Attach the model to the view.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
             this.graph = model as Graph;
             this.graphView = view as GraphView;
@@ -65,16 +65,22 @@ namespace UserInterface.Presenters
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
             this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
 
-            DrawGraph();
+            if (cache == null)
+                DrawGraph();
+            else
+            {
+                SeriesDefinitions = cache;
+                DrawGraph(cache);
+            }
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
             explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             graphView.OnAxisClick -= OnAxisClick;
@@ -83,29 +89,39 @@ namespace UserInterface.Presenters
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
         }
 
-        /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph()
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
+
+            // Get a list of series definitions.
+            try
+            {
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter).ToArray();
+            }
+            catch (SQLiteException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+            catch (FirebirdException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+
+            DrawGraph(SeriesDefinitions);
+        }
+
+        /// <summary>Draw the graph on the screen.</summary>
+        public void DrawGraph(IEnumerable<SeriesDefinition> definitions)
+        {
+            graphView.Clear();
+            if (storage == null)
+                storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
-                // Get a list of series definitions.
-                try
-                {
-                    seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
-                }
-                catch (SQLiteException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
-                catch (FirebirdException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
 
-                foreach (SeriesDefinition definition in seriesDefinitions)
+                foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
                 }
@@ -117,13 +133,13 @@ namespace UserInterface.Presenters
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis a in graph.Axis)
+                foreach (Models.Axis a in graph.Axis)
                 {
                     FormatAxis(a);
                 }
 
                 // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition);
+                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
 
                 // Format the title
                 graphView.FormatTitle(graph.Name);
@@ -142,10 +158,11 @@ namespace UserInterface.Presenters
                 // they are no longer valid i.e. not on the graph.
                 if (graph.DisabledSeries == null)
                     graph.DisabledSeries = new List<string>();
-                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.Title);
+                IEnumerable<string> validSeriesTitles = definitions.Select(s => s.Title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+                graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
 
                 graphView.Refresh();
             }
@@ -163,7 +180,7 @@ namespace UserInterface.Presenters
 
             graphView.Export(ref img, r, true);
 
-            string path = Apsim.FullPath(graph).Replace(".Simulations.", string.Empty);
+            string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
@@ -174,7 +191,27 @@ namespace UserInterface.Presenters
         /// <returns>A list of series names.</returns>
         public string[] GetSeriesNames()
         {
-            return seriesDefinitions.Select(s => s.Title).ToArray();
+            return SeriesDefinitions.Select(s => s.Title).ToArray();
+        }
+
+        public List<string> SimulationFilter { get; set; }
+
+        /// <summary>The current presenter</summary>
+        public IPresenter CurrentPresenter { get; set; }
+
+        /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return graphView.LegendInsideGraph;
+            }
+            set
+            {
+                graphView.LegendInsideGraph = value;
+            }
         }
 
         /// <summary>Draws the specified series definition on the view.</summary>
@@ -209,7 +246,10 @@ namespace UserInterface.Presenters
                                                     definition.Title,
                                                     definition.X,
                                                     definition.Y,
-                                                    definition.Error,
+                                                    definition.XFieldName,
+                                                    definition.YFieldName,
+                                                    definition.XError,
+                                                    definition.YError,
                                                     definition.XAxis,
                                                     definition.YAxis,
                                                     colour,
@@ -217,6 +257,7 @@ namespace UserInterface.Presenters
                                                     definition.Marker,
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
+                                                    definition.MarkerModifier,
                                                     definition.ShowInLegend);
                     }
                     else if (definition.Type == SeriesType.Region)
@@ -243,6 +284,30 @@ namespace UserInterface.Presenters
                             colour,
                             definition.ShowInLegend);
                     }
+                    else if (definition.Type == SeriesType.StackedArea)
+                    {
+                        graphView.DrawStackedArea(
+                            definition.Title,
+                            definition.X.Cast<object>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
+                    }
+                    else if (definition.Type == SeriesType.Box)
+                    {
+                        graphView.DrawBoxPLot(definition.Title,
+                            definition.X.Cast<object>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            definition.Colour,
+                            definition.ShowInLegend,
+                            definition.Line,
+                            definition.Marker,
+                            definition.LineThickness);
+                    }
                 }
                 catch (Exception err)
                 {
@@ -253,7 +318,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
-        private void DrawOnView(List<Annotation> annotations)
+        private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
             double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
@@ -261,14 +326,14 @@ namespace UserInterface.Presenters
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
-            for (int i = 0; i < annotations.Count; i++)
+            for (int i = 0; i < annotations.Count(); i++)
             {
-                if (annotations[i] is TextAnnotation)
+                IAnnotation annotation = annotations.ElementAt(i);
+                if (annotation is TextAnnotation textAnnotation)
                 {
-                    TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - (i * interval);
                         graphView.DrawText(
@@ -294,10 +359,8 @@ namespace UserInterface.Presenters
                                             Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                 }
-                else
+                else if (annotation is LineAnnotation lineAnnotation)
                 {
-                    LineAnnotation lineAnnotation = annotations[i] as LineAnnotation;
-
                     graphView.DrawLine(
                                         lineAnnotation.x1, 
                                         lineAnnotation.y1,
@@ -305,14 +368,18 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
                                         lineAnnotation.thickness,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour,
+                                        lineAnnotation.InFrontOfSeries,
+                                        lineAnnotation.ToolTip);
                 }
+                else
+                    throw new Exception($"Unknown annotation type {annotation.GetType()}");
             }
         }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(Models.Graph.Axis axis)
+        private void FormatAxis(Models.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)
@@ -321,7 +388,7 @@ namespace UserInterface.Presenters
                 // X or Y field name depending on whether 'axis' is an x axis or a y axis.
                 HashSet<string> names = new HashSet<string>();
 
-                foreach (SeriesDefinition definition in seriesDefinitions)
+                foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
                     if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
                     {
@@ -363,20 +430,21 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            DrawGraph();
+            if (model == graph || graph.FindAllDescendants().Contains(model))
+                DrawGraph();
         }
 
         /// <summary>User has clicked an axis.</summary>
         /// <param name="axisType">Type of the axis.</param>
         private void OnAxisClick(Axis.AxisType axisType)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             AxisPresenter axisPresenter = new AxisPresenter();
-            currentPresenter = axisPresenter;
+            CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
             graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
@@ -388,13 +456,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCaptionClick(object sender, EventArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             TitlePresenter titlePresenter = new TitlePresenter();
-            currentPresenter = titlePresenter;
+            CurrentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
 
             TitleView t = new TitleView(graphView as GraphView);
@@ -431,13 +499,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             LegendPresenter presenter = new LegendPresenter(this);
-            currentPresenter = presenter;
+            CurrentPresenter = presenter;
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");
@@ -450,7 +518,7 @@ namespace UserInterface.Presenters
         private void OnHoverOverPoint(object sender, EventArguments.HoverPointArgs e)
         {
             // Find the correct series.
-            foreach (SeriesDefinition definition in seriesDefinitions)
+            foreach (SeriesDefinition definition in SeriesDefinitions)
             {
                 if (definition.Title == e.SeriesName)
                 {
@@ -490,7 +558,7 @@ namespace UserInterface.Presenters
         /// <returns>The simulation name of the row</returns>
         private string GetSimulationNameForPoint(double x, double y)
         {
-            foreach (SeriesDefinition definition in seriesDefinitions)
+            foreach (SeriesDefinition definition in SeriesDefinitions)
             {
                 if (definition.SimulationNamesForEachPoint != null)
                 {

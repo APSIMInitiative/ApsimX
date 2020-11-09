@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SeparatorAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
-    using System.Runtime.CompilerServices;
-
+ 
     /// <summary>
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.

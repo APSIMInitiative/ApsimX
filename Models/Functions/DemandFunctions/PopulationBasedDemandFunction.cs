@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -16,11 +16,11 @@ namespace Models.Functions.DemandFunctions
     public class PopulationBasedDemandFunction : Model, IFunction
     {
         /// <summary>The thermal time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ThermalTime = null;
 
         /// <summary>The number of growing organs</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction OrganPopulation = null;
 
         /// <summary>The phenology</summary>
@@ -28,24 +28,24 @@ namespace Models.Functions.DemandFunctions
         private Models.PMF.Phen.Phenology Phenology = null;
 
         /// <summary>The expansion stress</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("0-1")]
         IFunction ExpansionStress = null;
 
         /// <summary>The maximum organ wt</summary>
         [Description("Size individual organs will grow to when fully supplied with DM")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g")]
         IFunction MaximumOrganWt = null;
 
         /// <summary>The start stage</summary>
         [Description("Stage when organ growth starts ")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction StartStage = null;
 
         /// <summary>The growth duration</summary>
         [Description("ThermalTime duration of organ growth ")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("<sup>o</sup>Cd")]
         IFunction GrowthDuration = null;
 
@@ -87,7 +87,7 @@ namespace Models.Functions.DemandFunctions
         }
         
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             AccumulatedThermalTime = 0;
         }

@@ -42,10 +42,20 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
+        }
+
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public override void AddNewResourceType(IResourceWithTransactionType child)
+        {
+            child.TransactionOccurred += Resource_TransactionOccurred;
+            this.Children.Add(child as Model);
         }
 
         #region Transactions

@@ -1,15 +1,23 @@
 ﻿namespace Models.Core.Run
 {
+    using APSIM.Shared.JobRunning;
+    using Models.Soils.Standardiser;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation
     /// and the associated metadata describing a simulation.
     /// </summary>
     [Serializable]
-    public class SimulationDescription
+    public class SimulationDescription : IRunnable, IReportsStatus
     {
+        /// <summary>The top level simulations instance.</summary>
+        private IModel topLevelModel;
+
         /// <summary>The base simulation.</summary>
         private Simulation baseSimulation;
 
@@ -19,6 +27,21 @@
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
 
+        /// <summary>
+        /// The actual simulation object to run
+        /// </summary>
+        public Simulation SimulationToRun { get; private set; } = null;
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                return SimulationToRun?.Progress ?? 0;
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -29,6 +52,14 @@
         public SimulationDescription(Simulation sim, string name = null, bool clone = true)
         {
             baseSimulation = sim;
+            if (sim != null)
+            {
+                IModel topLevel = sim;
+                while (topLevel.Parent != null)
+                    topLevel = topLevel.Parent;
+                topLevelModel = topLevel;
+            }
+
             if (name == null && baseSimulation != null)
                 Name = baseSimulation.Name;
             else
@@ -41,6 +72,19 @@
 
         /// <summary>Gets / sets the list of descriptors for this simulaton.</summary>
         public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
+
+        /// <summary>Gets or sets the DataStore for this simulaton.</summary>
+        public IDataStore Storage
+        {
+            get
+            {
+                var scope = new ScopingRules();
+                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
+            }
+        }
+
+        /// <summary>Status message.</summary>
+        public string Status => SimulationToRun.Status;
 
         /// <summary>
         /// Add an override to replace an existing model, as specified by the
@@ -63,33 +107,87 @@
             replacementsToApply.Add(new PropertyReplacement(path, replacement));
         }
 
+        /// <summary>Run the simulation.</summary>
+        /// <param name="cancelToken"></param>
+        public void Run(CancellationTokenSource cancelToken)
+        {
+            SimulationToRun = ToSimulation();
+            SimulationToRun.Run(cancelToken);
+        }
+
         /// <summary>
         /// Convert the simulation decription to a simulation.
         /// path.
         /// </summary>
-        /// <param name="simulations">The top level simulations model.</param>
-        public Simulation ToSimulation(Simulations simulations = null)
+        public Simulation ToSimulation()
         {
-            AddReplacements(simulations);
+            try
+            {
+                AddReplacements();
 
-            Simulation newSimulation;
-            if (doClone)
-                newSimulation = Apsim.Clone(baseSimulation) as Simulation;
+                Simulation newSimulation;
+                if (doClone)
+                {
+                    newSimulation = Apsim.Clone(baseSimulation) as Simulation;
+
+                    // After a binary clone, we need to force all managers to
+                    // recompile their scripts. This is to work around an issue
+                    // where scripts will change during deserialization. See issue
+                    // #4463 and the TestMultipleChildren test inside ReportTests.
+                    foreach (Manager script in newSimulation.FindAllDescendants<Manager>())
+                        script.OnCreated();
+                }
+                else
+                    newSimulation = baseSimulation;
+
+                if (string.IsNullOrWhiteSpace(Name))
+                    newSimulation.Name = baseSimulation.Name;
+                else
+                    newSimulation.Name = Name;
+
+                newSimulation.Parent = null;
+                newSimulation.ParentAllDescendants();
+                replacementsToApply.ForEach(r => r.Replace(newSimulation));
+
+                // Give the simulation the descriptors.
+                if (newSimulation.Descriptors == null || Descriptors.Count > 0)
+                    newSimulation.Descriptors = Descriptors;
+                newSimulation.Services = GetServices();
+
+                // Standardise the soil.
+                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
+                foreach (Soils.Soil soil in soils)
+                    SoilStandardiser.Standardise(soil);
+
+                newSimulation.ClearCaches();
+                return newSimulation;
+            }
+            catch (Exception err)
+            {
+                var message = "Error in file: " + baseSimulation.FileName + " Simulation: " + Name;
+                throw new Exception(message, err);
+            }
+        }
+
+        private List<object> GetServices()
+        {
+            List<object> services = new List<object>();
+            if (topLevelModel is Simulations sims)
+            {
+                // If the top-level model is a simulations object, it will have access
+                // to services such as the checkpoints. This should be passed into the
+                // simulation to be used in link resolution. If we don't provide these
+                // services to the simulation, it will not be able to resolve links to
+                // checkpoints.
+                services = sims.GetServices();
+            }
             else
-                newSimulation = baseSimulation;
+            {
+                IModel storage = topLevelModel.FindInScope<DataStore>();
+                services.Add(storage);
+            }
 
-            if (Name == null)
-                newSimulation.Name = baseSimulation.Name;
-            else
-                newSimulation.Name = Name;
-            newSimulation.Parent = null;
-            Apsim.ParentAllChildren(newSimulation);
-            replacementsToApply.ForEach(r => r.Replace(newSimulation));
-
-            // Give the simulation the descriptors.
-            newSimulation.Descriptors = Descriptors;
-
-            return newSimulation;
+            return services;
         }
 
         /// <summary>
@@ -102,13 +200,12 @@
         }
 
         /// <summary>Add any replacements to all simulation descriptions.</summary>
-        /// <param name="simulations">The top level simulations model.</param>
-        private void AddReplacements(Simulations simulations)
+        private void AddReplacements()
         {
-            if (simulations != null)
+            if (topLevelModel != null)
             {
-                IModel replacements = Apsim.Child(simulations, "Replacements");
-                if (replacements != null)
+                IModel replacements = topLevelModel.FindChild<Replacements>();
+                if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
@@ -124,10 +221,10 @@
         public class Descriptor
         {
             /// <summary>The name of the descriptor.</summary>
-            public string Name { get; }
+            public string Name { get; set; }
 
             /// <summary>The value of the descriptor.</summary>
-            public string Value { get; }
+            public string Value { get; set; }
 
             /// <summary>Constructor</summary>
             /// <param name="name">Name of the descriptor.</param>

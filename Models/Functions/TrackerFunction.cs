@@ -6,6 +6,7 @@
     using System.Reflection;
     using Models.Core;
     using Models.PMF.Phen;
+    using System.Globalization;
 
     /// <summary>
     /// # [Name]
@@ -31,11 +32,11 @@
         private IEvent events = null;
 
         /// <summary>The variable to track</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction variable = null;
 
         /// <summary>The variable to track</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction referenceVariable = null;
 
         /// <summary>The statistic to return e.g. value back 300</summary>
@@ -57,7 +58,7 @@
                 return 0;
             if (Statistic.StartsWith("value back "))
             {
-                double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""));
+                double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""), CultureInfo.InvariantCulture);
 
                 // Go backwards through referenceValues until we reach our accumulation target.
                 double accumulationValue = 0;

@@ -716,7 +716,7 @@
         <Cultivar>
           <Name>Early</Name>
           <Alias>
-            <Name>agtscythe</Name>
+            <Name>Scythe</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <Alias>
@@ -768,7 +768,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <Alias>
-            <Name>kirchauff</Name>
+            <Name>Krichauff</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <Alias>
@@ -874,7 +874,7 @@
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <Alias>
-            <Name>halbred</Name>
+            <Name>Halberd</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <Alias>

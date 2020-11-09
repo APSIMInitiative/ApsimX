@@ -10,7 +10,6 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
-    using Importer;
     using Interfaces;
     using Models;
     using Models.Core;

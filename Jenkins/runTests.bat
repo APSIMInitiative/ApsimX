@@ -33,6 +33,11 @@ if "%1"=="%uisyntax%" (
 
 if "%1"=="%prototypesyntax%" (
 	set testdir=%apsimx%\Prototypes
+	
+	rem Extract restricted grapevine dataset
+	set grapevine=%apsimx%\Prototypes\Grapevine
+	echo %GRAPEVINE_PASSWORD%| 7z x !grapevine!\Observations.zip -o!grapevine!
+	
 	goto :tests
 )
 
@@ -43,6 +48,8 @@ if "%1"=="%examplessyntax%" (
 
 if "%1"=="%validationsyntax%" (
 	set testdir=%apsimx%\Tests
+	set soybean=%apsimx%\Tests\UnderReview\Soybean
+	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
 	goto :tests
 )
 
@@ -88,5 +95,5 @@ echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
-models.exe %testdir%\*.apsimx /Recurse /RunTests
+models.exe %testdir%\*.apsimx /MultiProcess /Recurse /RunTests /Verbose
 endlocal

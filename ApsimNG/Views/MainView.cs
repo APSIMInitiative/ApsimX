@@ -149,13 +149,27 @@
 
             notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
             notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
-            hbox1.HeightRequest = 20;            
+
+            notebook1.SwitchPage += OnChangeTab;
+            notebook2.SwitchPage += OnChangeTab;
+
+            notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
+
+            hbox1.HeightRequest = 20;
 
             TextTag tag = new TextTag("error");
-            tag.Foreground = "red";
+            // Make errors orange-ish in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(1));
+            else
+                tag.Foreground = "red";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
-            tag.Foreground = "brown";
+            // Make warnings yellow in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(7));
+            else
+                tag.Foreground = "brown";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
@@ -166,15 +180,23 @@
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
 
-            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            // If font is null, or font family is null, or font size is 0, fallback
+            // to the default font (on windows only).
+            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
+                                                         f.Family == null ||
+                                                         f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+                Utility.Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (Utility.Configuration.Settings.Font != null)
-                ChangeFont(Utility.Configuration.Settings.Font);
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                ChangeFont(font);
+            }
 
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
@@ -187,6 +209,33 @@
                 RefreshTheme();
         }
 
+        /// <summary>
+        /// Invoked when the user changes tabs.
+        /// Gives the selected tab a special name so that its style is
+        /// modified according to the rules in the .gtkrc file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnChangeTab(object sender, SwitchPageArgs args)
+        {
+            try
+            {
+                Notebook control = sender as Notebook;
+
+                for (int i = 0; i < control.Children.Length; i++)
+                {
+                    // The top-level widget in the tab label is always an event box.
+                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+        
         /// <summary>
         /// Invoked when an error has been thrown in a view.
         /// </summary>
@@ -328,9 +377,16 @@
         /// <param name="e">Button press event arguments</param>
         public void OnEventbox1ButtonPress(object o, ButtonPressEventArgs e)
         {
-            if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
+            try
             {
-                CloseTabContaining(o);
+                if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
+                {
+                    CloseTabContaining(o);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -430,6 +486,8 @@
                 if (!args.AllowClose)
                     return;
             }
+            notebook1.SwitchPage -= OnChangeTab;
+            notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
             mainWidget.Destroy();
@@ -493,7 +551,14 @@
         /// <param name="e"></param>
         public void OnCloseBtnClick(object o, EventArgs e)
         {
-            CloseTabContaining(o);
+            try
+            {
+                CloseTabContaining(o);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Close a tab.</summary>
@@ -565,7 +630,7 @@
             get
             {
                 if (window1.GdkWindow != null)
-                    return window1.GdkWindow.State == Gdk.WindowState.Maximized;
+                    return (window1.GdkWindow.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -585,6 +650,14 @@
             set { window1.Title = value; }
         }
 
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition
+        {
+            get { return hpaned1.Position; }
+            set { hpaned1.Position = value; }
+        }
+
         /// <summary>Turn split window on/off</summary>
         public bool SplitWindowOn
         {
@@ -596,7 +669,8 @@
                 if (value)
                 {
                     hpaned1.Child2.Show();
-                    hpaned1.Position = hpaned1.Allocation.Width / 2;
+                    if (hpaned1.Position == 0)
+                        hpaned1.Position = hpaned1.Allocation.Width / 2;
                 }
                 else
                     hpaned1.Child2.Hide();
@@ -708,7 +782,6 @@
                 progressBar.Visible = false;
                 stopButton.Visible = false;
             });
-            while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>
@@ -763,7 +836,14 @@
         [GLib.ConnectBefore]
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
-            ShowDetailedError?.Invoke(sender, args);
+            try
+            {
+                ShowDetailedError?.Invoke(sender, args);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -774,11 +854,18 @@
         /// <param name="args">Event arguments.</param>
         public void ToggleTheme(object sender, EventArgs args)
         {
-            if (sender is ToolButton)
+            try
             {
-                ToolButton button = sender as ToolButton;
-                button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
-                button.IconWidget.ShowAll();
+                if (sender is ToolButton)
+                {
+                    ToolButton button = sender as ToolButton;
+                    button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
+                    button.IconWidget.ShowAll();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -794,8 +881,8 @@
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            if (Utility.Configuration.Settings.Font != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+            if (Utility.Configuration.Settings.FontName != null)
+                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
 
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
@@ -816,9 +903,16 @@
         /// <param name="args">Event arguments.</param>
         private void OnChangeFont(object sender, EventArgs args)
         {
-            Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
-            Utility.Configuration.Settings.Font = newFont;
-            ChangeFont(newFont);
+            try
+            {
+                Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+                Utility.Configuration.Settings.FontName = newFont.ToString();
+                ChangeFont(newFont);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -829,14 +923,21 @@
         /// <param name="args">Event arguments.</param>
         private void OnDestroyFontDialog(object sender, EventArgs args)
         {
-            if (fontDialog == null)
-                return;
-            
-            fontDialog.OkButton.Clicked -= OnChangeFont;
-            fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
-            fontDialog.ApplyButton.Clicked -= OnChangeFont;
-            fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
-            fontDialog.Destroy();
+            try
+            {
+                if (fontDialog == null)
+                    return;
+                
+                fontDialog.OkButton.Clicked -= OnChangeFont;
+                fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+                fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+                fontDialog.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -862,17 +963,24 @@
         /// <param name="e">Event arguments.</param>
         protected void OnClosing(object o, DeleteEventArgs e)
         {
-            if (AllowClose != null)
+            try
             {
-                AllowCloseArgs args = new AllowCloseArgs();
-                AllowClose.Invoke(this, args);
-                e.RetVal = !args.AllowClose;
+                if (AllowClose != null)
+                {
+                    AllowCloseArgs args = new AllowCloseArgs();
+                    AllowClose.Invoke(this, args);
+                    e.RetVal = !args.AllowClose;
+                }
+                else
+                    e.RetVal = false;
+                if ((bool)e.RetVal == false)
+                {
+                    Close(false);
+                }
             }
-            else
-                e.RetVal = false;
-            if ((bool)e.RetVal == false)
+            catch (Exception err)
             {
-                Close(false);
+                ShowError(err);
             }
         }
 
@@ -880,10 +988,17 @@
         /// <param name="e">Event arguments.</param>
         protected void OnStopClicked(object o, EventArgs e)
         {
-            if (StopSimulation != null)
+            try
             {
-                EventArgs args = new EventArgs();
-                StopSimulation.Invoke(this, args);
+                if (StopSimulation != null)
+                {
+                    EventArgs args = new EventArgs();
+                    StopSimulation.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

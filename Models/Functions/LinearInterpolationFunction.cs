@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -15,35 +15,39 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("A value is returned via linear interpolation of a given set of XY pairs")]
+    [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
 
         /// <summary>Gets the xy pairs.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
-
-        [Link]
-        private ILocator locator = null;
 
         private Dictionary<double, double> cache = new Dictionary<double, double>();
 
-        /// <summary>The x property</summary>
-        [Description("XProperty")]
-        public string XProperty { get; set; }
+        /// <summary>The x value to use for interpolation</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction XValue = null;
 
         /// <summary>Constructor</summary>
         public LinearInterpolationFunction() { }
 
         /// <summary>Constructor</summary>
-        /// <param name="xproperty">x property</param>
+        public LinearInterpolationFunction(double[] x, double[] y) 
+        {
+            XYPairs = new XYPairs() { X = x, Y = y };
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="xProperty">name of the x property</param>
         /// <param name="x">x values.</param>
         /// <param name="y">y values.</param>
-        public LinearInterpolationFunction(string xproperty, double[] x, double[] y)
+        public LinearInterpolationFunction(string xProperty, double[] x, double[] y)
         {
-            XProperty = xproperty;
+            VariableReference XValue = new VariableReference();
+            XValue.VariableName = xProperty;
             XYPairs = new XYPairs();
             XYPairs.X = x;
             XYPairs.Y = y;
@@ -72,22 +76,17 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             // Shortcut exit when the Y values are all the same. Runs quicker.
-            if (YsAreAllTheSame)
-                return XYPairs.Y[0];
-
-            
-            string PropertyName = XProperty;
-            object v = locator.Get(PropertyName);
-            if (v == null)
-                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-            double XValue;
-            if (v is Array)
-                XValue = (double)(v as Array).GetValue(arrayIndex);
-            else if (v is IFunction)
-                XValue = (v as IFunction).Value(arrayIndex);
-            else
-                XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
-            return XYPairs.ValueIndexed(XValue);
+            try
+            {
+                if (YsAreAllTheSame)
+                    return XYPairs.Y[0];
+                else
+                    return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
+            }
         }
 
         /// <summary>Values for x.</summary>
@@ -110,20 +109,20 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
 
                 // add graph and table.
                 if (XYPairs != null)
                 {
-                    IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
-                    string xName = XProperty;
-                    if (xProperty != null && xProperty.UnitsLabel != string.Empty)
-                        xName += " " + xProperty.UnitsLabel;
-
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+                    IModel xValue = (IModel)this.FindByPath("XValue")?.Value;
+                    string xName = xValue.Name;
+                    
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated using linear interpolation", indent));
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+
+                    AutoDocumentation.DocumentModel(xValue, tags, headingLevel + 1, indent);
                 }
             }
         }

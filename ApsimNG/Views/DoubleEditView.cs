@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DoubleEditView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using Gtk;
@@ -39,6 +33,9 @@ namespace UserInterface.Views
     /// <summary>A drop down view.</summary>
     public class DoubleEditView : ViewBase, IDoubleEditView
     {
+        public delegate void OnChangeHandler(object sender, EventArgs e);
+        public event OnChangeHandler OnChange;
+
         /// <summary>
         /// The control to manage/wrap
         /// </summary>
@@ -85,7 +82,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return value;
+                return Math.Max(MinValue, Math.Min(value, MaxValue)); ;
             }
 
             set
@@ -156,9 +153,16 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textEntry.Changed -= OnChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                textEntry.Changed -= OnChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -169,7 +173,7 @@ namespace UserInterface.Views
             if ((this.value == double.MaxValue) || (this.value == double.MinValue))
                 textEntry.Text = string.Empty;
             else
-                textEntry.Text = string.Format("{0,2:f" + DecPlaces.ToString() + "}", this.value);
+                textEntry.Text = string.Format("{0,0:f" + DecPlaces.ToString() + "}", this.value);
         }
 
         /// <summary>
@@ -179,12 +183,28 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnChanged(object sender, EventArgs e)
         {
-            double result;
-            if (double.TryParse(textEntry.Text, out result))    // TODO: need to check the ranges here and adjust the viewed value
-                value = result;
-            else
+            try
             {
-                textEntry.Text = "0.0";
+                if (textEntry.Text.Length > 0)
+                {
+                    double result;
+                    if (double.TryParse(textEntry.Text, out result))    // TODO: need to check the ranges here and adjust the viewed value
+                        value = result;
+                    else
+                    {
+                        textEntry.Text = string.Format("{0,0:f" + DecPlaces.ToString() + "}", 0);
+                    }
+                }
+
+                if (OnChange != null)
+                {
+                    EventArgs args = new EventArgs();
+                    OnChange(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
     }

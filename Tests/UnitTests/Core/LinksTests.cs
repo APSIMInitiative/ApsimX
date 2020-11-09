@@ -21,7 +21,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithIFunctions : Model
     {
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction model2 = null;
 
     }
@@ -40,7 +40,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLinkByName : Model
     {
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         public Zone zone2 = null;
 
     }
@@ -48,7 +48,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLink : Model
     {
-        [ScopedLink]
+        [Link]
         public Zone zone2 = null;
     }
 
@@ -56,34 +56,34 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithChildLink : Model
     {
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithChildLinkByName : Model
     {
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithParentLink : Model
     {
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor)]
         public Zone zone = null;
 
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor)]
         public Simulation sim = null;
     }
 
     [Serializable]
     class ModelWithLinkByPath : Model
     {
-        [LinkByPath(Path = "[zone2].irrig1")]
+        [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
@@ -110,7 +110,7 @@ namespace UnitTests.Core
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
@@ -119,15 +119,15 @@ namespace UnitTests.Core
                     new ModelWithLinks()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks:true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[4] as ModelWithLinks;
-            Assert.AreEqual(links.zones.Length, 2);
-            Assert.NotNull(links.zones[0]);
-            Assert.NotNull(links.zones[1]);
+            var modelWithLinks = sim.Children[4] as ModelWithLinks;
+            Assert.AreEqual(modelWithLinks.zones.Length, 2);
+            Assert.NotNull(modelWithLinks.zones[0]);
+            Assert.NotNull(modelWithLinks.zones[1]);
         }
 
         /// <summary>Ensure the old style IFunction are linked correctly i.e. treated specially.</summary>
@@ -136,7 +136,7 @@ namespace UnitTests.Core
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
@@ -144,7 +144,7 @@ namespace UnitTests.Core
                     new Zone(),
                     new ModelWithIFunctions()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new IFunctionProxy()
                             {
@@ -165,24 +165,23 @@ namespace UnitTests.Core
                     }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var model = sim.Children[4] as ModelWithIFunctions;
 
-            var links = sim.Children[4] as ModelWithIFunctions;
-
-            Assert.AreEqual(links.model2.Value(), 2);
+            Assert.AreEqual(model.model2.Value(), 2);
         }
 
-        /// <summary>Ensure a [ScopedLinkByName] works.</summary>
+        /// <summary>Ensure a [Link(ByName = true)] works.</summary>
         [Test]
         public void EnsureScopedLinkByNameWorks()
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
@@ -191,22 +190,22 @@ namespace UnitTests.Core
                     new ModelWithScopedLinkByName()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[4] as ModelWithScopedLinkByName;
-            Assert.AreEqual(links.zone2.Name, "zone2");
+            var model = sim.Children[4] as ModelWithScopedLinkByName;
+            Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ScopedLink] finds the closest match</summary>
+        /// <summary>Ensure a [Link] finds the closest match</summary>
         [Test]
         public void EnsureScopedLinkWorks()
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
@@ -215,63 +214,66 @@ namespace UnitTests.Core
                     new ModelWithScopedLink()
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find the closest match.
-            var links = sim.Children[4] as ModelWithScopedLink;
-            Assert.AreEqual(links.zone2.Name, "zone1");
+            var model = sim.Children[4] as ModelWithScopedLink;
+            Assert.AreEqual(model.zone2.Name, "zone1");
         }
 
-        /// <summary>Ensure a [ChildLink] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child)] finds works</summary>
         [Test]
         public void EnsureChildLinkWorks()
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new ModelWithChildLink()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Zone() { Name = "zone1" },
                         }
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find zone1 as a match i.e. not use the zones name when doing a match.
-            var links = sim.Children[2] as ModelWithChildLink;
-            Assert.AreEqual(links.zone2.Name, "zone1");
+            var model = sim.Children[2] as ModelWithChildLink;
+            Assert.AreEqual(model.zone2.Name, "zone1");
 
             // If we now add another child, resolve should fail as there are two matches.
-            links.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
-            Apsim.ParentAllChildren(sim);
-            Assert.Throws<Exception>(() => linksAlgorithm.Resolve(sim, allLinks:true) );
+            model.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
+            sim.ParentAllDescendants();
+            Assert.Throws<Exception>(() =>
+            {
+                links.Resolve(sim, true);
+            });
         }
 
-        /// <summary>Ensure a [ChildLinkByName] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child, ByName = true)] finds works</summary>
         [Test]
         public void EnsureChildLinkByNameWorks()
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new ModelWithChildLinkByName()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Zone() { Name = "zone1" },
                             new Zone() { Name = "zone2" }
@@ -279,30 +281,30 @@ namespace UnitTests.Core
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find zone2 as a match as it uses the fields name.
-            var links = sim.Children[2] as ModelWithChildLinkByName;
-            Assert.AreEqual(links.zone2.Name, "zone2");
+            var model = sim.Children[2] as ModelWithChildLinkByName;
+            Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ParentLink] works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Ancestor)] works</summary>
         [Test]
         public void EnsureParentLinkWorks()
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new Zone()
                     {
                         Name = "zone1",
-                        Children  = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new ModelWithParentLink()
                         }
@@ -310,15 +312,15 @@ namespace UnitTests.Core
                     new Zone() { Name = "zone2" }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
             // Should find the closest match.
-            var links = sim.Children[2].Children[0] as ModelWithParentLink;
-            Assert.AreEqual(links.zone.Name, "zone1");
-            Assert.AreEqual(links.sim.Name, "Simulation");
+            var model = sim.Children[2].Children[0] as ModelWithParentLink;
+            Assert.AreEqual(model.zone.Name, "zone1");
+            Assert.AreEqual(model.sim.Name, "Simulation");
         }
 
         /// <summary>Ensure a [LinkByPath] works</summary>
@@ -327,14 +329,14 @@ namespace UnitTests.Core
         {
             var sim = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new Zone()
                     {
                         Name = "zone1",
-                        Children  = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new ModelWithLinkByPath()
                         }
@@ -342,7 +344,7 @@ namespace UnitTests.Core
                     new Zone()
                     {
                         Name = "zone2",
-                        Children  = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockIrrigation() { Name = "irrig1" },
                             new MockIrrigation() { Name = "irrig2" }
@@ -350,15 +352,15 @@ namespace UnitTests.Core
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
-            Links linksAlgorithm = new Links();
-            linksAlgorithm.Resolve(sim, allLinks: true);
+            var links = new Links();
+            links.Resolve(sim, true);
 
-            var links = sim.Children[2].Children[0] as ModelWithLinkByPath;
+            var model = sim.Children[2].Children[0] as ModelWithLinkByPath;
             var zone2 = sim.Children[3];
-            Assert.AreEqual(links.irrigation1, zone2.Children[0]);
-            Assert.AreEqual(links.irrigation2, zone2.Children[1]);
+            Assert.AreEqual(model.irrigation1, zone2.Children[0]);
+            Assert.AreEqual(model.irrigation2, zone2.Children[1]);
         }
 
         /// <summary>Ensure link can resolve services</summary>
@@ -367,12 +369,12 @@ namespace UnitTests.Core
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new DataStore(),
                     new Simulation()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock(),
                             new MockSummary(),
@@ -382,9 +384,10 @@ namespace UnitTests.Core
                     }
                  }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
-            simulations.Links.Resolve(simulations.Children[1], allLinks:true);
+            var links = new Links();
+            links.Resolve(simulations.Children[1], true);
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.IsNotNull(modelWithServices.storage);

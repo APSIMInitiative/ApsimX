@@ -1,8 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ICommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using Models.Core;
+
 namespace UserInterface.Commands
 {
     /// <summary>
@@ -22,5 +19,11 @@ namespace UserInterface.Commands
         /// </summary>
         /// <param name="commandHistory">A reference to the parent command history</param>
         void Undo(CommandHistory commandHistory);
+
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        IModel AffectedModel { get; }
     }
 }

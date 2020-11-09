@@ -1,32 +1,19 @@
-﻿# -----------------------------------------------------------------------
-# <copyright file="SummaryPresenter.cs" company="APSIM Initiative">
-#     Copyright (c) APSIM Initiative
-# </copyright>
-# -----------------------------------------------------------------------
-
-
-#' Loads a package, installing it if necessary.
+﻿#' Loads a package, installing it if necessary.
 #'
 #' @param pkg Name of the package to be installed/loaded.
+#' @param pkgpath Path where package is to be installed.
 #' @return Nothing.
-getPackage <- function(pkg) {
-    if (!pkg %in% rownames(installed.packages())) {
-		i = which(!grepl("Program Files", .libPaths()))[1]
-		location = ""
-        if (is.na(i) || i > length(.libPaths()) || identical(i, integer(0))) {
-		    # No lib paths outside of program files exist....
-			location = getwd()
-		} else {
-			location = .libPaths()[i]
-		}
-		print(paste('Installing package', pkg, 'to location', location))
-		install.packages(pkg,repos = "https://cran.csiro.au/", lib = location)
+getPackage <- function(pkg, pkgpath) {
+    if (!pkg %in% rownames(installed.packages(lib.loc = pkgpath))) {
+        if (!dir.exists(pkgpath)) {
+            dir.create(pkgpath)
+        }
+        install.packages(pkg, repos = "https://cran.csiro.au/", lib = pkgpath, dependencies = TRUE)
 	} else {
-		print('Package', pkg, 'is already installed.')
+		print(paste('Package', pkg, 'is already installed.'))
 	}
 }
 
 args = commandArgs(TRUE)
-for (arg in args) {
-	getPackage(arg)
-}
+getPackage(args[1], args[2])
+

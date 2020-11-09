@@ -28,7 +28,8 @@
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(CompositeFactor))]
-    public class Factor : Model
+    [ValidParent(ParentType = typeof(Permutation))]
+    public class Factor : Model, IReferenceExternalFiles
     {
         /// <summary>A specification for producing a series of factor values.</summary>
         public string Specification { get; set; }
@@ -38,25 +39,53 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            List<CompositeFactor> factorValues = new List<CompositeFactor>();
-
+            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
             if (string.IsNullOrEmpty(Specification))
             {
-                // Look for child FactorValues.
-                factorValues.AddRange(Apsim.Children(this, typeof(CompositeFactor)).Cast<CompositeFactor>());
+                // Return each child CompositeFactor
+                return childCompositeFactors.ToList();
             }
             else
             {
+                List<CompositeFactor> factorValues = new List<CompositeFactor>();
+
                 if (Specification.Contains(" to ") &&
                     Specification.Contains(" step "))
                     factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
-                else if(Specification.Contains('='))
+                else if (Specification.Contains('='))
                     factorValues.AddRange(SetSpecificationToFactorValues(Specification));
                 else
                     factorValues.AddRange(ModelReplacementToFactorValues(Specification));
-            }
 
-            return factorValues;
+                return factorValues;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="compositeFactor"></param>
+        /// <returns></returns>
+        public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
+        {
+            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>();
+            if (childCompositeFactors.Count() > 0)
+            {
+                var newFactorValues = new List<CompositeFactor>();
+                foreach (var child in childCompositeFactors)
+                {
+                    var newCompositeFactor = new CompositeFactor(this, compositeFactor.Paths, compositeFactor.Values)
+                    {
+                        Name = compositeFactor.Name + child.Name,
+                        Specifications = child.Specifications
+                    };
+                    newCompositeFactor.Children.AddRange(child.Children);
+                    newFactorValues.Add(newCompositeFactor);
+                }
+                return newFactorValues;
+            }
+            else
+                return new CompositeFactor[] { compositeFactor };
         }
 
         /// <summary>
@@ -77,7 +106,11 @@
 
             string[] values = value.Split(",".ToCharArray());
             foreach (var val in values)
-                returnValues.Add(new CompositeFactor(this, path.Trim(), val.Trim()));
+            {
+                var newFactor = new CompositeFactor(this, path.Trim(), val.Trim());
+                newFactor.Children.AddRange(Children);
+                returnValues.Add(newFactor);
+            }
 
             return returnValues;
         }
@@ -101,7 +134,11 @@
             double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
 
             for (double value = from; value <= to; value += step)
-                values.Add(new CompositeFactor(this, path.Trim(), value.ToString()));
+            {
+                var newFactor = new CompositeFactor(this, path.Trim(), value.ToString());
+                newFactor.Children.AddRange(Children);
+                values.Add(newFactor);
+            }
 
             return values;
         }
@@ -117,17 +154,29 @@
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+            Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                IModel modelToReplace = Apsim.Get(baseSimulation, specification) as IModel;
+                var baseSimulation = experiment.FindChild<Simulation>();
+                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-                foreach (IModel newModel in Children)
+                foreach (IModel newModel in Children.Where(c => c.Enabled))
                     values.Add(new CompositeFactor(this, specification, newModel));
             }
             return values;
+        }
+
+        /// <summary>Return paths to all files referenced by this model.</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return GetCompositeFactors().SelectMany(factor => factor.GetReferencedFileNames());
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

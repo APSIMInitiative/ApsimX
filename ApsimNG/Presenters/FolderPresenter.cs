@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FolderPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>
@@ -33,7 +28,7 @@ namespace UserInterface.Presenters
 
             List<GraphView> views = new List<GraphView>();
 
-            foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
+            foreach (Graph graph in folder.FindAllChildren<Graph>())
             {
                 if (graph.Enabled)
                 {

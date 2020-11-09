@@ -7,6 +7,9 @@ pipeline {
 					agent {
 						label "windows && midweight"
 					}
+					environment {
+						GRAPEVINE_PASSWORD = credentials('grapevine-validation-password')
+					}
 					steps {
 						bat '''
 							@echo off
@@ -14,19 +17,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							pushd APSIM.Shared
-							git reset .
-							git checkout .
-							git clean -xfdq
-							git checkout master
-							git pull origin master
-							popd
 							cd ApsimX\\Jenkins
 							call cleanup
-							call build
+							if errorlevel 1 exit /b 1
+							call build /r
 							if errorlevel 1 exit /b 1
 							call runTests Prototypes
 						'''
@@ -36,6 +30,9 @@ pipeline {
 					agent {
 						label "windows && heavyweight"
 					}
+					environment {
+						SOYBEAN_PASSWORD = credentials('soybean-validation-password')
+					}
 					steps {
 						bat '''
 							@echo off
@@ -43,23 +40,15 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							pushd APSIM.Shared
-							git reset .
-							git checkout .
-							git clean -xfdq
-							git checkout master
-							git pull origin master
-							popd
 							cd ApsimX\\Jenkins
 							call cleanup
-							call build
+							if errorlevel 1 exit /b 1
+							call build /r
 							if errorlevel 1 exit /b 1
 							call runTests Validation
 							if errorlevel 1 exit /b 1
 							call performanceTests
+							if errorlevel 1 exit /b 1
 						'''
 					}
 				}
@@ -74,19 +63,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							pushd APSIM.Shared
-							git reset .
-							git checkout .
-							git clean -xfdq
-							git checkout master
-							git pull origin master
-							popd
 							cd ApsimX\\Jenkins
 							call cleanup
-							call build
+							if errorlevel 1 exit /b 1
+							call build /r
 							if errorlevel 1 exit /b 1
 							call runTests Examples
 						'''
@@ -103,19 +83,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							pushd APSIM.Shared
-							git reset .
-							git checkout .
-							git clean -xfdq
-							git checkout master
-							git pull origin master
-							popd
 							cd ApsimX\\Jenkins
 							call cleanup
-							call build
+							if errorlevel 1 exit /b 1
+							call build /r
 							if errorlevel 1 exit /b 1
 							call runTests UI
 						'''
@@ -132,19 +103,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							pushd APSIM.Shared
-							git reset .
-							git checkout .
-							git clean -xfdq
-							git checkout master
-							git pull origin master
-							popd
 							cd ApsimX\\Jenkins
 							call cleanup
-							call build
+							if errorlevel 1 exit /b 1
+							call build /r
 							if errorlevel 1 exit /b 1
 							call runTests Unit
 						'''

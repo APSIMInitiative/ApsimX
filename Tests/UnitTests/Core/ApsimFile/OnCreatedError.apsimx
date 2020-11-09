@@ -36,7 +36,7 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "ExperimentFactorNames": null,
               "ExperimentFactorValues": null,
               "VariableNames": [
@@ -58,7 +58,7 @@
               "Parameters": [],
               "Name": "Manager",
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],

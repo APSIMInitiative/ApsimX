@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MenuView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using Interfaces;

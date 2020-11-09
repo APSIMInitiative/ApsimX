@@ -1,16 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BibTeX.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Globalization;
     using System.IO;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Provides functionality for reading .bib (bibliography) files (http://www.bibtex.org/Format/)
@@ -141,7 +135,7 @@ namespace UserInterface.Commands
                     if (yearString == string.Empty)
                         return 0;
                     else
-                        return Convert.ToInt32(yearString);
+                        return Convert.ToInt32(yearString, CultureInfo.InvariantCulture);
                 }
             }
 

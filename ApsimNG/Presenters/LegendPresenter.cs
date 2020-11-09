@@ -1,21 +1,15 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LegendPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
     /// UserInterface.Views.AxisView
     /// </summary>
-    internal class LegendPresenter : IPresenter
+    public class LegendPresenter : IPresenter
     {
         /// <summary>
         /// Graph object
@@ -61,6 +55,7 @@ namespace UserInterface.Presenters
 
             // Trap events from the view.
             this.view.OnPositionChanged += this.OnTitleChanged;
+            this.view.LegendInsideGraphChanged += this.OnLegendInsideGraphChanged;
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -78,6 +73,7 @@ namespace UserInterface.Presenters
             this.view.OnPositionChanged -= this.OnTitleChanged;
 
             this.view.DisabledSeriesChanged -= this.OnDisabledSeriesChanged;
+            this.view.LegendInsideGraphChanged -= this.OnLegendInsideGraphChanged;
         }
 
         /// <summary>Populates the view.</summary>
@@ -151,6 +147,17 @@ namespace UserInterface.Presenters
             {
                 this.PopulateView();
             }
+        }
+
+        /// <summary>
+        /// The user has toggled the check button which controls whether the legend is to be displayed
+        /// inside the graph area or not. We need to apply the change.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnLegendInsideGraphChanged(object sender, EventArgs e)
+        {
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, nameof(graph.LegendOutsideGraph), !view.LegendInsideGraph));
         }
 
         /// <summary>

@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridCellsChangedArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
     using System.Collections.Generic;
-    using Interfaces;
+    using System.Linq;
 
     /// <summary>
     /// TODO: Update summary.
@@ -17,11 +12,15 @@ namespace UserInterface.EventArguments
         /// <summary>
         /// Gets or sets a list of the cells that have changed.
         /// </summary>
-        public List<IGridCell> ChangedCells { get; set; }
+        public List<GridCellChangedArgs> ChangedCells { get; set; }
 
         /// <summary>
-        /// True iff a cell has been modified to have an invalid value.
+        /// Constructor.
         /// </summary>
-        public bool InvalidValue { get; set; }
+        /// <param name="changedCells"></param>
+        public GridCellsChangedArgs(params GridCellChangedArgs[] changedCells)
+        {
+            ChangedCells = changedCells.ToList();
+        }
     }  
 }

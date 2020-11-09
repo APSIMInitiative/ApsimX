@@ -7,12 +7,12 @@
       "Name": "Wheat",
       "Children": [
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Name": "Graph",
           "Children": [
             {
 				"Name": "x-axis",
-				"$type": "Models.Graph.Axis, Models",
+				"$type": "Models.Axis, Models",
 				"Type": "Bottom",
 				"Title": "Date",
 				"Inverted": false,
@@ -22,7 +22,7 @@
             },
             {
 				"Name": "y-axis",
-				"$type": "Models.Graph.Axis, Models",
+				"$type": "Models.Axis, Models",
 				"Type": "Left",
 				"Title": "Yield",
 				"Inverted": false,

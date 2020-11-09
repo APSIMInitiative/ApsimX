@@ -1,15 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
     using System;
     using System.Collections.Generic;
     using Models.Core;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using APSIM.Shared.Utilities;
+    using System.Linq;
 
     /// <summary>
     /// Represents the simulation initial water status. There are multiple ways
@@ -29,10 +25,20 @@ namespace Models.Soils
         {
             get
             {
-                return Apsim.Parent(this, typeof(Soil)) as Soil;
+                return FindAncestor<Soil>();
             }
         }
 
+        /// <summary>
+        /// Gets the parent soil model.
+        /// </summary>
+        private IPhysical SoilPhysical
+        {
+            get
+            {
+                return FindInScope<IPhysical>();
+            }
+        }
         /// <summary>
         /// The fraction of a full profile.
         /// </summary>
@@ -83,7 +89,7 @@ namespace Models.Soils
                     double[] pawc;
                     if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                     {
-                        pawc = this.Soil.PAWC;
+                        pawc = SoilPhysical.PAWC;
                     }
                     else
                     {
@@ -91,7 +97,7 @@ namespace Models.Soils
                     }
 
                     // Convert from mm/mm to mm and sum over the profile.
-                    pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                    pawc = MathUtilities.Multiply(pawc, SoilPhysical.Thickness);
                     double totalPAWC = MathUtilities.Sum(pawc);
 
                     // Convert from total to a fraction.
@@ -143,7 +149,7 @@ namespace Models.Soils
             }
         }
 
-        //[XmlIgnore]
+        //[JsonIgnore]
         //[Units("cm")]
         //[Description("Depth")]
         //public string[] Depth
@@ -158,7 +164,7 @@ namespace Models.Soils
         /// Gets or sets the plant available water content
         /// </summary>
         [Summary]
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Plant available water")]
         [Units("mm")]
         public double PAW
@@ -170,23 +176,27 @@ namespace Models.Soils
                 double[] xf;
                 if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                 {
-                    ll = this.Soil.LL15;
+                    ll = SoilPhysical.LL15;
                     xf = null;
                 }
                 else
                 {
-                    ll = Soil.LL(this.RelativeTo);
-                    xf = Soil.XF(this.RelativeTo);
+                    var soilCrop = Soil.FindDescendant<SoilCrop>(RelativeTo + "Soil");
+                    if (soilCrop == null)
+                        throw new Exception($"Cannot find a soil crop parameterisation called {RelativeTo}Soil");
+
+                    ll = soilCrop.LL;
+                    xf = soilCrop.XF;
                 }
 
                 // Get the soil water values for each layer.
-                double[] sw = this.SW(this.Soil.Thickness, ll, this.Soil.DUL, xf);
+                double[] sw = this.SW(SoilPhysical.Thickness, ll, SoilPhysical.DUL, xf);
 
                 // Calculate the plant available water (mm/mm)
                 double[] pawVolumetric = MathUtilities.Subtract(sw, ll);
 
                 // Convert from mm/mm to mm and return
-                double[] paw = MathUtilities.Multiply(pawVolumetric, this.Soil.Thickness);
+                double[] paw = MathUtilities.Multiply(pawVolumetric, SoilPhysical.Thickness);
                 return MathUtilities.Sum(paw);
             }
 
@@ -196,7 +206,7 @@ namespace Models.Soils
                 double[] pawc;
                 if (this.RelativeTo == "LL15" || this.RelativeTo == null)
                 {
-                    pawc = this.Soil.PAWC;
+                    pawc = SoilPhysical.PAWC;
                 }
                 else
                 {
@@ -204,7 +214,7 @@ namespace Models.Soils
                 }
 
                 // Convert from mm/mm to mm and sum over the profile.
-                pawc = MathUtilities.Multiply(pawc, this.Soil.Thickness);
+                pawc = MathUtilities.Multiply(pawc, SoilPhysical.Thickness);
                 double totalPAWC = MathUtilities.Sum(pawc);
 
                 // Convert from total to a fraction.
@@ -224,12 +234,15 @@ namespace Models.Soils
         /// </summary>
         public double[] PAWCCrop(string CropName)
         {
-            SoilCrop soilCrop = Apsim.Find(Soil, CropName) as SoilCrop;
+            var soilCrop = Soil.FindDescendant<SoilCrop>(CropName + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {CropName}Soil");
+
             if (soilCrop != null)
-                return Soil.CalcPAWC(Soil.Thickness,
-                                     Soil.LL(CropName),
-                                     Soil.DUL,
-                                     Soil.XF(CropName));
+                return SoilUtilities.CalcPAWC(SoilPhysical.Thickness,
+                                              soilCrop.LL,
+                                              SoilPhysical.DUL,
+                                              soilCrop.XF);
             else
                 return new double[0];
         }
@@ -248,10 +261,10 @@ namespace Models.Soils
         {
             get
             {
-                List<string> crops = new List<string>();
-                crops.Add("LL15");
-                crops.AddRange(this.Soil.CropNames);
-                return crops.ToArray();
+                var cropNames = new List<string>();
+                cropNames.Add("LL15");
+                cropNames.AddRange(Soil.FindAllDescendants<SoilCrop>().Select(crop => crop.Name));
+                return cropNames.ToArray();
             }
         }
 
@@ -376,7 +389,7 @@ namespace Models.Soils
         /// <returns>Total soil depth</returns>
         public double TotalSoilDepth()
         {
-            return MathUtilities.Sum(Soil.Thickness);
+            return MathUtilities.Sum(SoilPhysical.Thickness);
         }
     }
 }

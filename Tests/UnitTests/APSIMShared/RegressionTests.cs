@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Models.Utilities;
 using APSIM.Shared.Utilities;
+using System.Globalization;
 
 namespace UnitTests.APSIMShared
 {
@@ -11,7 +12,7 @@ namespace UnitTests.APSIMShared
     /// </summary>
     class RegressionTests
     {
-        private static readonly double[] x = Enumerable.Range(0, 32).Select(t => Convert.ToDouble(t)).ToArray();
+        private static readonly double[] x = Enumerable.Range(0, 32).Select(t => Convert.ToDouble(t, CultureInfo.InvariantCulture)).ToArray();
 
         /// <summary>
         /// Test for polynomial regression utility.

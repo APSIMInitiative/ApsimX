@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AxisView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.IO;
@@ -11,6 +6,23 @@ namespace UserInterface.Views
     using System.Diagnostics;
     using System.Drawing;
     using APSIM.Shared.Utilities;
+    using System.Globalization;
+    using Models;
+    using SharpMap.Styles;
+    using SharpMap.Layers;
+    using SharpMap.Data.Providers;
+    using System.Drawing.Imaging;
+    using GeoAPI.Geometries;
+    using GeoAPI;
+    using NetTopologySuite;
+    using NetTopologySuite.Geometries;
+    using System.Linq;
+    using System.Reflection;
+    using Interfaces;
+    using Gtk;
+    using Utility;
+    using SharpMap.Data;
+    using SharpMap.Rendering;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -26,7 +38,8 @@ namespace UserInterface.Views
         void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 
         /// <summary>Export the map to an image.</summary>
-        Image Export();
+        System.Drawing.Image Export();
+
         /// <summary>
         /// Get or set the zoom factor of the map
         /// </summary>
@@ -41,246 +54,423 @@ namespace UserInterface.Views
         /// Store current position and zoom settings
         /// </summary>
         void StoreSettings();
-    }
 
-    /// It would be good if we could retrieve the current center and zoom values for a map,
-    /// and store them as part of the Map object, so that maps can be recreated and exported
-    /// using those settings. 
-    /// Google map readily allows the center and zoom values to be obtained in JavaScript, and
-    /// provides event handlers for when those values change, but the problem is getting those
-    /// values back to the hosting application. With IE, it should be possible to use
-    /// the ObjectForScripting approach. For Webkit, it may be a bit harder. See
-    /// http://stackoverflow.com/questions/9804360/how-to-call-javascript-from-monos-webkitsharp
-    /// for a workaround using the document title as a mechanism for receiving information. Webkit
-    /// does provide a listener for title changes.
-    /// 
-    /// <summary>
-    /// A Windows forms implementation of an AxisView
-    /// </summary>
-    public class MapView : HTMLView, IMapView
-    {
         /// <summary>
-        /// Invoked when the zoom level or map center is changed
+        /// Hide zoom controls.
         /// </summary>
-        public event EventHandler ViewChanged;
+        void HideZoomControls();
 
-        /// <summary>Construtor</summary>
-        public MapView(ViewBase owner) : base(owner)
-        {
-        }
-
-        /// <summary>Show the map</summary>
-        public void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center)
-        {
-            string html =
-@"<!DOCTYPE html>
-<html>
-<meta charset=""UTF-8"">
-<head>
-  <link rel=""stylesheet"" href=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.css""
-            integrity=""sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==""
-            crossorigin=""""/>
-  <script type=""text/javascript"" src=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.js""
-         integrity=""sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==""
-         crossorigin=""""></script>
-</head>
-<body>
-  <!--Make sure you put this AFTER Leaflet's CSS -->
-
-  <div id='mapid' style='position:fixed; top:0; bottom:0; left:0; right:0;' ></div>";
-
-            html += @"
-  <script>
-    var locations = [";
-
-            for (int i = 0; i < coordinates.Count; i++)
-            {
-                html += "[" + coordinates[i].Latitude.ToString() + ", " + coordinates[i].Longitude.ToString() + ", '" + locNames[i] + "']";
-                if (i < coordinates.Count - 1)
-                    html += ',';
-            }
-            html += "];" + Environment.NewLine;
-
-            html += "    var mymap = L.map('mapid', {";
-            html += "center: new L.LatLng(" + center.Latitude.ToString() + ", " + center.Longitude.ToString() + ")";
-            html += ", zoom: " + zoom.ToString();
-            if (popupWindow != null) // Exporting to a report, so leave off the zoom control
-                html += ", zoomControl: false";
-            html += "});";
-
-
-           html += @"
-
-    mymap.zoomDelta = 0.1;
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZXJpY3p1cmNoZXIiLCJhIjoiY2pmYzFxcnJ5MXZidjN1bXprdXRtZjd2aCJ9.BSxI0r_GNzUAZnbvmuHpHA', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href=""http://openstreetmap.org"">OpenStreetMap</a> contributors, ' +
-        '<a href=""http://creativecommons.org/licenses/by-sa/2.0/"">CC-BY-SA</a>, ' +
-        'Imagery © <a href=""http://mapbox.com"">Mapbox</a>',
-        id: 'mapbox.emerald'
-    }).addTo(mymap);
-
-    L.control.scale({metric: true, imperial: false, updateWhenIdle: true}).addTo(mymap);
-
-    var marker, i;
-    for (i = 0; i<locations.length; i++)
-    {
-        L.marker(locations[i]).addTo(mymap).bindPopup('<b>' + locations[i][2] + '</b><br>Latitude: ' + locations[i][0] + '<br>Longitude: ' + locations[i][1]);
+        IGridView Grid { get; }
     }
 
-    function SetTitle()
+    public class MapView : ViewBase, IMapView
     {
-        window.document.title = mymap.getZoom().toString() + ', (' + mymap.getCenter().lat.toString() + ', ' + mymap.getCenter().lng.toString() + ')';
-    }
-    function SetZoom(newZoom)
-    {
-        mymap.setZoom(newZoom);
-    }
-    function SetCenter(lat, long)
-    {
-        var center = new L.LatLng(lat, long);
-        mymap.panTo(center);
-    }
+        private const double scrollIncrement = 60;
 
-    mymap.on('zoomend', SetTitle);
-    mymap.on('moveend', SetTitle);
-	
-    var popup = L.popup();
-  </script>
-
-</body>
-</html>";
-            SetContents(html, false);
-        }
+        private SharpMap.Map map;
+        private Gtk.Image image;
 
         /// <summary>
-        /// Returns the Popup window used for exporting
+        /// Is the user dragging the mouse?
         /// </summary>
-        /// <returns></returns>
-        public Gtk.Window GetPopupWin() { return popupWindow; }
+        private bool isDragging;
 
         /// <summary>
-        /// Export the map to an image.
+        /// Position of the mouse when the user starts dragging.
         /// </summary>
-        public Image Export()
-        {
-            // Create a Bitmap and draw the DataGridView on it.
-            int width;
-            int height;
-            Gdk.Window gridWindow = MainWidget.GdkWindow;
-            gridWindow.GetSize(out width, out height);
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                // Give the browser half a second to run all its scripts
-                // It would be better if we could tap into the browser's Javascript engine
-                // and see whether loading of the map was complete, but my attempts to do
-                // so were not entirely successful.
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                while (watch.ElapsedMilliseconds < 500)
-                    Gtk.Application.RunIteration();
-                if ((browser as TWWebBrowserIE) != null)
-                {
-                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).Browser;
-                    System.Drawing.Bitmap bm = new System.Drawing.Bitmap(width, height);
-                    System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
-                    wb.DrawToBitmap(bm, rect);
-                    return bm;
-                }
-
-            }
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-        }
-
-        private double zoom = 1.0;
-
-        private Models.Map.Coordinate center = new Models.Map.Coordinate() { Latitude = 0.0, Longitude = 0.0 };
+        private Map.Coordinate mouseAtDragStart;
 
         /// <summary>
-        /// Get or set the zoom factor of the map
+        /// Zoom level of the map.
         /// </summary>
         public double Zoom
         {
             get
             {
-                return zoom;
+                if (map == null)
+                    return 0;
+                return map.Zoom;
             }
             set
             {
-                zoom = Math.Truncate(value + 0.5);
-                browser.ExecJavaScript("SetZoom", new object[] { (int)zoom });
-                if (popupWindow != null)
+                // Refreshing the map is a bit slow, so only do it if
+                // the incoming value is different to the old value.
+                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
                 {
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-                    while (watch.ElapsedMilliseconds < 500)
-                        Gtk.Application.RunIteration();
+                    map.Zoom = value;
+                    RefreshMap();
                 }
             }
         }
 
         /// <summary>
-        /// Get or set the center position of the map
+        /// Center of the map.
         /// </summary>
-        public Models.Map.Coordinate Center
+        public Map.Coordinate Center
         {
             get
             {
-                return center;
+                if (map == null)
+                    return null;
+                return new Map.Coordinate(map.Center.Y, map.Center.X);
             }
             set
             {
-                center = value;
-                browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
-
-                // With WebKit, it appears we need to give it time to actually update the display
-                // Really only a problem with the temporary windows used for generating documentation
-                if (popupWindow != null)
+                // Refreshing the map is a bit slow, so only do it if
+                // the incoming value is different to the old value.
+                if (map != null && 
+                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
                 {
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-                    while (watch.ElapsedMilliseconds < 500)
-                        Gtk.Application.RunIteration();
+                    map.Center = new Coordinate(value.Longitude, value.Latitude);
+                    RefreshMap();
                 }
             }
+        }
+
+        /// <summary>
+        /// GridView widget used to show properties. Could be refactored out.
+        /// </summary>
+        public IGridView Grid { get; private set; }
+
+        /// <summary>
+        /// Called when the view is changed by the user.
+        /// </summary>
+        public event EventHandler ViewChanged;
+
+        /// <summary>
+        /// Constructor. Initialises the widget and will show a world
+        /// map with no markers until <see cref="ShowMap" /> is called.
+        /// </summary>
+        /// <param name="owner">Owner view.</param>
+        public MapView(ViewBase owner) : base(owner)
+        {
+            GeometryServiceProvider.Instance = new NtsGeometryServices();
+
+            image = new Gtk.Image();
+            var container = new Gtk.EventBox();
+            container.Add(image);
+
+            VPaned box = new VPaned();
+            Grid = new GridView(this);
+            box.Pack1(((ViewBase)Grid).MainWidget, true, false);
+            box.Pack2(container, true, true);
+            
+            container.AddEvents(
+              (int)Gdk.EventMask.ButtonPressMask
+            | (int)Gdk.EventMask.ButtonReleaseMask
+            | (int)Gdk.EventMask.ScrollMask);
+            container.ButtonPressEvent += OnButtonPress;
+            container.ButtonReleaseEvent += OnButtonRelease;
+            image.SizeAllocated += OnSizeAllocated;
+            image.ExposeEvent += OnImageExposed;
+            container.Destroyed += OnMainWidgetDestroyed;
+            container.ScrollEvent += OnMouseScroll;
+
+            mainWidget = box;
+            mainWidget.ShowAll();
+        }
+
+        /// <summary>
+        /// Initialise the map component.
+        /// </summary>
+        private SharpMap.Map InitMap()
+        {
+            var result = new SharpMap.Map();
+            result.MaximumZoom = 720;
+            result.BackColor = Color.LightBlue;
+            result.Center = new Coordinate(0, 0);
+            result.Zoom = result.MaximumZoom;
+            
+            VectorLayer layWorld = new VectorLayer("Countries");
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimx = Directory.GetParent(bin).FullName;
+            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
+            layWorld.DataSource = new ShapeFile(shapeFileName, true);
+            layWorld.Style = new VectorStyle();
+            layWorld.Style.EnableOutline = true;
+            Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
+            Color foreground = Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+            layWorld.Style.Fill = new SolidBrush(background);
+            layWorld.Style.Outline.Color = foreground;
+            result.Layers.Add(layWorld);
+
+            // Show country names.
+            // Note this doesn't appear to work under mono for now.
+            LabelLayer countryNames = new LabelLayer("Country labels");
+			countryNames.DataSource = layWorld.DataSource;
+            //countryNames.Enabled = true;
+            countryNames.LabelColumn = "Name";
+            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
+            countryNames.Style = new LabelStyle();
+            countryNames.Style.CollisionDetection = true;
+            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
+            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
+            //^countryNames.Style.BackColor = new SolidBrush(foreground);
+            countryNames.Style.ForeColor = foreground;
+            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
+            //countryNames.MaxVisible = 90;
+            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
+            result.Layers.Add(countryNames);
+            
+            return result;
+        }
+
+        /// <summary>
+        /// Export the map to an image.
+        /// </summary>
+        public System.Drawing.Image Export()
+        {
+            return map.GetMap();
+        }
+
+        public void HideZoomControls()
+        {
+            // Not applicable.
         }
 
         public void StoreSettings()
         {
-            NewTitle(browser.GetTitle());
+            // Not applicable.
         }
 
-        protected override void NewTitle(string title)
+        /// <summary>
+        /// Show the given markers on the map and set the center/zoom level.
+        /// </summary>
+        /// <param name="coordinates">Coordinates of the markers.</param>
+        /// <param name="locNames">Names of the marekrs (unused currently).</param>
+        /// <param name="zoom">Zoom level of the map.</param>
+        /// <param name="center">Location of the center of the map.</param>
+        public void ShowMap(List<Map.Coordinate> coordinates, List<string> locNames, double zoom, Map.Coordinate center)
         {
-            if (!String.IsNullOrEmpty(title))
+            if (map != null)
+                map.Dispose();
+            map = InitMap();
+
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
+            VectorLayer markerLayer = new VectorLayer("Markers");
+            markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
+            markerLayer.DataSource = new GeometryProvider(locations);
+            map.Layers.Add(markerLayer);
+            map.Zoom = zoom;
+            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
+                RefreshMap();
+        }
+
+        /// <summary>
+        /// Refresh the map image shown in the UI.
+        /// </summary>
+        /// <remarks>
+        /// This is fairly slow (often ~200ms), so try not to call it unnecessarily.
+        /// </remarks>
+        private void RefreshMap()
+        {
+            image.Pixbuf = ImageToPixbuf(map.GetMap());
+        }
+
+        /// <summary>
+        /// Convert a System.Drawing.Image to a Gdk.Pixbuf.
+        /// </summary>
+        /// <param name="image">Image to be converted.</param>
+        private static Gdk.Pixbuf ImageToPixbuf(System.Drawing.Image image)
+        {
+            using (MemoryStream stream = new MemoryStream())
             {
-                double newLat, newLong, newZoom;
-                bool modified = false;
-                // Incoming title should look like "6, (-27.15, 151.25)"
-                // That is Zoom, then lat, long pair
-                // We remove the brackets and split on the commas
-                title = title.Replace("(", "");
-                title = title.Replace(")", "");
-                string[] parts = title.Split(new char[] { ',' });
-                if (Double.TryParse(parts[0], out newZoom) && newZoom != zoom)
+                image.Save(stream, ImageFormat.Png);
+                stream.Position = 0;
+                return new Gdk.Pixbuf(stream);
+            }
+        }
+
+        /// <summary>
+        /// Get an image from an embedded resource.
+        /// </summary>
+        /// <param name="resourceName">Name of the embedded resource.</param>
+        private static System.Drawing.Image GetResourceImage(string resourceName)
+        {
+            //var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                return System.Drawing.Image.FromStream(stream);
+        }
+
+        /// <summary>
+        /// Converts screen x/y coordinates to latitude/longitude on the map.
+        /// Note that x/y must be relative to the GtkImage (image)'s GdkWindow.
+        /// </summary>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="lat">Latitude.</param>
+        /// <param name="lon">Longitude.</param>
+        private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
+        {
+            Envelope viewport = map.Envelope;
+            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+        }
+    
+        /// <summary>
+        /// Traps the Exposed event for the image. This event fires after
+        /// size/space allocation has occurred but before it is actually
+        /// drawn on the screen. Because the size-allocated signal is emitted
+        /// several times, we don't want to refresh the map each time.
+        /// Therefore, we refresh the map once, during the expose event.
+        /// 
+        /// We also disconnect the event handler after refreshing the map so
+        /// that we don't refresh it multiple times unnecessarily.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnImageExposed(object sender, ExposeEventArgs args)
+        {
+            try
+            {
+                RefreshMap();
+                image.ExposeEvent -= OnImageExposed;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the mouse button is pressed down. Records the
+        /// mouse position, to be used to move map center when the
+        /// mouse button is released.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnButtonPress(object sender, ButtonPressEventArgs args)
+        {
+            try
+            {
+                isDragging = true;
+                CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
+                mouseAtDragStart = new Map.Coordinate(lat, lon);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the mouse button is released.
+        /// Handles the map drag logic.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnButtonRelease(object sender, ButtonReleaseEventArgs args)
+        {
+            try
+            {
+                if (isDragging)
                 {
-                    zoom = newZoom;
-                    modified = true;
+                    CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
+                    double dy = lat - mouseAtDragStart.Latitude;
+                    double dx = lon - mouseAtDragStart.Longitude;
+
+                    map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
+                    RefreshMap();
+                    ViewChanged?.Invoke(this, EventArgs.Empty);
                 }
-                if (Double.TryParse(parts[1], out newLat) &&
-                    Double.TryParse(parts[2], out newLong) &&
-                    (newLat != center.Latitude || newLong != center.Longitude))
+                isDragging = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user scrolls with the mouse.
+        /// Handles the zoom in/out logic.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnMouseScroll(object sender, ScrollEventArgs args)
+        {
+            try
+            {
+                Envelope viewport = map.Envelope;
+                double mouseLat = args.Event.Y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+                double mouseLon = args.Event.X / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+
+                if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
-                    center.Latitude = newLat;
-                    center.Longitude = newLong;
-                    modified = true;
+                    // Adjust zoom level on map.
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
+                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+
+                    // Adjust center of map, so that coordinates at mouse cursor are the same
+                    // as previously.
+                    viewport = map.Envelope;
+                    double newMouseLat = args.Event.Y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+                    double newMouseLon = args.Event.X / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+
+                    double dx = newMouseLon - mouseLon;
+                    double dy = newMouseLat - mouseLat;
+                    map.Center = new Coordinate(map.Center.X - dx, map.Center.Y - dy);
+                    RefreshMap();
+                    ViewChanged?.Invoke(this, EventArgs.Empty);
                 }
-                if (modified && ViewChanged != null)
-                    ViewChanged.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the image widget is allocated space.
+        /// Changes the map's size to match allocated size.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnSizeAllocated(object sender, EventArgs args)
+        {
+            try
+            {
+                // Update the map size iff the allocated width and height are both > 0,
+                // and width or height have changed.
+                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
+                 && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
+                {
+                    image.SizeAllocated -= OnSizeAllocated;
+                    map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
+                    //RefreshMap();
+                    image.WidthRequest = image.Allocation.Width;
+                    image.HeightRequest = image.Allocation.Height;
+                    image.SizeAllocated += OnSizeAllocated;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the main widget is destroyed.
+        /// Detaches event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnMainWidgetDestroyed(object sender, EventArgs args)
+        {
+            try
+            {
+                mainWidget.ButtonPressEvent -= OnButtonPress;
+                mainWidget.ButtonReleaseEvent -= OnButtonRelease;
+                mainWidget.ScrollEvent -= OnMouseScroll;
+                image.SizeAllocated -= OnSizeAllocated;
+                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
     }

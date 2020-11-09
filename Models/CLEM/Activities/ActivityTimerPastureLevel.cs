@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -34,13 +34,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
         /// paddock or pasture to graze
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
@@ -128,16 +128,34 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
             html += "Perform when ";
-            html += "<span class=\"resourcelink\">"+GrazeFoodStoreTypeName+"</span>";
+            if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ";
+            }
             html += " is between <span class=\"setvalueextra\">";
             html += MinimumPastureLevel.ToString();
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += MaximumPastureLevel.ToString();
-            html += "</span> kg per hectare</div>";
-            html += "\n</div>";
+            html += "</span> and ";
+            if (MaximumPastureLevel <= MinimumPastureLevel)
+            {
+                html += "<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += MaximumPastureLevel.ToString();
+                html += "</span> ";
+            }
+            html += " kg per hectare</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             return html;
         }
 
@@ -147,7 +165,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -156,7 +174,15 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
 
     }

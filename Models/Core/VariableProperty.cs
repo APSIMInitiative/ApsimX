@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableProperty.cs" company="APSIM Initiative">
-// Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
@@ -47,33 +42,20 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
-            if (model == null || property == null)
+            if (property == null)
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-
             this.Object = model;
             this.property = property;
-            if (arraySpecifier != null)
-            {
-                // Can be either a number or a range e.g. 1:3
-                int posColon = arraySpecifier.IndexOf(':');
-                if (posColon == -1)
-                {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
-                    this.upperArraySpecifier = this.lowerArraySpecifier;
-                }
-                else
-                {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
-                }
-            }
-            else
-            {
-                this.lowerArraySpecifier = 0;
-                this.upperArraySpecifier = 0;
-            }
+            this.lowerArraySpecifier = 0;
+            this.upperArraySpecifier = 0;
+
+            ProcessArraySpecifier(arraySpecifier);
+
+            // If the array specifier was specified and it was a zero then issue error
+            if (arraySpecifier != null && lowerArraySpecifier == 0)
+                throw new Exception("Array indexing in APSIM (report) is one based. Cannot have an index of zero. Variable called " + property.Name);
         }
 
         /// <summary>
@@ -81,10 +63,12 @@ namespace Models.Core
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
         /// <param name="elementPropertyName">The name of the property to call on each array element.</param>
-        public VariableProperty(object model, string elementPropertyName)
+        /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
+        public VariableProperty(object model, string elementPropertyName, string arraySpecifier = null)
         {
             this.Object = model;
             this.elementPropertyName = elementPropertyName;
+            ProcessArraySpecifier(arraySpecifier);
         }
 
         /// <summary>
@@ -116,15 +100,30 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    string cropName = (this.Object as ISoilCrop).Name;
+                    string cropName = (this.Object as SoilCrop).Name;
                     if (cropName.EndsWith("Soil"))
                         cropName = cropName.Replace("Soil", "");
                     return cropName + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets a tooltip for the property.
+        /// </summary>
+        public string Tooltip
+        {
+            get
+            {
+                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
+                if (attribute == null)
+                    return null;
+
+                return attribute.Tooltip;
             }
         }
 
@@ -158,7 +157,7 @@ namespace Models.Core
             {
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                PropertyInfo unitsInfo = this.Object?.GetType().GetProperty(this.property.Name + "Units");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
@@ -350,12 +349,14 @@ namespace Models.Core
         {
             get
             {
-                if (elementPropertyName != null)
-                    return ProcessPropertyOfArrayElement();
-
                 object obj = null;
-                obj = this.property.GetValue(this.Object, null);
-                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
+                if (elementPropertyName != null)
+                    obj = ProcessPropertyOfArrayElement();
+                else
+                    obj = this.property.GetValue(this.Object, null);
+                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                    && obj != null 
+                    && obj is IList)
                 {
                     IList array = obj as IList;
                     if (array.Count == 0)
@@ -374,15 +375,21 @@ namespace Models.Core
                             throw new Exception("Unknown type of array");
                     }
 
-                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
+                    int startIndex = lowerArraySpecifier;
+                    if (startIndex == -1)
+                        startIndex = 1;
+
+                    int endIndex = upperArraySpecifier;
+                    if (endIndex == -1)
+                        endIndex = array.Count;
+
+                    int numElements = endIndex - startIndex + 1;
                     Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
+                    for (int i = startIndex; i <= endIndex; i++)
                     {
-                        int index = i - this.lowerArraySpecifier;
+                        int index = i - startIndex;
                         if (i < 1 || i > array.Count)
-                        {
                             throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-                        }
 
                         values.SetValue(array[i - 1], index);
                     }
@@ -542,7 +549,7 @@ namespace Models.Core
                     {
                         if (j > 0)
                         {
-                            stringValue += ",";
+                            stringValue += ", ";
                         }
 
                         Array arr2d = arr.GetValue(j) as Array;
@@ -597,9 +604,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    SoilCrop soilCrop = this.Object as SoilCrop;
                     if (soilCrop.Name.EndsWith("Soil"))
                         return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
                     return soilCrop.Name;
@@ -664,7 +671,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(int[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToIntegers(stringValues);
                 }
                 else if (this.DataType == typeof(string[]))
                 {
@@ -695,7 +702,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {
@@ -759,5 +766,43 @@ namespace Models.Core
             }
             return Enum.Parse(t, obj.ToString()) as Enum;
         }
+
+        /// <summary>
+        /// Convert a string array specifier into integer lower and upper bounds.
+        /// </summary>
+        /// <param name="arraySpecifier">The array specifier.</param>
+        private void ProcessArraySpecifier(string arraySpecifier)
+        {
+            if (arraySpecifier != null)
+            {
+                // Can be either a number or a range e.g. 1:3
+                int posColon = arraySpecifier.IndexOf(':');
+                if (posColon == -1)
+                {
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
+                    this.upperArraySpecifier = this.lowerArraySpecifier;
+                }
+                else
+                {
+                    string start = arraySpecifier.Substring(0, posColon);
+                    if (!string.IsNullOrEmpty(start))
+                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
+                    else
+                        lowerArraySpecifier = -1;
+
+                    string end = arraySpecifier.Substring(posColon + 1);
+                    if (!string.IsNullOrEmpty(end))
+                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
+                    else
+                        upperArraySpecifier = -1;
+                }
+            }
+        }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return AutoDocumentation.GetSummary(property); } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
     }
 }

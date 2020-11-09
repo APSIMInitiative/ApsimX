@@ -52,7 +52,7 @@ namespace Models.Functions
         /// Child function whose value will be successively subtracted from the
         /// accumulator.
         /// </summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private IFunction child = null;
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace Models.Functions
             // Only decumulate if:
             //     1. Start stage is not provided or it is provided and we're past it
             // AND 2. Stop stage is not provided or it is provided and we're not past it.
-            if (( string.IsNullOrWhiteSpace(StartStageName) || phenology.Beyond(StartStageName) ) &&
-                ( string.IsNullOrWhiteSpace(StopStageName) || !phenology.Beyond(StopStageName) ))
+            if (( string.IsNullOrWhiteSpace(StartStageName) || phenology.Stage >= phenology.StartStagePhaseIndex(StartStageName) + 1 ) &&
+                ( string.IsNullOrWhiteSpace(StopStageName)  || phenology.Stage <= phenology.StartStagePhaseIndex(StopStageName) + 1 ))
             {
                 accumulator -= child.Value();
                 accumulator = Math.Max(accumulator, MinValue);

@@ -1,14 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridColumn.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Classes
+﻿namespace UserInterface.Classes
 {
-    using System;
-    using System.Drawing;
     using Gtk;
     using Interfaces;
+    using System.Drawing;
     using Views;
 
     /// <summary>
@@ -66,9 +60,25 @@ namespace UserInterface.Classes
         }
 
         /// <summary>
+        /// Gets or sets the minimum column width in pixels.
+        /// </summary>
+        public int MinimumWidth
+        {
+            get
+            {
+                return gridView.Grid.Columns[this.ColumnIndex].MinWidth;
+            }
+            set
+            {
+                gridView.Grid.Columns[this.ColumnIndex].MinWidth = value;
+            }
+        }
+
+
+        /// <summary>
         /// Gets or sets a value indicating whether the column is left aligned. If not then left is assumed.
         /// </summary>
-        public bool LeftAlignment
+        public bool LeftJustification
         {
             get
             {
@@ -137,7 +147,11 @@ namespace UserInterface.Classes
 
             set
             {
-                this.gridView.SetColBackgroundColor(this.ColumnIndex, new Gdk.Color(value.R, value.G, value.B));
+                if (value != Color.Empty)
+                {
+                    Gdk.Color colour = new Gdk.Color(value.R, value.G, value.B);
+                    this.gridView.SetColBackgroundColor(ColumnIndex, colour);
+                }
             }
         }
 
@@ -154,7 +168,11 @@ namespace UserInterface.Classes
 
             set
             {
-                this.gridView.SetColForegroundColor(this.ColumnIndex, new Gdk.Color(value.R, value.G, value.B));
+                if (value != Color.Empty)
+                {
+                    Gdk.Color colour = new Gdk.Color(value.R, value.G, value.B);
+                    this.gridView.SetColForegroundColor(ColumnIndex, colour);
+                }
             }
         }
 
@@ -236,7 +254,7 @@ namespace UserInterface.Classes
                 }
             }
         }
-
+        
         /// <summary>
         /// Gets or sets the text of the header
         /// </summary>
@@ -250,6 +268,24 @@ namespace UserInterface.Classes
             set
             {
                 this.gridView.Grid.Columns[this.ColumnIndex].Title = value;
+            }
+        }
+
+        /// <summary>Gets or sets the left justification of the header</summary>
+        public bool HeaderLeftJustification
+        {
+            get
+            {
+                return gridView.GetColumnHeaderLabel(this.ColumnIndex).Justify == Justification.Left;
+            }
+
+            set
+            {
+                var label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
+                if (value)
+                    label.Justify = Justification.Left;
+                else
+                    label.Justify = Justification.Right;
             }
         }
     }

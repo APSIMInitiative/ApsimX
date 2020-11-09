@@ -8,11 +8,11 @@
       "Name": "Wheat",
       "Children": [
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Name": "G",
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": "Bottom",
               "Title": "Date",
               "Inverted": false,
@@ -21,7 +21,7 @@
               "Interval": "NaN"
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": "Left",
               "Title": "Yield",
               "Inverted": false,

@@ -4,10 +4,11 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -32,14 +33,14 @@ namespace Models.CLEM.Activities
         /// Name of Porcust store to place clip (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Store to place clip")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(ProductStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
         public string ProductStoreName { get; set; }
 
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ProductStoreType StoreType { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -145,7 +146,7 @@ namespace Models.CLEM.Activities
             if (herd != null && herd.Count > 0)
             {
                 double woolTotal = 0;
-                if(LabourLimitProportion == 1 | !labourRequirement.LabourShortfallAffectsActivity)
+                if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.LabourShortfallAffectsActivity))
                 {
                     woolTotal = herd.Sum(a => a.Wool);
                     herd.ForEach(a => a.Wool = 0);
@@ -159,7 +160,7 @@ namespace Models.CLEM.Activities
                             // no clip taken
                             break;
                         case LabourUnitType.perHead:
-                            int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion);
+                            int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
                             woolTotal = herd.Take(numberShorn).Sum(a => a.Wool);
                             herd.Take(numberShorn).ToList().ForEach(a => a.Wool = 0);
                             break;
@@ -216,6 +217,7 @@ namespace Models.CLEM.Activities
                         default:
                             throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
                     }
+                    this.Status = ActivityStatus.Partial;
                 }
 
                 // place clip in selected store

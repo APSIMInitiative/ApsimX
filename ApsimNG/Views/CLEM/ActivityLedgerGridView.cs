@@ -299,7 +299,7 @@ namespace UserInterface.Views
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
 
-                pixbufRender.Height = 20; //TODO change based on zoom rate of UI //previously 23 before smaller UI font
+                pixbufRender.Height = 19; //TODO change based on zoom rate of UI //previously 23 before smaller UI font
                 textRender.Editable = !isReadOnly;
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
@@ -407,31 +407,31 @@ namespace UserInterface.Views
                 string iconName = "blank";
                 switch (dataVal.ToString())
                 {
-                    case "0":
+                    case "Success":
                         iconName = "Success";
                         break;
-                    case "1":
+                    case "Partial":
                         iconName = "Partial";
                         break;
-                    case "2":
+                    case "Ignored":
                         iconName = "NoTask";
                         break;
-                    case "3":
+                    case "Critical":
                         iconName = "Critical";
                         break;
-                    case "4":
+                    case "Timer":
                         iconName = "Timer";
                         break;
-                    case "5":
+                    case "Calculation":
                         iconName = "Calculation";
                         break;
-                    case "6":
+                    case "NotNeeded":
                         iconName = "NotNeeded";
                         break;
-                    case "7":
+                    case "Warning":
                         iconName = "Ignored";
                         break;
-                    case "8":
+                    case "NoTask":
                         iconName = "NoTask";
                         break;
                 }

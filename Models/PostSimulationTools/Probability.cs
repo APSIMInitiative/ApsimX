@@ -8,6 +8,7 @@
     using Storage;
     using System.Linq;
     using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -19,6 +20,9 @@
     [Serializable]
     public class Probability : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
@@ -40,12 +44,13 @@
         [Display(Type = DisplayType.FieldName)]
         public string FieldToSplitOn { get; set; } = "SimulationName";
 
-        /// <summary>
-        /// The main run method called to fill tables in the specified DataStore.
-        /// </summary>
-        /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IDataStore dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
+            // If the target table has not been modified during the simulation run, don't do anything.
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
+                return;
+
             if (string.IsNullOrWhiteSpace(TableName))
                 throw new Exception(string.Format("Error in probability model {0}: TableName is null", Name));
             else if (!dataStore.Reader.TableNames.Contains(TableName))

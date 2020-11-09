@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using APSIM.Shared.Utilities;
@@ -10,7 +11,9 @@
     using MigraDoc.DocumentObjectModel.Tables;
     using MigraDoc.RtfRendering;
     using Models.Core;
-    using Report;
+    using Models.Soils;
+    using Models.Soils.Standardiser;
+    using Models;
     using Storage;
 
     /// <summary>
@@ -56,7 +59,12 @@
             /// <summary>
             /// RTF format
             /// </summary>
-            rtf
+            rtf,
+
+            /// <summary>
+            /// Markdown format
+            /// </summary>
+            Markdown
         }
 
         /// <summary>Capture and store error messages?</summary>
@@ -84,7 +92,8 @@
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            storage.Writer.WriteTable(messages);
+            if (messages != null)
+                storage?.Writer?.WriteTable(messages);
         }
 
         /// <summary>Initialise the summary messages table.</summary>
@@ -112,8 +121,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -136,15 +145,15 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
                 newRow[1] = relativeModelPath;
                 newRow[2] = clock.Today;
                 newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning);
+                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning, CultureInfo.InvariantCulture);
                 messages.Rows.Add(newRow);
             }
         }
@@ -160,15 +169,15 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
                 newRow[1] = relativeModelPath;
                 newRow[2] = clock.Today;
                 newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error);
+                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error, CultureInfo.InvariantCulture);
                 messages.Rows.Add(newRow);
             }
         }
@@ -189,14 +198,14 @@
             initConditions.Columns.Add("Total", typeof(int));
             initConditions.Columns.Add("Value", typeof(string));
 
-            string simulationPath = Apsim.FullPath(simulation);
+            string simulationPath = simulation.FullPath;
 
             var row = initConditions.NewRow();
             row.ItemArray = new object[] { simulation.Name, simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, Simulations.GetApsimVersion() };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
@@ -204,31 +213,31 @@
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in Apsim.FindAll(simulation))
+            foreach (Model model in simulation.FindAllInScope())
             {
-                string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
+                string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 
-                List<VariableProperty> properties = new List<VariableProperty>();
+                var properties = new List<Tuple<string, VariableProperty>>();
                 FindAllProperties(model, properties);
-                foreach (VariableProperty property in properties)
+                foreach (var tuple in properties)
                 {
-                    string propertyValue = property.ValueAsString();
+                    string propertyValue = tuple.Item2.ValueAsString();
                     if (propertyValue != string.Empty)
                     {
-                        if (propertyValue != null && property.DataType == typeof(DateTime))
-                            propertyValue = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
+                        if (propertyValue != null && tuple.Item2.DataType == typeof(DateTime))
+                            propertyValue = ((DateTime)tuple.Item2.Value).ToString("yyyy-MM-dd HH:mm:ss");
 
                         int total;
-                        if (double.IsNaN(property.Total))
+                        if (double.IsNaN(tuple.Item2.Total))
                             total = 0;
                         else
                             total = 1;
 
-                        if (property.Units == null)
-                            property.Units = string.Empty;
+                        if (tuple.Item2.Units == null)
+                            tuple.Item2.Units = string.Empty;
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, tuple.Item2.Description, tuple.Item2.DataType.Name, tuple.Item2.Units, tuple.Item2.Format, total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }
@@ -506,6 +515,11 @@
                 Section section = document.LastSection;
                 Paragraph paragraph = section.AddParagraph(heading, "Heading2");
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine($"## {heading}");
+                writer.WriteLine();
+            }
             else
             {
                 writer.WriteLine(heading.ToUpper());
@@ -537,6 +551,13 @@
             {
                 Paragraph paragraph = document.LastSection.AddParagraph(st, "Monospace");
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
+                writer.WriteLine(st);
+                writer.WriteLine("```");
+                writer.WriteLine();
+            }
             else
             {
                 writer.WriteLine(st);
@@ -567,6 +588,7 @@
                             writer.Write(" class='col1'");
                         writer.Write(">" + table.Columns[i].ColumnName + "</th>");
                     }
+                    writer.WriteLine();
                 }
                 else
                     writer.WriteLine("<table>");
@@ -664,6 +686,13 @@
                 document.LastSection.Add(tabl);
                 document.LastSection.AddParagraph(); // Just to give a bit of spacing
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
+                writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
+                writer.WriteLine("```");
+                writer.WriteLine();
+            }
             else
             {
                 DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
@@ -692,6 +721,8 @@
                     Section section = document.LastSection;
                     Paragraph paragraph = section.AddParagraph(row[0].ToString(), "Heading3");
                 }
+                else if (outtype == OutputType.Markdown)
+                    writer.WriteLine($"### {row[0]}");
                 else
                 {
                     writer.WriteLine();
@@ -719,6 +750,13 @@
                     else if (st.Contains("ERROR:"))
                         paragraph.Format.Font.Color = Colors.Red;
                 }
+                else if (outtype == OutputType.Markdown)
+                {
+                    writer.WriteLine("```");
+                    writer.WriteLine(st);
+                    writer.WriteLine("```");
+                    writer.WriteLine();
+                }
                 else
                 {
                     st = StringUtilities.IndentText(st, 4);
@@ -732,7 +770,7 @@
         /// </summary>
         /// <param name="model">The model to search for properties</param>
         /// <param name="properties">The list of properties to fill</param>
-        private static void FindAllProperties(Model model, List<VariableProperty> properties)
+        private static void FindAllProperties(Model model, List<Tuple<string, VariableProperty>> properties)
         {
             if (model != null)
             {
@@ -743,7 +781,12 @@
 
                     if (includeProperty)
                     {
-                        properties.Add(new VariableProperty(model, property));
+                        string name = property.Name;
+                        VariableProperty prop = null;
+                        prop = new VariableProperty(model, property);
+
+                        if (prop != null)
+                            properties.Add(new Tuple<string, VariableProperty>(name, prop));
                     }
                 }
             }
@@ -794,7 +837,7 @@
                         propertyName += " (" + units + ")";
                     }
 
-                    bool showTotal = Convert.ToInt32(row["Total"]) == 1;
+                    bool showTotal = Convert.ToInt32(row["Total"], CultureInfo.InvariantCulture) == 1;
                     AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, showTotal, row["Value"], generalDataTable);
                 }
                 else

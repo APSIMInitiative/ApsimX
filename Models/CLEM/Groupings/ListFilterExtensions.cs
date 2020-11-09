@@ -20,40 +20,53 @@ namespace Models.CLEM.Groupings
         public static List<LabourType> Filter(this IEnumerable<LabourType> individuals, Model filterGroup)
         {
             var rules = new List<Rule>();
-            foreach (LabourFilter filter in Apsim.Children(filterGroup, typeof(LabourFilter)))
+            foreach (LabourFilter filter in filterGroup.FindAllChildren<LabourFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list
                 rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
             }
 
-            var compiledRulesList = CompileRule(new List<LabourType>(), rules);
-            return GetItemsThatMatchAll<LabourType>(individuals, compiledRulesList).ToList<LabourType>();
+            if ((filterGroup as IFilterGroup).CombinedRules is null)
+            {
+                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<LabourType>(), rules);
+            }
+
+            return GetItemsThatMatchAll<LabourType>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<LabourType, bool>>).ToList<LabourType>();
         }
 
         /// <summary>
         /// Filter extensions for herd list
         /// </summary>
-        public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, Model filterGroup)
+        public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, IModel filterGroup)
         {
+            double proportionToUse = (filterGroup as IFilterGroup).Proportion;
+            if (proportionToUse <= 0)
+            {
+                proportionToUse = 1;
+            }
+
             bool femaleProperties = false;
             bool maleProperties = false;
             var rules = new List<Rule>();
-            foreach (RuminantFilter filter in Apsim.Children(filterGroup, typeof(RuminantFilter)))
+            foreach (RuminantFilter filter in filterGroup.FindAllChildren<RuminantFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list
                 string gender = "";
                 switch (filter.Parameter)
                 {
-                    case RuminantFilterParameters.Draught:
-                    case RuminantFilterParameters.BreedingSire:
+                    case RuminantFilterParameters.IsDraught:
+                    case RuminantFilterParameters.IsSire:
+                    case RuminantFilterParameters.IsCastrate:
                         maleProperties = true;
                         gender = "Male";
                         break;
+                    case RuminantFilterParameters.IsBreeder:
                     case RuminantFilterParameters.IsPregnant:
                     case RuminantFilterParameters.IsLactating:
                     case RuminantFilterParameters.IsHeifer:
+                    case RuminantFilterParameters.MonthsSinceLastBirth:
                         femaleProperties = true;
                         gender = "Female";
                         break;
@@ -81,18 +94,54 @@ namespace Models.CLEM.Groupings
             {
                 if (femaleProperties)
                 {
-                    var compiledRulesList = CompileRule(new List<RuminantFemale>(), rules);
-                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantFemale>(), rules);
+                    }
+                    var result =  GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantFemale, bool>>);
+                    if(proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
                 else if (maleProperties)
                 {
-                    var compiledRulesList = CompileRule(new List<RuminantMale>(), rules);
-                    return GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantMale>(), rules);
+                    }
+                    var result = GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantMale, bool>>);
+                    if (proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
                 else
                 {
-                    var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
-                    return GetItemsThatMatchAll<Ruminant>(individuals, compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<Ruminant>(), rules);
+                    }
+                    var result = GetItemsThatMatchAll<Ruminant>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<Ruminant, bool>>);
+                    if (proportionToUse < 1)
+                    {
+                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
+                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
+                    }
+                    else
+                    {
+                        return result.ToList<Ruminant>();
+                    }
                 }
             }
         }
@@ -103,15 +152,18 @@ namespace Models.CLEM.Groupings
         public static List<OtherAnimalsTypeCohort> Filter(this IEnumerable<OtherAnimalsTypeCohort> individuals, Model filterGroup)
         {
             var rules = new List<Rule>();
-            foreach (OtherAnimalsFilter filter in Apsim.Children(filterGroup, typeof(OtherAnimalsFilter)))
+            foreach (OtherAnimalsFilter filter in filterGroup.FindAllChildren<OtherAnimalsFilter>())
             {
                 ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
                 // create rule list
                 rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
             }
 
-            var compiledRulesList = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
-            return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, compiledRulesList).ToList<OtherAnimalsTypeCohort>();
+            if ((filterGroup as IFilterGroup).CombinedRules is null)
+            {
+                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
+            }
+            return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<OtherAnimalsTypeCohort, bool>>).ToList<OtherAnimalsTypeCohort>();
         }
 
         private class Rule

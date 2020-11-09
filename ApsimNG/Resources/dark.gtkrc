@@ -166,10 +166,14 @@ GtkCheckButton::indicator-spacing = 4
 class "GtkWidget" style "default"
 
 style "notebook_style" {
-	bg[NORMAL]			= shade (1.5, @bg_color) # Tab background.
-	bg[ACTIVE]			= shade (1.5, @bg_color) # Unfocused tab background.
+	bg[NORMAL]			= shade (1.5, @bg_color) # Unselected tab background.
 }
 widget_class "*<GtkNotebook>*<GtkEventBox>"     	style "notebook_style"
+
+style "selected_tab_style" {
+	bg[NORMAL]			= @bg_color # Selected tab background.
+}
+widget "*.GtkNotebook.selected-tab" style "selected_tab_style"
 
 style "scrollbar_style" {
 	bg[PRELIGHT]		= shade (2.0, @bg_color) # Scrollbar colour

@@ -19,7 +19,7 @@ namespace ApsimNG.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -106,25 +106,16 @@ namespace ApsimNG.Properties {
         ///  &lt;/Axis&gt;
         ///  &lt;Series&gt;
         ///    &lt;Name&gt;Available water&lt;/Name&gt;
-        ///    &lt;Type&gt;Area&lt;/Type&gt;
+        ///    &lt;Type&gt;Region&lt;/Type&gt;
         ///    &lt;Title&gt;Available water&lt;/Title&gt;
         ///    &lt;ShowInLegend&gt;true&lt;/ShowInLegend&gt;
         ///    &lt;XAxis&gt;Top&lt;/XAxis&gt;
         ///    &lt;YAxis&gt;Left&lt;/YAxis&gt;
-        ///    &lt;ColourArg [rest of string was truncated]&quot;;.
+        ///    &lt;ColourA [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InitialWaterGraph {
             get {
                 return ResourceManager.GetString("InitialWaterGraph", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream notes {
-            get {
-                return ResourceManager.GetStream("notes", resourceCulture);
             }
         }
         
@@ -135,15 +126,6 @@ namespace ApsimNG.Properties {
             get {
                 object obj = ResourceManager.GetObject("Report", resourceCulture);
                 return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream success {
-            get {
-                return ResourceManager.GetStream("success", resourceCulture);
             }
         }
         
@@ -173,9 +155,9 @@ namespace ApsimNG.Properties {
         ///        &lt;/Axis&gt;
         ///        &lt;Series&gt;
         ///          &lt;Name&gt;LL15&lt;/Name&gt;
-        ///          &lt;Type&gt;Area&lt;/Type&gt;
+        ///          &lt;Type&gt;Region&lt;/Type&gt;
         ///          &lt;Title&gt;LL15&lt;/Title&gt;
-        ///          &lt;ShowInLegen [rest of string was truncated]&quot;;.
+        ///          &lt;ShowInLeg [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WaterGraph {
             get {

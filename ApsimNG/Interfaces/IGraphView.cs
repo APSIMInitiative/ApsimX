@@ -1,14 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGraphView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using System;
     using System.Collections;
     using System.Drawing;
-    using Models.Graph;
+    using Models;
     using EventArguments;
 
     /// <summary>
@@ -22,6 +17,16 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface IGraphView
     {
+        /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        double FontSize { get; set; }
+
+        /// <summary>
+        /// Marker size.
+        /// </summary>
+        MarkerSizeType MarkerSize { get; set; }
+
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
         /// </summary>
@@ -53,6 +58,11 @@ namespace UserInterface.Interfaces
         int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        bool LegendInsideGraph { get; set; }
+
+        /// <summary>
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">Show the specified series editor</param>
@@ -79,7 +89,10 @@ namespace UserInterface.Interfaces
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
-        /// <param name="error">The error values for the series</param>
+        /// <param name="xFieldName">The name of the x variable.</param>
+        /// <param name="yFieldName">The name of the y variable.</param>
+        /// <param name="xError">The error values for the x series</param>
+        /// <param name="yError">The error values for the y series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
@@ -93,14 +106,18 @@ namespace UserInterface.Interfaces
              string title, 
              IEnumerable x, 
              IEnumerable y,
-             IEnumerable error,
-             Models.Graph.Axis.AxisType xAxisType, 
-             Models.Graph.Axis.AxisType yAxisType,
+             string xFieldName,
+             string yFieldName,
+             IEnumerable xError,
+             IEnumerable yError,
+             Models.Axis.AxisType xAxisType, 
+             Models.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.LineType lineType,
-             Models.Graph.MarkerType markerType,
-             Models.Graph.LineThicknessType lineThickness,
-             Models.Graph.MarkerSizeType markerSize,
+             Models.LineType lineType,
+             Models.MarkerType markerType,
+             Models.LineThicknessType lineThickness,
+             Models.MarkerSizeType markerSize,
+             double markerModifier,
              bool showInLegend);
 
         /// <summary>
@@ -117,8 +134,8 @@ namespace UserInterface.Interfaces
             string title, 
             IEnumerable x, 
             IEnumerable y, 
-            Models.Graph.Axis.AxisType xAxisType, 
-            Models.Graph.Axis.AxisType yAxisType, 
+            Models.Axis.AxisType xAxisType, 
+            Models.Axis.AxisType yAxisType, 
             Color colour,
             bool showInLegend);
 
@@ -141,8 +158,8 @@ namespace UserInterface.Interfaces
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showInLegend);
 
@@ -167,6 +184,51 @@ namespace UserInterface.Interfaces
             bool showOnLegend);
 
         /// <summary>
+        /// Draw a stacked area series with the specified arguments.Similar to
+        /// an area series except that the area between this curve and the
+        /// previous curve (or y = 0 if this is first) will be filled with
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawStackedArea(
+            string title,
+            object[] x,
+            double[] y,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend);
+
+        /// <summary>
+        /// Draw a box-and-whisker plot.
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawBoxPLot(
+            string title,
+            object[] x,
+            double[] y,
+            Axis.AxisType xAxisType,
+            Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend,
+            LineType lineType,
+            MarkerType markerType,
+            LineThicknessType lineThickness);
+
+        /// <summary>
         /// Draw text on the graph at the specified coordinates.
         /// </summary>
         /// <param name="text">The text to put on the graph</param>
@@ -184,8 +246,8 @@ namespace UserInterface.Interfaces
             object y,
             bool leftAlign,
             double textRotation,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour);
 
         /// <summary>
@@ -199,15 +261,19 @@ namespace UserInterface.Interfaces
         /// <param name="textRotation">Text rotation</param>
         /// <param name="thickness">Line thickness</param>
         /// <param name="colour">The color of the text</param>
+        /// <param name="inFrontOfSeries">Show annotation in front of series?</param>
+        /// <param name="toolTip">Annotation tool tip.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLine(
             object x1,
             object y1,
             object x2,
             object y2,
-            Models.Graph.LineType type,
-            Models.Graph.LineThicknessType thickness,
-            Color colour);
+            Models.LineType type,
+            Models.LineThicknessType thickness,
+            Color colour,
+            bool inFrontOfSeries,
+            string toolTip);
 
         /// <summary>
         /// Format the specified axis.
@@ -220,7 +286,7 @@ namespace UserInterface.Interfaces
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         void FormatAxis(
-            Models.Graph.Axis.AxisType axisType, 
+            Models.Axis.AxisType axisType, 
             string title,
             bool inverted,
             double minimum,
@@ -232,7 +298,8 @@ namespace UserInterface.Interfaces
         /// Format the legend.
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
-        void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType);
+        /// <param name="orientation">Orientation of items in the legend.</param>
+        void FormatLegend(Models.Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation);
 
         /// <summary>
         /// Format the title.
@@ -278,17 +345,17 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        double AxisMaximum(Models.Graph.Axis.AxisType axisType);
+        double AxisMaximum(Models.Axis.AxisType axisType);
 
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        double AxisMinimum(Models.Graph.Axis.AxisType axisType);
+        double AxisMinimum(Models.Axis.AxisType axisType);
 
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        double AxisMajorStep(Models.Graph.Axis.AxisType axisType);
+        double AxisMajorStep(Models.Axis.AxisType axisType);
         
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>

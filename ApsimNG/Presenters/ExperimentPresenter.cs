@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Views;
@@ -52,10 +53,10 @@
             view.ExportToCSVAction.Clicked += OnExportCsv;
             view.ImportFromCSVAction.Clicked += OnImportCsv;
             view.RunAPSIMAction.Clicked += OnRunSims;
-            view.MaximumNumSimulations.Changed += OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave += OnSetMaxNumSims;
 
             // Give the view the default maximum number of simulations to display.
-            view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
+            view.MaximumNumSimulations.Text = DefaultMaxSims.ToString();
 
             // Get a list of all simulation descriptions (even disabled ones).
             GetAllSimulationDescriptionsFromExperiment();
@@ -73,7 +74,7 @@
             view.ExportToCSVAction.Clicked -= OnExportCsv;
             view.ImportFromCSVAction.Clicked -= OnImportCsv;
             view.RunAPSIMAction.Clicked -= OnRunSims;
-            view.MaximumNumSimulations.Changed -= OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave -= OnSetMaxNumSims;
         }
 
         /// <summary>Populate the view.</summary>
@@ -85,15 +86,17 @@
             {
                 // Using the first simulation description, create a column in the table
                 // for each descriptor.
-                foreach (var descriptor in simulationDescriptions[0].Descriptors)
-                {
-                    if (!hiddenColumns.Contains(descriptor.Name))
-                        table.Columns.Add(descriptor.Name, typeof(string));
-                }
+                foreach (var simulationDescription in simulationDescriptions)
+                    foreach (var descriptor in simulationDescription.Descriptors)
+                    {
+                        if (!hiddenColumns.Contains(descriptor.Name) &&
+                            !table.Columns.Contains(descriptor.Name))
+                            table.Columns.Add(descriptor.Name, typeof(string));
+                    }
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Text, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {
@@ -123,7 +126,7 @@
             view.List.CellRenderDetails = cellRenderDetails;
 
             // Populate the number of simulations label.
-            view.NumberSimulationsLabel.Value = "Number of simulations: " + simulationDescriptions.Count;
+            view.NumberSimulationsLabel.Text = "Number of simulations: " + simulationDescriptions.Count;
         }
 
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
@@ -139,7 +142,7 @@
         private List<string> GetSelectedSimulationNamesFromView()
         {
             var selectedSimulationNames = new List<string>();
-            foreach (var row in view.List.SelectedRows)
+            foreach (var row in view.List.SelectedIndicies)
                 selectedSimulationNames.Add(view.List.DataSource.Rows[row]["SimulationName"].ToString());
             return selectedSimulationNames;
         }
@@ -244,9 +247,9 @@
                 var selectedSimulations = GetSelectedSimulationNamesFromView();
 
                 // Before running the simulations, disable all simulations except for those which are selected.
-                RunCommand runner = new RunCommand(experiment, explorerPresenter, false);
-                runner.SimulationNamesToRun = selectedSimulations;
-                runner.Do(explorerPresenter.CommandHistory);
+                var runner = new Runner(experiment, simulationNamesToRun: selectedSimulations, wait: false);
+                RunCommand runCmd = new RunCommand(experiment.Name, runner, explorerPresenter);
+                runCmd.Do();
             }
             catch (Exception e)
             {
@@ -267,10 +270,10 @@
         {
             try
             {
-                var maxNumSimsString = view.MaximumNumSimulations.Value;
+                var maxNumSimsString = view.MaximumNumSimulations.Text;
                 int n;
                 if (string.IsNullOrEmpty(maxNumSimsString))
-                    view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
+                    view.MaximumNumSimulations.Text = DefaultMaxSims.ToString();
                 else if (Int32.TryParse(maxNumSimsString, out n))
                 {
                     if (n > 1000 && explorerPresenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)

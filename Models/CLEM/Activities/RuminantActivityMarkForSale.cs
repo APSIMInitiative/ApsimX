@@ -1,8 +1,10 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Groupings;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,46 +95,56 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
-            List<Ruminant> herd = CurrentHerd(false);
-            if (herd != null && herd.Count > 0)
+            if (this.TimingOK)
             {
-                double numberToTag = herd.Count();
-                if (LabourLimitProportion < 1 & labourRequirement.LabourShortfallAffectsActivity)
+                List<Ruminant> herd = CurrentHerd(false);
+                if (herd != null && herd.Count > 0)
                 {
-                    switch (labourRequirement.UnitType)
+                    double numberToTag = herd.Count();
+                    if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
                     {
-                        case LabourUnitType.Fixed:
-                            // no individuals tagged
-                            numberToTag = 0;
-                            this.Status = ActivityStatus.Ignored;
-                            break;
-                        case LabourUnitType.perHead:
-                            numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion);
-                            this.Status = ActivityStatus.Partial;
-                            break;
-                        default:
-                            throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                        switch (labourRequirement.UnitType)
+                        {
+                            case LabourUnitType.Fixed:
+                                // no individuals tagged
+                                numberToTag = 0;
+                                this.Status = ActivityStatus.Ignored;
+                                break;
+                            case LabourUnitType.perHead:
+                                numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
+                                this.Status = ActivityStatus.Partial;
+                                break;
+                            default:
+                                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                        }
+                    }
+                    else
+                    {
+                        this.Status = ActivityStatus.Success;
+                    }
+
+                    int cnt = 0;
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                    {
+                        foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
+                        {
+                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            cnt++;
+                            if (cnt > numberToTag)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    this.Status = ActivityStatus.Success;
-                }
-
-                int cnt = 0;
-                foreach (var ind in herd)
-                {
-                    ind.SaleFlag = HerdChangeReason.MarkedSale;
-                    cnt++;
-                    if (cnt > numberToTag)
-                    {
-                        break;
-                    }
+                    this.Status = ActivityStatus.NotNeeded;
                 }
             }
             else
             {
-                this.Status = ActivityStatus.NotNeeded;
+                this.Status = ActivityStatus.Ignored;
             }
         }
 

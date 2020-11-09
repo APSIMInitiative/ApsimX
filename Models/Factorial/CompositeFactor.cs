@@ -5,17 +5,21 @@
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
     /// Its sole purpose is to apply the object values to the model represented by the paths.
     /// If Specifications are specified then they are used instead of paths and values.
     /// </summary>
+    [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Factor))]
+    [ValidParent(ParentType = typeof(Permutation))]
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
-    public class CompositeFactor : Model
+    public class CompositeFactor : Model, IReferenceExternalFiles
     {
         /// <summary>Parameterless constrctor needed for serialisation</summary>
         public CompositeFactor()
@@ -65,23 +69,7 @@
         /// <param name="simulationDescription">A description of a simulation.</param>
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
-            List<string> allPaths;
-            List<object> allValues;
-            if (Specifications != null)
-            {
-                // Compound factorvalue i.e. multiple specifications that all
-                // work on a single simulation.
-                allPaths = new List<string>();
-                allValues = new List<object>();
-
-                foreach (var specification in Specifications)
-                    ParseSpecification(specification, allPaths, allValues);
-            }
-            else
-            {
-                allPaths = Paths;
-                allValues = Values;
-            }
+            ParseAllSpecifications(out List<string> allPaths, out List<object> allValues);
 
             if (allPaths.Count > 1 && allPaths.Count != allValues.Count)
                 throw new Exception("The number of factor paths does not match the number of factor values");
@@ -95,21 +83,43 @@
                     simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
             }
 
-            // Set descriptors in simulation.
-            string descriptorName = Name;
-            if (Parent != null)
-                descriptorName = Parent.Name;
-            if (Specifications != null && Specifications.Count > 0)
+            if (!(Parent is Factors))
             {
-                // compound factor value ie. one that has multiple specifications. 
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
-            }
-            else
-            {
-                if (allValues[0] is IModel)
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, (allValues[0] as IModel).Name));
+                // Set descriptors in simulation.
+                string descriptorName = Name;
+                if (Parent != null)
+                    descriptorName = Parent.Name;
+                if (Specifications != null && Specifications.Count > 0)
+                {
+                    // compound factor value ie. one that has multiple specifications. 
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
+                }
                 else
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
+                {
+                    if (allValues[0] is IModel)
+                        simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, (allValues[0] as IModel).Name));
+                    else
+                        simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
+                }
+            }
+        }
+
+        private void ParseAllSpecifications(out List<string> paths, out List<object> values)
+        {
+            paths = new List<string>();
+            values = new List<object>();
+
+            if (Specifications != null)
+            {
+                // Compound factorvalue i.e. multiple specifications that all
+                // work on a single simulation.
+                foreach (var specification in Specifications)
+                    ParseSpecification(specification, paths, values);
+            }
+            if (Paths != null)
+            {
+                paths.AddRange(Paths);
+                values.AddRange(Values);
             }
         }
 
@@ -121,6 +131,9 @@
         /// <param name="allValues">The list of values to add to.</param>
         private void ParseSpecification(string specification, List<string> allPaths, List<object> allValues)
         {
+            if (string.IsNullOrEmpty(specification))
+                return;
+
             string path = specification;
             object value;
             if (path.Contains("="))
@@ -135,20 +148,39 @@
             else
             {
                 // Find the model that we are to replace.
-                var experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
-                var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
+                var experiment = FindAncestor<Experiment>();
+                var baseSimulation = experiment.FindChild<Simulation>();
+                var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
+
+                if (modelToReplace == null)
+                    throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
-                var possibleMatches = Apsim.Children(this, modelToReplace.GetType());
-                if (possibleMatches.Count > 1)
-                    value = possibleMatches.Find(m => m.Name == modelToReplace.Name);
+                IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
+                if (possibleMatches.Count() > 1)
+                    value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
                 else
-                    value = possibleMatches[0];
+                    value = possibleMatches.First();
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);
             }
+        }
+
+        /// <summary>Return paths to all files referenced by this model.</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            ParseAllSpecifications(out List<string> paths, out List<object> values);
+
+            Simulations sims = FindAncestor<Simulations>();
+            IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(str, sims.FileName)));
+            return result;
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,7 +3,6 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.Run;
-    using Models.Core.Runners;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -11,65 +10,40 @@
     using System.IO;
     using System.Linq;
 
+    [Serializable]
     class StorageViaSockets : Model, IDataStore, IStorageWriter
     {
-        List<JobRunnerMultiProcess.TransferRowInTable> data = new List<JobRunnerMultiProcess.TransferRowInTable>();
-        private Guid jobKey;
+        public List<ReportData> reportDataThatNeedsToBeWritten = new List<ReportData>();
+        public List<DataTable> dataTablesThatNeedToBeWritten = new List<DataTable>();
 
-        public StorageViaSockets(Guid key)
+        public StorageViaSockets()
         {
-            jobKey = key;
+        }
+
+        public StorageViaSockets(string filename)
+        {
+            FileName = filename;
         }
 
         /// <summary>Write to permanent storage.</summary>
         /// <param name="tableData">Table data to write.</param>
         public void WriteTable(ReportData data)
         {
-            var rowData = new JobRunnerMultiProcess.TransferReportData()
-            {
-                key = jobKey,
-                data = data
-            };
-
-            if (data.Rows.Count > 0)
-            {
-                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
-                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-            }
+            reportDataThatNeedsToBeWritten.Add(data);
         }
 
         public void WriteTable(DataTable data)
         {
-            var rowData = new JobRunnerMultiProcess.TransferDataTable()
-            {
-                key = jobKey,
-                data = data
-            };
-
-            if (data.Rows.Count > 0)
-            {
-                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = rowData };
-                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-            }
+            dataTablesThatNeedToBeWritten.Add(data);
         }
 
-        /// <summary>Write all the data we stored</summary>
-        public void WriteAllData()
-        {
-            if (data.Count > 0)
-            {
-                SocketServer.CommandObject transferRowCommand = new SocketServer.CommandObject() { name = "TransferData", data = data };
-                SocketServer.Send("127.0.0.1", 2222, transferRowCommand);
-                data.Clear();
-            }
-        }
-
-        public string FileName { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public string FileName { get; set; }
 
         public IStorageReader Reader => throw new System.NotImplementedException();
 
         public IStorageWriter Writer { get { return this; } }
 
+        public List<string> TablesModified { get; set; }
 
         public void Empty()
         {
@@ -137,6 +111,21 @@
         /// <param name="tableName">Name of the table</param>
         /// <returns></returns>
         public IEnumerable<string> ColumnNames(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddView(string name, string selectSQL)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
         {
             throw new NotImplementedException();
         }

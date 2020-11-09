@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -199,17 +199,16 @@
             sims.FileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims.Write(sims.FileName);
 
-            Simulation sim = Apsim.Find(sims, typeof(Simulation)) as Simulation;
-            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            Simulation sim = sims.FindInScope<Simulation>();
+            IDataStore storage = sims.FindInScope<IDataStore>();
 
             // Record checkpoint names before and after running the simulation,
             // and ensure that they are not the same.
             string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
 
             // Run the simulation
-            IJobManager jobManager = new RunOrganiser(sims, sim, false);
-            IJobRunner jobRunner = new JobRunnerAsync();
-            jobRunner.Run(jobManager, wait: true);
+            var runner = new Runner(sims);
+            runner.Run();
             string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
 
             Assert.AreNotEqual(checkpointNamesBeforeRun, checkpointNamesAfterRun, "Storage reader failed to update checkpoint names after simulation was run.");
@@ -219,8 +218,8 @@
         public static void CreateTable(IDatabaseConnection database)
         {
             // Create a _Checkpoints table.
-            List<string> columnNames = new List<string>() { "ID", "Name", "Version", "Date" };
-            List<string> columnTypes = new List<string>() { "integer", "char(50)", "char(50)", "date" };
+            List<string> columnNames = new List<string>() { "ID", "Name", "Version", "Date", "OnGraphs" };
+            List<string> columnTypes = new List<string>() { "integer", "char(50)", "char(50)", "date", "integer" };
             database.CreateTable("_Checkpoints", columnNames, columnTypes);
             List<object[]> rows = new List<object[]>
             {

@@ -43,10 +43,6 @@
             {
             }
 
-            public void WriteSummary(TextWriter writer)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         /// <summary>Ensure the hold function can deal with exceptions.</summary>
@@ -57,39 +53,50 @@
             {
                 WhenToHold = "B",
 
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockFunctionThatThrows() { Name = "ValueToHold" },
-                    new Phenology()
+                    new Plant()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
-                            new Zone(),
-                            new Clock(),
-                            new MockSummary(),
-                            new Plant(),
-                            new MockFunctionThatThrows() { Name = "ThermalTime"},
-                            new MockPhase()
+                            new Phenology()
                             {
-                                Name = "Phase1",
-                                Start = "A",
-                                End = "B"
+                                Children = new List<IModel>()
+                                {
+                                    new Zone(),
+                                    new Clock(),
+                                    new MockSummary(),
+                                    new MockFunctionThatThrows() { Name = "ThermalTime"},
+                                    new MockPhase()
+                                    {
+                                        Name = "Phase1",
+                                        Start = "A",
+                                        End = "B"
+                                    },
+                                    new MockPhase()
+                                    {
+                                        Name = "Phase2",
+                                        Start = "B",
+                                        End = "C"
+                                    }
+                                }
                             },
-                            new MockPhase()
+                            new Constant()
                             {
-                                Name = "Phase2",
-                                Start = "B",
-                                End = "C"
+                                Name = "MortalityRate",
                             }
                         }
                     }
                 }
             };
-            Apsim.ParentAllChildren(f);
-            var links = new Links();
-            links.Resolve(f, true, true);
+            f.ParentAllDescendants();
 
-            Utilities.CallEvent(f.Children[1], "Commencing", new object[] { this, new EventArgs() });
+
+            var links = new Links();
+            links.Resolve(f, true);
+
+            Utilities.CallEvent(f.Children[1].Children[0], "Commencing", new object[] { this, new EventArgs() });
 
             (f.Children[0] as MockFunctionThatThrows).DoThrow = true;
             Utilities.CallEvent(f, "Commencing", new object[] { this, new EventArgs() });

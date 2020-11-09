@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Factorial;
-using Models.PMF.Interfaces;
-using Models.Graph;
-using System.Data;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using Models.Core.Run;
+    using Models.Factorial;
+    using Models;
+    using Models.PMF;
+    using Models.PMF.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+
     /// <summary>
     /// A folder model
     /// </summary>
@@ -24,6 +25,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(IOrgan))]
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class Folder : Model, ICustomDocumentation
     {
         /// <summary>Show page of graphs?</summary>
@@ -34,6 +36,7 @@ namespace Models.Core
         {
             ShowPageOfGraphs = true;
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -47,10 +50,10 @@ namespace Models.Core
 
                 if (ShowPageOfGraphs)
                 {
-                    foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
+                    foreach (Memo memo in FindAllChildren<Memo>())
                         memo.Document(tags, headingLevel, indent);
 
-                    if (Apsim.Children(this, typeof(Experiment)).Count > 0)
+                    if (FindAllChildren<Experiment>().Any())
                     {
                         // Write Phase Table
                         tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
@@ -58,11 +61,11 @@ namespace Models.Core
                         tableData.Columns.Add("Experiment Name", typeof(string));
                         tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
 
-                        foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
+                        foreach (IModel child in FindAllChildren<Experiment>())
                         {
-                            IModel Factors = Apsim.Child(child, typeof(Factors));
+                            IModel Factors = child.FindChild<Factors>();
                             string Design = "";
-                            foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                            foreach (Factor factor in Factors.FindAllChildren<Factor>())
                             {
                                 if (Design != "")
                                     Design += " x ";
@@ -82,14 +85,14 @@ namespace Models.Core
                     }
                     int pageNumber = 1;
                     int i = 0;
-                    List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));
+                    List<Graph> children = FindAllChildren<Graph>().ToList();
                     while (i < children.Count)
                     {
                         GraphPage page = new GraphPage();
                         page.name = Name + pageNumber;
                         for (int j = i; j < i + 6 && j < children.Count; j++)
                             if (children[j].IncludeInDocumentation)
-                                page.graphs.Add(children[j] as Graph.Graph);
+                                page.graphs.Add(children[j] as Graph);
                         if (page.graphs.Count > 0)
                             tags.Add(page);
                         i += 6;
@@ -98,7 +101,7 @@ namespace Models.Core
 
                     // Document everything else other than graphs
                     foreach (IModel model in Children)
-                        if (!(model is Graph.Graph) && !(model is Memo))
+                        if (!(model is Graph) && !(model is Memo))
                             AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
                 }
                 else

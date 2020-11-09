@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,15 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantFilterGroup))]
+    [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
+    [Version(1, 0, 3, "Now uses IsState() terminology for all state filter properties")]
+    [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
-    public class RuminantFilter: CLEMModel
+    public class RuminantFilter: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -66,7 +69,6 @@ namespace Models.CLEM.Groupings
         /// Value to check for filter
         /// </summary>
         [Description("Value to filter by")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to filter by required")]
         public string Value
         {
             get
@@ -125,25 +127,17 @@ namespace Models.CLEM.Groupings
                         default:
                             break;
                     }
-                    str += Value;
+                    if (Value.ToString() == "" && Parameter.ToString() == "Location")
+                    {
+                        str += "Not specified - general yards";
+                    }
+                    else
+                    {
+                        str += Value;
+                    }
                 }
             }
             return str;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public RuminantFilter Clone()
-        {
-            RuminantFilter clone = new RuminantFilter()
-            {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
         }
 
         /// <summary>
@@ -153,14 +147,20 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
+            string html = "";
+            if(!this.ValidParent())
+            {
+                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
+            }
             if (this.Value == null)
             {
-                return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
             }
             else
             {
-                return "<div class=\"filter\">" + this.ToString() + "</div>";
+                html += "<div class=\"filter\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">" + this.ToString() + "</div>";
             }
+            return html;
         }
 
         /// <summary>
@@ -181,6 +181,28 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
+        /// <summary>
+        /// Validate this component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure parent is of the right type.
+            if(!this.ValidParent())
+            {
+                string[] memberNames = new string[] { "RuminantFilter" };
+                results.Add(new ValidationResult("The RuminantFilter named "+this.Name+" does not have a valid RuminantGroup parent component", memberNames));
+            }
+            if((Value==null||Value=="")&&(Parameter.ToString()!="Location"))
+            {
+                string[] memberNames = new string[] { "Value" };
+                results.Add(new ValidationResult("Value must be specified", memberNames));
+            }
+            return results;
+        }
     }
 
     /// <summary>
@@ -189,64 +211,84 @@ namespace Models.CLEM.Groupings
     public enum RuminantFilterParameters
     {
         /// <summary>
-        /// Breed of ruminant
-        /// </summary>
-        Breed,
-        /// <summary>
-        /// Herd individuals belong to
-        /// </summary>
-        HerdName,
-        /// <summary>
-        /// Gender of individuals
-        /// </summary>
-        Gender,
-        /// <summary>
         /// Age (months) of individuals
         /// </summary>
-        Age,
+        Age = 3,
         /// <summary>
-        /// ID of individuals
+        /// Breed of ruminant
         /// </summary>
-        ID,
-        /// <summary>
-        /// Weight of individuals
-        /// </summary>
-        Weight,
-        /// <summary>
-        /// Weight as proportion of High weight achieved
-        /// </summary>
-        ProportionOfHighWeight,
-        /// <summary>
-        /// Weight as proportion of Standard Reference Weight
-        /// </summary>
-        ProportionOfSRW,
-        /// <summary>
-        /// Current grazing location
-        /// </summary>
-        Location,
-        /// <summary>
-        /// Weaned status
-        /// </summary>
-        Weaned,
-        /// <summary>
-        /// Is female lactating
-        /// </summary>
-        IsLactating,
-        /// <summary>
-        /// Is female pregnant
-        /// </summary>
-        IsPregnant,
-        /// <summary>
-        /// Is female a heifer (weaned, >= breed age and weight, no offspring)
-        /// </summary>
-        IsHeifer,
-        /// <summary>
-        /// Is male draught individual
-        /// </summary>
-        Draught,
+        Breed = 0,
         /// <summary>
         /// Is male breeding sire
         /// </summary>
-        BreedingSire,
+        IsSire = 15,
+        /// <summary>
+        /// Is male draught individual
+        /// </summary>
+        IsDraught = 14,
+        /// <summary>
+        /// Gender of individuals
+        /// </summary>
+        Gender = 2,
+        /// <summary>
+        /// Herd individuals belong to
+        /// </summary>
+        HerdName = 1,
+        /// <summary>
+        /// ID of individuals
+        /// </summary>
+        ID = 4,
+        /// <summary>
+        /// Determines if withing breeding ages
+        /// </summary>
+        IsBreeder = 17,
+        /// <summary>
+        /// Is female a heifer (weaned, >= breed age and weight, no offspring)
+        /// </summary>
+        IsHeifer = 13,
+        /// <summary>
+        /// Is female lactating
+        /// </summary>
+        IsLactating = 11,
+        /// <summary>
+        /// Is female pregnant
+        /// </summary>
+        IsPregnant = 12,
+        /// <summary>
+        /// Current grazing location
+        /// </summary>
+        Location = 8,
+        /// <summary>
+        /// The number of months since last birth for a breeder
+        /// </summary>
+        MonthsSinceLastBirth = 16,
+        /// <summary>
+        /// Weight as proportion of High weight achieved
+        /// </summary>
+        ProportionOfHighWeight = 6,
+        /// <summary>
+        /// Weight as proportion of Standard Reference Weight
+        /// </summary>
+        ProportionOfSRW = 7,
+        /// <summary>
+        /// Weaned status
+        /// </summary>
+        Weaned = 9,
+        /// <summary>
+        /// Is individual a weaner (weaned, but less than 12 months)
+        /// </summary>
+        IsWeaner = 10,
+        /// <summary>
+        /// Weight of individuals
+        /// </summary>
+        Weight = 5,
+        /// <summary>
+        /// Is individual a calf (not weaned)
+        /// </summary>
+        IsCalf = 18,
+        /// <summary>
+        /// Is individual castrated
+        /// </summary>
+        IsCastrate = 30,
     }
 }

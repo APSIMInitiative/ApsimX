@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 
@@ -52,13 +52,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
             if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityCollectProduct] activity must be present under this manage crop activity", memberNames));
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
             }
             return results;
         }
@@ -96,28 +96,28 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // locate Land Type resource for this forage.
-            LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
+            {
+                // locate Land Type resource for this forage.
+                LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
 
-            if (UseAreaAvailable)
-            {
-                LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-                Area = LinkedLandItem.AreaAvailable;
-            }
-            else
-            {
+                if (UseAreaAvailable)
+                {
+                    LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+                }
+
                 ResourceRequestList = new List<ResourceRequest>
                 {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                        ResourceType = typeof(Land),
-                        ResourceTypeName = LandItemNameToUse.Split('.').Last(),
-                        ActivityModel = this,
-                        Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
-                        FilterDetails = null
-                    }
+                new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ActivityModel = this,
+                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    FilterDetails = null
+                }
                 };
 
                 CheckResources(ResourceRequestList, Guid.NewGuid());
@@ -129,8 +129,8 @@ namespace Models.CLEM.Activities
                     //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                     Area = ResourceRequestList.FirstOrDefault().Provided;
                 }
-            }
 
+            }
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
@@ -173,6 +173,9 @@ namespace Models.CLEM.Activities
                     if (item.ActivityEnabled)
                     {
                         item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
+                        
+
+
                     }
                     else
                     {
@@ -286,9 +289,13 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
+            IModel clemParent = FindAncestor<ZoneCLEM>();
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
-                parentLand = Apsim.Find(this, LandItemNameToUse.Split('.')[0]) as Land;
+                if (clemParent != null && clemParent.Enabled)
+                {
+                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+                }
             }
 
             if(UseAreaAvailable)
@@ -325,7 +332,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
+            {
+                html += "\n</div>";
+            }
             return html;
         }
 
@@ -336,12 +346,22 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
-            if (rotation)
+
+            if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
             {
-                html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
+                html += "</div>";
             }
-            html += "\n<div class=\"croprotationborder\">";
+            else
+            {
+                bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
+                if (rotation)
+                {
+                    html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                }
+                html += "\n<div class=\"croprotationborder\">";
+            }
             return html;
         }
     }

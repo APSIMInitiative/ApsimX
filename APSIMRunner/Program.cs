@@ -1,16 +1,19 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Program.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIMRunner
+﻿namespace APSIMRunner
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Core.Runners;
+    using Models.Storage;
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Pipes;
+    using System.Linq;
+    using System.Net.Sockets;
     using System.Threading;
+    using System.Timers;
+    using static Models.Core.Run.JobRunnerMultiProcess;
 
     class Program
     {
@@ -18,59 +21,29 @@ namespace APSIMRunner
         static int Main(string[] args)
         {
             try
-            { 
-                AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+            {
+                if (args == null || args.Length < 2)
+                    throw new Exception("Usage: APSIMRunner.exe pipeWriteHandle pipeReadHandle");
 
-                // Send a command to socket server to get the job to run.
-                object response = GetNextJob();
-                while (response != null)
+                // Get read and write pipe handles
+                // Note: Roles are now reversed from how the other process is passing the handles in
+                string pipeWriteHandle = args[0];
+                string pipeReadHandle = args[1];
+
+                // Let in for debugging purposes.
+                //while (pipeReadHandle != null) 
+                //    Thread.Sleep(500);
+
+                // Add hook for manager assembly resolve method.
+                AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
+
+                // Create 2 anonymous pipes (read and write) for duplex communications
+                // (each pipe is one-way)
+                using (var pipeRead = new AnonymousPipeClientStream(PipeDirection.In, pipeReadHandle))
+                using (var pipeWrite = new AnonymousPipeClientStream(PipeDirection.Out, pipeWriteHandle))
                 {
-                    JobRunnerMultiProcess.GetJobReturnData job = response as JobRunnerMultiProcess.GetJobReturnData;
-
-                    // Run the simulation.
-                    Exception error = null;
-                    string simulationName = null;
-                    StorageViaSockets storage = new StorageViaSockets(job.key);
-                    object[] services = new object[] { storage };
-
-                    try
-                    {
-                        IRunnable jobToRun = job.job;
-                        if (jobToRun is RunSimulation)
-                        {
-                            RunSimulation simulationRunner = job.job as RunSimulation;
-
-                            // Replace datastore with a socket writer
-                            simulationRunner.Services = services;
-                            simulationName = simulationRunner.simulationToRun.Name;
-                        }
-                        else
-                        {
-                            Links links = new Links(services);
-                            links.Resolve(jobToRun);
-                        }
-
-                        jobToRun.Run(new CancellationTokenSource());
-                    }
-                    catch (Exception err)
-                    {
-                        error = err;
-                    }
-
-                    // Signal we have completed writing data for this sim.
-                    storage.WriteAllData();
-
-                    // Signal end of job.
-                    JobRunnerMultiProcess.EndJobArguments endJobArguments = new JobRunnerMultiProcess.EndJobArguments();
-                    endJobArguments.key = job.key;
-                    if (error != null)
-                        endJobArguments.errorMessage = error.ToString();
-                    endJobArguments.simulationName = simulationName;
-                    SocketServer.CommandObject endJobCommand = new SocketServer.CommandObject() { name = "EndJob", data = endJobArguments };
-                    SocketServer.Send("127.0.0.1", 2222, endJobCommand);
-
-                    // Get next job.
-                    response = GetNextJob();
+                    Client client = new Client(pipeRead, pipeWrite);
+                    client.Run();
                 }
             }
             catch (Exception err)
@@ -80,26 +53,9 @@ namespace APSIMRunner
             }
             finally
             {
-                AppDomain.CurrentDomain.AssemblyResolve -= Manager.ResolveManagerAssembliesEventHandler;
+                AppDomain.CurrentDomain.AssemblyResolve -= ScriptCompiler.ResolveManagerAssemblies;
             }
             return 0;
-        }
-
-        /// <summary>Get the next job to run. Returns the job to run or null if no more jobs.</summary>
-        private static object GetNextJob()
-        {
-            SocketServer.CommandObject command = new SocketServer.CommandObject() { name = "GetJob" };
-            object response = SocketServer.Send("127.0.0.1", 2222, command);
-
-            if (response is string && response.ToString() == "NULL")
-                return null;
-
-            while (response is string)
-            {
-                Thread.Sleep(300);
-                response = SocketServer.Send("127.0.0.1", 2222, command);
-            }
-            return response;
         }
     }
 }

@@ -29,46 +29,6 @@
                       <placeholder/>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="yalign">0</property>
-                        <property name="label" translatable="yes">The APSIM Initiative would appreciate an acknowledgement in your research paper if you or your team have utilised APSIM in its development. 
-For ease, we suggest the following wording:
-      Acknowledgment is made to the APSIM Initiative which takes responsibility for quality assurance and a structured innovation programme for APSIM. 
-      APSIM is provided free for research and development use (see www.apsim.info for details).</property>
-                        <property name="selectable">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="padding">5</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="label5">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="yalign">0</property>
-                        <property name="label" translatable="yes">The APSIM Initiative requests users to use the following reference when citing APSIM Next Generation:
-      Holzworth, D., Huth, N.I., Fainges, J., Brown, H., Zurcher, E., Cichota, R., Verrall, S., Herrmann, N.I., Zheng, B., Snow, V., 
-      2018. APSIM Next Generation: Overcoming challenges in modernising a farming systems model. Environmental Modelling &amp; Software 103, 43–51. 
-      https://doi.org/10.1016/j.envsoft.2018.02.002</property>
-                        <property name="selectable">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="padding">5</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
                       <placeholder/>
                     </child>
                   </object>
@@ -142,6 +102,7 @@ For ease, we suggest the following wording:
         </child>
         <child>
           <object class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
               <object class="GtkProgressBar" id="progressBar">

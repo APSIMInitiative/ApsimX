@@ -22,11 +22,11 @@ namespace Models.Functions
         public string StringValue { get; set; }
 
         /// <summary>The True Value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction TrueValue = null;
 
         /// <summary>The False Value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FalseValue = null;
 
         [Link]
@@ -69,7 +69,7 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph("If " + PropertyName + " = " + StringValue + " Then", indent));

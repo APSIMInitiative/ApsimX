@@ -1,30 +1,75 @@
-﻿// ----------------------------------------------------------------------
-// <copyright file="Main.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models
+﻿namespace Models
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.Runners;
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Models.Storage;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
+    using Models.Factorial;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
     {
-        private static string errors = string.Empty;
+        private static object lockObject = new object();
+        private static List<string> ignorePaths = new List<string>() { "UnitTests", "UserInterface", "ApsimNG" };
+        private static string[] arguments;
+        private static int exitCode = 0;
+        private static List<Exception> exceptionsWrittenToConsole = new List<Exception>();
 
-        /// <summary>
-        /// List of files to be run.
-        /// </summary>
-        private static List<string> files = new List<string>();
+        private static string fileName { get { return arguments[0]; } }
+        private static bool recurse { get { return arguments.Contains("/Recurse"); } }
+        private static bool version { get { return arguments.Contains("/Version"); } }
+        private static bool upgrade { get { return arguments.Contains("/Upgrade"); } }
+        private static bool runTests { get { return arguments.Contains("/RunTests"); } }
+        private static bool verbose { get { return arguments.Contains("/Verbose"); } }
+        private static bool csv { get { return arguments.Contains("/Csv"); } }
+        private static bool mergeDBFiles { get { return arguments.Contains("/MergeDBFiles"); } }
+        private static bool edit { get { return arguments.Contains("/Edit"); } }
+        private static bool listSimulationNames { get { return arguments.Contains("/ListSimulations"); } }
+
+        private static Runner.RunTypeEnum runType
+        {
+            get
+            {
+                if (arguments.Contains("/SingleThreaded"))
+                    return Runner.RunTypeEnum.SingleThreaded;
+                else if (arguments.Contains("/MultiProcess"))
+                    return Runner.RunTypeEnum.MultiProcess;
+                else
+                    return Runner.RunTypeEnum.MultiThreaded;
+            }
+        }
+        private static int numberOfProcessors
+        {
+            get
+            {
+                foreach (var argument in arguments)
+                {
+                    var index = argument.IndexOf("/NumberOfProcessors:");
+                    if (index != -1)
+                        return Convert.ToInt32(argument.Substring("/NumberOfProcessors:".Length));
+                }
+                return -1;
+            }
+        }
+        private static string simulationNameRegex
+        {
+            get
+            {
+                foreach (var argument in arguments)
+                {
+                    var index = argument.IndexOf("/SimulationNameRegexPattern:");
+                    if (index != -1)
+                        return argument.Substring("/SimulationNameRegexPattern:".Length);
+                }
+                return "";
+            }
+        }
 
         /// <summary>
         /// Main program entry point.
@@ -33,124 +78,42 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            if (args.Contains("/?") || args.Length < 1 || args.Length > 10)
+            {
+                WriteUsageMessage();
+                return 1;
+            }
 
-            int exitCode = 0;
+            arguments = args;
             try
             {
-                string fileName = null;
-
-                // Extract file name from command line arguments.
-                if (args.Length >= 1)
-                    fileName = args[0];
-
-                string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/m] [/?]";
-                if (args.Contains("/?"))
-                {
-                    string detailedHelpInfo = usageMessage;
-                    detailedHelpInfo += Environment.NewLine + Environment.NewLine;
-                    detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
-                    detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
-                    detailedHelpInfo += "    /Recurse             Recursively search subdirectories for files matching ApsimXFileSpec" + Environment.NewLine;
-                    detailedHelpInfo += "    /SingleThreaded      Run all simulations in a single thread." + Environment.NewLine;
-                    detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
-                    detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
-                    detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
-                    detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
-                    detailedHelpInfo += "    /Upgrade             Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
-                    detailedHelpInfo += "    /m                   Use the experimental multi-process job runner." + Environment.NewLine;
-                    detailedHelpInfo += "    /?                   Show detailed help information.";
-                    Console.WriteLine(detailedHelpInfo);
-                    return 1;
-                }
-
-                if (args.Length < 1 || args.Length > 10)
-                {
-                    Console.WriteLine(usageMessage);
-                    return 1;
-                }
-
-                if (args.Contains("/Version"))
-                {
-                    Model m = new Model();
-                    Console.WriteLine(m.ApsimVersion);
-                    return 0;
-                }
-
-                if (args.Contains("/Upgrade"))
-                {
-                    string dir = Path.GetDirectoryName(fileName);
-                    if (string.IsNullOrWhiteSpace(dir))
-                        dir = Directory.GetCurrentDirectory();
-                    string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
-                    foreach (string file in files)
-                    {
-                        List<Exception> errors;
-                        IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
-                        if (errors != null && errors.Count > 0)
-                            foreach (Exception error in errors)
-                                Console.Error.WriteLine(error.ToString());
-                        File.WriteAllText(file, FileFormat.WriteToString(sims));
-                        Console.WriteLine("Successfully upgraded " + file);
-                    }
-                    return 0;
-                }
-
-                Stopwatch timer = new Stopwatch();
-                timer.Start();
-
-                // If the filename argument has a wildcard then create a IJobManager to go look for matching files to run.
-                // Otherwise, create a JobManager to open the filename and run it in a separate, external process
-                IJobManager job;
-                bool hasWildcard = fileName.Contains('*') || fileName.Contains('?');
-                if (hasWildcard)
-                    job = Runner.ForFolder(fileName, args.Contains("/Recurse"), args.Contains("/RunTests"), args.Contains("/Verbose"), args.Contains("/m"));
+                if (version)
+                    WriteVersion();
+                else if (upgrade)
+                    UpgradeFile(fileName, recurse);
+                else if (listSimulationNames)
+                    ListSimulationNames();
+                else if (edit)
+                    ModifyFile(fileName, recurse);
+                else if (mergeDBFiles)
+                    DBMerger.MergeFiles(fileName, recurse, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
                 else
-                    job = Runner.ForFile(fileName, args.Contains("/RunTests"));
-
-                // Run the job created above using either a single thread or multi threaded (default)
-                IJobRunner jobRunner;
-                if (args.Contains("/SingleThreaded"))
-                    jobRunner = new JobRunnerSync();
-                else if (args.Contains("/m"))
                 {
-                    // If the multi-process switch has been provided as well as a wildcard in the filename,
-                    // we want to use the single threaded job runner, but run each job in multi-process mode.
-                    // TODO : might be useful to allow users to run a directory of apsimx files via the multi-
-                    // process job runner. This could be faster if they have many small files.
-                    if (hasWildcard)
-                        jobRunner = new JobRunnerSync();
-                    else
-                        jobRunner = new JobRunnerMultiProcess(args.Contains("/Verbose"));
-                }
-                else
-                    jobRunner = new JobRunnerAsync();
-                if (args.Select(arg => arg.ToLower()).Contains("/csv"))
-                {
-                    string dir = Path.GetDirectoryName(fileName);
-                    if (dir == "")
-                        dir = Directory.GetCurrentDirectory();
-                    files = Directory.GetFiles(
-                        dir,
-                        Path.GetFileName(fileName),
-                        args.Contains("/Recurse") ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToList();
-                    jobRunner.AllJobsCompleted += GenerateCsvFiles;
-                }
-                jobRunner.JobCompleted += OnJobCompleted;
-                jobRunner.AllJobsCompleted += OnAllJobsCompleted;
-                jobRunner.Run(job, wait: true);
+                    // Run simulations
+                    var runner = new Runner(fileName, ignorePaths, recurse, runTests, runType,
+                                            numberOfProcessors: numberOfProcessors,
+                                            simulationNamePatternMatch: simulationNameRegex);
+                    runner.SimulationCompleted += OnJobCompleted;
+                    runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                    runner.AllSimulationsCompleted += OnAllJobsCompleted;
+                    runner.Run();
 
-                // If errors occurred, write them to the console.
-                if (errors != string.Empty)
-                {
-                    Console.WriteLine("ERRORS FOUND!!");
-                    Console.WriteLine(errors);
-                    exitCode = 1;
+                    // If errors occurred, write them to the console.
+                    if (exitCode != 0)
+                        Console.WriteLine("ERRORS FOUND!!");
+                    if (verbose)
+                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                 }
-                else
-                    exitCode = 0;
-
-                timer.Stop();
-                Console.WriteLine("Finished running simulations. Duration " + timer.Elapsed.TotalSeconds.ToString("#.00") + " sec.");
             }
             catch (Exception err)
             {
@@ -162,43 +125,177 @@ namespace Models
         }
 
         /// <summary>
-        /// Generates a .csv file for each .apsimx file that has been run.
+        /// Write message to user on command line usage and switches.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void GenerateCsvFiles(object sender, AllCompletedArgs e)
+        private static void WriteUsageMessage()
         {
+            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/MultiProcess] [/NumberOfProcessors:xx] [/SimulationNameRegexPattern:xx] [/MergeDBFiles] [/Edit <PathToConfigFile>] [/ListSimulations] [/?]";
+            string detailedHelpInfo = usageMessage;
+            detailedHelpInfo += Environment.NewLine + Environment.NewLine;
+            detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
+            detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
+            detailedHelpInfo += "    /Recurse                        Recursively search subdirectories for files matching ApsimXFileSpec" + Environment.NewLine;
+            detailedHelpInfo += "    /SingleThreaded                 Run all simulations in a single thread." + Environment.NewLine;
+            detailedHelpInfo += "    /RunTests                       Run all tests." + Environment.NewLine;
+            detailedHelpInfo += "    /Csv                            Export all reports to .csv files." + Environment.NewLine;
+            detailedHelpInfo += "    /Version                        Display the version number." + Environment.NewLine;
+            detailedHelpInfo += "    /Verbose                        Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
+            detailedHelpInfo += "    /Upgrade                        Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
+            detailedHelpInfo += "    /MultiProcess                   Use the multi-process job runner." + Environment.NewLine;
+            detailedHelpInfo += "    /NumberOfProcessors:xx          Set the number of processors to use." + Environment.NewLine;
+            detailedHelpInfo += "    /SimulationNameRegexPattern:xx  Use to filter simulation names to run." + Environment.NewLine;
+            detailedHelpInfo += "    /MergeDBFiles                   Merges .db files into a single .db file." + Environment.NewLine;
+            detailedHelpInfo += "    /Edit <PathToConfigFile>        Edits the .apsimx file. Path to a config file must be specified which contains lines of parameters to change in the form 'path = value'" + Environment.NewLine;
+            detailedHelpInfo += "    /ListSimulations                List all simulation names in the file, without running the file." + Environment.NewLine;
+
+            detailedHelpInfo += "    /?                              Show detailed help information.";
+            Console.WriteLine(detailedHelpInfo);
+        }
+
+        /// <summary>
+        /// Write the APSIM version to the console.
+        /// </summary>
+        private static void WriteVersion()
+        {
+            Console.WriteLine(Simulations.GetApsimVersion());
+        }
+
+        /// <summary>
+        /// Upgrade a file to the latest APSIM version.
+        /// </summary>
+        /// <param name="fileName">The name of the file to upgrade.</param>
+        /// <param name="recurse">Recurse though child folders?</param>
+        private static void UpgradeFile(string fileName, bool recurse)
+        {
+            string dir = Path.GetDirectoryName(fileName);
+            if (string.IsNullOrWhiteSpace(dir))
+                dir = Directory.GetCurrentDirectory();
+            string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
             {
-                string fileName = Path.ChangeExtension(file, ".db");
-                Storage.IDataStore storage = new Storage.DataStore(fileName);
-                Report.Report.WriteAllTables(storage, fileName);
+                string contents = File.ReadAllText(file);
+                ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
+                if (converter.DidConvert)
+                    File.WriteAllText(file, converter.Root.ToString());
+                Console.WriteLine("Successfully upgraded " + file);
+            }
+        }
+
+        private static void ListSimulationNames()
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+
+        }
+
+        /// <summary>
+        /// Called when the user passes the /Edit command line switch.
+        /// Performs pattern matching and edits all specified .apsimx
+        /// files (e.g. *.apsimx /Recurse).
+        /// </summary>
+        private static void ModifyFile(string fileName, bool recurse)
+        {
+            int index = Array.IndexOf(arguments, "/Edit");
+            if (index < 0)
+                throw new Exception("Illegal state - this should never happen. /Edit paramter was not specified?");
+            if (index + 1 >= arguments.Length)
+                throw new Exception("/Edit option was provided but no config file argument was given. The config file argument must directly follow the /Edit argument. Use this syntax: Models.exe path/to/apsimXFile.apsimx /Edit path/to/configfile.txt");
+            string configFileName = arguments[index + 1];
+
+            string dir = Path.GetDirectoryName(fileName);
+            if (!Directory.Exists(dir))
+                dir = Directory.GetCurrentDirectory();
+
+            string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
+            foreach (string file in files)
+                EditFile.Do(file, configFileName);
+        }
+
+        /// <summary>Job has completed</summary>
+        private static void OnJobCompleted(object sender, JobCompleteArguments e)
+        {
+            if (e.ExceptionThrowByJob != null)
+            {
+                lock (lockObject)
+                {
+                    exceptionsWrittenToConsole.Add(e.ExceptionThrowByJob);
+                    Console.WriteLine("----------------------------------------------");
+                    Console.WriteLine(e.ExceptionThrowByJob.ToString());
+                    if (verbose)
+                        WriteCompleteMessage(e);
+                    exitCode = 1;
+                }
+            }
+            else if (verbose)
+                WriteCompleteMessage(e);
+        }
+
+        /// <summary>All jobs for a file have completed</summary>
+        private static void OnSimulationGroupCompleted(object sender, EventArgs e)
+        {
+            if (csv)
+            {
+                string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
+                var storage = new Storage.DataStore(fileName);
+                Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }
         }
 
-        /// <summary>Job has completed</summary>
-        private static void OnJobCompleted(object sender, JobCompleteArgs e)
+        /// <summary>All jobs have completed</summary>
+        private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
-            lock (errors)
+            if (e.AllExceptionsThrown != null)
             {
-                if (e.exceptionThrowByJob != null)
+                foreach (var exception in e.AllExceptionsThrown)
                 {
-                    if (e.exceptionThrowByJob is RunExternalException)
-                        errors += e.exceptionThrowByJob.Message + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
-                    else
-                        errors += e.exceptionThrowByJob.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                    if (!exceptionsWrittenToConsole.Contains(exception))
+                    {
+                        Console.WriteLine("----------------------------------------------");
+                        Console.WriteLine(exception.ToString());
+                        exitCode = 1;
+                    }
                 }
             }
         }
 
-        /// <summary>All jobs have completed</summary>
-        private static void OnAllJobsCompleted(object sender, AllCompletedArgs e)
+        /// <summary>
+        /// Write a complete message to the console.
+        /// </summary>
+        /// <param name="e">The event arguments of the completed job.</param>
+        private static void WriteCompleteMessage(JobCompleteArguments e)
         {
-            lock (errors)
+            var message = new StringBuilder();
+            WriteDetailsToMessage(e, message);
+            if (e.Job != null)
             {
-                if (e.exceptionThrown != null)
-                    errors += e.exceptionThrown.ToString() + Environment.NewLine + "----------------------------------------------" + Environment.NewLine;
+                message.Append(" has finished. Elapsed time was ");
+                message.Append(e.ElapsedTime.TotalSeconds.ToString("F1"));
+                message.Append(" seconds.");
+            }
+            Console.WriteLine(message);
+        }
+
+        /// <summary>
+        /// Write part of a complete message to a string builder.
+        /// </summary>
+        /// <param name="e">The event arguments of the completed job.</param>
+        /// <param name="message">The string builder to write to.</param>
+        private static void WriteDetailsToMessage(JobCompleteArguments e, StringBuilder message)
+        {
+            if (e.Job is SimulationDescription)
+            {
+                message.Append((e.Job as SimulationDescription).Name);
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    message.Append(" (");
+                    message.Append(fileName);
+                    message.Append(')');
+                }
             }
         }
 

@@ -13,8 +13,6 @@
         bool Checked { get; set; }
     }
 
-
-
     /// <summary>Encapsulates a menu item.</summary>
     public class MenuItemView : IMenuItemView
     {
@@ -54,11 +52,18 @@
             menuItem.Destroy();
         }
 
-        
-
         private void OnMenuClicked(object sender, EventArgs e)
         {
-            Clicked?.Invoke(this, e);
+            try
+            {
+                Clicked?.Invoke(this, e);
+            }
+            catch// (Exception err)
+            {
+                // todo - how should we handle errors in here? For now just
+                // swallow any exceptions. It's better than crashing, right?
+                //ShowError(err);
+            }
         }
 
     }

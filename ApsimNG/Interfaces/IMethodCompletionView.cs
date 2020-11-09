@@ -23,5 +23,7 @@
         /// Gets or sets the location (top-left corner) of the popup window.
         /// </summary>
         Point Location { get; set; }
+
+        void Destroy();
     }
 }

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of Other Animal Type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
         public string OtherAnimalType { get; set; }
 
         private OtherAnimalsType animalType { get; set; }

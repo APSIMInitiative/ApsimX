@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGridView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Drawing;
     using EventArguments;
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -44,7 +38,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        event EventHandler<GridCellsChangedArgs> ButtonClick;
+        event EventHandler<GridCellChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the user needs context items for the intellisense.

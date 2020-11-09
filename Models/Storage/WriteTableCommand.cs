@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
@@ -18,6 +19,13 @@
         
         /// <summary>The details of tables in the database.</summary>
         private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
+
+        public string Name { get { return "Write table"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
 
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database connection to write to.</param>

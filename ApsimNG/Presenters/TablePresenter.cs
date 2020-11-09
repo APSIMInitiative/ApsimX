@@ -39,14 +39,22 @@
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
+            if (model is ITestable t)
+                t.Test(false, true);
+
             presenter = parentPresenter;
             view = v as IDualGridView;
             tableModel = model as IModelAsTable;
             tables = tableModel.Tables;
             view.Grid1.DataSource = tables[0];
-            view.Grid2.DataSource = tables[1];
+            view.Grid2.DataSource = tables.Count > 1 ? tables[1] : null;
             view.Grid1.CellsChanged += OnCellValueChanged1;
             view.Grid2.CellsChanged += OnCellValueChanged2;
+
+            bool readOnly = !tableModel.GetType().GetProperty("Tables").CanWrite;
+            view.Grid1.ReadOnly = readOnly;
+            view.Grid2.ReadOnly = readOnly;
+
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             gridPresenter1 = new GridPresenter();
@@ -79,12 +87,10 @@
         /// <param name="e">Event arguments.</param>
         private void OnCellValueChanged1(object sender, GridCellsChangedArgs e)
         {
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
                 try
                 {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
                     tables[0] = view.Grid1.DataSource;
                     ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
                     presenter.CommandHistory.Add(cmd);
@@ -103,12 +109,10 @@
         /// <param name="e">Event arguments.</param>
         private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
         {
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
                 try
                 {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
                     tables[1] = view.Grid2.DataSource;
                     ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
                     presenter.CommandHistory.Add(cmd);
@@ -144,7 +148,7 @@
         {
             try
             {
-                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, args.ControlSpace))
+                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, false, args.ControlSpace))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)

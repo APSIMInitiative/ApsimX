@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -13,20 +13,20 @@ namespace Models.Functions.DemandFunctions
     public class FillingRateFunction : Model, IFunction
     {
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FillingDuration = null;
 
         /// <summary>The filling rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("grains/m2")]
         IFunction NumberFunction = null;
 
-        /// <summary>The arbitrator</summary>
-        [Link]
+        /// <summary>Thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ThermalTime = null;
 
         /// <summary>The maximum weight or maximum amount of N incremented for individual grains in a given phase</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/kernal")]
         IFunction PotentialSizeIncrement = null;
 

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SoilState.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Soils.Arbitrator
+﻿namespace Models.Soils.Arbitrator
 {
     using System;
     using System.Collections.Generic;
@@ -16,16 +11,16 @@ namespace Models.Soils.Arbitrator
     [Serializable]
     public class SoilState
     {
-        private List<Zone> allZones;
+        private IEnumerable<Zone> allZones;
 
         /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
-        public SoilState(List<Zone> allZones)
+        public SoilState(IEnumerable<Zone> allZones)
         {
             this.allZones = allZones;
             Zones = new List<ZoneWaterAndN>();
             foreach (Zone Z in allZones)
             {
-                Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
+                Soil soil = Z.FindChild<Soil>();
                 if (soil != null)
                     Zones.Add(new ZoneWaterAndN(Z, soil));
             }
@@ -67,8 +62,6 @@ namespace Models.Soils.Arbitrator
                             NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
                             NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
                             NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
-                            NewZ.PlantAvailableNO3N = MathUtilities.Subtract(NewZ.PlantAvailableNO3N, Z.PlantAvailableNO3N);
-                            NewZ.PlantAvailableNH4N = MathUtilities.Subtract(NewZ.PlantAvailableNH4N, Z.PlantAvailableNH4N);
 
                             for (int i = 0; i < NewZ.Water.Length; i++)
                             {
@@ -78,10 +71,6 @@ namespace Models.Soils.Arbitrator
                                     NewZ.NO3N[i] = 0;
                                 if (NewZ.NH4N[i] < 0)
                                     NewZ.NH4N[i] = 0;
-                                if (NewZ.PlantAvailableNO3N[i] < 0)
-                                    NewZ.PlantAvailableNO3N[i] = 0;
-                                if (NewZ.PlantAvailableNH4N[i] < 0)
-                                    NewZ.PlantAvailableNH4N[i] = 0;
                             }
                         }
             return NewState;

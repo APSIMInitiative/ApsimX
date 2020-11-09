@@ -4,72 +4,6 @@
         <name>Microsoft.Rest.ClientRuntime.Azure</name>
     </assembly>
     <members>
-        <member name="T:Microsoft.Rest.Azure.AzureAsyncOperation">
-            <summary>
-            The response body contains the status of the specified
-            asynchronous operation, indicating whether it has succeeded, is in
-            progress, or has failed. Note that this status is distinct from the
-            HTTP status code returned for the Get Operation Status operation
-            itself.  If the asynchronous operation succeeded, the response body
-            includes the HTTP status code for the successful request.  If the
-            asynchronous operation failed, the response body includes the HTTP
-            status code for the failed request, and also includes error
-            information regarding the failure.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.DefaultDelay">
-            <summary>
-            Default delay in seconds for long running operations.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.SuccessStatus">
-            <summary>
-            Successful status for long running operations.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.InProgressStatus">
-            <summary>
-            In progress status for long running operations.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.FailedStatus">
-            <summary>
-            Failed status for long running operations.
-            </summary>
-        </member>
-        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.CanceledStatus">
-            <summary>
-            Canceled status for long running operations.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.FailedStatuses">
-            <summary>
-            Failed terminal statuses for long running operations.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.TerminalStatuses">
-            <summary>
-            Terminal statuses for long running operations.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.Status">
-            <summary>
-            The status of the asynchronous request.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.Error">
-            <summary>
-            If the asynchronous operation failed, the response body includes
-            the HTTP status code for the failed request, and also includes
-            error information regarding the failure.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.RetryAfter">
-            <summary>
-            Gets or sets the delay in seconds that should be used when checking 
-            for the status of the operation.  
-            </summary>
-        </member>
         <member name="M:Microsoft.Rest.Azure.AzureClientExtensions.GetLongRunningOperationResultAsync``1(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{``0},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Gets operation result for long running operations.
@@ -270,56 +204,6 @@
             <param name="initialRequestMethod"></param>
             <returns></returns>
         </member>
-        <member name="T:Microsoft.Rest.Azure.IAzureOperationResponse">
-            <summary>
-            A standard service response including request ID.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.IAzureOperationResponse.RequestId">
-            <summary>
-            Gets or sets the value that uniquely identifies a request 
-            made against the service.
-            </summary>
-        </member>
-        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse">
-            <summary>
-            A standard service response including request ID.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse.RequestId">
-            <summary>
-            Gets or sets the value that uniquely identifies a request 
-            made against the service.
-            </summary>
-        </member>
-        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse`1">
-            <summary>
-            A standard service response including request ID.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse`1.RequestId">
-            <summary>
-            Gets or sets the value that uniquely identifies a request 
-            made against the service.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureOperationHeaderResponse`1.RequestId">
-            <summary>
-            Gets or sets the value that uniquely identifies a request 
-            made against the service.
-            </summary>
-        </member>
-        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse`2">
-            <summary>
-            A standard service response including request ID.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse`2.RequestId">
-            <summary>
-            Gets or sets the value that uniquely identifies a request 
-            made against the service.
-            </summary>
-        </member>
         <member name="T:Microsoft.Rest.Azure.ClientRequestTrackingHandler">
             <summary>
             Enables adding a correlation id to messages so that messages that are part of a long-running
@@ -352,36 +236,6 @@
             <param name="response">The http response message</param>
             <param name="cancellationToken">A token that allows canceling the http operation</param>
             <returns>The incoming http response message with the tracking ID header added</returns>
-        </member>
-        <member name="T:Microsoft.Rest.Azure.CloudError">
-            <summary>
-            Provides additional information about an http error response
-            </summary>
-        </member>
-        <member name="M:Microsoft.Rest.Azure.CloudError.#ctor">
-            <summary>
-            Initializes a new instance of CloudError.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.CloudError.Code">
-            <summary>
-            The error code parsed from the body of the http error response
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.CloudError.Message">
-            <summary>
-            The error message parsed from the body of the http error response
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.CloudError.Target">
-            <summary>
-            Gets or sets the target of the error.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Rest.Azure.CloudError.Details">
-            <summary>
-            Gets or sets details for the error.
-            </summary>
         </member>
         <member name="T:Microsoft.Rest.Azure.CloudErrorJsonConverter">
             <summary>
@@ -456,6 +310,171 @@
             </summary>
             <param name="message">A description of the error.</param>
             <param name="innerException">The exception which caused the current exception.</param>
+        </member>
+        <member name="M:Microsoft.Rest.Azure.CloudException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the CloudException class.
+            </summary>
+            <param name="info">Serialization info.</param>
+            <param name="context">Streaming context.</param>
+        </member>
+        <member name="M:Microsoft.Rest.Azure.CloudException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Sets SerializationInfo with information about the exception.
+            </summary>
+            <param name="info">Serialization infor.</param>
+            <param name="context">Streaming context</param>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.AzureAsyncOperation">
+            <summary>
+            The response body contains the status of the specified
+            asynchronous operation, indicating whether it has succeeded, is in
+            progress, or has failed. Note that this status is distinct from the
+            HTTP status code returned for the Get Operation Status operation
+            itself.  If the asynchronous operation succeeded, the response body
+            includes the HTTP status code for the successful request.  If the
+            asynchronous operation failed, the response body includes the HTTP
+            status code for the failed request, and also includes error
+            information regarding the failure.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.DefaultDelay">
+            <summary>
+            Default delay in seconds for long running operations.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.SuccessStatus">
+            <summary>
+            Successful status for long running operations.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.InProgressStatus">
+            <summary>
+            In progress status for long running operations.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.FailedStatus">
+            <summary>
+            Failed status for long running operations.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Rest.Azure.AzureAsyncOperation.CanceledStatus">
+            <summary>
+            Canceled status for long running operations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.FailedStatuses">
+            <summary>
+            Failed terminal statuses for long running operations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.TerminalStatuses">
+            <summary>
+            Terminal statuses for long running operations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.Status">
+            <summary>
+            The status of the asynchronous request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.Error">
+            <summary>
+            If the asynchronous operation failed, the response body includes
+            the HTTP status code for the failed request, and also includes
+            error information regarding the failure.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureAsyncOperation.RetryAfter">
+            <summary>
+            Gets or sets the delay in seconds that should be used when checking 
+            for the status of the operation.  
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.IAzureOperationResponse">
+            <summary>
+            A standard service response including request ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.IAzureOperationResponse.RequestId">
+            <summary>
+            Gets or sets the value that uniquely identifies a request 
+            made against the service.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse">
+            <summary>
+            A standard service response including request ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse.RequestId">
+            <summary>
+            Gets or sets the value that uniquely identifies a request 
+            made against the service.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse`1">
+            <summary>
+            A standard service response including request ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse`1.RequestId">
+            <summary>
+            Gets or sets the value that uniquely identifies a request 
+            made against the service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureOperationHeaderResponse`1.RequestId">
+            <summary>
+            Gets or sets the value that uniquely identifies a request 
+            made against the service.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.AzureOperationResponse`2">
+            <summary>
+            A standard service response including request ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.AzureOperationResponse`2.RequestId">
+            <summary>
+            Gets or sets the value that uniquely identifies a request 
+            made against the service.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.Azure.CloudError">
+            <summary>
+            Provides additional information about an http error response
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.Azure.CloudError.#ctor">
+            <summary>
+            Initializes a new instance of CloudError.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.CloudError.Code">
+            <summary>
+            The error code parsed from the body of the http error response
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.CloudError.Message">
+            <summary>
+            The error message parsed from the body of the http error response
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.CloudError.Target">
+            <summary>
+            Gets or sets the target of the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.CloudError.Details">
+            <summary>
+            Gets or sets details for the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.Azure.CloudError.AdditionalInfo">
+            <summary>
+            Gets or sets additional error info.
+            </summary>
         </member>
         <member name="T:Microsoft.Rest.Azure.IAzureClient">
             <summary>
@@ -809,6 +828,11 @@
             We want this to be int value and not int? because this value will always have a default non-zero/non-null value
             </summary>
         </member>
+        <member name="P:Microsoft.Rest.Azure.PollingState`2.IsRunningUnderPlaybackMode">
+            <summary>
+            Test hook to determine if running under Playback mode (test mode)
+            </summary>
+        </member>
         <member name="P:Microsoft.Rest.Azure.PollingState`2.CloudException">
             <summary>
             Gets CloudException from current instance.  
@@ -856,6 +880,392 @@
             <param name="serializer">JsonSerializer</param>
             <returns></returns>
         </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.CommonModels.AdditionalErrorInfo">
+            <summary>
+            This class represents additional info Resource Providers pass when an error occurs
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.CommonModels.AdditionalErrorInfo.Type">
+            <summary>
+            Type of error occured (e.g. PolicyViolation, SecurityViolation)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.CommonModels.AdditionalErrorInfo.Info">
+            <summary>
+            Additional information of the type of error that occured
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2">
+            <summary>
+            Base class for driving Azure LRO operation
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.#ctor(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{`0,`1},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Constructor for creating Azure LRO
+            LRO starts after the first response is returned to Azure ClientRuntime.
+            This will validate the initial response for missing data.
+            </summary>
+            <param name="client"></param>
+            <param name="initialResponse"></param>
+            <param name="customHeaders"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.BeginLROAsync">
+            <summary>
+            Begin polling
+            This will drive the entire LRO process of polling and checking for error during LRO
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.GetLROResults">
+            <summary>
+            Return results from LRO operation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.CheckFinalErrors">
+            <summary>
+            Check for errors at the end of LRO operation
+            Last chance to check any final errors
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.ValidateInitialResponse">
+            <summary>
+            Does basic validation on initial response from RP, prior to start LRO process
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.InitializeAsyncHeadersToUse">
+            <summary>
+            Initialize pollingUrl to use depending upon the headers passed back from RP
+            This function will be called after each response received during LRO
+            Each REST verb will override for specific requirements
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.StartPollingAsync">
+            <summary>
+            Performs polling
+            Workflow:
+            Depends on an internal structure CurrentPollingState for driving the LRO operation
+            1) Depending upon the initial response status (starts/exits polling)
+            2) Reson for making Poll function part of CurrentPollingState because there can be scenario we might have to enabled to serialize polling state (user can save and drive polling operation)
+            3) Update polling state after each polling iteration
+            4) Check for errors on each reponse we recieve during LRO
+            5) Initialize polling URL to use based on the headers received in each polling response
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.UpdatePollingState">
+            <summary>
+            Updates polling state strcture
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.IsCheckingProvisioningStateApplicable">
+            <summary>
+            Each verb will override to define if checking provisioning state is applicable
+            </summary>
+            <returns>true: if it's applicable, false: if not applicable</returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.PostPollingAsync">
+            <summary>
+            Each verb will override depending upon the requirements
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.CheckForErrors">
+            <summary>
+            Check for error codition during LRO
+            Each verb can participate in deciding if certain response results in error
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.GetValidAbsoluteUri(System.String,System.Boolean)">
+            <summary>
+            Validate passed URL
+            </summary>
+            <param name="url">Url to be validated</param>
+            <param name="throwForInvalidUri">True: throws expception, False: does not throw exception</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.GetAzureAsyncResponseState">
+            <summary>
+            Get Valid status
+            There are cases where there is an error sent from the service and in that case, the status should be one of the valid FailedStatuses
+            But there are cases where there is a customized error sent by service and they do not fall under Failed/Success statuses, in that case we fall back on response status
+            
+            e.g. The response status is OK, but the error body has the status as "TestFailed" (which do not fall under valid failed status, so we fall back to OK)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.IsAzureAsyncOperationResponseStateValid">
+            <summary>
+            This function determines if you are running your polling under Azure-Async header or if the response status falls under terminal/failed status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.AzureLRO`2.IsUriEqual(System.String,System.String)">
+            <summary>
+            Check URI for equality including differences in trailing slash and compare case insensitive 
+            </summary>
+            <param name="leftUrl">Url</param>
+            <param name="rightUrl">Url to compare against</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.IRestLRO">
+            <summary>
+            Base interface for LRO operations
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.LRO.IRestLRO.RESTOperationVerb">
+            <summary>
+            REST Verb
+            </summary>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.IAzureLRO`2">
+            <summary>
+            Base interface for Azure LRO operation classes
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.IAzureLRO`2.BeginLROAsync">
+            <summary>
+            Function that will begin the LRO operation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.IAzureLRO`2.GetLROResults">
+            <summary>
+            Returns LRO operation result
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Microsoft.Rest.ClientRuntime.Azure.LRO.LROPollState`2.IgnoreOperationErrorStatusCallBack">
+            <summary>
+            Ability for operatoins to participate in Error Status checking during polling
+            This provides ability for certain operations to continue with legacy behavior
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.LROPollState`2.GetRawAsync(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Gets a resource from the specified URL.
+            </summary>
+            <param name="customHeaders">Headers that will be added to request</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.LROPollState`2.ParseContent(System.String)">
+            <summary>
+            Currently the only way to parse non application/json content type is to try to parse and convert non application/json
+            to application/json
+            </summary>
+            <param name="responseContent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.LROPollState`2.CheckErrorStatusAndThrowAsync(System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Check for status.
+            Throw if error status.
+            </summary>
+            <param name="request">HttpRequsest</param>
+            <param name="response">HttpResponse</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2">
+            <summary>
+            DELETE Azure LRO Operation
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.RESTOperationVerb">
+            <summary>
+            REST Operation Verb
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.#ctor(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{`0,`1},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Initializes DELETE LRO Operation
+            </summary>
+            <param name="client"></param>
+            <param name="response"></param>
+            <param name="customHeaders"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.InitializeAsyncHeadersToUse">
+            <summary>
+            For DELETE
+            In absence of Async-operation, fall back on location header
+            
+            If both (Async-Operation, LocationHeader) provided, we will use Async-Operation for driving LRO
+            Will perform final GET on the provided LocationHeader to get calculation results.
+            
+            If first response status code is 201 and location header is not provided, we throw
+            
+            if first response status code is 202, we prefer Async-operation, else we will use Location header
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.IsCheckingProvisioningStateApplicable">
+            <summary>
+            Is checking provisioning state applicable for DELTE during LRO operation
+            If response code is 200/204 (regardless of header and first response code)
+            
+            This does not mean that for 200/204 the response WILL have provisioning state
+            This function only says to check provisioning state that is all.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.PostPollingAsync">
+            <summary>
+            If Azure Async-Operation URL is being used to poll and if the final response or any response returned Location header
+            We assume a final GET has to be done on provided location header
+            
+            This funciton allows to make any tweaks to the final GET if applicable
+            In this case, using Location header to do the final GET
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.DeleteLro`2.IgnoreResponseStatus(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Flag if NotFound status should be ignored during DELETE polling
+            Enable legacy behavior for certain RPs that are sending resource URI as part of location
+            </summary>
+            <param name="response"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2">
+            <summary>
+            PATCH Azure LRO operation
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2.RESTOperationVerb">
+            <summary>
+            REST Operation Verb
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2.#ctor(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{`0,`1},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Initializes PATCH LRO Operation
+            </summary>
+            <param name="client"></param>
+            <param name="response"></param>
+            <param name="customHeaders"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2.InitializeAsyncHeadersToUse">
+            <summary>
+            Initialize which URL to use for polling
+            
+            First responose status code 201
+            Either we use Async-operatino header for polling
+            Or fall back on original URL to poll
+            
+            First response status code 202
+            We prefer Async-operation
+            or we will fall back on location header
+            
+            At the end of the polling we will use the original URL to do the final GET
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2.IsCheckingProvisioningStateApplicable">
+            <summary>
+            Function to check if checking provisioning state is applicable during polling
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PATCHLro`2.PostPollingAsync">
+            <summary>
+            Function that allows you to make tweaks before finishing LRO operation and return back to the client
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2">
+            <summary>
+            POST Azure LRO operation
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2.RESTOperationVerb">
+            <summary>
+            REST Operation Verb
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2.#ctor(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{`0,`1},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Initializes POST LRO Operation
+            </summary>
+            <param name="client"></param>
+            <param name="response"></param>
+            <param name="customHeaders"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2.InitializeAsyncHeadersToUse">
+            <summary>
+            First response status is 201
+            Location header is required and we will throw if not provided
+            
+            First response status is 202
+            We prefer Async-Operation, if not provided we will fall back on Location header
+            
+            If we get both headers, we will use Location header to do the final GET at the end of the LRO operation
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2.IsCheckingProvisioningStateApplicable">
+            <summary>
+            Check if Provisioning state needs to be checked
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.POSTLro`2.PostPollingAsync">
+            <summary>
+            Function that allows you to make tweaks before finishing LRO operation and return back to the client
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2">
+            <summary>
+            PUT Azure Lro operation
+            </summary>
+            <typeparam name="TResourceBody"></typeparam>
+            <typeparam name="TRequestHeaders"></typeparam>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2.RESTOperationVerb">
+            <summary>
+            REST Operation Verb
+            </summary>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2.#ctor(Microsoft.Rest.Azure.IAzureClient,Microsoft.Rest.Azure.AzureOperationResponse{`0,`1},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Initializes PUT LRO Operation
+            </summary>
+            <param name="client"></param>
+            <param name="response"></param>
+            <param name="customHeaders"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2.IsCheckingProvisioningStateApplicable">
+            <summary>
+            Check if Provisioning state needs to be checked
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2.PostPollingAsync">
+            <summary>
+            Function that allows you to make tweaks before finishing LRO operation and return back to the client
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Rest.ClientRuntime.Azure.LRO.PutLRO`2.InitializeAsyncHeadersToUse">
+            <summary>
+            Initialize with the right URI to use for polling LRO opertion
+            Depending upon the return status code and the header provided, we initialize PollingUrlToUse with the right URI
+            Also verify if the right headers are provided, if not throw validation exception
+            </summary>
+        </member>
         <member name="T:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -891,6 +1301,11 @@
         <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.AuthenticationValidationFailed">
             <summary>
               Looks up a localized string similar to Authentication with Azure Active Directory Failed using clientId: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.BodyDeserializationError">
+            <summary>
+              Looks up a localized string similar to Unable to deserilize body &apos;{0}&apos;.
             </summary>
         </member>
         <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.CertificateCloudCredentials_InitializeServiceClient_NoWebRequestHandler">
@@ -958,6 +1373,16 @@
               Looks up a localized string similar to The default RetryManager has not been set. Set it by invoking the RetryManager.SetDefault static method, or if you are using declarative configuration, you can invoke the RetryPolicyFactory.CreateDefault() method to automatically create the retry manager from the configuration file..
             </summary>
         </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.HeaderAndStatusCode">
+            <summary>
+              Looks up a localized string similar to In long running operation &apos;{0}&apos; header requires initial response status code to be &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.InValidUri">
+            <summary>
+              Looks up a localized string similar to Provided URI &apos;{0}&apos; is not a valid URI..
+            </summary>
+        </member>
         <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.LongRunningOperationFailed">
             <summary>
               Looks up a localized string similar to Long running operation failed with status &apos;{0}&apos;..
@@ -965,7 +1390,7 @@
         </member>
         <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.LROOperationFailedAdditionalInfo">
             <summary>
-              Looks up a localized string similar to Long running operation failed with status &apos;{0}&apos;. Additional Info &apos;{1}&apos;.
+              Looks up a localized string similar to Long running operation failed with status &apos;{0}&apos;. Additional Info:&apos;{1}&apos;.
             </summary>
         </member>
         <member name="P:Microsoft.Rest.ClientRuntime.Azure.Properties.Resources.NoBody">

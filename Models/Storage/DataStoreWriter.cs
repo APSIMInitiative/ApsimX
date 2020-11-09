@@ -1,10 +1,12 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
 
@@ -23,7 +25,7 @@
         private IRunnable sleepJob = new JobRunnerSleepJob();
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
-        private IJobRunner commandRunner;
+        private JobRunner commandRunner;
 
         /// <summary>Are we idle i.e. not writing to database?</summary>
         private bool idle = true;
@@ -35,7 +37,7 @@
         private Dictionary<string, SimulationDetails> simulationIDs = new Dictionary<string, SimulationDetails>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
-        private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, Checkpoint> checkpointIDs = new Dictionary<string, Checkpoint>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>A list of simulation names that have been cleaned up for each table.</summary>
         private Dictionary<string, List<string>> simulationNamesThatHaveBeenCleanedUp = new Dictionary<string, List<string>>();
@@ -45,7 +47,10 @@
 
         /// <summary>A list of names of tables that don't have checkpointid or simulatoinid columns.</summary>
         private static string[] tablesNotNeedingIndexColumns = new string[] { "_Simulations", "_Checkpoints", "_Units" };
-        
+
+        /// <summary>Are we stopping writing to the db?</summary>
+        private bool stopping;
+
         /// <summary>Default constructor.</summary>
         public DataStoreWriter()
         {
@@ -89,6 +94,16 @@
         }
 
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        public List<string> TablesModified { get; private set; } = new List<string>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumJobs { get { return 0; } }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>
@@ -111,6 +126,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -120,6 +137,8 @@
         /// <param name="table">The data to write.</param>
         public void WriteTable(DataTable table)
         {
+            if (table == null)
+                return;
             // NOTE: This can be called from many threads. Don't actually
             // write to the database on these threads. We have a single worker
             // thread to do that.
@@ -141,7 +160,21 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
+        }
+
+        /// <summary>
+        /// Deletes a table from the database.
+        /// </summary>
+        /// <param name="tableName">Name of the table to be deleted.</param>
+        public void DeleteTable(string tableName)
+        {
+            Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+            lock (lockObject)
+                if (!TablesModified.Contains(tableName))
+                    TablesModified.Add(tableName);
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -160,57 +193,68 @@
         {
             if (commandRunner != null)
             {
-                WaitForIdle();
+                try
+                {
+                    WaitForIdle();
 
-                WriteSimulationIDs();
-                WriteCheckpointIDs();
-                WriteAllUnits();
+                    WriteSimulationIDs();
+                    WriteCheckpointIDs();
+                    WriteAllUnits();
+                }
+                catch
+                {
+                    // Swallow exceptions
+                }
+                finally
+                {
+                    WaitForIdle();
 
-                WaitForIdle();
-
-                commandRunner.Stop();
-                commandRunner = null;
-                commands.Clear();
-                simulationIDs.Clear();
-                checkpointIDs.Clear();
-                simulationNamesThatHaveBeenCleanedUp.Clear();
-                units.Clear();
+                    stopping = true;
+                    commandRunner.Stop();
+                    commandRunner = null;
+                    commands.Clear();
+                    simulationIDs.Clear();
+                    checkpointIDs.Clear();
+                    simulationNamesThatHaveBeenCleanedUp.Clear();
+                    units.Clear();
+                }
             }
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>
-        public void Completed() { }
+        public void AllCompleted() { }
 
-        /// <summary>Return the next command to run.</summary>
-        public IRunnable GetNextJobToRun()
+        /// <summary>Return an enumeration of jobs that need running.</summary>
+        public IEnumerable<IRunnable> GetJobs()
         {
             // NOTE: This is called from the job runner worker thread.
 
-            // Try and get a command to execute.
-            IRunnable command = null;
-            lock (lockObject)
+            while (!stopping)
             {
-                if (commands.Count > 0)
+                IRunnable command = null;
+                lock (lockObject)
                 {
-                    command = commands[0];
-                    commands.RemoveAt(0);
+                    if (commands.Count > 0)
+                    {
+                        command = commands[0];
+                        commands.RemoveAt(0);
+                    }
+                }
+
+                // If nothing was found to run then return a sleep job 
+                // so that the job runner doesn't exit.
+                if (command == null)
+                {
+                    idle = true;
+                    yield return sleepJob;
+                }
+                else
+                {
+                    idle = false;
+                    somethingHasBeenWriten = true;
+                    yield return command;
                 }
             }
-
-            // If nothing was found to run then return a sleep job 
-            // so that the job runner doesn't exit.
-            if (command == null)
-            {
-                command = sleepJob;
-                idle = true;
-            }
-            else
-            {
-                idle = false;
-                somethingHasBeenWriten = true;
-            }
-
-            return command;
         }
 
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
@@ -258,6 +302,17 @@
         {
             Start();
             commands.Add(new RevertCheckpointCommand(this, GetCheckpointID(name)));
+            Stop();
+        }
+
+        /// <summary>Set a checkpoint show on graphs flag.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="showGraphs">Show graphs?</param>
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
+        {
+            Start();
+            if (checkpointIDs.ContainsKey(name))
+                checkpointIDs[name].ShowOnGraphs = showGraphs;
             Stop();
         }
 
@@ -334,16 +389,17 @@
 
             lock (lockObject)
             {
-                if (!checkpointIDs.TryGetValue(checkpointName, out int id))
+                if (!checkpointIDs.TryGetValue(checkpointName, out Checkpoint checkpoint))
                 {
+                    checkpoint = new Checkpoint();
                     // Not found so create a new ID, add it to our collection of ids
                     if (checkpointIDs.Count > 0)
-                        id = checkpointIDs.Values.Max() + 1;
+                        checkpoint.ID = checkpointIDs.Select(c => c.Value.ID).Max() + 1;
                     else
-                        id = 1;
-                    checkpointIDs.Add(checkpointName, id);
+                        checkpoint.ID = 1;
+                    checkpointIDs.Add(checkpointName, checkpoint); 
                 }
-                return id;
+                return checkpoint.ID;
             }
         }
 
@@ -362,8 +418,10 @@
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                 {
-                    int id = Convert.ToInt32(row["ID"]);
-                    string folderName = row["FolderName"].ToString();
+                    int id = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture);
+                    string folderName = null;
+                    if (data.Columns.Contains("FolderName"))
+                        folderName = row["FolderName"].ToString();
                     simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
                 }
@@ -374,7 +432,13 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
+                    {
+                        ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null && 
+                                       !Convert.IsDBNull(row["OnGraphs"]) &&
+                                       Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
+                    });
             }
         }
 
@@ -461,8 +525,10 @@
                 {
                     if (commandRunner == null)
                     {
-                        commandRunner = new JobRunnerSync();
-                        commandRunner.Run(this);
+                        stopping = false;
+                        commandRunner = new JobRunner(numProcessors:1);
+                        commandRunner.Add(this);
+                        commandRunner.Run();
                         ReadExistingDatabase(Connection);
                     }
                 }
@@ -592,17 +658,23 @@
                 checkpointsTable.Columns.Add("ID", typeof(int));
                 checkpointsTable.Columns.Add("Name", typeof(string));
                 checkpointsTable.Columns.Add("Version", typeof(string));
-                checkpointsTable.Columns.Add("Date", typeof(DateTime));
+                checkpointsTable.Columns.Add("OnGraphs", typeof(int));
 
                 foreach (var checkpoint in checkpointIDs)
                 {
                     var row = checkpointsTable.NewRow();
-                    row[0] = checkpoint.Value;
+                    row[0] = checkpoint.Value.ID;
                     row[1] = checkpoint.Key;
+                    if (checkpoint.Value.ShowOnGraphs)
+                        row[3] = 1;
                     checkpointsTable.Rows.Add(row);
                 }
                 WriteTable(checkpointsTable);
             }
+        }
+
+        void IJobManager.JobHasCompleted(JobCompleteArguments args)
+        {
         }
 
         /// <summary>

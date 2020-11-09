@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -17,24 +18,24 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class LayerStructure : Model
     {
-        /// <summary>The depth boundaries of each layer</summary>
-        /// <value>The thickness.</value>
-        [XmlIgnore]
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
         [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer depth positions")]
         public string[] Depth
         {
             get
             {
-                return Soil.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
+
+
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
         [Units("mm")]
-        [Caption("Thickness")]
-        [Description("Soil layer thickness for each layer")]
         public double[] Thickness { get; set; }       
     }
 }

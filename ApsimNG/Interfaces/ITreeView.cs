@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using UserInterface.Views;
+﻿using UserInterface.Views;
 namespace UserInterface.Interfaces
 {
     
@@ -31,11 +26,17 @@ namespace UserInterface.Interfaces
         /// <summary>Invoked then a node is renamed.</summary>
         event EventHandler<NodeRenameArgs> Renamed;
 
+        /// <summary>Invoked then a node is double clicked.</summary>
+        event EventHandler<EventArgs> DoubleClicked;
+
         /// <summary>Gets or sets the currently selected node.</summary>
         string SelectedNode { get; set; }
 
         /// <summary>Gets or sets the width of the tree view.</summary>
         Int32 TreeWidth { get; set; }
+
+        /// <summary>Gets or sets whether tree nodes can be changed.</summary>
+        bool ReadOnly { get; set; }
 
         /// <summary>Gets or sets the popup menu of the tree view.</summary>
         MenuView ContextMenu { get; set; }
@@ -69,6 +70,30 @@ namespace UserInterface.Interfaces
         /// <param name="nodeDescription">The node description.</param>
         /// <param name="position">The position.</param>
         void AddChild(string parentNodePath, TreeViewNode nodeDescription, int position = -1);
+
+        /// <summary>
+        /// Returns tree nodes which are expanded.
+        /// </summary>
+        /// <returns></returns>
+        Utility.TreeNode[] GetExpandedNodes();
+
+        /// <summary>
+        /// Expands nodes.
+        /// </summary>
+        /// <param name="expandedNodes"></param>
+        void ExpandNodes(Utility.TreeNode[] expandedNodes);
+
+        /// <summary>
+        /// Expands all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        void ExpandChildren(string path);
+
+        /// <summary>
+        /// Collapses all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        void CollapseChildren(string path);
     }
 
     /// <summary>A structure for holding info about an item in the treeview.</summary>

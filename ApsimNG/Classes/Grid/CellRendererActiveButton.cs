@@ -13,7 +13,6 @@ namespace UserInterface.Classes
         /// Gets or sets the pixbuf object
         /// </summary>
         public Gdk.Pixbuf Pixbuf { get; set; }
-
         /// <summary>
         /// Render the cell in the window
         /// </summary>
@@ -25,8 +24,11 @@ namespace UserInterface.Classes
         /// <param name="flags">Render flags</param>
         protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
         {
+            lastRect = new Gdk.Rectangle(cell_area.X, cell_area.Y, cell_area.Width, cell_area.Height);
             Gdk.GC gc = new Gdk.GC(window);
             window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
         }
+
+        public Gdk.Rectangle lastRect;
     }
 }

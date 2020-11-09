@@ -1,46 +1,49 @@
-using System;
-
 namespace StdUnits
 {
     /// <summary>
     /// String utility functions
     /// </summary>
-    static public class StdStrng
+    public static class StdStrng
     {
-        /// The following set of routines is taken from the old CPI 
-        /// StdStrng.pas unit.
-        /// Token-handling routines for use in parsing.  A token is either:
-        ///   * a string made up of alphanumeric characters and/or the underscore
-        ///   * any string enclosed in double quotes (the quotes are stripped) 
-        ///   * a punctuation mark (other than double quotes) 
+        // The following set of routines is taken from the old CPI 
+        // StdStrng.pas unit.
+        // Token-handling routines for use in parsing.  A token is either:
+        //   * a string made up of alphanumeric characters and/or the underscore
+        //   * any string enclosed in double quotes (the quotes are stripped) 
+        //   * a punctuation mark (other than double quotes) 
         // Token handling is case-insensitive.
 
+        /// <summary>
+        /// Whitespace characters
+        /// </summary>
         private static char[] whitespace = { '\t', '\r', '\n', ' ' };
+
+        /// <summary>
+        /// Punctuation marks
+        /// </summary>
         private static char[] punctuation = { ',', ';', ':', '(', ')', '[', ']', '{', '}', '<', '>', '=', '+', '-', '*', '/', '\\', '&', '^', '~', '%' };
 
         /// <summary>
         /// TextToken strips the first token from a string.
-        ///</summary>
-        ///<param name="inSt">
-        /// String from which a token is to be taken.  It is returned as the
+        /// </summary>
+        /// <param name="inSt">String from which a token is to be taken.  It is returned as the
         /// remaining part of the input value (including any leading whitespace).
-        ///</param>
-        ///<param name="token">
-        /// Returned as the token which has been taken from InSt.  If InSt is
+        /// </param>
+        /// <param name="token">Returned as the token which has been taken from InSt.  If InSt is
         /// null or entirely whitespace, then Token will be the null string.
-        ///</param>
-        ///<param name="bRetainCase">
-        /// If true, case is unchanged, otherwise the "returned" token is converted
-        /// to uppercase.
-        ///</param>
-        public static void TextToken(ref string inSt, out string token, bool bRetainCase = false)
+        /// </param>
+        /// <param name="retainCase">If true, case is unchanged, otherwise the "returned" token is converted
+        /// to uppercase.</param>
+        public static void TextToken(ref string inSt, out string token, bool retainCase = false)
         {
             int breakPos = 0;
-            token = "";
-            inSt = inSt.TrimStart(whitespace); //  Start by clearing any whitespace at the beginning of inSt
-            if (inSt.Length > 0)               // A Null string will return a null token   
+            token = string.Empty;
+            inSt = inSt.TrimStart(whitespace); // Start by clearing any whitespace at the beginning of inSt
+            // A Null string will return a null token   
+            if (inSt.Length > 0)               
             {
-                if (inSt[0] == '"')            // Quoted token
+                // Quoted token
+                if (inSt[0] == '"')            
                 {
                     inSt = inSt.Remove(0, 1);
                     int idx = inSt.IndexOf('"');
@@ -57,8 +60,9 @@ namespace StdUnits
                     breakPos = 2;
                 else if (inSt.IndexOfAny(punctuation, 0, 1) == 0)      // Other punctuation marks are taken as tokens
                     breakPos = 1;
-                else                                                   // With anything else, go looking for whitespace as a break point
+                else                                                   
                 {
+                    // With anything else, go looking for whitespace as a break point
                     int idxWhite = inSt.IndexOfAny(whitespace);
                     int idxPunc = inSt.IndexOfAny(punctuation);
                     if (idxWhite > 0)
@@ -78,7 +82,7 @@ namespace StdUnits
                 }
                 token = inSt.Substring(0, breakPos);                    // Split the string
                 inSt = inSt.Remove(0, breakPos);
-                if (!bRetainCase)
+                if (!retainCase)
                     token = token.ToUpper();                            // Enforce case-insensitivity
             }
         }
@@ -129,7 +133,7 @@ namespace StdUnits
         public static bool TokenInt(ref string inSt, ref int n)
         {
             string parseSt = inSt;
-            string token = "";
+            string token = string.Empty;
             TextToken(ref parseSt, out token);  // Extract text from the front of ParseSt
             if (token == "-")
             {
@@ -158,10 +162,10 @@ namespace StdUnits
         /// <returns>
         /// Returns TRUE i.f.f. a value was found.
         /// </returns>
-        public static bool TokenFloat(ref string inSt, ref Single x)
+        public static bool TokenFloat(ref string inSt, ref float x)
         {
             string parseSt = inSt;
-            string token = "";
+            string token = string.Empty;
             TextToken(ref parseSt, out token);  // Extract text from the front of ParseSt
             if (token == "-")
             {
@@ -169,23 +173,23 @@ namespace StdUnits
                 token = "-" + token;
             }
 
-            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  // Number is in exponential format
+            // The number is in exponential format
+            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  
             {
                 MatchToken(ref parseSt, "+");
                 int exponent = 0;
                 if (TokenInt(ref parseSt, ref exponent))
                     token = token + exponent.ToString();  // Add the exponent to token
                 else
-                    token = "";          // This forces a FALSE return
+                    token = string.Empty;          // This forces a FALSE return
             }
 
-            bool result = Single.TryParse(token, out x); // Parse the value
+            bool result = float.TryParse(token, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;
         }
-
-
+        
         /// <summary>
         /// Take a double value from the front of a string.
         ///  Rules are analogous to Token_Int. Exponential notation is dealt with.
@@ -205,7 +209,7 @@ namespace StdUnits
         public static bool TokenDouble(ref string inSt, ref double x)
         {
             string parseSt = inSt;
-            string token = "";
+            string token = string.Empty;
             TextToken(ref parseSt, out token);  // Extract text from the front of ParseSt
             if (token == "-")
             {
@@ -213,29 +217,29 @@ namespace StdUnits
                 token = "-" + token;
             }
 
-            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  // Number is in exponential format
+            // If the number is in exponential format
+            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  
             {
                 MatchToken(ref parseSt, "+");
                 int exponent = 0;
                 if (TokenInt(ref parseSt, ref exponent))
                     token = token + exponent.ToString();  // Add the exponent to token
                 else
-                    token = "";          // This forces a FALSE return
+                    token = string.Empty;          // This forces a FALSE return
             }
 
-            bool result = Double.TryParse(token, out x); // Parse the value
+            bool result = double.TryParse(token, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;
         }
-
 
         /// <summary>
         /// Token_Date follows the same rules for its parameters as Token_Int.  It    
         /// expects day to precede months, and months to precede years, but it can    
         /// cope with D-M-Y and D-M-0 kinds of date.  Token_Date is implemented as a  
         /// state-based parser:                                                       
-        ///                                                                            
+        /// -----                                                                           
         /// State                     Next token  Token means  Go to state            
         /// -----                     ----------  -----------  -----------            
         /// -1   Error                                                              
@@ -250,68 +254,69 @@ namespace StdUnits
         ///                        Number       Year            4                  
         ///                          else       Year=0          4                  
         /// </summary>
-        /// <param name="InSt"></param>
-        /// <param name="D"></param>
-        /// <returns></returns>
-        public static bool TokenDate(ref string InSt, ref int D)
+        /// <param name="inputStr">Input date string</param>
+        /// <param name="dateValue">Returned date</param>
+        /// <returns>True is parsed ok</returns>
+        public static bool TokenDate(ref string inputStr, ref int dateValue)
         {
             bool result;
-            // We need to have these in upper case as that is how TextToken returns them     
-            string[] MonthTexts = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
 
-            int State = 0;
-            int Day = 0;
-            int Mn = 0;
-            int Yr = 0;
-            while ((State != -1) && (State != 4))
+            // We need to have these in upper case as that is how TextToken returns them     
+            string[] monthTexts = { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };
+
+            int state = 0;
+            int day = 0;
+            int mn = 0;
+            int yr = 0;
+            while ((state != -1) && (state != 4))
             {
-                switch (State)
+                switch (state)
                 {
                     case 0:
-                        if (TokenInt(ref InSt, ref Day) && (Day >= 1) && (Day <= 31))     // State 0:  we expect a number for the day 
-                            State = 1;
+                        if (TokenInt(ref inputStr, ref day) && (day >= 1) && (day <= 31))               // state 0:  we expect a number for the day 
+                            state = 1;
                         else
-                            State = -1;
+                            state = -1;
                         break;
-                    case 1: if ((MatchToken(ref InSt, "/") || MatchToken(ref InSt, "-")))             // State 1: Day found, looking for a        
-                            State = 2;                                                      //   delimiter or a month text              
+                    case 1: if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 1: Day found, looking for a        
+                            state = 2;                                                              // delimiter or a month text              
                         else
                         {
-                            Mn = 1;
-                            while ((Mn <= 12) && (!MatchToken(ref InSt, MonthTexts[Mn])))
-                                Mn++;
-                            if (Mn <= 12)
-                                State = 3;
+                            mn = 1;
+                            while ((mn <= 12) && (!MatchToken(ref inputStr, monthTexts[mn])))
+                                mn++;
+                            if (mn <= 12)
+                                state = 3;
                             else
-                                State = 2;
+                                state = 2;
                         }
                         break;
-                    case 2: if (TokenInt(ref InSt, ref Mn) && (Mn >= 1) && (Mn <= 12))        // State 2: Day/month delimiter found, so   
-                            State = 3;                                                             //   looking for a numeric month            
+                    case 2: if (TokenInt(ref inputStr, ref mn) && (mn >= 1) && (mn <= 12))              // State 2: Day/month delimiter found, so   
+                            state = 3;                                                              // looking for a numeric month            
                         else
-                            State = -1;
+                            state = -1;
                         break;
-                    case 3: if ((MatchToken(ref InSt, "/") || MatchToken(ref InSt, "-")))             // State 3:  month has been found.  Clear   
-                            State = 3;                                                      //   away any delimiter and then look for a 
-                        else if (TokenInt(ref InSt, ref Yr) && (Yr >= 1))                  //   year                                  
+                    case 3: if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 3:  month has been found.  Clear   
+                            state = 3;                                                              // away any delimiter and then look for a 
+                        else if (TokenInt(ref inputStr, ref yr) && (yr >= 1))                           // year                                  
                         {
-                            if (Yr < 100)
-                                Yr = 1900 + Yr;
-                            State = 4;                                                     // State=4 is the exit point                
+                            if (yr < 100)
+                                yr = 1900 + yr;
+                            state = 4;                                                              // state=4 is the exit point                
                         }
                         else
                         {
-                            Yr = 0;
-                            State = 4;
+                            yr = 0;
+                            state = 4;
                         }
                         break;
                 }
             }
 
-            if ((State != -1) && StdDate.DateValid(StdDate.DateVal(Day, Mn, Yr)))
+            if ((state != -1) && StdDate.DateValid(StdDate.DateVal(day, mn, yr)))
             {
                 result = true;
-                D = StdDate.DateVal(Day, Mn, Yr);
+                dateValue = StdDate.DateVal(day, mn, yr);
             }
             else
                 result = false;

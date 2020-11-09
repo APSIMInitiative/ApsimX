@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 
@@ -51,7 +51,7 @@ namespace Models.Functions
                     tags.Add(new AutoDocumentation.Paragraph(description, indent));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
             }
         }

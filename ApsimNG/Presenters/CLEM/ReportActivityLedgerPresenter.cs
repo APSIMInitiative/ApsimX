@@ -1,11 +1,10 @@
-
+﻿
 namespace UserInterface.Presenters
 {
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using System;
     using System.Data;
     using EventArguments;
@@ -32,15 +31,19 @@ namespace UserInterface.Presenters
 
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
+            Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
+                dataStore = simulations.FindChild<IDataStore>();
             }
 
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
-            Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
+            Simulation simulation = report.FindAncestor<Simulation>();
+            Zone paddock = report.FindAncestor<Zone>();
+
+            if (paddock != null)
+                dataStorePresenter.ZoneFilter = paddock;
             if (simulation != null)
             {
                 if (simulation.Parent is Experiment)
@@ -56,8 +59,9 @@ namespace UserInterface.Presenters
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             activityGridPresenter.ModelName = this.report.Name;
             activityGridPresenter.SimulationName = simulation.Name;
+            activityGridPresenter.ZoneName = paddock.Name;
             activityGridPresenter.Attach(dataStore, this.view.DisplayView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -82,15 +86,15 @@ namespace UserInterface.Presenters
         /// <summary>The variable names have changed in the view.</summary>
         void OnVariableNamesChanged(object sender, EventArgs e)
         {
-            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
         }
 
         /// <summary>The event names have changed in the view.</summary>
         void OnEventNamesChanged(object sender, EventArgs e)
         {
-            explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
-            explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
+            explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
         }
 
         /// <summary>The model has changed so update our view.</summary>

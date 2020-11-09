@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// Resource type to store milk in
         /// </summary>
         [Description("Store to place milk")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
         public string ResourceTypeName { get; set; }
 
@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // find milk store
             milkStore = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -78,6 +78,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantFemale female in herd)
                 {
                     female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                    this.Status = ActivityStatus.Success;
                 }
             }
             else
@@ -179,6 +180,27 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Milk is placed in ";
+
+            if (ResourceTypeName == null || ResourceTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
+            }
+            html += "</div>";
+            return html;
+        }
 
     }
 }

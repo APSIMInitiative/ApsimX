@@ -6,6 +6,10 @@ ApsimX is the next generation of [APSIM](http://www.apsim.info)
 * It can simulate a wide range of agricultural systems.
 * It begins its third decade evolving into an agro-ecosystem framework.
 
+## Licencing Conditions
+
+Use of APSIM source code is provided under the terms and conditions provided by either the Non-Commercial or Commercial licence Agreements.  Use in any way is not permitted unless previously agreed to and currently bound by a licence agreement which can be reviewed on www.apsim.info. Any questions, please email apsim@csiro.au 
+
 ## Getting Started
 
 **Hardware required**: 
@@ -17,6 +21,8 @@ Any recent PC with a minimum of 2Gb of RAM.
 64-bit version of Microsoft Windows Vista, Windows 7, Windows 8, Windows 10, Linux or macOS.
 
 ### Installation
+
+Binary releases are available via our [registration system](https://apsimdev.apsim.info/APSIM.Registration.Portal/Main.aspx).
 
 ## Contributing
 

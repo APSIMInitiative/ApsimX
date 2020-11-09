@@ -9,7 +9,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when a browse button is clicked.
         /// </summary>
-        event EventHandler<OpenDialogArgs> BrowseButtonClicked;
+        event EventHandler BrowseButtonClicked;
 
         /// <summary>
         /// Property to provide access to the filename label.
@@ -17,22 +17,17 @@ namespace UserInterface.Views
         string FileName { get; set; }
 
         /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        string WarningText { get; set; }
-        
-        /// <summary>
         /// Property to provide access to the grid.
         /// </summary>
         IGridView GridView { get; }
     }
 
-    public class InputView : ViewBase, Views.IInputView
+    public class InputView : ViewBase, IInputView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
         /// </summary>
-        public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
+        public event EventHandler BrowseButtonClicked;
 
         private VBox vbox1 = null;
         private Button button1 = null;
@@ -66,11 +61,18 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            button1.Clicked -= OnBrowseButtonClick;
-            grid.MainWidget.Destroy();
-            grid = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                button1.Clicked -= OnBrowseButtonClick;
+                grid.MainWidget.Destroy();
+                grid = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -114,13 +116,7 @@ namespace UserInterface.Views
             {
                 if (BrowseButtonClicked != null)
                 {
-                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "All Files (*.*) | *.*", FileName);
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        OpenDialogArgs args = new OpenDialogArgs();
-                        args.FileName = fileName;
-                        BrowseButtonClicked.Invoke(this, args);
-                    }
+                    BrowseButtonClicked.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception err)

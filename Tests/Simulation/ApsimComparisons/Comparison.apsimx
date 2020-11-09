@@ -1,1107 +1,1420 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
-  <Name>Simulations</Name>
-  <Memo>
-    <Name>Memo</Name>
-    <MemoText><![CDATA[
-The purpose of this test is to compare soil and nitrogen values against APSIM to ensure the models are the same.  The results should be accurate to within 1% or less. <br/>
-]]></MemoText>
-  </Memo>
-  <Simulation>
-    <Name>comparisons</Name>
-    <Weather>
-      <Name>met</Name>
-      <FileName>..\..\WeatherFiles\WeeWaa1889_2012.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>2007-01-01T00:00:00</StartDate>
-      <EndDate>2012-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>paddock</Name>
-      <Soil>
-        <Name>Soil</Name>
-        <InitialWater>
-          <Name>Initial water</Name>
-          <PercentMethod>FilledFromTop</PercentMethod>
-          <FractionFull>1</FractionFull>
-          <DepthWetSoil>NaN</DepthWetSoil>
-        </InitialWater>
-        <Water>
-          <Name>Water</Name>
-          <SoilCrop>
-            <Name>BarleySoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.32</double>
-              <double>0.38</double>
-              <double>0.39</double>
-              <double>0.39</double>
-              <double>0.41</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>ChickpeaSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.36</double>
-              <double>0.43</double>
-              <double>0.51</double>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>LucerneSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.3</double>
-              <double>0.31</double>
-              <double>0.32</double>
-              <double>0.33</double>
-              <double>0.34</double>
-              <double>0.35</double>
-              <double>0.36</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-              <double>0.09</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>MaizeSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.34</double>
-              <double>0.34</double>
-              <double>0.37</double>
-              <double>0.4</double>
-              <double>0.42</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>Perennial GrassSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.39</double>
-              <double>0.41</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.41</double>
-              <double>0.41</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.42</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.09</double>
-              <double>0.07</double>
-              <double>0.05</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>SorghumSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.35</double>
-              <double>0.38</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <SoilCrop>
-            <Name>WheatSoil</Name>
-            <LL>
-              <double>0.29</double>
-              <double>0.29</double>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.35</double>
-              <double>0.38</double>
-              <double>0.41</double>
-              <double>0.48</double>
-              <double>0.47</double>
-              <double>0.46</double>
-              <double>0.44</double>
-            </LL>
-            <KL>
-              <double>0.1</double>
-              <double>0.1</double>
-              <double>0.08</double>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCrop>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <BD>
-            <double>1.02</double>
-            <double>1.03</double>
-            <double>1.02</double>
-            <double>1.02</double>
-            <double>1.06</double>
-            <double>1.11</double>
-            <double>1.12</double>
-            <double>1.15</double>
-            <double>1.18</double>
-            <double>1.2</double>
-            <double>1.25</double>
-          </BD>
-          <AirDry>
-            <double>0.15</double>
-            <double>0.26</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </AirDry>
-          <LL15>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.3</double>
-            <double>0.31</double>
-            <double>0.32</double>
-            <double>0.33</double>
-            <double>0.34</double>
-            <double>0.35</double>
-            <double>0.36</double>
-          </LL15>
-          <DUL>
-            <double>0.54</double>
-            <double>0.53</double>
-            <double>0.54</double>
-            <double>0.54</double>
-            <double>0.52</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.44</double>
-          </DUL>
-          <SAT>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.59</double>
-            <double>0.58</double>
-            <double>0.57</double>
-            <double>0.55</double>
-            <double>0.55</double>
-            <double>0.53</double>
-            <double>0.52</double>
-            <double>0.51</double>
-            <double>0.49</double>
-          </SAT>
-        </Water>
-        <SoilWater>
-          <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
-          <SummerDate>1-Nov</SummerDate>
-          <SummerU>6</SummerU>
-          <SummerCona>3.5</SummerCona>
-          <WinterDate>1-Apr</WinterDate>
-          <WinterU>6</WinterU>
-          <WinterCona>3.5</WinterCona>
-          <DiffusConst>40</DiffusConst>
-          <DiffusSlope>16</DiffusSlope>
-          <Salb>0.13</Salb>
-          <CN2Bare>73</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <max_pond>0</max_pond>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <SWCON>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
-        </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>0.93392590415751187</double>
-            <double>0.83154588968770127</double>
-            <double>0.862578881029763</double>
-            <double>0.877319581636015</double>
-            <double>0.76475247963879023</double>
-            <double>0.44706055179613058</double>
-            <double>0.26830107269333631</double>
-            <double>0.21865773716672665</double>
-            <double>0.15905022778116015</double>
-            <double>0.12924598410863142</double>
-            <double>0.11931740140058296</double>
-          </oc>
-        </SoilNitrogen>
-        <SoilOrganicMatter>
-          <Name>SoilOrganicMatter</Name>
-          <RootCN>40</RootCN>
-          <RootWt>200</RootWt>
-          <SoilCN>12.5</SoilCN>
-          <EnrACoeff>7.4</EnrACoeff>
-          <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <Depth>
-            <string>0-15</string>
-            <string>15-30</string>
-            <string>30-60</string>
-            <string>60-90</string>
-            <string>90-120</string>
-            <string>120-150</string>
-            <string>150-180</string>
-            <string>180-210</string>
-            <string>210-240</string>
-            <string>240-270</string>
-            <string>270-300</string>
-          </Depth>
-          <OC>
-            <double>1.04</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.89</double>
-            <double>0.77</double>
-            <double>0.45</double>
-            <double>0.27</double>
-            <double>0.22</double>
-            <double>0.16</double>
-            <double>0.13</double>
-            <double>0.12</double>
-          </OC>
-          <FBiom>
-            <double>0.025</double>
-            <double>0.02</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </FBiom>
-          <FInert>
-            <double>0.4</double>
-            <double>0.6</double>
-            <double>0.8</double>
-            <double>0.9</double>
-            <double>0.95</double>
-            <double>0.95</double>
-            <double>0.95</double>
-            <double>0.95</double>
-            <double>0.95</double>
-            <double>0.95</double>
-            <double>0.95</double>
-          </FInert>
-          <OCUnits>Total</OCUnits>
-        </SoilOrganicMatter>
-        <Analysis>
-          <Name>Analysis</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <PH>
-            <double>8.4</double>
-            <double>8.8</double>
-            <double>9</double>
-            <double>9.2</double>
-            <double>9.2</double>
-            <double>9.1</double>
-            <double>9</double>
-            <double>9</double>
-            <double>8.9</double>
-            <double>8.9</double>
-            <double>8.9</double>
-          </PH>
-          <PHUnits>Water</PHUnits>
-          <BoronUnits>HotWater</BoronUnits>
-        </Analysis>
-        <Sample>
-          <Name>Initial nitrogen</Name>
-          <Thickness>
-            <double>150</double>
-            <double>150</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-          </Thickness>
-          <NO3>
-            <double>6.50300344798777</double>
-            <double>2.10100111398159</double>
-            <double>2.10100111398159</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-            <double>1.70100090189562</double>
-          </NO3>
-          <NH4>
-            <double>0.599004378686979</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-            <double>0.100000730999496</double>
-          </NH4>
-          <NO3Units>ppm</NO3Units>
-          <NH4Units>ppm</NH4Units>
-          <SWUnits>Volumetric</SWUnits>
-          <OCUnits>Total</OCUnits>
-          <PHUnits>Water</PHUnits>
-        </Sample>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Black Vertosol</SoilType>
-        <LocalName>Waco</LocalName>
-        <Site>Jimbour</Site>
-        <NearestTown>Jimbour, Q 4352</NearestTown>
-        <Region>South East Queensland</Region>
-        <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
-      </Soil>
-      <SurfaceOrganicMatter>
-        <Name>SurfaceOrganicMatter</Name>
-        <PondActive>no</PondActive>
-        <ReportAdditions>no</ReportAdditions>
-        <ReportRemovals>no</ReportRemovals>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>wheat</PoolName>
-            <ResidueType>wheat</ResidueType>
-            <Mass>1000</Mass>
-            <CNRatio>80</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>wheat</PoolName>
-        <type>wheat</type>
-        <mass>1000</mass>
-        <standing_fraction>0</standing_fraction>
-        <cpr />
-        <cnr>80</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <Fertiliser>
-        <Name>fertiliser</Name>
-      </Fertiliser>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Calculations].Script.TotalNO3</string>
-          <string>[Calculations].Script.SW</string>
-          <string>[Calculations].Script.TotalN</string>
-          <string>[Calculations].Script.TotalC</string>
-          <string>[met].Rain</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <MicroClimate>
-        <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.15</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
-        <a_interception>0</a_interception>
-        <b_interception>1</b_interception>
-        <c_interception>0</c_interception>
-        <d_interception>0</d_interception>
-        <soil_albedo>0.23</soil_albedo>
-      </MicroClimate>
-      <Manager>
-        <Name>Calculations</Name>
-        <Script>
-          <Offset>460</Offset>
-          <TotalNO3>144.237693334171</TotalNO3>
-          <SW>1460.28954762248</SW>
-          <TotalN>12359.5347096548</TotalN>
-          <TotalC>150899.832779773</TotalC>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-using Models.Soils;
-using Models.SurfaceOM;
-using APSIM.Shared.Utilities;
-
-namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Soil Soil;
-		[Link] SurfaceOrganicMatter SurfaceOM;
-		[Link] Summary Summary;
-		
-		public double Offset {get; set;}
-	    public double TotalNO3 {get; set;}
-	    public double SW {get;set;}
-	    public double TotalN {get;set;}
-	    public double TotalC {get;set;}
-		
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-		{	
-			TotalNO3 = 0;
-			SW = 0;
-			TotalN = 0;
-			TotalC = 0;
-		}
-		
-		[EventSubscribe("DoDailyInitialisation")]
-		private void OnDoDailyInitialisation(object sender, EventArgs e)
-		{
-		}
-		
-       [EventSubscribe("DoManagementCalculations")]
-       private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			TotalNO3 = MathUtilities.Sum(Soil.NO3N);
-			SW = MathUtilities.Sum(Soil.SoilWater.SWmm);
-			TotalN = MathUtilities.Sum(Soil.SoilNitrogen.TotalN);
-			TotalC = MathUtilities.Sum(Soil.SoilNitrogen.TotalC);
-		}
-	}
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 250,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "\r\nThe purpose of this test is to compare soil and nitrogen values against APSIM to ensure the models are the same.  The results should be accurate to within 1% or less. <br/>\r\n",
+      "Name": "Memo",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "comparisons",
+      "Children": [
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "..\\..\\WeatherFiles\\WeeWaa1889_2012.met",
+          "ExcelWorkSheetName": null,
+          "Name": "met",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2007-01-01T00:00:00",
+          "End": "2012-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "paddock",
+          "Children": [
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "Black Vertosol",
+              "LocalName": "Waco",
+              "Site": "Jimbour",
+              "NearestTown": "Jimbour, Q 4352",
+              "Region": "South East Queensland",
+              "State": null,
+              "Country": null,
+              "NaturalVegetation": "Grassland, mainly Qld bluegrass",
+              "ApsoilNumber": null,
+              "Latitude": 0.0,
+              "Longitude": 0.0,
+              "LocationAccuracy": null,
+              "DataSource": null,
+              "Comments": null,
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 0,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "Initial water",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180",
+                    "180-210",
+                    "210-240",
+                    "240-270",
+                    "270-300"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "BD": [
+                    1.02,
+                    1.03,
+                    1.02,
+                    1.02,
+                    1.06,
+                    1.11,
+                    1.12,
+                    1.15,
+                    1.18,
+                    1.2,
+                    1.25
+                  ],
+                  "AirDry": [
+                    0.15,
+                    0.26,
+                    0.29,
+                    0.29,
+                    0.3,
+                    0.31,
+                    0.32,
+                    0.33,
+                    0.34,
+                    0.35,
+                    0.36
+                  ],
+                  "LL15": [
+                    0.29,
+                    0.29,
+                    0.29,
+                    0.29,
+                    0.3,
+                    0.31,
+                    0.32,
+                    0.33,
+                    0.34,
+                    0.35,
+                    0.36
+                  ],
+                  "DUL": [
+                    0.54,
+                    0.53,
+                    0.54,
+                    0.54,
+                    0.52,
+                    0.5,
+                    0.5,
+                    0.48,
+                    0.47,
+                    0.46,
+                    0.44
+                  ],
+                  "SAT": [
+                    0.59,
+                    0.58,
+                    0.59,
+                    0.58,
+                    0.57,
+                    0.55,
+                    0.55,
+                    0.53,
+                    0.52,
+                    0.51,
+                    0.49
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.32,
+                        0.38,
+                        0.39,
+                        0.39,
+                        0.41,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.01,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "BarleySoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.36,
+                        0.43,
+                        0.51,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.01,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "ChickpeaSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.29,
+                        0.29,
+                        0.3,
+                        0.31,
+                        0.32,
+                        0.33,
+                        0.34,
+                        0.35,
+                        0.36
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.09,
+                        0.09,
+                        0.09,
+                        0.09,
+                        0.09,
+                        0.09,
+                        0.09
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "LucerneSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.34,
+                        0.34,
+                        0.37,
+                        0.4,
+                        0.42,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "MaizeSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.39,
+                        0.41,
+                        0.4,
+                        0.4,
+                        0.41,
+                        0.41,
+                        0.4,
+                        0.4,
+                        0.42
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.09,
+                        0.07,
+                        0.05,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "Perennial GrassSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.35,
+                        0.38,
+                        0.4,
+                        0.4,
+                        0.4,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SorghumSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.29,
+                        0.29,
+                        0.32,
+                        0.32,
+                        0.35,
+                        0.38,
+                        0.41,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.01,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WheatSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 6.0,
+                  "SummerCona": 3.5,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 6.0,
+                  "WinterCona": 3.5,
+                  "DiffusConst": 40.0,
+                  "DiffusSlope": 16.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": 0.0,
+                  "discharge_width": 0.0,
+                  "catchment_area": 0.0,
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180",
+                    "180-210",
+                    "210-240",
+                    "240-270",
+                    "270-300"
+                  ],
+                  "SWCON": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "KLAT": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PrecipitationInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogen, Models",
+                  "fom_types": [
+                    "default",
+                    "manure",
+                    "mucuna",
+                    "lablab",
+                    "shemp",
+                    "stable"
+                  ],
+                  "fract_carb": [
+                    0.2,
+                    0.3,
+                    0.54,
+                    0.57,
+                    0.45,
+                    0.0
+                  ],
+                  "fract_cell": [
+                    0.7,
+                    0.3,
+                    0.37,
+                    0.37,
+                    0.47,
+                    0.1
+                  ],
+                  "fract_lign": [
+                    0.1,
+                    0.4,
+                    0.09,
+                    0.06,
+                    0.08,
+                    0.9
+                  ],
+                  "Name": "SoilNitrogen",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                      "Name": "PlantAvailableNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                      "Name": "PlantAvailableNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180",
+                    "180-210",
+                    "210-240",
+                    "240-270",
+                    "270-300"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    1.04,
+                    0.89,
+                    0.89,
+                    0.89,
+                    0.77,
+                    0.45,
+                    0.27,
+                    0.22,
+                    0.16,
+                    0.13,
+                    0.12
+                  ],
+                  "SoilCNRatio": [
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5
+                  ],
+                  "FBiom": [
+                    0.025,
+                    0.02,
+                    0.015,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.6,
+                    0.8,
+                    0.9,
+                    0.95,
+                    0.95,
+                    0.95,
+                    0.95,
+                    0.95,
+                    0.95,
+                    0.95
+                  ],
+                  "FOM": [
+                    48.128639588700892,
+                    41.424703988481674,
+                    30.688175501013852,
+                    22.734359570629373,
+                    16.842027805452027,
+                    12.476881071506991,
+                    9.2431008350512176,
+                    6.8474575142043443,
+                    5.0727212918665181,
+                    3.75796436145482,
+                    2.7839684716382678
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180",
+                    "180-210",
+                    "210-240",
+                    "240-270",
+                    "270-300"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    6.50300344798777,
+                    2.1010011139815892,
+                    2.10100111398159,
+                    1.7010009018956203,
+                    1.7010009018956196,
+                    1.7010009018956196,
+                    1.7010009018956196,
+                    1.7010009018956209,
+                    1.7010009018956196,
+                    1.7010009018956196,
+                    1.7010009018956196
+                  ],
+                  "NH4N": [
+                    0.599004378686979,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949598,
+                    0.10000073099949608,
+                    0.10000073099949608,
+                    0.10000073099949608
+                  ],
+                  "PH": [
+                    8.4,
+                    8.8,
+                    9.0,
+                    9.2,
+                    9.2,
+                    9.1,
+                    9.0,
+                    9.0,
+                    8.9,
+                    8.9,
+                    8.9
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180",
+                    "180-210",
+                    "210-240",
+                    "240-270",
+                    "270-300"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": null,
+                  "OC": null,
+                  "EC": null,
+                  "CL": null,
+                  "ESP": null,
+                  "PH": null,
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "Initial nitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "wheat",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 80.0,
+              "FractionFaecesAdded": 1.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Calculations].Script.TotalNO3",
+                "[Calculations].Script.SW",
+                "[Calculations].Script.TotalN",
+                "[Calculations].Script.TotalC",
+                "[met].Rain"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.23,
+              "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Soils;\r\nusing Models.PMF.OilPalm;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private SurfaceOrganicMatter SurfaceOM;\r\n        [Link] private Summary Summary;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        \r\n        public double Offset {get; set;}\r\n        public double TotalNO3 {get; set;}\r\n        public double SW {get;set;}\r\n        public double TotalN {get;set;}\r\n        public double TotalC {get;set;}\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {    \r\n            TotalNO3 = 0;\r\n            SW = 0;\r\n            TotalN = 0;\r\n            TotalC = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void OnDoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n       [EventSubscribe(\"DoManagementCalculations\")]\r\n       private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            TotalNO3 = MathUtilities.Sum(NO3.kgha);\r\n            SW = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            TotalN = MathUtilities.Sum(SoilNitrogen.TotalN);\r\n            TotalC = MathUtilities.Sum(SoilNitrogen.TotalC);\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "Offset",
+                  "Value": "460"
+                },
+                {
+                  "Key": "TotalNO3",
+                  "Value": "144.237693334171"
+                },
+                {
+                  "Key": "SW",
+                  "Value": "1460.28954762248"
+                },
+                {
+                  "Key": "TotalN",
+                  "Value": "12359.5347096548"
+                },
+                {
+                  "Key": "TotalC",
+                  "Value": "150899.832779773"
+                }
+              ],
+              "Name": "Calculations",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Apsim.out",
+          "Name": "Input",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": "Year",
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 1,
+      "LegendOrientation": 0,
+      "DisabledSeries": null,
+      "LegendOutsideGraph": false,
+      "Name": "NO3",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -16776961,
+          "FactorToVaryColours": null,
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "Input",
+          "XFieldName": "Date",
+          "YFieldName": "Calculations.Script.TotalNO3",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Series",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": "Year",
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 1,
+      "LegendOrientation": 0,
+      "DisabledSeries": null,
+      "LegendOutsideGraph": false,
+      "Name": "SW",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -16776961,
+          "FactorToVaryColours": null,
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "Input",
+          "XFieldName": "Date",
+          "YFieldName": "Calculations.Script.SW",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Series",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": "Year",
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 1,
+      "LegendOrientation": 0,
+      "DisabledSeries": null,
+      "LegendOutsideGraph": false,
+      "Name": "TotalN",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -16776961,
+          "FactorToVaryColours": null,
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 1,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "Input",
+          "XFieldName": "Date",
+          "YFieldName": "Calculations.Script.TotalN",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Series",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": "Year",
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 1,
+      "LegendOrientation": 0,
+      "DisabledSeries": null,
+      "LegendOutsideGraph": false,
+      "Name": "TotalC",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 0,
+          "ColourArgb": -16776961,
+          "FactorToVaryColours": null,
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 11,
+          "MarkerSize": 0,
+          "Line": 0,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "Input",
+          "XFieldName": "Date",
+          "YFieldName": "Calculations.Script.TotalC",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Series",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Graph.Graph, Models",
+      "Caption": null,
+      "Axis": [
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 3,
+          "Title": "Year",
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 0,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        },
+        {
+          "$type": "Models.Graph.Axis, Models",
+          "Type": 2,
+          "Title": null,
+          "Inverted": false,
+          "Minimum": "NaN",
+          "Maximum": "NaN",
+          "Interval": "NaN",
+          "DateTimeAxis": false,
+          "CrossesAtZero": false
+        }
+      ],
+      "LegendPosition": 1,
+      "LegendOrientation": 0,
+      "DisabledSeries": null,
+      "LegendOutsideGraph": false,
+      "Name": "SW and rain",
+      "Children": [
+        {
+          "$type": "Models.Graph.Series, Models",
+          "Type": 1,
+          "XAxis": 3,
+          "YAxis": 2,
+          "ColourArgb": -16776961,
+          "FactorToVaryColours": null,
+          "FactorToVaryMarkers": null,
+          "FactorToVaryLines": null,
+          "Marker": 0,
+          "MarkerSize": 0,
+          "Line": 4,
+          "LineThickness": 0,
+          "Checkpoint": "Current",
+          "TableName": "Report",
+          "XFieldName": "Clock.Today",
+          "YFieldName": "met.Rain",
+          "X2FieldName": null,
+          "Y2FieldName": null,
+          "ShowInLegend": false,
+          "IncludeSeriesNameInLegend": false,
+          "Cumulative": false,
+          "CumulativeX": false,
+          "Filter": null,
+          "Name": "Series",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
 }
-]]></Code>
-      </Manager>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <Input>
-      <Name>Input</Name>
-      <ErrorMessage />
-      <FileName>Apsim.out</FileName>
-    </Input>
-    <AutoExport>false</AutoExport>
-  </DataStore>
-  <Graph>
-    <Name>NO3</Name>
-    <Series>
-      <Name />
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Input</TableName>
-      <XFieldName>Date</XFieldName>
-      <YFieldName>Calculations.Script.TotalNO3</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>SW</Name>
-    <Series>
-      <Name />
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Calculations.Script.SW</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Input</TableName>
-      <XFieldName>Date</XFieldName>
-      <YFieldName>Calculations.Script.SW</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>TotalN</Name>
-    <Series>
-      <Name />
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Calculations.Script.TotalN</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Dash</Line>
-      <TableName>Input</TableName>
-      <XFieldName>Date</XFieldName>
-      <YFieldName>Calculations.Script.TotalN</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>TotalC</Name>
-    <Series>
-      <Name />
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Calculations.Script.TotalC</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Input</TableName>
-      <XFieldName>Date</XFieldName>
-      <YFieldName>Calculations.Script.TotalC</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>SW and rain</Name>
-    <Series>
-      <Name />
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-65536</ColourArgb>
-      <Marker>None</Marker>
-      <Line>Solid</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>Calculations.Script.SW</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Series>
-      <Name>Series</Name>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Right</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
-      <Marker>FilledCircle</Marker>
-      <Line>None</Line>
-      <TableName>Report</TableName>
-      <XFieldName>Clock.Today</XFieldName>
-      <YFieldName>met.Rain</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Year</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title />
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Right</Type>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>TopRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>false</IncludeInDocumentation>
-  </Graph>
-  <ExplorerWidth>250</ExplorerWidth>
-</Simulations>

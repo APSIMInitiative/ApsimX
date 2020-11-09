@@ -1,23 +1,17 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Series.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models
 {
-    using System;
-    using System.Drawing;
-    using System.Xml.Serialization;
-    using System.Data;
-    using System.Collections.Generic;
-    using System.Linq;
     using APSIM.Shared.Utilities;
-    using System.Collections;
+    using Models.CLEM;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Factorial;
     using Storage;
-    using Models.Core.Run;
-    using Models.CLEM;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using Newtonsoft.Json;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -31,7 +25,6 @@ namespace Models.Graph
         /// <summary>Constructor for a series</summary>
         public Series()
         {
-            this.Checkpoint = "Current";
             this.XAxis = Axis.AxisType.Bottom;
         }
 
@@ -50,7 +43,7 @@ namespace Models.Graph
         public int ColourArgb { get; set; }
 
         /// <summary>Gets or sets the color</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Color Colour
         {
             get
@@ -85,9 +78,6 @@ namespace Models.Graph
         /// <summary>Gets or sets the line thickness</summary>
         public LineThicknessType LineThickness { get; set; }
 
-        /// <summary>Gets or sets the checkpoint to get data from.</summary>
-        public string Checkpoint { get; set; }
-
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
 
@@ -119,80 +109,110 @@ namespace Models.Graph
         public string Filter { get; set; }
         
         /// <summary>A list of all descriptor names that can be listed as 'vary by' in markers/line types etc.</summary>
-        public IEnumerable<string> GetDescriptorNames()
+        public IEnumerable<string> GetDescriptorNames(IStorageReader reader)
         {
             var names = new List<string>();
             foreach (var simulationDescription in FindSimulationDescriptions())
                 names.AddRange(simulationDescription.Descriptors.Select(d => d.Name));
             names.Add("Graph series");
+
+            // Add all string and integer fields to descriptor names.
+            foreach (var column in reader.GetColumns(TableName))
+                if (column.Item2 == typeof(string) || column.Item2 == typeof(int))
+                    if (column.Item1 != "CheckpointID" && column.Item1 != "SimulationID")
+                        names.Add(column.Item1);
+
             return names.Distinct();
         }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
-        /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="reader">A storage reader.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions)
+        /// <param name="simulationFilter"></param>
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader reader, List<string> simulationFilter = null)
         {
             List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
             {
-                seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions.Add(new SeriesDefinition(this, "Current", colModifier:0, markerModifier: 0));
                 seriesDefinitions[0].ReadData(reader, simulationDescriptions);
             }
             else
             {
-                // TableName exists so get the vary by fields and the simulation descriptions.
-                var varyByFieldNames = GetVaryByFieldNames();
-                simulationDescriptions = FindSimulationDescriptions();
-                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
-
-                if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
+                int checkpointNumber = 0;
+                foreach (var checkpointName in reader.CheckpointNames)
                 {
-                    // No vary by fields. Just plot the whole table in a single
-                    // series with data that is in scope.
-                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData, Filter) };
+                    if (checkpointName == "Current" || reader.GetCheckpointShowOnGraphs(checkpointName))
+                    {
+                        // Colour modifier can be in range [-1, 1] but we will
+                        // use only 0..1 so that we start with the normal colour
+                        // and gradually get brighter.
+                        double colourModifier = (double)checkpointNumber / reader.CheckpointNames.Count;
+                        double markerModifier = 1 + 1.0 * checkpointNumber / reader.CheckpointNames.Count;
+
+                        // TableName exists so get the vary by fields and the simulation descriptions.
+                        var varyByFieldNames = GetVaryByFieldNames();
+                        simulationDescriptions = FindSimulationDescriptions();
+                        if (simulationFilter == null)
+                            simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
+
+                        var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
+
+                        if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
+                        {
+                            // No vary by fields. Just plot the whole table in a single
+                            // series with data that is in scope.
+                            seriesDefinitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, whereClauseForInScopeData, Filter));
+                        }
+                        else
+                        {
+                            // There are one or more vary by fields. Create series definitions
+                            // for each combination of vary by fields.
+                            seriesDefinitions.AddRange(CreateDefinitionsUsingVaryBy(varyByFieldNames, checkpointName, colourModifier, markerModifier, simulationDescriptions, whereClauseForInScopeData));
+                        }   
+
+                        // If we don't have any definitions then see if the vary by fields
+                        // refer to string fields in the database table.
+                        if (seriesDefinitions.Count == 0)
+                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, checkpointName, colourModifier, markerModifier, varyByFieldNames, whereClauseForInScopeData);
+
+                        // Paint all definitions. 
+                        var painter = GetSeriesPainter();
+                        foreach (var seriesDefinition in seriesDefinitions)
+                            painter.Paint(seriesDefinition);
+
+                        // Tell each series definition to read its data.
+                        foreach (var seriesDefinition in seriesDefinitions)
+                            seriesDefinition.ReadData(reader, simulationDescriptions);
+
+                        // Remove series that have no data.
+                        seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
+
+                        checkpointNumber++;
+                    }
                 }
-                else
-                {
-                    // There are one or more vary by fields. Create series definitions
-                    // for each combination of vary by fields.
-                    seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
-                }
-
-                // If we don't have any definitions then see if the vary by fields
-                // refer to string fields in the database table.
-                if (seriesDefinitions.Count == 0)
-                    seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
-
-                // Paint all definitions. 
-                var painter = GetSeriesPainter();
-                foreach (var seriesDefinition in seriesDefinitions)
-                    painter.Paint(seriesDefinition);
-
-                // Tell each series definition to read its data.
-                foreach (var seriesDefinition in seriesDefinitions)
-                    seriesDefinition.ReadData(reader, simulationDescriptions);
-
-                // Remove series that have no data.
-                seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(reader, seriesDefinitions);
+            foreach (IGraphable graphable in FindAllChildren<IGraphable>())
+            {
+                IEnumerable<SeriesDefinition> definitions;
+                if (graphable is ICachableGraphable cachable)
+                    definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
+                else
+                    definitions = graphable.GetSeriesDefinitions(reader, simulationFilter);
+                seriesDefinitions.AddRange(definitions);
+            }
 
-            definitions.AddRange(seriesDefinitions);
+            return seriesDefinitions;
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        public IEnumerable<IAnnotation> GetAnnotations()
         {
             // We might have child models that wan't to add to the annotations e.g. regression.
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetAnnotationsToPutOnGraph(annotations);
+            return FindAllChildren<IGraphable>().Where(g => g.Enabled).SelectMany(g => g.GetAnnotations());
         }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
@@ -207,9 +227,12 @@ namespace Models.Graph
         /// Create series definitions assuming the vary by fields are text fields in the table.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
+        /// <param name="checkpointName">The checkpoint name.</param>
+        /// <param name="colourModifier">Checkpoint colour modifer.</param>
+        /// <param name="markerModifier">Checkpoint marker size modifier.</param>
         /// <param name="varyByFieldNames">The vary by fields.</param>
         /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
-        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, List<string> varyByFieldNames, string whereClauseForInScopeData)
+        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, string checkpointName, double colourModifier, double markerModifier, List<string> varyByFieldNames, string whereClauseForInScopeData)
         {
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
 
@@ -233,7 +256,7 @@ namespace Models.Graph
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, Filter, descriptors));
+                definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, whereClauseForInScopeData, Filter, descriptors));
             }
 
             return definitions;
@@ -243,14 +266,14 @@ namespace Models.Graph
         /// Create an SQL WHERE clause for rows that are in scope.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
-        /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
-        private string CreateInScopeWhereClause(IStorageReader reader, IEnumerable<SimulationDescription> simulationDescriptions)
+        /// <param name="simulationFilter">The names of simulatiosn that are in scope.</param>
+        private string CreateInScopeWhereClause(IStorageReader reader, List<string> simulationFilter)
         {
             var fieldsThatExist = reader.ColumnNames(TableName);
             if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
             {
                 // Extract all the simulation names from all descriptions.
-                var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
+                var simulationNames = simulationFilter.Distinct(); 
 
                 string whereClause =  "SimulationName IN (" +
                                       StringUtilities.Build(simulationNames, ",", "'", "'") +
@@ -267,9 +290,15 @@ namespace Models.Graph
         /// Create and return a list of series definitions for each group by field.
         /// </summary>
         /// <param name="varyByFieldNames">The vary by fields</param>
+        /// <param name="checkpointName">Checkpoint name.</param>
+        /// <param name="colourModifier">Checkpoint colour modifier.</param>
+        /// <param name="markerModifier">Checkpoint marker size modifier.</param>
         /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
         /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
         private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, 
+                                                                    string checkpointName,
+                                                                    double colourModifier,
+                                                                    double markerModifier,
                                                                     List<SimulationDescription> simulationDescriptions,
                                                                     string whereClauseForInScopeData)
         {
@@ -296,6 +325,9 @@ namespace Models.Graph
                 {
                     // Create the definition.
                     definitions.Add(new SeriesDefinition(this,
+                                                         checkpointName,
+                                                         colourModifier,
+                                                         markerModifier,
                                                          whereClauseForInScopeData,
                                                          Filter,
                                                          descriptorsForDefinition));

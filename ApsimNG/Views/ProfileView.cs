@@ -1,9 +1,9 @@
-﻿using System;
-using Gtk;
-using UserInterface.Interfaces;
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using System;
+    using Gtk;
+    using Interfaces;
+
     interface IProfileView
     {
         /// <summary>
@@ -67,14 +67,21 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            profileGrid.MainWidget.Destroy();
-            profileGrid = null;
-            propertyGrid.MainWidget.Destroy();
-            propertyGrid = null;
-            graph.MainWidget.Destroy();
-            graph = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                profileGrid.MainWidget.Destroy();
+                profileGrid = null;
+                propertyGrid.MainWidget.Destroy();
+                propertyGrid = null;
+                graph.MainWidget.Destroy();
+                graph = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -85,14 +92,21 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void GraphWidget_Realized(object sender, EventArgs e)
         {
-            vpaned2.PositionSet = true;
-            vpaned2.Position = vpaned1.Parent.Allocation.Height / 2;
+            try
+            {
+                vpaned2.PositionSet = true;
+                vpaned2.Position = vpaned1.Parent.Allocation.Height / 2;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// Allow direct access to the property grid.
         /// </summary>
-        IGridView IProfileView.PropertyGrid
+        public IGridView PropertyGrid
         {
             get { return propertyGrid; }
         }
@@ -100,7 +114,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IGridView IProfileView.ProfileGrid
+        public IGridView ProfileGrid
         {
             get { return profileGrid; }
         }
@@ -108,7 +122,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the graph.
         /// </summary>
-        IGraphView IProfileView.Graph
+        public IGraphView Graph
         {
             get { return graph; }
         }
@@ -136,6 +150,5 @@ namespace UserInterface.Views
         {
             MainWidget.Visible = show;
         }
-
     }
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Utilities;
-using Models;
+﻿using Models;
 using Models.Core;
-using Models.Core.Runners;
 using NUnit.Framework;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using UnitTests.Storage;
+using System.Reflection;
 
 namespace UnitTests.Weather
 {
@@ -23,45 +19,35 @@ namespace UnitTests.Weather
         [Test]
         public void ExcelWeatherFileTest()
         {
-            Simulation baseSim = new Simulation();
-            baseSim.Name = "Base";
-
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx").CopyTo(file);
             }
 
-            var excelWeather = new Models.Weather()
+            Simulation baseSim = new Simulation()
             {
-                Name = "Weather",
-                Parent = baseSim,
-                FullFileName = weatherFilePath,
-                ExcelWorkSheetName = "Sheet1"
+                Name = "Base",
+                Children = new List<IModel>()
+                {
+                    new Models.Climate.Weather()
+                    {
+                        Name = "Weather",
+                        FullFileName = weatherFilePath,
+                        ExcelWorkSheetName = "Sheet1"
+                    },
+                    new Clock()
+                    {
+                        Name = "Clock",
+                        StartDate = new DateTime(1998, 11, 9),
+                        EndDate = new DateTime(1998, 11, 12)
+                    },
+                    new MockSummary()
+                }
             };
 
-            Clock clock = new Clock()
-            {
-                Name = "Clock",
-                Parent = baseSim,
-                StartDate = new DateTime(1998, 11, 9),
-                EndDate = new DateTime(1998, 11, 12)
-            };
-
-            MockSummary summary = new MockSummary()
-            {
-                Name = "Summary",
-                Parent = baseSim
-            };
-
-            baseSim.Children = new List<Model>() { excelWeather, clock, summary };
-            MockStorage storage = new MockStorage();
-            Simulations simsToRun = Simulations.Create(new List<IModel> { baseSim, storage });
-
-            IJobManager jobManager = Runner.ForSimulations(simsToRun, simsToRun, false);
-            IJobRunner jobRunner = new JobRunnerSync();
-            jobRunner.JobCompleted += Utilities.EnsureJobRanGreen;
-            jobRunner.Run(jobManager, true);
+            baseSim.Run();
+            Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
         }
     }
 }

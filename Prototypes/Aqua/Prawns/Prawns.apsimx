@@ -1,650 +1,734 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
-  <Name>Simulations</Name>
-  <Simulation>
-    <Name>Prawns</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Ingham.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>1990-01-01T00:00:00</StartDate>
-      <EndDate>1990-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>Pond</Name>
-      <PondWater>
-        <Name>PondWater</Name>
-        <SurfaceArea>10000</SurfaceArea>
-        <MaxPondDepth>1</MaxPondDepth>
-        <Kpan>1</Kpan>
-      </PondWater>
-      <FoodInPond>
-        <Name>FoodInPond</Name>
-      </FoodInPond>
-      <Prawns>
-        <Name>Prawns</Name>
-        <PrawnSpecies>Penaeus Monodon</PrawnSpecies>
-        <Ki1>0.101</Ki1>
-        <Ki2>0.65</Ki2>
-        <Ki3>2200</Ki3>
-        <Ki4>0.33</Ki4>
-        <Ki5>0.37</Ki5>
-        <Ki6>0.026</Ki6>
-        <Ki7>0.62</Ki7>
-        <Ki8>0.015</Ki8>
-        <Kt1>36</Kt1>
-        <Kt2>15</Kt2>
-        <Kt3>2</Kt3>
-        <Km1>0.115</Km1>
-        <Km2>0.8</Km2>
-        <Ks1>0.0032</Ks1>
-        <Kg1>0.2</Kg1>
-        <Kg4>0.4</Kg4>
-        <Kd1>0.0006</Kd1>
-        <Kd2>0.1</Kd2>
-        <Kd3>20</Kd3>
-        <Kd4>4</Kd4>
-        <Kd5>2.5</Kd5>
-      </Prawns>
-      <Folder>
-        <Name>Manager folder</Name>
-        <Manager>
-          <Name>Add water on fixed date</Name>
-          <Script>
-            <added_date>01-jan</added_date>
-            <volume>10000</volume>
-            <temperature>15</temperature>
-            <salinity>5</salinity>
-            <ph>2</ph>
-            <n>3</n>
-            <p>4</p>
-            <tss>10</tss>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] PondWater PondWater;
-		
-		
-	    [Description("Add Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
-		
-		[Description("Volume of Water Added (m^3)")]
-		public double volume {get; set;}
-		
-		[Description("Temperature of Water Added (oC)")]
-		public double temperature {get; set;}
-		
-		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity {get; set;}
-		
-		[Description("PH of Water Added")]
-		public double ph {get; set;}
-		
-		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n {get; set;}
-	
-	    [Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p {get; set;}
-		
-		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss {get; set;}
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
-			}
-
-		}
-      
-	}
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 250,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Prawns",
+      "Children": [
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "Ingham.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "soil_albedo": 0.13,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1990-01-01T00:00:00",
+          "End": "1990-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Pond",
+          "Children": [
+            {
+              "$type": "Models.Aqua.PondWater, Models",
+              "SurfaceArea": 10000.0,
+              "MaxPondDepth": 1.0,
+              "Kpan": 1.0,
+              "Name": "PondWater",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Aqua.FoodInPond, Models",
+              "Name": "FoodInPond",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Aqua.Prawns, Models",
+              "PrawnSpecies": "Penaeus Monodon",
+              "Ki1": 0.101,
+              "Ki2": 0.65,
+              "Ki3": 2200.0,
+              "Ki4": 0.33,
+              "Ki5": 0.37,
+              "Ki6": 0.026,
+              "Ki7": 0.62,
+              "Ki8": 0.015,
+              "Kt1": 36.0,
+              "Kt2": 15.0,
+              "Kt3": 2.0,
+              "Km1": 0.115,
+              "Km2": 0.8,
+              "Ks1": 0.0032,
+              "Kg1": 0.2,
+              "Kg4": 0.4,
+              "Kd1": 0.0006,
+              "Kd2": 0.1,
+              "Kd3": 20.0,
+              "Kd4": 4.0,
+              "Kd5": 2.5,
+              "Name": "Prawns",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Manager folder",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Aqua;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] PondWater PondWater;\r\n        \r\n        \r\n        [Description(\"Add Water on this date (dd-mmm)\")]\r\n        public string added_date {get; set;}\r\n        \r\n        [Description(\"Volume of Water Added (m^3)\")]\r\n        public double volume {get; set;}\r\n        \r\n        [Description(\"Temperature of Water Added (oC)\")]\r\n        public double temperature {get; set;}\r\n        \r\n        [Description(\"Salinity of Water Added (kg/m^3)\")]\r\n        public double salinity {get; set;}\r\n        \r\n        [Description(\"PH of Water Added\")]\r\n        public double ph {get; set;}\r\n        \r\n        [Description(\"Nitrogen of Water Added (kg/m^3)\")]\r\n        public double n {get; set;}\r\n    \r\n        [Description(\"Phosphorus of Water Added (kg/m^3)\")]\r\n        public double p {get; set;}\r\n        \r\n        [Description(\"Total Suspended Solids of Water Added (kg/m^3)\")]\r\n        public double tss {get; set;}\r\n\r\n\r\n        \r\n       [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\r\n            {\r\n            WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);\r\n            PondWater.Fill(Volume: volume, WaterProperties: addedProps);\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "01-jan"
+                    },
+                    {
+                      "Key": "volume",
+                      "Value": "10000"
+                    },
+                    {
+                      "Key": "temperature",
+                      "Value": "15"
+                    },
+                    {
+                      "Key": "salinity",
+                      "Value": "5"
+                    },
+                    {
+                      "Key": "ph",
+                      "Value": "2"
+                    },
+                    {
+                      "Key": "n",
+                      "Value": "3"
+                    },
+                    {
+                      "Key": "p",
+                      "Value": "4"
+                    },
+                    {
+                      "Key": "tss",
+                      "Value": "10"
+                    }
+                  ],
+                  "Name": "Add water on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Aqua;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] PondWater PondWater;\r\n        \r\n        \r\n        [Description(\"Add Water on this date (dd-mmm)\")]\r\n        public string added_date { get; set; }\r\n        \r\n        [Description(\"Volume of Water Added (m^3)\")]\r\n        public double volume { get; set; }\r\n        \r\n        [Description(\"Temperature of Water Added (oC)\")]\r\n        public double temperature { get; set; }\r\n        \r\n        [Description(\"Salinity of Water Added (kg/m^3)\")]\r\n        public double salinity { get; set; }\r\n        \r\n        [Description(\"PH of Water Added\")]\r\n        public double ph { get; set; }\r\n        \r\n        [Description(\"Nitrogen of Water Added (kg/m^3)\")]\r\n        public double n { get; set; }\r\n    \r\n        [Description(\"Phosphorus of Water Added (kg/m^3)\")]\r\n        public double p { get; set; }\r\n        \r\n        [Description(\"Total Suspended Solids of Water Added (kg/m^3)\")]\r\n        public double tss { get; set; }\r\n\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.DatesEqual(added_date, Clock.Today))\r\n            {\r\n                WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);\r\n                PondWater.Fill(Volume: volume, WaterProperties: addedProps);\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "01-oct"
+                    },
+                    {
+                      "Key": "volume",
+                      "Value": "10000"
+                    },
+                    {
+                      "Key": "temperature",
+                      "Value": "15"
+                    },
+                    {
+                      "Key": "salinity",
+                      "Value": "5"
+                    },
+                    {
+                      "Key": "ph",
+                      "Value": "2"
+                    },
+                    {
+                      "Key": "n",
+                      "Value": "3"
+                    },
+                    {
+                      "Key": "p",
+                      "Value": "4"
+                    },
+                    {
+                      "Key": "tss",
+                      "Value": "10"
+                    }
+                  ],
+                  "Name": "Add water on fixed date1",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Aqua;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] FoodInPond FoodInPond;\r\n        \r\n        \r\n        [Description(\"Add feed on this date (dd-mmm)\")]\r\n        public string added_date {get; set;}\r\n\r\n        [Description(\"Name of the feed\")]\r\n        public string FeedName {get; set;}\r\n        \r\n        [Description(\"Amount of feed added (as Dry Matter) (kg)\")]\r\n        public double DryMatter {get; set;}\r\n        \r\n        [Description(\"Amount of Nitrogen in the feed added (kg)\")]\r\n        public double Nitrogen {get; set;}\r\n        \r\n        [Description(\"Amount of Digestible Energy in the feed added (MJ)\")]\r\n        public double DigestibleEnergy {get; set;}\r\n        \r\n\r\n\r\n        \r\n       [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\r\n            {\r\n            Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);\r\n            FoodInPond.Food.AddFeed(newFeed);\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "05-jan"
+                    },
+                    {
+                      "Key": "FeedName",
+                      "Value": "TestFeed"
+                    },
+                    {
+                      "Key": "DryMatter",
+                      "Value": "400"
+                    },
+                    {
+                      "Key": "Nitrogen",
+                      "Value": "20"
+                    },
+                    {
+                      "Key": "DigestibleEnergy",
+                      "Value": "3000"
+                    }
+                  ],
+                  "Name": "Add Feed on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Aqua;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] FoodInPond FoodInPond;\r\n        \r\n        \r\n        [Description(\"Add feed on this date (dd-mmm)\")]\r\n        public string added_date { get; set; }\r\n\r\n        [Description(\"Name of the feed\")]\r\n        public string FeedName { get; set; }\r\n        \r\n        [Description(\"Amount of feed added (as Dry Matter) (kg)\")]\r\n        public double DryMatter { get; set; }\r\n        \r\n        [Description(\"Amount of Nitrogen in the feed added (kg)\")]\r\n        public double Nitrogen { get; set; }\r\n        \r\n        [Description(\"Amount of Digestible Energy in the feed added (MJ)\")]\r\n        public double DigestibleEnergy { get; set; }\r\n        \r\n\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.DatesEqual(added_date, Clock.Today))\r\n            {\r\n                Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);\r\n                FoodInPond.Food.AddFeed(newFeed);\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "10-jan"
+                    },
+                    {
+                      "Key": "FeedName",
+                      "Value": "ShaunFeed"
+                    },
+                    {
+                      "Key": "DryMatter",
+                      "Value": "100"
+                    },
+                    {
+                      "Key": "Nitrogen",
+                      "Value": "20"
+                    },
+                    {
+                      "Key": "DigestibleEnergy",
+                      "Value": "3000"
+                    }
+                  ],
+                  "Name": "Add Feed on fixed date1",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Aqua;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] Prawns Prawns;\r\n        \r\n        \r\n        [Description(\"Add feed on this date (dd-mmm)\")]\r\n        public string added_date { get; set; }\r\n\r\n        [Description(\"Number of prawns to add to the pond\")]\r\n        public int NumberOfPrawns { get; set; }\r\n        \r\n        [Description(\"Starting live weight of a prawn (g/prawn)\")]\r\n        public double LiveWeight { get; set; }\r\n        \r\n        [Description(\"Starting mass of Nitrogen in a prawn (g N/prawn)\")]\r\n        public double NitrogenMass { get; set; }\r\n        \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.DatesEqual(added_date, Clock.Today))\r\n            {\r\n                Prawns.AddPrawnsToPond(NumberOfPrawns, LiveWeight, NitrogenMass);\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "05-jan"
+                    },
+                    {
+                      "Key": "NumberOfPrawns",
+                      "Value": "1000"
+                    },
+                    {
+                      "Key": "LiveWeight",
+                      "Value": "1"
+                    },
+                    {
+                      "Key": "NitrogenMass",
+                      "Value": "0.02"
+                    }
+                  ],
+                  "Name": "Add Prawns on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[FoodInPond].Food.TotalDM as FoodDM",
+                "[FoodInPond].Food.TotalN as FoodN",
+                "[FoodInPond].Food.TotalDE as FoodDE ",
+                "[Prawns].NumOfPrawns as Prawns",
+                "[Prawns].LiveWeight as Weight",
+                "[Prawns].Nitrogen as NWeight",
+                "[Prawns].Deaths as Deaths",
+                "[Prawns].ConsumedDM as Consumed",
+                "[Prawns].FaecesDM as Faeces",
+                "[Prawns].ExcretedNH4 as Ammonium",
+                "[FoodInPond].Food.FeedNames as FoodNames",
+                "[FoodInPond].Food.FeedDMs as FoodDEs"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": "kg",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": null,
+              "LegendOutsideGraph": false,
+              "Name": "Graph",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16776961,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FoodDM",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series 0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -65536,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FoodN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16711936,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "FoodDE",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series3",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": "kg",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": null,
+              "LegendOutsideGraph": false,
+              "Name": "Graph1",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16776961,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Prawns",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series 0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -65536,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deaths",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": "kg",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": null,
+              "LegendOutsideGraph": false,
+              "Name": "Graph2",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16776961,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Weight",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series 0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -65536,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Consumed",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16711936,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deaths",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series3",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
 }
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Add water on fixed date1</Name>
-          <Script>
-            <added_date>01-oct</added_date>
-            <volume>10000</volume>
-            <temperature>15</temperature>
-            <salinity>5</salinity>
-            <ph>2</ph>
-            <n>3</n>
-            <p>4</p>
-            <tss>10</tss>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] PondWater PondWater;
-		
-		
-		[Description("Add Water on this date (dd-mmm)")]
-		public string added_date { get; set; }
-		
-		[Description("Volume of Water Added (m^3)")]
-		public double volume { get; set; }
-		
-		[Description("Temperature of Water Added (oC)")]
-		public double temperature { get; set; }
-		
-		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity { get; set; }
-		
-		[Description("PH of Water Added")]
-		public double ph { get; set; }
-		
-		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n { get; set; }
-	
-		[Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p { get; set; }
-		
-		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss { get; set; }
-
-
-        
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-			if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-				WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-				PondWater.Fill(Volume: volume, WaterProperties: addedProps);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Add Feed on fixed date</Name>
-          <Script>
-            <added_date>05-jan</added_date>
-            <FeedName>TestFeed</FeedName>
-            <DryMatter>400</DryMatter>
-            <Nitrogen>20</Nitrogen>
-            <DigestibleEnergy>3000</DigestibleEnergy>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] FoodInPond FoodInPond;
-		
-		
-	    [Description("Add feed on this date (dd-mmm)")]
-		public string added_date {get; set;}
-
-	    [Description("Name of the feed")]
-		public string FeedName {get; set;}
-		
-		[Description("Amount of feed added (as Dry Matter) (kg)")]
-		public double DryMatter {get; set;}
-		
-		[Description("Amount of Nitrogen in the feed added (kg)")]
-		public double Nitrogen {get; set;}
-		
-		[Description("Amount of Digestible Energy in the feed added (MJ)")]
-		public double DigestibleEnergy {get; set;}
-		
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
-			FoodInPond.Food.AddFeed(newFeed);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Add Feed on fixed date1</Name>
-          <Script>
-            <added_date>10-jan</added_date>
-            <FeedName>ShaunFeed</FeedName>
-            <DryMatter>100</DryMatter>
-            <Nitrogen>20</Nitrogen>
-            <DigestibleEnergy>3000</DigestibleEnergy>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] FoodInPond FoodInPond;
-		
-		
-		[Description("Add feed on this date (dd-mmm)")]
-		public string added_date { get; set; }
-
-		[Description("Name of the feed")]
-		public string FeedName { get; set; }
-		
-		[Description("Amount of feed added (as Dry Matter) (kg)")]
-		public double DryMatter { get; set; }
-		
-		[Description("Amount of Nitrogen in the feed added (kg)")]
-		public double Nitrogen { get; set; }
-		
-		[Description("Amount of Digestible Energy in the feed added (MJ)")]
-		public double DigestibleEnergy { get; set; }
-		
-
-
-        
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-			if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-				Feed newFeed = new Feed(FeedName, DryMatter, Nitrogen, DigestibleEnergy);
-				FoodInPond.Food.AddFeed(newFeed);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-        <Manager>
-          <Name>Add Prawns on fixed date</Name>
-          <Script>
-            <added_date>05-jan</added_date>
-            <NumberOfPrawns>1000</NumberOfPrawns>
-            <LiveWeight>1</LiveWeight>
-            <NitrogenMass>0.02</NitrogenMass>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] Prawns Prawns;
-		
-		
-		[Description("Add feed on this date (dd-mmm)")]
-		public string added_date { get; set; }
-
-		[Description("Number of prawns to add to the pond")]
-		public int NumberOfPrawns { get; set; }
-		
-		[Description("Starting live weight of a prawn (g/prawn)")]
-		public double LiveWeight { get; set; }
-		
-		[Description("Starting mass of Nitrogen in a prawn (g N/prawn)")]
-		public double NitrogenMass { get; set; }
-		
-
-        
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-			if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-				Prawns.AddPrawnsToPond(NumberOfPrawns, LiveWeight, NitrogenMass);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-      </Folder>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[FoodInPond].Food.TotalDM as FoodDM</string>
-          <string>[FoodInPond].Food.TotalN as FoodN</string>
-          <string>[FoodInPond].Food.TotalDE as FoodDE </string>
-          <string>[Prawns].NumOfPrawns as Prawns</string>
-          <string>[Prawns].LiveWeight as Weight</string>
-          <string>[Prawns].Nitrogen as NWeight</string>
-          <string>[Prawns].Deaths as Deaths</string>
-          <string>[Prawns].ConsumedDM as Consumed</string>
-          <string>[Prawns].FaecesDM as Faeces</string>
-          <string>[Prawns].ExcretedNH4 as Ammonium</string>
-          <string>[FoodInPond].Food.FeedNames as FoodNames</string>
-          <string>[FoodInPond].Food.FeedDMs as FoodDEs</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Graph>
-        <Name>Graph</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FoodDM</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FoodN</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FoodDE</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>kg</Title>
-          <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Graph1</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Prawns</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Deaths</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>kg</Title>
-          <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Graph>
-        <Name>Graph2</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Weight</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Consumed</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-16711936</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Deaths</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>kg</Title>
-          <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-  </DataStore>
-  <ExplorerWidth>250</ExplorerWidth>
-</Simulations>

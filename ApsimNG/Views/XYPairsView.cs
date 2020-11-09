@@ -1,15 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using System;
-    //using System.Windows.Forms;
-    using Interfaces;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -43,8 +35,15 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -68,6 +67,5 @@ namespace UserInterface.Views
                 return gridView;
             }
         }
-
     }
 }

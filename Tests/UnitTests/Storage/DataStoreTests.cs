@@ -12,7 +12,7 @@ namespace UnitTests.Storage
         public void TestFileNameChange()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = sims.FindInScope<IDataStore>();
 
             // Write the simulations to disk.
             sims.Write(sims.FileName);

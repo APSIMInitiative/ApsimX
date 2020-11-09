@@ -1,15 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using Interfaces;
-    using Models.Graph;
+    using Models;
     using Models.Soils;
     using Commands;
+    using System.Globalization;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -61,7 +57,6 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
-            this.initialWater.Parent.Children.Add(this.graph);
             this.graph.Parent = this.initialWater.Parent;
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.initialWaterView.Graph, this.explorerPresenter);
@@ -72,9 +67,9 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            graphPresenter.Detach();
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
             this.DisconnectViewEvents();
-            this.initialWater.Parent.Children.Remove(this.graph);
         }
 
         /// <summary>
@@ -83,7 +78,7 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             DisconnectViewEvents();
-            initialWaterView.PercentFull = Convert.ToInt32(initialWater.FractionFull * 100);
+            initialWaterView.PercentFull = Convert.ToInt32(initialWater.FractionFull * 100, CultureInfo.InvariantCulture);
             initialWaterView.PAW = (int)Math.Round(initialWater.PAW);
             if (double.IsNaN(initialWater.DepthWetSoil))
             {

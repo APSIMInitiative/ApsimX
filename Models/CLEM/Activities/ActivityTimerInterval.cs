@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [XmlIgnore]
+        [JsonIgnore]
         [Link]
         Clock Clock = null;
 
@@ -44,17 +44,17 @@ namespace Models.CLEM.Activities
         public int Interval { get; set; }
 
         /// <summary>
-        /// First month to pay overhead
+        /// First month to start interval
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Description("First month to start interval (1-12)")]
+        [Description("First month to start interval")]
         [Required, Month]
-        public int MonthDue { get; set; }
+        public MonthsOfYear MonthDue { get; set; }
 
         /// <summary>
         /// Month this overhead is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime NextDueDate { get; set; }
 
         /// <summary>
@@ -138,19 +138,22 @@ namespace Models.CLEM.Activities
         [EventSubscribe("StartOfSimulation")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            if (MonthDue >= Clock.StartDate.Month)
+            int monthDue = (int)MonthDue;
+            if (monthDue != 0)
             {
-                NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-            }
-            else
-            {
-                NextDueDate = new DateTime(Clock.StartDate.Year, MonthDue, Clock.StartDate.Day);
-                while (Clock.StartDate > NextDueDate)
+                if (monthDue >= Clock.StartDate.Month)
                 {
-                    NextDueDate = NextDueDate.AddMonths(Interval);
+                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
+                }
+                else
+                {
+                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
+                    while (Clock.StartDate > NextDueDate)
+                    {
+                        NextDueDate = NextDueDate.AddMonths(Interval);
+                    }
                 }
             }
-
         }
 
         /// <summary>
@@ -170,14 +173,34 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform every <span class=\"setvalueextra\">";
-            html += Interval.ToString();
-            html += "</span> months from <span class=\"setvalueextra\">";
-            html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            html += "Perform every ";
+            if (Interval > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += Interval.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
+            html += "</span> months from ";
+            if(MonthDue > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += MonthDue.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
             html += "</span></div>";
-            html += "\n</div>";
+            if(!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             return html;
         }
 
@@ -187,7 +210,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -196,7 +219,15 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "<div class=\"filtername\">";
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
+                html += this.Name;
+            }
+            html += $"</div>";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
 
     }

@@ -2,10 +2,11 @@
 using Models.Core;
 using System.Xml;
 using Models.Soils;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Interfaces;
+using Models.Soils.Nutrients;
 
 namespace Models
 {
@@ -43,6 +44,28 @@ namespace Models
         /// <value>The fraction ca.</value>
         public double FractionCa { get; set; }
     }
+
+    /// <summary>
+    /// Stores information about a fertiliser application.
+    /// </summary>
+    public class FertiliserApplicationType : EventArgs
+    {
+        /// <summary>
+        /// Amount of fertiliser applied.
+        /// </summary>
+        public double Amount { get; set; }
+
+        /// <summary>
+        /// Depth to which fertiliser was applied.
+        /// </summary>
+        public double Depth { get; set; }
+
+        /// <summary>
+        /// Type of fertiliser applied.
+        /// </summary>
+        public Fertiliser.Types FertiliserType { get; set; }
+    }
+
     /// <summary>
     /// The fertiliser model
     /// </summary>
@@ -51,25 +74,30 @@ namespace Models
     public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
-        [Link] private ISoil Soil = null;
+        [Link] private IPhysical soilPhysical = null;
         
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute NO3 = null;
+        [Link(ByName = true)] private ISolute NO3 = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute NH4 = null;
+        [Link(ByName = true)] private ISolute NH4 = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute Urea = null;
+        [Link(ByName = true)] private ISolute Urea = null;
 
         // Parameters
         /// <summary>Gets or sets the definitions.</summary>
         /// <value>The definitions.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<FertiliserType> Definitions { get; set; }
+
+        /// <summary>
+        /// Invoked whenever fertiliser is applied.
+        /// </summary>
+        public event EventHandler<FertiliserApplicationType> Fertilised;
 
         /// <summary>Adds the definitions.</summary>
         private void AddDefinitions()
@@ -94,7 +122,7 @@ namespace Models
       
         /// <summary>Gets the nitrogen applied.</summary>
         /// <value>The nitrogen applied.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double NitrogenApplied { get ; private set; }
 
@@ -146,12 +174,15 @@ namespace Models
             if (Amount > 0)
             {
                 // find the layer that the fertilizer is to be added to.
-                int layer = GetLayerDepth(Depth, Soil.Thickness);
+                int layer = GetLayerDepth(Depth, soilPhysical.Thickness);
 
                 FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
                 if (fertiliserType == null)
                     throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
 
+                // We find the current amount of N in each form, add to it as needed, 
+                // then set the new value. An alternative approach could call AddKgHaDelta
+                // rather than SetKgHa
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     var values = NO3.kgha;
@@ -175,6 +206,8 @@ namespace Models
                 }
                 if (doOutput)
                     Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+
+                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
             }
         }
 

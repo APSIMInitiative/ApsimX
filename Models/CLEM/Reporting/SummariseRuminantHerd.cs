@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
+using System.Globalization;
 
 namespace Models.CLEM
 {
@@ -36,13 +37,13 @@ namespace Models.CLEM
         /// <summary>
         /// The details of the summary group for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public HerdReportItemGeneratedEventArgs ReportDetails { get; set; }
 
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
-        private List<RuminantFilterGroup> herdFilters { get; set; }
+        private List<RuminantGroup> herdFilters { get; set; }
 
         /// <summary>
         /// Report item generated and ready for reporting 
@@ -56,7 +57,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
-        public List<RuminantFilterGroup> HerdFilters { get; set; }
+        public List<RuminantGroup> HerdFilters { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -65,11 +66,11 @@ namespace Models.CLEM
         private void OnCommencing(object sender, EventArgs e)
         {
             // determine any herd filtering
-            herdFilters = new List<RuminantFilterGroup>();
+            herdFilters = new List<RuminantGroup>();
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantFilterGroup>().Cast<RuminantFilterGroup>();
+                var filtergroup = current.Children.OfType<RuminantGroup>().Cast<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
                     Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
@@ -93,7 +94,7 @@ namespace Models.CLEM
 
             // store details needed to create this report in future.
 
-            //hSReport = new Report.Report
+            //hSReport = new Report
             //{
             //    Name = this.Name + "Report",
             //    VariableNames = new string[]
@@ -128,7 +129,7 @@ namespace Models.CLEM
         {
             timestep++;
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
-            foreach (RuminantFilterGroup filter in herdFilters)
+            foreach (RuminantGroup filter in herdFilters)
             {
                 herd = herd.Filter(filter).ToList();
             }
@@ -150,7 +151,7 @@ namespace Models.CLEM
                                 TimeStep = timestep,
                                 Breed = breedGroup.Key,
                                 Herd = herdGroup.Key,
-                                Age = Convert.ToInt32(ageGroup.Key),
+                                Age = Convert.ToInt32(ageGroup.Key, CultureInfo.InvariantCulture),
                                 Sex = sexGroup.Key.ToString().Substring(0, 1),
                                 Number = ageGroup.Sum(a => a.Number),
                                 AverageWeight = ageGroup.Average(a => a.Weight),
