@@ -917,15 +917,16 @@ namespace APSIM.Shared.Utilities
         /// Convert a csv string into a data table. Note that the datatable of each 
         /// column will be string.
         /// </summary>
+        /// <param name="tableName">Name of the table to create.</param>
         /// <param name="csv">The csv string.</param>
         /// <returns>The created datatable.</returns>
-        public static DataTable FromCSV(string csv)
+        public static DataTable FromCSV(string tableName, string csv)
         {
             var sr = new StringReader(csv);
             string[] headers = sr.ReadLine().Split(',');
-            DataTable dt = new DataTable();
+            DataTable dt = new DataTable(tableName);
             foreach (string header in headers)
-                dt.Columns.Add(header);
+                dt.Columns.Add(header.Trim());
 
             var line = sr.ReadLine();
             while (!string.IsNullOrEmpty(line))
@@ -937,7 +938,59 @@ namespace APSIM.Shared.Utilities
                 dt.Rows.Add(dr);
                 line = sr.ReadLine();
             }
+
+            // Go through all columns and see if the column datatype can be made more 
+            // specific than string e.g. convert string to double 
+            for (int colIndex = 0; colIndex < dt.Columns.Count; colIndex++)
+            {
+                Type typeToConvertTo = null;
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Int32.TryParse((string)row[colIndex], out int intValue))
+                    {
+                        if (typeToConvertTo == null)
+                            typeToConvertTo = typeof(int);
+                        else if (typeToConvertTo != typeof(int))
+                        {
+                            typeToConvertTo = null;
+                            break;
+                        }
+                    }
+                    else if (Double.TryParse((string)row[colIndex], out double doubleValue))
+                    {
+                        if (typeToConvertTo == null)
+                            typeToConvertTo = typeof(double);
+                        else if (typeToConvertTo != typeof(double))
+                        {
+                            typeToConvertTo = null;
+                            break;
+                        }
+                    }
+                    else if (DateTime.TryParse((string)row[colIndex], out DateTime dateValue))
+                    {
+                        if (typeToConvertTo == null)
+                            typeToConvertTo = typeof(DateTime);
+                        else if (typeToConvertTo != typeof(DateTime))
+                        {
+                            typeToConvertTo = null;
+                            break;
+                        }
+                    }
+                }
+                if (typeToConvertTo != null)
+                    ConvertDataTableOfColumn(dt, dt.Columns[colIndex].ColumnName, typeToConvertTo);
+            }
+
             return dt;
+        }
+
+        /// <summary>Convert a DataTable to a comma separated text string.</summary>
+        /// <param name="table">The table to convert.</param>
+        public static string ToCSV(DataTable table)
+        {
+            System.IO.StringWriter writer = new System.IO.StringWriter();
+            DataTableUtilities.DataTableToText(table, 0, ",", true, writer);
+            return writer.ToString();
         }
 
         /// <summary>

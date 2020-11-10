@@ -35,6 +35,8 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool FloatsAreEqual(double value1, double value2, double tolerance)
         {
+            if (tolerance == 0)
+                return value1 == value2;
             return (System.Math.Abs(value1 - value2) < tolerance);
         }
         
@@ -2023,6 +2025,39 @@ namespace APSIM.Shared.Utilities
                 if (FloatsAreEqual(items[i], value))
                     return i;
             return -1;
+        }
+
+        /// <summary>
+        /// Format a value to a specified number of significant figures.
+        /// </summary>
+        /// <param name="value">The value to format.</param>
+        /// <param name="digits">The number of digits to format to.</param>
+        public static string FormatSignificantDigits(double value, int digits)
+        {
+            string returnStr;
+
+            // get the number of digits before the decimal place
+            int decPos = value.ToString().IndexOf(".");
+
+            // then round the number up based on the number of decimal places we can have
+            // ie 62.3422623  should become 62.3423  if decPos = 2, then round dvalue to 4 decimal places
+            //    3642.45678  should become 3642.57  if decPos = 4, then round dvalue to 2 decimal places
+            //    3642        should become 3642.00  if decPos = 0, then round dvalue to 2 decimal places
+            if (decPos > 0)
+                returnStr = Math.Round(value, digits - decPos).ToString();
+            else
+                returnStr = Math.Round(value, digits).ToString();
+
+            if (returnStr.Length >= (digits + 1))
+            {
+                // new trucate the string to get the correct number of digits
+                returnStr = returnStr.Substring(0, digits + 1);
+            }
+            else
+                returnStr = returnStr.PadRight(7, '0');
+            
+            // add a space so that we always have something
+            return returnStr;
         }
     }
 }
