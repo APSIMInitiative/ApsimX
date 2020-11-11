@@ -88,18 +88,9 @@
         private void OnCellValueChanged1(object sender, GridCellsChangedArgs e)
         {
             foreach (GridCellChangedArgs cell in e.ChangedCells)
-            {
-                try
-                {
-                    tables[0] = view.Grid1.DataSource;
-                    ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
-                    presenter.CommandHistory.Add(cmd);
-                }
-                catch (Exception ex)
-                {
-                    presenter.MainPresenter.ShowError(ex);
-                }
-            }
+                tables[0].Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
+            ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
+            presenter.CommandHistory.Add(cmd);
         }
 
         /// <summary>
@@ -110,18 +101,9 @@
         private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
         {
             foreach (GridCellChangedArgs cell in e.ChangedCells)
-            {
-                try
-                {
-                    tables[1] = view.Grid2.DataSource;
-                    ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
-                    presenter.CommandHistory.Add(cmd);
-                }
-                catch (Exception ex)
-                {
-                    presenter.MainPresenter.ShowError(ex);
-                }
-            }
+                tables[1].Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
+            ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
+            presenter.CommandHistory.Add(cmd);
         }
 
         /// <summary>
