@@ -100,13 +100,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Bin\gtk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Bin\Mono.Cairo.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -136,6 +136,7 @@
   <ItemGroup>
     <Compile Include="ApsimNG\Presenters\AddModelPresenterTests.cs" />
     <Compile Include="ApsimNG\Presenters\ProfileGridTests.cs" />
+    <Compile Include="ApsimNG\Presenters\TablePresenterTests.cs" />
     <Compile Include="ApsimNG\UITestsMain.cs" />
     <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />
     <Compile Include="ApsimNG\Utilities\UITestUtilities.cs" />
