@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
+    [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -41,6 +42,7 @@ namespace Models.CLEM.Activities
         public int OffsetMonthHarvestStop { get; set; }
     
         private CropActivityManageProduct ManageProductActivity;
+        private List<ActivityTimerSequence> sequenceTimerList;
 
         /// <summary>
         /// Notify CLEM that this activity was performed.
@@ -53,6 +55,15 @@ namespace Models.CLEM.Activities
         public ActivityTimerCropHarvest()
         {
             this.SetDefaults();
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            sequenceTimerList = FindAllChildren<ActivityTimerSequence>().ToList<ActivityTimerSequence>();
         }
 
         /// <summary>
@@ -118,10 +129,11 @@ namespace Models.CLEM.Activities
                     DateTime checkDate = harvestDate.AddMonths(range[i]);
                     month[i] = (checkDate.Year * 100 + checkDate.Month);
                 }
+
                 int today = Clock.Today.Year * 100 + Clock.Today.Month;
                 if (month[0] <= today && month[1] >= today)
                 {
-                    // report activity performed.
+                    // report activity performed details.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
                         Activity = new BlankActivity()
@@ -130,6 +142,23 @@ namespace Models.CLEM.Activities
                             Name = this.Name,
                         }
                     };
+                    // check if timer sequence ok
+                    if (sequenceTimerList.Count() > 0)
+                    {
+                        // get month index in sequence
+                        int sequenceIndex = today - month[0];
+                        foreach (var sequence in sequenceTimerList)
+                        {
+                            if (!sequence.TimerOK(sequenceIndex))
+                            {
+                                // report activity performed.
+                                activitye.Activity.Status = ActivityStatus.NotNeeded;
+                                activitye.Activity.SetGuID(this.UniqueID);
+                                this.OnActivityPerformed(activitye);
+                                return false;
+                            }
+                        }
+                    }
                     activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                     return true;
@@ -139,7 +168,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine whether the activity has past based on current dateand harvest details form parent.
+        /// Method to determine whether the activity has past based on current date and harvest details form parent.
         /// </summary>
         /// <returns>Whether the activity is past</returns>
         public bool ActivityPast
