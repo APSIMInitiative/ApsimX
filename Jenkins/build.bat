@@ -39,7 +39,7 @@ popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 
 rem and use the multithreaded switch.
-set "flags=/v:m /m /nologo"
+set "flags=/v:m /nologo"
 
 if "%1"=="/r" (
 	rem We need to build in release mode.

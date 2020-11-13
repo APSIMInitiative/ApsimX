@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
@@ -13,6 +14,7 @@ using Microsoft.Toolkit.Parsers.Markdown;
 using Microsoft.Toolkit.Parsers.Markdown.Blocks;
 using Microsoft.Toolkit.Parsers.Markdown.Inlines;
 using Models.Core;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -36,6 +38,7 @@ namespace UserInterface.Views
         private VBox container;
         private Cursor handCursor;
 		private Cursor regularCursor;
+        private MarkdownFindView findView;
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -55,6 +58,11 @@ namespace UserInterface.Views
             Initialise(owner, e);
         }
 
+        public void SetMainWidget(Widget widget)
+        {
+            mainWidget = widget;
+        }
+
         /// <summary>Initialise widget.</summary>
         /// <param name="ownerView">The owner of the widget.</param>
         /// <param name="gtkControl">The raw gtk control.</param>
@@ -62,6 +70,9 @@ namespace UserInterface.Views
         {
             container = (VBox)gtkControl;
             textView = (TextView)container.Children[0];
+            textView.PopulatePopup += OnPopulatePopupMenu;
+
+            findView = new MarkdownFindView();
 
             textView.Editable = false;
             textView.WrapMode = WrapMode.Word;
@@ -75,6 +86,54 @@ namespace UserInterface.Views
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
+            
+            textView.KeyPressEvent += OnTextViewKeyPress;
+        }
+
+        /// <summary>
+        /// Trap keypress events - show the text search dialog on ctrl + f.
+        /// </summary>
+        /// <param name="sender">Sender widget.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnTextViewKeyPress(object sender, KeyPressEventArgs args)
+        {
+            try
+            {
+                if ( (args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
+                    findView.ShowFor(this);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        [GLib.ConnectBefore]
+        private void OnPopulatePopupMenu(object o, PopulatePopupArgs args)
+        {
+            try
+            {
+                MenuItem option = new MenuItem("Find Text");
+                option.ShowAll();
+                option.Activated += OnFindText;
+                args.Menu.Append(option);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        private void OnFindText(object sender, EventArgs e)
+        {
+            try
+            {
+                findView.ShowFor(this);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the visibility of the widget.</summary>
@@ -175,6 +234,7 @@ namespace UserInterface.Views
                         container.Remove(textView);
                         container.Add(new HSeparator());
                         textView = new TextView();
+                        textView.PopulatePopup += OnPopulatePopupMenu;
                         container.Add(textView);
                         insertPos = textView.Buffer.GetIterAtOffset(0);
                     }
@@ -212,7 +272,7 @@ namespace UserInterface.Views
                 else if (inline is CodeInline codeInline)
                     textView.Buffer.InsertWithTags(ref insertPos, codeInline.Text, GetTags("Normal", indent + 1));
                 else if (inline is ImageInline imageInline)
-                    DisplayImage(imageInline.Url, ref insertPos);
+                    DisplayImage(imageInline.Url, imageInline.Tooltip, ref insertPos);
                 else if (inline is SubscriptTextInline subscript)
                     textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
                 else if (inline is SuperscriptTextInline superscript)
@@ -241,8 +301,10 @@ namespace UserInterface.Views
             for (uint i = 0; i < table.Rows.Count(); i++)
                 for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
                 {
-                    var cell = table.Rows[(int)i].Cells[(int)j];
-                    string text = cell.Inlines.FirstOrDefault()?.ToString();
+                    string text = "";
+                    TableBlock.TableRow row = table.Rows[(int)i];
+                    if (row.Cells.Count > j)
+                        text = row.Cells[(int)j].Inlines.FirstOrDefault()?.ToString();
                     if (i == 0)
                         text = $"<b>{text}</b>";
                     tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
@@ -257,6 +319,7 @@ namespace UserInterface.Views
 
             // Insert a new textview beneath the previous one.
             textView = new TextView();
+            textView.PopulatePopup += OnPopulatePopupMenu;
             textView.ShowAll();
             container.Add(textView);
             insertPos = textView.Buffer.GetIterAtOffset(0);
@@ -268,17 +331,14 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="url">The url of the image.</param>
         /// <param name="insertPos">The text iterator insert position.</param>
-        private void DisplayImage(string url, ref TextIter insertPos)
+        private void DisplayImage(string url, string tooltip, ref TextIter insertPos)
         {
             // Convert relative paths in url to absolute.
             string absolutePath = PathUtilities.GetAbsolutePath(url, ImagePath);
 
             Gtk.Image image = null;
-            if (System.IO.File.Exists(absolutePath))
-            {
-                var pix = new Pixbuf(absolutePath);
-                image = new Gtk.Image(pix);
-            }
+            if (File.Exists(absolutePath))
+                image = new Gtk.Image(absolutePath);
             else
             {
                 string imagePath = "ApsimNG.Resources." + url;
@@ -290,6 +350,8 @@ namespace UserInterface.Views
             if (image != null)
             { 
                 image.SetAlignment(0, 0);
+                if (!string.IsNullOrWhiteSpace(tooltip))
+                    image.TooltipText = tooltip;
 
                 var eventBox = new EventBox();
                 eventBox.Visible = true;
@@ -300,6 +362,7 @@ namespace UserInterface.Views
                 image.Visible = true;
 
                 textView = new TextView();
+                textView.PopulatePopup += OnPopulatePopupMenu;
                 container.Add(textView);
                 textView.Visible = true;
                 insertPos = textView.Buffer.GetIterAtOffset(0);
@@ -523,6 +586,7 @@ namespace UserInterface.Views
         {
             try
             {
+                textView.KeyPressEvent -= OnTextViewKeyPress;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;

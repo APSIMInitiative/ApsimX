@@ -347,6 +347,10 @@
             potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
+        /// <summary>Gets the biomass retranslocation.</summary>
+        [JsonIgnore]
+        public double RetranslocationWt { get; private set;}
+
         /// <summary>Sets the dry matter allocation.</summary>
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
@@ -359,6 +363,8 @@
             // CO2 (44/12).
             double dMCE = DMConversionEfficiency.Value();
             double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+
+            RetranslocationWt = dryMatter.Retranslocation;
 
             GrowthRespiration = 0.0;
             // allocate structural DM

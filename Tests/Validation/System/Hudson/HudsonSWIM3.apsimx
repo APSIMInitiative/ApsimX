@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 119,
+  "Version": 123,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -34,6 +34,7 @@
         },
         {
           "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "Hudson.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
@@ -88,9 +89,9 @@
                 "[Wheat].AboveGround.Wt",
                 "[Wheat].Grain.Wt",
                 "[Weather].Rain",
-                "sum([Soil].SoilNitrogen.NH4.kgha) as NH4",
-                "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
-                "sum([Soil].SoilNitrogen.Denitrification) as dnit",
+                "sum([Soil].Nutrient.NH4.kgha) as NH4",
+                "sum([Soil].Nutrient.NO3.kgha) as NO3",
+                "sum([Soil].Nutrient.DenitrifiedN) as dnit",
                 "[Wheat].AboveGround.N",
                 "[Wheat].BelowGround.N",
                 "sum([Soil].Swim3.SWmm[5:9]) as SW110",
@@ -367,88 +368,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-10",
@@ -702,61 +621,6 @@
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
-                  "Thickness": [
-                    100.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0
-                  ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial nitrogen",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1367,6 +1231,27 @@
                 },
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
+                  "Depth": [
+                    "0-1",
+                    "1-3",
+                    "3-6",
+                    "6-10",
+                    "10-30",
+                    "30-50",
+                    "50-70",
+                    "70-90",
+                    "90-110",
+                    "110-130",
+                    "130-150",
+                    "150-170",
+                    "170-190",
+                    "190-210",
+                    "210-230",
+                    "230-250",
+                    "250-270",
+                    "270-290",
+                    "290-310"
+                  ],
                   "Thickness": [
                     10.0,
                     20.0,
@@ -1398,6 +1283,14 @@
                   "$type": "Models.Soils.Nutrients.Solute, Models",
                   "Name": "CL",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

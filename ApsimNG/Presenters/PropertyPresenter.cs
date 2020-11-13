@@ -772,7 +772,7 @@
             LifeCycle lc = null;
             foreach (IVariable property in properties)
                 if (lc == null)
-                    lc = model.FindInScope<LifeCycle>(property.Value.ToString());
+                    lc = model.FindInScope<LifeCycle>(property.Value?.ToString());
             return lc;
         }
 
