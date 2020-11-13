@@ -29,7 +29,7 @@ namespace Models
 ```
 
 1. All models in APSIM must derive from *Model* - ```public class SimpleModel : Model```
-2. To allow users, via the user interface, to add the model to another model (as a child), the model developer needs to specify the valid parent models - ```[ValidParent(ParentType = typeof(Simulation))]```. This will allow users to add *RainfallModifier* to a *Simulation* model. Other common options could have been *Zone* or *Folder*. Multiple valid parents can be specified by duplicating the *ValidParent* attribute.
+2. To allow users, via the user interface, to add the model to another model (as a child), the model developer needs to specify the valid parent models - ```[ValidParent(ParentType = typeof(Simulation))]```. This will allow users to add *RainfallModifier* to a *Simulation* model. Other common options could have been *Zone*. All models can be added to a *Folder* so there is no need to specify *Folder* as a valid parent. Multiple valid parents can be specified by duplicating the *ValidParent* attribute.
 3. The ```[Serializable]``` attribute is needed for all models and indicates that the model instance can be converted to a string (JSON) and written to the .apsimx file.
 4. This model, in its current form, can be compiled and run in APSIM, even though it doesn't do anything yet.
 
@@ -109,7 +109,7 @@ The new property is call *OriginalRain*. APSIM makes all public properties visib
 
 The *OriginalRain* property in this example also defines a private setter so that other models cannot modify the value of this property. Only the *RainfallModifier* model is allowed to modify *OriginalRain*. To allow other models to modify the property. The *private* designator can be removed leaving:
 
- ```public double OriginalRain { get; set; };``` 
+ ```public double OriginalRain { get; set; }``` 
  
 # 4. Add links to other models
 
