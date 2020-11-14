@@ -127,10 +127,10 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < 2; i++)
                 {
                     DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                    month[i] = (checkDate.Year * 12 + checkDate.Month);
                 }
 
-                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                int today = Clock.Today.Year * 12 + Clock.Today.Month;
                 if (month[0] <= today && month[1] >= today)
                 {
                     // report activity performed details.
@@ -199,9 +199,9 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < 2; i++)
                 {
                     DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                    month[i] = (checkDate.Year * 12 + checkDate.Month);
                 }
-                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                int today = Clock.Today.Year * 12 + Clock.Today.Month;
                 return (month[0] < today && month[1] < today);
             }
         }
