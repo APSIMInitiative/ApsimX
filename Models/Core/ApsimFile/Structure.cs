@@ -28,7 +28,7 @@
 
             modelToAdd.Parent = parent;
             modelToAdd.ParentAllDescendants();
-            parent.Children.Add(modelToAdd as Model);
+            parent.Children.Add(modelToAdd);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
