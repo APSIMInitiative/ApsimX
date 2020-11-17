@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 124; } }
+        public static int LatestVersion { get { return 125; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3257,6 +3257,22 @@
                     changed |= manager.Replace(change.Item1, change.Item2, true);
                 if (changed)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Add a default value for Sobol's variable to aggregate.
+        /// This was previously assumed to be Clock.Today.Year but
+        /// has been extracted to a variable.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion125(JObject root, string fileName)
+        {
+            foreach (JObject sobol in JsonUtilities.ChildrenRecursively(root, "Sobol"))
+            {
+                sobol["TableName"] = "Report";
+                sobol["AggregationVariableName"] = "Clock.Today.Year";
             }
         }
 
