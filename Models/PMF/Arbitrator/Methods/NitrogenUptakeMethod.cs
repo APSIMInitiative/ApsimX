@@ -89,7 +89,7 @@ namespace Models.PMF.Arbitrator
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
-                N.UptakeSupply[i] = NSupply / zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                N.UptakeSupply[i] = NSupply / zone.Area * MathUtilities.Divide(N.UptakeSupply[i], N.TotalUptakeSupply, 0) * kgha2gsm;
 
         }
     }
