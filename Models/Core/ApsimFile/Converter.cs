@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 123; } }
+        public static int LatestVersion { get { return 124; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3235,6 +3235,28 @@
                             variables.RemoveAt(i);
                     report["VariableNames"] = variables;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Rename RadIntTot to RadiationIntercepted.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion124(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes = new Tuple<string, string>[1]
+            {
+                new Tuple<string, string>("RadIntTot", "RadiationIntercepted")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = false;
+                foreach (Tuple<string, string> change in changes)
+                    changed |= manager.Replace(change.Item1, change.Item2, true);
+                if (changed)
+                    manager.Save();
             }
         }
 
