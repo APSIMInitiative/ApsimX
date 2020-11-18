@@ -44,17 +44,17 @@ namespace Models.PostSimulationTools
 
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
-        [Display(Values = nameof(CommonColumns))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldNameUsedForMatch { get; set; }
 
         /// <summary>Gets or sets the second field name used for match.</summary>
         [Description("Second field name to use for matching predicted with observed data (optional)")]
-        [Display(Values = nameof(CommonColumns))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName2UsedForMatch { get; set; }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Third field name to use for matching predicted with observed data (optional)")]
-        [Display(Values = nameof(CommonColumns))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>
