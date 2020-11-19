@@ -29,7 +29,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater, IPhysical
+    public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -141,7 +141,7 @@ namespace Models.Soils
         {
             get
             {
-                return APSoilUtilities.CalcPAWC(Thickness, LL15, DUL, null);
+                return APSoilUtilities.CalcPAWC(Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Models.Soils
         {
             get
             {
-                return APSoilUtilities.CalcPAWC(Thickness, LL15, SW, null);
+                return APSoilUtilities.CalcPAWC(Thickness, soilPhysical.LL15, SW, null);
             }
         }
 
@@ -301,6 +301,9 @@ namespace Models.Soils
         private Clock Clock = null;
         [Link(IsOptional = true)]
         Plant Plant = null;
+        [Link]
+        private IPhysical soilPhysical = null;
+
         #endregion
 
         #region Class Events
@@ -324,27 +327,6 @@ namespace Models.Soils
         #endregion
 
         #region Parameters
-        /// <summary>Gets or sets the l L15.</summary>
-        /// <value>The l L15.</value>
-        [Summary]
-        [Description("LL15")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] LL15 { get; set; }
-        /// <summary>Gets or sets the dul.</summary>
-        /// <value>The dul.</value>
-        [Summary]
-        [Description("DUL")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] DUL { get; set; }
-        /// <summary>Gets or sets the sat.</summary>
-        /// <value>The sat.</value>
-        [Summary]
-        [Description("SAT")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
         [Description("ConductC (*e^-10")]
         [Display(Format = "N2")]
@@ -373,19 +355,6 @@ namespace Models.Soils
         [Display(Format = "N2")]
         [Description("Rupper")]
         public double[] UpperRepellentWC { get; set; }
-        /// <summary>Root extension factor</summary>
-        [Summary]
-        [Description("XF")]
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        public double[] XF { get; set; }
-        /// <summary>Gets or sets the bd.</summary>
-        /// <value>The bd.</value>
-        [Summary]
-        [Description("BD")]
-        [Units("g/cc")]
-        [Display(Format = "N2")]
-        public double[] BD { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
@@ -522,6 +491,7 @@ namespace Models.Soils
         [Summary]
         [Description("The Poiseuille conductivity of each pore")]
         [Display(Format = "N1")]
+        [JsonIgnore]
         public double[][] Capillarity { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy out of each pore
@@ -530,6 +500,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("The Potential hydraulic conducitivity of water out of the pore")]
+        [JsonIgnore]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
         /// The water potential when this pore space is full and larger pores are empty
@@ -538,6 +509,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] PsiUpper { get; set; }
         /// <summary>
         /// The relative water water filled porosity when this pore space if full and larger pores are empty
@@ -545,6 +517,7 @@ namespace Models.Soils
         [Units("0-1")]
         [Display(Format = "N1")]
         [Description("Layer relative water water filled porosity when these pores are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] RelativePoreVolume { get; set; }
         /// <summary>
         /// Layer volumetric water content when these pores are full and larger pores are empty
@@ -553,6 +526,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("Layer volumetric water content when these pores are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] Theta { get; set; }
         /// <summary>
         /// Net diffusion Upward (+) or downwrd (-) from this layer
@@ -831,15 +805,15 @@ namespace Models.Soils
         {
             double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
 
-            MappedSAT = Layers.MapConcentration(SAT, Thickness, targetThickness, SAT[SAT.Length-1]);
-            MappedDUL = Layers.MapConcentration(DUL, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedLL15 = Layers.MapConcentration(LL15, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedSAT = Layers.MapConcentration(soilPhysical.SAT, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length-1]);
+            MappedDUL = Layers.MapConcentration(soilPhysical.DUL, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedLL15 = Layers.MapConcentration(soilPhysical.LL15, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
+            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, soilPhysical.SAT[soilPhysical.SAT.Length - 1]);
         }
 
         private void doPrecipitation()

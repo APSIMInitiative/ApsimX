@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 124; } }
+        public static int LatestVersion { get { return 125; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3257,6 +3257,38 @@
                     changed |= manager.Replace(change.Item1, change.Item2, true);
                 if (changed)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Move physical properties off Weirdo class and use Physical class instead.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion125(JObject root, string fileName)
+        {
+
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                var weirdo = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
+                if (weirdo != null)
+                {
+                    Physical physical = new Physical();
+                    physical.Name = "Physical";
+                    /* if (weirdo["Thickness"] != null)
+                         physical.AirDry = weirdo["Thickness"].Values<double>().ToArray();
+                     if (weirdo["BD"] != null)
+                         physical.BD = weirdo["BD"].Values<double>().ToArray();
+                     if (weirdo["DUL"] != null)
+                         physical.DUL = weirdo["DUL"].Values<double>().ToArray();
+                     if (weirdo["LL15"] != null)
+                         physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
+                     if (weirdo["SAT"] != null)
+                         physical.SAT = weirdo["SAT"].Values<double>().ToArray();*/
+                    if (weirdo["Thickness"] != null)
+                         physical.Thickness = weirdo["Thickness"].Values<double>().ToArray(); 
+                    JsonUtilities.AddModel(soil, physical);
+                }
             }
         }
 
