@@ -145,7 +145,6 @@
     <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
