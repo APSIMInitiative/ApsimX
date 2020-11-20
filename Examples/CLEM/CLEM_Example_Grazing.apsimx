@@ -701,7 +701,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.CLEM.Activities.RuminantActivityMuster, Models",
+                          "$type": "Models.CLEM.Activities.RuminantActivityMove, Models",
                           "ManagedPastureName": "GrazeFoodStore.NativePasture",
                           "PerformAtStartOfSimulation": true,
                           "MoveSucklings": false,
@@ -709,7 +709,7 @@
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
                           "OnPartialResourcesAvailableAction": 0,
-                          "Name": "Muster to pasture",
+                          "Name": "Move to pasture",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",

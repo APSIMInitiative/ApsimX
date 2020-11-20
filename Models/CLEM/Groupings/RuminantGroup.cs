@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
     [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]

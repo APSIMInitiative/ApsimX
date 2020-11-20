@@ -114,6 +114,7 @@ namespace UserInterface.Presenters
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
+                ".filterset {float: left; font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 0px 3px; margin: 2px 0px 0px 5px; border-radius:3px; }" +
                 ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
@@ -177,8 +178,8 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ResContBack]", "#281A0E");
                 htmlString = htmlString.Replace("[ResContBackLight]", "#3F2817");
                 htmlString = htmlString.Replace("[ResContBackDark]", "#281A0E");
-                htmlString = htmlString.Replace("[ResFontBanner]", "#ffffff"); //1E1610
-                htmlString = htmlString.Replace("[ResFontContent]", "#ffffff"); // cea178
+                htmlString = htmlString.Replace("[ResFontBanner]", "#ffffff"); 
+                htmlString = htmlString.Replace("[ResFontContent]", "#ffffff"); 
 
                 //activities
                 htmlString = htmlString.Replace("[ActContBack]", "#003F3D");

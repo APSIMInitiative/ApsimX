@@ -971,6 +971,7 @@
                             }
                         }
                     }
+                    view.Tree.ExpandChildren(toParent.FullPath, false);
                 }
             }
             catch (Exception err)

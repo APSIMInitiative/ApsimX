@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
             markdown.AppendLine();
             markdown.AppendLine("## General Description");
             markdown.AppendLine();
-            string summary = AutoDocumentation.GetSummary(model.GetType()).Replace("            ", "");
+            string summary = AutoDocumentation.GetSummary(model.GetType())?.Replace("            ", "");
             
             markdown.AppendLine(summary);
             markdown.AppendLine();

@@ -72,6 +72,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+<<<<<<< HEAD
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -79,6 +80,93 @@
     </Reference>
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
 	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
+=======
+  <ItemGroup>
+    <Compile Include="ApsimNG\Presenters\AddModelPresenterTests.cs" />
+    <Compile Include="ApsimNG\Presenters\ProfileGridTests.cs" />
+    <Compile Include="ApsimNG\Presenters\TablePresenterTests.cs" />
+    <Compile Include="ApsimNG\UITestsMain.cs" />
+    <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />
+    <Compile Include="ApsimNG\Utilities\UITestUtilities.cs" />
+    <Compile Include="ApsimNG\Views\GraphViewTests.cs" />
+    <Compile Include="ApsimNG\Views\GridViewTests.cs" />
+    <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
+    <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
+    <Compile Include="APSIMShared\MockJob.cs" />
+    <Compile Include="APSIMShared\ReflectionUtilitiesTests.cs" />
+    <Compile Include="CommandLineArgsTests.cs" />
+    <Compile Include="Core\ApsimFile\EditFileTests.cs" />
+    <Compile Include="Core\ModelTests.cs" />
+    <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
+    <Compile Include="Core\Run\RunnerTests.cs" />
+    <Compile Include="Core\Run\SimulationTests.cs" />
+    <Compile Include="Functions\HoldFunctionTests.cs" />
+    <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
+    <Compile Include="Graph\SeriesTests.cs" />
+    <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
+    <Compile Include="Factorial\ExperimentTests.cs" />
+    <Compile Include="IrrigationTests.cs" />
+    <Compile Include="MockModelValuesChangeDaily.cs" />
+    <Compile Include="MockModel.cs" />
+    <Compile Include="Resources\ResourceTests.cs" />
+    <Compile Include="Soils\MockNutrientPool.cs" />
+    <Compile Include="MockPostSimulationTool.cs" />
+    <Compile Include="MockModelThatThrows.cs" />
+    <Compile Include="Soils\MockSoilTemperature.cs" />
+    <Compile Include="Soils\SoilStandardiserTests.cs" />
+    <Compile Include="Stock\MockForage.cs" />
+    <Compile Include="Stock\StockTests.cs" />
+    <Compile Include="Storage\DataStoreReaderTests.cs" />
+    <Compile Include="Report\ReportDataTests.cs" />
+    <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
+    <Compile Include="Manager\ManagerTests.cs" />
+    <Compile Include="Sensitivity\MorrisTests.cs" />
+    <Compile Include="APSIMShared\RegressionTests.cs" />
+    <Compile Include="Core\ApsimFile\StructureTests.cs" />
+    <Compile Include="ImporterTests.cs" />
+    <Compile Include="Storage\DataStoreTests.cs" />
+    <Compile Include="SummaryTests.cs" />
+    <Compile Include="TextStorageReader.cs" />
+    <Compile Include="APSIMShared\DBMergerTests.cs" />
+    <Compile Include="UtilityTests\PathUtilitiesTests.cs" />
+    <Compile Include="Weather\WeatherSamplerTests.cs" />
+    <Compile Include="Weather\WeatherTests.cs" />
+    <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
+    <Compile Include="Core\DocumentationTests.cs" />
+    <Compile Include="Core\ApsimFile\ManagerConverterTests.cs" />
+    <Compile Include="APSIMShared\IndexedDataTableTests.cs" />
+    <Compile Include="Functions\TrackerFunctionTests.cs" />
+    <Compile Include="FertiliserTests.cs" />
+    <Compile Include="Core\MockEvents.cs" />
+    <Compile Include="Core\MockLocator.cs" />
+    <Compile Include="Storage\MockStorage.cs" />
+    <Compile Include="Core\ScopeTests.cs" />
+    <Compile Include="Soils\MockSoil.cs" />
+    <Compile Include="MockSummary.cs" />
+    <Compile Include="Surface\MockSurfaceOrganicMatter.cs" />
+    <Compile Include="MockIrrigation.cs" />
+    <Compile Include="MockClock.cs" />
+    <Compile Include="Weather\MockWeather.cs" />
+    <Compile Include="Core\ApsimFile\ConverterTests.cs" />
+    <Compile Include="Core\ApsimTests.cs" />
+    <Compile Include="..\..\Models\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Core\ApsimFile\FileFormatTests.cs" />
+    <Compile Include="Core\LinksTests.cs" />
+    <Compile Include="Storage\DataStoreWriterTests.cs" />
+    <Compile Include="Core\LocatorTests.cs" />
+    <Compile Include="Report\ReportTests.cs" />
+    <Compile Include="Soils\SoilsTests.cs" />
+    <Compile Include="APSIMShared\RegrStatsTests.cs" />
+    <Compile Include="Utilities.cs" />
+>>>>>>> d9936592468bc04aa1c5f1f690f6bb8c4ea11c32
   </ItemGroup>
 
   <ItemGroup>

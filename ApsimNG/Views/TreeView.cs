@@ -364,7 +364,7 @@ namespace UserInterface.Views
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
-            string tick = description.Checked ? "✔" : "";
+            string tick = description.Checked ? "✓" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
             for (int i = 0; i < description.Children.Count; i++)
@@ -910,10 +910,10 @@ namespace UserInterface.Views
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
-        public void ExpandChildren(string path)
+        public void ExpandChildren(string path, bool recursive = true)
         {
             TreePath nodePath = treemodel.GetPath(FindNode(path));
-            treeview1.ExpandRow(nodePath, true);
+            treeview1.ExpandRow(nodePath, recursive);
         }
 
         /// <summary>

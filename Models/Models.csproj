@@ -76,6 +76,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>false</Private>
     </Reference>

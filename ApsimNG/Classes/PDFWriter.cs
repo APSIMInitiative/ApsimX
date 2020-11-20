@@ -52,6 +52,7 @@
             
             // Create a temporary working directory.
             WorkingDirectory = Path.Combine(Path.GetTempPath(), "autodoc");
+            RelativePath = explorerPresenter.ApsimXFile.FileName;
             if (Directory.Exists(WorkingDirectory))
                 Directory.Delete(WorkingDirectory, true);
             Directory.CreateDirectory(WorkingDirectory);
@@ -59,6 +60,12 @@
 
         /// <summary>The directory where the PDFWriter instance is working.</summary>
         public string WorkingDirectory { get; }
+
+        /// <summary>
+        /// If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
+        /// </summary>
+        /// <value></value>
+        public string RelativePath { get; private set; }
 
         /// <summary>Create the PDF file.</summary>
         /// <param name="tags">The tags to convert to the PDF file.</param>
@@ -499,7 +506,7 @@
         {
             string html = Markdown.ToHtml(paragraph.text);
 
-            HtmlToMigraDoc.Convert(html, section, WorkingDirectory);
+            HtmlToMigraDoc.Convert(html, section, WorkingDirectory, RelativePath);
 
             Paragraph para = section.LastParagraph;
             para.Format.LeftIndent += Unit.FromCentimeter(paragraph.indent);
@@ -709,7 +716,8 @@
                     // Convert potential HTML to the cell in our row.
                     HtmlToMigraDoc.Convert(tableObj.data[rowIndex][columnIndex].ToString(),
                                            row.Cells[columnIndex], 
-                                           WorkingDirectory);
+                                           WorkingDirectory,
+                                           RelativePath);
 
                     // Update the maximum size of the column with the value from the current row.
                     foreach (var element in row.Cells[columnIndex].Elements)

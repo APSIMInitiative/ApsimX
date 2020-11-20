@@ -153,7 +153,7 @@
         {
             get
             {
-                return Phenology.CurrentPhase.Name == "ReadyForHarvesting";
+                return Phenology.CurrentPhase is EndPhase;
             }
         }
 
