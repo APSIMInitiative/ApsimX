@@ -3275,17 +3275,15 @@
                 {
                     Physical physical = new Physical();
                     physical.Name = "Physical";
-                    /* if (weirdo["Thickness"] != null)
-                         physical.AirDry = weirdo["Thickness"].Values<double>().ToArray();
-                     if (weirdo["BD"] != null)
+                     if (weirdo["BD"].ToArray().Length > 0)
                          physical.BD = weirdo["BD"].Values<double>().ToArray();
-                     if (weirdo["DUL"] != null)
+                     if (weirdo["DUL"].ToArray().Length > 0)
                          physical.DUL = weirdo["DUL"].Values<double>().ToArray();
-                     if (weirdo["LL15"] != null)
+                     if (weirdo["LL15"].ToArray().Length > 0)
                          physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
-                     if (weirdo["SAT"] != null)
-                         physical.SAT = weirdo["SAT"].Values<double>().ToArray();*/
-                    if (weirdo["Thickness"] != null)
+                     if (weirdo["SAT"].ToArray().Length > 0)
+                         physical.SAT = weirdo["SAT"].Values<double>().ToArray();
+                    if (weirdo["Thickness"].ToArray().Length > 0)
                          physical.Thickness = weirdo["Thickness"].Values<double>().ToArray(); 
                     JsonUtilities.AddModel(soil, physical);
                 }
