@@ -81,7 +81,6 @@
     </Reference>
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
 	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

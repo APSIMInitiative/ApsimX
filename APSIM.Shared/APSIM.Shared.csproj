@@ -37,6 +37,7 @@
       <Private>false</Private>
       <SpecificVersion>false</SpecificVersion>
     </Reference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
