@@ -462,7 +462,7 @@ namespace Models.Optimisation
         public DataTable ReadRData(string path)
         {
             REngine engine = REngine.GetInstance();
-            engine.Evaluate($"load('{path}')");
+            engine.Evaluate($"load('{path.Replace(@"\", @"\\")}')");
 
             GenericVector nlo = engine.GetSymbol("nlo").AsList();
             DataTable table = new DataTable(Name);
