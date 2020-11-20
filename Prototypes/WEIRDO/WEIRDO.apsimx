@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 119,
+  "Version": 125,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -989,6 +989,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -1062,6 +1063,18 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-7.5",
+                            "7.5-15",
+                            "15-30",
+                            "30-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-240"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
@@ -1076,42 +1089,7 @@
                             200.0,
                             1000.0
                           ],
-                          "LL15": [
-                            0.0,
-                            0.0,
-                            0.04,
-                            0.04,
-                            0.04,
-                            0.04,
-                            0.04,
-                            0.04,
-                            0.04,
-                            0.04
-                          ],
-                          "DUL": [
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.13,
-                            0.09,
-                            0.1,
-                            0.1,
-                            0.12,
-                            0.11
-                          ],
-                          "SAT": [
-                            0.57,
-                            0.48,
-                            0.48,
-                            0.44,
-                            0.4,
-                            0.38,
-                            0.37,
-                            0.38,
-                            0.39,
-                            0.4
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.07,
                             0.07,
@@ -1184,30 +1162,6 @@
                             0.8,
                             0.8
                           ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "BD": [
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -1218,6 +1172,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -1235,11 +1190,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -1251,6 +1201,40 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-7.5",
+                            "7.5-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140",
+                            "140-145",
+                            "145-150",
+                            "150-155",
+                            "155-160"
+                          ],
                           "Thickness": [
                             25.0,
                             50.0,
@@ -1514,41 +1498,6 @@
                         {
                           "$type": "Models.Soils.Sample, Models",
                           "Depth": [
-                            "0-10",
-                            "10-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150"
-                          ],
-                          "Thickness": [
-                            100.0,
-                            200.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
                             "0-7.5",
                             "7.5-15",
                             "15-30",
@@ -1622,6 +1571,104 @@
                             200.0
                           ],
                           "Name": "OutputLayers",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-7.5",
+                            "7.5-15",
+                            "15-30",
+                            "30-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-240"
+                          ],
+                          "Thickness": [
+                            75.0,
+                            75.0,
+                            150.0,
+                            100.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            1000.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.0,
+                            0.0,
+                            0.04,
+                            0.04,
+                            0.04,
+                            0.04,
+                            0.04,
+                            0.04,
+                            0.04,
+                            0.04
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.13,
+                            0.09,
+                            0.1,
+                            0.1,
+                            0.12,
+                            0.11
+                          ],
+                          "SAT": [
+                            0.57,
+                            0.48,
+                            0.48,
+                            0.44,
+                            0.4,
+                            0.38,
+                            0.37,
+                            0.38,
+                            0.39,
+                            0.4
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4684,6 +4731,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -4749,6 +4797,13 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
@@ -4758,27 +4813,7 @@
                             200.0,
                             600.0
                           ],
-                          "LL15": [
-                            0.16,
-                            0.15,
-                            0.12,
-                            0.18,
-                            0.12
-                          ],
-                          "DUL": [
-                            0.3,
-                            0.28,
-                            0.28,
-                            0.36,
-                            0.28
-                          ],
-                          "SAT": [
-                            0.44,
-                            0.46,
-                            0.46,
-                            0.42,
-                            0.46
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             4.0,
                             12.0,
@@ -4821,14 +4856,6 @@
                             0.8,
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0,
-                            1.2,
-                            1.2,
-                            1.2,
-                            1.2
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -4839,6 +4866,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -4856,11 +4884,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -5401,6 +5424,37 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -5458,6 +5512,74 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-140"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            600.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.16,
+                            0.15,
+                            0.12,
+                            0.18,
+                            0.12
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.28,
+                            0.28,
+                            0.36,
+                            0.28
+                          ],
+                          "SAT": [
+                            0.44,
+                            0.46,
+                            0.46,
+                            0.42,
+                            0.46
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5642,7 +5764,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -5659,7 +5781,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Residue mass",
               "Children": [
@@ -5738,7 +5860,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -5755,7 +5877,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Residue cover",
               "Children": [
@@ -5834,7 +5956,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -5851,7 +5973,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "sw_dep 0 - 20 cm",
               "Children": [
@@ -5930,7 +6052,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -5947,7 +6069,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "sw_dep 20 - 40 cm",
               "Children": [
@@ -6026,7 +6148,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -6043,7 +6165,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "sw_dep 40 - 60 cm",
               "Children": [
@@ -6122,7 +6244,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -6139,7 +6261,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "sw_dep 0 - 60 cm",
               "Children": [
@@ -6218,7 +6340,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -6235,7 +6357,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "PotentialEvaporation",
               "Children": [
@@ -7002,7 +7124,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "ObsPred",
               "Children": [
@@ -7064,7 +7186,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -7081,7 +7203,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Pond",
               "Children": [
@@ -7148,7 +7270,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "PoreWater",
               "Children": [
@@ -7476,7 +7598,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "RepellencyFactor",
               "Children": [
@@ -7674,20 +7796,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -7706,10 +7823,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -7720,6 +7833,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -7737,11 +7851,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -7771,20 +7880,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.1
                           ],
@@ -7803,10 +7907,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -7817,6 +7917,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -7834,11 +7935,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -7868,20 +7964,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.09
                           ],
@@ -7900,10 +7991,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -7914,6 +8001,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -7931,11 +8019,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -7978,6 +8061,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -8127,6 +8211,16 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-3",
+                            "3-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
@@ -8139,36 +8233,7 @@
                             200.0,
                             200.0
                           ],
-                          "LL15": [
-                            0.16,
-                            0.15,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14
-                          ],
-                          "DUL": [
-                            0.3,
-                            0.3,
-                            0.28,
-                            0.28,
-                            0.26,
-                            0.26,
-                            0.26,
-                            0.26
-                          ],
-                          "SAT": [
-                            0.44,
-                            0.44,
-                            0.46,
-                            0.46,
-                            0.36,
-                            0.36,
-                            0.36,
-                            0.36
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             7E-11,
                             7E-11,
@@ -8229,26 +8294,6 @@
                             0.8,
                             0.8
                           ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "BD": [
-                            1.0,
-                            1.0,
-                            1.2,
-                            1.2,
-                            1.3,
-                            1.4,
-                            1.5,
-                            1.6
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -8259,6 +8304,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 2.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -8276,11 +8322,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -8517,43 +8558,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -8821,6 +8825,37 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -8878,6 +8913,92 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-3",
+                            "3-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
+                          "Thickness": [
+                            30.0,
+                            170.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0,
+                            1.0,
+                            1.2,
+                            1.2,
+                            1.3,
+                            1.4,
+                            1.5,
+                            1.6
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.16,
+                            0.15,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.3,
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.26,
+                            0.26,
+                            0.26
+                          ],
+                          "SAT": [
+                            0.44,
+                            0.44,
+                            0.46,
+                            0.46,
+                            0.36,
+                            0.36,
+                            0.36,
+                            0.36
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -9469,7 +9590,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -9486,7 +9607,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Cover",
               "Children": [
@@ -9603,7 +9724,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -9620,7 +9741,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "WaterUse",
               "Children": [
@@ -9630,7 +9751,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Texture",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": "Texture",
                   "Marker": 11,
@@ -9659,7 +9780,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Texture",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": "Texture",
                   "Marker": 11,
@@ -9688,7 +9809,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Texture",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": "Texture",
                   "Marker": 11,
@@ -9745,7 +9866,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "PoreWater",
               "Children": [
@@ -10061,7 +10182,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10078,7 +10199,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "0_5cm",
                   "Children": [
@@ -10592,20 +10713,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-160"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1600.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.3
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.9
                               ],
@@ -10624,10 +10740,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 100.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -10638,6 +10750,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 0.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -10655,11 +10768,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -10689,20 +10797,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-160"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1600.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.3
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.1
                               ],
@@ -10721,10 +10824,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 100.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -10735,6 +10834,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 0.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -10752,11 +10852,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -10786,20 +10881,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-160"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1600.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.3
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.09
                               ],
@@ -10818,10 +10908,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 100.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -10832,6 +10918,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 0.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -10849,11 +10936,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -10901,6 +10983,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -11012,30 +11095,44 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-160"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
-                          "Thickness": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
-                          "CFlow": null,
-                          "XFlow": null,
-                          "PsiBub": null,
-                          "MinRepellancyFactor": null,
-                          "LowerRepellentWC": null,
-                          "UpperRepellentWC": null,
-                          "XF": null,
-                          "BD": null,
-                          "SubProfileConductance": 20.0,
+                          "Thickness": [
+                            1600.0
+                          ],
+                          "LayerThickness": null,
+                          "CFlow": [
+                            0.9
+                          ],
+                          "XFlow": [
+                            3.5
+                          ],
+                          "PsiBub": [
+                            -20.0
+                          ],
+                          "MinRepellancyFactor": [
+                            1.0
+                          ],
+                          "LowerRepellentWC": [
+                            0.2
+                          ],
+                          "UpperRepellentWC": [
+                            0.8
+                          ],
+                          "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
                           "CalculateDrainage": true,
                           "ReportDetail": false,
                           "IncludeSorption": true,
-                          "CalculateEvaporation": true,
+                          "CalculateEvaporation": false,
                           "CalculateDiffusion": true,
-                          "DiffusivityMultiplier": 2.0,
+                          "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -11053,11 +11150,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -11616,6 +11708,41 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140",
+                            "140-145",
+                            "145-150",
+                            "150-155",
+                            "155-160"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -11660,6 +11787,92 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-3",
+                            "3-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
+                          "Thickness": [
+                            30.0,
+                            170.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0,
+                            1.0,
+                            1.2,
+                            1.2,
+                            1.3,
+                            1.4,
+                            1.5,
+                            1.6
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44,
+                            0.44,
+                            0.46,
+                            0.46,
+                            0.36,
+                            0.36,
+                            0.36,
+                            0.36
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -12290,7 +12503,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12307,7 +12520,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "TopWater",
                   "Children": [
@@ -12357,7 +12570,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12374,7 +12587,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "BottomWater",
                   "Children": [
@@ -12451,20 +12664,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -12483,10 +12691,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -12497,6 +12701,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -12514,11 +12719,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -12548,20 +12748,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.1
                           ],
@@ -12580,10 +12775,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -12594,6 +12785,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -12611,11 +12803,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -12645,20 +12832,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.09
                           ],
@@ -12677,10 +12859,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -12691,6 +12869,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -12708,11 +12887,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -12755,6 +12929,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -12866,20 +13041,17 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": null,
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LayerThickness": null,
                           "CFlow": null,
                           "XFlow": null,
                           "PsiBub": null,
                           "MinRepellancyFactor": null,
                           "LowerRepellentWC": null,
                           "UpperRepellentWC": null,
-                          "XF": null,
-                          "BD": null,
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": false,
@@ -12890,6 +13062,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 2.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -12907,11 +13080,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -13148,43 +13316,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -13448,6 +13579,36 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             50.0,
                             50.0,
@@ -13487,6 +13648,38 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": null,
+                          "Thickness": null,
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": null,
+                          "AirDry": null,
+                          "LL15": null,
+                          "DUL": null,
+                          "SAT": null,
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -15039,20 +15232,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -15071,10 +15259,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -15085,6 +15269,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -15102,11 +15287,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -15136,20 +15316,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -15168,10 +15343,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 8.0,
                           "CalculateInfiltration": true,
@@ -15182,6 +15353,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -15199,11 +15371,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -15233,20 +15400,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -15265,10 +15427,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 8.0,
                           "CalculateInfiltration": true,
@@ -15279,6 +15437,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -15296,11 +15455,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -15343,6 +15497,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -15398,20 +15553,17 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": null,
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LayerThickness": null,
                           "CFlow": null,
                           "XFlow": null,
                           "PsiBub": null,
                           "MinRepellancyFactor": null,
                           "LowerRepellentWC": null,
                           "UpperRepellentWC": null,
-                          "XF": null,
-                          "BD": null,
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -15422,6 +15574,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 2.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -15439,11 +15592,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -15680,43 +15828,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -15963,6 +16074,36 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             50.0,
                             50.0,
@@ -16019,6 +16160,38 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": null,
+                          "Thickness": null,
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": null,
+                          "AirDry": null,
+                          "LL15": null,
+                          "DUL": null,
+                          "SAT": null,
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -18145,20 +18318,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -18177,10 +18345,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -18191,6 +18355,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -18208,11 +18373,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -18242,20 +18402,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.1
                           ],
@@ -18274,10 +18429,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -18288,6 +18439,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -18305,11 +18457,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -18339,20 +18486,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.09
                           ],
@@ -18371,10 +18513,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 100.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -18385,6 +18523,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -18402,11 +18541,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -18449,6 +18583,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -18594,6 +18729,16 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-3",
+                            "3-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
@@ -18606,36 +18751,7 @@
                             200.0,
                             200.0
                           ],
-                          "LL15": [
-                            0.16,
-                            0.15,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14
-                          ],
-                          "DUL": [
-                            0.3,
-                            0.3,
-                            0.28,
-                            0.28,
-                            0.26,
-                            0.26,
-                            0.26,
-                            0.26
-                          ],
-                          "SAT": [
-                            0.44,
-                            0.44,
-                            0.46,
-                            0.46,
-                            0.36,
-                            0.36,
-                            0.36,
-                            0.36
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             7E-11,
                             7E-11,
@@ -18696,17 +18812,6 @@
                             0.8,
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0,
-                            1.0,
-                            1.2,
-                            1.2,
-                            1.3,
-                            1.4,
-                            1.5,
-                            1.6
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -18717,6 +18822,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 2.0,
                           "ExtractionMultiplier": 10.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -18734,11 +18840,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -18983,52 +19084,21 @@
                         {
                           "$type": "Models.Soils.Sample, Models",
                           "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
+                            "0-3",
+                            "3-20",
+                            "20-40"
                           ],
                           "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-140"
-                          ],
-                          "Thickness": [
-                            1400.0
+                            30.0,
+                            170.0,
+                            200.0
                           ],
                           "NO3": null,
                           "NH4": null,
                           "SW": [
-                            0.15
+                            0.16,
+                            0.15,
+                            0.14
                           ],
                           "OC": null,
                           "EC": null,
@@ -19258,6 +19328,36 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             50.0,
                             50.0,
@@ -19314,6 +19414,92 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-3",
+                            "3-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
+                          "Thickness": [
+                            30.0,
+                            170.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0,
+                            1.0,
+                            1.2,
+                            1.2,
+                            1.3,
+                            1.4,
+                            1.5,
+                            1.6
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.16,
+                            0.15,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.3,
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.26,
+                            0.26,
+                            0.26
+                          ],
+                          "SAT": [
+                            0.44,
+                            0.44,
+                            0.46,
+                            0.46,
+                            0.36,
+                            0.36,
+                            0.36,
+                            0.36
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -20725,6 +20911,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -20836,20 +21023,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -20868,10 +21050,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 3.0,
                           "CalculateInfiltration": true,
@@ -20882,6 +21060,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -20899,11 +21078,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -21417,6 +21591,37 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -21474,6 +21679,50 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-140"
+                          ],
+                          "Thickness": [
+                            1400.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -22388,6 +22637,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -22554,20 +22804,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
                             1400.0
                           ],
-                          "LL15": [
-                            0.15
-                          ],
-                          "DUL": [
-                            0.3
-                          ],
-                          "SAT": [
-                            0.44
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.9
                           ],
@@ -22586,10 +22831,6 @@
                           "UpperRepellentWC": [
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -22600,6 +22841,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -22617,11 +22859,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -22858,43 +23095,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -23141,6 +23341,37 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -23198,6 +23429,50 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-140"
+                          ],
+                          "Thickness": [
+                            1400.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -24037,20 +24312,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-140"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1400.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.3
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.9
                               ],
@@ -24069,10 +24339,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 20.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -24083,6 +24349,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 10.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -24100,11 +24367,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -24134,20 +24396,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-140"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1400.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.4
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.9
                               ],
@@ -24166,10 +24423,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 20.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -24180,6 +24433,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 10.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -24197,11 +24451,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -24231,20 +24480,15 @@
                               "Hourly": null,
                               "SubHourly": null,
                               "PrecipitationInterception": 0.0,
+                              "Depth": [
+                                "0-140"
+                              ],
                               "Salb": 0.15,
                               "SWCON": null,
                               "Thickness": [
                                 1400.0
                               ],
-                              "LL15": [
-                                0.15
-                              ],
-                              "DUL": [
-                                0.44
-                              ],
-                              "SAT": [
-                                0.44
-                              ],
+                              "LayerThickness": null,
                               "CFlow": [
                                 0.9
                               ],
@@ -24263,10 +24507,6 @@
                               "UpperRepellentWC": [
                                 0.8
                               ],
-                              "XF": null,
-                              "BD": [
-                                1.0
-                              ],
                               "SubProfileConductance": 20.0,
                               "WaterTableDepth": 10.0,
                               "CalculateInfiltration": true,
@@ -24277,6 +24517,7 @@
                               "CalculateDiffusion": true,
                               "DiffusivityMultiplier": 1.0,
                               "ExtractionMultiplier": 10.0,
+                              "MappedThickness": null,
                               "MappedSAT": null,
                               "MappedDUL": null,
                               "MappedLL15": null,
@@ -24294,11 +24535,6 @@
                               "Hour": 0,
                               "ReportLayer": 0,
                               "TimeStep": 0,
-                              "Capillarity": null,
-                              "HydraulicConductivityOut": null,
-                              "PsiUpper": null,
-                              "RelativePoreVolume": null,
-                              "Theta": null,
                               "Diffusion": null,
                               "SoluteFluxEfficiency": null,
                               "SoluteFlowEfficiency": null,
@@ -24346,6 +24582,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -24401,20 +24638,17 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": null,
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LayerThickness": null,
                           "CFlow": null,
                           "XFlow": null,
                           "PsiBub": null,
                           "MinRepellancyFactor": null,
                           "LowerRepellentWC": null,
                           "UpperRepellentWC": null,
-                          "XF": null,
-                          "BD": null,
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -24425,6 +24659,7 @@
                           "CalculateDiffusion": false,
                           "DiffusivityMultiplier": 2.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -24442,11 +24677,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -24960,6 +25190,37 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-2.5",
+                            "2.5-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             25.0,
                             25.0,
@@ -25017,6 +25278,38 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": null,
+                          "Thickness": null,
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": null,
+                          "AirDry": null,
+                          "LL15": null,
+                          "DUL": null,
+                          "SAT": null,
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -25935,6 +26228,36 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-5",
+                            "5-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-35",
+                            "35-40",
+                            "40-45",
+                            "45-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70",
+                            "70-75",
+                            "75-80",
+                            "80-85",
+                            "85-90",
+                            "90-95",
+                            "95-100",
+                            "100-105",
+                            "105-110",
+                            "110-115",
+                            "115-120",
+                            "120-125",
+                            "125-130",
+                            "130-135",
+                            "135-140"
+                          ],
                           "Thickness": [
                             50.0,
                             50.0,
@@ -25987,6 +26310,22 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-20",
+                            "20-30",
+                            "30-40",
+                            "40-50",
+                            "50-60",
+                            "60-70",
+                            "70-80",
+                            "80-90",
+                            "90-100",
+                            "100-110",
+                            "110-120",
+                            "120-130",
+                            "130-140"
+                          ],
                           "Thickness": [
                             100.0,
                             100.0,
@@ -26025,6 +26364,15 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -26073,6 +26421,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "lincoln.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
@@ -26184,6 +26533,15 @@
                           "Hourly": null,
                           "SubHourly": null,
                           "PrecipitationInterception": 0.0,
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
                           "Salb": 0.15,
                           "SWCON": null,
                           "Thickness": [
@@ -26195,33 +26553,7 @@
                             200.0,
                             200.0
                           ],
-                          "LL15": [
-                            0.15,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14,
-                            0.14
-                          ],
-                          "DUL": [
-                            0.3,
-                            0.28,
-                            0.28,
-                            0.26,
-                            0.26,
-                            0.26,
-                            0.26
-                          ],
-                          "SAT": [
-                            0.44,
-                            0.46,
-                            0.46,
-                            0.36,
-                            0.36,
-                            0.36,
-                            0.36
-                          ],
+                          "LayerThickness": null,
                           "CFlow": [
                             0.6,
                             0.6,
@@ -26276,16 +26608,6 @@
                             0.8,
                             0.8
                           ],
-                          "XF": null,
-                          "BD": [
-                            1.0,
-                            1.2,
-                            1.2,
-                            1.3,
-                            1.4,
-                            1.5,
-                            1.6
-                          ],
                           "SubProfileConductance": 20.0,
                           "WaterTableDepth": 10.0,
                           "CalculateInfiltration": true,
@@ -26296,6 +26618,7 @@
                           "CalculateDiffusion": true,
                           "DiffusivityMultiplier": 1.0,
                           "ExtractionMultiplier": 0.0,
+                          "MappedThickness": null,
                           "MappedSAT": null,
                           "MappedDUL": null,
                           "MappedLL15": null,
@@ -26313,11 +26636,6 @@
                           "Hour": 0,
                           "ReportLayer": 0,
                           "TimeStep": 0,
-                          "Capillarity": null,
-                          "HydraulicConductivityOut": null,
-                          "PsiUpper": null,
-                          "RelativePoreVolume": null,
-                          "Theta": null,
                           "Diffusion": null,
                           "SoluteFluxEfficiency": null,
                           "SoluteFlowEfficiency": null,
@@ -26554,41 +26872,6 @@
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "InitialN",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -26871,6 +27154,7 @@
                         },
                         {
                           "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": null,
                           "Thickness": null,
                           "Name": "LayerStructure",
                           "Children": [],
@@ -26881,6 +27165,86 @@
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.0,
+                            1.2,
+                            1.2,
+                            1.3,
+                            1.4,
+                            1.5,
+                            1.6
+                          ],
+                          "AirDry": null,
+                          "LL15": [
+                            0.15,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14,
+                            0.14
+                          ],
+                          "DUL": [
+                            0.3,
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.26,
+                            0.26,
+                            0.26
+                          ],
+                          "SAT": [
+                            0.44,
+                            0.46,
+                            0.46,
+                            0.36,
+                            0.36,
+                            0.36,
+                            0.36
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
