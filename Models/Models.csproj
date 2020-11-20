@@ -32,6 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -92,6 +93,15 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="R.NET">
+      <HintPath>../packages/R.NET.1.9.0/lib/netstandard2.0/RDotNet.dll</HintPath>
+    </Reference>
+       <Reference Include="Microsoft.Win32.Registry">
+      <HintPath>../packages/Microsoft.Win32.Registry.5.0.0/lib/net461/Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="DynamicInterop">
+      <HintPath>../packages/DynamicInterop.0.9.1/lib/netstandard2.0/DynamicInterop.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
