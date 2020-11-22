@@ -1935,7 +1935,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -1952,7 +1952,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Cover",
               "Children": [
@@ -2031,7 +2031,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -2048,7 +2048,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "ProfileSoilWaterContent",
               "Children": [
@@ -2127,7 +2127,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -2144,7 +2144,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "0_150mm",
               "Children": [
@@ -2511,7 +2511,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -2528,7 +2528,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "600_800mm",
               "Children": [
@@ -2895,7 +2895,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -2912,7 +2912,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "1400_1600mm",
               "Children": [
@@ -3058,7 +3058,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -3075,7 +3075,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Height",
               "Children": [
@@ -3125,7 +3125,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -3142,7 +3142,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "WaterExtraction",
               "Children": [
@@ -3192,7 +3192,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -3209,7 +3209,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "WaterDemand",
               "Children": [
@@ -8590,12 +8590,12 @@
                           "SW": [
                             0.3,
                             0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.26,
+                            0.26,
+                            0.26
                           ],
                           "OC": null,
                           "EC": null,
@@ -9116,7 +9116,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9133,7 +9133,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "0_20cm",
                   "Children": [
@@ -9183,7 +9183,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9200,7 +9200,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "20_40cm",
                   "Children": [
@@ -9250,7 +9250,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9267,7 +9267,7 @@
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "40_60cm",
                   "Children": [
@@ -9317,7 +9317,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9334,7 +9334,7 @@
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "60_80cm",
                   "Children": [
@@ -9384,7 +9384,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9401,7 +9401,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "80_100cm",
                   "Children": [
@@ -9451,7 +9451,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9468,7 +9468,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "100_120cm",
                   "Children": [
@@ -9518,7 +9518,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -9535,7 +9535,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "120_140cm",
                   "Children": [
@@ -13655,18 +13655,30 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": null,
-                          "Thickness": null,
+                          "Depth": [
+                            "0-140"
+                          ],
+                          "Thickness": [
+                            1400.0
+                          ],
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
-                          "BD": null,
+                          "BD": [
+                            1.0
+                          ],
                           "AirDry": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LL15": [
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44
+                          ],
                           "KS": null,
                           "BDMetadata": null,
                           "AirDryMetadata": null,
@@ -14237,7 +14249,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -14254,7 +14266,7 @@
               ],
               "LegendPosition": 1,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Drainage",
               "Children": [
@@ -16167,18 +16179,30 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": null,
-                          "Thickness": null,
+                          "Depth": [
+                            "0-140"
+                          ],
+                          "Thickness": [
+                            1400.0
+                          ],
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
-                          "BD": null,
+                          "BD": [
+                            1.0
+                          ],
                           "AirDry": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LL15": [
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44
+                          ],
                           "KS": null,
                           "BDMetadata": null,
                           "AirDryMetadata": null,
@@ -17338,7 +17362,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -17355,7 +17379,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "ProfileWater",
               "Children": [
@@ -20073,7 +20097,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -20090,7 +20114,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "ProfileWater",
               "Children": [
@@ -22312,7 +22336,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Evaporation",
               "Children": [
@@ -23514,7 +23538,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -23531,7 +23555,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Infiltration",
               "Children": [
@@ -23581,7 +23605,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -23598,7 +23622,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Drainage",
               "Children": [
@@ -23648,7 +23672,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -23665,7 +23689,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Drainage1",
               "Children": [
@@ -25285,18 +25309,30 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": null,
-                          "Thickness": null,
+                          "Depth": [
+                            "0-140"
+                          ],
+                          "Thickness": [
+                            1400.0
+                          ],
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
                           "Texture": null,
-                          "BD": null,
+                          "BD": [
+                            1.0
+                          ],
                           "AirDry": null,
-                          "LL15": null,
-                          "DUL": null,
-                          "SAT": null,
+                          "LL15": [
+                            0.15
+                          ],
+                          "DUL": [
+                            0.3
+                          ],
+                          "SAT": [
+                            0.44
+                          ],
                           "KS": null,
                           "BDMetadata": null,
                           "AirDryMetadata": null,
@@ -25458,7 +25494,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -25475,7 +25511,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Infiltration",
                   "Children": [
