@@ -274,8 +274,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double WinterU { get; set; }
-        ///<summary> Who knows</summary>
-        public void RemoveWater(double[] NewSWmm) { }
+        
         ///<summary> Who knows</summary>
         public void SetWater_frac(double[] New_SW) { }
         ///<summary> Who knows</summary>
@@ -760,7 +759,7 @@ namespace Models.Soils
                     if (CalculateDrainage)
                         doDrainage(h, TimeStepSplits, Subh);
                 }
-                doTranspiration();
+                //doTranspiration();  Use KL approach so it integrates with arbitrator for the time being
                 if(CalculateEvaporation)
                     doEvaporation();
                 if(CalculateDiffusion)
@@ -1090,6 +1089,23 @@ namespace Models.Soils
                 }
             UpdateProfileValues();
         }
+
+        ///<summary> Who knows</summary>
+        public void RemoveWater(double[] AmountToRemove)
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                double remainingExtraction = AmountToRemove[l];
+                for (int c = 0; (c < PoreCompartments && remainingExtraction > 0); c++)
+                {
+                    double poreExtraction = Math.Min(remainingExtraction, Pores[l][c].WaterDepth);
+                    Pores[l][c].WaterDepth -= poreExtraction;
+                    remainingExtraction -= poreExtraction;
+                }
+            }
+            WaterExtraction = AmountToRemove.Sum();
+            UpdateProfileValues();
+        }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
@@ -1330,7 +1346,7 @@ namespace Models.Soils
             double WaterIn = InitialProfileWater + InitialPondDepth + InitialResidueWater 
                              + Rain + Irrig;
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
-            double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
+            //double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
             double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Drain;
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
                 throw new Exception(this + " " + Process + " calculations are violating mass balance");           
