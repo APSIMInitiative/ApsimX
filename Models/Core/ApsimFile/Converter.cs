@@ -3261,32 +3261,18 @@
         }
 
         /// <summary>
-        /// Move physical properties off Weirdo class and use Physical class instead.
+        /// Add a default value for Sobol's variable to aggregate.
+        /// This was previously assumed to be Clock.Today.Year but
+        /// has been extracted to a variable.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion125(JObject root, string fileName)
         {
-
-            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            foreach (JObject sobol in JsonUtilities.ChildrenRecursively(root, "Sobol"))
             {
-                var weirdo = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
-                if (weirdo != null)
-                {
-                    Physical physical = new Physical();
-                    physical.Name = "Physical";
-                     if (weirdo["BD"].ToArray().Length > 0)
-                         physical.BD = weirdo["BD"].Values<double>().ToArray();
-                     if (weirdo["DUL"].ToArray().Length > 0)
-                         physical.DUL = weirdo["DUL"].Values<double>().ToArray();
-                     if (weirdo["LL15"].ToArray().Length > 0)
-                         physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
-                     if (weirdo["SAT"].ToArray().Length > 0)
-                         physical.SAT = weirdo["SAT"].Values<double>().ToArray();
-                    if (weirdo["Thickness"].ToArray().Length > 0)
-                         physical.Thickness = weirdo["Thickness"].Values<double>().ToArray(); 
-                    JsonUtilities.AddModel(soil, physical);
-                }
+                sobol["TableName"] = "Report";
+                sobol["AggregationVariableName"] = "Clock.Today.Year";
             }
         }
 
