@@ -278,7 +278,7 @@ namespace Models.CLEM
                     html += "\n<div class=\"activityentry\">This resource is measured in  ";
                     if (units == null || units == "")
                     {
-                        html += "<span class=\"errorlink\">Not specified</span>";
+                        html += "<span class=\"errorlink\">NOT SET</span>";
                     }
                     else
                     {

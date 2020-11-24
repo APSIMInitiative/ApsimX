@@ -386,7 +386,7 @@
 
         /// <summary>Initialise widget.</summary>
         private void InitialiseWidget()
-        { 
+        {
             scroller = new ScrolledWindow();
             if (textEditor.Parent is Container container)
             {

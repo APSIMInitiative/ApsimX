@@ -1107,9 +1107,18 @@ namespace Models.Soils
         [EventSubscribe("StartOfSimulation")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            ErrorChecking();
             OnReset();
             initDone = true;
             Sum_Report();
+        }
+
+        private void ErrorChecking()
+        {
+            if (soilPhysical.KS == null
+                || !MathUtilities.ValuesInArray(soilPhysical.KS)
+                || soilPhysical.KS.All(ks => ks == 0))
+                throw new ApsimXException(this, "KS not provided. Check Soil.Physical configuration");
         }
 
         /// <summary>
@@ -1662,9 +1671,8 @@ namespace Models.Soils
             x[0] = 0.0;
             x[1] = 2.0 * dx[0] + x[0];
 
-            for (int i = 2; i < n; i++)
-                //         p%x(i) = (2d0*(sum(p%dlayer(0:i-1))-p%x(i-1))+p%x(i-1))
-                x[i] = 2.0 * dx[i - 1] + x[i - 2];
+            for (int i = 1; i < n; i++)
+                x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;
 
             x[n] = MathUtilities.Sum(dx);
 
@@ -5872,6 +5880,9 @@ namespace Models.Soils
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [JsonIgnore]
         public double[] Thickness { get { return soilPhysical.Thickness; } }
+
+        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
+        public double[] LayerThickness { get { return soilPhysical.Thickness; } }
 
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
