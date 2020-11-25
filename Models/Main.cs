@@ -17,7 +17,6 @@
     public class Program
     {
         private static object lockObject = new object();
-        private static List<string> ignorePaths = new List<string>() { "UnitTests", "UserInterface", "ApsimNG" };
         private static int exitCode = 0;
         private static List<Exception> exceptionsWrittenToConsole = new List<Exception>();
 
@@ -33,22 +32,28 @@
             {
                 config.AutoHelp = true;
                 config.HelpWriter = Console.Out;
-            })
-                        .ParseArguments<Options>(args)
-                        .WithParsed(Run)
-                        .WithNotParsed(HandleParseError);
-            return 0;
+            }).ParseArguments<Options>(args)
+              .WithParsed(Run)
+              .WithNotParsed(HandleParseError);
+            return exitCode;
         }
 
+        /// <summary>
+        /// Handles parser errors to ensure that a non-zero exit code
+        /// is returned when parse errors are encountered.
+        /// </summary>
+        /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
-            foreach (Error error in errors)
-                if (error.Tag != ErrorType.HelpRequestedError
-                 && error.Tag != ErrorType.VersionRequestedError)
-                    Console.Error.WriteLine($"Parse error: {error.Tag}");
+            if ( !(errors.IsHelp() || errors.IsVersion()) )
+                exitCode = 1;
         }
 
-        private static void Run(Options options)
+        /// <summary>
+        /// Run Models with the given set of options.
+        /// </summary>
+        /// <param name="options"></param>
+        public static void Run(Options options)
         {
             try
             {
@@ -79,7 +84,7 @@
                 else
                 {
                     // Run simulations
-                    var runner = new Runner(files, ignorePaths, options.RunTests, options.RunType,
+                    var runner = new Runner(files, options.RunTests, options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
                     runner.SimulationCompleted += OnJobCompleted;
@@ -102,8 +107,6 @@
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
-
-            //return exitCode;
         }
 
         private static void ReplaceObsoleteArguments(ref string[] args)
@@ -130,34 +133,6 @@
             for (int i = 0; i < args.Length; i++)
                 foreach (KeyValuePair<string, string> replacement in replacements)
                     args[i] = args[i].Replace(replacement.Key, replacement.Value);
-        }
-
-        /// <summary>
-        /// Write message to user on command line usage and switches.
-        /// </summary>
-        private static void WriteUsageMessage()
-        {
-            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/MultiProcess] [/NumberOfProcessors:xx] [/SimulationNameRegexPattern:xx] [/MergeDBFiles] [/Edit <PathToConfigFile>] [/ListSimulations] [/?]";
-            string detailedHelpInfo = usageMessage;
-            detailedHelpInfo += Environment.NewLine + Environment.NewLine;
-            detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
-            detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
-            detailedHelpInfo += "    /Recurse                        Recursively search subdirectories for files matching ApsimXFileSpec" + Environment.NewLine;
-            detailedHelpInfo += "    /SingleThreaded                 Run all simulations in a single thread." + Environment.NewLine;
-            detailedHelpInfo += "    /RunTests                       Run all tests." + Environment.NewLine;
-            detailedHelpInfo += "    /Csv                            Export all reports to .csv files." + Environment.NewLine;
-            detailedHelpInfo += "    /Version                        Display the version number." + Environment.NewLine;
-            detailedHelpInfo += "    /Verbose                        Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
-            detailedHelpInfo += "    /Upgrade                        Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
-            detailedHelpInfo += "    /MultiProcess                   Use the multi-process job runner." + Environment.NewLine;
-            detailedHelpInfo += "    /NumberOfProcessors:xx          Set the number of processors to use." + Environment.NewLine;
-            detailedHelpInfo += "    /SimulationNameRegexPattern:xx  Use to filter simulation names to run." + Environment.NewLine;
-            detailedHelpInfo += "    /MergeDBFiles                   Merges .db files into a single .db file." + Environment.NewLine;
-            detailedHelpInfo += "    /Edit <PathToConfigFile>        Edits the .apsimx file. Path to a config file must be specified which contains lines of parameters to change in the form 'path = value'" + Environment.NewLine;
-            detailedHelpInfo += "    /ListSimulations                List all simulation names in the file, without running the file." + Environment.NewLine;
-
-            detailedHelpInfo += "    /?                              Show detailed help information.";
-            Console.WriteLine(detailedHelpInfo);
         }
 
         /// <summary>
@@ -221,16 +196,16 @@
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
-            if (e.AllExceptionsThrown != null)
+            if (e.AllExceptionsThrown == null)
+                return;
+
+            foreach (Exception error in e.AllExceptionsThrown)
             {
-                foreach (var exception in e.AllExceptionsThrown)
+                if (!exceptionsWrittenToConsole.Contains(error))
                 {
-                    if (!exceptionsWrittenToConsole.Contains(exception))
-                    {
-                        Console.WriteLine("----------------------------------------------");
-                        Console.WriteLine(exception.ToString());
-                        exitCode = 1;
-                    }
+                    Console.WriteLine("----------------------------------------------");
+                    Console.WriteLine(error.ToString());
+                    exitCode = 1;
                 }
             }
         }

@@ -124,7 +124,6 @@
 
         /// <summary>Constructor</summary>
         /// <param name="pathAndFileSpec">Path and file specification for finding files.</param>
-        /// <param name="ignorePaths">Ignore these paths when looking for files to run.</param>
         /// <param name="recurse">Recurse into child folder?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="runType">How should the simulations be run?</param>
@@ -132,14 +131,12 @@
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(string pathAndFileSpec,
-                      List<string> ignorePaths = null,
                       bool recurse = true,
                       bool runTests = true,
                       RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
                       int numberOfProcessors = -1,
                       string simulationNamePatternMatch = null) : this(DirectoryUtilities.FindFiles(pathAndFileSpec, recurse),
-                                                                       ignorePaths,
                                                                        runTests,
                                                                        runType,
                                                                        wait,
@@ -150,14 +147,12 @@
 
         /// <summary>Constructor</summary>
         /// <param name="files">Files to be run.</param>
-        /// <param name="ignorePaths">Ignore these paths when looking for files to run.</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="runType">How should the simulations be run?</param>
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(string[] files,
-                      List<string> ignorePaths = null,
                       bool runTests = true,
                       RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
@@ -170,12 +165,9 @@
 
             foreach (string fileName in files)
             {
-                if (!DoIgnoreFile(fileName, ignorePaths))
-                {
-                    var simulationGroup = new SimulationGroup(fileName, runTests, simulationNamePatternMatch);
-                    simulationGroup.Completed += OnSimulationGroupCompleted;
-                    jobs.Add(simulationGroup);
-                }
+                var simulationGroup = new SimulationGroup(fileName, runTests, simulationNamePatternMatch);
+                simulationGroup.Completed += OnSimulationGroupCompleted;
+                jobs.Add(simulationGroup);
             }
         }
 
@@ -257,21 +249,6 @@
                 jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
             }
-        }
-
-        /// <summary>
-        /// Ignore the specified path when looking for files to run?
-        /// </summary>
-        /// <param name="fileNameToCheck">The filename to check.</param>
-        /// <param name="ignorePaths">The list of ignore paths.</param>
-        private bool DoIgnoreFile(string fileNameToCheck, List<string> ignorePaths)
-        {
-            if (ignorePaths != null)
-                foreach (var path in ignorePaths)
-                    if (fileNameToCheck.Contains(Path.DirectorySeparatorChar + path + Path.DirectorySeparatorChar))
-                        return true;
-
-            return false;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace Models
     /// <summary>
     /// Command-line options for Models.exe.
     /// </summary>
-    internal class Options
+    public class Options
     {
         /// <summary>Files to be run.</summary>
         [Value(0, HelpText = ".apsimx file(s) to be run.", MetaName = "ApsimXFileSpec")]
