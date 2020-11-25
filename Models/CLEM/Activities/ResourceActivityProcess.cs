@@ -257,6 +257,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -293,13 +295,14 @@ namespace Models.CLEM.Activities
                 html += "1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>";
             }
             html += "</div>";
-            if(Reserve > 0)
+            if (Reserve > 0)
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.";
                 html += "</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

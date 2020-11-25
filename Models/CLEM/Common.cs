@@ -489,4 +489,32 @@ namespace Models.CLEM
         /// </summary>
         December = 12
     }
+
+    /// <summary>
+    /// Style selling resource
+    /// </summary>
+    public enum ResourceSellStyle
+    {
+        /// <summary>
+        /// Specified amount
+        /// </summary>
+        SpecifiedAmount,
+        /// <summary>
+        /// Proportion of store
+        /// </summary>
+        ProportionOfStore,
+        /// <summary>
+        /// Proportion of last gain transaction
+        /// </summary>
+        ProportionOfLastGain,
+        /// <summary>
+        /// Reserve amount
+        /// </summary>
+        ReserveAmount,
+        /// <summary>
+        /// Reserve proportion
+        /// </summary>
+        ReserveProportion
+    }
+
 }

@@ -577,6 +577,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -597,6 +599,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

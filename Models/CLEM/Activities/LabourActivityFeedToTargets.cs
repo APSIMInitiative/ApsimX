@@ -94,48 +94,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // if finances and not account provided throw error
-            if(SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
-            {
-                if(bankAccount is null)
-                {
-                    string[] memberNames = new string[] { "AccountName" };
-                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
-                }
-            }
-
-            if(Resources.FoundMarket != null & bankAccount is null)
-            {
-                string[] memberNames = new string[] { "AccountName" };
-                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
-            }
-
-            // check that at least one target has been provided. 
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
-                results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
-            }
-
-            // check purchases
-            if(this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
-            {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
-                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
-            }
-
-            return results;
-        }
-
-        /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>List of required resource requests</returns>
@@ -689,6 +647,53 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // if finances and not account provided throw error
+            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            {
+                if (bankAccount is null)
+                {
+                    string[] memberNames = new string[] { "AccountName" };
+                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
+                }
+            }
+
+            if (Resources.FoundMarket != null & bankAccount is null)
+            {
+                string[] memberNames = new string[] { "AccountName" };
+                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
+            }
+
+            // check that at least one target has been provided. 
+            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
+                results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
+            }
+
+            // check purchases
+            if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
+            {
+                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
+                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
+            }
+
+            return results;
+        } 
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -699,7 +704,7 @@ namespace Models.CLEM.Activities
             string html = "";
             html += "<div class=\"activityentry\">";
             html += "Each Adult Equivalent is able to consume ";
-            if(DailyIntakeLimit > 0)
+            if (DailyIntakeLimit > 0)
             {
                 html += "<span class=\"setvalue\">";
                 html += DailyIntakeLimit.ToString("#,##0.##");
@@ -709,7 +714,7 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"errorlink\">NOT SET";
             }
             html += "</span> kg per day";
-            if(DailyIntakeOtherSources > 0)
+            if (DailyIntakeOtherSources > 0)
             {
                 html += "with <span class=\"setvalue\">";
                 html += DailyIntakeOtherSources.ToString("#,##0.##");
@@ -771,6 +776,7 @@ namespace Models.CLEM.Activities
             }
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

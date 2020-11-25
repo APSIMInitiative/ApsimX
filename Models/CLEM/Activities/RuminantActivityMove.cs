@@ -233,6 +233,8 @@ namespace Models.CLEM.Activities
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -250,16 +252,17 @@ namespace Models.CLEM.Activities
             {
                 html += "<span class=\"resourcelink\">" + ManagedPastureName + "</span>";
             }
-            if(MoveSucklings)
+            if (MoveSucklings)
             {
                 html += " moving sucklings with mother";
             }
             html += "</div>";
-            if(PerformAtStartOfSimulation)
+            if (PerformAtStartOfSimulation)
             {
                 html += "\n<div class=\"activityentry\">These individuals will located on the specified pasture at startup</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

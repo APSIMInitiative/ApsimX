@@ -68,6 +68,8 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -78,7 +80,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if (!formatForParentControl)
             {
-                if(MonthlyValues == null)
+                if (MonthlyValues == null)
                 {
                     return "\n<div class=\"activityentry\">No availability provided</div>";
                 }
@@ -97,7 +99,7 @@ namespace Models.CLEM.Resources
                 {
                     html += "<span class=\"errorlink\">" + min.ToString() + "</span>";
                 }
-                else 
+                else
                 {
                     html += "<span class=\"setvalue\">" + min.ToString() + "</span>";
                 }
@@ -188,5 +190,7 @@ namespace Models.CLEM.Resources
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
         }
 
+
+        #endregion
     }
 }

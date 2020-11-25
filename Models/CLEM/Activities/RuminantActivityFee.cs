@@ -73,6 +73,8 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -85,7 +87,7 @@ namespace Models.CLEM.Activities
             html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
             html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ";
             html += " from ";
-            if(BankAccountName!=null)
+            if (BankAccountName != null)
             {
                 html += "<span class=\"resourcelink\">" + BankAccountName + "</span> ";
             }
@@ -95,7 +97,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

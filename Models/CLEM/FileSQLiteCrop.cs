@@ -323,6 +323,8 @@ namespace Models.CLEM
             return cropdata;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -403,7 +405,7 @@ namespace Models.CLEM
                     {
                         html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
                     }
-                    if(PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                    if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
                     {
                         html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>";
                     }
@@ -417,7 +419,8 @@ namespace Models.CLEM
             }
             return html;
 
-        }
+        } 
+        #endregion
     }
 
 }

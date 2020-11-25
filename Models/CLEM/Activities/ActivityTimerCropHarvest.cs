@@ -67,35 +67,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            // check that this activity has a parent of type CropActivityManageProduct
-
-            Model current = this;
-            while (current.GetType() != typeof(ZoneCLEM))
-            {
-                if(current.GetType() == typeof(CropActivityManageProduct))
-                {
-                    ManageProductActivity = current as CropActivityManageProduct;
-                }
-                current = current.Parent as Model;
-            }
-
-            if (ManageProductActivity == null)
-            {
-                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
-                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
-            }
-
-            return results;
-        }
-        
-        /// <summary>
         /// Method to determine whether the activity is due based on harvest details form parent.
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>
@@ -224,6 +195,40 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity has a parent of type CropActivityManageProduct
+
+            Model current = this;
+            while (current.GetType() != typeof(ZoneCLEM))
+            {
+                if (current.GetType() == typeof(CropActivityManageProduct))
+                {
+                    ManageProductActivity = current as CropActivityManageProduct;
+                }
+                current = current.Parent as Model;
+            }
+
+            if (ManageProductActivity == null)
+            {
+                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
+                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
+            }
+
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -255,14 +260,14 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"filter\">";
                 html += "Perform <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " "+((OffsetMonthHarvestStop<0)?"before":"after")+" harvest";
+                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before" : "after") + " harvest";
                 html += "</div>";
             }
             else
             {
                 html += "\n<div class=\"filter\">";
                 html += "Start <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month"+(Math.Abs(OffsetMonthHarvestStart)==1?"":"s") +" ";
+                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ";
                 html += (OffsetMonthHarvestStart > 0) ? "after " : "before ";
                 html += " harvest and stop <span class=\"setvalueextra\">";
                 html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ";
@@ -300,6 +305,7 @@ namespace Models.CLEM.Activities
             html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
-        }
+        } 
+        #endregion
     }
 }

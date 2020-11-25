@@ -93,6 +93,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public void Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
+        #region transactions
+
+        /// <summary>
         /// Add to Resource method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
@@ -156,15 +166,9 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public void Set(double newAmount)
         {
-            this.amount = Math.Max(0,newAmount);
-        }
+            this.amount = Math.Max(0, newAmount);
+        } 
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Initialise()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

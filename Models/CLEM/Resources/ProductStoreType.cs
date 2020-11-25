@@ -78,6 +78,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Add product to store
         /// </summary>
@@ -111,6 +117,7 @@ namespace Models.CLEM.Resources
                     Reason = reason,
                     ResourceType = this
                 };
+                lastGain = addAmount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -172,6 +179,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -180,9 +189,9 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = base.ModelSummary(formatForParentControl);
-                
+
             html += "\n<div class=\"activityentry\">";
-            if(StartingAmount > 0)
+            if (StartingAmount > 0)
             {
                 html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
             }
@@ -190,6 +199,7 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
 
     }
 }

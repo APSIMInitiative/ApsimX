@@ -98,6 +98,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Add money to account
         /// </summary>
@@ -122,6 +128,7 @@ namespace Models.CLEM.Resources
                     Reason = reason,
                     ResourceType = this
                 };
+                lastGain = addAmount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
