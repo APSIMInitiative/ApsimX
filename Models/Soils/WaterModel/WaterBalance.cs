@@ -214,6 +214,9 @@
         [Description("Soil layer thickness for each layer")]
         public double[] Thickness { get; set; }
 
+        /// <summary> This is the layer thickness that the model exicutes on</summary>
+        public double[] LayerThickness { get; set; }
+
         /// <summary>Amount of water in the soil (mm).</summary>
         [JsonIgnore]
         public double[] Water 

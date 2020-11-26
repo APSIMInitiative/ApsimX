@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(ManureActivityCollectAll))]
     [ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
-    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(ResourceActivitySell))]
     [ValidParent(ParentType = typeof(ResourceActivityBuy))]
     [ValidParent(ParentType = typeof(ResourceActivityProcess))]

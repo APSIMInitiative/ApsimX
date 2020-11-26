@@ -199,10 +199,10 @@
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
-        /// <summary>Gets the RAD int tot.</summary>
+        /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {

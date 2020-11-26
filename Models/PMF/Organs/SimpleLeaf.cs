@@ -663,7 +663,7 @@
         /// Intercepted radiation value that is passed to the RUE class to calculate DM supply.
         /// </summary>
         [Units("MJ/m^2/day")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {
