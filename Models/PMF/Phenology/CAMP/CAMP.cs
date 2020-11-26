@@ -19,10 +19,10 @@ namespace Models.PMF.Phen
     public class FinalLeafNumberSet : Model
     {
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
-        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary")]
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp")]
         public double LV { get; set; }
-        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp</summary>
-        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp")]
+        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in 8h Pp</summary>
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in 8h Pp")]
         public double SV { get; set; }
         /// <summary>Final Leaf Number when grown at >20oC in >16h Pp</summary>
         [Description("Final Leaf Number when grown at >20oC in >16h Pp")]
