@@ -279,6 +279,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
+            lastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -375,6 +376,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Current amount of labour required.
         /// </summary>
@@ -387,6 +394,8 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -407,10 +416,10 @@ namespace Models.CLEM.Resources
                 {
                     if (this.Individuals > 1)
                     {
-                        html += "<span class=\"setvalue\">"+this.Individuals.ToString()+"</span> x ";
+                        html += "<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ";
                     }
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>";
                     if (Hired)
                     {
                         html += " as hired labour";
@@ -453,5 +462,6 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #endregion
     }
 }

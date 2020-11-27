@@ -193,6 +193,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -204,6 +206,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">Mark individuals in the following groups for sale";
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }

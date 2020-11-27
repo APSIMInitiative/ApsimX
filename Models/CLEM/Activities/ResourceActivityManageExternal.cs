@@ -84,6 +84,8 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -98,7 +100,8 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("Unable to locate resource input file.\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -410,6 +413,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -430,11 +435,11 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             html += "\n<div class=\"activityentry\">";
-            if(AccountName == null || AccountName == "")
+            if (AccountName == null || AccountName == "")
             {
                 html += "Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>";
             }
-            else if(AccountName == "No financial implications")
+            else if (AccountName == "No financial implications")
             {
                 html += "No financial constraints relating to pricing and packet sizes associated with each resource will be included.";
             }
@@ -444,7 +449,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

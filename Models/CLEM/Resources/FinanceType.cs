@@ -132,6 +132,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Add money to account
         /// </summary>
@@ -169,6 +175,7 @@ namespace Models.CLEM.Resources
                     ResourceType = this
                 };
                 LastTransaction = details;
+                lastGain = addAmount;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
 
@@ -250,6 +257,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -259,10 +268,10 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "\n<div class=\"activityentry\">";
-            html += "Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00")+"</span>";
+            html += "Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>";
             if (this.EnforceWithdrawalLimit)
             {
-                html += " that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>"; 
+                html += " that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>";
             }
             else
             {
@@ -294,7 +303,8 @@ namespace Models.CLEM.Resources
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

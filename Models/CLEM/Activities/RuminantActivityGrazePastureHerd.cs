@@ -424,6 +424,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -464,6 +466,7 @@ namespace Models.CLEM.Activities
             html += "the maximum 8 hours each day</span>";
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }

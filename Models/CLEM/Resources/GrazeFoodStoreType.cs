@@ -472,6 +472,30 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Ecological indicators have been calculated
+        /// </summary>
+        public event EventHandler EcologicalIndicatorsCalculated;
+
+        /// <summary>
+        /// Ecological indicators calculated 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
+        {
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
+            CurrentEcologicalIndicators.Reset();
+        }
+
+        /// <summary>
+        /// Ecological indicators of this pasture
+        /// </summary>
+        [JsonIgnore]
+        public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
+
+
+        #region transactions
+
+        /// <summary>
         /// Graze food add method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
@@ -521,7 +545,7 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                if(!reason.StartsWith("Initialise"))
+                if (!reason.StartsWith("Initialise"))
                 {
                     // do not update if this is ian initialisation pool
                     biomassAddedThisYear += pool.Amount;
@@ -535,6 +559,7 @@ namespace Models.CLEM.Resources
                     ResourceType = this
                 };
                 LastTransaction = details;
+                lastGain = pool.Amount;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
             }
@@ -589,7 +614,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // if forage still limiting and second take allowed (enforce strict limits is false)
-                if(amountRequired > 0 & !thisBreed.RuminantTypeModel.StrictFeedingLimits)
+                if (amountRequired > 0 & !thisBreed.RuminantTypeModel.StrictFeedingLimits)
                 {
                     // allow second take for the limited pools
                     double forage = thisBreed.PoolFeedLimits.Sum(a => a.Pool.Amount);
@@ -603,7 +628,7 @@ namespace Models.CLEM.Resources
                         if (amountRequired >= forage)
                         {
                             // take as a proportion of the pool to total forage remaining
-                            amountToRemove = pool.Pool.Amount/forage * amountRequired;
+                            amountToRemove = pool.Pool.Amount / forage * amountRequired;
                         }
                         else
                         {
@@ -649,7 +674,7 @@ namespace Models.CLEM.Resources
                 double nitrogen = 0;
 
                 // take proportionally from all pools.
-                double useproportion = Math.Min(1.0,amountRequired / Pools.Sum(a => a.Amount));
+                double useproportion = Math.Min(1.0, amountRequired / Pools.Sum(a => a.Amount));
                 // if less than pools then take required as proportion of pools
                 foreach (GrazeFoodStorePool pool in Pools)
                 {
@@ -713,26 +738,15 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
         /// <summary>
-        /// Ecological indicators have been calculated
+        /// Amount of last gain transaction
         /// </summary>
-        public event EventHandler EcologicalIndicatorsCalculated;
+        public double LastGain { get { return lastGain; } }
 
-        /// <summary>
-        /// Ecological indicators calculated 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
-        {
-            EcologicalIndicatorsCalculated?.Invoke(this, e);
-            CurrentEcologicalIndicators.Reset();
-        }
+        #endregion
 
-        /// <summary>
-        /// Ecological indicators of this pasture
-        /// </summary>
-        [JsonIgnore]
-        public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -743,7 +757,7 @@ namespace Models.CLEM.Resources
         {
             string html = "\n<div class=\"activityentry\">";
             html += "This pasture has an initial green nitrogen content of ";
-            if(this.GreenNitrogen == 0)
+            if (this.GreenNitrogen == 0)
             {
                 html += "<span class=\"errorlink\">Not set</span>%";
             }
@@ -751,7 +765,7 @@ namespace Models.CLEM.Resources
             {
                 html += "<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
             }
-            
+
             if (DecayNitrogen > 0)
             {
                 html += " and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>";
@@ -792,7 +806,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 

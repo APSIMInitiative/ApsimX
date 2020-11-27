@@ -48,6 +48,7 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 
+        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -68,7 +69,8 @@ namespace Models.CLEM.Activities
                     break;
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// Constructor
@@ -234,6 +236,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -255,7 +259,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

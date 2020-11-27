@@ -34,7 +34,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
-    public class FileCrop : CLEMModel, IFileCrop, IValidatableObject
+    public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -486,6 +486,7 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -577,22 +578,12 @@ namespace Models.CLEM
                 html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>";
             }
             html += "\n</div>";
- 
+
             html += "\n</div>";
             return html;
-        }
+        } 
+        #endregion
 
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
     }
 
     /// <summary>

@@ -101,6 +101,38 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            EcologicalIndicatorsCalculationInterval = 12;
+        }
+
+        /// <summary>
+        /// Method to determine if this is the month to calculate ecological indicators
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEcologicalIndicatorsCalculationMonth()
+        {
+            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+        }
+
+        /// <summary>Data stores to clear at start of month</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfMonth")]
+        private void OnEndOfMonth(object sender, EventArgs e)
+        {
+            if (IsEcologicalIndicatorsCalculationMonth())
+            {
+                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
+            }
+        }
+
+        #region validation
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -109,7 +141,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (Clock.StartDate.ToShortDateString() == "1/01/0001") 
+            if (Clock.StartDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
                 results.Add(new ValidationResult(String.Format("Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
@@ -202,15 +234,6 @@ namespace Models.CLEM
                     }
                 }
             }
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            EcologicalIndicatorsCalculationInterval = 12;
         }
 
         /// <summary>
@@ -310,6 +333,9 @@ namespace Models.CLEM
             }
             return valid;
         }
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// 
@@ -328,7 +354,7 @@ namespace Models.CLEM
 
             // find random number generator
             RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
-            if(rnd != null)
+            if (rnd != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
                 html += "<div class=\"namediv\">" + rnd.Name + "</div>";
@@ -384,28 +410,8 @@ namespace Models.CLEM
                 html += cm.GetFullSummary(cm, true, "");
             }
             return html;
-        }
-
-        /// <summary>
-        /// Method to determine if this is the month to calculate ecological indicators
-        /// </summary>
-        /// <returns></returns>
-        public bool IsEcologicalIndicatorsCalculationMonth()
-        {
-            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
-        }
-
-        /// <summary>Data stores to clear at start of month</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
-        {
-            if(IsEcologicalIndicatorsCalculationMonth())
-            {
-                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
-            }
-        }
+        } 
+        #endregion
 
     }
 }

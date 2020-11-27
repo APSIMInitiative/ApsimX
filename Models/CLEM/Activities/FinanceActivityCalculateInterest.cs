@@ -37,17 +37,6 @@ namespace Models.CLEM.Activities
             financesExist = ((Resources.FinanceResource() != null));
         }
 
-        /// <summary>An event handler to allow us to make all payments when needed</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMEndOfTimeStep")]
-        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
-        {
-            // Interest is paid and earned on the last day of the month after all other acitivites have made financial transactions.
-            // Interest payment does not occur in the Activity order.
-
-        }
-
         /// <summary>
         /// Resource shortfall event handler
         /// </summary>
@@ -178,6 +167,8 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -222,7 +213,8 @@ namespace Models.CLEM.Activities
                 }
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

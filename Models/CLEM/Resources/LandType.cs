@@ -159,6 +159,7 @@ namespace Models.CLEM.Resources
                 Reason = reason,
                 ResourceType = this
             };
+            lastGain = amountAdded;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -290,7 +291,15 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -344,6 +353,8 @@ namespace Models.CLEM.Resources
         {
             return "";
         }
+
+        #endregion 
     }
 
     /// <summary>

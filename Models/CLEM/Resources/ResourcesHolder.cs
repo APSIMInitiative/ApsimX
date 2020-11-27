@@ -582,6 +582,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -590,7 +592,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            
+
             var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
 
             // check that only one instance of each resource group is present
@@ -601,6 +603,11 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -629,5 +636,7 @@ namespace Models.CLEM.Resources
         {
             return "\n</div>";
         }
+
+        #endregion
     }
 }

@@ -155,6 +155,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -174,13 +176,14 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + AccountName + "</span>";
             }
             html += "</div>";
-            if(IsOverhead)
+            if (IsOverhead)
             {
                 html += "\n<div class=\"activityentry\">This is an overhead</div>";
             }
 
             return html;
-        }
+        } 
+        #endregion
 
     }
 }
