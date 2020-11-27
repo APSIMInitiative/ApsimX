@@ -182,6 +182,12 @@ namespace Models.Climate
         public double Amp => weather.Amp;
 
         /// <summary>
+        /// Temperature amplitude.
+        /// </summary>
+        [JsonIgnore]
+        public string FileName => weather.FileName;
+
+        /// <summary>
         /// Tomorrow's met data.
         /// </summary>
         public DailyMetDataFromFile TomorrowsMetData => weather.TomorrowsMetData;

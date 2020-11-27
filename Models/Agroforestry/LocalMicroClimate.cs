@@ -111,6 +111,10 @@ namespace Models.Agroforestry
         [JsonIgnore]
         public double Amp { get { return weather.Amp; } }
 
+        /// <summary>Gets the temperature amplitude.</summary>
+        [JsonIgnore]
+        public string FileName { get { return weather.FileName; } }
+
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
         public DailyMetDataFromFile YesterdaysMetData { get; set; }
