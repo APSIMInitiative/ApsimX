@@ -143,29 +143,6 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (this.Parent.GetType() != typeof(CropActivityManageCrop) && this.Parent.GetType() != typeof(CropActivityManageProduct))
-            {
-                string[] memberNames = new string[] { "Parent model" };
-                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", memberNames));
-            }
-
-            // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
-            if(!((this.Parent.GetType() == typeof(CropActivityManageCrop) || (this.Parent.GetType() == typeof(CropActivityManageProduct) && this.Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
-            {
-                string[] memberNames = new string[] { "Invalid nesting" };
-                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
-            }
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -526,6 +503,34 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (this.Parent.GetType() != typeof(CropActivityManageCrop) && this.Parent.GetType() != typeof(CropActivityManageProduct))
+            {
+                string[] memberNames = new string[] { "Parent model" };
+                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", memberNames));
+            }
+
+            // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
+            if (!((this.Parent.GetType() == typeof(CropActivityManageCrop) || (this.Parent.GetType() == typeof(CropActivityManageProduct) && this.Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
+            {
+                string[] memberNames = new string[] { "Invalid nesting" };
+                results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -534,9 +539,9 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if (TreesPerHa>0)
+            if (TreesPerHa > 0)
             {
-                html += "\n<div class=\"activityentry\">This is a tree crop with a density of "+ TreesPerHa.ToString() +" per hectare</div>";
+                html += "\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>";
             }
             if (ProportionKept == 0)
             {
@@ -544,7 +549,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                html += "\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">"+(ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ";
+                html += "\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ";
             }
             if (StoreItemName == null || StoreItemName == "")
             {
@@ -596,7 +601,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             // if first child of mixed 
-            if(this.Parent.GetType() == typeof(CropActivityManageProduct))
+            if (this.Parent.GetType() == typeof(CropActivityManageProduct))
             {
                 if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
                 {
@@ -613,6 +618,7 @@ namespace Models.CLEM.Activities
             }
             html += base.ModelSummaryOpeningTags(formatForParentControl);
             return html;
-        }
+        } 
+        #endregion
     }
 }

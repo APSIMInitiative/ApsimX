@@ -13,10 +13,10 @@
         DateTime EndDate { get; }
 
         /// <summary>Gets or sets the maximum temperature (oc)</summary>
-        double MaxT { get; }
+        double MaxT { get; set; }
 
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
-        double MinT { get; }
+        double MinT { get; set; }
 
         /// <summary>Mean temperature  /// </summary>
         double MeanT { get; }
@@ -25,22 +25,22 @@
         double VPD { get; }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>
-        double Rain { get; }
+        double Rain { get; set; }
 
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
-        double Radn { get; }
+        double Radn { get; set; }
 
         /// <summary>Gets or sets the vapor pressure</summary>
-        double VP { get; }
+        double VP { get; set; }
 
         /// <summary> Gets or sets the wind value found in weather file or zero if not specified.</summary>
-        double Wind { get; }
+        double Wind { get; set; }
 
         /// <summary> Gets or sets the CO2 level. If not specified in the weather file the default is 350.</summary>
-        double CO2 { get; }
+        double CO2 { get; set; }
         
         /// <summary>Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.</summary>
-        double AirPressure { get; }
+        double AirPressure { get; set; }
 
         /// <summary>Gets the latitude</summary>
         double Latitude { get; }

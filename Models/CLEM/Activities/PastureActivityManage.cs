@@ -124,6 +124,7 @@ namespace Models.CLEM.Activities
         //EcologicalCalculationIntervals worth of data read from pasture database file 
         private List<PastureDataType> PastureDataList;
 
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -150,6 +151,7 @@ namespace Models.CLEM.Activities
             return results;
         }
 
+        #endregion
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -601,6 +603,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -655,6 +659,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

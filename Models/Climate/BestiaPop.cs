@@ -104,14 +104,22 @@ namespace Models.Climate
         /// </summary>
         [Units("°C")]
         [JsonIgnore]
-        public double MaxT => weather.MaxT;
+        public double MaxT
+        {
+            get => weather.MaxT;
+            set => weather.MaxT = value;
+        }
 
         /// <summary>
         /// Minimum temperature.
         /// </summary>
         [Units("°C")]
         [JsonIgnore]
-        public double MinT => weather.MinT;
+        public double MinT
+        {
+            get => weather.MinT;
+            set => weather.MinT = value;
+        }
 
         /// <summary>
         /// Mean temperature.
@@ -132,41 +140,65 @@ namespace Models.Climate
         /// </summary>
         [Units("mm")]
         [JsonIgnore]
-        public double Rain => weather.Rain;
+        public double Rain
+        {
+            get => weather.Rain;
+            set => weather.Rain = value;
+        }
 
         /// <summary>
         /// Solar radiation.
         /// </summary>
         [Units("MJ/m^2/d")]
         [JsonIgnore]
-        public double Radn => weather.Radn;
+        public double Radn
+        {
+            get => weather.Radn;
+            set => weather.Radn = value;
+        }
 
         /// <summary>
         /// Vapor pressure.
         /// </summary>
         [Units("hPa")]
         [JsonIgnore]
-        public double VP => weather.VP;
+        public double VP
+        {
+            get => weather.VP;
+            set => weather.VP = value;
+        }
 
         /// <summary>
         /// Wind value found in weather file or 3 if not found.
         /// </summary>
         /// <remarks>See <see cref="Weather.Wind"/>.</remarks>
         [JsonIgnore]
-        public double Wind => weather.Wind;
+        public double Wind
+        {
+            get => weather.Wind;
+            set => weather.Wind = value;
+        }
 
         /// <summary>
         /// CO2 level. Default value if not found is 350.
         /// </summary>
         [JsonIgnore]
-        public double CO2 => weather.CO2;
+        public double CO2
+        {
+            get => weather.CO2;
+            set => weather.CO2 = value;
+        }
 
         /// <summary>
         /// Atmospheric pressure.
         /// </summary>
         [Units("hPa")]
         [JsonIgnore]
-        public double AirPressure => weather.AirPressure;
+        public double AirPressure
+        {
+            get => weather.AirPressure;
+            set => weather.AirPressure = value;
+        }
 
         /// <summary>
         /// Average temperature.

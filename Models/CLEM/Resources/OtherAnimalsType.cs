@@ -100,6 +100,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Amount
         /// </summary>
@@ -154,6 +160,7 @@ namespace Models.CLEM.Resources
                 ExtraInformation = cohortToAdd
             };
             LastTransaction = details;
+            lastGain = cohortToAdd.Number;
             TransactionEventArgs eargs = new TransactionEventArgs
             {
                 Transaction = LastTransaction

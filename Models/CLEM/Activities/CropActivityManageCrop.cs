@@ -73,23 +73,6 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            // check that this activity contains at least one CollectProduct activity
-            if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
-            }
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -278,6 +261,28 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity contains at least one CollectProduct activity
+            if (this.Children.OfType<CropActivityManageProduct>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "Collect product activity" };
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -290,7 +295,7 @@ namespace Models.CLEM.Activities
 
             Land parentLand = null;
             IModel clemParent = FindAncestor<ZoneCLEM>();
-            if(LandItemNameToUse != null && LandItemNameToUse != "")
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 if (clemParent != null && clemParent.Enabled)
                 {
@@ -298,7 +303,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if(UseAreaAvailable)
+            if (UseAreaAvailable)
             {
                 html += "the unallocated portion of ";
             }
@@ -363,6 +368,7 @@ namespace Models.CLEM.Activities
                 html += "\n<div class=\"croprotationborder\">";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

@@ -67,6 +67,7 @@ namespace Models.CLEM.Activities
             BankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -86,7 +87,8 @@ namespace Models.CLEM.Activities
                 }
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// 
@@ -195,6 +197,7 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -216,7 +219,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }
