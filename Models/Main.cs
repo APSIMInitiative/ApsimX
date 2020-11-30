@@ -60,6 +60,8 @@
                 string[] files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive)).ToArray();
                 if (files == null || files.Length < 1)
                     throw new ArgumentException($"No files were specified");
+                if (options.NumProcessors == 0)
+                    throw new ArgumentException($"Number of processors cannot be 0");
                 if (options.Upgrade)
                 {
                     foreach (string file in files)

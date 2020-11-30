@@ -80,7 +80,7 @@ namespace Models
         /// Maximum number of threads/processes to spawn for running simulations.
         /// </summary>
         [Option("cpu-count", HelpText = "Maximum number of threads/processes to spawn for running simulations.")]
-        public int NumProcessors { get; set; }
+        public int NumProcessors { get; set; } = -1;
 
         /// <summary>
         /// Only run simulations if their names match this regular expression.
