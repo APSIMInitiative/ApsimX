@@ -2,19 +2,7 @@
 !stationnumber  =                            24508
 !stationname    =              CALLINGTON
 latitude=                -35.12 (DECIMAL           DEGREES)
-longitud=                139.04 (DECIMAL           DEGREES)
-
-
-
-
-
-
-
-
-
-
-
-
+longitude=                139.04 (DECIMAL           DEGREES)
 
 year    day     radn           maxt               mint                    rain          pan             vp      
 ()      ()      (MJ/m^2)       (oC)               (oC)                    (mm)          (mm)            (hPa)   

@@ -2,7 +2,7 @@
 !stationnumber  =          73127
 !stationname    =       WAGGA   WAGGA   AGRICULTINSTITUTE
 latitude =  -35.05 (DECIMALDEGREES)
-longitud =  147.35 (DECIMALDEGREES)
+longitude =  147.35 (DECIMALDEGREES)
 
 year    day     radn    maxt    mint    rain    pan     vp      code
 ()      ()      (MJ/m^2) (oC)    (oC)    (mm)    (mm)    (hPa)   ()
