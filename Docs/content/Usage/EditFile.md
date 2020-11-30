@@ -11,7 +11,7 @@ The /Edit switch on Models.exe allows the user to edit an .apsimx file from the 
 
 The first argument, <PathToApsimXFile> should be the path to the .apsimx file which you want to edit. This file will be edited in-place - that is, if you don't want to modify the original .apsimx file, you should copy it somewhere else and edit the copy.
 
-The /Edit argument instructs APSIM to edit the .apsimx file rather than run it.
+The /Edit argument instructs APSIM to edit the .apsimx file before running it. The changed file is *not* saved to disk.
 
 The argument immediately following /Edit must be the path to a config file. The config file should contain zero or more lines of the form `path = value`.
 
