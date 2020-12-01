@@ -67,7 +67,7 @@ cd APSIM.PerformanceTests
 
 echo Running performance tests collector...
 echo bin\Release\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR% %apsimx%\Tests\Validation
-bin\Release\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR% %apsimx%\Tests\Validation
+bin\Release\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% "%COMMIT_AUTHOR%" %apsimx%\Tests\Validation
 
 
 
