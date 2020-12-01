@@ -96,9 +96,9 @@ namespace Models.CLEM.Activities
                     AllowTransmutation = false,
                     Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
                     ResourceType = typeof(Land),
-                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ResourceTypeName = LandItemNameToUse,
                     ActivityModel = this,
-                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    Category = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
                 };
@@ -248,7 +248,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

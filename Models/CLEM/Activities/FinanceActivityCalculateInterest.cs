@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -107,7 +107,7 @@ namespace Models.CLEM.Activities
                     {
                         if (accnt.InterestRatePaid > 0)
                         {
-                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "Interest earned");
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
                             SetStatusSuccess();
                         }
                     }
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = interest,
                                 AllowTransmutation = false,
-                                Reason = "Pay interest charged"
+                                Category = "Interest"
                             };
                             accnt.Remove(interestRequest);
 
@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
                             if (interestRequest.Required > interestRequest.Provided)
                             {
                                 interestRequest.ResourceType = typeof(Finance);
-                                interestRequest.ResourceTypeName = accnt.Name;
+                                interestRequest.ResourceTypeName = accnt.NameWithParent;
                                 interestRequest.Available = accnt.FundsAvailable;
                                 ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
                                 OnShortfallOccurred(rre);

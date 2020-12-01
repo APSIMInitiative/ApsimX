@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Sell", (resourceToSell as CLEMModel).NameWithParent);
         }
 
         /// <summary>
@@ -226,18 +226,20 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Required = units * price.PacketSize,
                     AllowTransmutation = true,
-                    Reason = "Sell " + (resourceToSell as Model).Name
+                    Category = "Sell",
+                    RelatesToResource = (resourceToSell as CLEMModel).NameWithParent
                 };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned
                 if (bankAccount != null)
                 {
-                    bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, "Sales");
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = units * price.PricePerPacket;
-                        purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
+                        purchaseRequest.Category = "Sales";
+                        purchaseRequest.RelatesToResource = (resourceToSell as CLEMModel).NameWithParent;
                         (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
                     }
                 }

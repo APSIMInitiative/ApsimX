@@ -113,7 +113,7 @@ namespace Models.CLEM.Activities
             ResourceRequest rr = ResourceRequestList.Where(a => (a.Resource != null && a.Resource.GetType() == resourceTypeProcessModel.GetType())).FirstOrDefault();
             if (rr != null)
             {
-                resourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, "Created " + (resourceTypeCreatedModel as Model).Name);
+                resourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
                 if(rr.Provided > 0)
                 {
                     Status = ActivityStatus.Success;
@@ -126,7 +126,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Process", (resourceTypeCreatedModel as CLEMModel).NameWithParent);
         }
 
         /// <summary>
@@ -196,7 +196,8 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = item.BankAccount.Name,
                         ActivityModel = this,
                         FilterDetails = null,
-                        Reason = item.Name
+                        Category = item.Name,
+                        RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                     );
                 }
@@ -213,7 +214,8 @@ namespace Models.CLEM.Activities
                         ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
                         ResourceTypeName = (resourceTypeProcessModel as Model).Name,
                         ActivityModel = this,
-                        Reason = "Process "+ (resourceTypeProcessModel as Model).Name
+                        Category = "Processed",
+                        RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                 );
             }

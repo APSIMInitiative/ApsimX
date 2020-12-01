@@ -298,7 +298,7 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
-                            Reason = "Food purchase",
+                            Category = "Food purchase",
                             MarketTransactionMultiplier = 1
                         };
                         bankAccount.Remove(marketRequest);
@@ -312,7 +312,7 @@ namespace Models.CLEM.Activities
                         Required = amount * financeLimit,
                         ResourceTypeName = item.Key.Name,
                         ActivityModel = this,
-                        Reason = "Consumption"
+                        Category = "Consumption"
                     });
                 }
             }
@@ -365,7 +365,7 @@ namespace Models.CLEM.Activities
                                     Required = amountfood,
                                     ResourceTypeName = purchase.FoodStoreName.Split('.')[1],
                                     ActivityModel = this,
-                                    Reason = "Consumption"
+                                    Category = "Consumption"
                                 });
                             }
                             else
@@ -387,7 +387,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
@@ -427,7 +427,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
         }
 
         /// <summary>
@@ -586,7 +586,8 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
-                                Reason = "Sell excess",
+                                Category = "Sell excess",
+                                RelatesToResource = foodStore.NameWithParent,
                                 MarketTransactionMultiplier = this.FarmMultiplier
                             };
                             foodStore.Remove(purchaseRequest);
@@ -599,10 +600,11 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,
                                     AllowTransmutation = false,
-                                    Reason = $"Sales {foodStore.Name}",
+                                    Category = $"Sales",
+                                    RelatesToResource = foodStore.NameWithParent,
                                     MarketTransactionMultiplier = this.FarmMultiplier
                                 };
-                                bankAccount.Add(purchaseFinance, this, $"Sales {foodStore.Name}");
+                                bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, "Sales");
                             }
                         } 
                     }

@@ -215,7 +215,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "External", null);
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = AccountName,
-                        Reason = "External purchases"
+                        Category = "External purchases"
                     };
                     ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
                     OnShortfallOccurred(rre);
@@ -330,14 +330,15 @@ namespace Models.CLEM.Activities
                                         packets = Math.Truncate(packets);
                                         amount = packets * price.PacketSize;
                                     }
-                                    bankAccount.Add(packets * price.PricePerPacket, this, $"External output {(resourceList[i] as Model).Name}");
+                                    bankAccount.Add(packets * price.PricePerPacket, this, (resourceList[i] as CLEMModel).NameWithParent, "External output");
                                 }
                                 ResourceRequest sellRequest = new ResourceRequest
                                 {
                                     ActivityModel = this,
                                     Required = amount,
                                     AllowTransmutation = false,
-                                    Reason = "External output"
+                                    Category = "External output",
+                                    RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
                                 };
                                 resourceList[i].Remove(sellRequest);
                             }
@@ -362,11 +363,12 @@ namespace Models.CLEM.Activities
                                         ActivityModel = this,
                                         Required = packets * price.PacketSize,
                                         AllowTransmutation = false,
-                                        Reason = $"External input {(resourceList[i] as Model).Name}"
+                                        Category = "External input",
+                                        RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
                                     };
                                     bankAccount.Remove(sellRequestDollars);
                                 }
-                                resourceList[i].Add(amount, this, "External input");
+                                resourceList[i].Add(amount, this, (resourceList[i] as CLEMModel).NameWithParent, "External input");
                             }
                         }
 
