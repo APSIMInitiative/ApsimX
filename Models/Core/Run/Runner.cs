@@ -103,6 +103,38 @@
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
+        public Runner(IEnumerable<IModel> relativeTo,
+                      bool runSimulations = true,
+                      bool runPostSimulationTools = true,
+                      bool runTests = true,
+                      IEnumerable<string> simulationNamesToRun = null,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
+                      bool wait = true,
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null)
+        {
+            this.runType = runType;
+            this.wait = wait;
+            this.numberOfProcessors = numberOfProcessors;
+
+            foreach (IModel model in relativeTo)
+            {
+                var simulationGroup = new SimulationGroup(model, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
+                simulationGroup.Completed += OnSimulationGroupCompleted;
+                jobs.Add(simulationGroup);
+            }
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="relativeTo">The model to use to search for simulations to run.</param>
+        /// <param name="runSimulations">Run simulations?</param>
+        /// <param name="runPostSimulationTools">Run post simulation tools?</param>
+        /// <param name="runTests">Run tests?</param>
+        /// <param name="simulationNamesToRun">Only run these simulations.</param>
+        /// <param name="runType">How should the simulations be run?</param>
+        /// <param name="wait">Wait until all simulations are complete?</param>
+        /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(IModel relativeTo,
                       bool runSimulations = true,
                       bool runPostSimulationTools = true,
