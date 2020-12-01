@@ -307,7 +307,7 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in rootNode.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
             {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
