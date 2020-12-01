@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
                     Required = this.Amount,
                     ResourceTypeName = this.AccountName,
                     ActivityModel = this,
-                    Reason = ((IsOverhead) ? "Overhead" : "Expense")
+                    Category = ((IsOverhead) ? "Overhead" : "Expense")
                 }
             };
             return resourcesNeeded;
@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

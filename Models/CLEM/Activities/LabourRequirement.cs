@@ -246,6 +246,8 @@ namespace Models.CLEM.Activities
                     return "";
                 case LabourUnitType.perHa:
                     return "hectare";
+                case LabourUnitType.perUnitOfLand:
+                    return "land unit";
                 case LabourUnitType.perTree:
                     return "tree";
                 case LabourUnitType.perHead:

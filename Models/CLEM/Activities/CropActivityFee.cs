@@ -50,6 +50,15 @@ namespace Models.CLEM.Activities
         public FinanceType BankAccount { get; set; }
 
         /// <summary>
+        /// Category label to use in ledger
+        /// </summary>
+        [Description("Shortname of fee for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
+
+        private string RelatesToResourceName = "";
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public CropActivityFee()
@@ -65,6 +74,8 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             BankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+
+            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         #region validation
@@ -95,9 +106,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return 0;
+            return new GetDaysLabourRequiredReturnArgs(0, null, null);
         }
 
         /// <summary>
@@ -115,8 +126,12 @@ namespace Models.CLEM.Activities
                     case CropPaymentStyleType.Fixed:
                         sumneeded = Amount;
                         break;
-                    case CropPaymentStyleType.perHa:
+                    case CropPaymentStyleType.perUnitOfLand:
                         CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
+                        sumneeded = cropParent.Area * Amount;
+                        break;
+                    case CropPaymentStyleType.perHa:
+                        cropParent = FindAncestor<CropActivityManageCrop>();
                         CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
                         sumneeded = cropParent.Area * productParent.UnitsToHaConverter * Amount;
                         break;
@@ -136,7 +151,8 @@ namespace Models.CLEM.Activities
                     ResourceTypeName = AccountName,
                     ActivityModel = this,
                     FilterDetails = null,
-                    Reason = Name
+                    RelatesToResource = RelatesToResourceName,
+                    Category = Category
                 }
                 );
                 return resourcesNeeded;
@@ -218,6 +234,17 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + AccountName + "</span>";
             }
             html += "</div>";
+            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            if (Category != null && Category != "")
+            {
+                html += "<span class=\"setvalue\">" + Category + "</span> ";
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span> ";
+            }
+            html += " for all transactions</div>";
+
             return html;
         } 
         #endregion

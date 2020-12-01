@@ -161,6 +161,7 @@
     <Compile Include="CLEM\Activities\ResourceActivityManageExternal.cs" />
     <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
+    <Compile Include="CLEM\ICategoryActivity.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />

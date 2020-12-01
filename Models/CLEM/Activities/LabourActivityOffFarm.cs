@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             // get fixed days per LabourRequirement
@@ -60,7 +60,8 @@ namespace Models.CLEM.Activities
             {
                 daysNeeded = labourRequired.LabourPerUnit;
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Off-farm", null);
+
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Models.CLEM.Activities
             // receive payment for labour if bank type exists
             if (bankType != null)
             {
-                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "Off farm labour");
+                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "", "Off farm labour");
             }
         }
 
