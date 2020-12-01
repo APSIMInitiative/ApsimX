@@ -976,8 +976,10 @@ namespace APSIM.Shared.Utilities
                             break;
                         }
                     }
+                    else
+                        typeToConvertTo = typeof(string);
                 }
-                if (typeToConvertTo != null)
+                if (typeToConvertTo != null && typeToConvertTo != typeof(string))
                     ConvertDataTableOfColumn(dt, dt.Columns[colIndex].ColumnName, typeToConvertTo);
             }
 
