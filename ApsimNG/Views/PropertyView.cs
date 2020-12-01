@@ -99,7 +99,7 @@ namespace UserInterface.Views
             }
             box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
-            propertyTable = new Table((uint)properties.Count(), 2, false);
+            propertyTable = new Table((uint)properties.Count(), 2, true);
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 

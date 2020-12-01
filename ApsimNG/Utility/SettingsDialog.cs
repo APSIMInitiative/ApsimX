@@ -19,8 +19,8 @@ namespace UserInterface.Views
     public class SettingsDialog : Dialog
     {
         private PropertyView propertyEditor;
-        Dictionary<Guid, Property> properties = new Dictionary<Guid, Property>();
-        List<KeyValuePair<Property, object>> pendingChanges = new List<KeyValuePair<Property, object>>();
+        Dictionary<Guid, PropertyInfo> properties = new Dictionary<Guid, PropertyInfo>();
+        List<KeyValuePair<PropertyInfo, object>> pendingChanges = new List<KeyValuePair<PropertyInfo, object>>();
 
         public SettingsDialog(Window parent) : base("Settings",
                                                     parent,
@@ -52,7 +52,7 @@ namespace UserInterface.Views
                 response = (ResponseType)base.Run();
                 if (response == ResponseType.Ok || response == ResponseType.Apply)
                 {
-                    foreach (KeyValuePair<Property, object> change in pendingChanges)
+                    foreach (KeyValuePair<PropertyInfo, object> change in pendingChanges)
                         ApplyChange(change.Key, change.Value);
                     Configuration.Settings.Save();
                     pendingChanges.Clear();
@@ -64,7 +64,7 @@ namespace UserInterface.Views
 
         private PropertyGroup GetPropertyGroup()
         {
-            return new PropertyGroup("Settings", GetProperties(), null);
+            return new PropertyGroup("APSIM", GetProperties(), null);
         }
 
         private IEnumerable<Property> GetProperties()
@@ -100,16 +100,10 @@ namespace UserInterface.Views
             }
             else
                 throw new NotImplementedException($"Unknown input attribute type {attrib.GetType().Name}");
-            string tooltip;
-            // Get tooltip from a TooltipAttribute if one exists, otherwise use summary in xml documentation.
-            TooltipAttribute tooltipAttrib = property.GetCustomAttribute<TooltipAttribute>();
-            if (tooltipAttrib != null)
-                tooltip = tooltipAttrib.Tooltip;
-            else
-                tooltip = AutoDocumentation.GetSummary(property);
+            string tooltip = property.GetCustomAttribute<TooltipAttribute>()?.Tooltip;
             object value = property.GetValue(instance);
-            Property p = new Property(property.Name, tooltip, value, displayType);
-            properties[p.ID] = p;
+            Property p = new Property(attrib.Name, tooltip, value, displayType);
+            properties[p.ID] = property;
             return p;
         }
 
@@ -120,12 +114,11 @@ namespace UserInterface.Views
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            pendingChanges.Add(new KeyValuePair<Property, object>(properties[args.ID], args.NewValue));
+            pendingChanges.Add(new KeyValuePair<PropertyInfo, object>(properties[args.ID], args.NewValue));
         }
 
-        private void ApplyChange(Property changedProperty, object newValue)
+        private void ApplyChange(PropertyInfo property, object newValue)
         {
-            PropertyInfo property = typeof(Configuration).GetProperty(changedProperty.Name, BindingFlags.Public | BindingFlags.Instance);
             if (newValue != null && newValue.GetType() != property.PropertyType)
                 newValue = ReflectionUtilities.StringToObject(property.PropertyType, newValue.ToString(), CultureInfo.CurrentCulture);
             property.SetValue(Configuration.Settings, newValue);
