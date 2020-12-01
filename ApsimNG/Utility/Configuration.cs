@@ -7,7 +7,29 @@ using System.Collections.Generic;
 
 namespace Utility
 {
-    /// <summary>Handle the reading and writing of the configuration settings file</summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    internal class InputAttribute : Attribute { }
+
+    internal class FileInput : InputAttribute
+    {
+        /// <summary>
+        /// Recommended file extension.
+        /// </summary>
+        public string[] Extensions { get; set; }
+
+        /// <summary>
+        /// Constructor to provide recommended file extensions.
+        /// </summary>
+        /// <param name="extensions">Recommended file extensions.</param>
+        public FileInput(params string[] extensions)
+        {
+            Extensions = extensions;
+        }
+    }
+
+    internal class FontInput : InputAttribute { }
+
+    /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>
     public class Configuration
     {
         /// <summary>The instance</summary>
@@ -23,12 +45,13 @@ namespace Utility
         public Size MainFormSize { get; set; }
 
         /// <summary>The state (max, min, norm) of the form</summary>
-        public Boolean MainFormMaximized { get; set; }
+        public bool MainFormMaximized { get; set; }
 
         /// <summary>List of the most recently opened files</summary>
         public List<ApsimFileMetadata> MruList { get; set; }
 
         /// <summary>The maximum number of files allowed in the mru list</summary>
+        [Input]
         public int FilesInHistory { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
@@ -48,12 +71,15 @@ namespace Utility
         public int ReportSplitterPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
+        [Input]
         public bool DarkTheme { get; set; }
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        [Input]
         public bool Muted { get; set; }
 
         /// <summary>Use the new property presenter?</summary>
+        [Input]
         public bool UseNewPropertyPresenter { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
@@ -97,16 +123,22 @@ namespace Utility
         public string Email { get; set; }
 
         /// <summary>The maximum number of rows to show on a report grid</summary>
+        [Input]
         public int MaximumRowsOnReportGrid { get; set; }
 
         /// <summary>
         /// Store the style name used in the editor
         /// </summary>
+        /// <remarks>
+        /// This should probably be user controllable, but we would need a way of
+        /// providing a list of valid values for the drop-down box.
+        /// </remarks>
         public string EditorStyleName { get; set; } = "Visual Studio";
 
         /// <summary>
         /// Store the zoom level for editors
         /// </summary>
+        [Input]
         public double EditorZoom { get; set; } = 1.0;
 
         /// <summary>
@@ -117,22 +149,25 @@ namespace Utility
         /// <summary>
         /// Simulation complete wav file.
         /// </summary>
+        [FileInput(".wav")]
         public string SimulationCompleteWavFileName { get; set; }
 
         /// <summary>
         /// Simulation complete with error wav file.
         /// </summary>
+        [FileInput]
         public string SimulationCompleteWithErrorWavFileName { get; set; }
 
         /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
-        /// <value></value>
+        [FontInput]
         public string FontName { get; set; } = "Segoe UI 11";
 
         /// <summary>
         /// Stores the user's preferred font for the manager script text editor.
         /// </summary>
+        [FontInput]
         public string EditorFontName { get; set; } = "monospace 10";
 
         /// <summary>
