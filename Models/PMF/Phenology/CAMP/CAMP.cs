@@ -134,9 +134,6 @@ namespace Models.PMF.Phen
         IFunction tt = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction pp = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PTQ = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -157,10 +154,7 @@ namespace Models.PMF.Phen
         FLNParameterEnvironment EnvData = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction LowerCriticalPp = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction UpperCriticalPp = null;
+        IFunction PpResponse = null;
 
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
@@ -169,19 +163,13 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
         /// </summary>
-        /// <param name="Pp">Photoperiod</param>
         /// <param name="baseUR">dVrn/HS below 8h Pp</param>
         /// <param name="maxUR">dVrn/HS above 16h Pp</param>
         /// <param name="dBP">delta base phyllochron</param>
         /// <returns></returns>
-        private double CalcdPPVrn(double Pp, double baseUR, double maxUR, double dBP)
+        private double CalcdPPVrn(double baseUR, double maxUR, double dBP)
         {
-            if (Pp <= LowerCriticalPp.Value())
-                return baseUR * dBP;
-            else if ((Pp > LowerCriticalPp.Value()) && (Pp < UpperCriticalPp.Value()))
-                return (baseUR + (maxUR - baseUR) * (Pp - LowerCriticalPp.Value()) / (UpperCriticalPp.Value() - LowerCriticalPp.Value())) * dBP;
-            else // (Pp >= UpperPp)
-                return maxUR * dBP; 
+            return (baseUR + (maxUR - baseUR) * PpResponse.Value()) * dBP;
         }
 
         /// <summary>
@@ -369,7 +357,7 @@ namespace Models.PMF.Phen
                 { // Crop emerged
                     dBP = CalcdBP(tt.Value(), PTQ.Value());
                     // Calculate delta long photoperiod haunstage
-                    dLPpBP = dBP * CalcdPPVrn(pp.Value(), 0, 1, 1) * PropnOfDay;
+                    dLPpBP = dBP * PpResponse.Value() * PropnOfDay;
                 }
 
                 LPpBP += dLPpBP;
@@ -400,7 +388,7 @@ namespace Models.PMF.Phen
                     {
                         if (MethColdVrn1 == 0.0)  // VrnX expression only occurs if no methalation of Vrn1 has occured
                         {
-                            dVrnX = CalcdPPVrn(pp.Value(), BaseDVrnX, Params.MaxDVrnX, dBP);
+                            dVrnX = CalcdPPVrn(BaseDVrnX, Params.MaxDVrnX, dBP);
                         }
                         pVrn2 = CalcpVrn2(LPpBP, Params.MaxIpVrn2, Params.MaxDpVrn2);
                     }
@@ -426,7 +414,7 @@ namespace Models.PMF.Phen
                     
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isReproductive == false))
-                dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, Params.MaxDVrn3, dBP);
+                dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dBP);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then work out phase progression based on Vrn expression
