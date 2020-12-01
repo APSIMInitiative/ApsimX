@@ -461,7 +461,7 @@ namespace Models.Optimisation
         public DataTable ReadRData(string path)
         {
             StringBuilder script = new StringBuilder();
-            script.AppendLine($"load('{path.Replace(@"\\", @"\")}')");
+            script.AppendLine($"load('{path.Replace(@"\", @"\\")}')");
             IEnumerable<string> paramNames = Parameters.Select(p => $"'{p.Name}'");
             script.AppendLine($"param_names <- c({string.Join(", ", paramNames)})");
             script.AppendLine(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.read_croptimizr_output.r"));
