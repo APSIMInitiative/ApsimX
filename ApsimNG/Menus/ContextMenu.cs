@@ -416,7 +416,7 @@
         /// <param name="multiProcessRunner">Use the multi-process runner?</param>
         private void RunAPSIMInternal(bool multiProcessRunner)
         {
-            if (this.explorerPresenter.Save())
+            if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
             {
                 Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
                 if (multiProcessRunner)

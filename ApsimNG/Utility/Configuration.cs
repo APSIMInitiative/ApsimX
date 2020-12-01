@@ -85,6 +85,11 @@ namespace Utility
         [Input("Dark theme enabled")]
         public bool DarkTheme { get; set; }
 
+        /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
+        [Input("Autosave")]
+        [Tooltip("Should the file be automatically saved to disk before running simulations?")]
+        public bool AutoSave { get; set;} = true;
+
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
         public bool Muted { get; set; }
