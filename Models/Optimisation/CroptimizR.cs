@@ -18,8 +18,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Models.Sensitivity;
-using RDotNet;
-using RDotNet.Internals;
 
 namespace Models.Optimisation
 {
@@ -309,7 +307,8 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in sims.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
+            {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
                     string absoluteFileName = PathUtilities.GetAbsolutePath(file, originalFile);
@@ -317,7 +316,7 @@ namespace Models.Optimisation
                     string newPath = Path.GetDirectoryName(sims.FileName);
                     File.Copy(absoluteFileName, Path.Combine(newPath, fileName), true);
                 }
-
+            }
             return apsimxFileName;
         }
 
@@ -461,41 +460,16 @@ namespace Models.Optimisation
         /// <param name="path">Path to the .Rdata file on disk.</param>
         public DataTable ReadRData(string path)
         {
-            REngine engine = REngine.GetInstance();
-            engine.Evaluate($"load('{path.Replace(@"\", @"\\")}')");
-
-            GenericVector nlo = engine.GetSymbol("nlo").AsList();
-            DataTable table = new DataTable(Name);
-            table.Columns.Add("Repetition", typeof(int));
-            table.Columns.Add("Objective Function Value", typeof(double));
-            table.Columns.Add("Number of Iterations");
-            foreach (Parameter param in Parameters)
-                table.Columns.Add($"{param.Name} Initial", typeof(double));
-            foreach (Parameter param in Parameters)
-                table.Columns.Add($"{param.Name} Final", typeof(double));
-            table.Columns.Add("Message", typeof(string));
-
-            for (int i = 0; i < nlo.Count(); i++)
-            {
-                double[] initial = engine.Evaluate($"nlo[[{i + 1}]]$x0").AsNumeric().ToArray();
-                double[] solution = engine.Evaluate($"nlo[[{i + 1}]]$solution").AsNumeric().ToArray();
-                string message = engine.Evaluate($"nlo[[{i + 1}]]$message").AsCharacter().ToArray().FirstOrDefault();
-                double objective = engine.Evaluate($"nlo[[{i + 1}]]$objective").AsNumeric().ToArray().FirstOrDefault();
-                int iterations = engine.Evaluate($"nlo[[{i + 1}]]$iterations").AsInteger().ToArray().FirstOrDefault();
-
-                DataRow row = table.NewRow();
-                List<object> data = new List<object>();
-                data.Add(i);
-                data.Add(objective);
-                data.Add(iterations);
-                foreach (double initialValue in initial)
-                    data.Add(initialValue);
-                foreach (double solutionValue in solution)
-                    data.Add(solutionValue);
-                data.Add(message);
-                row.ItemArray = data.ToArray();
-                table.Rows.Add(row);
-            }
+            StringBuilder script = new StringBuilder();
+            script.AppendLine($"load('{path.Replace(@"\", @"\\")}')");
+            IEnumerable<string> paramNames = Parameters.Select(p => $"'{p.Name}'");
+            script.AppendLine($"param_names <- c({string.Join(", ", paramNames)})");
+            script.AppendLine(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.read_croptimizr_output.r"));
+            R r = new R();
+            string scriptPath = GetTempFileName("read_croptimizr_output", ".r");
+            File.WriteAllText(scriptPath, script.ToString());
+            DataTable table = r.RunToTable(scriptPath);
+            table.TableName = "CroptimizR";
             return table;
         }
     }
