@@ -96,10 +96,7 @@ namespace UnitTests
 
             // Run Models.exe with /Edit command.
             sims.Write(apsimxFileName);
-            Utilities.RunModels($"{apsimxFileName} /Edit {configFileName}");
-            sims = FileFormat.ReadFromFile<Simulations>(apsimxFileName, out errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            sims = EditFile.Do(apsimxFileName, configFileName);
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
