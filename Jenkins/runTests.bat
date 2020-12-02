@@ -1,6 +1,8 @@
 @echo off
 setlocal
 SETLOCAL EnableDelayedExpansion
+setlocal enableExtensions
+
 if "%apsimx%"=="" (
 	pushd %~dp0..>nul
 	set apsimx=!cd!
@@ -23,7 +25,24 @@ set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
-	nunit3-console.exe %bin%\UnitTests.dll
+	call :numTempFiles
+	set count=!result!
+
+	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	if errorlevel 1 exit /b 1
+
+	call :numTempFiles
+	set count_after=!result!
+
+	if not !count!==!count_after! (
+		set /a n=!count_after!-!count!
+		echo !n! .apsimx files were created by not deleted by unit tests
+		exit /b 1
+	)
+
+	endlocal
+	endlocal
+
 	exit /b
 )
 
@@ -62,6 +81,13 @@ echo     %examplessyntax%
 echo     %validationsyntax%
 
 exit /b 1
+
+:numTempFiles
+setlocal
+set count=0
+for %%x in (%temp%\*.apsimx) do set /a count+=1
+endlocal & set result=%count%
+exit /b
 
 :uitests
 rem Run UI Tests

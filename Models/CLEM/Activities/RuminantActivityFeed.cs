@@ -81,6 +81,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -96,7 +97,8 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] is required to define the animals and amount fed", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -198,7 +200,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Reason = "Feed"
+                        Category = "Feed",
+                        RelatesToResource = this.PredictedHerdName
                     }
                 };
             }
@@ -213,7 +216,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
@@ -262,7 +265,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -298,7 +301,7 @@ namespace Models.CLEM.Activities
                             ResourceType = typeof(AnimalFoodStore),
                             ResourceTypeName = item.ResourceTypeName,
                             ActivityModel = this,
-                            Reason = "Wastage"
+                            Category = "Wastage"
                         };
                         ResourceRequestList.Insert(0, wastedRequest);
                         item.Required -= wasted;
@@ -331,7 +334,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = item.ResourceTypeName,
                         ActivityModel = this,
-                        Reason = "Overfed wastage"
+                        Category = "Overfed wastage"
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                     item.Required -= excess;
@@ -460,6 +463,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -480,11 +485,12 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            if(ProportionTramplingWastage>0)
+            if (ProportionTramplingWastage > 0)
             {
-                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%")+"</span> is lost through trampling</div>";
+                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

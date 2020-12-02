@@ -112,6 +112,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -137,7 +139,7 @@ namespace Models.CLEM.Resources
             }
             html += " if";
 
-            if(timerpresent)
+            if (timerpresent)
             {
                 html += "</div>";
                 html += "\n<div class=\"activityentry\">";
@@ -193,6 +195,7 @@ namespace Models.CLEM.Resources
                 html += "\n</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

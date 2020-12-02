@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (StartingAmount > 0)
             {
-                Add(StartingAmount, this, "Starting value");
+                Add(StartingAmount, this, NameWithParent, "Starting value");
             }
         }
 
@@ -90,8 +90,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double addAmount;
             double nAdded;
@@ -118,10 +119,12 @@ namespace Models.CLEM.Resources
             {
                 Gain = addAmount,
                 Activity = activity,
-                Reason = reason,
+                RelatesToResource = relatesToResource,
+                Category = category,
                 ResourceType = this
             };
             LastTransaction = details;
+            lastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -161,7 +164,7 @@ namespace Models.CLEM.Resources
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
                 additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, "Farm sales");
+                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
             }
 
             ResourceTransaction details = new ResourceTransaction
@@ -169,7 +172,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                RelatesToResource = request.RelatesToResource,
+                Category = request.Category 
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -206,7 +210,15 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -217,8 +229,8 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "<div class=\"activityentry\">";
-            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###")+"%</span>";
-            if(DMD > 0)
+            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>";
+            if (DMD > 0)
             {
                 html += " and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>";
             }
@@ -243,7 +255,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 }

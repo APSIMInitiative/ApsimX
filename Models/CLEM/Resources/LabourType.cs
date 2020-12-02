@@ -262,8 +262,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
@@ -275,10 +276,12 @@ namespace Models.CLEM.Resources
             {
                 Gain = addAmount,
                 Activity = activity,
-                Reason = reason,
+                RelatesToResource = relatesToResource,
+                Category = category,
                 ResourceType = this
             };
             LastTransaction = details;
+            lastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -326,7 +329,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -375,6 +379,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Current amount of labour required.
         /// </summary>
@@ -387,6 +397,8 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -407,10 +419,10 @@ namespace Models.CLEM.Resources
                 {
                     if (this.Individuals > 1)
                     {
-                        html += "<span class=\"setvalue\">"+this.Individuals.ToString()+"</span> x ";
+                        html += "<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ";
                     }
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>";
                     if (Hired)
                     {
                         html += " as hired labour";
@@ -453,5 +465,6 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #endregion
     }
 }

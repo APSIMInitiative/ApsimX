@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "Starting value");
+                Add(initialpPool, this, "", "Starting value");
             }
         }
 
@@ -113,8 +113,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             HumanFoodStorePool pool;
             switch (resourceAmount.GetType().Name)
@@ -146,9 +147,11 @@ namespace Models.CLEM.Resources
                 {
                     Gain = pool.Amount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
+                lastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -185,7 +188,7 @@ namespace Models.CLEM.Resources
                 // send to market if needed
                 if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
+                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
                 }
 
                 if (amountRequired <= 0)
@@ -203,7 +206,8 @@ namespace Models.CLEM.Resources
                     ResourceType = this,
                     Loss = amountRemoved,
                     Activity = request.ActivityModel,
-                    Reason = request.Reason
+                    Category = request.Category,
+                    RelatesToResource = request.RelatesToResource
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -250,7 +254,7 @@ namespace Models.CLEM.Resources
                         ResourceType = this,
                         Loss = spoiled,
                         Activity = this,
-                        Reason = "Spoiled"
+                        Category = "Spoiled"
                     };
                     LastTransaction = details;
                     TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -279,7 +283,15 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -289,7 +301,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if ((Units??"").ToUpper() != "KG")
+            if ((Units ?? "").ToUpper() != "KG")
             {
                 html += "Each unit of this resource is equivalent to ";
                 if (ConvertToKg == 0)
@@ -304,7 +316,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                if(ConvertToKg != 1)
+                if (ConvertToKg != 1)
                 {
                     html += "<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg";
                 }
@@ -328,15 +340,16 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month"+((UseByAge>1)?"s":"")+" old";
+                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old";
             }
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
-            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("#0%"))+"</span> of this raw food is edible";
+            html += ((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible";
             html += "\n</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

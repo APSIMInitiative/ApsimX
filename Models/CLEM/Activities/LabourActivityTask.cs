@@ -23,18 +23,14 @@ namespace Models.CLEM.Activities
     [Description("This activity will arange payment for a task based on the labour specified in the labour requirement.")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase, IValidatableObject
+    public class LabourActivityTask : CLEMActivityBase, ICategoryActivity
     {
         /// <summary>
-        /// Validate object
+        /// Category label to use in ledger
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
+        [Description("Shortname of task for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
 
         /// <summary>
         /// Constructor
@@ -67,13 +63,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all days required as fixed only option from requirement
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    return requirement.LabourPerUnit;
+                    return new GetDaysLabourRequiredReturnArgs(requirement.LabourPerUnit, this.Category, null);
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
@@ -124,6 +120,7 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -132,7 +129,18 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            if (Category != null && Category != "")
+            {
+                html += "<span class=\"setvalue\">" + Category + "</span> ";
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span> ";
+            }
+            html += " for all transactions</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }

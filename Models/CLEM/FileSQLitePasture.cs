@@ -831,6 +831,8 @@ namespace Models.CLEM
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -845,7 +847,7 @@ namespace Models.CLEM
                 html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
                 html += "\n</div>";
             }
-            else if(!this.FileExists)
+            else if (!this.FileExists)
             {
                 html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
                 html += "\n</div>";
@@ -989,6 +991,7 @@ namespace Models.CLEM
                 html += "\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

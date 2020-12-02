@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
                 if (trucking != null)
                 {
                     expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                    expenseRequest.Reason = "Transport sales";
+                    expenseRequest.Category = "Transport sales";
                     bankAccount.Remove(expenseRequest);
                 }
 
@@ -217,7 +217,7 @@ namespace Models.CLEM.Activities
                         default:
                             throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
                     }
-                    expenseRequest.Reason = item.Name;
+                    expenseRequest.Category = item.Category;
                     // uses bank account specified in the RuminantActivityFee
                     item.BankAccount.Remove(expenseRequest);
                 }
@@ -225,7 +225,7 @@ namespace Models.CLEM.Activities
                 // add and remove from bank
                 if(saleValue > 0)
                 {
-                    bankAccount.Add(saleValue, this, this.PredictedHerdName+" sales");
+                    bankAccount.Add(saleValue, this, this.PredictedHerdName, "Sales");
                 }
             }
         }
@@ -294,7 +294,8 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Required = cost,
                     AllowTransmutation = false,
-                    Reason = this.PredictedHerdName + " purchases"
+                    Category =  "Purchases",
+                    RelatesToResource = this.PredictedHerdName
                 };
                 bankAccount.Remove(purchaseRequest);
 
@@ -426,7 +427,8 @@ namespace Models.CLEM.Activities
                         ActivityModel = this,
                         Required = cost,
                         AllowTransmutation = false,
-                        Reason = this.PredictedHerdName + " purchases"
+                        Category = "Purchases",
+                        RelatesToResource = this.PredictedHerdName
                     };
                     bankAccount.Remove(purchaseRequest);
 
@@ -453,7 +455,7 @@ namespace Models.CLEM.Activities
                     if (trucking != null)
                     {
                         expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                        expenseRequest.Reason = "Transport purchases";
+                        expenseRequest.Category = "Transport purchases";
                         bankAccount.Remove(expenseRequest);
 
                         if (expenseRequest.Required > expenseRequest.Available)
@@ -487,7 +489,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
@@ -520,9 +522,9 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Buy-Sell", this.PredictedHerdName);
         }
-        
+
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
@@ -577,6 +579,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -597,6 +601,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }
