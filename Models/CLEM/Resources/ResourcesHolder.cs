@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Activities;
@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of the all the Resource Groups.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<IModel> ResourceGroupList;
 
         private void InitialiseResourceGroupList()
@@ -57,7 +57,7 @@ namespace Models.CLEM.Resources
         /// Finds a shared marketplace
         /// </summary>
         /// <returns>Market</returns>
-        [XmlIgnore]
+        [JsonIgnore]
         public Market FoundMarket { get; private set; }
 
         /// <summary>
@@ -339,14 +339,11 @@ namespace Models.CLEM.Resources
             // TODO: if market and looking for finance only return or create "Bank"
 
             // find resource type in group
-            object resType = resGroup.GetByName((resourceType as IModel).Name) as IResourceWithTransactionType;
+            object resType = resGroup.FindChild< IResourceWithTransactionType >((resourceType as IModel).Name);
             if (resType is null)
             {
-                // clone resource
-                // too many problems with linked events to clone these objects and setup again
+                // clone resource: too many problems with linked events to clone these objects and setup again
                 // it will be the responsibility of the user to ensure the resources and details are in the market
-                // resType = Apsim.Clone(resourceType);
-
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
@@ -575,7 +572,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "Transmutation");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, "Transmutation");
                             }
                         }
                     }
@@ -585,6 +582,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -593,7 +592,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            
+
             var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
 
             // check that only one instance of each resource group is present
@@ -604,6 +603,11 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -632,5 +636,7 @@ namespace Models.CLEM.Resources
         {
             return "\n</div>";
         }
+
+        #endregion
     }
 }

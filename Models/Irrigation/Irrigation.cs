@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Core;
     using Soils;
     /// <summary>
@@ -14,28 +14,28 @@
     {
         /// <summary>Access the summary model.</summary>
         [Link] private ISummary summary = null;
-
-        /// <summary>Access the soil model.</summary>
-        [Link] private Soil soil = null;
-
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] private IPhysical soilPhysical = null;
+        
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double IrrigationApplied { get; private set; }
 
         /// <summary>Gets or sets the depth at which irrigation is applied (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; private set; }
 
         /// <summary>Gets or sets the duration of the irrigation event (minutes).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Duration { get; private set; }
 
         /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Efficiency { get; private set; }
 
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool WillRunoff { get; private set; }
 
         /// <summary>Occurs when [irrigated].</summary>
@@ -58,7 +58,7 @@
         {
             if (Irrigated != null && amount > 0.0)
             {
-                if (depth > soil.Thickness.Sum())
+                if (depth > soilPhysical.Thickness.Sum())
                     throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
                 Depth = depth;
  

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Xml;
 using System.Linq;
 using System.Text;

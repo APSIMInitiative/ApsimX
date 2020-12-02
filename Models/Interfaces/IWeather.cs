@@ -13,10 +13,10 @@
         DateTime EndDate { get; }
 
         /// <summary>Gets or sets the maximum temperature (oc)</summary>
-        double MaxT { get; set;  }
+        double MaxT { get; set; }
 
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
-        double MinT { get; set;  }
+        double MinT { get; set; }
 
         /// <summary>Mean temperature  /// </summary>
         double MeanT { get; }
@@ -40,10 +40,13 @@
         double CO2 { get; set; }
         
         /// <summary>Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.</summary>
-        double AirPressure { get; }
+        double AirPressure { get; set; }
 
         /// <summary>Gets the latitude</summary>
         double Latitude { get; }
+
+        /// <summary>Gets the longitude</summary>
+        double Longitude { get; }
 
         /// <summary>Gets the average temperature</summary>
         double Tav { get; }

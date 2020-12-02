@@ -89,11 +89,6 @@ namespace Models.CLEM.Resources
         public double PreviousConceptionRate { get; set; }
 
         /// <summary>
-        /// Weight lost at birth due to calf
-        /// </summary>
-        public double WeightLossDueToCalf { get; set; }
-
-        /// <summary>
         /// Months since minimum breeding age or entering the population
         /// </summary>
         public double NumberOfBreedingMonths
@@ -113,7 +108,9 @@ namespace Models.CLEM.Resources
             get
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                return (this.Weaned && this.NumberOfBirths == 0 && this.Age < this.BreedParams.MinimumAge1stMating);
+                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (this.Weaned && this.NumberOfBirths == 0);
             }
         }
 

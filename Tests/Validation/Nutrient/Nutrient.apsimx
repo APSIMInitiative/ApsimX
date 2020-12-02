@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 99,
+  "Version": 113,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -609,9 +609,7 @@
                   "Name": "FRGRFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
-                      "SubDailyTemperatures": null,
-                      "SubDailyResponse": null,
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "Children": [
@@ -629,7 +627,7 @@
                             1.0,
                             0.0
                           ],
-                          "Name": "TemperatureResponse",
+                          "Name": "Response",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -2341,6 +2339,16 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "RootDepthStressFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2898,6 +2906,7 @@
           "FieldNameUsedForMatch": "Clock.Today.Year",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -2911,6 +2920,7 @@
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObservedSoil",
           "Children": [
             {
@@ -3687,10 +3697,12 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "TarleeBaseSimulation",
                       "Children": [
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Tarlee.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -3939,7 +3951,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
@@ -3986,6 +3998,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.54,
                                     1.41,
@@ -4028,6 +4041,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -4165,6 +4182,8 @@
                                     200.0,
                                     100.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4211,6 +4230,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5557,6 +5580,8 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "HudsonBase",
                       "Children": [
                         {
@@ -5581,7 +5606,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Hudson.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -5711,6 +5736,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.0,
                                     1.1,
@@ -5808,6 +5834,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -6142,6 +6172,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -6243,6 +6275,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -7494,10 +7530,12 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "BrigalowBase",
                       "Children": [
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Brigalow.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -8473,7 +8511,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using System.Diagnostics;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link(ByName = true)] NutrientPool FOMLignin;\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Debugger.Break();\r\n            \r\n            if (Clock.Today.DayOfYear == 60 && Clock.Today.Year == 1982)\r\n            {\r\n                double[] CAdded = new double[] { 11600, 80, 80 };\r\n                double[] NAdded = new double[] { 1450, 10, 10 };\r\n                FOMLignin.Add(CAdded, NAdded);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link(ByName = true)] NutrientPool FOMLignin;\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Debugger.Break();\r\n            \r\n            if (Clock.Today.DayOfYear == 60 && Clock.Today.Year == 1982)\r\n            {\r\n                double[] CAdded = new double[] { 11600, 80, 80 };\r\n                double[] NAdded = new double[] { 1450, 10, 10 };\r\n                double[] PAdded = new double[] {  185, 1.28, 1.28}; \r\n                FOMLignin.Add(CAdded, NAdded, PAdded);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                                   "Parameters": [],
                                   "Name": "TillManager",
                                   "IncludeInDocumentation": false,
@@ -8482,7 +8520,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        \r\n        public double CumRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n/*\r\n                CumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Year > 1983)\r\n                CumRunoff += Soil.SoilWater.Runoff;\r\n                \r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n            TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
+                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        \r\n        public double CumRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n/*\r\n                CumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Year > 1983)\r\n                CumRunoff += Soil.SoilWater.Runoff;\r\n                \r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n            TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
                                   "Parameters": [
                                     {
                                       "Key": "CumRunoff",
@@ -8530,7 +8568,7 @@
                                 "[Wheat].Grain.Wt",
                                 "[Wheat].Grain.Protein",
                                 "sum([Soil].SoilWater.ESW)",
-                                "sum([Soil].Nutrient.FOMC) as TotalFOMC"
+                                "sum([Soil].Nutrient.FOM.C) as TotalFOMC"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -8605,6 +8643,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.38,
                                     1.64,
@@ -8682,6 +8721,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -9009,6 +9052,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -9090,6 +9135,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -9279,7 +9328,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
                               "IncludeInDocumentation": false,
@@ -9797,6 +9846,8 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "HorshamBase",
                       "Children": [
                         {
@@ -9821,7 +9872,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "Hudson.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -9944,6 +9995,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.0,
                                     1.1,
@@ -10041,6 +10093,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -10375,6 +10431,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -10476,6 +10534,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -14848,10 +14910,12 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
                       "Name": "PendletonBaseSimulation",
                       "Children": [
                         {
-                          "$type": "Models.Weather, Models",
+                          "$type": "Models.Climate.Weather, Models",
                           "FileName": "pendletonAPSIMtav.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -15111,7 +15175,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        [Link] Plant Wheat;\r\n        [Description(\"Tillage date (d-mmm)\")]\r\n        public string TillDate { get; set; }\r\n        [Description(\"Incorporation fraction (0-1)\")]\r\n        public double IncorpFraction { get; set; }\r\n\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((!Wheat.IsAlive) && DateUtilities.WithinDates(TillDate, Clock.Today, TillDate))\r\n                SOM.Incorporate(fraction: IncorpFraction, depth: 200);            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        [Link] Plant Wheat;\r\n        [Description(\"Tillage date (d-mmm)\")]\r\n        public string TillDate { get; set; }\r\n        [Description(\"Incorporation fraction (0-1)\")]\r\n        public double IncorpFraction { get; set; }\r\n\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((!Wheat.IsAlive) && DateUtilities.WithinDates(TillDate, Clock.Today, TillDate))\r\n                SOM.Incorporate(fraction: IncorpFraction, depth: 200);            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [
                                 {
                                   "Key": "TillDate",
@@ -15225,7 +15289,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Plant Wheat;\r\n        \r\n       \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n\r\n        [Link] Plant Wheat;\r\n        \r\n       \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
@@ -15284,6 +15348,7 @@
                                   "ParticleSizeClay": null,
                                   "ParticleSizeSand": null,
                                   "ParticleSizeSilt": null,
+                                  "Rocks": null,
                                   "BD": [
                                     1.24,
                                     1.25,
@@ -15344,6 +15409,10 @@
                                   "DULMetadata": null,
                                   "SATMetadata": null,
                                   "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
                                   "Name": "Physical",
                                   "Children": [
                                     {
@@ -15501,6 +15570,8 @@
                                     40.0,
                                     25.0
                                   ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -15557,6 +15628,10 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
                                   "IncludeInDocumentation": true,

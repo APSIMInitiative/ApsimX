@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
 
     /// <summary>
     /// This is a post simulation tool that lets the user filter the rows of a source data table.
@@ -57,7 +58,7 @@
 
                     // Trim spaces from all column names.
                     for (int i = 0; i < columnsToKeep.Count; i++)
-                        columnsToKeep[i] = columnsToKeep[i].Trim();
+                        columnsToKeep[i] = new string(columnsToKeep[i].Trim().Where(c => c != '[' && c != ']').ToArray());
 
                     for (int i = 0; i < table.Columns.Count; i++)
                     {

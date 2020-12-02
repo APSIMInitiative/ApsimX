@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -48,19 +48,19 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Current target
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Target { get; set; }
 
         /// <summary>
         /// Stored level achieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CurrentAchieved { get; set; }
 
         /// <summary>
         /// Has target been achieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool TargetMet { get { return CurrentAchieved >= Target; } }
 
         /// <summary>
@@ -71,6 +71,8 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -79,13 +81,13 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if(Metric is null || Metric=="")
+            if (Metric is null || Metric == "")
             {
                 html += "<span class=\"errorlink\">METRIC NOT SET</span>: ";
             }
             else
             {
-                html += "<span class=\"setvalue\">"+Metric+"</span>: ";
+                html += "<span class=\"setvalue\">" + Metric + "</span>: ";
             }
             if (TargetValue > 0)
             {
@@ -104,7 +106,8 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

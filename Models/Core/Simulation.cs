@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml.Serialization;
 
 namespace Models.Core
 {
@@ -21,7 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation, IReportsStatus
     {
         [Link]
         private ISummary summary = null;
@@ -154,12 +153,15 @@ namespace Models.Core
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FileName { get; set; }
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
         [JsonIgnore]
         public List<object> Services { get; set; } = new List<object>();
+
+        /// <summary>Status message.</summary>
+        public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
 
         /// <summary>
         /// Simulation has completed. Clear scope and locator

@@ -52,6 +52,8 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -80,7 +82,8 @@ namespace Models.CLEM.Activities
             html += " of remaining intake needed to meet current targets";
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

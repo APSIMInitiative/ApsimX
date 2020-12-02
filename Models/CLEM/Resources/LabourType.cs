@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -27,7 +27,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
-        [Description("Units (nominal)")]
         public string Units { get { return "NA"; } }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age in years.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
 
         private double ageInMonths = 0;
@@ -55,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age in months.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AgeInMonths
         {
             get
@@ -78,7 +77,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adult equivalent.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AdultEquivalent
         {
             get
@@ -156,7 +155,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The amount of feed eaten during the feed to target activity processing.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FeedToTargetIntake { get; set; }
 
         /// <summary>
@@ -175,37 +174,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The unique id of the last activity request for this labour type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Guid LastActivityRequestID { get; set; }
 
         /// <summary>
         /// The amount of labour supplied to the last activity for this labour type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LastActivityRequestAmount { get; set; }
 
         /// <summary>
         /// The number of hours provided to the current activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LastActivityLabour { get; set; }
 
         /// <summary>
         /// Available Labour (in days) in the current month. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AvailableDays { get; private set; }
 
         /// <summary>
         /// Link to the current labour availability for this person
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LabourSpecificationItem LabourAvailability { get; set; }
 
         /// <summary>
         /// A proportion (0-1) to limit available labour. This may be from financial shortfall for hired labour.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AvailabilityLimiter { get; set; }
 
         /// <summary>
@@ -280,6 +279,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
+            lastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -373,8 +373,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
+
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
 
         /// <summary>
         /// Current amount of labour required.
@@ -388,6 +394,8 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -408,10 +416,10 @@ namespace Models.CLEM.Resources
                 {
                     if (this.Individuals > 1)
                     {
-                        html += "<span class=\"setvalue\">"+this.Individuals.ToString()+"</span> x ";
+                        html += "<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ";
                     }
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ";
+                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>";
                     if (Hired)
                     {
                         html += " as hired labour";
@@ -454,5 +462,6 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #endregion
     }
 }

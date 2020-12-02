@@ -233,7 +233,7 @@ namespace UnitTests.Core.ApsimFile
             // This regular expression will effectively remove the first space.
             // There are simpler ways to achieve this but this method tests
             // backreferencing.
-            string newText = "originaltext\r\n";
+            string newText = "originaltext" + Environment.NewLine;
             manager.ReplaceRegex(@"([^\s]*)\s", @"$1");
             Assert.AreEqual(manager.ToString(), newText);
 

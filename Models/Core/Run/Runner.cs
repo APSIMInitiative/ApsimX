@@ -80,16 +80,48 @@
                 // If progress is at 100% (ie all jobs have finished running), and the job manager supports
                 // status reporting, allow the job manager to provide a status message. This lets the user
                 // know why the job is still running even though progress is at 100%.
-                if (MathUtilities.FloatsAreEqual(Progress, 1) && jobs.Count == 1 && jobs[0] is IReportsStatus jobManager)
+                if (MathUtilities.FloatsAreEqual(Progress, 1) && jobs.Count == 1 && jobs[0] is IReportsStatus jobManager && !string.IsNullOrEmpty(jobManager.Status))
                     return jobManager.Status;
 
                 // If there's only one job to be run, and that job is specifically designed
                 // to provide status reports, return that job's status message.
-                if (numJobs == 1 && jobRunner.SimsRunning.Count == 1 && jobRunner.SimsRunning[0] is IReportsStatus statusReporter)
+                if (numJobs == 1 && jobRunner.SimsRunning.Count == 1 && jobRunner.SimsRunning[0] is IReportsStatus statusReporter && !string.IsNullOrEmpty(statusReporter.Status))
                     return statusReporter.Status;
 
                 // Otherwise, return the generic "x of y completed" message.
                 return $"{numComplete} of {numJobs} completed";
+            }
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="relativeTo">The model to use to search for simulations to run.</param>
+        /// <param name="runSimulations">Run simulations?</param>
+        /// <param name="runPostSimulationTools">Run post simulation tools?</param>
+        /// <param name="runTests">Run tests?</param>
+        /// <param name="simulationNamesToRun">Only run these simulations.</param>
+        /// <param name="runType">How should the simulations be run?</param>
+        /// <param name="wait">Wait until all simulations are complete?</param>
+        /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
+        public Runner(IEnumerable<IModel> relativeTo,
+                      bool runSimulations = true,
+                      bool runPostSimulationTools = true,
+                      bool runTests = true,
+                      IEnumerable<string> simulationNamesToRun = null,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
+                      bool wait = true,
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null)
+        {
+            this.runType = runType;
+            this.wait = wait;
+            this.numberOfProcessors = numberOfProcessors;
+
+            foreach (IModel model in relativeTo)
+            {
+                var simulationGroup = new SimulationGroup(model, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
+                simulationGroup.Completed += OnSimulationGroupCompleted;
+                jobs.Add(simulationGroup);
             }
         }
 

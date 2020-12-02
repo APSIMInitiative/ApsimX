@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
@@ -23,19 +23,8 @@ namespace Models.CLEM.Activities
     [Description("This activity will arange payment for a task based on the labour specified in the labour requirement.")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase, IValidatableObject
+    public class LabourActivityTask : CLEMActivityBase
     {
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -124,6 +113,7 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -133,6 +123,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             return html;
-        }
+        } 
+        #endregion
     }
 }

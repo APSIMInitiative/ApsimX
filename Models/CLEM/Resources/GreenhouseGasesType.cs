@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Units (nominal)")]
         public string Units { get { return "kg"; } }
 
@@ -75,8 +75,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
+
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
 
         /// <summary>
         /// Add money to account
@@ -103,6 +109,7 @@ namespace Models.CLEM.Resources
                     ResourceType = this
                 };
                 LastTransaction = details;
+                lastGain = addAmount;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
             }
@@ -160,6 +167,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -175,7 +184,8 @@ namespace Models.CLEM.Resources
                 html += "</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

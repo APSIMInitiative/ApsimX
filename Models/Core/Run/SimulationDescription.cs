@@ -13,7 +13,7 @@
     /// and the associated metadata describing a simulation.
     /// </summary>
     [Serializable]
-    public class SimulationDescription : IRunnable
+    public class SimulationDescription : IRunnable, IReportsStatus
     {
         /// <summary>The top level simulations instance.</summary>
         private IModel topLevelModel;
@@ -82,6 +82,10 @@
                 return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
             }
         }
+
+        /// <summary>Status message.</summary>
+        public string Status => SimulationToRun.Status;
+
         /// <summary>
         /// Add an override to replace an existing model, as specified by the
         /// path, with a replacement model.

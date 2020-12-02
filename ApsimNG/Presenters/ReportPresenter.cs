@@ -173,7 +173,7 @@
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender;
-                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
+                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
@@ -214,9 +214,9 @@
         {
             try
             {
-                explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "VariableNames", view.VariableList.Lines));
-                explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
             }
             catch (Exception err)
             {
@@ -231,9 +231,9 @@
         {
             try
             {
-                explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "EventNames", view.EventList.Lines));
-                explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
             }
             catch (Exception err)
             {
@@ -248,9 +248,9 @@
         {
             try
             {
-                explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged -= new ModelChangedDelegate(OnModelChanged);
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Text));
-                explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.ModelChanged += new ModelChangedDelegate(OnModelChanged);
             }
             catch (Exception err)
             {

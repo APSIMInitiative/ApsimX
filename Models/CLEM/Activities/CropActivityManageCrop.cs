@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -52,13 +52,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
         /// Land item
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
@@ -71,23 +71,6 @@ namespace Models.CLEM.Activities
         public CropActivityManageCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-        }
-
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            // check that this activity contains at least one CollectProduct activity
-            if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
-            }
-            return results;
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -278,6 +261,28 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity contains at least one CollectProduct activity
+            if (this.Children.OfType<CropActivityManageProduct>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "Collect product activity" };
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -290,7 +295,7 @@ namespace Models.CLEM.Activities
 
             Land parentLand = null;
             IModel clemParent = FindAncestor<ZoneCLEM>();
-            if(LandItemNameToUse != null && LandItemNameToUse != "")
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 if (clemParent != null && clemParent.Enabled)
                 {
@@ -298,7 +303,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if(UseAreaAvailable)
+            if (UseAreaAvailable)
             {
                 html += "the unallocated portion of ";
             }
@@ -363,6 +368,7 @@ namespace Models.CLEM.Activities
                 html += "\n<div class=\"croprotationborder\">";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

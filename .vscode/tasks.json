@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "version": "2.0.0",
     "tasks": [
         {
@@ -39,4 +40,34 @@
             "problemMatcher": "$msCompile"
         }
     ]
+=======
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "nuget",
+			"type": "shell",
+			"command": "nuget",
+			"args": [
+				"restore",
+				"${workspaceRoot}/ApsimX.sln"
+			]
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "msbuild",
+			"args": [
+				"/v:m",
+				//"/p:Configuration=Release",
+				"${workspaceRoot}/ApsimX.sln"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": "nuget"
+		}
+	]
+>>>>>>> a117553398fe46628f3cd70e45cb6e7a21d316f7
 }

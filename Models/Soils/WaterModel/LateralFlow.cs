@@ -3,7 +3,8 @@
     using APSIM.Shared.Utilities;
     using Core;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
+    using Models.Soils;
 
     /// <summary>
     /// Lateral movement of water is calculated from a user specified lateral inflow ('InFlow'). 
@@ -33,10 +34,18 @@
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private WaterBalance soil = null;
+        private WaterBalance soilWater = null;
+
+        /// <summary> The field. </summary>
+        [Link]
+        private Zone field = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>The amount of incoming water (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] InFlow { get; set; }
 
         /// <summary>The amount of outgoing water (mm).</summary>
@@ -50,20 +59,23 @@
             {
                 if (OutFlow.Length != InFlow.Length)
                     OutFlow = new double[InFlow.Length];
-                double[] SW = MathUtilities.Add(soil.Water, InFlow);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
-                double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, soil.Properties.Thickness);
+                double[] SW = MathUtilities.Add(soilWater.Water, InFlow);
+                double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);
+                double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, soilPhysical.Thickness);
 
-                for (int layer = 0; layer < soil.Properties.Thickness.Length; layer++)
+                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
                 {
                     // Calculate depth of water table (m)
-                    double depthWaterTable = soil.Properties.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
+                    double depthWaterTable = soilPhysical.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
                     depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
 
                     // Calculate out flow (mm)
                     double i, j;
-                    i = soil.KLAT[layer] * depthWaterTable * (soil.DischargeWidth / UnitConversion.mm2m) * soil.Slope;
-                    j = (soil.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(soil.Slope, 2)), 0.5));
+
+                    // Convert slope from degrees to m/m (proportion). Should we bound this to [0, 1]?
+                    double slope = Math.Tan(field.Slope * Math.PI / 180);
+                    i = soilWater.KLAT[layer] * depthWaterTable * (soilWater.DischargeWidth / UnitConversion.mm2m) * slope;
+                    j = (soilWater.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
                     OutFlow[layer] = MathUtilities.Divide(i, j, 0.0);
 
                     // Bound out flow to max flow

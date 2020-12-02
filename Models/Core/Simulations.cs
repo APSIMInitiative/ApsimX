@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
@@ -10,7 +10,6 @@ using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
 using Models.Storage;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
@@ -37,16 +36,16 @@ namespace Models.Core
         public Int32 ExplorerWidth { get; set; }
 
         /// <summary>Gets or sets the version.</summary>
-        [XmlAttribute("Version")]
+        [System.Xml.Serialization.XmlAttribute("Version")]
         public int Version { get; set; }
 
         /// <summary>The name of the file containing the simulations.</summary>
         /// <value>The name of the file.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FileName { get; set; }
 
         /// <summary>Returns an instance of a links service</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Links Links
         {
             get

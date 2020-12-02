@@ -3,8 +3,9 @@
     using Interfaces;
     using System;
     using Models.Core;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Soils.Nutrients;
+    using APSIM.Shared.Utilities;
 
     /// <summary>This class encapsulates a SoilNitrogen model NH4 solute.</summary>
     [Serializable]
@@ -15,7 +16,7 @@
         SoilNitrogen parent = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] kgha
         {
             get
@@ -29,7 +30,7 @@
         }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return parent.Soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(parent.soilPhysical.Thickness, parent.soilPhysical.BD, kgha); } }
 
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

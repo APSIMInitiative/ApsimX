@@ -87,7 +87,8 @@ namespace UserInterface.Interfaces
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
-        void ExpandChildren(string path);
+        /// <param name="recursive">Expand all children/descendants as well?</param>
+        void ExpandChildren(string path, bool recursive = true);
 
         /// <summary>
         /// Collapses all child nodes recursively.

@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils
 {
     using APSIM.Shared.APSoil;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -66,5 +67,17 @@
         [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
+
+        /// <summary>EC metadata</summary>
+        public string[] ECMetadata { get; set; }
+
+        /// <summary>CL metadata</summary>
+        public string[] CLMetadata { get; set; }
+
+        /// <summary>ESP metadata</summary>
+        public string[] ESPMetadata { get; set; }
+
+        /// <summary>PH metadata</summary>
+        public string[] PHMetadata { get; set; }
     }
 }

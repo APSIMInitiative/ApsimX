@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Reporting
@@ -35,7 +35,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// The details of the summary group for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RuminantReportItemEventArgs ReportDetails { get; set; }
 
         /// <summary>

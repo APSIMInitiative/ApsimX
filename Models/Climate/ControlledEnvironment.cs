@@ -6,7 +6,6 @@ namespace Models.Climate
     using Newtonsoft.Json;
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Xml.Serialization;
 
     ///<summary>
     /// Reads in controlled environment weather data and makes it available to models.
@@ -42,27 +41,29 @@ namespace Models.Climate
         /// <summary>
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
-        [Description("Maximum Air Temperature (oC)")]
+        [Description("Maximum Air Temperature")]
+        [Units("째C")]
         public double MaxT { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum temperature (oC)
         /// </summary>
-        [Description("Minimum Air Temperature (oC)")]
+        [Description("Minimum Air Temperature")]
+        [Units("째C")]
         public double MinT { get; set; }
 
         /// <summary>
         /// Daily Mean temperature (oC)
         /// </summary>
-        [Units("캜")]
-        [XmlIgnore]
+        [Units("째C")]
+        [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
         /// <summary>
         /// Daily mean VPD (hPa)
         /// </summary>
         [Units("hPa")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double VPD
         {
             get
@@ -81,50 +82,63 @@ namespace Models.Climate
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
-        [Description("Rainfall (mm)")]        
+        [Description("Rainfall")]
+        [Units("mm")]
         public double Rain { get; set; }
 
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
-        [Description("Solar Radiation (MJ/m2/d)")]
+        [Description("Solar Radiation")]
+        [Units("MJ/m2/d")]
         public double Radn { get; set; }
 		
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
-        [Description("Pan Evaporation (mm)")]
+        [Description("Pan Evaporation")]
+        [Units("mm")]
         public double PanEvap { get; set; }
 
         /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
-        [Description("Vapour Pressure (hPa)")]
+        [Description("Vapour Pressure")]
+        [Units("hPa")]
         public double VP { get; set; }
 
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified. (code says 3.0 not zero)
         /// </summary>
-        [Description("Wind Speed (m/s)")]
+        [Description("Wind Speed")]
+        [Units("m/s")]
         public double Wind { get; set; }
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
-        [Description("CO2 concentration of the air (ppm)")]
+        [Description("CO2 concentration of the air")]
+        [Units("ppm")]
         public double CO2 { get; set; }
 
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
         /// </summary>
-        [Description("Air Pressure (hPa")]
+        [Description("Air Pressure")]
+        [Units("hPa")]
         public double AirPressure { get; set; }
 
         /// <summary>
         /// Gets the latitude
         /// </summary>
-        [Description("Latitude (deg)")]        
+        [Description("Latitude")]
+        [Units("째")]
         public double Latitude{ get; set; }
+
+        /// <summary>Gets the longitude</summary>
+        [Description("Longitude")]
+        [Units("째")]
+        public double Longitude { get; set; }
 
         /// <summary>
         /// Gets the average temperature
@@ -139,7 +153,8 @@ namespace Models.Climate
         /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
-        [Description("Day Length (h)")]
+        [Description("Day Length")]
+        [Units("h")]
         public double DayLength {get; set;}
 
         /// <summary>
@@ -170,7 +185,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
-        [Description("Day Length (h)")]
+        [Description("The hour of the day for sunset")]
         public double SunSet { get; set; }
 
         /// <summary>

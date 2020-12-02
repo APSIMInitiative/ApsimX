@@ -5,7 +5,7 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
@@ -27,14 +27,14 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This model holds a crop data file for the CLEM simulation.")]
+    [Description("This component specifies a crop data file for the CLEM simulation")]
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
     [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
-    public class FileCrop : CLEMModel, IFileCrop, IValidatableObject
+    public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -151,7 +151,7 @@ namespace Models.CLEM
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -223,7 +223,7 @@ namespace Models.CLEM
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -486,6 +486,7 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -559,7 +560,7 @@ namespace Models.CLEM
                 html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
             }
 
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ";
+            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ";
             if (AmountColumnName is null || AmountColumnName == "")
             {
                 html += "<span class=\"errorlink\">NOT SET</span></div>";
@@ -577,22 +578,12 @@ namespace Models.CLEM
                 html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>";
             }
             html += "\n</div>";
- 
+
             html += "\n</div>";
             return html;
-        }
+        } 
+        #endregion
 
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
     }
 
     /// <summary>

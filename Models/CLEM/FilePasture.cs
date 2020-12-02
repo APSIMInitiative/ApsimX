@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +17,7 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
-    [Description("This component holds a Pasture database file for native pasture used in the CLEM simulation.")]
+    [Description("This component specifies a pasture database file for native pasture used in the CLEM simulation")]
     [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
@@ -208,7 +208,7 @@ namespace Models.CLEM
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -821,6 +821,8 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -844,7 +846,8 @@ namespace Models.CLEM
             }
             html += "\n</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 
     /// <summary>

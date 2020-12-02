@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -40,7 +40,7 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [XmlIgnore, GreaterThanValue(0)]
+        [JsonIgnore, GreaterThanValue(0)]
         public int EcologicalIndicatorsCalculationInterval { get; set; }
 
         /// <summary>
@@ -76,30 +76,62 @@ namespace Models.CLEM
         /// <summary>
         /// Month this overhead is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
         // ignore zone base class properties
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Slope { get; set; }
 
         /// <summary>
         /// not used in CLEM
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Altitude { get; set; } = 50;
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            EcologicalIndicatorsCalculationInterval = 12;
+        }
+
+        /// <summary>
+        /// Method to determine if this is the month to calculate ecological indicators
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEcologicalIndicatorsCalculationMonth()
+        {
+            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+        }
+
+        /// <summary>Data stores to clear at start of month</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfMonth")]
+        private void OnEndOfMonth(object sender, EventArgs e)
+        {
+            if (IsEcologicalIndicatorsCalculationMonth())
+            {
+                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
+            }
+        }
+
+        #region validation
 
         /// <summary>
         /// Validate object
@@ -109,7 +141,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (Clock.StartDate.ToShortDateString() == "1/01/0001") 
+            if (Clock.StartDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
                 results.Add(new ValidationResult(String.Format("Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
@@ -202,15 +234,6 @@ namespace Models.CLEM
                     }
                 }
             }
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            EcologicalIndicatorsCalculationInterval = 12;
         }
 
         /// <summary>
@@ -310,6 +333,9 @@ namespace Models.CLEM
             }
             return valid;
         }
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// 
@@ -328,7 +354,7 @@ namespace Models.CLEM
 
             // find random number generator
             RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
-            if(rnd != null)
+            if (rnd != null)
             {
                 html += "\n<div class=\"clearfix defaultbanner\">";
                 html += "<div class=\"namediv\">" + rnd.Name + "</div>";
@@ -384,28 +410,8 @@ namespace Models.CLEM
                 html += cm.GetFullSummary(cm, true, "");
             }
             return html;
-        }
-
-        /// <summary>
-        /// Method to determine if this is the month to calculate ecological indicators
-        /// </summary>
-        /// <returns></returns>
-        public bool IsEcologicalIndicatorsCalculationMonth()
-        {
-            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
-        }
-
-        /// <summary>Data stores to clear at start of month</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
-        {
-            if(IsEcologicalIndicatorsCalculationMonth())
-            {
-                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
-            }
-        }
+        } 
+        #endregion
 
     }
 }

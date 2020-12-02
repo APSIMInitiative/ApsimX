@@ -4,7 +4,8 @@
     using Core;
     using Functions;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
+    using Models.Soils;
 
     /// <summary>
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
@@ -16,18 +17,22 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>Depth of water table (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; private set; }
 
         /// <summary>Calculate water table depth.</summary>
         public void Calculate()
         {
-            double[] Thickness = soil.Properties.Thickness;
+            double[] Thickness = soilPhysical.Thickness;
             double[] SW = soil.Water;
-            double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, Thickness);
-            double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, Thickness);
+            double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
+            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
 
             // Find the first saturated layer
             int sat_layer = -1;
@@ -79,9 +84,9 @@
         /// <param name="initialDepth">The initial depth.</param>
         public void Set(double initialDepth)
         {
-            double[] Thickness = soil.Properties.Thickness;
-            double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, Thickness);
-            double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, Thickness);
+            double[] Thickness = soilPhysical.Thickness;
+            double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
+            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
 
             double fraction;
             double top = 0.0;
@@ -90,7 +95,7 @@
             for (int i = 0; i < soil.Water.Length; i++)
             {
                 top = bottom;
-                bottom = bottom + soil.Thickness[i];
+                bottom = bottom + soilPhysical.Thickness[i];
                 
                 if (initialDepth >= bottom)
                 {

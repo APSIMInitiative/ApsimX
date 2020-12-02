@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Reflection;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -23,6 +23,7 @@
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
+    [ValidParent(ParentType = typeof(Soils.Soil))]
     public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
     {
         [NonSerialized]
@@ -30,7 +31,7 @@
         private ScriptCompiler scriptCompiler = null;
 
         /// <summary>The code to compile.</summary>
-        private string cSharpCode;
+        private string cSharpCode = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
@@ -90,14 +91,14 @@
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
         /// way to store both the caret position and scrolling information.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
@@ -142,16 +143,13 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
-                    if (Children.Count == 0 || results.WasCompiled)
+                    if (Children.Count != 0)
+                        Children.Clear();
+                    var newModel = results.Instance as IModel;
+                    if (newModel != null)
                     {
-                        if (Children.Count != 0)
-                            Children.Clear();
-                        var newModel = results.Instance as IModel;
-                        if (newModel != null)
-                        {
-                            newModel.IsHidden = true;
-                            Structure.Add(newModel, this);
-                        }
+                        newModel.IsHidden = true;
+                        Structure.Add(newModel, this);
                     }
                 }
                 else
@@ -216,7 +214,7 @@
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
-                        ReflectionUtilities.GetAttribute(property, typeof(XmlIgnoreAttribute), false) == null)
+                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null)
                     {
                         object value = property.GetValue(script, null);
                         if (value == null)

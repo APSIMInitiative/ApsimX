@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -70,7 +70,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of pools available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount
         {
             get
@@ -149,6 +149,7 @@ namespace Models.CLEM.Resources
                     Reason = reason,
                     ResourceType = this
                 };
+                lastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -276,10 +277,18 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -289,7 +298,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if ((Units??"").ToUpper() != "KG")
+            if ((Units ?? "").ToUpper() != "KG")
             {
                 html += "Each unit of this resource is equivalent to ";
                 if (ConvertToKg == 0)
@@ -304,7 +313,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                if(ConvertToKg != 1)
+                if (ConvertToKg != 1)
                 {
                     html += "<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg";
                 }
@@ -328,15 +337,16 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month"+((UseByAge>1)?"s":"")+" old";
+                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old";
             }
             html += "\n</div>";
 
             html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
-            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("#0%"))+"</span> of this raw food is edible";
+            html += ((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible";
             html += "\n</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

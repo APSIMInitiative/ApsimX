@@ -14,7 +14,7 @@ getPackage <- function(pkg, pkgpath) {
         if (!dir.exists(pkgpath)) {
             dir.create(pkgpath)
         }
-        devtools::install_github(pkg, lib = pkgpath, dependencies = TRUE)
+        devtools::install_github(pkg, lib = pkgpath)
 	} else {
 		print(paste('Package', pkg, 'is already installed.'))
 	}

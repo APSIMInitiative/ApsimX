@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Labour types currently available.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LabourType> Items { get; set; }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current pay rate value of individuals
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LabourPricing PayList;
 
         /// <summary>
@@ -111,6 +111,8 @@ namespace Models.CLEM.Resources
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
+        #region validation
+
         /// <summary>
         /// Validation of this resource
         /// </summary>
@@ -132,6 +134,8 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -455,6 +459,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -463,7 +468,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(AllowAging)
+            if (AllowAging)
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "Individuals age with time";
@@ -489,5 +494,6 @@ namespace Models.CLEM.Resources
         }
 
 
+        #endregion
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Land allocation details for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LandActivityAllocation ReportedLandAllocation { get; set; }
 
         private bool ChangeOccurred = false;
@@ -170,6 +170,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public event EventHandler AllocationReported;
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -180,7 +182,7 @@ namespace Models.CLEM.Resources
             string html = "";
             html += "\n<div class=\"activityentry\">";
             html += "Reported in ";
-            if(UnitsOfArea == null || UnitsOfArea == "")
+            if (UnitsOfArea == null || UnitsOfArea == "")
             {
                 html += "<span class=\"errorlink\">Unspecified units of area</span>";
             }
@@ -198,7 +200,7 @@ namespace Models.CLEM.Resources
             html += "</div>";
             return html;
         }
+
+        #endregion
     }
-
-
 }

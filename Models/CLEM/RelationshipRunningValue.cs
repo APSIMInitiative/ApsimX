@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -25,7 +25,7 @@ namespace Models.CLEM
         /// <summary>
         /// Current value
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Value { get; set; }
 
         /// <summary>
@@ -80,6 +80,8 @@ namespace Models.CLEM
             Value = StartingValue;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -95,6 +97,10 @@ namespace Models.CLEM
             }
             return results;
         }
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -117,6 +123,7 @@ namespace Models.CLEM
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }

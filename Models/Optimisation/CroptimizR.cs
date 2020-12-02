@@ -49,7 +49,7 @@ namespace Models.Optimisation
     /// https://github.com/hol430/ApsimOnR
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.DualGridView")]
+    [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
@@ -91,9 +91,10 @@ namespace Models.Optimisation
         /// <summary>
         /// Variable to optimise.
         /// </summary>
-        [Description("Variable to optimise")]
-        [Display(Type = DisplayType.FieldName)]
-        public string VariableName { get; set; }
+        [Description("Variables to optimise")]
+        [Tooltip("Can select multiple values, separated by commas")]
+        //[Display(Type = DisplayType.FieldName)]
+        public string[] VariableNames { get; set; }
 
         /// <summary>
         /// Directory to which output files (graphs, reports, ...) will be saved.
@@ -146,7 +147,6 @@ namespace Models.Optimisation
         /// </summary>
         [Description("Optimization method")]
         [Display(Type = DisplayType.SubModel)]
-        [Separator("Optimization method-specific parameters")]
         public IOptimizationMethod OptimizationMethod { get; set; } = new Simplex();
 
         /// <summary>
@@ -232,17 +232,20 @@ namespace Models.Optimisation
         /// Generates the R script which performs the optimization.
         /// </summary>
         /// <param name="fileName">File path to which the R code will be saved.</param>
-        private void GenerateRScript(string fileName)
+        /// <param name="outputPath">Directory/path to which output results will be saved. This is passed as a parameter to croptimizR.</param>
+        private void GenerateRScript(string fileName, string outputPath)
         {
             // tbi: package installation. Need to test on a clean VM.
             StringBuilder contents = new StringBuilder();
             string apsimxFileName = GenerateApsimXFile();
 
-            contents.AppendLine($"variable_names <- c('{VariableName}')");
+            contents.AppendLine($"variable_names <- c({string.Join(", ", VariableNames.Select(x => $"'{x.Trim()}'").ToArray())})");
 
             // If we're reading from the PredictedObserved table, need to fix
             // Predicted./Observed. suffix for the observed variables.
-            contents.AppendLine($"observed_variable_names <- c('{GetObservedVariableName()}', 'Clock.Today')");
+            string[] sanitisedObservedVariables = GetObservedVariableName().Select(x => $"'{x.Trim()}'").ToArray();
+            string dateVariable = VariableNames.Any(v => v.StartsWith("Predicted.")) ? "Predicted.Clock.Today" : "Clock.Today";
+            contents.AppendLine($"observed_variable_names <- c({string.Join(", ", sanitisedObservedVariables)}, '{dateVariable}')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
             contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
@@ -251,8 +254,7 @@ namespace Models.Optimisation
             contents.AppendLine($"param_info <- {GetParamInfo()}");
             contents.AppendLine();
             contents.AppendLine(OptimizationMethod.GenerateOptimizationOptions("optim_options"));
-            if (!string.IsNullOrEmpty(OutputPath))
-                contents.AppendLine($"optim_options$path_results <- '{OutputPath.Replace(@"\", @"\\")}'");
+            contents.AppendLine($"optim_options$path_results <- '{outputPath.Replace(@"\", @"\\")}'");
             if (RandomSeed != null)
                 contents.AppendLine($"optim_options$ranseed <- {RandomSeed}");
             contents.AppendLine();
@@ -264,11 +266,11 @@ namespace Models.Optimisation
             File.WriteAllText(fileName, contents.ToString());
         }
 
-        private string GetObservedVariableName()
+        private string[] GetObservedVariableName()
         {
             if (PredictedTableName == ObservedTableName)
-                return VariableName.Replace("Predicted.", "Observed.");
-            return VariableName;
+                return VariableNames.Select(x => x.Replace("Predicted.", "Observed.")).ToArray();
+            return VariableNames;
         }
 
         /// <summary>
@@ -305,7 +307,8 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in sims.FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>().Cast<IReferenceExternalFiles>())
+            {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
                     string absoluteFileName = PathUtilities.GetAbsolutePath(file, originalFile);
@@ -313,7 +316,7 @@ namespace Models.Optimisation
                     string newPath = Path.GetDirectoryName(sims.FileName);
                     File.Copy(absoluteFileName, Path.Combine(newPath, fileName), true);
                 }
-
+            }
             return apsimxFileName;
         }
 
@@ -421,7 +424,12 @@ namespace Models.Optimisation
 
             Status = "Generating R Script";
             string fileName = GetTempFileName($"parameter_estimation_{id}", ".r");
-            GenerateRScript(fileName);
+
+            string outputPath = Path.Combine(Path.GetTempPath(), $"croptimizr-output-{id}");
+            if (!Directory.Exists(outputPath))
+                Directory.CreateDirectory(outputPath);
+
+            GenerateRScript(fileName, outputPath);
 
             // todo - capture stderr as well?
             r.OutputReceived += OnOutputReceivedFromR;
@@ -430,6 +438,39 @@ namespace Models.Optimisation
             string stdout = r.Run(fileName);
             r.OutputReceived -= OnOutputReceivedFromR;
             WriteMessage(stdout);
+
+            // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
+            foreach (string file in Directory.EnumerateFiles(outputPath))
+            {
+                if (Path.GetExtension(file) == ".Rdata")
+                {
+                    IDataStore storage = FindInScope<IDataStore>();
+                    if (storage != null && storage.Writer != null)
+                        storage.Writer.WriteTable(ReadRData(file));
+                }
+                if (!string.IsNullOrEmpty(OutputPath))
+                    File.Copy(file, Path.Combine(OutputPath, Path.Combine($"{Name}-{Path.GetFileName(file)}")), true);
+            }
+            Directory.Delete(outputPath, true);
+        }
+
+        /// <summary>
+        /// Read output data from the .Rdata file generated by CroptimizR.
+        /// </summary>
+        /// <param name="path">Path to the .Rdata file on disk.</param>
+        public DataTable ReadRData(string path)
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine($"load('{path.Replace(@"\", @"\\")}')");
+            IEnumerable<string> paramNames = Parameters.Select(p => $"'{p.Name}'");
+            script.AppendLine($"param_names <- c({string.Join(", ", paramNames)})");
+            script.AppendLine(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.read_croptimizr_output.r"));
+            R r = new R();
+            string scriptPath = GetTempFileName("read_croptimizr_output", ".r");
+            File.WriteAllText(scriptPath, script.ToString());
+            DataTable table = r.RunToTable(scriptPath);
+            table.TableName = "CroptimizR";
+            return table;
         }
     }
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -57,6 +57,13 @@
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="Webview.Core" Version="0.0.3" />
     <PackageReference Include="Markdig.Signed" Version="0.20.0" />
+    <PackageReference Include="ISO3166" Version="1.0.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
+    <PackageReference Include="SharpMap" Version="1.2.0-pre.185420022" />
+    <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
+    <PackageReference Include="BruTile" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
+    <Compile Remove="Web References\**" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->
@@ -66,7 +73,7 @@
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.2-netcorebeta" />
     <PackageReference Include="MigraDoc.Rendering.Core" Version="1.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
-	
+    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
     <Compile Remove="Classes\Intellisense\*" />
   </ItemGroup>

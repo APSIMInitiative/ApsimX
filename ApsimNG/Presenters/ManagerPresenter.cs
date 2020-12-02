@@ -14,6 +14,7 @@
     // Used for the "code reformat option"..
     using ICSharpCode.NRefactory.CSharp;
 #endif
+    using Utility;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -23,7 +24,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private PropertyPresenter propertyPresenter = new PropertyPresenter();
+        private IPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -74,7 +75,11 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
-            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -135,10 +140,15 @@
             if (!intellisense.Visible)
                 BuildScript();
             if (scriptModel != null)
-            {
-                propertyPresenter.UpdateModel(scriptModel);
-                propertyPresenter.Refresh();
-            }
+                RefreshProperties();
+        }
+
+        private void RefreshProperties()
+        {
+            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
+                simplePresenter.RefreshView(scriptModel);
+            else if (propertyPresenter is PropertyPresenter presenter)
+                presenter.Refresh();
         }
 
         /// <summary>
@@ -150,10 +160,6 @@
             if (changedModel == manager)
             {
                 managerView.Editor.Text = manager.Code;
-            }
-            else if (changedModel == scriptModel)
-            {
-                propertyPresenter.UpdateModel(scriptModel);
             }
         }
 
@@ -193,8 +199,6 @@
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
-                if (scriptModel != null)
-                    propertyPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -214,6 +218,8 @@
             try
             {
                 BuildScript();
+                if (scriptModel != null)
+                    RefreshProperties();
             }
             catch (Exception err)
             {

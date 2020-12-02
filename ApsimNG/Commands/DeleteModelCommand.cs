@@ -25,6 +25,12 @@
         /// <summary>The position of the model in the list of child models.</summary>
         private int pos;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToDelete;
+
         /// <summary>The constructor</summary>
         /// <param name="modelToDelete">The model to delete</param>
         /// <param name="nodeDescription">The node description. This is used for the undo operation when we need to re-add the model.</param>

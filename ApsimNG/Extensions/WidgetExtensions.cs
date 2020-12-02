@@ -209,18 +209,32 @@ namespace UserInterface.Extensions
             ImageMenuItem imageItem = new ImageMenuItem(text);
             imageItem.Image = image;
 #else
-                    // GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
-                    // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
-                    // with a GtkImage and a GtkLabel instead.
-                    HBox container = new HBox();
-                    Label label = new Label(text);
-                    MenuItem imageItem = new MenuItem();
+            // GtkImageMenuItem has been deprecated since GTK+ 3.10. If you want to
+            // display an icon in a menu item, you should use GtkMenuItem and pack a GtkBox
+            // with a GtkImage and a GtkLabel instead.
+            HBox container = new HBox();
+            Label label = new Label(text);
+            MenuItem imageItem = new MenuItem();
 
-                    container.PackStart(image, false, false, 0);
-                    container.PackStart(label, false, false, 0);
-                    imageItem.Add(container);
+            container.PackStart(image, false, false, 0);
+            container.PackStart(label, false, false, 0);
+            imageItem.Add(container);
 #endif
             return imageItem;
         }
+
+#if NETCOREAPP
+        /// <summary>
+        /// Gets the child of grid whose area covers the grid cell whose upper left corner is at (left, top).
+        /// </summary>
+        /// <param name="grid">The grid.</param>
+        /// <param name="left">Column index.</param>
+        /// <param name="top">Row index.</param>
+        /// <remarks>Provided for compatibility with gtk2 builds which use GtkTable.</remarks>
+        public static Widget GetChild(this Grid grid, int left, int top)
+        {
+            return grid.GetChildAt(left, top);
+        }
+#endif
     }
 }

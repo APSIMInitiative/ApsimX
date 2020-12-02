@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount
         {
             get
@@ -113,62 +113,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if(this.FindAllChildren<Transmutation>().Count() > 0)
-            {
-                string[] memberNames = new string[] { "Transmutations" };
-                results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));
-            }
-
-            pasture = new object();
-
-            // check that either a AnimalFoodStoreType or a GrazeFoodStoreType can be found if link required.
-            if (PastureLink!=null && !PastureLink.StartsWith("Not specified"))
-            {
-                // check animalFoodStoreType
-                pasture = Resources.GetResourceItem(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-                if(pasture==null)
-                {
-                    string[] memberNames = new string[] { "Pasture link" };
-                    results.Add(new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames));
-                }
-            }
-
-            if (PastureLink != null && PastureLink.StartsWith("Not specified"))
-            {
-                // no link so need to ensure values are all supplied.
-                List<string> missing = new List<string>();
-                if (NToDMDCoefficient == 0)
-                {
-                    missing.Add("NToDMDCoefficient");
-                }
-                if (NToDMDIntercept == 0)
-                {
-                    missing.Add("NToDMDIntercept");
-                }
-                if (NToDMDCrudeProteinDenominator == 0)
-                {
-                    missing.Add("NToDMDCrudeProteinDenominator");
-                }
-                if (missing.Count() > 0)
-                {
-                    foreach (var item in missing)
-                    {
-                        string[] memberNames = new string[] { item };
-                        results.Add(new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames));
-                    }
-                }
-            }
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -177,7 +121,7 @@ namespace Models.CLEM.Resources
         {
             // TODO: find and link pasture
 
-            if(pasture==null)
+            if (pasture == null)
             {
                 dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
                 dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
@@ -234,6 +178,89 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Ecological indicators have been calculated
+        /// </summary>
+        public event EventHandler EcologicalIndicatorsCalculated;
+
+        /// <summary>
+        /// Ecological indicators calculated 
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
+        {
+            EcologicalIndicatorsCalculated?.Invoke(this, e);
+            CurrentEcologicalIndicators.Reset();
+        }
+
+        /// <summary>
+        /// Ecological indicators of this pasture
+        /// </summary>
+        [JsonIgnore]
+        public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
+
+
+        #region validation
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (this.FindAllChildren<Transmutation>().Count() > 0)
+            {
+                string[] memberNames = new string[] { "Transmutations" };
+                results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));
+            }
+
+            pasture = new object();
+
+            // check that either a AnimalFoodStoreType or a GrazeFoodStoreType can be found if link required.
+            if (PastureLink != null && !PastureLink.StartsWith("Not specified"))
+            {
+                // check animalFoodStoreType
+                pasture = Resources.GetResourceItem(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                if (pasture == null)
+                {
+                    string[] memberNames = new string[] { "Pasture link" };
+                    results.Add(new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames));
+                }
+            }
+
+            if (PastureLink != null && PastureLink.StartsWith("Not specified"))
+            {
+                // no link so need to ensure values are all supplied.
+                List<string> missing = new List<string>();
+                if (NToDMDCoefficient == 0)
+                {
+                    missing.Add("NToDMDCoefficient");
+                }
+                if (NToDMDIntercept == 0)
+                {
+                    missing.Add("NToDMDIntercept");
+                }
+                if (NToDMDCrudeProteinDenominator == 0)
+                {
+                    missing.Add("NToDMDCrudeProteinDenominator");
+                }
+                if (missing.Count() > 0)
+                {
+                    foreach (var item in missing)
+                    {
+                        string[] memberNames = new string[] { item };
+                        results.Add(new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames));
+                    }
+                }
+            }
+            return results;
+        }
+        #endregion
+
+        #region transactions
+
+        /// <summary>
         /// Graze food add method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
@@ -285,6 +312,7 @@ namespace Models.CLEM.Resources
                     Reason = reason,
                     ResourceType = this
                 };
+                lastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -362,30 +390,18 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
         /// <summary>
-        /// Ecological indicators have been calculated
+        /// Amount of last gain transaction
         /// </summary>
-        public event EventHandler EcologicalIndicatorsCalculated;
+        public double LastGain { get { return lastGain; } }
 
-        /// <summary>
-        /// Ecological indicators calculated 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
-        {
-            EcologicalIndicatorsCalculated?.Invoke(this, e);
-            CurrentEcologicalIndicators.Reset();
-        }
+        #endregion
 
-        /// <summary>
-        /// Ecological indicators of this pasture
-        /// </summary>
-        [XmlIgnore]
-        public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
-
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -426,5 +442,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
     }
 }

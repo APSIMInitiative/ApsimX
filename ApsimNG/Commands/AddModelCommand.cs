@@ -1,29 +1,22 @@
 ﻿namespace UserInterface.Commands
 {
-    using global::UserInterface.Presenters;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
     using System;
     using System.Collections.Generic;
 
-    /// <summary>This command changes the 'CurrentNode' in the ExplorerView.</summary>
+    /// <summary>This command adds a model as a child of another model.</summary>
     public class AddModelCommand : ICommand
     {
         /// <summary>The parent model to add the model to.</summary>
         private IModel parent;
-
-        /// <summary>The path of the parent to add the model to.</summary>
-        private string parentPath;
 
         /// <summary>A string representation of the child model to add.</summary>
         private IModel child;
 
         /// <summary>A string representation of the child model to add.</summary>
         private string xmlOrJson;
-
-        /// <summary>The explorer presenter.</summary>
-        ExplorerPresenter presenter;
 
         /// <summary>The model we're to add.</summary>
         private IModel modelToAdd;
@@ -32,51 +25,47 @@
         private bool modelAdded;
 
         /// <summary>Constructor.</summary>
-        /// <param name="pathOfParent">The path of the parent model to add the child to.</param>
+        /// <param name="parent">The path of the parent model to add the child to.</param>
         /// <param name="child">The model to add.</param>
-        /// <param name="explorerView">The explorer view to work with.</param>
-        /// <param name="explorerPresenter">The explorer presenter to work with.</param>
-        public AddModelCommand(string pathOfParent, IModel child, ExplorerPresenter explorerPresenter)
+        public AddModelCommand(IModel parent, IModel child)
         {
-            parentPath = pathOfParent;
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent), "Cannot add a child to a null parent");
+            if (child == null)
+                throw new ArgumentNullException(nameof(child), "Cannot add a null child");
+
+            this.parent = parent;
             this.child = child;
-            presenter = explorerPresenter;
         }
 
-        /// <summary>Constructor.</summary>
-        /// <param name="pathOfParent">The path of the parent model to add the child to.</param>
-        /// <param name="textToAdd">The text string representation of the model to add.</param>
-        /// <param name="explorerPresenter">The explorer presenter to work with.</param>
-        public AddModelCommand(string pathOfParent, string textToAdd, ExplorerPresenter explorerPresenter)
+        /// <summary>Constructor - allows for adding a serialized model.</summary>
+        /// <param name="parent">The model to which the child will be added.</param>
+        /// <param name="textToAdd">The text string (xml/json) representation of the model to add.</param>
+        public AddModelCommand(IModel parent, string textToAdd)
         {
-            parentPath = pathOfParent;
+            if (parent == null)
+                throw new ArgumentNullException("Cannot add a child to a null parent");
+
+            this.parent = parent;
             xmlOrJson = textToAdd;
-            presenter = explorerPresenter;
         }
+
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToAdd;
 
         /// <summary>Perform the command</summary>
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            try
-            {
-                parent = presenter.ApsimXFile.FindByPath(parentPath)?.Value as IModel;
-                if (parent == null)
-                    throw new Exception("Cannot find model " + parentPath);
+            if (xmlOrJson != null)
+                modelToAdd = Structure.Add(xmlOrJson, parent);
+            else
+                modelToAdd = Structure.Add(child, parent);
 
-                if (xmlOrJson != null)
-                    modelToAdd = Structure.Add(xmlOrJson, parent);
-                else
-                    modelToAdd = Structure.Add(child, parent);
-
-                presenter.AddChildToTree(parentPath, modelToAdd);
-                modelAdded = true;
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-                modelAdded = false;
-            }
+            modelAdded = true;
         }
 
         /// <summary>Undoes the command</summary>
@@ -84,10 +73,7 @@
         public void Undo(CommandHistory commandHistory)
         {
             if (modelAdded && modelToAdd != null)
-            {
-                parent.Children.Remove(modelToAdd as Model);
-                presenter.DeleteFromTree(modelToAdd.FullPath);
-            }
+                Structure.Delete(modelToAdd);
         }
     }
 }

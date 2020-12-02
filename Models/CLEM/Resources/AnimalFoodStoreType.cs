@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -25,7 +25,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
-        [Description("Units (nominal)")]
         public string Units { get; private set; }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current store nitrogen (%)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount currently available (kg dry)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount { get { return amount; } set { return; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
@@ -123,6 +122,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
+            lastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -204,10 +204,18 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -218,8 +226,8 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "<div class=\"activityentry\">";
-            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###")+"%</span>";
-            if(DMD > 0)
+            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>";
+            if (DMD > 0)
             {
                 html += " and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>";
             }
@@ -244,7 +252,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 }

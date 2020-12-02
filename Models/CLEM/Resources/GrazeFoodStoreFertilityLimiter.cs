@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStoreType))]
     [Description("Allows for the reduction of new pasture nitrogen content (N%) based on annual yield or growth month")]
     [Version(1, 0, 1, "Provides NABSA 'Fertility - N decline yield' functionality")]
-    [HelpUri(@"Content/Features/Resources/Graze Food Store/GrazeFoodStoreFertilityLimiter.htm")]
+    [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreFertilityLimiter.htm")]
     public class GrazeFoodStoreFertilityLimiter: CLEMModel
     {
         [Link]
@@ -55,6 +55,14 @@ namespace Models.CLEM.Resources
         private double annualNUsed = 0;
         private GrazeFoodStoreType parentPasture;
         private bool timingPresent;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public GrazeFoodStoreFertilityLimiter()
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -104,6 +112,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -129,7 +139,7 @@ namespace Models.CLEM.Resources
             }
             html += " if";
 
-            if(timerpresent)
+            if (timerpresent)
             {
                 html += "</div>";
                 html += "\n<div class=\"activityentry\">";
@@ -185,6 +195,7 @@ namespace Models.CLEM.Resources
                 html += "\n</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

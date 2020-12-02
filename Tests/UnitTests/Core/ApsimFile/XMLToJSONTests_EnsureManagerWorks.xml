@@ -8,21 +8,7 @@
       <CropName>wheat</CropName>
     </Script>
     <Code>
-      <![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-namespace Models
-{
-    [Serializable]
-    public class Script : Model
-    {
-        [Link] Clock Clock;
-        [Link] Fertiliser Fertiliser;
-        [Link] Summary Summary;
-        
-    }
-}
-]]>
+      <![CDATA[using System;]]>
     </Code>
   </Manager>
 </Simulations>

@@ -7,7 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IValidatableObject, IFilterGroup
+    public class LabourFeedGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Value to supply for each month
@@ -33,13 +33,13 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Proportion { get; set; }
 
         /// <summary>
@@ -50,16 +50,7 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -70,7 +61,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
 
-            if(this.Parent.GetType() != typeof(LabourActivityFeed))
+            if (this.Parent.GetType() != typeof(LabourActivityFeed))
             {
                 html += "<div class=\"warningbanner\">This Labour Feed Group must be placed beneath a Labour Activity Feed component</div>";
                 return html;
@@ -82,7 +73,7 @@ namespace Models.CLEM.Groupings
             {
                 case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
                 case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString() + "</span>";
+                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "</span>";
                     break;
                 default:
                     break;
@@ -91,7 +82,7 @@ namespace Models.CLEM.Groupings
 
             ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
             ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
-            HumanFoodStoreType food =  resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+            HumanFoodStoreType food = resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
             if (food != null)
             {
                 html += " " + food.Units + " ";
@@ -149,5 +140,6 @@ namespace Models.CLEM.Groupings
             return html;
         }
 
+        #endregion
     }
 }

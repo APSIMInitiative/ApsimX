@@ -91,8 +91,8 @@
             try
             {
                 Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
-                ICommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
-                command.Do(null);
+                RunCommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                command.Do();
             }
             catch (Exception err)
             {
@@ -290,10 +290,10 @@
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
-                                                  text, 
-                                                  explorerPresenter);
+                IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+                ICommand command = new AddModelCommand(currentNode, text);
                 explorerPresenter.CommandHistory.Add(command, true);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -425,7 +425,7 @@
                 Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                 var runner = new Runner(model, runType:typeOfRun, wait: false);
                 this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                this.command.Do(null);
+                this.command.Do();
             }
         }
 
@@ -477,7 +477,11 @@
         {
             try
             {
-                this.explorerPresenter.DownloadSoil();
+                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                                                       new DownloadPresenter());
             }
             catch (Exception err)
             {
@@ -751,14 +755,23 @@
                 IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
+                    // Toggle the enabled property on the model, and change the enabled property
+                    // on all descendants to the new value of the model's enabled property.
                     List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                     changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
-
                     foreach (IModel child in model.FindAllDescendants())
                         changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
 
                     ChangeProperty command = new ChangeProperty(changes);
                     explorerPresenter.CommandHistory.Add(command);
+
+                    // Now call OnCreated() for all changed models. Note ToList() to force greedy evaluation.
+                    if (model.Enabled)
+                    {
+                        model.OnCreated();
+                        foreach (IModel descendant in model.FindAllDescendants().ToList())
+                            descendant.OnCreated();
+                    }
 
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
@@ -844,19 +857,18 @@
                     explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    ICommand command;
-                    string fileNameWritten;
                     var modelToDocument = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
 
                     var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
+                    CreateFileDocumentationCommand command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    string fileNameWritten = command.FileNameWritten;
 
-                    explorerPresenter.CommandHistory.Add(command, true);
+                    command.Do();
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    Process.Start(fileNameWritten);
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)

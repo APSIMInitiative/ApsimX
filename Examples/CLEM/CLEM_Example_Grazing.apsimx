@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 105,
+  "Version": 117,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -32,6 +32,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "Grazing",
           "Children": [
             {
@@ -180,6 +181,7 @@
                           "SRWGrowthScalar": 0.32,
                           "IntakeCoefficient": 0.024,
                           "IntakeIntercept": 1.7,
+                          "OverfeedPotentialIntakeModifier": 1.0,
                           "ProteinCoefficient": 120.0,
                           "ProteinDegradability": 0.9,
                           "BaseAnimalEquivalent": 450.0,
@@ -699,7 +701,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.CLEM.Activities.RuminantActivityMuster, Models",
+                          "$type": "Models.CLEM.Activities.RuminantActivityMove, Models",
                           "ManagedPastureName": "GrazeFoodStore.NativePasture",
                           "PerformAtStartOfSimulation": true,
                           "MoveSucklings": false,
@@ -707,7 +709,7 @@
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
                           "OnPartialResourcesAvailableAction": 0,
-                          "Name": "Muster to pasture",
+                          "Name": "Move to pasture",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",

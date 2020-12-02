@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 111,
+  "Version": 123,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.AgPasture.PastureSpecies, Models",
-      "MaximumNUptake": 10.0,
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
@@ -244,6 +243,9 @@
           "RootElongationRate": 25.0,
           "KNO3": 0.01,
           "KNH4": 0.005,
+          "MaximumNUptake": 10.0,
+          "ReferenceRLD": 5.0,
+          "ReferenceKSuptake": 15.0,
           "Name": "Root",
           "Children": [
             {
@@ -270,7 +272,8 @@
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "AGPWhiteClover"
     }
   ]
 }

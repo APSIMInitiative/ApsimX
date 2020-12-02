@@ -62,6 +62,7 @@
     <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
     <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
     <Compile Remove="Report\RowEnumerator.cs" />
+    <Compile Remove="Resources\Scripts\*.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -80,6 +81,7 @@
     </Reference>
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
 	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
+  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>

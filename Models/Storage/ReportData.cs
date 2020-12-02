@@ -8,7 +8,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>Encapsulates a table that needs writing to the database.</summary>
     [Serializable]
@@ -129,7 +129,7 @@
                     bool ignore = false;
                     foreach (object attr in attrs)
                     {
-                        if (attr is XmlIgnoreAttribute)
+                        if (attr is JsonIgnoreAttribute)
                         {
                             ignore = true;
                             continue;

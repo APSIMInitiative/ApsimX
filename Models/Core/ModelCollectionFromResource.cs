@@ -9,7 +9,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
@@ -84,8 +83,9 @@
         /// </summary>
         public override void OnCreated()
         {
+            // If the model is not under replacements and a resource name is provided,
             // lookup the resource get the xml and then deserialise to a model.
-            if (!string.IsNullOrEmpty(ResourceName))
+            if (!string.IsNullOrEmpty(ResourceName) && (Children.Count == 0 || FindAncestor<Replacements>() == null))
             {
                 var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
@@ -196,9 +196,9 @@
                     property.Name != "ResourceName")
                 {
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
+                    var JsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
                     var jsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
-                    if (description == null && xmlIgnore == null && jsonIgnore == null)
+                    if (description == null && JsonIgnore == null && jsonIgnore == null)
                     {
                         try
                         {

@@ -48,7 +48,7 @@
         public void Run()
         {
             // If the target table has not been modified during the simulation run, don't do anything.
-            if (dataStore?.Writer != null && dataStore.Writer.TablesModified.Contains(TableName))
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
                 return;
 
             if (string.IsNullOrWhiteSpace(TableName))

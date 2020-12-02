@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
@@ -33,13 +33,13 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Proportion { get; set; }
 
         /// <summary>
@@ -50,6 +50,7 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -59,7 +60,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
 
-            if(this.Parent.GetType() != typeof(RuminantActivityFeed))
+            if (this.Parent.GetType() != typeof(RuminantActivityFeed))
             {
                 html += "<div class=\"warningbanner\">This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component</div>";
                 return html;
@@ -71,7 +72,7 @@ namespace Models.CLEM.Groupings
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString() + "kg</span>";
+                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "kg</span>";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                 case RuminantFeedActivityTypes.ProportionOfWeight:
@@ -79,7 +80,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     if (Value != 1)
                     {
-                        html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString("0.##%")+"</span>";
+                        html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString("0.##%") + "</span>";
                     }
                     break;
                 default:
@@ -92,19 +93,24 @@ namespace Models.CLEM.Groupings
                 starter = "The ";
             }
 
+            bool overfeed = false;
             html += "<span class=\"setvalue\">";
             switch (ft)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     html += " of the available food supply";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                     html += " per individual per day";
+                    overfeed = true;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    overfeed = true;
                     html += " per day";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
+                    overfeed = true;
                     html += starter + "live weight";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -117,6 +123,7 @@ namespace Models.CLEM.Groupings
                     break;
             }
             html += "</span> ";
+
             switch (ft)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
@@ -134,10 +141,13 @@ namespace Models.CLEM.Groupings
             }
             html += "</div>";
 
-            html += "\n<div class=\"activityentry\">";
-            html += "Individual's intake will automatically be limited to 1.2 x potential intake, with excess food still utilised";
-            html += "</div>";
+            if (overfeed)
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
+                html += "</div>";
 
+            }
             if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
             {
                 html += "<div class=\"warningbanner\">Note: This is a specified daily amount fed to the entire herd. If insufficient provided, each individual's potential intake will not be met</div>";
@@ -170,7 +180,8 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

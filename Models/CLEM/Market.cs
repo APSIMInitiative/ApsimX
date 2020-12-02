@@ -10,7 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -35,28 +35,28 @@ namespace Models.CLEM
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
         /// <value>The slope.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Slope { get; set; }
 
         /// <summary>
         /// not used in CLEM
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         private ResourcesHolder resources;
@@ -121,6 +121,7 @@ namespace Models.CLEM
             }
         }
 
+        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -156,8 +157,10 @@ namespace Models.CLEM
             }
 
             return results;
-        }
+        } 
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// 
         /// </summary>
@@ -177,7 +180,8 @@ namespace Models.CLEM
 
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
 
     }

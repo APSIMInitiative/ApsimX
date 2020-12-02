@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 
@@ -30,26 +30,26 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Current list of resources requested by this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<ResourceRequest> ResourceRequestList { get; set; }
 
         /// <summary>
         /// Current list of activities under this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<CLEMActivityBase> ActivityList { get; set; }
 
         /// <summary>
         /// Current status of this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ActivityStatus Status { get; set; }
 
         private bool enabled = true;
         /// <summary>
         /// Current status of this activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool ActivityEnabled
         {
             get
@@ -95,7 +95,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Resource allocation style
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceAllocationStyle AllocationStyle { get; set; }
 
         /// <summary>
@@ -783,7 +783,7 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
-                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>().GetType() == typeof(Market))
+                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)

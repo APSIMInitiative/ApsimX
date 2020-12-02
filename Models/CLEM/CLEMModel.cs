@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -31,13 +31,13 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
         /// Warning log for this CLEM model
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public WarningLog Warnings = WarningLog.GetInstance(50);
 
         /// <summary>
@@ -52,14 +52,14 @@ namespace Models.CLEM
         /// <summary>
         /// Model identifier
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string UniqueID { get { return id.ToString(); } }
 
         /// <summary>
         /// Parent CLEM Zone
         /// Stored here so rapidly retrieved
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public String CLEMParentName { get; set; }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Models.CLEM
                     {
                         //So lets try to load default value to the property
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
-                        if(dv != null)
+                        if (dv != null)
                         {
                             if (property.PropertyType.IsEnum)
                             {
@@ -126,6 +126,8 @@ namespace Models.CLEM
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -171,7 +173,7 @@ namespace Models.CLEM
         /// <summary>
         /// Styling to use for HTML summary
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <summary>
@@ -192,9 +194,9 @@ namespace Models.CLEM
             string overall = "activity";
             string extra = "";
 
-            if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
+            if (this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
-                if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)) )
+                if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)))
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Default;
                 }
@@ -246,9 +248,9 @@ namespace Models.CLEM
             }
 
             string html = "";
-            html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
-            html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
+            html += "\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
+            html += "\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>";
+            html += "\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">";
 
             return html;
         }
@@ -278,7 +280,7 @@ namespace Models.CLEM
                     html += "\n<div class=\"activityentry\">This resource is measured in  ";
                     if (units == null || units == "")
                     {
-                        html += "<span class=\"errorlink\">Not specified</span>";
+                        html += "<span class=\"errorlink\">NOT SET</span>";
                     }
                     else
                     {
@@ -313,7 +315,7 @@ namespace Models.CLEM
         public string ModelSummaryNameTypeHeader()
         {
             string html = "";
-            html += "<div class=\"namediv\">" + this.Name +  ((!this.Enabled)?" - DISABLED!":"")+ "</div>";
+            html += "<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
             if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
                 html += "<div class=\"partialdiv\"";
@@ -336,5 +338,7 @@ namespace Models.CLEM
             html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
             return html;
         }
+
+        #endregion    }
     }
 }

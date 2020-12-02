@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
     using Models.Soils.Nutrients;
     using Models.Surface;
     using System;
@@ -25,8 +26,8 @@
             if (zone != null)
             {
                 AddFaecesObj = (SurfaceOrganicMatter)zone.FindInScope<SurfaceOrganicMatter>();
-                var soil = (ISoil)zone.FindInScope<ISoil>();
-                SoilLayerThickness = soil.Thickness;
+                var soilPhysical = zone.FindInScope<IPhysical>();
+                SoilLayerThickness = soilPhysical.Thickness;
                 AddUrineObj = (ISolute)zone.FindInScope("Urea");
             }
         }

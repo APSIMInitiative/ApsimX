@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 111,
+  "Version": 123,
   "Name": "Simulations",
   "Children": [
     {
@@ -220,6 +220,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Inert",
           "Children": [
@@ -234,7 +235,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].FInert * [Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness",
+              "Expression": "[Soil].Organic.FInert * [Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -253,7 +254,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Inert].C / [Soil].InitialSoilCNR",
+              "Expression": "[Inert].C / [Soil].Initial.OCNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -269,6 +270,35 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Inert].C / [Inert].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -279,6 +309,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "SurfaceResidue",
           "Children": [
@@ -306,6 +337,16 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "InitialNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -550,6 +591,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMLignin",
           "Children": [
@@ -564,7 +606,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.1 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.1 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -596,6 +638,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -681,6 +733,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMCellulose",
           "Children": [
@@ -695,7 +748,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.7 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.7 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -727,6 +780,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -812,6 +875,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMCarbohydrate",
           "Children": [
@@ -826,7 +890,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].InitialRootWt * 0.2 * 0.4",
+              "Expression": "[Soil].Organic.FOM * 0.2 * 0.4",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -858,6 +922,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -943,6 +1017,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Microbial",
           "Children": [
@@ -957,7 +1032,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(([Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness -[Inert].C) * [Soil].FBiom) / (1 + [Soil].FBiom)",
+              "Expression": "(([Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -994,10 +1069,39 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Microbial].C / [Microbial].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 8.0,
               "Units": null,
               "Name": "CNRatio",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 60.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -1124,6 +1228,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Humic",
           "Children": [
@@ -1138,7 +1243,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(1-[Soil].FInert)*[Soil].Initial.OC * 100 * [Soil].BD * [Soil].Thickness - [Microbial].C",
+              "Expression": "(1-[Soil].Organic.FInert)*[Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1157,8 +1262,27 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Humic].C / [Soil].InitialSoilCNR",
+              "Expression": "[Humic].C / [Soil].Initial.OCNR",
               "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Humic].C / [Humic].InitialCPRatio",
+              "Name": "InitialPhosphorus",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1241,6 +1365,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1450,7 +1584,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
-          "Expression": "([Soil].BD*[Soil].Thickness)/100",
+          "Expression": "([Soil].Physical.BD*[Soil].Physical.Thickness)/100",
           "Name": "ppm2kgha",
           "Children": [],
           "IncludeInDocumentation": true,

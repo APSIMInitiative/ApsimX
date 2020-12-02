@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         {
             if (HerdFilters == null)
             {
-                throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perfrom InitialiseHerd() in CLEMInitialiseActivity for this activity.");
+                throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perform InitialiseHerd() in CLEMInitialiseActivity for this activity. Please report this issue to CLEM developers.");
             }
             if(includeCheckHerdMeetsCriteria)
             {

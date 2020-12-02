@@ -40,11 +40,6 @@
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
         /// <summary>
-        /// View used to convert xml files to a newer version.
-        /// </summary>
-        private IFileConverterView fileConverter = null;
-
-        /// <summary>
         /// View used to show help information.
         /// </summary>
         private HelpView helpView = null;
@@ -114,8 +109,6 @@
             this.view.TabClosing -= this.OnTabClosing;
             this.view.OnError -= OnError;
             this.view.ShowDetailedError -= ShowDetailedErrorMessage;
-            if (fileConverter != null)
-                fileConverter.Convert -= OnConvert;
         }
 
         /// <summary>
@@ -572,7 +565,7 @@
 
 #if DEBUG
             startPage.AddButton(
-                                "Convert Files",
+                                "Upgrade Resource Files",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
@@ -1240,37 +1233,14 @@
         {
             try
             {
-                if (fileConverter == null)
-                {
-                    fileConverter = new FileConverterView(view as ViewBase);
-                    fileConverter.Convert += OnConvert;
-                }
-                fileConverter.Visible = true;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Opens a dialog which allows the user to upgrade an XML file from and to a version of their choice.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnConvert(object sender, EventArgs args)
-        {
-            try
-            {
-                if (fileConverter == null || fileConverter.Files == null)
-                    return;
-
-                // The file converter view has an option to automatically select the latest version.
-                // If the user has enabled this option, we will upgrade the file to the latest version. 
-                // Otherwise, we will upgrade to the version they have specified.
-                int version = fileConverter.LatestVersion ? Models.Core.ApsimFile.Converter.LatestVersion : fileConverter.ToVersion;
+                int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                foreach (string file in fileConverter.Files)
+                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                if (!Directory.Exists(resources))
+                    throw new Exception("Unable to locate resources directory");
+                IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);
+                foreach (string file in files)
                 {
                     if (!File.Exists(file))
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
@@ -1326,7 +1296,6 @@
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                fileConverter?.Destroy();
                 Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;

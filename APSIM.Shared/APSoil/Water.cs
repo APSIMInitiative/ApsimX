@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Xml;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>A water specification for a soil.</summary>
     [Serializable]
@@ -49,7 +49,7 @@
         public string[] KSMetadata { get; set; }
 
         /// <summary>Gets or sets the crops.</summary>
-        [XmlElement("SoilCrop")]
+        [System.Xml.Serialization.XmlElement("SoilCrop")]
         public List<SoilCrop> Crops { get; set; }
     }
 }

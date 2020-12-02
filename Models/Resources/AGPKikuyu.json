@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 111,
+  "Version": 123,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.AgPasture.PastureSpecies, Models",
-      "MaximumNUptake": 10.0,
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
@@ -104,8 +103,6 @@
       "NFixingCostFactor": 0.0,
       "GenericGLF": 1.0,
       "SoilFertilityGLF": 1.0,
-      "referenceRLD": 5.0,
-      "ReferenceKSuptake": 15.0,
       "NuptakeSWFactor": 0.25,
       "MaximumUptakeRateNH4": 0.5,
       "MaximumUptakeRateNO3": 0.5,
@@ -277,6 +274,9 @@
           "KNO3": 0.02,
           "KNH4": 0.01,
           "Name": "Root",
+          "MaximumNUptake": 10.0,
+          "ReferenceRLD": 5.0,
+          "ReferenceKSuptake": 15.0,
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",
@@ -302,7 +302,8 @@
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "AGPKikuyu"
     }
   ]
 }

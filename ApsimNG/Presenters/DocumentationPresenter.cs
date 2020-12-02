@@ -17,7 +17,7 @@ namespace UserInterface.Presenters
 {
     public class DocumentationPresenter : IPresenter
     {
-        private IHTMLView view;
+        private IMarkdownView view;
         private ExplorerPresenter presenter;
         private IModel model;
 
@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = view as IHTMLView;
+            this.view = view as IMarkdownView;
             this.model = model as IModel;
             this.presenter = explorerPresenter;
 
@@ -37,65 +37,77 @@ namespace UserInterface.Presenters
 
         private void PopulateView()
         {
-            string html = DocumentModel(model);
-            view.SetContents(html, false, false);
+            view.Text = DocumentModel(model);
         }
 
         private string DocumentModel(IModel model)
         {
-            StringBuilder html = new StringBuilder();
-            html.AppendLine("<html><body>");
+            StringBuilder markdown = new StringBuilder();
 
-            html.AppendLine($"<h1>{model.Name} Description</h1>");
-            html.AppendLine("<h2>General Description</h2>");
-            string summary = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(model.GetType()));
-            html.Append($"<p>{summary}</p>");
+            markdown.AppendLine($"# {model.Name} Description");
+            markdown.AppendLine();
+            markdown.AppendLine("## General Description");
+            markdown.AppendLine();
+            string summary = AutoDocumentation.GetSummary(model.GetType())?.Replace("            ", "");
+            
+            markdown.AppendLine(summary);
+            markdown.AppendLine();
 
-            string remarks = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(model.GetType()));
+            string remarks = AutoDocumentation.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
-                html.AppendLine("<h2>Remarks</h2>");
-                html.AppendLine($"<p>{remarks}</p>");
+                markdown.AppendLine("## Remarks");
+                markdown.AppendLine();
+                markdown.AppendLine(remarks);
+                markdown.AppendLine();
             }
 
             string typeName = model.GetType().Name;
-            html.AppendLine($"<h1>{model.Name} Configuration</h1>");
-            html.AppendLine($"<h2>Inputs</h2>");
+            markdown.AppendLine($"# {model.Name} Configuration");
+            markdown.AppendLine();
+            markdown.AppendLine("## Inputs");
+            markdown.AppendLine();
             //html.AppendLine($"<h3>Fixed Parameters</h3>");
             //html.AppendLine("<p>todo - requires GridView</p>");
 
-            html.AppendLine("<h3>Variable Parameters</h2>");
+            markdown.AppendLine("### Variable Parameters");
+            markdown.AppendLine();
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            html.AppendLine(DataTableUtilities.ToHTML(functionTable, true));
+            markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
 
-            html.AppendLine("<h3>Other dependencies");
+            markdown.AppendLine("### Other dependencies");
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            html.AppendLine(DataTableUtilities.ToHTML(depsTable, true));
+            markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
+            markdown.AppendLine();
 
             DataTable publicMethods = GetPublicMethods(model);
             if (publicMethods.Rows.Count > 0)
             {
-                html.AppendLine("<h2>Public Methods</h2>");
-                html.AppendLine(DataTableUtilities.ToHTML(publicMethods, true));
+                markdown.AppendLine("## Public Methods");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
+                markdown.AppendLine();
             }
 
             DataTable events = GetEvents(model);
             if (events.Rows.Count > 0)
             {
-                html.AppendLine("<h2>Events</h2>");
-                html.AppendLine(DataTableUtilities.ToHTML(events, true));
+                markdown.AppendLine("## Events");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
+                markdown.AppendLine();
             }
 
             DataTable outputs = GetOutputs(model);
             if (outputs.Rows.Count > 0)
             {
-                html.AppendLine("<h2>Model Outputs</h2>");
-                html.AppendLine(DataTableUtilities.ToHTML(outputs, true));
+                markdown.AppendLine("## Model Outputs");
+                markdown.AppendLine();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                markdown.AppendLine();
             }
 
-            html.Append("</body></html>");
-
-            return html.ToString();
+            return markdown.ToString();
         }
 
         private DataTable GetEvents(IModel model)
@@ -115,8 +127,8 @@ namespace UserInterface.Presenters
 
                     row[0] = evnt.Name;
                     row[1] = evnt.EventHandlerType.Name;
-                    row[2] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(evnt));
-                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(evnt));
+                    row[2] = AutoDocumentation.GetSummary(evnt);
+                    row[3] = AutoDocumentation.GetRemarks(evnt);
 
                     table.Rows.Add(row);
                 }
@@ -145,8 +157,8 @@ namespace UserInterface.Presenters
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
                     row[2] = property.PropertyType.Name;
-                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(property));
-                    row[4] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(property));
+                    row[3] = AutoDocumentation.GetSummary(property);
+                    row[4] = AutoDocumentation.GetRemarks(property);
 
                     table.Rows.Add(row);
                 }
@@ -172,8 +184,8 @@ namespace UserInterface.Presenters
 
                     row[0] = method.Name;
                     row[1] = method.ReturnType.Name;
-                    row[2] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(method));
-                    row[3] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(method));
+                    row[2] = AutoDocumentation.GetSummary(method);
+                    row[3] = AutoDocumentation.GetRemarks(method);
 
                     table.Rows.Add(row);
                 }
@@ -215,8 +227,8 @@ namespace UserInterface.Presenters
                     row[3] = link.ByName.ToString();
                     row[4] = link.IsOptional.ToString();
                     row[5] = link.Path;
-                    row[6] = MarkdownConverter.ToHtml(AutoDocumentation.GetSummary(member));
-                    row[7] = MarkdownConverter.ToHtml(AutoDocumentation.GetRemarks(member));
+                    row[6] = AutoDocumentation.GetSummary(member);
+                    row[7] = AutoDocumentation.GetRemarks(member);
 
                     result.Rows.Add(row);
                 }

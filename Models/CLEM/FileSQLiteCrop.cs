@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +29,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This model holds a crop data file from a APSIM SQLite database for the CLEM simulation.")]
+    [Description("This component specifies a crop data file as a table in an SQLite database for the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
@@ -111,7 +111,7 @@ namespace Models.CLEM
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -211,7 +211,7 @@ namespace Models.CLEM
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -323,6 +323,8 @@ namespace Models.CLEM
             return cropdata;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -403,7 +405,7 @@ namespace Models.CLEM
                     {
                         html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
                     }
-                    if(PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                    if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
                     {
                         html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>";
                     }
@@ -417,7 +419,8 @@ namespace Models.CLEM
             }
             return html;
 
-        }
+        } 
+        #endregion
     }
 
 }

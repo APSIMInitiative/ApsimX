@@ -6,7 +6,7 @@
     using Models.PMF.Interfaces;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using System.Linq;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
@@ -36,19 +36,15 @@
         //---------------------------- Parameters -----------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcOptimum { get; set; } = 0.04;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMinimum { get; set; } = 0.012;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [XmlIgnore]
         public double NConcMaximum { get; set; } = 0.05;
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        [XmlIgnore]
         public double FractionStanding { get; set; } = 1.0;
 
         //----------------------- States -----------------------
@@ -57,7 +53,7 @@
         public GenericTissue[] LiveTissue { get; private set; }
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; private set; }
+        public double MinimumLiveDM { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }

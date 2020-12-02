@@ -13,8 +13,8 @@
     public class DGArc : DGObject
     {
         private int clickTolerence = 3;
-        private DGNode sourceNode = null;
-        private DGNode targetNode = null;
+        public DGNode Source { get; private set; }= null;
+        public DGNode Target { get; private set; }= null;
         private BezierCurve bezCurve = new BezierCurve();
         private List<PointD> bezPoints = new List<PointD>();
         private double[] bezParameters = new double[8];
@@ -25,10 +25,10 @@
         public DGArc(Arc directedGraphArc, List<DGNode> allNodes)
         {
             Location = new PointD(directedGraphArc.Location.X, directedGraphArc.Location.Y);
-            sourceNode = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
-            targetNode = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
+            Source = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
+            Target = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
             Colour = OxyColor.FromRgb(directedGraphArc.Colour.R, directedGraphArc.Colour.G, directedGraphArc.Colour.B);
-            Name = directedGraphArc.Text;
+            Name = directedGraphArc.Name;
         }
 
         /// <summary>Get a DirectedGraph arc from this instance.</summary>
@@ -36,11 +36,11 @@
         {
             Arc a = new Arc();
             a.Location = new System.Drawing.Point((int)Location.X, (int)Location.Y);
-            if (sourceNode != null)
-                a.SourceName = sourceNode.Name;
-            if (targetNode != null)
-                a.DestinationName = targetNode.Name;
-            a.Text = Name;
+            if (Source != null)
+                a.SourceName = Source.Name;
+            if (Target != null)
+                a.DestinationName = Target.Name;
+            a.Name = Name;
             a.Colour = System.Drawing.Color.FromArgb(Colour.A, Colour.R, Colour.B);
             return a;
         }
@@ -74,12 +74,12 @@
                 for (int i = bezPoints.Count - 1; i >= 0; i--)
                 {
                     PointD arrowHead;
-                    if (!targetNode.HitTest(bezPoints[i]))
+                    if (!Target.HitTest(bezPoints[i]))
                     {
                         arrowHead = bezPoints[i];
                         i--;
                         //keep moving along the line until distance = target radius
-                        double targetRadius = targetNode.Width / 2;
+                        double targetRadius = Target.Width / 2;
                         while (i >= 0)
                         {
                             double dist = GetDistance(bezPoints[i], arrowHead);
@@ -139,31 +139,31 @@
         private void CalcBezPoints()
         {
             bezPoints.Clear();
-            if (sourceNode == null || targetNode == null) return;
+            if (Source == null || Target == null) return;
             PointD ep1 = new PointD();
             PointD ep2 = new PointD();
-            if (sourceNode != targetNode)
+            if (Source != Target)
             {
-                ep1 = sourceNode.Location;
-                ep2 = targetNode.Location;
+                ep1 = Source.Location;
+                ep2 = Target.Location;
             }
             else
             {
-                double d = sourceNode.Width / 4;
+                double d = Source.Width / 4;
                 double m;
-                if ((sourceNode.Location.X - Location.X) != 0)
-                    m = Math.Atan((sourceNode.Location.Y - Location.Y) / (double)(sourceNode.Location.X - Location.X));
+                if ((Source.Location.X - Location.X) != 0)
+                    m = Math.Atan((Source.Location.Y - Location.Y) / (double)(Source.Location.X - Location.X));
                 else
-                    if (sourceNode.Location.Y > Location.Y)
+                    if (Source.Location.Y > Location.Y)
                     m = Math.PI * 0.5;
                 else
                     m = Math.PI * 1.5;
                 double m1 = m - Math.PI / 2;
                 double m2 = m + Math.PI / 2;
-                ep1.X = sourceNode.Location.X + (int)(d * Math.Cos(m1));
-                ep1.Y = sourceNode.Location.Y + (int)(d * Math.Sin(m1));
-                ep2.X = sourceNode.Location.X + (int)(d * Math.Cos(m2));
-                ep2.Y = sourceNode.Location.Y + (int)(d * Math.Sin(m2));
+                ep1.X = Source.Location.X + (int)(d * Math.Cos(m1));
+                ep1.Y = Source.Location.Y + (int)(d * Math.Sin(m1));
+                ep2.X = Source.Location.X + (int)(d * Math.Cos(m2));
+                ep2.Y = Source.Location.Y + (int)(d * Math.Sin(m2));
             }
 
             int start = (int)Math.Min(ep1.X, ep2.X);

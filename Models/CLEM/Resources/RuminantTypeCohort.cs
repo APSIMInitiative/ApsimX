@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Activities;
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantTypeCohort.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
         [Link]
@@ -176,6 +176,8 @@ namespace Models.CLEM.Resources
 
             return individuals;
         }
+
+        #region descriptive summary 
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -362,6 +364,7 @@ namespace Models.CLEM.Resources
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
         }
 
+        #endregion
     }
 }
 

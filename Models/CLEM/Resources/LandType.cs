@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -60,7 +60,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
         private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
         private double roundedAreaAvailable;
@@ -68,13 +68,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The total area available 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
 
         /// <summary>
         /// List of currently allocated land
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LandActivityAllocation> AllocatedActivitiesList;
 
         private CLEMModel ActivityRequestingRemainingLand;
@@ -137,7 +137,7 @@ namespace Models.CLEM.Resources
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported Add method in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
             }
             double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;
@@ -159,6 +159,7 @@ namespace Models.CLEM.Resources
                 Reason = reason,
                 ResourceType = this
             };
+            lastGain = amountAdded;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -287,10 +288,18 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -344,6 +353,8 @@ namespace Models.CLEM.Resources
         {
             return "";
         }
+
+        #endregion 
     }
 
     /// <summary>

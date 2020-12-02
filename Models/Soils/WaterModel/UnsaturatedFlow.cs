@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Core;
+    using Models.Soils;
     using System;
 
     /// <summary>
@@ -32,7 +33,10 @@
         [Link]
         private WaterBalance soil = null;
 
- 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
         /// <summary>Calculate unsaturated flow below drained upper limit.</summary>
         public double[] Values
         {
@@ -40,10 +44,10 @@
             {
                 const double gravity_gradient = 0.00002;
 
-                double[] Thickness = soil.Properties.Thickness;
+                double[] Thickness = soilPhysical.Thickness;
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
+                double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);
 
                 int second_last_layer = Thickness.Length - 2;
 

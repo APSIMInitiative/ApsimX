@@ -180,6 +180,30 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\">Milk is placed in ";
+
+            if (ResourceTypeName == null || ResourceTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
+            }
+            html += "</div>";
+            return html;
+        } 
+        #endregion
 
     }
 }

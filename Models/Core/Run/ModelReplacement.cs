@@ -75,6 +75,16 @@
             newModel.Parent = match.Parent;
             newModel.Name = match.Name;
             newModel.Enabled = match.Enabled;
+
+            // If a resource model (e.g. maize) is copied into replacements, and its
+            // property values changed, these changed values will be overriden with the
+            // 'accepted' values from the official maize model when the simulation is
+            // run, because the model's resource name is not null. This can be manually
+            // rectified by editing the json, but such an intervention shouldn't be
+            // necessary.
+            if (newModel is ModelCollectionFromResource resourceModel)
+                resourceModel.ResourceName = null;
+
             match.Parent.Children.Remove(match as Model);
             Apsim.ClearCaches(match);
 

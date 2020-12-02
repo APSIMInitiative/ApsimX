@@ -9,7 +9,6 @@
     using System.Xml;
     using Newtonsoft.Json.Serialization;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Models.Core.Interfaces;
     using Newtonsoft.Json.Linq;
 
@@ -21,7 +20,7 @@
     /// * Can WRITE a model in memory to an APSIM Next Generation .json string.
     ///     - Only writes public, settable, properties of a model.
     ///     - If a model implements IDontSerialiseChildren then no child models will be serialised.
-    ///     - Won't serialise any property with XmlIgnore attribute.
+    ///     - Won't serialise any property with LinkAttribute.
     /// * Can READ an APSIM Next Generation JSON or XML string to models in memory.
     ///     - Calls converter on the string before deserialisation.
     ///     - Sets fileName property in all simulation models read in.
@@ -121,7 +120,7 @@
                 var result = base.GetSerializableMembers(objectType);
                 result.RemoveAll(m => m is PropertyInfo &&
                                       !(m as PropertyInfo).CanWrite);
-                result.RemoveAll(m => m.GetCustomAttribute(typeof(XmlIgnoreAttribute)) != null);
+                result.RemoveAll(m => m.GetCustomAttribute(typeof(LinkAttribute)) != null);
                 return result;
             }
 
@@ -151,9 +150,9 @@
                 {
                     property.ShouldSerialize = instance =>
                     {
-                        var xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
+                        var link = member.GetCustomAttribute<LinkAttribute>();
                         var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-                        if (xmlIgnore != null || jsonIgnore != null)
+                        if (link != null || jsonIgnore != null)
                             return false;
 
                         // If this property has a description attribute, then it's settable

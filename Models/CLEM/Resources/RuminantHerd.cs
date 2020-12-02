@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.Core.Attributes;
@@ -28,25 +28,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current state of this resource.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<Ruminant> Herd;
 
         /// <summary>
         /// List of requested purchases.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<Ruminant> PurchaseIndividuals;
 
         /// <summary>
         /// The last individual to be added or removed (for reporting)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object LastIndividualChanged { get; set; }
 
         /// <summary>
         /// The details of an individual for reporting
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RuminantReportItemEventArgs ReportIndividual { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -416,6 +416,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -428,5 +429,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
     }
 }

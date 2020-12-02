@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -27,13 +27,13 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Proportion { get; set; }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if(SelectedOtherAnimalsType == null)
+            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().FindChild(AnimalType) as OtherAnimalsType;
+            if (SelectedOtherAnimalsType == null)
             {
                 throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
             }

@@ -11,7 +11,7 @@
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -43,7 +43,7 @@
         public int ColourArgb { get; set; }
 
         /// <summary>Gets or sets the color</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Color Colour
         {
             get
@@ -126,10 +126,9 @@
         }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
-        /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="reader">A storage reader.</param>
         /// <param name="simulationFilter"></param>
-        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader reader, List<string> simulationFilter = null)
         {
             List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
@@ -195,20 +194,25 @@
                 }
             }
 
-            definitions.AddRange(seriesDefinitions);
-
             // We might have child models that want to add to our series definitions e.g. regression.
-            foreach (IGraphable series in this.FindAllChildren<IGraphable>())
-                series.GetSeriesToPutOnGraph(reader, definitions);
+            foreach (IGraphable graphable in FindAllChildren<IGraphable>())
+            {
+                IEnumerable<SeriesDefinition> definitions;
+                if (graphable is ICachableGraphable cachable)
+                    definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
+                else
+                    definitions = graphable.GetSeriesDefinitions(reader, simulationFilter);
+                seriesDefinitions.AddRange(definitions);
+            }
+
+            return seriesDefinitions;
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        public IEnumerable<IAnnotation> GetAnnotations()
         {
             // We might have child models that wan't to add to the annotations e.g. regression.
-            foreach (IGraphable series in this.FindAllChildren<IGraphable>())
-                series.GetAnnotationsToPutOnGraph(annotations);
+            return FindAllChildren<IGraphable>().Where(g => g.Enabled).SelectMany(g => g.GetAnnotations());
         }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>

@@ -39,9 +39,15 @@ namespace Models.Utilities
             if (values.Count > numberOfDays)
                 values.RemoveAt(0);
 
-            double value = (double) parentModel.FindByPath(variableName)?.Value;
-
-            values.Add(value);
+            try
+            {
+                double value = (double) parentModel.FindByPath(variableName)?.Value;
+                values.Add(value);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Accumulator is unable to update variable '{variableName}'", err);
+            }
         }
 
         /// <summary>

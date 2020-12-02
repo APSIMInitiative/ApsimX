@@ -78,6 +78,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         public double AeShortfall { get {return AeToDestock - AeDestocked; } }
 
+        #region validation
+
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -104,11 +106,12 @@ namespace Models.CLEM.Activities
 
             if (!destockGroupFound)
             {
-                string[] memberNames = new string[] { "Ruminant destocking group" };
-                results.Add(new ValidationResult("At least one RuminantDestockGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("At least one RuminantGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -342,6 +345,8 @@ namespace Models.CLEM.Activities
             ReportStatus?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -401,12 +406,13 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
-            if(FindAllChildren<RuminantGroup>().Count() == 0)
+            if (FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

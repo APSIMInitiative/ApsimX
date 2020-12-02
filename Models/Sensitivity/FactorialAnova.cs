@@ -9,7 +9,6 @@
     using System.Data;
     using System.IO;
     using Newtonsoft.Json;
-    using System.Xml.Serialization;
     using Utilities;
     using Models.Storage;
     using Models.Core.Run;
@@ -58,7 +57,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get

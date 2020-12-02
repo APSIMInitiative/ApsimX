@@ -4,7 +4,7 @@
     using Models.Core;
     using Models.Surface;
     using System;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
@@ -36,19 +36,15 @@
         //---------------------------- Parameters -----------------------
 
         /// <summary>The fraction of luxury N remobilisable per day (0-1).</summary>
-        [XmlIgnore]
         public double FractionNLuxuryRemobilisable { get; set; } = 0.1;
 
         /// <summary>The sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
-        [XmlIgnore]
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>The digestibility of cell walls (0-1).</summary>
-        [XmlIgnore]
         public double DigestibilityCellWall { get; set; } = 0.5;
 
         /// <summary>The digestibility of proteins (0-1).</summary>
-        [XmlIgnore]
         public double DigestibilityProtein { get; set; } = 1.0;
 
         //----------------------- Daily Deltas -----------------------

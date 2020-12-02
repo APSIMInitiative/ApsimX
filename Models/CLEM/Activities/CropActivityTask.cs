@@ -36,22 +36,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if(this.Parent.GetType() != typeof(CropActivityManageProduct))
-            {
-                string[] memberNames = new string[] { "Parent model" };
-                results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
-            }
-            return results;
-        }
-
-        /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>List of required resource requests</returns>
@@ -203,6 +187,27 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (this.Parent.GetType() != typeof(CropActivityManageProduct))
+            {
+                string[] memberNames = new string[] { "Parent model" };
+                results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -211,12 +216,13 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+            if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
             {
                 html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
 
     }

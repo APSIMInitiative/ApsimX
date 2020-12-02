@@ -107,7 +107,10 @@ namespace Models.CLEM.Reporting
                 string folderName = null;
                 var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
                 if (folderDescriptor != null)
+                {
                     folderName = folderDescriptor.Value;
+                }
+
                 dataToWriteToDb = new ReportData()
                 {
                     FolderName = folderName,
@@ -139,7 +142,9 @@ namespace Models.CLEM.Reporting
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
+                {
                     throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                }
 
                 // Add row to our table that will be written to the db file
                 dataToWriteToDb.Rows.Add(valuesToWrite);
@@ -222,14 +227,18 @@ namespace Models.CLEM.Reporting
             string from = null;
             string to = null;
             if (!string.IsNullOrEmpty(GroupByVariableName))
+            {
                 FindFromTo(out from, out to);
+            }
 
             foreach (string fullVariableName in this.VariableNames)
             {
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
+                    {
                         columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                    }
                 }
                 catch (Exception err)
                 {

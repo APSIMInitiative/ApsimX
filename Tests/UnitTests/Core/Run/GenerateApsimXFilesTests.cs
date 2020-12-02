@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
 
@@ -72,10 +73,10 @@
             Assert.AreEqual(progress[0], 50);
             Assert.AreEqual(progress[1], 100);
 
-            var generatedFiles = Directory.GetFiles(path);
+            var generatedFiles = Directory.GetFiles(path).OrderBy(x => x).ToArray();
             Assert.AreEqual(generatedFiles.Length, 2);
-            Assert.AreEqual(Path.GetFileName(generatedFiles[0]), "Sim1.apsimx");
-            Assert.AreEqual(Path.GetFileName(generatedFiles[1]), "Sim2.apsimx");
+            Assert.AreEqual("Sim1.apsimx", Path.GetFileName(generatedFiles[0]));
+            Assert.AreEqual("Sim2.apsimx", Path.GetFileName(generatedFiles[1]));
             Directory.Delete(path, true);
         }
     }

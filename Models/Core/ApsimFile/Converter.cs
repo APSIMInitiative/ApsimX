@@ -2,9 +2,11 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
+    using Models.Factorial;
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.Soils;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
@@ -21,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 111; } }
+        public static int LatestVersion { get { return 126; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -111,9 +113,12 @@
                 if (soilChildren != null && soilChildren.Count > 0)
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
 
-                    if (sample == null && initWater == null)
+                    bool res = false;
+                    if (initWater == null)
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
@@ -123,7 +128,10 @@
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
-
+                        res = true;
+                    }
+                    if (sample == null)
+                    {
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
                         JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
@@ -132,8 +140,9 @@
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["SWUnits"] = "Volumetric";
                         soilChildren.Add(sample);
-                        return true;
+                        res = true;
                     }
+                    return res;
                 }
             }
 
@@ -2868,6 +2877,406 @@
         }
 
         /// <summary>
+        /// Upgrade to version 112. Lots of breaking changes to class Plant.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion112(JObject root, string fileName)
+        {
+            var changes = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("Plant.Canopy", "Plant.Leaf"),
+                new Tuple<string, string>("[Plant].Canopy", "[Plant].Leaf"),
+                new Tuple<string, string>("plant.Canopy", "plant.Leaf"),
+                new Tuple<string, string>("[plant].Canopy", "[plant].Leaf"),
+                new Tuple<string, string>("Wheat.Canopy", "Wheat.Leaf"),
+                new Tuple<string, string>("[Wheat].Canopy", "[Wheat].Leaf"),
+                new Tuple<string, string>("wheat.Canopy", "wheat.Leaf"),
+                new Tuple<string, string>("[wheat].Canopy", "[wheat].Leaf"),
+                new Tuple<string, string>("[Phenology].CurrentPhaseName", "[Phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("[phenology].CurrentPhaseName", "[phenology].CurrentPhase.Name"),
+                new Tuple<string, string>("Phenology.CurrentPhaseName", "Phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("phenology.CurrentPhaseName", "phenology.CurrentPhase.Name"),
+                new Tuple<string, string>("[Plant].Phenology.DaysAfterSowing", "[Plant].DaysAfterSowing"),
+                new Tuple<string, string>("Plant.Phenology.DaysAfterSowing", "Plant.DaysAfterSowing"),
+                new Tuple<string, string>("Phenology.DaysAfterSowing", "DaysAfterSowing"),
+                new Tuple<string, string>("[Phenology].DaysAfterSowing", "[Plant].DaysAfterSowing"),
+            };
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Some more complicated changes to manager code.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                ConvertPlantPropertyToDirectLink(manager, "Root", "Models.PMF.Organs");
+                ConvertPlantPropertyToDirectLink(manager, "Structure", "Models.PMF.Struct");
+                ConvertPlantPropertyToDirectLink(manager, "Phenology", "Models.PMF.Phen");
+            }
+
+            void ConvertPlantPropertyToDirectLink(ManagerConverter manager, string property, string nameSpace)
+            {
+                string code = manager.ToString();
+                if (code == null)
+                    return;
+                if (code.Contains($".{property}."))
+                {
+                    string plantName = Regex.Match(code, $@"(\w+)\.{property}\.").Groups[1].Value;
+                    JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
+                    if (zone == null)
+                    {
+                        JObject replacements = JsonUtilities.Ancestor(manager.Token, typeof(Replacements));
+                        if (replacements != null)
+                        {
+                            JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
+                            if (replacement != null)
+                                zone = JsonUtilities.Ancestor(replacement, typeof(Zone));
+                            else
+                                // This manager script is under replacements, but is not replacing any models.
+                                // It is also likely to contain compilation errors due to API changes. Therefore
+                                // we will disable it to suppress these errors.
+                                manager.Token["Enabled"] = false;
+                        }
+                    }
+
+                    int numPlantsInZone = JsonUtilities.ChildrenRecursively(zone, "Plant").Count;
+                    if (numPlantsInZone > 0)
+                    {
+                        manager.AddUsingStatement(nameSpace);
+
+                        bool isOptional = false;
+                        Declaration plantLink = manager.GetDeclarations().Find(d => d.InstanceName == plantName);
+                        if (plantLink != null)
+                        {
+                            string linkAttribute = plantLink.Attributes.Find(a => a.Contains("[Link"));
+                            if (linkAttribute != null && linkAttribute.Contains("IsOptional = true"))
+                                isOptional = true;
+                        }
+
+                        string link;
+                        int numPlantsWithCorrectName = JsonUtilities.ChildrenRecursively(zone, "Plant").Count(p => p["Name"].ToString() == plantName);
+                        if (string.IsNullOrEmpty(plantName) || numPlantsWithCorrectName == 0)
+                            link = $"[Link{(isOptional ? "(IsOptional = true)" : "")}]";
+                        else
+                            link = $"[Link(Type = LinkType.Path, Path = \"[{plantName}].{property}\"{(isOptional ? ", IsOptional = true" : "")})]";
+
+                        string memberName = property[0].ToString().ToLower() + property.Substring(1);
+                        manager.AddDeclaration(property, memberName, new string[1] { link });
+
+                        if (!string.IsNullOrEmpty(plantName))
+                            manager.ReplaceRegex($"([^\"]){plantName}\\.{property}", $"$1{memberName}");
+                        manager.Save();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 113. Rename SowPlant2Type to SowingParameters.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion113(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.Replace("SowPlant2Type", "SowingParameters"))
+                    manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 114. Remove references to Plant.IsC4.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion114(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
+                    manager.Save();
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add mortality rate constant of 0 to any plants
+        /// which do not already have a mortality rate.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        /// <remarks>
+        /// This is part of the change to make mortality rate non-optional.
+        /// </remarks>
+        private static void UpgradeToVersion115(JObject root, string fileName)
+        {
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
+            {
+                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, typeof(Replacements)) != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
+                {
+                    Constant mortalityRate = new Constant();
+                    mortalityRate.Name = "MortalityRate";
+                    mortalityRate.FixedValue = 0;
+                    JsonUtilities.AddModel(plant, mortalityRate);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion116(JObject root, string fileName)
+        {
+            foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                string plantType = pasture["ResourceName"]?.ToString();//?.Substring("AGP".Length);
+                if (string.IsNullOrEmpty(plantType))
+                    plantType = pasture["Name"]?.ToString();
+                pasture["PlantType"] = plantType;
+            }
+            
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+                plant["PlantType"] = plant["CropType"]?.ToString();
+
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
+        }
+
+        /// <summary>
+        /// Upgrade to version 115. Add PlantType to IPlants.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion117(JObject root, string fileName)
+        {
+            foreach (JObject croptimizr in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+            {
+                string variableName = croptimizr["VariableName"]?.ToString();
+                JArray variableNames = new JArray(new object[1] { variableName });
+                croptimizr.Remove("VariableName");
+                croptimizr["VariableNames"] = variableNames;
+            }
+        }
+
+
+        /// <summary>
+        /// Renames Initial NO3N and NH4N to NO3 and NH4
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion118(JObject root, string fileName)
+        {
+            foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                JsonUtilities.RenameChildModel(sample, "NO3N", "NO3");
+                JsonUtilities.RenameChildModel(sample, "NH4N", "NH4");
+            }
+
+            foreach (var chloride in JsonUtilities.ChildrenRecursively(root, "Chloride"))
+            {
+                chloride["$type"] = "Models.Soils.Nutrients.Solute, Models";
+                chloride["Name"] = "CL";
+            }
+        }
+
+        /// <summary>
+        /// Change report and manager scripts for soil variables that have been out of soil class. 
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion119(JObject root, string fileName)
+        {
+            var changes = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("[ISoil]", "[Soil]"),
+                new Tuple<string, string>("[Soil].Temperature", "[Soil].Temperature.Value"),
+                new Tuple<string, string>("Soil.Temperature", "Soil.Temperature.Value"),
+                new Tuple<string, string>("[Soil].FBiom", "[Soil].Organic.FBiom"),
+                new Tuple<string, string>("[Soil].FInert", "[Soil].Organic.FInert"),
+                new Tuple<string, string>("[Soil].InitialRootWt", "[Soil].Organic.FOM"),
+                new Tuple<string, string>("[Soil].DepthMidPoints", "[Soil].Physical.DepthMidPoints"),
+                new Tuple<string, string>("[Soil].Thickness", "[Soil].Physical.Thickness"),
+                new Tuple<string, string>("[Soil].BD", "[Soil].Physical.BD"),
+                new Tuple<string, string>("[Soil].AirDry", "[Soil].Physical.AirDry"),
+                new Tuple<string, string>("[Soil].LL15", "[Soil].Physical.LL15"),   // will also convert LL15mm
+                new Tuple<string, string>("[Soil].DUL", "[Soil].Physical.DUL"),     // will also convert DULmm
+                new Tuple<string, string>("[Soil].SAT", "[Soil].Physical.SAT"),     // will also convert SATmm
+                new Tuple<string, string>("[Soil].PAWC", "[Soil].Physical.PAWC"),   // will also convert PAWCmm
+                new Tuple<string, string>("[Soil].PAW", "[Soil].SoilWater.PAW"),    // will also convert PAWmm
+                new Tuple<string, string>("[Soil].Water", "[Soil].SoilWater.SWmm"),
+                new Tuple<string, string>("[Soil].KS", "[Soil].Physical.KS"),
+            };
+            JsonUtilities.RenameVariables(root, changes);
+
+            // Look in manager scripts and move some soil properties to the soil physical instance.
+            var variablesToMove = new ManagerReplacement[]
+            {
+                new ManagerReplacement("Soil.ThicknessCumulative", "soilPhysical.ThicknessCumulative", "IPhysical"),
+                new ManagerReplacement("Soil.Thickness", "soilPhysical.Thickness", "IPhysical"),
+                new ManagerReplacement("Soil.BD", "soilPhysical.BD", "IPhysical"),
+                new ManagerReplacement("Soil.AirDry", "soilPhysical.AirDry", "IPhysical"),
+                new ManagerReplacement("Soil.LL15", "soilPhysical.LL15", "IPhysical"),
+                new ManagerReplacement("Soil.LL15mm", "soilPhysical.LL15mm", "IPhysical"),
+                new ManagerReplacement("Soil.DUL", "soilPhysical.DUL", "IPhysical"),
+                new ManagerReplacement("Soil.DULmm", "soilPhysical.DULmm", "IPhysical"),
+                new ManagerReplacement("Soil.SAT", "soilPhysical.SAT", "IPhysical"),
+                new ManagerReplacement("Soil.KS", "soilPhysical.KS", "IPhysical"),
+                new ManagerReplacement("Soil.PAWC", "soilPhysical.PAWC", "IPhysical"),
+                new ManagerReplacement("Soil.PAWCmm", "soilPhysical.PAWCmm", "IPhysical"),
+                new ManagerReplacement("Soil.SoilWater", "waterBalance", "ISoilWater"),
+                new ManagerReplacement("Soil.Water", "waterBalance.SWmm", "ISoilWater"),
+            };
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changesMade = manager.MoveVariables(variablesToMove);
+
+                if (changesMade)
+                {
+                    manager.AddUsingStatement("Models.Interfaces");
+                    manager.Save();
+                }
+            }
+
+            // Rename the CERESSoilTemperature model to SoilTemperature
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+                JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+        }
+
+        /// <summary>
+        /// Remove empty samples from soils.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion120(JObject root, string fileName)
+        {
+            foreach (JObject sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                if ( (sample["NO3N"] == null || !sample["NO3N"].HasValues)
+                 &&  (sample["NH4N"] == null || !sample["NH4N"].HasValues)
+                 &&  (sample["SW"]   == null || !sample["SW"].HasValues)
+                 &&  (sample["OC"]   == null || !sample["OC"].HasValues)
+                 &&  (sample["EC"]   == null || !sample["EC"].HasValues)
+                 &&  (sample["CL"]   == null || !sample["CL"].HasValues)
+                 &&  (sample["ESP"]  == null || !sample["ESP"].HasValues)
+                 &&  (sample["PH"]   == null || !sample["PH"].HasValues) )
+                {
+                    // The sample is empty. If it is not being overridden by a factor
+                    // or replacements, get rid of it.
+                    JObject expt = JsonUtilities.Ancestor(sample, typeof(Experiment));
+                    if (expt != null)
+                    {
+                        // The sample is in an experiment. If it's being overriden by a factor,
+                        // ignore it.
+                        JObject factors = JsonUtilities.ChildWithName(expt, "Factors");
+                        if (factors != null && JsonUtilities.DescendantOfType(factors, typeof(Sample)) != null)
+                            continue;
+                    }
+
+                    JObject replacements = JsonUtilities.DescendantOfType(root, typeof(Replacements));
+                    if (replacements != null && JsonUtilities.DescendantOfType(replacements, typeof(Sample)) != null)
+                        continue;
+
+                    JObject parent = JsonUtilities.Parent(sample) as JObject;
+                    string name = sample["Name"]?.ToString();
+                    if (parent != null && !string.IsNullOrEmpty(name))
+                        JsonUtilities.RemoveChild(parent, name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Replace all instances of PhaseBasedSwitch with PhaseLookupValues.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion121(JObject root, string fileName)
+        {
+            foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+            {
+                phaseSwitch["$type"] = "Models.Functions.PhaseLookupValue, Models";
+                Constant value = new Constant();
+                value.FixedValue = 1;
+                JsonUtilities.AddModel(phaseSwitch, value);
+            }
+        }
+
+        /// <summary>
+        /// Set maps' default zoom level to 360.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion122(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
+            {
+                map["Zoom"] = 360;
+                map["Center"]["Latitude"] = 0;
+                map["Center"]["Longitude"] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Remove all references to Arbitrator.WDemand, Arbitrator.WSupply, and Arbitrator.WAllocated.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion123(JObject root, string fileName)
+        {
+            string[] patterns = new[]
+            {
+                "Arbitrator.WSupply",
+                "[Arbitrator].WSupply",
+                "Arbitrator.WDemand",
+                "[Arbitrator].WDemand",
+                "Arbitrator.WAllocated",
+                "[Arbitrator].WAllocated",
+            };
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, typeof(Report).Name))
+            {
+                if (report["VariableNames"] is JArray variables)
+                {
+                    for (int i = variables.Count - 1; i >= 0; i--)
+                        if (patterns.Any(p => variables[i].ToString().Contains(p)))
+                            variables.RemoveAt(i);
+                    report["VariableNames"] = variables;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename RadIntTot to RadiationIntercepted.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion124(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes = new Tuple<string, string>[1]
+            {
+                new Tuple<string, string>("RadIntTot", "RadiationIntercepted")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = false;
+                foreach (Tuple<string, string> change in changes)
+                    changed |= manager.Replace(change.Item1, change.Item2, true);
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Add a default value for Sobol's variable to aggregate.
+        /// This was previously assumed to be Clock.Today.Year but
+        /// has been extracted to a variable.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion125(JObject root, string fileName)
+        {
+            foreach (JObject sobol in JsonUtilities.ChildrenRecursively(root, "Sobol"))
+            {
+                sobol["TableName"] = "Report";
+                sobol["AggregationVariableName"] = "Clock.Today.Year";
+            }
+        }
+
+        /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
@@ -2882,6 +3291,36 @@
                     JObject ProgDest = JsonUtilities.CreateNewChildModel(LP, "ProgenyDestination", "Models.LifeCycle.ProgenyDestinationPhase");
                     ProgDest["NameOfLifeCycleForProgeny"] = LC["Name"].ToString();
                     ProgDest["NameOfPhaseForProgeny"] = LP["NameOfPhaseForProgeny"].ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Move physical properties off Weirdo class and use Physical class instead.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion126(JObject root, string fileName)
+        {
+
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                var weirdo = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
+                if (weirdo != null)
+                {
+                    Physical physical = new Physical();
+                    physical.Name = "Physical";
+                    if (weirdo["BD"].ToArray().Length > 0)
+                        physical.BD = weirdo["BD"].Values<double>().ToArray();
+                    if (weirdo["DUL"].ToArray().Length > 0)
+                        physical.DUL = weirdo["DUL"].Values<double>().ToArray();
+                    if (weirdo["LL15"].ToArray().Length > 0)
+                        physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
+                    if (weirdo["SAT"].ToArray().Length > 0)
+                        physical.SAT = weirdo["SAT"].Values<double>().ToArray();
+                    if (weirdo["Thickness"].ToArray().Length > 0)
+                        physical.Thickness = weirdo["Thickness"].Values<double>().ToArray();
+                    JsonUtilities.AddModel(soil, physical);
                 }
             }
         }

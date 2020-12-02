@@ -52,6 +52,7 @@
             
             // Create a temporary working directory.
             WorkingDirectory = Path.Combine(Path.GetTempPath(), "autodoc");
+            RelativePath = explorerPresenter.ApsimXFile.FileName;
             if (Directory.Exists(WorkingDirectory))
                 Directory.Delete(WorkingDirectory, true);
             Directory.CreateDirectory(WorkingDirectory);
@@ -59,6 +60,11 @@
 
         /// <summary>The directory where the PDFWriter instance is working.</summary>
         public string WorkingDirectory { get; }
+
+        /// <summary>
+        /// If images are provided as a relative path name, the full path name will be resolved relative to this path.
+        /// </summary>
+        public string RelativePath { get; private set; }
 
         /// <summary>Create the PDF file.</summary>
         /// <param name="tags">The tags to convert to the PDF file.</param>
@@ -407,7 +413,11 @@
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
+                    Image map = mapView.Export();
+                    string pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                    if (map.Width > section.PageSetup.PageWidth)
+                        map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
+                    map.Save(pngFileName);
                     if (!String.IsNullOrEmpty(pngFileName))
                         section.AddImage(pngFileName);
                     mapPresenter.Detach();
@@ -428,52 +438,61 @@
                 }
                 else if (tag is AutoDocumentation.ModelView)
                 {
-                    AutoDocumentation.ModelView modelView = tag as AutoDocumentation.ModelView;
-                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    if (viewName != null && presenterName != null)
+                    try
                     {
-                        ViewBase owner = ViewBase.MasterView as ViewBase;
-                        if (viewName.ToString() == "UserInterface.Views.MapView")
-                            owner = null;
-
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
-                        IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
-
-                        if (view != null && presenter != null)
+                        AutoDocumentation.ModelView modelView = tag as AutoDocumentation.ModelView;
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                        if (viewName != null && presenterName != null)
                         {
-                            explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                            presenter.Attach(modelView.model, view, explorerPresenter);
+                            ViewBase owner = ViewBase.MasterView as ViewBase;
+                            if (viewName.ToString() == "UserInterface.Views.MapView")
+                                owner = null;
 
-                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                            popupWin.SetSizeRequest(800, 800);
-                            popupWin.Add(view.MainWidget);
+                            ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
+                            IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
-                            if (view is IMapView map)
-                                map.HideZoomControls();
-
-                            popupWin.ShowAll();
-
-                            while (Gtk.Application.EventsPending())
-                                Gtk.Application.RunIteration();
-#if NETFRAMEWORK
-                            // From MapView:
-                            // With WebKit, it appears we need to give it time to actually update the display
-                            // Really only a problem with the temporary windows used for generating documentation
-                            if (view is MapView)
+                            if (view != null && presenter != null)
                             {
-                                var watch = new System.Diagnostics.Stopwatch();
-                                watch.Start();
-                                while (watch.ElapsedMilliseconds < 1000)
+                                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                                presenter.Attach(modelView.model, view, explorerPresenter);
+
+                                Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                                popupWin.SetSizeRequest(700, 700);
+                                popupWin.Add(view.MainWidget);
+
+                                if (view is MapView map)
+                                    map.HideZoomControls();
+
+                                popupWin.ShowAll();
+
+                                while (Gtk.Application.EventsPending())
                                     Gtk.Application.RunIteration();
+
+                                // From MapView:
+                                // With WebKit, it appears we need to give it time to actually update the display
+                                // Really only a problem with the temporary windows used for generating documentation
+                                string pngFileName;
+                                if (view is MapView mapView)
+                                {
+                                    Image img = mapView.Export();
+                                    pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                                    if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
+                                        img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
+                                    img.Save(pngFileName);
+                                }
+                                else
+                                    pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+                                section.AddImage(pngFileName);
+                                presenter.Detach();
+                                view.MainWidget.Cleanup();
+                                popupWin.Cleanup();
                             }
-#endif
-                            string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
-                            section.AddImage(pngFileName);
-                            presenter.Detach();
-                            view.MainWidget.Cleanup();
-                            popupWin.Cleanup();
                         }
+                    }
+                    catch (Exception err)
+                    {
+                        Console.WriteLine(err);
                     }
                 }
             }
@@ -486,7 +505,7 @@
         {
             string html = Markdown.ToHtml(paragraph.text);
 
-            HtmlToMigraDoc.Convert(html, section, WorkingDirectory);
+            HtmlToMigraDoc.Convert(html, section, WorkingDirectory, RelativePath);
 
             Paragraph para = section.LastParagraph;
             para.Format.LeftIndent += Unit.FromCentimeter(paragraph.indent);
@@ -696,7 +715,8 @@
                     // Convert potential HTML to the cell in our row.
                     HtmlToMigraDoc.Convert(tableObj.data[rowIndex][columnIndex].ToString(),
                                            row.Cells[columnIndex], 
-                                           WorkingDirectory);
+                                           WorkingDirectory,
+                                           RelativePath);
 
                     // Update the maximum size of the column with the value from the current row.
                     foreach (var element in row.Cells[columnIndex].Elements)

@@ -146,6 +146,8 @@
                 Assembly.GetEntryAssembly()?.Location,             // Not sure why this can be null in unit tests.
                 typeof(MathNet.Numerics.Fit).Assembly.Location,
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
+                typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location,
+                typeof(System.Drawing.Color).Assembly.Location,
             };
 
             if (previousCompilations != null)

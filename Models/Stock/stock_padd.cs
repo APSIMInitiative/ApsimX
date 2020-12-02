@@ -869,8 +869,21 @@ namespace Models.GrazPlan
                     result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
                 }
 
-                if (forageObj is IPlant)
-                    result.LegumePropn = ((IPlant)forageObj).Legumosity;  
+                if (forageObj is IPlant plant)
+                {
+                    switch (plant.PlantType)
+                    {
+                        case "AGPLucerne":
+                        case "AGPRedClover":
+                        case "AGPWhiteClover":
+                            result.LegumePropn = 1;
+                            break;
+                        default:
+                            result.LegumePropn = 0;
+                            break;
+                    }
+                }
+                    
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
                 // TODO: Store any seed pools

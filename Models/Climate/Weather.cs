@@ -10,7 +10,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Xml.Serialization;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -98,6 +97,44 @@
         public event EventHandler PreparingNewWeatherData;
 
         /// <summary>
+        /// Optional constants file name. This should only be accessed via
+        /// <see cref="ConstantsFile" />, which handles conversion between
+        /// relative/absolute paths.
+        /// </summary>
+        private string constantsFile;
+
+        /// <summary>
+        /// Allows to specify a second file which contains constants such as lat, long,
+        /// tav, amp, etc. Really only used when the actual met data is in a .csv file.
+        /// </summary>
+        [Description("Constants file")]
+        public string ConstantsFile
+        {
+            get
+            {
+                Simulation simulation = FindAncestor<Simulation>();
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.constantsFile, simulation.FileName);
+                else
+                {
+                    Simulations simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.constantsFile, simulations.FileName);
+                    else
+                        return this.constantsFile;
+                }
+            }
+            set
+            {
+                Simulations simulations = FindAncestor<Simulations>();
+                if (simulations != null)
+                    this.constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+                else
+                    this.constantsFile = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
@@ -107,7 +144,7 @@
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -171,13 +208,13 @@
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
         [Units("°C")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxT { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum temperature (oC)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("°C")]
         public double MinT { get; set; }
 
@@ -185,14 +222,14 @@
         /// Daily Mean temperature (oC)
         /// </summary>
         [Units("°C")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
         /// <summary>
         /// Daily mean VPD (hPa)
         /// </summary>
         [Units("hPa")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double VPD
         {
             get
@@ -212,7 +249,7 @@
         /// days since winter solstice (day)
         /// </summary>
         [Units("day")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int WinterSolsticeDOY
         {
             get {
@@ -238,80 +275,80 @@
         /// Number of days lapsed since the winter solstice
         /// </summary>
         [Units("d")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int DaysSinceWinterSolstice { get; set; }
 
         /// <summary>
         /// Maximum clear sky radiation (MJ/m2)
         /// </summary>
         [Units("MJ/M2")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Qmax { get; set; }
 
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Rain { get; set; }
 
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
         [Units("MJ/m^2/d")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Radn { get; set; }
 
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PanEvap { get; set; }
 
         /// <summary>
         /// Gets or sets the number of hours rainfall occured in
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double RainfallHours { get; set; }
 
         /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
         [Units("hPa")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double VP { get; set; }
 
         /// <summary>
         /// Gets or sets the wind value found in weather file or zero if not specified. (code says 3.0 not zero)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Wind { get; set; }
 
         /// <summary>
         /// Gets or sets the DF value found in weather file or zero if not specified
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DiffuseFraction { get; set; }
 
         /// <summary>
         /// Gets or sets the Daylength value found in weather file or zero if not specified
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DayLength { get; set; }
 
 
         /// <summary>
         /// Gets or sets the CO2 level. If not specified in the weather file the default is 350.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CO2 { get; set; }
 
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
         /// </summary>
         [Units("hPa")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double AirPressure { get; set; }
 
         /// <summary>
@@ -388,36 +425,36 @@
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>First date of summer.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public string FirstDateOfSummer { get; set; } = "1-dec";
 
         /// <summary>First date of autumn / fall.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public string FirstDateOfAutumn { get; set; } = "1-mar";
 
         /// <summary>First date of winter.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public string FirstDateOfWinter { get; set; } = "1-jun";
 
         /// <summary>First date of spring.</summary>
-        [XmlIgnore] 
+        [JsonIgnore] 
         public string FirstDateOfSpring { get; set; } = "1-sep";
 
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] public int ActiveTabIndex = 0;
         /// <summary>
         /// Temporarily stores the starting date for charts.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int StartYear = -1;
+        [JsonIgnore] public int StartYear = -1;
         /// <summary>
         /// Temporarily stores the years to show in charts.
         /// Meaningful only within the GUI
         /// </summary>
-        [XmlIgnore] public int ShowYears = 1;
+        [JsonIgnore] public int ShowYears = 1;
 
         /// <summary>Start of spring event.</summary>
         public event EventHandler StartOfSpring;
@@ -590,8 +627,11 @@
             { // Move everything forward a day
                 YesterdaysMetData = TodaysMetData;
                 TodaysMetData = TomorrowsMetData;
-                try { TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); }
-                catch { } // Keep tomorrows met data as todays if last day of file
+                
+                if (clock.Today == clock.EndDate && clock.EndDate == reader.LastDate)
+                    TomorrowsMetData = TodaysMetData;
+                else
+                    TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
             }
 
             this.Radn = TodaysMetData.Radn;
@@ -774,11 +814,20 @@
             {
                 if (this.reader == null)
                 {
+                    if (ExcelUtilities.IsExcelFile(FullFileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
+                        throw new Exception($"Unable to open excel file {FullFileName}: no sheet name is specified");
+
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
 
                     if (this.reader.Headings == null)
-                        throw new Exception("Cannot find the expected header in weather file: " + this.FullFileName);
+                    {
+                        string message = "Cannot find the expected header in ";
+                        if (ExcelUtilities.IsExcelFile(FullFileName))
+                            message += $"sheet '{ExcelWorkSheetName}' of ";
+                        message += $"weather file: {FullFileName}";
+                        throw new Exception(message);
+                    }
 
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
@@ -790,6 +839,15 @@
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+
+                    if (!string.IsNullOrEmpty(ConstantsFile))
+                    {
+                        ApsimTextFile constantsReader = new ApsimTextFile();
+                        constantsReader.Open(ConstantsFile);
+                        if (constantsReader.Constants != null)
+                            foreach (ApsimConstant constant in constantsReader.Constants)
+                                this.reader.AddConstant(constant.Name, constant.Value, constant.Units, constant.Comment);
+                    }
 
                     if (this.maximumTemperatureIndex == -1)
                         if (this.reader == null || this.reader.Constant("maxt") == null)

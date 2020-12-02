@@ -85,9 +85,10 @@
         /// <param name="atype">Data type for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -115,9 +116,10 @@
 
                 if (methods)
                 {
-                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
-                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
+                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_") &&
+                            !method.Name.StartsWith("add_") && !method.Name.StartsWith("remove_"))
                         {
                             ContextItem item = new ContextItem
                             {
@@ -141,7 +143,7 @@
                                     ParameterInfo parameter = allparams[p];
                                     paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
                                     if (parameter.DefaultValue != DBNull.Value)
-                                        paramText.Append(" = " + parameter.DefaultValue.ToString());
+                                        paramText.Append(" = " + parameter.DefaultValue?.ToString() ?? "null");
                                     if (p < allparams.Count() - 1)
                                         paramText.Append(", ");
                                 }
@@ -154,7 +156,7 @@
                     }
                 }
 
-                if (events)
+                if (publishedEvents)
                 {
                     foreach (EventInfo evnt in atype.GetEvents(BindingFlags.Instance | BindingFlags.Public))
                     {
@@ -170,6 +172,27 @@
                         allItems.Add(item);
                     }
                 }
+
+                if (subscribedEvents)
+                {
+                    foreach (MethodInfo method in atype.GetMethods(/*BindingFlags.Instance |*/ BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (subscriberAttribute != null)
+                        {
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = subscriberAttribute.ToString();
+                            item.IsProperty = false;
+                            item.IsEvent = false;
+                            item.IsMethod = true;
+                            item.IsWriteable = false;
+                            item.TypeName = atype.Name;
+                            item.Descr = GetDescription(atype);
+                            item.Units = "";
+                            allItems.Add(item);
+                        }
+                    }
+                }
             }
 
             allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
@@ -182,13 +205,14 @@
         /// <param name="o">Fully- or partially-qualified object name for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
+        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
-            allItems = ExamineTypeForContextItems(objectType, properties, methods, events);
+            allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
             
             // add in the child models.
             if (o is IModel)
@@ -261,7 +285,7 @@
 
             if (o != null)
             {
-                return ExamineObjectForContextItems(o, properties, methods, events);
+                return ExamineObjectForContextItems(o, properties, methods, events, false);
             }
 
             return new List<ContextItem>();
@@ -273,16 +297,17 @@
         /// </summary>
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
-        /// <param name="properties">Include properties?</param>
-        /// <param name="methods">Include methods?</param>
-        /// <param name="events">Include events?</param>
-        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool events)
+        /// <param name="properties">Search for properties of the model?</param>
+        /// <param name="methods">Search for methods of the model?</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
+        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node != null)
             {
-                contextItems = ExamineObjectForContextItems(node, properties, methods, events);
+                contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
             }
             return contextItems;
         }
@@ -376,7 +401,20 @@
                             return null;
 
                         // Try to set node to the value of the property.
-                        node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        try
+                        {
+                            node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        }
+                        catch (TargetInvocationException err)
+                        {
+                            if (err.InnerException is NullReferenceException)
+                                // Some properties depend on links being resolved which is not
+                                // always the case (ie in an intellisense context).
+                                node = null;
+                            else
+                                throw;
+                        }
+
                         if (node == null)
                         {
                             // This property has the correct name. If the property's type provides a parameterless constructor, we can use 

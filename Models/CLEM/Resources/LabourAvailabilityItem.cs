@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Proportion { get; set; }
 
         /// <summary>
@@ -60,6 +60,8 @@ namespace Models.CLEM.Resources
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -95,12 +97,12 @@ namespace Models.CLEM.Resources
             if (formatForParentControl)
             {
                 string classstr = "setvalue";
-                if(Value==0)
+                if (Value == 0)
                 {
                     classstr = "errorlink";
                 }
                 html += "</td>";
-                html += "<td><span class=\""+classstr+"\">" + this.Value.ToString() + "</span></td>";
+                html += "<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>";
                 for (int i = 1; i < 12; i++)
                 {
                     html += "<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>";
@@ -159,6 +161,7 @@ namespace Models.CLEM.Resources
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
         }
 
+        #endregion
 
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
@@ -25,7 +25,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This component reads a SQLite database with native pasture production used in the CLEM simulation.")]
+    [Description("This component specifies an SQLite database with native pasture production used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]
@@ -45,11 +45,11 @@ namespace Models.CLEM
         /// <summary>
         /// All the distinct Stocking Rates that were found in the database
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctStkRates;
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctGBAs;
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] distinctLandConditions;
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Models.CLEM
         /// Provides an error message to display if something is wrong.
         /// The message is displayed in the warning label of the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace Models.CLEM
         /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
         /// ChangeProperty does not work on fields.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -568,7 +568,7 @@ namespace Models.CLEM
                     break;
                 case "LandCondition":
                     valuesToUse = distinctLandConditions;
-                    if (valuesToUse.Max() > 11 | valuesToUse.Min() <= 0)
+                    if (valuesToUse.Max() > 11 | valuesToUse.Min() < 0)
                     {
                         // add warning
                         string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
@@ -831,6 +831,8 @@ namespace Models.CLEM
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -845,7 +847,7 @@ namespace Models.CLEM
                 html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
                 html += "\n</div>";
             }
-            else if(!this.FileExists)
+            else if (!this.FileExists)
             {
                 html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
                 html += "\n</div>";
@@ -989,6 +991,7 @@ namespace Models.CLEM
                 html += "\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

@@ -11,8 +11,12 @@
         ///<summary>Remove water from the profile</summary>
         void RemoveWater(double[] amountToRemove);
 
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
+        ///<summary>Gets or sets soil thickness for each layer (mm) in the parameter grid(</summary>
         double[] Thickness { get; }
+
+
+        /// <summary>gets or sets the thickness for each layer (layer) that the water balance model computes</summary>
+        double[] LayerThickness { get; }
 
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
         double[] SW { get; set; }
@@ -67,6 +71,12 @@
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         double[] Flux { get; }
+
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        double[] PAW { get; }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        double[] PAWmm { get; }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         double PotentialInfiltration { get; set; }

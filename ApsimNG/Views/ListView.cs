@@ -101,6 +101,7 @@ namespace UserInterface.Views
             tree = treeView;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
+            tree.ButtonPressEvent += OnTreeButtonDown;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
@@ -265,6 +266,8 @@ namespace UserInterface.Views
         {
             try
             {
+                tree.ButtonPressEvent -= OnTreeButtonDown;
+                tree.ButtonReleaseEvent -= OnTreeClicked;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;
             }
@@ -286,8 +289,6 @@ namespace UserInterface.Views
             // Populate with rows.
             foreach (DataRow row in table.Rows)
                 AddRow(row.ItemArray);
-
-            SetTreeSortModel();
         }
 
         /// <summary>
@@ -354,6 +355,32 @@ namespace UserInterface.Views
             //{
             //    ShowError(err);
             //}
+        }
+
+        /// <summary>
+        /// Called when the user pushes the mouse button down.
+        /// If it's a right click event, we will prevent the
+        /// signal from propagating any further. If we don't do this,
+        /// the selection (if multiple rows are selected) will be
+        /// cleared before the button release event is fired. The
+        /// result will be right clicking on a selection and having
+        /// the selection disappear, which is not what would be expected.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [GLib.ConnectBefore]
+        private void OnTreeButtonDown(object sender, ButtonPressEventArgs args)
+        {
+            try
+            {
+                tree.GetPathAtPos((int)args.Event.X, (int)args.Event.Y, out TreePath path);
+                if (args.Event.Button == 3 && tree.Selection.GetSelectedRows().Contains(path))
+                    args.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -442,9 +469,11 @@ namespace UserInterface.Views
         /// <returns></returns>
         private int SortData(TreeModel model, TreeIter a, TreeIter b, int i)
         {
-            string s1 = (string)model.GetValue(a, i);
-            string s2 = (string)model.GetValue(b, i);
-            return string.Compare(s1, s2);
+            object o1 = model.GetValue(a, i);
+            object o2 = model.GetValue(b, i);
+            if (o1 != null && o2 != null)
+                return string.Compare(o1.ToString(), o2.ToString());
+            return 0;
         }
     }
 }

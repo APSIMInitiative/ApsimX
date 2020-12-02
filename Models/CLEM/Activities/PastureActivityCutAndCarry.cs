@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -62,13 +62,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Amount harvested this timestep after limiter accounted for
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountHarvested { get; set; }
 
         /// <summary>
         /// Amount available for harvest from crop file
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
         private GrazeFoodStoreType pasture { get; set; }
@@ -92,6 +92,18 @@ namespace Models.CLEM.Activities
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);
+
+            switch (CutStyle)
+            {
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    InitialiseHerd(true, true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>An event handler for a Cut and Carry</summary>
@@ -397,6 +409,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -446,8 +460,8 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
-
+        } 
+        #endregion
 
     }
 }

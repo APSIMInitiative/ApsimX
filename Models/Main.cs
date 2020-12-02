@@ -93,16 +93,21 @@
                     UpgradeFile(fileName, recurse);
                 else if (listSimulationNames)
                     ListSimulationNames();
-                else if (edit)
-                    ModifyFile(fileName, recurse);
                 else if (mergeDBFiles)
                     DBMerger.MergeFiles(fileName, recurse, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
                 else
                 {
                     // Run simulations
-                    var runner = new Runner(fileName, ignorePaths, recurse, runTests, runType,
-                                            numberOfProcessors: numberOfProcessors,
-                                            simulationNamePatternMatch: simulationNameRegex);
+                    Runner runner;
+                    if (edit)
+                        runner = new Runner(ModifyFile(fileName, recurse), true, true,
+                                                runTests, runType: runType,
+                                                numberOfProcessors: numberOfProcessors,
+                                                simulationNamePatternMatch: simulationNameRegex);
+                    else
+                        runner = new Runner(fileName, ignorePaths, recurse, runTests, runType,
+                                                numberOfProcessors: numberOfProcessors,
+                                                simulationNamePatternMatch: simulationNameRegex);
                     runner.SimulationCompleted += OnJobCompleted;
                     runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
                     runner.AllSimulationsCompleted += OnAllJobsCompleted;
@@ -197,7 +202,7 @@
         /// Performs pattern matching and edits all specified .apsimx
         /// files (e.g. *.apsimx /Recurse).
         /// </summary>
-        private static void ModifyFile(string fileName, bool recurse)
+        private static IEnumerable<Simulations> ModifyFile(string fileName, bool recurse)
         {
             int index = Array.IndexOf(arguments, "/Edit");
             if (index < 0)
@@ -212,7 +217,7 @@
 
             string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
-                EditFile.Do(file, configFileName);
+                yield return EditFile.Do(file, configFileName);
         }
 
         /// <summary>Job has completed</summary>

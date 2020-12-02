@@ -138,7 +138,7 @@ namespace Models
 
                 // Modify a string
                 "[Weather].FileName = fdsa.met",
-                @"[Weather2].FullFileName = .\jkl.met",
+                @"[Weather2].FullFileName = jkl.met",
 
                 // Replace a model with a model from another file.
                 $"[Weather3] = {extFile}",
@@ -198,7 +198,7 @@ namespace Models
             var weather2 = sim.Children[4] as Models.Climate.Weather;
             Assert.NotNull(weather2);
             Assert.AreEqual("Weather2", weather2.Name);
-            Assert.AreEqual(@".\jkl.met", weather2.FileName);
+            Assert.AreEqual(@"jkl.met", weather2.FileName);
 
             // Weather3 and Weather4 should have been
             // renamed to w1 and w2, respectively.
