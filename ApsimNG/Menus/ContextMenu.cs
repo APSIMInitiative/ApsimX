@@ -477,11 +477,12 @@
         {
             try
             {
-                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
-                                                       new DownloadPresenter());
+                throw new NotImplementedException();
+                // object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                // explorerPresenter.HideRightHandPanel();
+                // explorerPresenter.ShowInRightHandPanel(model,
+                //                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                //                                        new DownloadPresenter());
             }
             catch (Exception err)
             {

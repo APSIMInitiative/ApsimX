@@ -1,5 +1,6 @@
-﻿using APSIM.Shared.Utilities;
-using ApsimNG.ApsoilWeb;
+﻿#if FALSE
+using APSIM.Shared.Utilities;
+//using ApsimNG.ApsoilWeb;
 using ApsimNG.Cloud;
 using ISO3166;
 using Models.Core;
@@ -906,3 +907,4 @@ namespace UserInterface.Presenters
 
     }
 }
+#endif

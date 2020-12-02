@@ -137,5 +137,8 @@ namespace UserInterface.Interfaces
         /// Redraws the text editor.
         /// </summary>
         void Refresh();
+
+        /// <summary>Gets or sets the widget visibility.</summary>
+        bool Visible { get; set; }
     }
 }

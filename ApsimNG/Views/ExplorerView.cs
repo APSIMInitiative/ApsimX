@@ -96,7 +96,7 @@ namespace UserInterface.Views
                     descriptionView = new HTMLView(this);
                     rightHandView.PackStart((descriptionView as ViewBase).MainWidget, false, false, 0);
                 }
-                descriptionView.SetContents(description, false);
+                descriptionView.SetContents(description, false, false);
             }
         }
 

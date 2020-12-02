@@ -165,6 +165,24 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Controls visibility of the widget.
+        /// </summary>
+        public bool Visible
+        {
+            get
+            {
+                return MainWidget.Visible;
+            }
+            set
+            {
+                if (value)
+                    MainWidget.ShowAll();
+                else
+                    MainWidget.Hide();
+            }
+        }
+
         private MenuItem styleMenu;
         private MenuItem styleSeparator;
 
@@ -250,6 +268,8 @@ namespace UserInterface.Views
                 textEditor.Buffer.Language = LanguageManager.Default.GetLanguage(value);
             }
         }
+
+        public EditorView() { }
 
         /// <summary>
         /// Default constructor that configures the Completion form.

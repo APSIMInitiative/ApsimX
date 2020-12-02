@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 124,
+  "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -9667,7 +9667,7 @@
       "VariableNames": [
         "Wheat.Leaf.LAI"
       ],
-      "OutputPath": null,
+      "OutputPath": "/home/drew/code/ApsimX2/Prototypes/CroptimizR",
       "RandomSeed": null,
       "OptimizationMethod": {
         "$type": "Models.Optimisation.Simplex, Models",

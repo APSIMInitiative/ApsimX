@@ -910,6 +910,7 @@ namespace UserInterface.Views
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        /// <param name="recursive">Recursively expand children too?</param>
         public void ExpandChildren(string path, bool recursive = true)
         {
             TreePath nodePath = treemodel.GetPath(FindNode(path));

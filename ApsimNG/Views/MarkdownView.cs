@@ -14,7 +14,11 @@ using Microsoft.Toolkit.Parsers.Markdown;
 using Microsoft.Toolkit.Parsers.Markdown.Blocks;
 using Microsoft.Toolkit.Parsers.Markdown.Inlines;
 using Models.Core;
+using UserInterface.Extensions;
 using Utility;
+#if NETCOREAPP
+using StateType = Gtk.StateFlags;
+#endif
 
 namespace UserInterface.Views
 {
@@ -48,7 +52,7 @@ namespace UserInterface.Views
         {
             VBox box = new VBox();
             TextView child = new TextView();
-            box.PackStart(child);
+            box.PackStart(child, true, true, 0);
             Initialise(owner, box);
         }
 
@@ -116,7 +120,12 @@ namespace UserInterface.Views
                 MenuItem option = new MenuItem("Find Text");
                 option.ShowAll();
                 option.Activated += OnFindText;
+#if NETFRAMEWORK
                 args.Menu.Append(option);
+#else
+                if (args.Popup is Menu menu)
+                    menu.Append(option);
+#endif
             }
             catch (Exception err)
             {
@@ -330,6 +339,7 @@ namespace UserInterface.Views
         /// Display an image
         /// </summary>
         /// <param name="url">The url of the image.</param>
+        /// <param name="tooltip">Tooltip to be displayed on the image.</param>
         /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, string tooltip, ref TextIter insertPos)
         {
@@ -355,7 +365,7 @@ namespace UserInterface.Views
 
                 var eventBox = new EventBox();
                 eventBox.Visible = true;
-                eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+                eventBox.ModifyBg(Gtk.StateType.Normal, mainWidget.GetBackgroundColour(StateType.Normal));
                 eventBox.Add(image);
 
                 container.Add(eventBox);
@@ -607,7 +617,7 @@ namespace UserInterface.Views
             public LinkTag(string url) : base(url)
             {
                 URL = url;
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.Style.Background(StateType.Selected);
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.GetBackgroundColour(StateType.Selected);
                 Underline = Pango.Underline.Single;
             }
         }

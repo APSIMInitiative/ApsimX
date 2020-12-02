@@ -5,26 +5,21 @@ using System.Drawing;
 namespace UserInterface.Interfaces
 {
     /// <summary>
-    /// Describes an interface for a map view.
+    /// Describes an interface for an axis view.
     /// </summary>
-    public interface IMapView
+    interface IMapView
     {
         /// <summary>
         /// Invoked when the zoom level or map center is changed
         /// </summary>
         event EventHandler ViewChanged;
 
-        /// <summary>
-        /// Invoked when the user wants to preview the map as it will appear
-        /// in the autodocs.
-        /// </summary>
-        event EventHandler PreviewDocs;
-
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 
         /// <summary>Export the map to an image.</summary>
-        Image Export();
+        System.Drawing.Image Export();
+
         /// <summary>
         /// Get or set the zoom factor of the map
         /// </summary>
@@ -44,5 +39,7 @@ namespace UserInterface.Interfaces
         /// Hide zoom controls.
         /// </summary>
         void HideZoomControls();
+
+        IGridView Grid { get; }
     }
 }
