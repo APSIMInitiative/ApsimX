@@ -49,10 +49,7 @@ Documentation/errors.txt
 *.db-journal
 *.db-shm
 *.db-wal
-<<<<<<< HEAD
 NetCoreBin/
-=======
 Docs/docfx/api/*.yml
 Docs/docfx/api/.manifest
 Docs/apsimx-docs/
->>>>>>> a117553398fe46628f3cd70e45cb6e7a21d316f7

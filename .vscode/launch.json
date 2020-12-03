@@ -5,7 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-<<<<<<< HEAD
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
@@ -27,20 +26,11 @@
             "type": "mono",
             "request": "launch",
             "preLaunchTask": "build",
-=======
-            "name": "Launch",
-            "type": "mono",
-            "request": "launch",
->>>>>>> a117553398fe46628f3cd70e45cb6e7a21d316f7
             "program": "${workspaceRoot}/Bin/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
         {
-<<<<<<< HEAD
             "name": "Mono Attach",
-=======
-            "name": "Attach",
->>>>>>> a117553398fe46628f3cd70e45cb6e7a21d316f7
             "type": "mono",
             "request": "attach",
             "address": "localhost",
