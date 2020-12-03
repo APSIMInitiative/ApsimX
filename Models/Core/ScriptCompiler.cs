@@ -243,6 +243,12 @@
                                 previousCompilations.Add(compilation);
                             }
 
+                            // Write the assembly to disk
+                            ms.Seek(0, SeekOrigin.Begin);
+                            string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                ms.WriteTo(file);
+
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);
                             compilation.Code = code;
@@ -297,7 +303,9 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
-               MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location)
+               MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
             };
 
             if (previousCompilations != null)
@@ -320,7 +328,6 @@
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
             var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
-
             bool VB = code.IndexOf("Imports System") != -1;
             Compilation compilation;
             if (VB)
@@ -337,9 +344,8 @@
                     Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
                     new[] { syntaxTree },
                     referencedAssemblies,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             }
-
             return compilation;
         }
 #endif

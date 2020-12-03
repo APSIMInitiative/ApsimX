@@ -9,12 +9,12 @@
     using Models.Core;
     using Views;
     using Interfaces;
+    using Utility;
 
 #if NETFRAMEWORK
     // Used for the "code reformat option"..
     using ICSharpCode.NRefactory.CSharp;
 #endif
-    using Utility;
 
     /// <summary>
     /// Presenter for the Manager component

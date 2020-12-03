@@ -112,8 +112,6 @@
         /// <param name="owner">Owner view.</param>
         public MapView(ViewBase owner) : base(owner)
         {
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
-
             image = new Gtk.Image();
             var container = new Gtk.EventBox();
             container.Add(image);
@@ -238,7 +236,8 @@
         /// </remarks>
         private void RefreshMap()
         {
-            image.Pixbuf = ImageToPixbuf(map.GetMap());
+            if (map != null)
+                image.Pixbuf = ImageToPixbuf(map.GetMap());
         }
 
         /// <summary>
@@ -415,7 +414,7 @@
                 {
                     image.SizeAllocated -= OnSizeAllocated;
                     map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    //RefreshMap();
+                    RefreshMap();
                     image.WidthRequest = image.Allocation.Width;
                     image.HeightRequest = image.Allocation.Height;
                     image.SizeAllocated += OnSizeAllocated;

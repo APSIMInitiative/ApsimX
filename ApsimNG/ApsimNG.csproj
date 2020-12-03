@@ -76,6 +76,9 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
     <Compile Remove="Classes\Intellisense\*" />
+    
+    <!-- Remove ApsoilWeb-related stuff. -->
+    <Compile Remove="Web References/ApsoilWeb/*" />
   </ItemGroup>
   
   <!-- .NET Framework-specific references -->
@@ -133,6 +136,7 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Linq" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />

@@ -9,21 +9,26 @@ APSIM can be compiled using Microsoft's [Visual Studio for Mac](https://visualst
 
 2. Install [git](https://git-scm.com/downloads) or a git GUI client such as [SourceTree](https://www.sourcetreeapp.com/) or [Fork](https://git-fork.com/)
 
-3. [Obtain the source code](../../cli/)
+3. Install the .NET Core 3.0 SDK. The [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script) is a simple way to do this
+
+4. Install GTK+3 and gtksourceview4
+
+    ```
+    brew install gtk+3
+    brew install gtksourceview4
+    ```
+
+5. [Obtain the source code](../../cli/)
 
     ```
     git clone https://github.com/APSIMInitiative/ApsimX
     ```
 
-4. Copy the webkit-sharp binary (and its config file) from ApsimX/ApsimNG/Assemblies/ to your ApsimX/Bin/ folder
+6. Copy the webkit-sharp binary (and its config file) from ApsimX/ApsimNG/Assemblies/ to your ApsimX/Bin/ folder
 
     ```
     cd /path/to/ApsimX
     cp ApsimNG/Assemblies/webkit-* Bin/
     ```
 
-5. Set ApsimNG as startup project
-
-    ![Set ApsimNG as startup project](/images/macos-apsimng-startup.png)
-
-6. Build and Run
+7. Build and Run

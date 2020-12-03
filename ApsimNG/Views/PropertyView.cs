@@ -127,6 +127,7 @@ namespace UserInterface.Views
                 }
             }
 #endif
+            box.Remove(propertyTable);
             box.Label = $"{properties.Name} Properties";
             propertyTable.Cleanup();
 #if NETFRAMEWORK
@@ -180,17 +181,30 @@ namespace UserInterface.Views
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
+#if NETFRAMEWORK
                         propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+#else
+                        propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, startRow, 2, 1);
+                        startRow++;
+#endif
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
                 label.Xalign = 0;
+#if NETFRAMEWORK
                 propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+#else
+                propertyTable.Attach(label, 0, startRow, 1, 1);
+#endif
 
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
+#if NETFRAMEWORK
                 propertyTable.Attach(inputWidget, 1, 2, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+#else
+                propertyTable.Attach(inputWidget, 1, startRow, 1, 1);
+#endif
 
                 startRow++;
             }
