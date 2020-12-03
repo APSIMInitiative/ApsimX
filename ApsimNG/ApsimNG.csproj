@@ -63,7 +63,6 @@
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     <PackageReference Include="BruTile" Version="3.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
-    <Compile Remove="Web References\**" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->

@@ -1,7 +1,6 @@
-﻿﻿using APSIM.Shared.Utilities;
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
+using APSIM.Shared.Utilities;
 using ApsimNG.ApsoilWeb;
-#endif
 using UserInterface.Extensions;
 using ApsimNG.Cloud;
 using ISO3166;
