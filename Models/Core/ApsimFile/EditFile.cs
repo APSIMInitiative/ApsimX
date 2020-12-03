@@ -24,9 +24,9 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="apsimxFilePath">Absolute path to the .apsimx file.</param>
         /// <param name="configFilePath">Absolute path to the config file.</param>
-        public static void Do(string apsimxFilePath, string configFilePath)
+        public static Simulations Do(string apsimxFilePath, string configFilePath)
         {
-            ApplyChanges(apsimxFilePath, GetFactors(configFilePath));
+            return ApplyChanges(apsimxFilePath, GetFactors(configFilePath));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="apsimxFileName">Path to an .apsimx file.</param>
         /// <param name="factors">Factors to apply to the file.</param>
-        private static void ApplyChanges(string apsimxFileName, List<CompositeFactor> factors)
+        private static Simulations ApplyChanges(string apsimxFileName, List<CompositeFactor> factors)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFileName, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
@@ -113,7 +113,7 @@ namespace Models.Core.ApsimFile
                 else
                     ChangeVariableValue(variable, value);
             }
-            file.Write(apsimxFileName);
+            return file;
         }
 
         private static void ChangeVariableValue(IVariable variable, string value)

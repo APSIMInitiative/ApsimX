@@ -32,6 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -914,6 +915,7 @@
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %282nd cross%29.json" />
     <EmbeddedResource Include="Resources\RScripts\OptimizR.r" />
     <EmbeddedResource Include="Resources\RScripts\InstallPackageGithub.R" />
+    <EmbeddedResource Include="Resources\RScripts\read_croptimizr_output.r" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

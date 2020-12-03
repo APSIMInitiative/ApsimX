@@ -268,6 +268,20 @@ namespace UserInterface.Classes
                 default:
                     throw new NotImplementedException($"Unknown display type {displayType}");
             }
+
+            // If the list of dropdown options doesn't contain the actual value of the
+            // property, add that value to the list of valid options.
+            if (DisplayMethod == PropertyType.DropDown && Value != null)
+            {
+                if (DropDownOptions == null)
+                    DropDownOptions = new string[1] { Value.ToString() };
+                else if (!DropDownOptions.Contains(Value.ToString()))
+                {
+                    List<string> values = DropDownOptions.ToList();
+                    values.Add(Value.ToString());
+                    DropDownOptions = values.ToArray();
+                }
+            }
         }
     }
 }

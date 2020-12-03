@@ -29,6 +29,7 @@ if "%1"=="%unitsyntax%" (
 	set count=!result!
 
 	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	if errorlevel 1 exit /b 1
 
 	call :numTempFiles
 	set count_after=!result!
