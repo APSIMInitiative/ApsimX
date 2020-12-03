@@ -127,7 +127,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
             List<RuminantFemale> herd = this.CurrentHerd(false).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth && a.PreviousConceptionRate >= MinimumConceptionBeforeSell && a.AgeAtLastBirth > 0).ToList();
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Sell dry breeders", this.PredictedHerdName);
         }
 
         /// <summary>

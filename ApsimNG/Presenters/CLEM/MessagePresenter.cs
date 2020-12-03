@@ -217,6 +217,20 @@ namespace UserInterface.Presenters
                             int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
                             DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
+
+                            // check for resource shortfall and adjust information accordingly
+                            // if table exists
+                            if (ds.Reader.TableNames.Contains("ReportResourceShortfalls"))
+                            {
+                                // if rows in table
+                                DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
+                                if(dataRowsShortfalls.Rows.Count > 0)
+                                {
+                                    type = "warning";
+                                    title = "Resource shortfalls occurred";
+                                    msgStr += "\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                }
+                            }
                         }
 
                         htmlString += "\n<div class=\"holdermain\">";

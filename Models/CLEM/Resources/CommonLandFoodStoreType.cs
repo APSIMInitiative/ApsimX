@@ -266,8 +266,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
             if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() != typeof(FoodResourcePacket)))
@@ -309,7 +310,8 @@ namespace Models.CLEM.Resources
                 {
                     Gain = pool.Amount,
                     Activity = activity,
-                    Reason = reason,
+                    Category = category,
+                    RelatesToResource = relatesToResource,
                     ResourceType = this
                 };
                 lastGain = pool.Amount;
@@ -357,7 +359,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = request.Provided,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

@@ -106,7 +106,7 @@ namespace Models.CLEM.Resources
         {
             if (UsableArea > 0)
             {
-                Add(UsableArea, this, "Initialise");
+                Add(UsableArea, this, this.NameWithParent, "Initialise");
             }
 
             // take away buildings (allows building to change over time. 
@@ -116,7 +116,7 @@ namespace Models.CLEM.Resources
                 {
                     ActivityModel = this,
                     AllowTransmutation = false,
-                    Reason = "Allocate buildings",
+                    Category = "Allocate buildings",
                     Required = UsableArea * PortionBuildings,
                     Resource = this as IResourceType,
                     ResourceTypeName = this.Name,
@@ -130,10 +130,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="resourceAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
@@ -156,7 +157,8 @@ namespace Models.CLEM.Resources
             {
                 Gain = amountAdded,
                 Activity = activity,
-                Reason = reason,
+                RelatesToResource = relatesToResource,
+                Category = category,
                 ResourceType = this
             };
             lastGain = amountAdded;
@@ -164,7 +166,7 @@ namespace Models.CLEM.Resources
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
 
-            if (reason != "Initialise")
+            if (category != "Initialise")
             {
                 UpdateLandAllocatedList(activity, amountAdded, true);
                 // adjust activity using all remaining land as well.
@@ -190,7 +192,7 @@ namespace Models.CLEM.Resources
             // avoid taking too much
             amountRemoved = Math.Min(this.areaAvailable, amountRemoved);
 
-            if (request.Reason != "Assign unallocated")
+            if (request.Category != "Assign unallocated")
             {
                 this.areaAvailable -= amountRemoved;
             }
@@ -214,7 +216,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

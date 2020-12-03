@@ -48,6 +48,13 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 
+        /// <summary>
+        /// Category label to use in ledger
+        /// </summary>
+        [Description("Shortname of fee for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
+
         #region validation
         /// <summary>
         /// Validate object
@@ -134,7 +141,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(Finance),
                         ResourceTypeName = this.AccountName.Split('.').Last(),
                         ActivityModel = this,
-                        Reason = breedName
+                        RelatesToResource = breedName,
+                        Category = Category
                     }
                 };
             }
@@ -154,7 +162,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
             List<Ruminant> herd = this.CurrentHerd(false);
@@ -188,7 +196,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, this.Category, this.PredictedHerdName);
         }
 
         /// <summary>
@@ -258,6 +266,16 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"resourcelink\">" + AccountName + "</span>";
             }
             html += "</div>";
+            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            if (Category != null && Category != "")
+            {
+                html += "<span class=\"setvalue\">" + Category + "</span> ";
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span> ";
+            }
+            html += " for all transactions</div>";
             return html;
         } 
         #endregion

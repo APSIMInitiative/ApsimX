@@ -138,9 +138,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return 0;
+            return new GetDaysLabourRequiredReturnArgs(0, "Hire labour", null);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                 Required = total,
                 ResourceTypeName = this.AccountName,
                 ActivityModel = this,
-                Reason = "Hire labour"
+                Category = "Hire labour"
             }
             );
             return resourcesNeeded;

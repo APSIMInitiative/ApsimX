@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "Starting value");
+                Add(initialpPool, this, "", "Starting value");
             }
         }
 
@@ -113,8 +113,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             HumanFoodStorePool pool;
             switch (resourceAmount.GetType().Name)
@@ -146,7 +147,8 @@ namespace Models.CLEM.Resources
                 {
                     Gain = pool.Amount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
                 lastGain = pool.Amount;
@@ -186,7 +188,7 @@ namespace Models.CLEM.Resources
                 // send to market if needed
                 if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
+                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
                 }
 
                 if (amountRequired <= 0)
@@ -204,7 +206,8 @@ namespace Models.CLEM.Resources
                     ResourceType = this,
                     Loss = amountRemoved,
                     Activity = request.ActivityModel,
-                    Reason = request.Reason
+                    Category = request.Category,
+                    RelatesToResource = request.RelatesToResource
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -251,7 +254,7 @@ namespace Models.CLEM.Resources
                         ResourceType = this,
                         Loss = spoiled,
                         Activity = this,
-                        Reason = "Spoiled"
+                        Category = "Spoiled"
                     };
                     LastTransaction = details;
                     TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

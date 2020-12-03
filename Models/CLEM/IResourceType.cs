@@ -17,8 +17,9 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity requesting resource</param>
-        /// <param name="reason">Name of individual requesting resource</param>
-        void Add(object resourceAmount, CLEMModel activity, string reason);
+        /// <param name="relatesToResource">The resource the transaction relates to, not uses</param>
+        /// <param name="category">Name of individual requesting resource</param>
+        void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category);
 
         /// <summary>
         /// Remove this Amount from the existing Amount

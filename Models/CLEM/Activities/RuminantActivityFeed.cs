@@ -200,7 +200,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Reason = "Feed"
+                        Category = "Feed",
+                        RelatesToResource = this.PredictedHerdName
                     }
                 };
             }
@@ -215,7 +216,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
@@ -264,7 +265,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -300,7 +301,7 @@ namespace Models.CLEM.Activities
                             ResourceType = typeof(AnimalFoodStore),
                             ResourceTypeName = item.ResourceTypeName,
                             ActivityModel = this,
-                            Reason = "Wastage"
+                            Category = "Wastage"
                         };
                         ResourceRequestList.Insert(0, wastedRequest);
                         item.Required -= wasted;
@@ -333,7 +334,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = item.ResourceTypeName,
                         ActivityModel = this,
-                        Reason = "Overfed wastage"
+                        Category = "Overfed wastage"
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                     item.Required -= excess;
