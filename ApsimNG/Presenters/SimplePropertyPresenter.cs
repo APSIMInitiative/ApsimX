@@ -50,8 +50,6 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">An <see cref="ExplorerPresenter" /> instance.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
             if (explorerPresenter == null)
@@ -61,7 +59,7 @@ namespace UserInterface.Presenters
             this.view = view as IPropertyView;
             this.presenter = explorerPresenter;
 
-            if (this.model == null)
+            if (this.model != null && !(this.model is IModel))
                 throw new ArgumentException($"The model must be an IModel instance");
             if (this.view == null)
                 throw new ArgumentException($"The view must be an IPropertyView instance");
@@ -76,9 +74,12 @@ namespace UserInterface.Presenters
         /// </summary>
         public void RefreshView(IModel model)
         {
-            this.model = model;
-            PropertyGroup properties = GetProperties(model);
-            view.DisplayProperties(properties);
+            if (model != null)
+            {
+                this.model = model;
+                PropertyGroup properties = GetProperties(model);
+                view.DisplayProperties(properties);
+            }
         }
 
         /// <summary>
