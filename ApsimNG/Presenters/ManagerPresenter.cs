@@ -141,7 +141,10 @@
             if (propertyPresenter is SimplePropertyPresenter simplePresenter)
                 simplePresenter.RefreshView(scriptModel);
             else if (propertyPresenter is PropertyPresenter presenter)
+            {
+                presenter.UpdateModel(scriptModel);
                 presenter.Refresh();
+            }
         }
 
         /// <summary>
