@@ -86,7 +86,7 @@ namespace Utility
         public bool DarkTheme { get; set; }
 
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
-        [Input("Autosave")]
+        [Input("Autosave on run")]
         [Tooltip("Should the file be automatically saved to disk before running simulations?")]
         public bool AutoSave { get; set;} = true;
 
