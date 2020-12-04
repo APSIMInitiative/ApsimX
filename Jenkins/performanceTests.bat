@@ -33,44 +33,35 @@ if "%resp%" neq "200" (
 for /F "tokens=1-6 delims==><" %%I IN (%resp_file%) DO SET FULLRESPONSE=%%K
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
 
+REM ==================================================================
+REM Existing PerformanceTests 
+REM ==================================================================
 pushd %apsimx%\..
-REM if not exist APSIM.PerformanceTests (
-	REM echo Cloning APSIM.PerformanceTests...
-	REM git clone https://github.com/APSIMInitiative/APSIM.PerformanceTests
-REM )
-
-REM rem Cleanup any modified files.
-REM cd APSIM.PerformanceTests
-
-REM git checkout master
-REM git checkout .
-REM git reset .
-REM git clean -fdxq
-REM git pull
-
-REM cd APSIM.PerformanceTests.Collector
-
-REM echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
-REM nuget restore -verbosity quiet
-
-REM echo Compiling APSIM.PerformanceTests.Collector...
-REM msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
-REM copy /y "%apsimx%\DeploymentSupport\Windows\Bin32\sqlite3.dll" bin\Release\
-REM echo Running performance tests collector...
-REM bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
-
 if not exist APSIM.PerformanceTests (
-	mkdir APSIM.PerformanceTests
+	echo Cloning APSIM.PerformanceTests...
+	git clone https://github.com/APSIMInitiative/APSIM.PerformanceTests
 )
+
+rem Cleanup any modified files.
 cd APSIM.PerformanceTests
-7z x -aoa -obin\Release %apsimx%\Jenkins\Collector.zip 
+
+git checkout master
+git checkout .
+git reset .
+git clean -fdxq
+git pull
+
+cd APSIM.PerformanceTests.Collector
+
+echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
+nuget restore -verbosity quiet
+
+echo Compiling APSIM.PerformanceTests.Collector...
+msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
+copy /y "%apsimx%\DeploymentSupport\Windows\Bin32\sqlite3.dll" bin\Release\
 
 echo Running performance tests collector...
-echo bin\Release\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR% %apsimx%\Tests\Validation
-bin\Release\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% "%COMMIT_AUTHOR%" %apsimx%\Tests\Validation
-
-
-
+bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 set err=%errorlevel%
 if errorlevel 1 (
 	echo APSIM.PerformanceTests.Collector did not run succecssfully!
@@ -83,6 +74,46 @@ if errorlevel 1 (
 ) else (
 	echo Done.
 )
+
+REM ==================================================================
+REM New POStats
+REM ==================================================================
+
 popd
+pushd %apsimx%\..
+cd APSIM.PerformanceTests
+
+git checkout refactor
+git checkout .
+git reset .
+git clean -fdxq
+git pull
+
+echo Compiling APSIM.POStats.Shared...
+cd APSIM.POStats.Shared
+nuget restore -verbosity quiet APSIM.POStats.Shared.csproj
+msbuild /v:m /p:Configuration=Release /m
+
+echo Compiling APSIM.POStats.Collector...
+cd ..\APSIM.POStats.Collector
+nuget restore -verbosity quiet APSIM.POStats.Collector.csproj
+msbuild /v:m /p:Configuration=Release /m
+copy /y "%apsimx%\DeploymentSupport\Windows\Bin64\sqlite3.dll" bin\Release\
+
+echo Running APSIM.POStats collector...
+bin\Release\netcoreapp3.1\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% "%COMMIT_AUTHOR%" %apsimx%\Tests\Validation
+set err=%errorlevel%
+if errorlevel 1 (
+	echo APSIM.POStats.Collector did not run succecssfully!
+	echo Pull request ID: 	"%PULL_ID%"
+	echo DateTime stamp: 	"%DATETIMESTAMP%"
+	echo Commit author:		"%COMMIT_AUTHOR%"
+	exit /b 1
+) else (
+	echo Done.
+)
+popd
+
+
 endlocal
 exit /b %err%
