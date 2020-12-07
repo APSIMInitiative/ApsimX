@@ -106,6 +106,23 @@
         public event EventHandler ViewChanged;
 
         /// <summary>
+        /// Static constructor to perform 1-time initialisation.
+        /// </summary>
+        static MapView()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
+            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+        }
+
+        /// <summary>
         /// Constructor. Initialises the widget and will show a world
         /// map with no markers until <see cref="ShowMap" /> is called.
         /// </summary>
@@ -409,7 +426,8 @@
             {
                 // Update the map size iff the allocated width and height are both > 0,
                 // and width or height have changed.
-                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
+                if (image != null && map != null &&
+                    image.Allocation.Width > 0 && image.Allocation.Height > 0
                  && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
                 {
                     image.SizeAllocated -= OnSizeAllocated;

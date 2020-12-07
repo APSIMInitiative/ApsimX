@@ -740,7 +740,7 @@
         public bool ShowModelStructureChecked()
         {
             IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-            if (model.Children.Count < 1)
+            if (model != null && model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
         }
