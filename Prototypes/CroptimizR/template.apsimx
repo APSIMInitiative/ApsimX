@@ -9667,7 +9667,7 @@
       "VariableNames": [
         "Wheat.Leaf.LAI"
       ],
-      "OutputPath": "/home/drew/code/ApsimX2/Prototypes/CroptimizR",
+      "OutputPath": null,
       "RandomSeed": null,
       "OptimizationMethod": {
         "$type": "Models.Optimisation.Simplex, Models",
