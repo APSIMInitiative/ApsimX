@@ -32,7 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -286,6 +286,7 @@
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationModel.cs" />
+    <Compile Include="Functions\SupplyFunctions\MaximumHourlyTrModel.cs" />
     <Compile Include="Functions\SupplyFunctions\StomatalConductanceCO2Modifier.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
