@@ -45,9 +45,9 @@ if not exist APSIM.PerformanceTests (
 rem Cleanup any modified files.
 cd APSIM.PerformanceTests
 
-git checkout master
-git checkout .
 git reset .
+git checkout .
+git checkout master
 git clean -fdxq
 git pull
 
@@ -83,9 +83,9 @@ popd
 pushd %apsimx%\..
 cd APSIM.PerformanceTests
 
-git checkout refactor
+git reset .	
 git checkout .
-git reset .
+git checkout refactor
 git clean -fdxq
 git pull
 
