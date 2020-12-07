@@ -92,7 +92,7 @@ git pull
 echo Compiling APSIM.POStats.Shared...
 cd APSIM.POStats.Shared
 nuget restore -verbosity quiet APSIM.POStats.Shared.csproj
-msbuild /v:m /p:Configuration=Release /m
+dotnet build -v m -c Release
 
 echo Compiling APSIM.POStats.Collector...
 cd ..\APSIM.POStats.Collector
