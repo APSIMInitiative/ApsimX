@@ -1,7 +1,7 @@
 !station number = NA
 !station name = geraldton airport_btos
-latitude = -28.80  (DECIMAL DEGREES)
-longitude = 114.70  (DECIMAL DEGREES)
+latitude = -28.77867  (DECIMAL DEGREES)
+longitude = 114.6568  (DECIMAL DEGREES)
 tav = 20.71 (oC) ! Annual average ambient temperature
 amp = 10.28 (oC) ! Annual amplitude in mean monthly temperature
 

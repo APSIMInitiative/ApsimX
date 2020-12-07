@@ -1,7 +1,7 @@
 !station number = NA
 !station name = goondiwindi post office_byie
-latitude = -28.55  (DECIMAL DEGREES)
-longitude = 150.31  (DECIMAL DEGREES)
+latitude = -28.53  (DECIMAL DEGREES)
+longitude = 150.30  (DECIMAL DEGREES)
 tav = 20.24 (oC) ! Annual average ambient temperature
 amp = 12.43 (oC) ! Annual amplitude in mean monthly temperature
 

@@ -1,7 +1,7 @@
 !station number = NA
 !station name = dinninup_bcvt
-latitude = -33.84  (DECIMAL DEGREES)
-longitude = 116.56  (DECIMAL DEGREES)
+latitude = -31.99998  (DECIMAL DEGREES)
+longitude = 117.5023  (DECIMAL DEGREES)
 tav = 15.40 (oC) ! Annual average ambient temperature
 amp = 11.84 (oC) ! Annual amplitude in mean monthly temperature
 

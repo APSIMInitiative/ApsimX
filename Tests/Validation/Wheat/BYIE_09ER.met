@@ -1,7 +1,7 @@
 !station number = NA
 !station name = eradu_byie
-latitude = -28.69  (DECIMAL DEGREES)
-longitude = 115.04  (DECIMAL DEGREES)
+latitude = -28.68  (DECIMAL DEGREES)
+longitude = 115.03  (DECIMAL DEGREES)
 tav = 20.99 (oC) ! Annual average ambient temperature
 amp = 12.38 (oC) ! Annual amplitude in mean monthly temperature
 

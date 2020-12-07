@@ -1,7 +1,7 @@
 !station number = NA
 !station name = katanning comparison_btos
-latitude = -33.69  (DECIMAL DEGREES)
-longitude = 117.56  (DECIMAL DEGREES)
+latitude = -33.68305  (DECIMAL DEGREES)
+longitude = 117.6121  (DECIMAL DEGREES)
 tav = 16.39 (oC) ! Annual average ambient temperature
 amp = 10.18 (oC) ! Annual amplitude in mean monthly temperature
 

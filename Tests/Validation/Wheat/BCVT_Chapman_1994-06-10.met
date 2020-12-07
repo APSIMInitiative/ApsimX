@@ -1,7 +1,7 @@
 !station number = NA
 !station name = watheroo_bcvt
-latitude = -30.30  (DECIMAL DEGREES)
-longitude = 116.06  (DECIMAL DEGREES)
+latitude = -28.72329  (DECIMAL DEGREES)
+longitude = 114.6268  (DECIMAL DEGREES)
 tav = 19.03 (oC) ! Annual average ambient temperature
 amp = 15.18 (oC) ! Annual amplitude in mean monthly temperature
 

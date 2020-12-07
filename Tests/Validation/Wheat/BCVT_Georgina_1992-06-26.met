@@ -1,7 +1,7 @@
 !station number = NA
 !station name = trayning_bcvt
-latitude = -31.12  (DECIMAL DEGREES)
-longitude = 117.79  (DECIMAL DEGREES)
+latitude = -28.8769  (DECIMAL DEGREES)
+longitude = 114.7534  (DECIMAL DEGREES)
 tav = 18.51 (oC) ! Annual average ambient temperature
 amp = 14.92 (oC) ! Annual amplitude in mean monthly temperature
 

@@ -1,7 +1,7 @@
 !station number = NA
 !station name = horsham polkemmet rd_byie
-latitude = -36.66  (DECIMAL DEGREES)
-longitude = 142.07  (DECIMAL DEGREES)
+latitude = -36.70  (DECIMAL DEGREES)
+longitude = 142.20  (DECIMAL DEGREES)
 tav = 15.21 (oC) ! Annual average ambient temperature
 amp = 11.17 (oC) ! Annual amplitude in mean monthly temperature
 

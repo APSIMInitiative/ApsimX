@@ -1,7 +1,7 @@
 !station number = NA
 !station name = busselton shire_bcvt
-latitude = -33.66  (DECIMAL DEGREES)
-longitude = 115.35  (DECIMAL DEGREES)
+latitude = -31.64193  (DECIMAL DEGREES)
+longitude = 117.4836  (DECIMAL DEGREES)
 tav = 17.09 (oC) ! Annual average ambient temperature
 amp = 9.96 (oC) ! Annual amplitude in mean monthly temperature
 
