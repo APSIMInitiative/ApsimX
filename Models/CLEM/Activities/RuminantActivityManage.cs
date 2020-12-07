@@ -244,6 +244,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -259,7 +260,8 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("The number of age classes (12 months each) to spread breeder purchases across will exceed the maximum age of breeders. Reduce number of breeder age classes", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -819,7 +821,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -869,6 +871,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -876,7 +880,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string skippedMarkForSale = (!MarkAgeWeightMalesForSale | !MarkOldBreedersForSale | !MarkOldSiresForSale)?"*":"";
+            string skippedMarkForSale = (!MarkAgeWeightMalesForSale | !MarkOldBreedersForSale | !MarkOldSiresForSale) ? "*" : "";
 
             string html = "";
             html += "\n<div class=\"activitybannerlight\">Breeding females</div>";
@@ -891,13 +895,13 @@ namespace Models.CLEM.Activities
             {
                 html += " using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders";
             }
-            else if(MinimumBreedersKept == maxBreed)
+            else if (MinimumBreedersKept == maxBreed)
             {
                 html += " with breeder purchases and natural recruitment up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > breeders";
             }
             else
             {
-                html += " with breeder purchases up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + maxBreed.ToString("#,###") +"</span> breeders";
+                html += " with breeder purchases up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + maxBreed.ToString("#,###") + "</span> breeders";
             }
             html += "</div>";
 
@@ -928,7 +932,7 @@ namespace Models.CLEM.Activities
             }
             else if (MaximumSiresKept < 1)
             {
-                html += "The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">"+(Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) +"</span> individuals";
+                html += "The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">" + (Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) + "</span> individuals";
             }
             else
             {
@@ -1044,7 +1048,8 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 }

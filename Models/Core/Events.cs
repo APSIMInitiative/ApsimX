@@ -168,7 +168,7 @@
 
                 foreach (IModel modelNode in allModels)
                 {
-                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    foreach (MethodInfo method in modelNode.GetType().GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
                         EventSubscribeAttribute attribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
                         if (attribute != null)

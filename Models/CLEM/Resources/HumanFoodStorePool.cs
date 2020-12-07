@@ -37,6 +37,8 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public int Age { get; set; }
 
+        #region transactions
+
         /// <summary>
         /// Add to Resource method.
         /// This style is used when a pool needs to be added to the current pool
@@ -74,6 +76,7 @@ namespace Models.CLEM.Resources
             removeAmount = Math.Min(this.amount, removeAmount);
             this.amount -= removeAmount;
             return removeAmount;
-        }
+        } 
+        #endregion
     }
 }

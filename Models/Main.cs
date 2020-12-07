@@ -85,8 +85,20 @@
                 }
                 else
                 {
-                    // Run simulations
-                    var runner = new Runner(files, options.RunTests, options.RunType,
+                    Runner runner;
+                    if (string.IsNullOrEmpty(options.EditFilePath))
+                        // Run simulations
+                        runner = new Runner(files,
+                                            options.RunTests,
+                                            options.RunType,
+                                            numberOfProcessors: options.NumProcessors,
+                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                    else
+                        runner = new Runner(files.Select(f => EditFile.Do(f, options.EditFilePath)),
+                                            true,
+                                            true,
+                                            options.RunTests,
+                                            runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
                     runner.SimulationCompleted += OnJobCompleted;

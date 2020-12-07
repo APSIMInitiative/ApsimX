@@ -540,10 +540,11 @@ namespace Models.CLEM.Resources
                                     // create new request for this transmutation cost
                                     ResourceRequest transRequest = new ResourceRequest
                                     {
-                                        Reason = trans.Name + " " + trans.Parent.Name,
+                                        RelatesToResource = request.ResourceTypeName,
                                         Required = transmutationCost,
                                         ResourceType = transcost.ResourceType,
-                                        ActivityModel = request.ActivityModel
+                                        ActivityModel = request.ActivityModel,
+                                        Category = "Transmutation",
                                     };
 
                                     // used to pass request, but this is not the transmutation cost
@@ -572,7 +573,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, "Transmutation");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, request.ResourceTypeName, "Transmutation");
                             }
                         }
                     }
@@ -582,6 +583,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region validation
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -590,7 +593,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            
+
             var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
 
             // check that only one instance of each resource group is present
@@ -601,6 +604,11 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -629,5 +637,7 @@ namespace Models.CLEM.Resources
         {
             return "\n</div>";
         }
+
+        #endregion
     }
 }

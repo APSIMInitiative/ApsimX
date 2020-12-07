@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivitySell: CLEMActivityBase
+    public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
     {
         /// <summary>
         /// Bank account to use
@@ -43,29 +43,54 @@ namespace Models.CLEM.Activities
         public string ResourceTypeName { get; set; }
 
         /// <summary>
-        /// Amount reserved from sale
+        /// Resource sell style to use
         /// </summary>
-         [Description("Amount reserved from sale")]
+        [Description("Selling style")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Selling style required")]
+        public ResourceSellStyle SellStyle { get; set; }
+
+        /// <summary>
+        /// Value based on selling style
+        /// </summary>
+        [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
-        public double AmountReserved { get; set; }
+        public double Value { get; set; }
 
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
         private FinanceType bankAccount;
-
-        /// <summary>
-        /// Store type to use
-        /// </summary>
         private IResourceType resourceToSell;
-
-        /// <summary>
-        /// Store type to place resource within market if present
-        /// </summary>
         private IResourceType resourceToPlace;
-
         private ResourcePricing price;
         private double unitsAvailable;
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity has a parent of type CropActivityManageProduct
+
+            switch (SellStyle)
+            {
+                case ResourceSellStyle.ProportionOfStore:
+                case ResourceSellStyle.ProportionOfLastGain:
+                case ResourceSellStyle.ReserveProportion:
+                    if (Value > 1)
+                    {
+                        string[] memberNames = new string[] { "Selling style" };
+                        results.Add(new ValidationResult("The specified selling style expects a value between 0 and 1", memberNames));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return results;
+        }
+
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -101,8 +126,29 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                double amountForSale = resourceToSell.Amount - AmountReserved;
-                double units = amountForSale / price.PacketSize;
+                double amount = 0;
+                switch (SellStyle)
+                {
+                    case ResourceSellStyle.SpecifiedAmount:
+                        amount = Value;
+                        break;
+                    case ResourceSellStyle.ProportionOfStore:
+                        amount = resourceToSell.Amount * Value;
+                        break;
+                    case ResourceSellStyle.ProportionOfLastGain:
+
+                        break;
+                    case ResourceSellStyle.ReserveAmount:
+                        amount = resourceToSell.Amount - Value;
+                        break;
+                    case ResourceSellStyle.ReserveProportion:
+                        amount = resourceToSell.Amount * (1 - Value);
+                        break;
+                    default:
+                        break;
+                }
+                amount = Math.Max(0, amount);
+                double units = amount / price.PacketSize;
                 if(price.UseWholePackets)
                 {
                     units = Math.Truncate(units);
@@ -126,7 +172,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -140,7 +186,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Sell", (resourceToSell as CLEMModel).NameWithParent);
         }
 
         /// <summary>
@@ -180,18 +226,20 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Required = units * price.PacketSize,
                     AllowTransmutation = true,
-                    Reason = "Sell " + (resourceToSell as Model).Name
+                    Category = "Sell",
+                    RelatesToResource = (resourceToSell as CLEMModel).NameWithParent
                 };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned
                 if (bankAccount != null)
                 {
-                    bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, "Sales");
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = units * price.PricePerPacket;
-                        purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
+                        purchaseRequest.Category = "Sales";
+                        purchaseRequest.RelatesToResource = (resourceToSell as CLEMModel).NameWithParent;
                         (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
                     }
                 }
@@ -237,6 +285,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary 
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -246,6 +296,27 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Sell ";
+            switch (SellStyle)
+            {
+                case ResourceSellStyle.SpecifiedAmount:
+                    html += "<span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> of ";
+                    break;
+                case ResourceSellStyle.ProportionOfStore:
+                    html += "<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of ";
+                    break;
+                case ResourceSellStyle.ProportionOfLastGain:
+                    html += "<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of the last gain transaction recorded for ";
+                    break;
+                case ResourceSellStyle.ReserveAmount:
+                    html += "all but <span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> as reserve of ";
+                    break;
+                case ResourceSellStyle.ReserveProportion:
+                    html += "all but leaving <span class=\"resourcelink\">" + Value.ToString("##0%") + "</span> percent of store as reserve of ";
+                    break;
+                default:
+                    break;
+            }
+
             if (ResourceTypeName == null || ResourceTypeName == "")
             {
                 html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
@@ -254,22 +325,20 @@ namespace Models.CLEM.Activities
             {
                 html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
             }
-            if(AmountReserved > 0)
-            {
-                html += " with <span class=\"resourcelink\">" + AmountReserved.ToString("#,##0") + "</span> reserved in the store";
-            }
+            html += " with sales placed in ";
             if (AccountName == null || AccountName == "")
             {
-                html += " with sales placed in <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+                html += " <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
             }
             else
             {
-                html += " with sales placed in <span class=\"resourcelink\">" + AccountName + "</span>";
+                html += " <span class=\"resourcelink\">" + AccountName + "</span>";
             }
             html += "</div>";
 
             return html;
         }
 
+        #endregion
     }
 }

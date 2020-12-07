@@ -124,12 +124,12 @@ namespace Models.Soils
         /// </summary>
         public void SetHydraulicProperties()
         {
-            DELk = new double[Weirdo.Thickness.Length, 5];
-            Mk = new double[Weirdo.Thickness.Length, 5];
-            M0 = new double[Weirdo.Thickness.Length, 6];
-            M1 = new double[Weirdo.Thickness.Length, 6];
-            Y0 = new double[Weirdo.Thickness.Length, 6];
-            Y1 = new double[Weirdo.Thickness.Length, 6];
+            DELk = new double[Weirdo.MappedSAT.Length, 5];
+            Mk = new double[Weirdo.MappedSAT.Length, 5];
+            M0 = new double[Weirdo.MappedSAT.Length, 6];
+            M1 = new double[Weirdo.MappedSAT.Length, 6];
+            Y0 = new double[Weirdo.MappedSAT.Length, 6];
+            Y1 = new double[Weirdo.MappedSAT.Length, 6];
             
             SetupThetaCurve();
         }
@@ -139,7 +139,7 @@ namespace Models.Soils
         /// </summary>
         private void SetupThetaCurve()
         {
-            for (int layer = 0; layer < Weirdo.Thickness.Length; layer++)
+            for (int layer = 0; layer < Weirdo.MappedSAT.Length; layer++)
             {
                 if (Weirdo.MappedPsiBub[layer] > 0)
                     throw new Exception(this + "PsiBub is positive in layer " + layer + ".  It must be a negative number" );

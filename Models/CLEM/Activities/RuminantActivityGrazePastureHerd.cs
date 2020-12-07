@@ -306,7 +306,8 @@ namespace Models.CLEM.Activities
                         {
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Reason = RuminantTypeModel.Name + " grazing",
+                            Category = "Grazing",
+                            RelatesToResource = RuminantTypeModel.NameWithParent,
                             Required = totalEaten,
                             Resource = GrazeFoodStoreModel as IResourceType
                         };
@@ -374,7 +375,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -424,6 +425,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -464,6 +467,7 @@ namespace Models.CLEM.Activities
             html += "the maximum 8 hours each day</span>";
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }

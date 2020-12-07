@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
         {
             if (Amount > 0)
             {
-                bankAccount.Add(Amount, this, "Income");
+                bankAccount.Add(Amount, this, "", "Income");
                 SetStatusSuccess();
             }
         }
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -136,6 +136,8 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -158,7 +160,8 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

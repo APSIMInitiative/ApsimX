@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
                     // if 0 delete
                     store.Pools.RemoveAll(a => a.Amount == 0);
                 }
-                this.Add(amountMoved, activity, ((storeName=="")?"General":storeName));
+                this.Add(amountMoved, activity, this.NameWithParent, ((storeName=="")?"General":storeName));
             }
         }
 
@@ -195,13 +195,20 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
+        private double lastGain = 0;
+        /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get { return lastGain; } }
+
         /// <summary>
         /// Add money to account
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
@@ -216,7 +223,8 @@ namespace Models.CLEM.Resources
                 {
                     Gain = addAmount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
                 LastTransaction = details;
@@ -246,7 +254,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -264,6 +273,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -274,11 +285,12 @@ namespace Models.CLEM.Resources
             string html = "<div class=\"activityentry\">";
             html += "Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>";
             html += "<div class=\"activityentry\">";
-            html += "Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by "+ this.MoistureDecayRate.ToString("0.###") + "</span> each month.";
+            html += "Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.";
             html += "</div>";
             return html;
         }
 
+        #endregion
     }
 
     /// <summary>

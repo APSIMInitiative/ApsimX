@@ -29,6 +29,7 @@ if "%1"=="%unitsyntax%" (
 	set count=!result!
 
 	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	if errorlevel 1 exit /b 1
 
 	call :numTempFiles
 	set count_after=!result!
@@ -66,8 +67,12 @@ if "%1"=="%examplessyntax%" (
 
 if "%1"=="%validationsyntax%" (
 	set testdir=%apsimx%\Tests
+	rem Extract restricted soybean dataset
 	set soybean=%apsimx%\Tests\UnderReview\Soybean
 	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
+	rem Extract restricted NPI wheat dataset
+	set wheat=%apsimx%\Tests\Validation\Wheat
+	echo %NPI_PASSWORD%| 7z x !wheat!\NPIValidation.7z -o!wheat!
 	goto :tests
 )
 

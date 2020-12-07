@@ -140,6 +140,8 @@ namespace Models.CLEM.Groupings
             return str;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -148,7 +150,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(!this.ValidParent())
+            if (!this.ValidParent())
             {
                 html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
             }
@@ -181,6 +183,10 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
+        #endregion
+
+        #region validation
+
         /// <summary>
         /// Validate this component
         /// </summary>
@@ -191,18 +197,19 @@ namespace Models.CLEM.Groupings
             var results = new List<ValidationResult>();
 
             // ensure parent is of the right type.
-            if(!this.ValidParent())
+            if (!this.ValidParent())
             {
                 string[] memberNames = new string[] { "RuminantFilter" };
-                results.Add(new ValidationResult("The RuminantFilter named "+this.Name+" does not have a valid RuminantGroup parent component", memberNames));
+                results.Add(new ValidationResult("The RuminantFilter named " + this.Name + " does not have a valid RuminantGroup parent component", memberNames));
             }
-            if((Value==null||Value=="")&&(Parameter.ToString()!="Location"))
+            if ((Value == null || Value == "") && (Parameter.ToString() != "Location"))
             {
                 string[] memberNames = new string[] { "Value" };
                 results.Add(new ValidationResult("Value must be specified", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
     }
 
     /// <summary>
