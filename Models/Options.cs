@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CommandLine;
-
+using CommandLine.Text;
 namespace Models
 {
     /// <summary>
@@ -50,12 +50,12 @@ namespace Models
         public bool MergeDBFiles { get; set; }
 
         /// <summary>
-        /// Edit the .apsimx file(s) wihtout running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.
+        /// Edit the .apsimx file(s) before running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.
         /// </summary>
         /// <remarks>
         /// This property holds the path to the config file.
         /// </remarks>
-        [Option("edit", HelpText = "Edit the .apsimx file(s) wihtout running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
+        [Option("edit", HelpText = "Edit the .apsimx file(s) before running them. Path to a config file must be specified which contains lines of parameters to change, in the form 'path = value'.")]
         public string EditFilePath { get; set; }
 
         /// <summary>
@@ -67,20 +67,26 @@ namespace Models
         /// <summary>
         /// Run all simulations sequentially on a single thread.
         /// </summary>
-        [Option("single-threaded", HelpText = "Run all simulations sequentially on a single thread.")]
+        /// <remarks>
+        /// SetName specified to make it incompatible with multi-process switch.
+        /// </remarks>
+        [Option("single-threaded", HelpText = "Run all simulations sequentially on a single thread.", SetName = "singlethreaded")]
         public bool SingleThreaded { get; set; }
 
         /// <summary>
         /// Use the multi-process job runner.
         /// </summary>
-        [Option("multi-process", HelpText = "Use the multi-process job runner.")]
+        /// <remarks>
+        /// SetName specified to make it incompatible with single-threaded switch.
+        /// </remarks>
+        [Option("multi-process", HelpText = "Use the multi-process job runner.", SetName = "multithreaded")]
         public bool MultiProcess { get; set; }
 
         /// <summary>
         /// Maximum number of threads/processes to spawn for running simulations.
         /// </summary>
-        [Option("cpu-count", HelpText = "Maximum number of threads/processes to spawn for running simulations.")]
-        public int NumProcessors { get; set; } = -1;
+        [Option("cpu-count", Default = -1, HelpText = "Maximum number of threads/processes to spawn for running simulations.")]
+        public int NumProcessors { get; set; }
 
         /// <summary>
         /// Only run simulations if their names match this regular expression.
@@ -101,6 +107,34 @@ namespace Models
                 if (MultiProcess)
                     return Models.Core.Run.Runner.RunTypeEnum.MultiProcess;
                 return Models.Core.Run.Runner.RunTypeEnum.MultiThreaded;
+            }
+        }
+
+        /// <summary>
+        /// Concrete examples shown in help text.
+        /// </summary>
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Normal usage",
+                                         new Options()
+                                         {
+                                             Files = new[] { "file.apsimx", "file2.apsimx" }
+                                         });
+                yield return new Example("Run all files under a directory, recursively",
+                                         new Options()
+                                         {
+                                             Files = new[] { "dir/*.apsimx"},
+                                             Recursive = true,
+                                         });
+                yield return new Example("Edit a file before running it",
+                                         new Options()
+                                         {
+                                             Files = new[] { "/path/to/file.apsimx" },
+                                             EditFilePath = "/path/to/config/file.txt"
+                                         });
             }
         }
     }
