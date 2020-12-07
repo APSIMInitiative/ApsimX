@@ -97,7 +97,7 @@ msbuild /v:m /p:Configuration=Release /m
 echo Compiling APSIM.POStats.Collector...
 cd ..\APSIM.POStats.Collector
 nuget restore -verbosity quiet APSIM.POStats.Collector.csproj
-msbuild /v:m /p:Configuration=Release /m
+dotnet build -v m -c Release
 copy /y "%apsimx%\DeploymentSupport\Windows\Bin64\sqlite3.dll" bin\Release\
 
 echo Running APSIM.POStats collector...
