@@ -1,7 +1,7 @@
 !station number = NA
 !station name = doodenanning_bcvt
-latitude = -31.91  (DECIMAL DEGREES)
-longitude = 117.10  (DECIMAL DEGREES)
+latitude = -31.63245  (DECIMAL DEGREES)
+longitude = 117.0066  (DECIMAL DEGREES)
 tav = 17.41 (oC) ! Annual average ambient temperature
 amp = 15.00 (oC) ! Annual amplitude in mean monthly temperature
 

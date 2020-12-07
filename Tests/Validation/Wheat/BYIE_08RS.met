@@ -1,7 +1,7 @@
 !station number = NA
 !station name = roseworthy agric college_byie
 latitude = -34.53  (DECIMAL DEGREES)
-longitude = 138.69  (DECIMAL DEGREES)
+longitude = 138.75  (DECIMAL DEGREES)
 tav = 16.95 (oC) ! Annual average ambient temperature
 amp = 11.73 (oC) ! Annual amplitude in mean monthly temperature
 

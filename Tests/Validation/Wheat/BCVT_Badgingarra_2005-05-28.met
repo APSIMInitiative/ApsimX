@@ -1,7 +1,7 @@
 !station number = NA
 !station name = bonnie rock_bcvt
-latitude = -30.47  (DECIMAL DEGREES)
-longitude = 118.38  (DECIMAL DEGREES)
+latitude = -30.38621  (DECIMAL DEGREES)
+longitude = 115.5001  (DECIMAL DEGREES)
 tav = 18.58 (oC) ! Annual average ambient temperature
 amp = 16.66 (oC) ! Annual amplitude in mean monthly temperature
 

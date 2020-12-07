@@ -1,7 +1,7 @@
 !station number = NA
 !station name = konnongorring_bcvt
-latitude = -31.06  (DECIMAL DEGREES)
-longitude = 116.73  (DECIMAL DEGREES)
+latitude = -33.24519  (DECIMAL DEGREES)
+longitude = 119.8599  (DECIMAL DEGREES)
 tav = 18.57 (oC) ! Annual average ambient temperature
 amp = 14.75 (oC) ! Annual amplitude in mean monthly temperature
 

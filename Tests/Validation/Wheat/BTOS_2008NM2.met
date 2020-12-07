@@ -1,7 +1,7 @@
 !station number = NA
 !station name = northam_btos
-latitude = -31.65  (DECIMAL DEGREES)
-longitude = 116.66  (DECIMAL DEGREES)
+latitude = -31.65302  (DECIMAL DEGREES)
+longitude = 116.6944  (DECIMAL DEGREES)
 tav = 18.93 (oC) ! Annual average ambient temperature
 amp = 13.15 (oC) ! Annual amplitude in mean monthly temperature
 

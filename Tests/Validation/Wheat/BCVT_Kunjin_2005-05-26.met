@@ -1,7 +1,7 @@
 !station number = NA
 !station name = southern cross_bcvt
-latitude = -31.23  (DECIMAL DEGREES)
-longitude = 119.33  (DECIMAL DEGREES)
+latitude = -32.35615  (DECIMAL DEGREES)
+longitude = 117.7705  (DECIMAL DEGREES)
 tav = 18.39 (oC) ! Annual average ambient temperature
 amp = 15.96 (oC) ! Annual amplitude in mean monthly temperature
 

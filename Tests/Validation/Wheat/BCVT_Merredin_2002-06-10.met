@@ -1,7 +1,7 @@
 !station number = NA
 !station name = amelup_bcvt
-latitude = -34.26  (DECIMAL DEGREES)
-longitude = 118.22  (DECIMAL DEGREES)
+latitude = -31.48234  (DECIMAL DEGREES)
+longitude = 118.2813  (DECIMAL DEGREES)
 tav = 15.79 (oC) ! Annual average ambient temperature
 amp = 10.48 (oC) ! Annual amplitude in mean monthly temperature
 
