@@ -358,8 +358,8 @@ namespace Models.Optimisation
         /// <returns></returns>
         private string GetParamInfo()
         {
-            string[] lower = Parameters.Select(p => $"{p.Path}={p.LowerBound}").ToArray();
-            string[] upper = Parameters.Select(p => $"{p.Path}={p.UpperBound}").ToArray();
+            string[] lower = Parameters.Select(p => $"'{p.Path}'={p.LowerBound}").ToArray();
+            string[] upper = Parameters.Select(p => $"'{p.Path}'={p.UpperBound}").ToArray();
             string lowerBounds = string.Join(", ", lower);
             string upperBounds = string.Join(", ", upper);
 
