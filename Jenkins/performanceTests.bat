@@ -101,7 +101,7 @@ dotnet build -v m -c Release
 copy /y "%apsimx%\DeploymentSupport\Windows\Bin64\sqlite3.dll" bin\Release\
 
 echo Running APSIM.POStats collector...
-bin\Release\netcoreapp3.1\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% "%COMMIT_AUTHOR%" %apsimx%\Tests\Validation
+bin\Release\netcoreapp3.1\APSIM.POStats.Collector.exe %PULL_ID% %DATETIMESTAMP% "%COMMIT_AUTHOR%" %apsimx%\Tests\Validation %apsimx%\Tests\UnderReview
 set err=%errorlevel%
 if errorlevel 1 (
 	echo APSIM.POStats.Collector did not run succecssfully!
