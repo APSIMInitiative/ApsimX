@@ -97,14 +97,6 @@ namespace Models.Optimisation
         public string[] VariableNames { get; set; }
 
         /// <summary>
-        /// Directory to which output files (graphs, reports, ...) will be saved.
-        /// </summary>
-        [Description("Output path")]
-        [Tooltip("Path to which output files (graphs, reports, ...) will be saved. If empty, output files will not be saved.")]
-        [Display(Type = DisplayType.DirectoryName)]
-        public string OutputPath { get; set; }
-
-        /// <summary>
         /// Random seed to be used. Set to null for random results.
         /// </summary>
         [Description("Random seed (optional)")]
@@ -440,6 +432,11 @@ namespace Models.Optimisation
             WriteMessage(stdout);
 
             // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
+            string apsimxFileDir = FindAncestor<Simulations>()?.FileName;
+            if (string.IsNullOrEmpty(apsimxFileDir))
+                apsimxFileDir = FindAncestor<Simulation>()?.FileName;
+            if (!string.IsNullOrEmpty(apsimxFileDir))
+                apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
                 if (Path.GetExtension(file) == ".Rdata")
@@ -448,8 +445,8 @@ namespace Models.Optimisation
                     if (storage != null && storage.Writer != null)
                         storage.Writer.WriteTable(ReadRData(file));
                 }
-                if (!string.IsNullOrEmpty(OutputPath))
-                    File.Copy(file, Path.Combine(OutputPath, Path.Combine($"{Name}-{Path.GetFileName(file)}")), true);
+                if (!string.IsNullOrEmpty(apsimxFileDir))
+                    File.Copy(file, Path.Combine(apsimxFileDir, Path.Combine($"{Name}-{Path.GetFileName(file)}")), true);
             }
             Directory.Delete(outputPath, true);
         }
