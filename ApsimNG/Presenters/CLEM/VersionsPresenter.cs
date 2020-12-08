@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using ApsimNG.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -20,7 +21,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -36,9 +37,26 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
+            this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-            this.genericView.SetContents(CreateHTML(), false, false);
+        }
+
+        public void Refresh()
+        {
+            this.genericView.Text = CreateMarkdown();
+        }
+
+
+        private string CreateMarkdown()
+        {
+            string markdownString = "";
+
+            foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
+            {
+                markdownString += $"### v {item.ToString()}";
+                markdownString += $"  \n{(item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\n", "  \n"))}  \n  \n";
+            }
+            return markdownString;
         }
 
         private string CreateHTML()
@@ -70,8 +88,6 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
                 htmlString = htmlString.Replace("[Background]", "#030028");
             }
-
-
 
             foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
             {
