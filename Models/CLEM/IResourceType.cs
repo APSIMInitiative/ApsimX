@@ -38,6 +38,11 @@ namespace Models.CLEM
         double Amount { get; }
 
         /// <summary>
+        /// Get the amount of the last gain in this resource 
+        /// </summary>
+        double LastGain { get; set;  }
+
+        /// <summary>
         /// Get the current price of this resource.
         /// </summary>
         ResourcePricing Price(PurchaseOrSalePricingStyleType priceType);

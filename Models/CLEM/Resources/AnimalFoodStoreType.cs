@@ -124,7 +124,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
-            lastGain = addAmount;
+            LastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -149,35 +149,40 @@ namespace Models.CLEM.Resources
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
-            this.amount -= amountRemoved;
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket
+            if (amountRemoved > 0)
             {
-                DMD = this.DMD,
-                PercentN = this.CurrentStoreNitrogen
-            };
-            request.AdditionalDetails = additionalDetails;
+                this.amount -= amountRemoved;
 
-            request.Provided = amountRemoved;
+                FoodResourcePacket additionalDetails = new FoodResourcePacket
+                {
+                    DMD = this.DMD,
+                    PercentN = this.CurrentStoreNitrogen
+                };
+                request.AdditionalDetails = additionalDetails;
 
-            // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
-                additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                request.Provided = amountRemoved;
+
+                // send to market if needed
+                if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                {
+                    additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                    (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                }
+
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    Loss = amountRemoved,
+                    Activity = request.ActivityModel,
+                    RelatesToResource = request.RelatesToResource,
+                    Category = request.Category
+                };
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+
             }
-
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                Loss = amountRemoved,
-                Activity = request.ActivityModel,
-                RelatesToResource = request.RelatesToResource,
-                Category = request.Category 
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
             return;
         }
 
@@ -209,12 +214,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
-
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
 
         #endregion
 
