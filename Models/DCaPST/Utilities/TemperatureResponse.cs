@@ -1,5 +1,5 @@
 using System;
-using Models.Core;
+
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
@@ -169,37 +169,31 @@ namespace Models.DCAPST
     /// <summary>
     /// Describes parameters used in leaf temperature calculations
     /// </summary>
-    [Serializable]
-    public class LeafTemperatureParameters
+    public struct LeafTemperatureParameters
     {
         /// <summary>
         /// 
         /// </summary>
-        [Description("C")]
-        public double C { get; set; }
+        public double C;
 
         /// <summary>
         /// The maximum temperature
         /// </summary>
-        [Description("Maximum Temperature")]
-        public double TMax { get; set; }
+        public double TMax;
         
         /// <summary>
         /// The minimum temperature
         /// </summary>
-        [Description("Minimum Temperature")]
-        public double TMin { get; set; }
+        public double TMin;
         
         /// <summary>
         /// The optimum temperature
         /// </summary>
-        [Description("Optimal Temperature")]
-        public double TOpt { get; set; }
+        public double TOpt;
 
         /// <summary>
         /// 
         /// </summary>
-        [Description("Beta")]
-        public double Beta { get; set; }
+        public double Beta;
     }
 }

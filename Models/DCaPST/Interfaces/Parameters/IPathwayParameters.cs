@@ -13,7 +13,7 @@
         /// <summary>
         /// Fraction of cyclic electron floww
         /// </summary>
-        double FractionOfCyclicElectronFlow { get; }
+        double FractionOfCyclicElectronFlow { get; set; }
 
         /// <summary>
         /// Ratio of respiration to SLN
@@ -43,12 +43,12 @@
         /// <summary>
         /// Mesophyll electron transport fraction
         /// </summary>
-        double MesophyllElectronTransportFraction { get; }
+        double MesophyllElectronTransportFraction { get; set; }
         
         /// <summary>
         /// ATP production electron transport factor
         /// </summary>
-        double ATPProductionElectronTransportFactor { get; }
+        double ATPProductionElectronTransportFactor { get; set; }
  
         /// <summary>
         /// Extra ATP cost
