@@ -188,12 +188,12 @@ namespace UserInterface.Presenters
 
                         markdownString += "\n###" + title;
                         msgStr = msgStr.Replace("]", "**");
-                        msgStr = msgStr.Replace("[r=", "**");
-                        msgStr = msgStr.Replace("[a=", "**");
-                        msgStr = msgStr.Replace("[f=", "**");
+                        msgStr = msgStr.Replace("[r=", "(resource) **");
+                        msgStr = msgStr.Replace("[a=", "(activity) **");
+                        msgStr = msgStr.Replace("[f=", "(filter) **");
                         msgStr = msgStr.Replace("[x=", "**");
                         msgStr = msgStr.Replace("[o=", "**");
-                        msgStr = msgStr.Replace("[m=", "**");
+                        msgStr = msgStr.Replace("[m=", "(market) **");
                         msgStr = msgStr.Replace("[", "**");
                         msgStr = msgStr.Replace("\n", "  \n");
                         markdownString += "\n"+msgStr;
