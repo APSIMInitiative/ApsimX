@@ -7,14 +7,18 @@ for (i in 1:length(nlo)) {
   msg <- row$message
   objective <- row$objective
   iterations <- row$iterations
-  df <- rbind(df, c(i, objective, iterations, initial, solution, msg))
+
+  rowdata <- c(i, objective, iterations)
+  for (j in 1:length(param_names)) {
+    rowdata <- c(rowdata, initial[j], solution[j])
+  }
+  rowdata <- c(rowdata, msg)
+  df <- rbind(df, rowdata)
 }
 
 cols <- c('Repetition', 'Objective Function Value', 'Number of Iterations')
 for (param in param_names) {
   cols <- c(cols, paste(param, 'Initial'))
-}
-for (param in param_names) {
   cols <- c(cols, paste(param, 'Final'))
 }
 cols <- c(cols, 'Message')
