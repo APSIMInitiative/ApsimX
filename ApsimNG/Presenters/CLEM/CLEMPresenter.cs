@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
                 {
                     if (model is ZoneCLEM)
                     {
-                        object newView = new HTMLView(this.view as ViewBase);
+                        object newView = new MarkdownView(this.view as ViewBase);
                         messagePresenter = new MessagePresenter();
                         if (newView != null && messagePresenter != null)
                         {
@@ -76,10 +76,39 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
+                //Properties
+                try
+                {
+                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
+                    bool isTablePresenter = childDisplayInParentPresenters.Contains(presenterName.ToString().Split('.').Last());
+
+                    // check if it has properties
+                    if (isTablePresenter ||
+                        (model.GetType().GetProperties(
+                        BindingFlags.Public |
+                          BindingFlags.NonPublic |
+                          BindingFlags.Instance
+                          ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
+                    {
+                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                        propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
+                        if (newView != null && propertyPresenter != null)
+                        {
+                            this.view.AddTabView("Properties", newView);
+                            propertyPresenter.Attach(model, newView, this.explorerPresenter);
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.MainPresenter.ShowError(err);
+                }
                 //HTML Summary
                 try
                 {
-                    object newView = new HTMLView(this.view as ViewBase);
+                    object newView = new MarkdownView(this.view as ViewBase);
                     summaryPresenter = new CLEMSummaryPresenter();
                     if (newView != null && summaryPresenter != null)
                     {
@@ -97,7 +126,7 @@ namespace UserInterface.Presenters
                     var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                     if (versions.Count() > 0)
                     {
-                        object newView = new HTMLView(this.view as ViewBase);
+                        object newView = new MarkdownView(this.view as ViewBase);
                         versionPresenter = new VersionsPresenter();
                         if (newView != null && versionPresenter != null)
                         {
@@ -110,41 +139,17 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
-                //Properties
-                try
-                {
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
-                    bool isTablePresenter = childDisplayInParentPresenters.Contains(presenterName.ToString().Split('.').Last());
 
-                    // check if it has properties
-                    if (isTablePresenter || 
-                        (model.GetType().GetProperties(
-                        BindingFlags.Public |
-                          BindingFlags.NonPublic |
-                          BindingFlags.Instance 
-                          ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0)) 
-                    {
-                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
-                        if (newView != null && propertyPresenter != null)
-                        {
-                            this.view.AddTabView("Properties", newView);
-                            propertyPresenter.Attach(model, newView, this.explorerPresenter);
-                        }
-                    }
-                }
-                catch (Exception err)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
-                }
+                this.view.TabSelected += OnTabSelected;
 
                 if (clemModel != null)
                 {
                     this.view.SelectTabView(clemModel.SelectedTab);
+                    if(clemModel.SelectedTab == "Summary")
+                    {
+                        (summaryPresenter as CLEMSummaryPresenter).Refresh();
+                    }
                 }
-                this.view.TabSelected += OnTabSelected;
             }
         }
 
@@ -159,9 +164,19 @@ namespace UserInterface.Presenters
                 clemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
             }
 
-            if((e as TabChangedEventArgs).TabName == "Summary")
+            switch ((e as TabChangedEventArgs).TabName)
             {
-                (summaryPresenter as CLEMSummaryPresenter).RefreshSummary();
+                case "Messages":
+                    (messagePresenter as MessagePresenter).Refresh();
+                    break;
+                case "Summary":
+                    (summaryPresenter as CLEMSummaryPresenter).Refresh();
+                    break;
+                case "Versions":
+                    (versionPresenter as VersionsPresenter).Refresh();
+                    break;
+                default:
+                    break;
             }
         }
 
