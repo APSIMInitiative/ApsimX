@@ -1,4 +1,10 @@
 
+objectives <- c()
+for (rep in nlo) {
+  objectives <- c(objectives, rep$objective)
+}
+optimal_index <- which.min(objectives)
+
 df <- NULL
 for (i in 1:length(nlo)) {
   row <- nlo[[i]]
@@ -7,16 +13,16 @@ for (i in 1:length(nlo)) {
   msg <- row$message
   objective <- row$objective
   iterations <- row$iterations
-
-  rowdata <- c(i, objective, iterations)
+  
+  vals <- c()
   for (j in 1:length(param_names)) {
-    rowdata <- c(rowdata, initial[j], solution[j])
+    vals <- c(vals, initial[j], solution[j])
   }
-  rowdata <- c(rowdata, msg)
+  rowdata <- c(i, i == optimal_index, objective, iterations, vals, msg)
   df <- rbind(df, rowdata)
 }
 
-cols <- c('Repetition', 'Objective Function Value', 'Number of Iterations')
+cols <- c('Repetition', 'Is Optimal', 'Objective Function Value', 'Number of Iterations')
 for (param in param_names) {
   cols <- c(cols, paste(param, 'Initial'))
   cols <- c(cols, paste(param, 'Final'))
