@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Cairo;
 using ClosedXML.Excel;
@@ -71,7 +72,6 @@ namespace UserInterface.Views
             container = (VBox)gtkControl;
             textView = (TextView)container.Children[0];
             textView.PopulatePopup += OnPopulatePopupMenu;
-
             findView = new MarkdownFindView();
 
             textView.Editable = false;
@@ -161,7 +161,24 @@ namespace UserInterface.Views
                 if (value != null)
                 {
                     var document = new MarkdownDocument();
-                    document.Parse(value.Replace("~~~", "```"));
+
+                    string correctedvalue = value.Replace("~~~", "```");
+                    
+                    // modify absolute paths in all links for markdown parser acceptance
+                    Regex absolutePathRegex = new Regex(@"[a-zA-Z]:/[^/]");
+                    Match absolutePathMatch = absolutePathRegex.Match(correctedvalue);
+                    int count = 0;
+                    while (absolutePathMatch.Success)
+                    {
+                        string match = absolutePathMatch.Value;
+                        match = "file://../" + match.Replace(":", "[drive]");
+                        correctedvalue = correctedvalue.Replace(absolutePathMatch.Value, match);
+                        absolutePathMatch = absolutePathRegex.Match(correctedvalue);
+                        if (count++ > 1000)
+                            throw new Exception("Too many absolute paths in markdown text");
+                    }
+
+                    document.Parse(correctedvalue);
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
@@ -526,7 +543,16 @@ namespace UserInterface.Views
                             foreach (var tag in iter.Tags)
                             {
                                 if (tag is LinkTag linkTag)
+                                {
+                                    // convert modified absolute paths in links for parser acceptance back to real link
+                                    // allows tags in URL to link to absolute c: path
+                                    if (linkTag.URL.Contains("[drive]"))
+                                    {
+                                        linkTag.URL = linkTag.URL.Replace("[drive]", ":");
+                                        linkTag.URL = linkTag.URL.Replace("../", "/");
+                                    }
                                     Process.Start(linkTag.URL);
+                                }
                             }
                         }
                     }
