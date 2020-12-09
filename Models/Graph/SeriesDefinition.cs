@@ -294,7 +294,7 @@
                     foreach (var descriptor in Descriptors)
                     {
                         if (fieldsThatExist.Contains(descriptor.Name))
-                            filter = AddToFilter(filter, descriptor.Name + " = '" + descriptor.Value + "'");
+                            filter = AddToFilter(filter, $"\"{descriptor.Name}\" = '{descriptor.Value}'");
                         else
                             filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
                     }
