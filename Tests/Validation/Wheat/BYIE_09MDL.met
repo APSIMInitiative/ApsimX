@@ -1,7 +1,7 @@
 !station number = NA
 !station name = merredin_byie
-latitude = -31.48  (DECIMAL DEGREES)
-longitude = 118.28  (DECIMAL DEGREES)
+latitude = -31.47  (DECIMAL DEGREES)
+longitude = 118.27  (DECIMAL DEGREES)
 tav = 19.01 (oC) ! Annual average ambient temperature
 amp = 14.11 (oC) ! Annual amplitude in mean monthly temperature
 

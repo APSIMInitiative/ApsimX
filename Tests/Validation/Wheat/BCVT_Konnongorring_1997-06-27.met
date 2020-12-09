@@ -1,7 +1,7 @@
 !station number = NA
 !station name = badgebup_bcvt
-latitude = -33.64  (DECIMAL DEGREES)
-longitude = 117.93  (DECIMAL DEGREES)
+latitude = -31.05395  (DECIMAL DEGREES)
+longitude = 116.7761  (DECIMAL DEGREES)
 tav = 16.14 (oC) ! Annual average ambient temperature
 amp = 12.69 (oC) ! Annual amplitude in mean monthly temperature
 

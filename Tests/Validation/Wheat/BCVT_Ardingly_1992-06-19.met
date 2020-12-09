@@ -1,7 +1,7 @@
 !station number = NA
 !station name = mukinbudin_bcvt
-latitude = -30.92  (DECIMAL DEGREES)
-longitude = 118.21  (DECIMAL DEGREES)
+latitude = -28.58367  (DECIMAL DEGREES)
+longitude = 115.442  (DECIMAL DEGREES)
 tav = 18.77 (oC) ! Annual average ambient temperature
 amp = 15.96 (oC) ! Annual amplitude in mean monthly temperature
 

@@ -1,7 +1,7 @@
 !station number = NA
 !station name = graball_bcvt
-latitude = -31.99  (DECIMAL DEGREES)
-longitude = 118.51  (DECIMAL DEGREES)
+latitude = -34.26353  (DECIMAL DEGREES)
+longitude = 119.4004  (DECIMAL DEGREES)
 tav = 17.58 (oC) ! Annual average ambient temperature
 amp = 15.13 (oC) ! Annual amplitude in mean monthly temperature
 

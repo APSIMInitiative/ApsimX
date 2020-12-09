@@ -1,7 +1,7 @@
 !station number = NA
 !station name = nungarin_bcvt
-latitude = -31.18  (DECIMAL DEGREES)
-longitude = 118.10  (DECIMAL DEGREES)
+latitude = -32.75399  (DECIMAL DEGREES)
+longitude = 121.6819  (DECIMAL DEGREES)
 tav = 18.84 (oC) ! Annual average ambient temperature
 amp = 16.56 (oC) ! Annual amplitude in mean monthly temperature
 
