@@ -314,7 +314,7 @@ namespace Models.CLEM.Resources
                     RelatesToResource = relatesToResource,
                     ResourceType = this
                 };
-                lastGain = pool.Amount;
+                LastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -395,12 +395,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
-
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
 
         #endregion
 

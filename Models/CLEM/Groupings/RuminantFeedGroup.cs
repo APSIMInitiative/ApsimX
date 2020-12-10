@@ -144,7 +144,11 @@ namespace Models.CLEM.Groupings
             if (overfeed)
             {
                 html += "\n<div class=\"activityentry\">";
-                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
+                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding";
+                if(!(this.Parent as RuminantActivityFeed).StopFeedingWhenSatisfied)
+                {
+                    html += ", with excess food still utilised but wasted";
+                }
                 html += "</div>";
 
             }

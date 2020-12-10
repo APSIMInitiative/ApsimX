@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
     [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
+    [Version(1, 0, 3, "Added Proportion of last gain as selling style. Allows you to sell a proportion of the harvest")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
@@ -136,7 +137,7 @@ namespace Models.CLEM.Activities
                         amount = resourceToSell.Amount * Value;
                         break;
                     case ResourceSellStyle.ProportionOfLastGain:
-
+                        amount = resourceToSell.LastGain * Value;
                         break;
                     case ResourceSellStyle.ReserveAmount:
                         amount = resourceToSell.Amount - Value;
