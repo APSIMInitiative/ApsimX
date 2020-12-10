@@ -570,6 +570,28 @@
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
+    },
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Country\")]\r\n        public string Country { get; set; }\r\n\r\n        [Description(\"State\")]\r\n        public string State { get; set; }\r\n\r\n        [Description(\"Region\")]\r\n        public string Region { get; set; }\r\n\r\n    }\r\n}\r\n",
+      "Parameters": [
+        {
+          "Key": "Country",
+          "Value": ""
+        },
+        {
+          "Key": "State",
+          "Value": ""
+        },
+        {
+          "Key": "Region",
+          "Value": ""
+        }
+      ],
+      "Name": "LocationInfo",
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
     }
   ],
   "IncludeInDocumentation": true,

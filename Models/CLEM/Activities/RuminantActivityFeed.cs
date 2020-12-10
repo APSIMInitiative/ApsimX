@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
+    [Version(1, 0, 4, "Added smart feeding switch to stop feeding when animals are satisfied and avoid overfeed wastage")]
     [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
@@ -74,6 +75,13 @@ namespace Models.CLEM.Activities
         public RuminantFeedActivityTypes FeedStyle { get; set; }
 
         /// <summary>
+        /// Stop feeding when animals are satisfied
+        /// </summary>
+        [Description("Stop feeding when satisfied")]
+        [Required]
+        public bool StopFeedingWhenSatisfied { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityFeed()
@@ -81,6 +89,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -96,7 +105,8 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] is required to define the animals and amount fed", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -185,6 +195,12 @@ namespace Models.CLEM.Activities
                 }
             }
 
+            if(StopFeedingWhenSatisfied)
+            {
+                // restrict to max intake permitted by individuals and avoid overfeed wastage
+                feedEstimated = Math.Min(feedEstimated, Math.Max(feedToOverSatisfy, feedToSatisfy));
+            }
+
             if (feedEstimated > 0)
             {
                 // FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
@@ -198,7 +214,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Reason = "Feed"
+                        Category = "Feed",
+                        RelatesToResource = this.PredictedHerdName
                     }
                 };
             }
@@ -213,7 +230,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
@@ -262,7 +279,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -298,7 +315,8 @@ namespace Models.CLEM.Activities
                             ResourceType = typeof(AnimalFoodStore),
                             ResourceTypeName = item.ResourceTypeName,
                             ActivityModel = this,
-                            Reason = "Wastage"
+                            Category = "Wastage",
+                            RelatesToResource = this.PredictedHerdName
                         };
                         ResourceRequestList.Insert(0, wastedRequest);
                         item.Required -= wasted;
@@ -309,17 +327,17 @@ namespace Models.CLEM.Activities
 
                 // report any excess fed above feed needed to fill animals itake (including potential multiplier if required for overfeeding)
                 double excess = 0;
-                if (item.Required >= feedToOverSatisfy)
+                if (Math.Min(item.Available, item.Required) >= feedToOverSatisfy)
                 {
-                    excess = item.Required - feedToOverSatisfy;
+                    excess = Math.Min(item.Available, item.Required) - feedToOverSatisfy;
                     if(feedToOverSatisfy > feedToSatisfy)
                     {
                         overfeedProportion = 1;
                     }
                 }
-                else if(feedToOverSatisfy > feedToSatisfy && item.Required > feedToSatisfy)
+                else if(feedToOverSatisfy > feedToSatisfy && Math.Min(item.Available, item.Required) > feedToSatisfy)
                 {
-                    overfeedProportion = (item.Required - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
+                    overfeedProportion = (Math.Min(item.Available, item.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
                 }
                 if (excess > 0)
                 {
@@ -331,7 +349,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = item.ResourceTypeName,
                         ActivityModel = this,
-                        Reason = "Overfed wastage"
+                        Category = "Overfed wastage",
+                        RelatesToResource = this.PredictedHerdName
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                     item.Required -= excess;
@@ -460,6 +479,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -480,11 +501,12 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            if(ProportionTramplingWastage>0)
+            if (ProportionTramplingWastage > 0)
             {
-                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%")+"</span> is lost through trampling</div>";
+                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

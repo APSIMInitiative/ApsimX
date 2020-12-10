@@ -78,6 +78,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -86,16 +88,17 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(CurrencyName!=null && CurrencyName!="")
+            if (CurrencyName != null && CurrencyName != "")
             {
-                html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName+"</span></div>";
+                html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName + "</span></div>";
             }
             else
             {
                 html += "<div class=\"activityentry\">Currency is <span class=\"errorlink\">Not specified</span></div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

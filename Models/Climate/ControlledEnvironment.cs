@@ -151,6 +151,11 @@ namespace Models.Climate
         public double Amp { get {return 0;}}
 
         /// <summary>
+        /// Gets the temperature amplitude.
+        /// </summary>
+        public string FileName { get { return "Controlled Environment does not read from a file"; } }
+
+        /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
         [Description("Day Length")]

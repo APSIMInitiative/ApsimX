@@ -20,5 +20,11 @@ namespace Models.CLEM
         /// Last transaction received
         /// </summary>
         ResourceTransaction LastTransaction { get; set; }
+
+        /// <summary>
+        /// Last gain transaction amount
+        /// </summary>
+        double LastGain { get; }
+
     }
 }

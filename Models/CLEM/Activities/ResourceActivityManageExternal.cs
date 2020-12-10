@@ -84,6 +84,8 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -98,7 +100,8 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult("Unable to locate resource input file.\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -212,7 +215,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -223,7 +226,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "External", null);
         }
 
         /// <summary>
@@ -266,7 +269,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = AccountName,
-                        Reason = "External purchases"
+                        Category = "External purchases"
                     };
                     ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
                     OnShortfallOccurred(rre);
@@ -327,14 +330,15 @@ namespace Models.CLEM.Activities
                                         packets = Math.Truncate(packets);
                                         amount = packets * price.PacketSize;
                                     }
-                                    bankAccount.Add(packets * price.PricePerPacket, this, $"External output {(resourceList[i] as Model).Name}");
+                                    bankAccount.Add(packets * price.PricePerPacket, this, (resourceList[i] as CLEMModel).NameWithParent, "External output");
                                 }
                                 ResourceRequest sellRequest = new ResourceRequest
                                 {
                                     ActivityModel = this,
                                     Required = amount,
                                     AllowTransmutation = false,
-                                    Reason = "External output"
+                                    Category = "External output",
+                                    RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
                                 };
                                 resourceList[i].Remove(sellRequest);
                             }
@@ -359,11 +363,12 @@ namespace Models.CLEM.Activities
                                         ActivityModel = this,
                                         Required = packets * price.PacketSize,
                                         AllowTransmutation = false,
-                                        Reason = $"External input {(resourceList[i] as Model).Name}"
+                                        Category = "External input",
+                                        RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
                                     };
                                     bankAccount.Remove(sellRequestDollars);
                                 }
-                                resourceList[i].Add(amount, this, "External input");
+                                resourceList[i].Add(amount, this, (resourceList[i] as CLEMModel).NameWithParent, "External input");
                             }
                         }
 
@@ -410,6 +415,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -430,11 +437,11 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             html += "\n<div class=\"activityentry\">";
-            if(AccountName == null || AccountName == "")
+            if (AccountName == null || AccountName == "")
             {
                 html += "Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>";
             }
-            else if(AccountName == "No financial implications")
+            else if (AccountName == "No financial implications")
             {
                 html += "No financial constraints relating to pricing and packet sizes associated with each resource will be included.";
             }
@@ -444,7 +451,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

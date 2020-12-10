@@ -100,6 +100,7 @@ namespace UserInterface.Views
             vbox1.PackStart(modelTypeLabel, false, true, 0);
             vbox1.PackStart(modelDescriptionLabel, false, true, 0);
             vbox1.PackStart(modelVersionLabel, false, true, 4);
+
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 

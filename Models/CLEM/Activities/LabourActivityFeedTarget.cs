@@ -71,6 +71,8 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -79,13 +81,13 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if(Metric is null || Metric=="")
+            if (Metric is null || Metric == "")
             {
                 html += "<span class=\"errorlink\">METRIC NOT SET</span>: ";
             }
             else
             {
-                html += "<span class=\"setvalue\">"+Metric+"</span>: ";
+                html += "<span class=\"setvalue\">" + Metric + "</span>: ";
             }
             if (TargetValue > 0)
             {
@@ -104,7 +106,8 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

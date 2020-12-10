@@ -206,11 +206,13 @@ namespace Models.CLEM.Activities
 
                     if (gasstore != null && emissions > 0)
                     {
-                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "Trucking "+(isSales?"sales":"purchases"));
+                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "", "Trucking "+(isSales?"sales":"purchases"));
                     }
                 }
             }
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -234,16 +236,16 @@ namespace Models.CLEM.Activities
             }
             html += " 450 kg individuals</div>";
 
-            if(MinimumLoadBeforeSelling>0 || MinimumTrucksBeforeSelling>0)
+            if (MinimumLoadBeforeSelling > 0 || MinimumTrucksBeforeSelling > 0)
             {
                 html += "\n<div class=\"activityentry\">";
-                if(MinimumTrucksBeforeSelling>0)
+                if (MinimumTrucksBeforeSelling > 0)
                 {
                     html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required";
                 }
                 if (MinimumLoadBeforeSelling > 0)
                 {
-                    if(MinimumTrucksBeforeSelling>0)
+                    if (MinimumTrucksBeforeSelling > 0)
                     {
                         html += " and each ";
                     }
@@ -310,7 +312,7 @@ namespace Models.CLEM.Activities
                 if (TruckMethaneEmissions > 0)
                 {
                     html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
-                    if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                    if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                     {
                         html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
                     }
@@ -349,7 +351,8 @@ namespace Models.CLEM.Activities
             }
 
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

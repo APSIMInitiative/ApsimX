@@ -519,7 +519,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = this,
-                    Reason = reason
+                    Category = reason
                 };
                 (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }

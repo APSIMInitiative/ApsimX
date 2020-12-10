@@ -80,6 +80,8 @@ namespace Models.CLEM
             Value = StartingValue;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -95,6 +97,10 @@ namespace Models.CLEM
             }
             return results;
         }
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -117,6 +123,7 @@ namespace Models.CLEM
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
     }
 }
