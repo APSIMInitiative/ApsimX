@@ -5,7 +5,6 @@ namespace Models.DCAPST.Canopy
     /// <summary>
     /// Models solar radiation on the canopy
     /// </summary>
-    [Serializable]
     public class CanopyRadiation
     {
         /// <summary>

@@ -7,7 +7,6 @@ namespace Models.DCAPST
     /// <summary>
     /// Models the parameters of the leaf necessary to calculate photosynthesis
     /// </summary>
-    [Serializable]
     public class TemperatureResponse
     {
         /// <summary>
@@ -170,7 +169,6 @@ namespace Models.DCAPST
     /// <summary>
     /// Describes parameters used in leaf temperature calculations
     /// </summary>
-    [Serializable]
     public struct LeafTemperatureParameters
     {
         /// <summary>

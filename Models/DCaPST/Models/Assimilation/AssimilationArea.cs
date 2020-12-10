@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Canopy
@@ -9,17 +8,12 @@ namespace Models.DCAPST.Canopy
     /// <summary>
     /// Models a subsection of the canopy (used for distinguishing between sunlit and shaded)
     /// </summary>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ICanopyAttributes))]
-    public class AssimilationArea : Model, IAssimilationArea
+    public class AssimilationArea : IAssimilationArea
     {   
         /// <summary>
         /// The assimilation model
         /// </summary>
-        [Link]
-        IAssimilation assimilation = null;
+        IAssimilation assimilation;
 
         /// <summary>
         /// A group of parameters valued at the reference temperature of 25 Celsius
@@ -192,7 +186,6 @@ namespace Models.DCAPST.Canopy
     /// <summary>
     /// An instance of values present within an assimilation area
     /// </summary>
-    [Serializable]
     public struct AreaValues
     {
         /// <summary>

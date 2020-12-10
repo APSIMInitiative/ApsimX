@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Environment
@@ -7,12 +6,7 @@ namespace Models.DCAPST.Environment
     /// <summary>
     /// Models the position of the sun
     /// </summary>
-    [Serializable]
-    [Description("Models the position of the sun relative to the crop")]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(DCAPSTModel))]
-    public class SolarGeometry : Model, ISolarGeometry
+    public class SolarGeometry : ISolarGeometry
     {
         /// <summary>
         /// Geographic latitude (radians)
@@ -32,8 +26,6 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// The rate at which the suns energy reaches the earth
         /// </summary>
-        [Description("Solar constant")]
-        [Units("")]
         public double SolarConstant { get; } = 1360;
 
         /// <summary>

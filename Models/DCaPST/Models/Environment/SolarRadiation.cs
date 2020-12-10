@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Environment
@@ -7,12 +6,7 @@ namespace Models.DCAPST.Environment
     /// <summary>
     /// Models the different forms of environmental radiation
     /// </summary>
-    [Serializable]
-    [Description("Models the types of incoming solar radiation")]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(DCAPSTModel))]
-    public class SolarRadiation : Model, ISolarRadiation
+    public class SolarRadiation : ISolarRadiation
     {
         /// <summary>
         /// Models the solar geometry
@@ -22,9 +16,7 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// Fraction of incoming radiation that is diffuse
         /// </summary>
-        [Description("Fraction of incoming diffuse radiation")]
-        [Units("")]
-        public double DiffuseFraction { get; set; } = 0.1725;       
+        private readonly double diffuseFraction = 0.1725;       
 
         /// <summary>
         /// The radiation measured across a day
@@ -43,8 +35,6 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// PAR energy fraction
         /// </summary>
-        [Description("Fraction of PAR energy")]
-        [Units("")]
         public double RPAR { get; set; }
 
         /// <summary>
@@ -117,7 +107,7 @@ namespace Models.DCAPST.Environment
         /// </summary>
         private double CurrentDiffuse(double time)
         {
-            var diffuse = Math.Max(DiffuseFraction * solar.SolarConstant * Math.Sin(solar.SunAngle(time)) / 1000000, 0);
+            var diffuse = Math.Max(diffuseFraction * solar.SolarConstant * Math.Sin(solar.SunAngle(time)) / 1000000, 0);
 
             if (diffuse > Total)
                 return Total;

@@ -1,5 +1,4 @@
 using System;
-using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Environment
@@ -7,11 +6,7 @@ namespace Models.DCAPST.Environment
     /// <summary>
     /// Models the environmental temperature
     /// </summary>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(DCAPSTModel))]
-    public class Temperature : Model, ITemperature
+    public class Temperature : ITemperature
     {
         /// <summary>
         /// The solar geometry
@@ -22,7 +17,7 @@ namespace Models.DCAPST.Environment
         /// The atmospheric pressure
         /// </summary>
         public double AtmosphericPressure { get; set; } = 1.01325;
-
+        
         /// <summary>
         /// The daily maximum temperature
         /// </summary>
@@ -36,22 +31,16 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// Maximum temperature lag coefficient
         /// </summary>
-        [Description("Maximum temperature lag coefficient")]
-        [Units("hours")]
         public double XLag { get; set; } = 1.8;
 
         /// <summary>
         /// Night time temperature lag coefficient
         /// </summary>
-        [Description("Night time temperature lag coefficient")]
-        [Units("hours")]
         public double YLag { get; set; } = 2.2;
 
         /// <summary>
         /// Minimum temperature lag coefficient
         /// </summary>
-        [Description("Minimum temperature lag coefficient")]
-        [Units("hours")]
         public double ZLag { get; set; } = 1;
 
         /// <summary>

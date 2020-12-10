@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
@@ -28,22 +27,16 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(IAssimilationArea))]
-    public class AssimilationPathway : Model
+    public class AssimilationPathway
     {    
         /// <summary>
         /// The canopy parameters
         /// </summary>
-        [Link]
         ICanopyParameters Canopy;
 
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        [Link]
         IPathwayParameters Pathway;        
 
         /// <summary>
@@ -149,7 +142,6 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public struct PathValues
     {
         /// <summary>
