@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 282,
   "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -2578,13 +2578,13 @@
                         4.0
                       ],
                       "Y": [
-                        0.03,
-                        0.03,
-                        0.03,
-                        0.03,
-                        0.03,
-                        0.03,
-                        0.03
+                        0.027,
+                        0.027,
+                        0.027,
+                        0.027,
+                        0.027,
+                        0.027,
+                        0.027
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -6324,8 +6324,8 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 407",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.33",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1700",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.66",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
@@ -11819,6 +11819,14 @@
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "06/10/2001 00:00:00"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "EarlyBunch"
+                                },
+                                {
                                   "Key": "RowSpacing",
                                   "Value": "760"
                                 },
@@ -11829,14 +11837,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "30"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "EarlyBunch"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "06/10/2001 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -16924,6 +16924,10 @@
                                   "Value": "12/12/1989 00:00:00"
                                 },
                                 {
+                                  "Key": "CultivarName",
+                                  "Value": "VB97"
+                                },
+                                {
                                   "Key": "RowSpacing",
                                   "Value": "600"
                                 },
@@ -16934,10 +16938,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "8.8"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "VB97"
                                 }
                               ],
                               "Name": "SowingRule",
