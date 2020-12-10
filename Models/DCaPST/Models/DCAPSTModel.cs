@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Core;
 using Models.DCAPST.Canopy;
 
 using Models.DCAPST.Interfaces;
@@ -8,28 +9,39 @@ using Models.DCAPST.Interfaces;
 namespace Models.DCAPST
 {
     /// <summary>
-    /// 
+    /// Models daily biomass growth due to photosynthetic activity
     /// </summary>
-    public class DCAPSTModel : IPhotosynthesisModel
+    [Serializable]
+    [Description("Calculates daily biomass growth due to photosynthetic activity, using the DCAPST model." +
+        "DCAPST only activates once the LAI reaches 0.5, prior to that the normal RUE model is used." +
+        "DCAPST stays in use even if the LAI falls below 0.5 again.")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(typeof(Simulation))]
+    public class DCAPSTModel : Model, IPhotosynthesisModel
     {
         /// <summary>
         /// The solar geometry
         /// </summary>
+        [Link(Type = LinkType.Child)]
         private ISolarGeometry Solar { get; set; }
 
         /// <summary>
         /// The solar radiation
         /// </summary>
+        [Link(Type = LinkType.Child)]
         private ISolarRadiation Radiation { get; set; }
 
         /// <summary>
         /// The environmental temperature
         /// </summary>
+        [Link(Type = LinkType.Child)]
         private ITemperature Temperature { get; set; }
         
         /// <summary>
         /// The canopy undergoing photosynthesis
         /// </summary>
+        [Link(Type = LinkType.Child)]
         private ICanopyAttributes Canopy { get; set; }
 
         /// <summary>
@@ -414,6 +426,7 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class IntervalValues
     {
         /// <summary>

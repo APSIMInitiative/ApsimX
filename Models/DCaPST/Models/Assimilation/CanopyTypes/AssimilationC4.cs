@@ -1,10 +1,17 @@
-﻿using Models.DCAPST.Interfaces;
+﻿using System;
+using Models.Core;
+using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Defines the pathway functions for a C4 canopy
     /// </summary>
+    [Serializable]
+    [Description("Models how a C4 crop assimilates biomass")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ICanopyAttributes))]
     public class AssimilationC4 : Assimilation
     {
         /// <summary>

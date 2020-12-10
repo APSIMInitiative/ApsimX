@@ -1,4 +1,5 @@
 ﻿using System;
+using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Environment
@@ -6,7 +7,11 @@ namespace Models.DCAPST.Environment
     /// <summary>
     /// Models how temperature impacts the water used by the leaf during photosynthesis
     /// </summary>
-    public class WaterInteraction : IWaterInteraction
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ICanopyAttributes))]
+    public class WaterInteraction : Model, IWaterInteraction
     {
         #region Constants
         /// <summary>

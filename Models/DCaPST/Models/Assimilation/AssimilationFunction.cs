@@ -13,6 +13,7 @@ namespace Models.DCAPST
     /// Note that some adjustments have been made to account for the CCM model, 
     /// which as of Feb 2020 has not been published.
     /// </remarks>
+    [Serializable]
     public class AssimilationFunction
     {
         /// <summary>
@@ -88,6 +89,7 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public struct Terms
     {
         /// <summary>

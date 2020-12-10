@@ -1,11 +1,14 @@
-﻿using Models.DCAPST.Interfaces;
+﻿using System;
+using Models.Core;
+using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Tracks the state of an assimilation type
     /// </summary>
-    public abstract class Assimilation : IAssimilation
+    [Serializable]
+    public abstract class Assimilation : Model, IAssimilation
     {
         /// <inheritdoc/>
         public virtual int Iterations { get; set; } = 3;
@@ -13,12 +16,14 @@ namespace Models.DCAPST
         /// <summary>
         /// The parameters describing the canopy
         /// </summary>
-        protected ICanopyParameters canopy;
+        [Link]
+        protected ICanopyParameters canopy = null;
 
         /// <summary>
         /// The parameters describing the pathways
         /// </summary>
-        protected IPathwayParameters parameters;
+        [Link]
+        protected IPathwayParameters parameters = null;
 
         /// <summary>
         /// 

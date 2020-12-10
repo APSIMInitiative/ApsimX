@@ -1,4 +1,5 @@
 ﻿using System;
+using Models.Core;
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
@@ -6,6 +7,11 @@ namespace Models.DCAPST
     /// <summary>
     /// Defines the pathway functions for a C3 canopy
     /// </summary>
+    [Serializable]
+    [Description("Models how a C3 crop assimilates biomass")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ICanopyAttributes))]
     public class AssimilationC3 : Assimilation
     {
         /// <summary>

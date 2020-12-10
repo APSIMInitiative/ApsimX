@@ -6,6 +6,7 @@ namespace Models.DCAPST.Canopy
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class Transpiration
     {
         /// <summary>

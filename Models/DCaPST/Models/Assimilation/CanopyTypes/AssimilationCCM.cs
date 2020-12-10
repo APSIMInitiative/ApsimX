@@ -1,10 +1,17 @@
-﻿using Models.DCAPST.Interfaces;
+﻿using System;
+using Models.Core;
+using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
     /// <summary>
     /// Defines the pathway functions for a CCM canopy
     /// </summary>
+    [Serializable]
+    [Description("Models how a CCM crop assimilates biomass")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ICanopyAttributes))]
     public class AssimilationCCM : Assimilation
     {
         /// <summary>

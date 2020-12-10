@@ -1,4 +1,5 @@
-﻿using Models.DCAPST.Canopy;
+﻿using System;
+using Models.DCAPST.Canopy;
 
 namespace Models.DCAPST.Interfaces
 {
@@ -44,6 +45,7 @@ namespace Models.DCAPST.Interfaces
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class ParameterRates
     {
         /// <summary>
