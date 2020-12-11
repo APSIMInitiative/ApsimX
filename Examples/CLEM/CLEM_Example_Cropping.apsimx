@@ -880,7 +880,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "General",
+                          "YFieldName": "General_account",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,

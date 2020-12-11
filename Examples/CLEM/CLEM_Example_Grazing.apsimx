@@ -1292,7 +1292,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Bos",
+                          "YFieldName": "Bos_indicus",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
