@@ -780,7 +780,6 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                       "VariableNames": [
-                        "[Clock].Today as Date",
                         "Labour",
                         "ProductStore",
                         "Finances"
@@ -2315,7 +2314,6 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                       "VariableNames": [
-                        "[Clock].Today",
                         "Labour",
                         "ProductStore",
                         "Finances"
