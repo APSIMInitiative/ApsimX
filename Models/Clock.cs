@@ -173,6 +173,8 @@
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
+        /// <summary>Occurs when [do report].</summary>
+        public event EventHandler DoDCAPST;
 
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
@@ -345,6 +347,8 @@
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
+
+                DoDCAPST?.Invoke(this, args);
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);

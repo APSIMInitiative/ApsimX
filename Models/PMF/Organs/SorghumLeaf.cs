@@ -385,7 +385,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return CoverGreen * MetData.Radn;
+                if (LightProfile == null)
+                    return CoverGreen * MetData.Radn;
+                return LightProfile.Sum(p => p.amount);
             }
         }
 

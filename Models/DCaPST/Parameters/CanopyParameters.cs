@@ -8,8 +8,7 @@ namespace Models.DCAPST
     /// Implements the canopy parameters
     /// </summary>
     [Serializable]
-    [ValidParent(typeof(DCAPSTModel))]
-    public class CanopyParameters : Model, ICanopyParameters
+    public class CanopyParameters : ICanopyParameters
     {
         /// <summary>
         /// Canopy type.

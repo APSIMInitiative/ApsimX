@@ -7,7 +7,6 @@ namespace Models.DCAPST
     /// <summary>
     /// Pathway Parameters.
     /// </summary>
-    [ValidParent(typeof(DCAPSTModel))]
     [Serializable]
     public class PathwayParameters : IPathwayParameters
     {
@@ -61,9 +60,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Mesophyll electron transport fraction
         /// </summary>
-        [Description("Mesophyll electron transport fraction")]
-        [Units("")]
-        public double MesophyllElectronTransportFraction { get; set; }
+        public double MesophyllElectronTransportFraction => ExtraATPCost / (3.0 + ExtraATPCost);
 
         /// <summary>
         /// ATP production electron transport factor
@@ -147,7 +144,6 @@ namespace Models.DCAPST
         /// Describes how mesophyll CO2 conductance changes with temperature
         /// </summary>
         [Description("Mesophyll CO2 conductance temperature response")]
-        [Units("")]
         [Display(Type = DisplayType.SubModel)]
         public LeafTemperatureParameters MesophyllCO2ConductanceParams { get; set; }
 
@@ -180,19 +176,19 @@ namespace Models.DCAPST
     /// Describes a temperature response.
     /// </summary>
     [Serializable]
-    public struct TemperatureResponseValues
+    public class TemperatureResponseValues
     {
         /// <summary>
         /// The value of the temperature response factor for a given parameter
         /// </summary>
         [Description("The value of the temperature response factor for a given parameter")]
-        public double Factor;
+        public double Factor { get; set; }
 
         /// <summary>
         /// The value of the temperature response factor at 25 degrees
         /// </summary>
         [Description("The value of the temperature response factor at 25 degrees")]
         [Units("")]
-        public double At25;
+        public double At25 { get; set; }
     }
 }
