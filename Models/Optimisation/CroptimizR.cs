@@ -466,6 +466,15 @@ namespace Models.Optimisation
             string scriptPath = GetTempFileName("read_croptimizr_output", ".r");
             File.WriteAllText(scriptPath, script.ToString());
             DataTable table = r.RunToTable(scriptPath);
+
+            // The repetition column will be of type float. Need to change this to int.
+            string repCol = "Repetition";
+            int[] reps = DataTableUtilities.GetColumnAsIntegers(table, repCol);
+            table.Columns.Remove(repCol);
+            table.Columns.Add(repCol, typeof(int)).SetOrdinal(0);
+            for (int i = 0; i < table.Rows.Count; i++)
+                table.Rows[i][0] = reps[i];
+
             table.TableName = "CroptimizR";
             return table;
         }
