@@ -173,6 +173,8 @@ namespace Models
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
+        /// <summary>Occurs when [do report].</summary>
+        public event EventHandler DoDCAPST;
 
         /// <summary>
         /// Occurs when dcaps performs its calculations. This needs to happen
