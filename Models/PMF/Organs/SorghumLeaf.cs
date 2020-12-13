@@ -1105,6 +1105,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
+        [JsonIgnore]
+        public double MaintenanceRespiration { get; set; }
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
         public virtual double NFixationCost { get { return 0; } }
