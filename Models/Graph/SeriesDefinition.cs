@@ -442,6 +442,8 @@
                     return DataTableUtilities.GetColumnAsDates(data, fieldName);
                 else if (data.Columns[fieldName].DataType == typeof(string))
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
+                else if (data.Columns[fieldName].DataType == typeof(int))
+                    return DataTableUtilities.GetColumnAsIntegers(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
             }
