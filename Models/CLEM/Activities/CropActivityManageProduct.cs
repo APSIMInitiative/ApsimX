@@ -287,7 +287,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;
@@ -336,19 +336,32 @@ namespace Models.CLEM.Activities
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
-                case LabourUnitType.perHa:
+                case LabourUnitType.perUnitOfLand:
                     numberUnits = parentManagementActivity.Area / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
-
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHa:
+                    numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+
+            if(amount <= 0)
+            {
+                daysNeeded = 0;
+            }
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Harvest", (LinkedResourceItem as CLEMModel).NameWithParent);
+ 
         }
 
         /// <summary>
@@ -421,7 +434,7 @@ namespace Models.CLEM.Activities
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
-                                LinkedResourceItem.Add(AmountHarvested, this, addReason);
+                                LinkedResourceItem.Add(AmountHarvested, this,"", addReason);
                             }
                             else
                             {
@@ -434,7 +447,7 @@ namespace Models.CLEM.Activities
                                 {
                                     packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
                                 }
-                                LinkedResourceItem.Add(packet, this, addReason);
+                                LinkedResourceItem.Add(packet, this,"", addReason);
                             }
                             SetStatusSuccess();
                         }

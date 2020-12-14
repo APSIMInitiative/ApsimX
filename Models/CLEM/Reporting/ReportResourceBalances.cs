@@ -119,7 +119,7 @@ namespace Models.CLEM.Reporting
                                             default:
                                                 break;
                                         }
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                        variableNames.Add($"[Resources].{this.VariableNames[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }");
                                         if(item.GetType().Name == "RuminantType")
                                         {
                                             variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + ".AmountAE as TotalAE");

@@ -68,7 +68,7 @@ namespace Models.CLEM.Reporting
                 "[Clock].Today as Date",
                 "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
-                "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                "[Activities].LastShortfallResourceRequest.Category as Category",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
                 "[Activities].LastShortfallResourceRequest.Available as Available"
             };

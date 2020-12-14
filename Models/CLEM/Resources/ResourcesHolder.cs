@@ -540,10 +540,11 @@ namespace Models.CLEM.Resources
                                     // create new request for this transmutation cost
                                     ResourceRequest transRequest = new ResourceRequest
                                     {
-                                        Reason = trans.Name + " " + trans.Parent.Name,
+                                        RelatesToResource = request.ResourceTypeName,
                                         Required = transmutationCost,
                                         ResourceType = transcost.ResourceType,
-                                        ActivityModel = request.ActivityModel
+                                        ActivityModel = request.ActivityModel,
+                                        Category = "Transmutation",
                                     };
 
                                     // used to pass request, but this is not the transmutation cost
@@ -572,7 +573,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, "Transmutation");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, request.ResourceTypeName, "Transmutation");
                             }
                         }
                     }
@@ -582,7 +583,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region descriptive summary
+        #region validation
 
         /// <summary>
         /// Validate object
