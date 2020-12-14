@@ -259,7 +259,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
             if (PerformAtStartOfSimulation)
             {
-                html += "\n<div class=\"activityentry\">These individuals will located on the specified pasture at startup</div>";
+                html += "\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>";
             }
             return html;
         } 

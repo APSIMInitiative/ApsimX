@@ -54,6 +54,9 @@
         /// <summary>Gets the temperature amplitude.</summary>
         double Amp { get; }
 
+        /// <summary>Gets the average temperature</summary>
+        string FileName { get; }
+
         /// <summary>Gets the duration of the day in hours.</summary>
         double CalculateDayLength(double Twilight);
 
@@ -62,6 +65,8 @@
 
         /// <summary> Gets the time the sun went down. </summary>
         double CalculateSunSet();
+
+
 
         /// <summary> MetData for tomorrow </summary>
         DailyMetDataFromFile TomorrowsMetData { get; }

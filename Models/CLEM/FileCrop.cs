@@ -520,6 +520,7 @@ namespace Models.CLEM
                     html += " with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>";
                 }
             }
+            html += "\n</div>";
 
             html += "\n<div class=\"activityentry\">";
             html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";

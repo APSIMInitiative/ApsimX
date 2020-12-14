@@ -83,6 +83,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Get the amount of the last gain in this resource 
+        /// </summary>
+        public double LastGain { get; set; }
+
+        /// <summary>
         /// Reset timestep stores
         /// </summary>
         public void Reset()

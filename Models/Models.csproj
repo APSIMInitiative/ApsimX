@@ -130,6 +130,9 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="CommandLineParser">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgPasture\AGPBiomass.cs" />
@@ -730,6 +733,7 @@
     <Compile Include="Climate\BestiaPop.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="CLEM\Activities\ActivitiesHolder.cs" />

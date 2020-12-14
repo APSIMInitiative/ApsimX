@@ -384,6 +384,25 @@
             return StringToObject(dataType, newValue, CultureInfo.InvariantCulture);
         }
 
+        private static readonly HashSet<Type> numericTypes = new HashSet<Type>
+        {
+            typeof(decimal),
+            typeof(short), typeof(ushort),
+            typeof(int), typeof(uint),
+            typeof(long), typeof(ulong),
+            typeof(float), typeof(double)
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
+        public static bool IsNumericType(Type dataType)
+        {
+            return numericTypes.Contains(dataType);
+        }
+
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'.
         /// Will throw if cannot convert type.

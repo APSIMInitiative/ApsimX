@@ -281,7 +281,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
-            lastGain = addAmount;
+            LastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -378,12 +378,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
-
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
 
         /// <summary>
         /// Current amount of labour required.

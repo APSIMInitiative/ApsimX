@@ -284,6 +284,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get; set; }
+
+        /// <summary>
         /// Add resources from various objects
         /// </summary>
         /// <param name="resourceAmount">Amount to be applied</param>

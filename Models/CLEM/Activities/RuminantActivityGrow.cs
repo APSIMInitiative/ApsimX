@@ -809,7 +809,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
             {
-                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+                html += "<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present";
             }
             else
             {
