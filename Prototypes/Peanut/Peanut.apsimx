@@ -6601,10 +6601,12 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].Emerging.ShootLag=50",
                     "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1300",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.25",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
@@ -12101,10 +12103,6 @@
                                   "Value": "06/10/2001 00:00:00"
                                 },
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "EarlyBunch"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "760"
                                 },
@@ -12115,6 +12113,10 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "30"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "EarlyBunch"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -16990,7 +16992,7 @@
                         {
                           "$type": "Models.Clock, Models",
                           "Start": "1996-11-14T00:00:00",
-                          "End": "1997-04-30T00:00:00",
+                          "End": "1997-05-30T00:00:00",
                           "Name": "clock",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -17202,10 +17204,6 @@
                                   "Value": "12/12/1989 00:00:00"
                                 },
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "VB97"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "600"
                                 },
@@ -17216,6 +17214,10 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "8.8"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "VB97"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -17622,6 +17624,15 @@
                                 }
                               ],
                               "Name": "Harvest",
+                              "IncludeInDocumentation": true,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Parameters": [],
+                              "Name": "Harvest1",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -19113,6 +19124,73 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Nodes",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "SR",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.NodeNumber",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -19198,7 +19276,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName=Florunner,EarlyBunch",
+                              "Specification": "[SowingRule].Script.CultivarName=Florunner,EarlyBunch, VB97",
                               "Name": "Cv",
                               "Children": [],
                               "IncludeInDocumentation": true,
