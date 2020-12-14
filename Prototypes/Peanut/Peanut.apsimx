@@ -406,12 +406,12 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         13.0,
-                        32.0,
+                        25.0,
                         50.0
                       ],
                       "Y": [
                         0.0,
-                        19.0,
+                        12.0,
                         0.0
                       ],
                       "Name": "XYPairs",
@@ -1538,7 +1538,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Area",
+                  "Name": "AreaOLD",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
@@ -1560,6 +1560,126 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "AreaNew",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "InitialArea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "Emergence",
+                      "EndStageName": "EndCanopyDevelopment",
+                      "ResetStageName": null,
+                      "FractionRemovedOnCut": 1.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 1.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "AreaGrowth",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DeltaArea",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Allocated.StructuralWt",
+                              "Name": "DeltaMass",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].SpecificArea",
+                              "Name": "SLA",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Area",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.03,
+                      "Units": null,
+                      "Name": "InitialArea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AccumulateAtEvent, Models",
+                      "StartStageName": "Emergence",
+                      "EndStageName": "EndCanopyDevelopment",
+                      "AccumulateEventName": "[Clock].DoActualPlantGrowth",
+                      "Name": "AreaGrowth",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DeltaArea",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Allocated.StructuralWt",
+                              "Name": "DeltaMass",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].SpecificArea",
+                              "Name": "SLA",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2570,19 +2690,13 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        0.3,
-                        0.8,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0
+                        20.0,
+                        32.0,
+                        35.0
                       ],
                       "Y": [
-                        0.027,
-                        0.027,
-                        0.027,
-                        0.027,
-                        0.027,
+                        0.015,
+                        0.015,
                         0.027,
                         0.027
                       ],
@@ -2594,7 +2708,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAI",
+                      "VariableName": "[Weather].MeanT",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -6322,7 +6436,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 407",
+                    "[Phenology].Vegetative.Target.FixedValue = 420",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1700",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.66",
@@ -6339,7 +6453,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 465",
+                    "[Phenology].Vegetative.Target.FixedValue = 450",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
@@ -6407,7 +6521,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 432",
+                    "[Phenology].Vegetative.Target.FixedValue = 400",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
@@ -13376,6 +13490,17 @@
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 2,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 5,
@@ -13437,6 +13562,35 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Weather.MeanT",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted1",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
