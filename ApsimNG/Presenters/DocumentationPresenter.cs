@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Extensions;
+using APSIM.Shared.Utilities;
 using MarkdownDeep;
 using Models.Core;
 using Models.Functions;
@@ -146,7 +147,7 @@ namespace UserInterface.Presenters
                     DataRow row = table.NewRow();
 
                     row[0] = evnt.Name;
-                    row[1] = evnt.EventHandlerType.Name;
+                    row[1] = evnt.EventHandlerType.GetFriendlyName();
                     row[2] = AutoDocumentation.GetSummary(evnt);
                     row[3] = AutoDocumentation.GetRemarks(evnt);
 
@@ -176,7 +177,7 @@ namespace UserInterface.Presenters
 
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
-                    row[2] = property.PropertyType.Name;
+                    row[2] = property.PropertyType.GetFriendlyName();
                     row[3] = AutoDocumentation.GetSummary(property);
                     row[4] = AutoDocumentation.GetRemarks(property);
 
@@ -203,7 +204,7 @@ namespace UserInterface.Presenters
                     DataRow row = table.NewRow();
 
                     row[0] = method.Name;
-                    row[1] = method.ReturnType.Name;
+                    row[1] = method.ReturnType.GetFriendlyName();
                     row[2] = AutoDocumentation.GetSummary(method);
                     row[3] = AutoDocumentation.GetRemarks(method);
 
