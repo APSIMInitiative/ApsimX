@@ -64,17 +64,20 @@ namespace UserInterface.Views
             //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
             string text = slice.Text.Substring(slice.Start, slice.End - slice.Start + 1);
 
+            if (slice.PeekCharExtra(-1) != '>')
+                return false;
+
             string openSuperscript = "<sup>";
             string closeSuperscript = "</sup>";
             string openSubscript = "<sub>";
             string closeSubscript = "</sub>";
-            int indexOpenSuper = text.IndexOf(openSuperscript);
-            if (indexOpenSuper >= 0)
+            
+            if (TryMatch(slice, openSuperscript))
             {
-                int indexCloseSuper = text.IndexOf(closeSuperscript, indexOpenSuper);
-                if (indexCloseSuper > indexOpenSuper)
+                int indexCloseSuper = text.IndexOf(closeSuperscript);
+                if (indexCloseSuper > 0)
                 {
-                    slice = new StringSlice(text.Substring(indexOpenSuper + openSuperscript.Length, indexCloseSuper - (indexOpenSuper + openSuperscript.Length)));
+                    slice = new StringSlice(text.Substring(0, indexCloseSuper));
                     processor.Inline = new EmphasisInline()
                     {
                         DelimiterChar = '^',
@@ -83,17 +86,32 @@ namespace UserInterface.Views
                     return true;
                 }
             }
-            int indexOpenSub = text.IndexOf(openSubscript);
-            if (indexOpenSub >= 0)
+            else if (TryMatch(slice, openSubscript))
             {
-                int indexCloseSub = text.IndexOf(closeSubscript, indexOpenSub);
-                if (indexCloseSub > indexOpenSub)
+                int indexCloseSub = text.IndexOf(closeSubscript);
+                if (indexCloseSub > 0)
                 {
-                    slice = new StringSlice(text.Substring(indexOpenSub + openSubscript.Length, indexCloseSub - (indexOpenSub + openSubscript.Length)));
+                    slice = new StringSlice(text.Substring(0, indexCloseSub));
+                    processor.Inline = new EmphasisInline()
+                    {
+                        DelimiterChar = '~',
+                        DelimiterCount = 1,
+                    };
                     return true;
                 }
             }
             return false;
+        }
+
+        private bool TryMatch(StringSlice slice, string text)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            for (int i = 0; i < text.Length; i++)
+                if (slice.PeekCharExtra(-1 * text.Length + i) != text[i])
+                    return false;
+            return true;
         }
     }
 
