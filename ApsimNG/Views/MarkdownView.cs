@@ -167,6 +167,7 @@ namespace UserInterface.Views
         /// <param name="gtkControl">The raw gtk control.</param>
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
+            base.Initialise(ownerView, gtkControl);
             container = (VBox)gtkControl;
             textView = (TextView)container.Children[0];
             textView.PopulatePopup += OnPopulatePopupMenu;
@@ -277,8 +278,8 @@ namespace UserInterface.Views
         /// <param name="blocks">The blocks to process.</param>
         /// <param name="insertPos">The insert position.</param>
         /// <param name="indent">The indent level.</param>
-        /// <returns></returns>
-        private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, int indent, params TextTag[] tags)
+        /// <param name="autoNewline">Should newline characters be automatically inserted after each block?</param>
+        private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, int indent, bool autoNewline = true, params TextTag[] tags)
         {
             // The markdown parser will strip out all of the whitespace (linefeeds) in the
             // text. Therefore, we need to insert newlines between each block - but not
@@ -291,16 +292,14 @@ namespace UserInterface.Views
                 if (block is HeadingBlock header)
                 {
                     ProcessMarkdownInlines(header.Inline, ref insertPos, indent, GetTags($"Heading{header.Level}", indent).Union(tags).ToArray());
-                    textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is ParagraphBlock paragraph)
                 {
                     ProcessMarkdownInlines(paragraph.Inline, ref insertPos, indent, tags);
-                    textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is QuoteBlock quote)
                 {
-                    ProcessMarkdownBlocks(quote, ref insertPos, indent + 1, tags);
+                    ProcessMarkdownBlocks(quote, ref insertPos, indent + 1, false, tags);
                 }
                 else if (block is ListBlock list)
                 {
@@ -316,30 +315,30 @@ namespace UserInterface.Views
                         {
                             textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags("Normal", indent + 1));
                         }
-                        ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, indent + 1, tags);
+                        ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, indent + 1, false, tags);
                     }
                 }
                 else if (block is ListItemBlock listItem)
                 {
-                    ProcessMarkdownBlocks(listItem, ref insertPos, indent, tags);
+                    ProcessMarkdownBlocks(listItem, ref insertPos, indent, false, tags);
                 }
                 else if (block is CodeBlock code)
                 {
                     textView.Buffer.InsertWithTags(ref insertPos, code.Lines.ToString(), GetTags("Code", indent + 1).Union(tags).ToArray());
-                    textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is Table table)
                 {
                     DisplayTable(ref insertPos, table, indent);
-                    textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is ThematicBreakBlock)
                 {
-                    textView.Buffer.Insert(ref insertPos, "\n\n");
+                    // Horizontal rule - tbi.
                 }
                 else
                 {
                 }
+                if (autoNewline)
+                    textView.Buffer.Insert(ref insertPos, "\n\n");
             }
 
             return insertPos;
@@ -405,6 +404,8 @@ namespace UserInterface.Views
             int cumWidth = 0;
             for (int i = 0; i < table.ColumnDefinitions.Count(); i++)
             {
+                // The i-th tab stop will be set to the cumulative column width
+                // of the first i columns (including padding).
                 cumWidth += GetColumnWidth(table, i);
                 tabs.SetTab(i, TabAlign.Left, cumWidth);
             }
@@ -416,57 +417,77 @@ namespace UserInterface.Views
             tableTag.WrapMode = Gtk.WrapMode.None;
             textView.Buffer.TagTable.Add(tableTag);
 
-            for (uint i = 0; i < table.Count; i++)
+            for (int i = 0; i < table.Count; i++)
             {
-                for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
+                TableRow row = (TableRow)table[i];
+                for (int j = 0; j < Math.Min(table.ColumnDefinitions.Count(), row.Count); j++)
                 {
-                    string text = "";
-                    TableRow row = (TableRow)table[(int)i];
-                    // fixme - need to add more robust parsing here
-                    // Really, we should be using the above parsing methods.
-                    if (row.Count > j)
+                    if (row[j] is TableCell cell)
                     {
-                        if (row[(int)j] is TableCell cell)
-                        {
-                            text = $"{GetCellRawText(cell)}\t";
-                            if (row.IsHeader)
-                                textView.Buffer.InsertWithTags(ref insertPos, text, tableTag, textView.Buffer.TagTable.Lookup("Bold"));
-                            else
-                                textView.Buffer.InsertWithTags(ref insertPos, text, tableTag);
-                            //ProcessMarkdownBlocks(cell, ref insertPos, indent);
-                        }
+                        // Figure out which tags to use for this cell. We always
+                        // need to use the tableTag (which includes the tab stops)
+                        // but if it's the top row, we also include the bold tag.
+                        TextTag[] tags;
+                        if (row.IsHeader)
+                            tags = new TextTag[2] { tableTag, textView.Buffer.TagTable.Lookup("Bold") };
                         else
-                            throw new Exception($"Unknown cell type {row[(int)j].GetType()}.");
+                            tags = new TextTag[1] { tableTag };
+
+                        // Recursively process all markdown blocks inside this cell. In
+                        // theory, this supports both blocks and inline content. In practice
+                        // I wouldn't recommend using blocks inside a table cell.
+                        ProcessMarkdownBlocks(cell, ref insertPos, indent, false, tags);
+                        if (j != row.Count - 1)
+                            textView.Buffer.InsertWithTags(ref insertPos, "\t", tableTag);
                     }
-                    //tableWidget.Attach(new Label() { Markup = text, Xalign = 0, Selectable = true }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
+                    else
+                        // This shouldn't happen.
+                        throw new Exception($"Unknown cell type {row[(int)j].GetType()}.");
                 }
                 textView.Buffer.Insert(ref insertPos, "\n");
             }
         }
 
+        /// <summary>
+        /// Calculate the width (in pixels) of a column in a table.
+        /// This is the width of the widest cell in the column.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <param name="columnIndex">Index of a column in the table.</param>
+        /// <remarks>
+        /// fixme:
+        /// This is pretty crude - it doesn't consider inline or block content
+        /// in the cell - only plaintext. Meaning it may return an incorrect
+        /// result if the widest cell in the column contains, say, a link.
+        /// </remarks>
         private int GetColumnWidth(Table table, int columnIndex)
         {
             int width = int.MinValue;
             for (int i = 0; i < table.Count; i++)
             {
-                for (int j = 0; j < table.ColumnDefinitions.Count(); j++)
+                TableRow row = (TableRow)table[i];
+                if (columnIndex < row.Count)
                 {
-                    TableRow row = (TableRow)table[i];
-                    if (j < row.Count)
+                    if (row[columnIndex] is TableCell cell)
                     {
-                        if (row[j] is TableCell cell)
-                        {
-                            int cellWidth = MeasureText(GetCellRawText(cell));
-                            width = Math.Max(width, cellWidth + tableColumnPadding);
-                        }
-                        else
-                            throw new NotImplementedException($"Unknown cell type {((TableRow)table[i])[j].GetType().Name}.");
+                        int cellWidth = MeasureText(GetCellRawText(cell));
+                        width = Math.Max(width, cellWidth + tableColumnPadding);
                     }
+                    else
+                        throw new NotImplementedException($"Unknown cell type {row[columnIndex].GetType().Name}.");
                 }
             }
             return width;
         }
 
+        /// <summary>
+        /// Get the raw text in a cell.
+        /// </summary>
+        /// <param name="cell">The cell.</param>
+        /// <remarks>
+        /// This is very crude and will not consider
+        /// inline or block content in the cell.
+        /// </remarks>
         private string GetCellRawText(TableCell cell)
         {
             string text = "";
@@ -476,10 +497,14 @@ namespace UserInterface.Views
             return text;
         }
 
-        private static int MeasureText(string text)
+        /// <summary>
+        /// Measure the width of a string in pixels.
+        /// </summary>
+        /// <param name="text">The text to be measured.</param>
+        private int MeasureText(string text)
         {
             Label label = new Label();
-            label.Layout.FontDescription = Pango.FontDescription.FromString(Configuration.Settings.FontName);
+            label.Layout.FontDescription = owner.MainWidget.Style.FontDescription;
             label.Layout.SetMarkup(text);
             label.Layout.GetPixelSize(out int width, out _);
             return width;
@@ -516,20 +541,6 @@ namespace UserInterface.Views
                 TextChildAnchor anchor = textView.Buffer.CreateChildAnchor(ref insertPos);
                 textView.AddChildAtAnchor(image, anchor);
             }
-        }
-
-        private TextTag GetMarginTag(int margin)
-        {
-            string tagName = $"Margin{margin}";
-            TextTag tag = textView.Buffer.TagTable.Lookup(tagName);
-            if (tag == null)
-            {
-                tag = new TextTag(tagName);
-                tag.LeftMargin = margin;
-                tag.AccumulativeMargin = true;
-                textView.Buffer.TagTable.Add(tag);
-            }
-            return tag;
         }
 
         /// <summary>
