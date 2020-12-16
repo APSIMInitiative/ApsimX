@@ -462,10 +462,12 @@ namespace UserInterface.Views
         private TextTag[] GetTags(string styleName, int indent, string url = null)
         {
             var tags = new List<TextTag>();
-            var styleTag = textView.Buffer.TagTable.Lookup(styleName);
-            if (styleTag != null)
-                tags.Add(styleTag);
-
+            if (!string.IsNullOrEmpty(styleName))
+            {
+                var styleTag = textView.Buffer.TagTable.Lookup(styleName);
+                if (styleTag != null)
+                    tags.Add(styleTag);
+            }
             if (indent > 0)
             {
                 var indentTag = textView.Buffer.TagTable.Lookup($"Indent{indent}");
