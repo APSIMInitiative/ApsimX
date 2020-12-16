@@ -312,17 +312,7 @@ namespace UserInterface.Views
                 }
                 else if (block is ThematicBreakBlock)
                 {
-                    if (string.IsNullOrWhiteSpace(textView.Buffer.Text))
-                    {
-                        container.Remove(textView);
-                        container.Add(new HSeparator());
-                        textView = new TextView();
-                        textView.PopulatePopup += OnPopulatePopupMenu;
-                        container.Add(textView);
-                        insertPos = textView.Buffer.GetIterAtOffset(0);
-                    }
-                    else
-                        textView.Buffer.Insert(ref insertPos, Environment.NewLine + Environment.NewLine);
+                    textView.Buffer.Insert(ref insertPos, Environment.NewLine + Environment.NewLine);
                 }
                 else
                 {
@@ -435,20 +425,9 @@ namespace UserInterface.Views
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     image.TooltipText = tooltip;
 
-                var eventBox = new EventBox();
-                eventBox.Visible = true;
-                eventBox.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-                eventBox.Add(image);
-
-                container.Add(eventBox);
-                image.Visible = true;
-
-                textView = new TextView();
-                textView.PopulatePopup += OnPopulatePopupMenu;
-                container.Add(textView);
-                textView.Visible = true;
-                insertPos = textView.Buffer.GetIterAtOffset(0);
-                CreateStyles(textView);
+                image.ShowAll();
+                TextChildAnchor anchor = textView.Buffer.CreateChildAnchor(ref insertPos);
+                textView.AddChildAtAnchor(image, anchor);
             }
         }
 
