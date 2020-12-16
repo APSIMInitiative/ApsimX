@@ -385,21 +385,9 @@ namespace UserInterface.Views
                         text = $"<b>{text}</b>";
                     tableWidget.Attach(new Label() { Markup = text, Xalign = 0, Selectable = true }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
                 }
-
-            // Add table to gtk container.
-            tableWidget.ShowAll();
-            Alignment alignment = new Alignment(0f, 0f, 1f, 1f);
-            alignment.BottomPadding = 10;
-            alignment.Add(tableWidget);
-            container.PackStart(alignment, true, true, 0);
-
-            // Insert a new textview beneath the previous one.
-            textView = new TextView();
-            textView.PopulatePopup += OnPopulatePopupMenu;
-            textView.ShowAll();
-            container.Add(textView);
-            insertPos = textView.Buffer.GetIterAtOffset(0);
-            CreateStyles(textView);
+            TextChildAnchor anchor = textView.Buffer.CreateChildAnchor(ref insertPos);
+            textView.AddChildAtAnchor(tableWidget, anchor);
+            textView.Buffer.Insert(ref insertPos, "\n");
         }
 
         /// <summary>
