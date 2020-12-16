@@ -11,11 +11,18 @@ using Cairo;
 using ClosedXML.Excel;
 using Gdk;
 using Gtk;
-using Microsoft.Toolkit.Parsers.Markdown;
-using Microsoft.Toolkit.Parsers.Markdown.Blocks;
-using Microsoft.Toolkit.Parsers.Markdown.Inlines;
+using Markdig;
+using Markdig.Extensions;
+using Markdig.Extensions.EmphasisExtras;
+using Markdig.Extensions.Tables;
+using Markdig.Helpers;
+using Markdig.Parsers;
+using Markdig.Renderers;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Models.Core;
 using Utility;
+using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
 {
@@ -30,6 +37,64 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets the visibility of the widget.</summary>
         bool Visible { get; set; }
+    }
+
+    public class SubSuperScriptExtensions : IMarkdownExtension
+    {
+        public void Setup(MarkdownPipelineBuilder pipeline)
+        {
+            if (!pipeline.InlineParsers.Contains<SubSuperScriptParser>())
+                pipeline.InlineParsers.Insert(0, new SubSuperScriptParser());
+        }
+
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class SubSuperScriptParser : InlineParser
+    {
+        public override bool Match(InlineProcessor processor, ref StringSlice slice)
+        {
+            var startPosition = processor.GetSourcePosition(slice.Start, out int line, out int column);
+
+            // Slightly faster to perform our own search for opening characters
+            var nextStart = processor.Parsers.IndexOfOpeningCharacter(slice.Text, slice.Start + 1, slice.End);
+            //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
+            string text = slice.Text.Substring(slice.Start, slice.End - slice.Start + 1);
+
+            string openSuperscript = "<sup>";
+            string closeSuperscript = "</sup>";
+            string openSubscript = "<sub>";
+            string closeSubscript = "</sub>";
+            int indexOpenSuper = text.IndexOf(openSuperscript);
+            if (indexOpenSuper >= 0)
+            {
+                int indexCloseSuper = text.IndexOf(closeSuperscript, indexOpenSuper);
+                if (indexCloseSuper > indexOpenSuper)
+                {
+                    slice = new StringSlice(text.Substring(indexOpenSuper + openSuperscript.Length, indexCloseSuper - (indexOpenSuper + openSuperscript.Length)));
+                    processor.Inline = new EmphasisInline()
+                    {
+                        DelimiterChar = '^',
+                        DelimiterCount = 1,
+                    };
+                    return true;
+                }
+            }
+            int indexOpenSub = text.IndexOf(openSubscript);
+            if (indexOpenSub >= 0)
+            {
+                int indexCloseSub = text.IndexOf(closeSubscript, indexOpenSub);
+                if (indexCloseSub > indexOpenSub)
+                {
+                    slice = new StringSlice(text.Substring(indexOpenSub + openSubscript.Length, indexCloseSub - (indexOpenSub + openSubscript.Length)));
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /// <summary>A rich text view.</summary>
@@ -160,28 +225,11 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    var document = new MarkdownDocument();
-
-                    string correctedvalue = value.Replace("~~~", "```");
-                    
-                    // modify absolute paths in all links for markdown parser acceptance
-                    Regex absolutePathRegex = new Regex(@"[a-zA-Z]:/[^/]");
-                    Match absolutePathMatch = absolutePathRegex.Match(correctedvalue);
-                    int count = 0;
-                    while (absolutePathMatch.Success)
-                    {
-                        string match = absolutePathMatch.Value;
-                        match = "file://../" + match.Replace(":", "[drive]");
-                        correctedvalue = correctedvalue.Replace(absolutePathMatch.Value, match);
-                        absolutePathMatch = absolutePathRegex.Match(correctedvalue);
-                        if (count++ > 1000)
-                            throw new Exception("Too many absolute paths in markdown text");
-                    }
-
-                    document.Parse(correctedvalue);
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Use<SubSuperScriptExtensions>().Build();
+                    MarkdownDocument document = Markdown.Parse(value, pipeline);
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
-                    insertPos = ProcessMarkdownBlocks(document.Blocks, ref insertPos, 0);
+                    insertPos = ProcessMarkdownBlocks(document, ref insertPos, 0);
                     container.ShowAll();
                 }
             }
@@ -197,54 +245,54 @@ namespace UserInterface.Views
         /// <param name="insertPos">The insert position.</param>
         /// <param name="indent">The indent level.</param>
         /// <returns></returns>
-        private TextIter ProcessMarkdownBlocks(IList<MarkdownBlock> blocks, ref TextIter insertPos, int indent)
+        private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, int indent)
         {
             foreach (var block in blocks)
             {
-                if (block is HeaderBlock header)
+                if (block is HeadingBlock header)
                 {
-                    textView.Buffer.InsertWithTags(ref insertPos, header.ToString().Trim(), 
-                                                   GetTags($"Heading{header.HeaderLevel}", indent));
+                    ProcessMarkdownInlines(header.Inline, ref insertPos, indent, GetTags($"Heading{header.Level}", indent));
                     textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is ParagraphBlock paragraph)
                 {
-                    ProcessMarkdownInlines(paragraph.Inlines, ref insertPos, indent);
+                    ProcessMarkdownInlines(paragraph.Inline, ref insertPos, indent);
                     textView.Buffer.Insert(ref insertPos, "\n\n");
                 }
                 else if (block is QuoteBlock quote)
                 {
-                    ProcessMarkdownBlocks(quote.Blocks, ref insertPos, indent + 1);
+                    ProcessMarkdownBlocks(quote, ref insertPos, indent + 1);
                 }
                 else if (block is ListBlock list)
                 {
                     int itemNumber = 1;
-                    foreach (var listItem in list.Items)
+                    foreach (Block listBlock in list)
                     {
-                        foreach (var listBlock in listItem.Blocks)
+                        if (list.IsOrdered)
                         {
-                            if (list.Style == ListStyle.Bulleted)
-                                textView.Buffer.InsertWithTags(ref insertPos, "• ",
-                                                               GetTags("Normal", indent + 1));
-                            else
-                            {
-                                textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ",
-                                                               GetTags("Normal", indent + 1));
-                                itemNumber++;
-                            }
-                            ProcessMarkdownInlines((listBlock as ParagraphBlock).Inlines, ref insertPos, indent + 1);
-                            textView.Buffer.Insert(ref insertPos, "\n\n");
+                            textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ", GetTags("Normal", indent + 1));
+                            itemNumber++;
                         }
+                        else
+                        {
+                            textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags("Normal", indent + 1));
+                        }
+                        ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, indent + 1);
+                        // textView.Buffer.Insert(ref insertPos, "\n\n");
                     }
                 }
                 else if (block is CodeBlock code)
                 {
-                    textView.Buffer.InsertWithTags(ref insertPos, code.Text, GetTags("Code", indent + 1));
+                    textView.Buffer.InsertWithTags(ref insertPos, code.Lines.ToString(), GetTags("Code", indent + 1));
                     textView.Buffer.InsertWithTags(ref insertPos, Environment.NewLine);
                 }
-                else if (block is TableBlock table)
+                else if (block is Table table)
                     DisplayTable(ref insertPos, table);
-                else if (block is HorizontalRuleBlock hr)
+                else if (block is ListItemBlock listItem)
+                {
+                    ProcessMarkdownBlocks(listItem, ref insertPos, indent);
+                }
+                else if (block is ThematicBreakBlock)
                 {
                     if (string.IsNullOrWhiteSpace(textView.Buffer.Text))
                     {
@@ -272,35 +320,42 @@ namespace UserInterface.Views
         /// <param name="inlines">The inlines to process.</param>
         /// <param name="insertPos">The insert position.</param>
         /// <param name="indent">The indent level.</param>
-        private void ProcessMarkdownInlines(IList<MarkdownInline> inlines, ref TextIter insertPos, int indent)
+        /// <param name="tags">Tags to use for all child inlines.</param>
+        private void ProcessMarkdownInlines(IEnumerable<Inline> inlines, ref TextIter insertPos, int indent, params TextTag[] tags)
         {
             foreach (var inline in inlines)
             {
-                if (inline is TextRunInline textInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, textInline.Text, GetTags("Normal", indent));
-                else if (inline is ItalicTextInline italicInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, italicInline.Inlines[0].ToString(), GetTags("Italic", indent));
-                else if (inline is BoldTextInline boldInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, boldInline.Inlines[0].ToString(), GetTags("Bold", indent));
-                else if (inline is HyperlinkInline linkInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, linkInline.Text, GetTags("Link", indent, linkInline.Url));
-                else if (inline is MarkdownLinkInline markdownLinkInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
-                else if (inline is CodeInline codeInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Text, GetTags("Normal", indent + 1));
-                else if (inline is ImageInline imageInline)
-                    DisplayImage(imageInline.Url, imageInline.Tooltip, ref insertPos);
-                else if (inline is SubscriptTextInline subscript)
-                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", subscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Subscript", indent));
-                else if (inline is SuperscriptTextInline superscript)
-                    textView.Buffer.InsertWithTags(ref insertPos, string.Join("", superscript.Inlines.Select(i => i.ToString()).ToArray()), GetTags("Superscript", indent));
-                else if (inline is LinkAnchorInline anchor)
+                if (inline is LiteralInline textInline)
+                    textView.Buffer.InsertWithTags(ref insertPos, textInline.Content.ToString(), tags.Union(GetTags(null, indent)).ToArray());
+                else if (inline is EmphasisInline italicInline)
                 {
-                    if (anchor.Link != null)
-                        textView.Buffer.InsertWithTags(ref insertPos, anchor.Link, GetTags("Link", indent, anchor.ToString()));
-                    else
-                        textView.Buffer.Insert(ref insertPos, anchor.ToString());
+                    string style;
+                    switch (italicInline.DelimiterChar)
+                    {
+                        case '^':
+                            style = "Superscript";
+                            break;
+                        case '~':
+                            style = italicInline.DelimiterCount == 1 ? "Subscript" : "Strikethrough";
+                            break;
+                        default:
+                            style = italicInline.DelimiterCount == 1 ? "Italic" : "Bold";
+                            break;
+                    }
+                    ProcessMarkdownInlines(italicInline, ref insertPos, indent, GetTags(style, indent));
                 }
+                else if (inline is LinkInline link)
+                {
+                    // todo: difference between link.Label and link.Title?
+                    if (link.IsImage)
+                        DisplayImage(link.Url, link.Label, ref insertPos);
+                    else
+                        ProcessMarkdownInlines(link, ref insertPos, indent, GetTags("Link", indent, link.Url));
+                }
+                //else if (inline is MarkdownLinkInline markdownLinkInline)
+                //    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
+                else if (inline is CodeInline codeInline)
+                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, GetTags(null, indent + 1));
                 else
                 {
                 }
@@ -312,19 +367,23 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="insertPos"></param>
         /// <param name="table"></param>
-        private void DisplayTable(ref TextIter insertPos, TableBlock table)
+        private void DisplayTable(ref TextIter insertPos, Table table)
         {
-            Table tableWidget = new Table((uint)table.Rows.Count(), (uint)table.ColumnDefinitions.Count(), false);
-            for (uint i = 0; i < table.Rows.Count(); i++)
+            Gtk.Table tableWidget = new Gtk.Table((uint)table.Count, (uint)table.ColumnDefinitions.Count(), false);
+            for (uint i = 0; i < table.Count; i++)
                 for (uint j = 0; j < table.ColumnDefinitions.Count(); j++)
                 {
                     string text = "";
-                    TableBlock.TableRow row = table.Rows[(int)i];
-                    if (row.Cells.Count > j)
-                        text = row.Cells[(int)j].Inlines.FirstOrDefault()?.ToString();
-                    if (i == 0)
+                    TableRow row = (TableRow)table[(int)i];
+                    // fixme - need to add more robust parsing here
+                    // Really, we should be using the above parsing methods.
+                    if (row.Count > j && row[(int)j] is TableCell cell)
+                        foreach (ParagraphBlock paragraph in cell.OfType<ParagraphBlock>())
+                            foreach (LiteralInline inline in paragraph.Inline.OfType<LiteralInline>())
+                                text += inline.Content.ToString();
+                    if (row.IsHeader)
                         text = $"<b>{text}</b>";
-                    tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
+                    tableWidget.Attach(new Label() { Markup = text, Xalign = 0, Selectable = true }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
                 }
 
             // Add table to gtk container.
@@ -442,28 +501,15 @@ namespace UserInterface.Views
             heading3.Weight = Pango.Weight.Bold;
             textView.Buffer.TagTable.Add(heading3);
 
-            var normal = new TextTag("Normal");
-            normal.SizePoints = 12;
-            normal.Weight = Pango.Weight.Normal;
-            normal.Style = Pango.Style.Normal;
-            normal.Indent = 0;
-            textView.Buffer.TagTable.Add(normal);
-
             var code = new TextTag("Code");
-            code.SizePoints = 12;
-            code.Weight = Pango.Weight.Normal;
-            code.Style = Pango.Style.Normal;
-            code.Indent = 0;
             code.Font = "monospace";
             textView.Buffer.TagTable.Add(code);
 
             var bold = new TextTag("Bold");
-            bold.SizePoints = 12;
             bold.Weight = Pango.Weight.Bold;
             textView.Buffer.TagTable.Add(bold);
 
             var italic = new TextTag("Italic");
-            italic.SizePoints = 12;
             italic.Style = Pango.Style.Italic;
             textView.Buffer.TagTable.Add(italic);
 
@@ -488,6 +534,10 @@ namespace UserInterface.Views
             superscript.Rise = 8192;
             superscript.Scale = Pango.Scale.XSmall;
             textView.Buffer.TagTable.Add(superscript);
+
+            var strikethrough = new TextTag("Strikethrough");
+            strikethrough.Strikethrough = true;
+            textView.Buffer.TagTable.Add(strikethrough);
         }
 
         // Looks at all tags covering the position (x, y) in the text view,
