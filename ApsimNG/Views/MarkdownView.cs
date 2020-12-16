@@ -263,7 +263,7 @@ namespace UserInterface.Views
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
-                    insertPos = ProcessMarkdownBlocks(document, ref insertPos, 0);
+                    insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
                     container.ShowAll();
                 }
             }
@@ -279,7 +279,7 @@ namespace UserInterface.Views
         /// <param name="insertPos">The insert position.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="autoNewline">Should newline characters be automatically inserted after each block?</param>
-        private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, int indent, bool autoNewline = true, params TextTag[] tags)
+        private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, TextView textView, int indent, bool autoNewline = true, params TextTag[] tags)
         {
             // The markdown parser will strip out all of the whitespace (linefeeds) in the
             // text. Therefore, we need to insert newlines between each block - but not
@@ -291,15 +291,15 @@ namespace UserInterface.Views
             {
                 if (block is HeadingBlock header)
                 {
-                    ProcessMarkdownInlines(header.Inline, ref insertPos, indent, GetTags($"Heading{header.Level}", indent).Union(tags).ToArray());
+                    ProcessMarkdownInlines(header.Inline, ref insertPos, textView, indent, GetTags($"Heading{header.Level}", indent).Union(tags).ToArray());
                 }
                 else if (block is ParagraphBlock paragraph)
                 {
-                    ProcessMarkdownInlines(paragraph.Inline, ref insertPos, indent, tags);
+                    ProcessMarkdownInlines(paragraph.Inline, ref insertPos, textView, indent, tags);
                 }
                 else if (block is QuoteBlock quote)
                 {
-                    ProcessMarkdownBlocks(quote, ref insertPos, indent + 1, false, tags);
+                    ProcessMarkdownBlocks(quote, ref insertPos, textView, indent + 1, false, tags);
                 }
                 else if (block is ListBlock list)
                 {
@@ -315,12 +315,12 @@ namespace UserInterface.Views
                         {
                             textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags("Normal", indent + 1));
                         }
-                        ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, indent + 1, false, tags);
+                        ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, textView, indent + 1, false, tags);
                     }
                 }
                 else if (block is ListItemBlock listItem)
                 {
-                    ProcessMarkdownBlocks(listItem, ref insertPos, indent, false, tags);
+                    ProcessMarkdownBlocks(listItem, ref insertPos, textView, indent, false, tags);
                 }
                 else if (block is CodeBlock code)
                 {
@@ -351,7 +351,7 @@ namespace UserInterface.Views
         /// <param name="insertPos">The insert position.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="tags">Tags to use for all child inlines.</param>
-        private void ProcessMarkdownInlines(IEnumerable<Inline> inlines, ref TextIter insertPos, int indent, params TextTag[] tags)
+        private void ProcessMarkdownInlines(IEnumerable<Inline> inlines, ref TextIter insertPos, TextView textView, int indent, params TextTag[] tags)
         {
             foreach (var inline in inlines)
             {
@@ -372,7 +372,7 @@ namespace UserInterface.Views
                             style = italicInline.DelimiterCount == 1 ? "Italic" : "Bold";
                             break;
                     }
-                    ProcessMarkdownInlines(italicInline, ref insertPos, indent, GetTags(style, indent));
+                    ProcessMarkdownInlines(italicInline, ref insertPos, textView, indent, GetTags(style, indent));
                 }
                 else if (inline is LinkInline link)
                 {
@@ -380,7 +380,7 @@ namespace UserInterface.Views
                     if (link.IsImage)
                         DisplayImage(link.Url, link.Label, ref insertPos);
                     else
-                        ProcessMarkdownInlines(link, ref insertPos, indent, GetTags("Link", indent, link.Url));
+                        ProcessMarkdownInlines(link, ref insertPos, textView, indent, GetTags("Link", indent, link.Url));
                 }
                 //else if (inline is MarkdownLinkInline markdownLinkInline)
                 //    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
@@ -436,7 +436,7 @@ namespace UserInterface.Views
                         // Recursively process all markdown blocks inside this cell. In
                         // theory, this supports both blocks and inline content. In practice
                         // I wouldn't recommend using blocks inside a table cell.
-                        ProcessMarkdownBlocks(cell, ref insertPos, indent, false, tags);
+                        ProcessMarkdownBlocks(cell, ref insertPos, textView, indent, false, tags);
                         if (j != row.Count - 1)
                             textView.Buffer.InsertWithTags(ref insertPos, "\t", tableTag);
                     }
@@ -454,12 +454,6 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="table">The table.</param>
         /// <param name="columnIndex">Index of a column in the table.</param>
-        /// <remarks>
-        /// fixme:
-        /// This is pretty crude - it doesn't consider inline or block content
-        /// in the cell - only plaintext. Meaning it may return an incorrect
-        /// result if the widest cell in the column contains, say, a link.
-        /// </remarks>
         private int GetColumnWidth(Table table, int columnIndex)
         {
             int width = int.MinValue;
@@ -470,7 +464,8 @@ namespace UserInterface.Views
                 {
                     if (row[columnIndex] is TableCell cell)
                     {
-                        int cellWidth = MeasureText(GetCellRawText(cell));
+                        string cellText = GetCellRawText(cell);
+                        int cellWidth = MeasureText(cellText);
                         width = Math.Max(width, cellWidth + tableColumnPadding);
                     }
                     else
@@ -484,17 +479,15 @@ namespace UserInterface.Views
         /// Get the raw text in a cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        /// <remarks>
-        /// This is very crude and will not consider
-        /// inline or block content in the cell.
-        /// </remarks>
         private string GetCellRawText(TableCell cell)
         {
-            string text = "";
-            foreach (ParagraphBlock paragraph in cell.OfType<ParagraphBlock>())
-                foreach (LiteralInline inline in paragraph.Inline.OfType<LiteralInline>())
-                    text += inline.Content.ToString();
-            return text;
+            TextView tmpView = new TextView();
+            CreateStyles(tmpView);
+            TextIter iter = tmpView.Buffer.StartIter;
+            ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
+            string result = tmpView.Buffer.Text;
+            tmpView.Destroy();
+            return result;
         }
 
         /// <summary>
@@ -505,7 +498,7 @@ namespace UserInterface.Views
         {
             Label label = new Label();
             label.Layout.FontDescription = owner.MainWidget.Style.FontDescription;
-            label.Layout.SetMarkup(text);
+            label.Layout.SetText(text);
             label.Layout.GetPixelSize(out int width, out _);
             return width;
         }
