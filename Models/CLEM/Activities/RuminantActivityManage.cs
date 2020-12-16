@@ -539,7 +539,8 @@ namespace Models.CLEM.Activities
                 int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
-                int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None).Count();
+                // don't include those marked as max age sale as these can't be considered excess female
+                int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None & a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
@@ -643,7 +644,7 @@ namespace Models.CLEM.Activities
 
                 // calculate the mortality of the remaining + purchases
                 int numberDyingInNextYear = 0;
-                numberDyingInNextYear +=  Convert.ToInt32(Math.Floor((numberFemaleBreedingInHerd + excessBreeders) * mortalityRate), CultureInfo.InvariantCulture);
+                numberDyingInNextYear +=  Convert.ToInt32(Math.Floor((Math.Max(0,numberFemaleBreedingInHerd + excessBreeders)) * mortalityRate), CultureInfo.InvariantCulture);
                 //  include mortality of heifers added
                 numberDyingInNextYear += Convert.ToInt32(Math.Floor(Math.Max(0,numberFemaleHeifersInHerd - ((excessBreeders>0)?-excessBreeders:0)) * mortalityRate), CultureInfo.InvariantCulture);
 
