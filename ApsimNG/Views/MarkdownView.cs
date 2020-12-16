@@ -309,13 +309,15 @@ namespace UserInterface.Views
                         if (list.IsOrdered)
                         {
                             textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ", GetTags("Normal", indent + 1));
-                            itemNumber++;
                         }
                         else
                         {
                             textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags("Normal", indent + 1));
                         }
                         ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, textView, indent + 1, false, tags);
+                        if (itemNumber != list.Count)
+                            textView.Buffer.Insert(ref insertPos, "\n");
+                        itemNumber++;
                     }
                 }
                 else if (block is ListItemBlock listItem)
