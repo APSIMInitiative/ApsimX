@@ -1166,14 +1166,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
-        public double MaintenanceRespiration
-        {
-            get { return Leaves.Sum(l => l.MaintenanceRespiration); }
-            set
-            {
-                throw new Exception("Trying to set MaintenanceRespiration for the Leaf organ! MaintenanceRespiration can only be set for leaf cohorts.");
-            }
-        }
+        public double MaintenanceRespiration { get { return Leaves.Sum(l => l.MaintenanceRespiration); } }
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]

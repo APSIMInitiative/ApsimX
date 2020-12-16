@@ -1107,7 +1107,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
-        public double MaintenanceRespiration { get; set; }
+        public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]

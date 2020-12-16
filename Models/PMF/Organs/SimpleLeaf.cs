@@ -413,7 +413,7 @@
 
         /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
-        public double MaintenanceRespiration { get; set; }
+        public double MaintenanceRespiration { get; private set; }
 
         /// <summary>
         /// Growth Respiration.

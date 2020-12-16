@@ -78,7 +78,7 @@ namespace Models.PMF.Organs
         public Biomass Removed { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        public double MaintenanceRespiration { get { return 0; } set { } }
+        public double MaintenanceRespiration { get { return 0; } }
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }

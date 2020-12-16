@@ -18,6 +18,6 @@ namespace Models.PMF.Interfaces
         /// <summary>
         /// Maintenance respiration.
         /// </summary>
-        double MaintenanceRespiration { get; set; }
+        double MaintenanceRespiration { get; }
     }
 }
