@@ -21,6 +21,15 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
     public class LabourAvailabilityList: LabourSpecifications
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourAvailabilityList()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -37,14 +46,6 @@ namespace Models.CLEM.Resources
                 html += "</div>";
             }
             return html;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourAvailabilityList()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
         /// <summary>
@@ -72,5 +73,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
     }
 }

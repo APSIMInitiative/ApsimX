@@ -51,20 +51,6 @@ namespace Models.CLEM.Resources
         public double ConceptionRateAsymptote { get; set; }
 
         /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
-        {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception rates are being calculated for all females using the same curve.";
-            html += "</div>";
-            return html;
-        }
-
-        /// <summary>
         /// Calculate conception rate for a female
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
@@ -79,5 +65,23 @@ namespace Models.CLEM.Resources
             rate = Math.Max(0,Math.Min(rate, 100));
             return rate / 100;
         }
+
+        #region descriptive summary
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "<div class=\"activityentry\">";
+            html += "Conception rates are being calculated for all females using the same curve.";
+            html += "</div>";
+            return html;
+        }
+
+        #endregion
     }
 }

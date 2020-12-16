@@ -12,7 +12,7 @@ namespace Models.CLEM.Reporting
     /// A report class for writing output to the data store.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.LabourAllocationPresenter")]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]

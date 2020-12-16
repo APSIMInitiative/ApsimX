@@ -67,6 +67,19 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Determine if the month in sequence is enabled
+        /// </summary>
+        /// <param name="sequenceMonth"></param>
+        /// <returns>Whether timer is enabled</returns>
+        public bool TimerOK(int sequenceMonth)
+        {
+            int index = sequenceMonth - ((sequenceMonth / sequence.Length) * sequence.Length);
+            return sequence[index] == '1';
+        }
+
+        #region validation
+
+        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>
@@ -76,25 +89,16 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check validity of sequence
-            if(sequence.Replace("0","").Replace("1","").Trim() != "")
+            if (sequence.Replace("0", "").Replace("1", "").Trim() != "")
             {
                 string[] memberNames = new string[] { "ActivityTimerSequence" };
                 results.Add(new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
-        /// <summary>
-        /// Determine if the month in sequence is enabled
-        /// </summary>
-        /// <param name="sequenceMonth"></param>
-        /// <returns>Whether timer is enabled</returns>
-        public bool TimerOK(int sequenceMonth)
-        {
-            int index = sequenceMonth - ((sequenceMonth / sequence.Length)*sequence.Length);
-            return sequence[index] == '1';
-        }
-
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -104,7 +108,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"filter\">";
-            if(Sequence is null || Sequence == "")
+            if (Sequence is null || Sequence == "")
             {
                 html += $"Sequence <span class=\"errorlink\">NOT SET</span>";
             }
@@ -141,6 +145,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
     }
 }

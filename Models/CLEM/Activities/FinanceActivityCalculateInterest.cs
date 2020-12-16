@@ -37,17 +37,6 @@ namespace Models.CLEM.Activities
             financesExist = ((Resources.FinanceResource() != null));
         }
 
-        /// <summary>An event handler to allow us to make all payments when needed</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMEndOfTimeStep")]
-        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
-        {
-            // Interest is paid and earned on the last day of the month after all other acitivites have made financial transactions.
-            // Interest payment does not occur in the Activity order.
-
-        }
-
         /// <summary>
         /// Resource shortfall event handler
         /// </summary>
@@ -81,7 +70,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -118,7 +107,7 @@ namespace Models.CLEM.Activities
                     {
                         if (accnt.InterestRatePaid > 0)
                         {
-                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "Interest earned");
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
                             SetStatusSuccess();
                         }
                     }
@@ -132,7 +121,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = interest,
                                 AllowTransmutation = false,
-                                Reason = "Pay interest charged"
+                                Category = "Interest"
                             };
                             accnt.Remove(interestRequest);
 
@@ -140,7 +129,7 @@ namespace Models.CLEM.Activities
                             if (interestRequest.Required > interestRequest.Provided)
                             {
                                 interestRequest.ResourceType = typeof(Finance);
-                                interestRequest.ResourceTypeName = accnt.Name;
+                                interestRequest.ResourceTypeName = accnt.NameWithParent;
                                 interestRequest.Available = accnt.FundsAvailable;
                                 ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
                                 OnShortfallOccurred(rre);
@@ -177,6 +166,8 @@ namespace Models.CLEM.Activities
         {
             return null;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -222,7 +213,8 @@ namespace Models.CLEM.Activities
                 }
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

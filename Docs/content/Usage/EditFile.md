@@ -3,17 +3,17 @@ title: "Edit .apsimx files from command line"
 draft: false
 ---
 
-The /Edit switch on Models.exe allows the user to edit an .apsimx file from the command line in a language-agnostic way. The syntax is:
+The --edit switch on Models.exe allows the user to edit an .apsimx file from the command line in a language-agnostic way. The syntax is:
 
 ```
-/path/to/Models.exe <PathToApsimXFile> /Edit <PathToConfigFile>
+/path/to/Models.exe <PathToApsimXFile> --edit <PathToConfigFile>
 ```
 
 The first argument, <PathToApsimXFile> should be the path to the .apsimx file which you want to edit. This file will be edited in-place - that is, if you don't want to modify the original .apsimx file, you should copy it somewhere else and edit the copy.
 
-The /Edit argument instructs APSIM to edit the .apsimx file rather than run it.
+The --edit argument instructs APSIM to edit the .apsimx file before running it. The changed file is *not* saved to disk.
 
-The argument immediately following /Edit must be the path to a config file. The config file should contain zero or more lines of the form `path = value`.
+The argument immediately following --edit must be the path to a config file. The config file should contain zero or more lines of the form `path = value`.
 
 The path should be the path to a model or property of a model in the .apsimx file. This can be a [scoped or absolute path](/usage/pathspecification). An absolute path can be obtained by right-clicking on the model in the user interface and clicking "Copy path to node". This will copy the path to the model, not to one of the model's properties. For example:
 

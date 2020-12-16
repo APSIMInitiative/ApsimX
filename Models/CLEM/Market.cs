@@ -121,6 +121,7 @@ namespace Models.CLEM
             }
         }
 
+        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -156,8 +157,10 @@ namespace Models.CLEM
             }
 
             return results;
-        }
+        } 
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// 
         /// </summary>
@@ -177,7 +180,8 @@ namespace Models.CLEM
 
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
 
     }

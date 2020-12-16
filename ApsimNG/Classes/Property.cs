@@ -24,6 +24,8 @@ namespace UserInterface.Classes
         Files,
         Directory,
         //Directories,
+        Font,
+        Numeric
     }
 
     /// <summary>
@@ -58,7 +60,7 @@ namespace UserInterface.Classes
         {
             Name = name;
             Properties = properties;
-            SubModelProperties = subProperties;
+            SubModelProperties = subProperties ?? new PropertyGroup[0];
         }
 
         /// <summary>
@@ -66,7 +68,20 @@ namespace UserInterface.Classes
         /// </summary>
         public int Count()
         {
-            return Properties.Count() + SubModelProperties.Sum(p => p.Count());
+            return Properties.Count() + SubModelProperties?.Sum(p => p.Count()) ?? 0;
+        }
+
+        public Property Find(Guid id)
+        {
+            return GetAllProperties().FirstOrDefault(p => p.ID == id);
+        }
+
+        public IEnumerable<Property> GetAllProperties()
+        {
+            foreach (Property property in Properties)
+                yield return property;
+            foreach (Property property in SubModelProperties.SelectMany(g => g.GetAllProperties()))
+                yield return property;
         }
     }
 
@@ -116,6 +131,20 @@ namespace UserInterface.Classes
         /// unless <see cref="DisplayMethod" /> is set to PropertyType.DropDown.
         /// </summary>
         public string[] DropDownOptions { get; private set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public Property(string name, string tooltip, object value, PropertyType displayType, IEnumerable<string> dropDownOptions = null, IEnumerable<string> separators = null)
+        {
+            ID = Guid.NewGuid();
+            Name = name;
+            Tooltip = tooltip;
+            Value = value;
+            DisplayMethod = displayType;
+            DropDownOptions = dropDownOptions?.ToArray();
+            Separators = separators?.ToList();
+        }
 
         /// <summary>
         /// Instantiates a Property object by reading metadata about
