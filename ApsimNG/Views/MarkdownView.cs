@@ -405,7 +405,7 @@ namespace UserInterface.Views
                 }
             TextChildAnchor anchor = textView.Buffer.CreateChildAnchor(ref insertPos);
             textView.AddChildAtAnchor(tableWidget, anchor);
-            textView.Buffer.Insert(ref insertPos, "\n");
+            textView.Buffer.Insert(ref insertPos, "\n\n");
         }
 
         /// <summary>
