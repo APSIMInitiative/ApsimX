@@ -1,1 +1,0 @@
-PathwayParameters.FractionOfCyclicElectronFlow

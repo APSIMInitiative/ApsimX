@@ -229,9 +229,9 @@ namespace Models.DCAPST.Utilities
                 MesophyllCO2ConductanceParams = g
             };            
             
-            PP.MesophyllElectronTransportFraction = PP.ExtraATPCost / (3.0 + PP.ExtraATPCost);
-            PP.FractionOfCyclicElectronFlow = 0.25 * PP.ExtraATPCost;
-            PP.ATPProductionElectronTransportFactor = (3.0 - PP.FractionOfCyclicElectronFlow) / (4.0 * (1.0 - PP.FractionOfCyclicElectronFlow));
+            // PP.MesophyllElectronTransportFraction = PP.ExtraATPCost / (3.0 + PP.ExtraATPCost);
+            // PP.FractionOfCyclicElectronFlow = 0.25 * PP.ExtraATPCost;
+            // PP.ATPProductionElectronTransportFactor = (3.0 - PP.FractionOfCyclicElectronFlow) / (4.0 * (1.0 - PP.FractionOfCyclicElectronFlow));
 
             return PP;
         }

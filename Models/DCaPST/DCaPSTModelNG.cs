@@ -4,6 +4,7 @@ using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
 using Models.DCAPST.Interfaces;
+using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Organs;
 
@@ -55,11 +56,8 @@ namespace Models.DCAPST
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs args)
         {
-            if (parameters.Crop == null)
+            if (string.IsNullOrEmpty(parameters.CropName))
                 throw new ArgumentNullException($"No crop was specified in DCaPST configuration");
-        
-            if (!(parameters.Crop is IModel))
-                throw new Exception($"Unknown plant type {parameters.Crop.GetType().Name}");
         }
 
         /// <summary>
@@ -70,9 +68,8 @@ namespace Models.DCAPST
         [EventSubscribe("DoDCAPST")]
         private void OnDoDCaPST(object sender, EventArgs args)
         {
-            IModel plant = (IModel)parameters.Crop;
-            Root root = plant.FindChild<Root>();
-            double rootShootRatio = (double)plant.FindByPath("[ratioRootShoot]").Value;
+            IModel plant = FindInScope(parameters.CropName);
+            double rootShootRatio = ((IFunction)plant.FindByPath("[ratioRootShoot]").Value).Value();
             DCAPSTModel model = SetUpModel(parameters.Canopy,
                                            parameters.Pathway,
                                            clock.Today.DayOfYear,
@@ -85,245 +82,24 @@ namespace Models.DCAPST
             // such as verbosity, BioLimit, Reduction, etc.
 
             // fixme - are we using the right SW??
-            model.DailyRun(leaf.LAI, leaf.SLN, soilWater.SW.Sum(), rootShootRatio);
-
-            // Outputs
-            leaf.BiomassRUE = leaf.BiomassTE = model.ActualBiomass;
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            if (leaf.LAI > 0)
             {
-                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
+                model.DailyRun(leaf.LAI, leaf.SLN, soilWater.SW.Sum(), rootShootRatio);
+
+                // Outputs
+                leaf.BiomassRUE = leaf.BiomassTE = model.ActualBiomass;
+                foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
                 {
-                    new CanopyEnergyBalanceInterceptionlayerType()
+                    canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                     {
-                        amount = model.InterceptedRadiation,
-                    }
-                };
-                canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
+                        new CanopyEnergyBalanceInterceptionlayerType()
+                        {
+                            amount = model.InterceptedRadiation,
+                        }
+                    };
+                    canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
+                }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="airCO2"></param>
-        /// <param name="curvatureFactor"></param>
-        /// <param name="diffusivitySolubilityRatio"></param>
-        /// <param name="airO2"></param>
-        /// <param name="diffuseExtCoeff"></param>
-        /// <param name="diffuseExtCoeffNIR"></param>
-        /// <param name="diffuseReflectionCoeff"></param>
-        /// <param name="diffuseReflectionCoeffNIR"></param>
-        /// <param name="leafAngle"></param>
-        /// <param name="leafScatteringCoeff"></param>
-        /// <param name="leafScatteringCoeffNIR"></param>
-        /// <param name="leafWidth"></param>
-        /// <param name="slnRatioTop"></param>
-        /// <param name="minimumN"></param>
-        /// <param name="windspeed"></param>
-        /// <param name="windSpeedExtinction"></param>
-        /// <returns></returns>
-        public static CanopyParameters SetUpCanopy(
-            CanopyType type,
-            double airCO2,
-            double curvatureFactor,
-            double diffusivitySolubilityRatio,
-            double airO2,
-            double diffuseExtCoeff,
-            double diffuseExtCoeffNIR,
-            double diffuseReflectionCoeff,
-            double diffuseReflectionCoeffNIR,
-            double leafAngle,
-            double leafScatteringCoeff,
-            double leafScatteringCoeffNIR,
-            double leafWidth,
-            double slnRatioTop,
-            double minimumN,
-            double windspeed,
-            double windSpeedExtinction
-        )
-        {
-            var CP = new CanopyParameters
-            {
-                Type = type,
-                AirCO2 = airCO2,
-                CurvatureFactor = curvatureFactor,
-                DiffusivitySolubilityRatio = diffusivitySolubilityRatio,
-                AirO2 = airO2,
-                DiffuseExtCoeff = diffuseExtCoeff,
-                DiffuseExtCoeffNIR = diffuseExtCoeffNIR,
-                DiffuseReflectionCoeff = diffuseReflectionCoeff,
-                DiffuseReflectionCoeffNIR = diffuseReflectionCoeffNIR,
-                LeafAngle = leafAngle,
-                LeafScatteringCoeff = leafScatteringCoeff,
-                LeafScatteringCoeffNIR = leafScatteringCoeffNIR,
-                LeafWidth = leafWidth,
-                SLNRatioTop = slnRatioTop,
-                MinimumN = minimumN,
-                Windspeed = windspeed,
-                WindSpeedExtinction = windSpeedExtinction
-            };
-
-            return CP;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="jTMin"></param>
-        /// <param name="jTOpt"></param>
-        /// <param name="jTMax"></param>
-        /// <param name="jC"></param>
-        /// <param name="jBeta"></param>
-        /// <param name="gTMin"></param>
-        /// <param name="gTOpt"></param>
-        /// <param name="gTMax"></param>
-        /// <param name="gC"></param>
-        /// <param name="gBeta"></param>
-        /// <param name="KcAt25"></param>
-        /// <param name="KcFactor"></param>
-        /// <param name="KoAt25"></param>
-        /// <param name="KoFactor"></param>
-        /// <param name="VcVoAt25"></param>
-        /// <param name="VcVoFactor"></param>
-        /// <param name="KpAt25"></param>
-        /// <param name="KpFactor"></param>
-        /// <param name="VcFactor"></param>
-        /// <param name="RdFactor"></param>
-        /// <param name="VpFactor"></param>
-        /// <param name="pepRegeneration"></param>
-        /// <param name="spectralCorrectionFactor"></param>
-        /// <param name="ps2ActivityFraction"></param>
-        /// <param name="bundleSheathConductance"></param>
-        /// <param name="maxRubiscoActivitySLNRatio"></param>
-        /// <param name="maxElectronTransportSLNRatio"></param>
-        /// <param name="respirationSLNRatio"></param>
-        /// <param name="maxPEPcActivitySLNRatio"></param>
-        /// <param name="mesophyllCO2ConductanceSLNRatio"></param>
-        /// <param name="extraATPCost"></param>
-        /// <param name="intercellularToAirCO2Ratio"></param>
-        /// <returns></returns>
-        public static PathwayParameters SetUpPathway(
-            double jTMin,
-            double jTOpt,
-            double jTMax,
-            double jC,
-            double jBeta,
-            double gTMin,
-            double gTOpt,
-            double gTMax,
-            double gC,
-            double gBeta,
-            double KcAt25,
-            double KcFactor,
-            double KoAt25,
-            double KoFactor,
-            double VcVoAt25,
-            double VcVoFactor,
-            double KpAt25,
-            double KpFactor,
-            double VcFactor,
-            double RdFactor,
-            double VpFactor,
-            double pepRegeneration,
-            double spectralCorrectionFactor,
-            double ps2ActivityFraction,
-            double bundleSheathConductance,
-            double maxRubiscoActivitySLNRatio,
-            double maxElectronTransportSLNRatio,
-            double respirationSLNRatio,
-            double maxPEPcActivitySLNRatio,
-            double mesophyllCO2ConductanceSLNRatio,
-            double extraATPCost,
-            double intercellularToAirCO2Ratio
-        )
-        {
-            var j = new LeafTemperatureParameters
-            {
-                TMin = jTMin,
-                TOpt = jTOpt,
-                TMax = jTMax,
-                C = jC,
-                Beta = jBeta
-            };
-
-            var g = new LeafTemperatureParameters
-            {
-                TMin = gTMin,
-                TOpt = gTOpt,
-                TMax = gTMax,
-                C = gC,
-                Beta = gBeta,
-            };
-
-            var Kc = new TemperatureResponseValues
-            {
-                At25 = KcAt25,
-                Factor = KcFactor
-            };
-
-            var Ko = new TemperatureResponseValues
-            {
-                At25 = KoAt25,
-                Factor = KoFactor
-            };
-
-            var VcVo = new TemperatureResponseValues
-            {
-                At25 = VcVoAt25,
-                Factor = VcVoFactor
-            };
-
-            var Kp = new TemperatureResponseValues
-            {
-                At25 = KpAt25,
-                Factor = KpFactor
-            };
-
-            var Vc = new TemperatureResponseValues
-            {
-                Factor = VcFactor
-            };
-
-            var Rd = new TemperatureResponseValues
-            {
-                Factor = RdFactor
-            };
-
-            var Vp = new TemperatureResponseValues
-            {
-                Factor = VpFactor
-            };
-
-            var PP = new PathwayParameters
-            {
-                PEPRegeneration = pepRegeneration,
-                SpectralCorrectionFactor = spectralCorrectionFactor,
-                PS2ActivityFraction = ps2ActivityFraction,
-                BundleSheathConductance = bundleSheathConductance,
-                MaxRubiscoActivitySLNRatio = maxRubiscoActivitySLNRatio,
-                MaxElectronTransportSLNRatio = maxElectronTransportSLNRatio,
-                RespirationSLNRatio = respirationSLNRatio,
-                MaxPEPcActivitySLNRatio = maxPEPcActivitySLNRatio,
-                MesophyllCO2ConductanceSLNRatio = mesophyllCO2ConductanceSLNRatio,
-                ExtraATPCost = extraATPCost,
-                IntercellularToAirCO2Ratio = intercellularToAirCO2Ratio,
-                RubiscoCarboxylation = Kc,
-                RubiscoOxygenation = Ko,
-                RubiscoCarboxylationToOxygenation = VcVo,
-                PEPc = Kp,
-                RubiscoActivity = Vc,
-                Respiration = Rd,
-                PEPcActivity = Vp,
-                ElectronTransportRateParams = j,
-                MesophyllCO2ConductanceParams = g
-            };            
-            
-            PP.MesophyllElectronTransportFraction = PP.ExtraATPCost / (3.0 + PP.ExtraATPCost);
-            PP.FractionOfCyclicElectronFlow = 0.25 * PP.ExtraATPCost;
-            PP.ATPProductionElectronTransportFactor = (3.0 - PP.FractionOfCyclicElectronFlow) / (4.0 * (1.0 - PP.FractionOfCyclicElectronFlow));
-
-            return PP;
         }
 
         /// <summary>
@@ -368,7 +144,7 @@ namespace Models.DCAPST
                 MaxTemperature = maxT,
                 MinTemperature = minT,
                 AtmosphericPressure = 1.01325
-            };            
+            };
 
             // Model the pathways
             var SunlitAc1 = new AssimilationPathway(CP, PP);
@@ -381,9 +157,12 @@ namespace Models.DCAPST
 
             // Model the canopy
             IAssimilation A;
-            if (CP.Type == CanopyType.C3) A = new AssimilationC3(CP, PP);
-            else if (CP.Type == CanopyType.C4) A = new AssimilationC4(CP, PP);
-            else A = new AssimilationCCM(CP, PP);
+            if (CP.Type == CanopyType.C3)
+                A = new AssimilationC3(CP, PP);
+            else if (CP.Type == CanopyType.C4)
+                A = new AssimilationC4(CP, PP);
+            else
+                A = new AssimilationCCM(CP, PP);
 
             var sunlit = new AssimilationArea(SunlitAc1, SunlitAc2, SunlitAj, A);
             var shaded = new AssimilationArea(ShadedAc1, ShadedAc2, ShadedAj, A);

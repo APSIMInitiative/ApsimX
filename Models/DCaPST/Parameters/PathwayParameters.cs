@@ -20,7 +20,7 @@ namespace Models.DCAPST
         /// </summary>
         [Description("Fraction of cyclic electron flow")]
         [Units("")]
-        public double FractionOfCyclicElectronFlow { get; set; }        
+        public double FractionOfCyclicElectronFlow => 0.25 * ExtraATPCost;
 
         /// <summary>
         /// Ratio of respiration to SLN
@@ -67,7 +67,7 @@ namespace Models.DCAPST
         /// </summary>
         [Description("ATP production electron transport factor")]
         [Units("")]
-        public double ATPProductionElectronTransportFactor { get; set; }
+        public double ATPProductionElectronTransportFactor => (3.0 - FractionOfCyclicElectronFlow) / (4.0 * (1.0 - FractionOfCyclicElectronFlow));
 
         /// <summary>
         /// Extra ATP cost

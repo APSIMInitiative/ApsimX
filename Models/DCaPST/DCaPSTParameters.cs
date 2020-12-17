@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.PMF;
 
@@ -17,7 +19,8 @@ namespace Models.DCAPST
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop")]
-        public Plant Crop { get; set; }
+        [Display(Type = DisplayType.DropDown, Values = nameof(FindPlantNames))]
+        public string CropName { get; set; }
 
         /// <summary>
         /// PAR energy fraction
@@ -38,5 +41,16 @@ namespace Models.DCAPST
         [Description("Pathway Parameters")]
         [Display(Type = DisplayType.SubModel)]
         public PathwayParameters Pathway { get; set; } = new PathwayParameters();
-    }
+    
+        /// <summary>
+        /// Find the names of all plants in scope.
+        /// </summary>
+        /// <remarks>
+        /// Used to find valid values for <see cref="CropName" />.
+        /// </remarks>
+        private IEnumerable<string> FindPlantNames()
+        {
+            return FindAllInScope<Plant>().Select(p => p.Name);
+        }
+}
 }
