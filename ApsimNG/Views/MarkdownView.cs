@@ -324,7 +324,8 @@ namespace UserInterface.Views
                         text = row.Cells[(int)j].Inlines.FirstOrDefault()?.ToString();
                     if (i == 0)
                         text = $"<b>{text}</b>";
-                    tableWidget.Attach(new Label() { Markup = text, Xalign = 0 }, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
+                    Label label = new Label() { Markup = text, Xalign = 0, UseMarkup = i == 0 };
+                    tableWidget.Attach(label, j, j + 1, i, i + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 5);
                 }
 
             // Add table to gtk container.
