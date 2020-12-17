@@ -378,10 +378,10 @@
                     }
                 }
 
-                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
+                double[] yearlyRainfall = DataTableUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMaxT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMinT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
 
                 // what do we do if the date range is less than 1 year.
                 // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
@@ -515,11 +515,11 @@
             {
                 if (table != null && table.Rows.Count > 0)
                 {
-                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
+                    double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
 
                     if (monthlyRainfall.Length != 0)
                     {
-                        double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                        double[] avgMonthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
                         this.PopulateMonthlyRainfallGraph(
                                                        "Monthly Rainfall",
                                                         this.monthsToDisplay, 

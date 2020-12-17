@@ -1713,17 +1713,23 @@
             var dbFileName = Path.ChangeExtension(fileName, ".db");
             if (File.Exists(dbFileName))
             {
-                db.OpenDatabase(dbFileName, false);
-                if (db.TableExists("_Checkpoints"))
+                try
                 {
-                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    db.OpenDatabase(dbFileName, false);
+                    if (db.TableExists("_Checkpoints"))
                     {
-                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                        if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                        {
+                            db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                        }
                     }
+                }
+                finally
+                {
+                    db.CloseDatabase();
                 }
             }
         }
-
 
         /// <summary>
         /// Add new methods structure to OrganArbitrator.

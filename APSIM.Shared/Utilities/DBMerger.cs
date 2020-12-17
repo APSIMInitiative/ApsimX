@@ -22,6 +22,16 @@
             File.Delete(outFileName);
 
             string[] filesToMerge = DirectoryUtilities.FindFiles(fileSpec, recurse);
+            MergeFiles(filesToMerge, outFileName);
+        }
+
+        /// <summary>
+        /// Merge multiple .db files into a single .db file.
+        /// </summary>
+        /// <param name="filesToMerge">The .db files to be merged.</param>
+        /// <param name="outFileName">The name of the new output file.</param>
+        public static void MergeFiles(string[] filesToMerge, string outFileName)
+        {
             if (filesToMerge.Length > 1)
             {
                 File.Copy(filesToMerge[0], outFileName, overwrite:true);

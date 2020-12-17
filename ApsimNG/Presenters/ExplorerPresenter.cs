@@ -369,9 +369,9 @@
             view.Tree.CollapseChildren(path);
         }
 
-        internal void ExpandChildren(string path)
+        internal void ExpandChildren(string path, bool recursive = true)
         {
-            view.Tree.ExpandChildren(path);
+            view.Tree.ExpandChildren(path, recursive);
         }
 
         /// <summary>

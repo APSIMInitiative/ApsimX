@@ -63,6 +63,11 @@ namespace Models.CLEM
         public String CLEMParentName { get; set; }
 
         /// <summary>
+        /// return combo name of ParentName.ModelName
+        /// </summary>
+        public string NameWithParent => $"{this.Parent.Name}.{this.Name}";
+
+        /// <summary>
         /// Method to set defaults from   
         /// </summary>
         public void SetDefaults()

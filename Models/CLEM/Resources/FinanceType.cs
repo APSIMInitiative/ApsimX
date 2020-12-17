@@ -106,7 +106,7 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (OpeningBalance > 0)
             {
-                Add(OpeningBalance, this, "Opening balance");
+                Add(OpeningBalance, this, "", "Opening balance");
             }
         }
 
@@ -132,19 +132,14 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
-
         /// <summary>
         /// Add money to account
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double multiplier = 0;
             double addAmount = 0;
@@ -171,11 +166,12 @@ namespace Models.CLEM.Resources
                 {
                     Gain = addAmount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
                 LastTransaction = details;
-                lastGain = addAmount;
+                LastGain = addAmount;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
 
@@ -187,7 +183,8 @@ namespace Models.CLEM.Resources
                     {
                         (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                         (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
-                        (resourceAmount as ResourceRequest).Reason = "Farm transaction";
+                        (resourceAmount as ResourceRequest).Category = "Farm transaction";
+                        (resourceAmount as ResourceRequest).RelatesToResource = EquivalentMarketStore.NameWithParent;
                         (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
                     }
                 }
@@ -229,9 +226,8 @@ namespace Models.CLEM.Resources
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
-                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm purchases");
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
             }
-
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -239,7 +235,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                RelatesToResource = request.RelatesToResource,
+                Category = request.Category
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
                     ActivityModel = this,
-                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    Category = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
                 };
@@ -297,7 +297,7 @@ namespace Models.CLEM.Activities
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, "Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, "", "Growth");
                 }
             }
 
@@ -425,7 +425,7 @@ namespace Models.CLEM.Activities
                 {
                     reason = "Initialise pool " + pool.Age.ToString();
                 }
-                LinkedNativeFoodType.Add(pool, this, reason);
+                LinkedNativeFoodType.Add(pool, this, "", reason);
             }
         }
 
@@ -590,7 +590,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

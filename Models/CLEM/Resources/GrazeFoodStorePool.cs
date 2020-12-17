@@ -83,6 +83,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Get the amount of the last gain in this resource 
+        /// </summary>
+        public double LastGain { get; set; }
+
+        /// <summary>
         /// Reset timestep stores
         /// </summary>
         public void Reset()
@@ -108,8 +113,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }

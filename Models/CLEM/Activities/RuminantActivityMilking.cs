@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
             {
                 double labourLimit = this.LabourLimitProportion;
                 // only provide what labour would allow
-                (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
+                (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName, "Milking");
 
                 // record milk taken with female for accounting
                 foreach (RuminantFemale female in herd)
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Milking", this.PredictedHerdName);
         }
 
         /// <summary>

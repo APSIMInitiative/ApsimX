@@ -62,7 +62,9 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view.</param>
         public PropertyView(ViewBase owner) : base(owner)
         {
-            propertyTable = new Table(0, 0, true);
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table(0, 0, false);
             box = new Frame("Properties");
             box.Add(propertyTable);
             mainWidget = box;
@@ -99,7 +101,11 @@ namespace UserInterface.Views
             }
             box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
+
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
             propertyTable = new Table((uint)properties.Count(), 2, false);
+
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 
@@ -237,6 +243,20 @@ namespace UserInterface.Views
                     colourChooser.MainWidget.Name = property.ID.ToString();
                     component = colourChooser.MainWidget;
                     break;
+                case PropertyType.Numeric:
+                    SpinButton button = new SpinButton(double.MinValue, double.MaxValue, 1);
+                    component = button;
+                    if (property.Value == null)
+                        button.Value = 0; // ?
+                    else
+                        button.Value = Convert.ToDouble(property.Value);
+                    button.ValueChanged += OnNumberChanged;
+                    break;
+                case PropertyType.Font:
+                    FontButton btnFont = new FontButton(property.Value?.ToString());
+                    btnFont.FontSet += OnFontChanged;
+                    component = btnFont;
+                    break;
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
@@ -246,6 +266,46 @@ namespace UserInterface.Views
             // the property changed event, despite the event handlers being
             // shared by multiple components.
             return component;
+        }
+
+        private void OnFontChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is FontButton btnFont)
+                {
+                    Guid id = Guid.Parse(btnFont.Name);
+                    PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, btnFont.FontName);
+                    PropertyChanged?.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a spinbutton is modified.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnNumberChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is SpinButton spinner)
+                {
+                    double newValue = spinner.Value;
+                    Guid id = Guid.Parse(spinner.Name);
+                    var args = new PropertyChangedEventArgs(id, newValue);
+                    PropertyChanged?.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
