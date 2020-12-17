@@ -401,14 +401,17 @@ namespace UserInterface.Views
         /// <param name="table"></param>
         private void DisplayTable(ref TextIter insertPos, Table table, int indent)
         {
+            int spaceWidth = MeasureText(" ");
             // Setup tab stops for the table.
             TabArray tabs = new TabArray(table.ColumnDefinitions.Count(), true);
             int cumWidth = 0;
+            Dictionary<int, int> columnWidths = new Dictionary<int, int>();
             for (int i = 0; i < table.ColumnDefinitions.Count(); i++)
             {
                 // The i-th tab stop will be set to the cumulative column width
                 // of the first i columns (including padding).
-                cumWidth += GetColumnWidth(table, i);
+                columnWidths[i] = GetColumnWidth(table, i);
+                cumWidth += columnWidths[i];
                 tabs.SetTab(i, TabAlign.Left, cumWidth);
             }
 
@@ -434,6 +437,29 @@ namespace UserInterface.Views
                             tags = new TextTag[2] { tableTag, textView.Buffer.TagTable.Lookup("Bold") };
                         else
                             tags = new TextTag[1] { tableTag };
+
+                        TableColumnAlign? alignment = table.ColumnDefinitions[j].Alignment;
+                        // If the column is center- or right-aligned, we will insert
+                        // some whitespace characters to pad out the text.
+                        if (alignment == TableColumnAlign.Center || alignment == TableColumnAlign.Right)
+                        {
+                            // Calculate the width of the cell contents.
+                            int cellWidth = MeasureText(GetCellRawText(cell));
+
+                            // Number of whitespace characters we can fit will be the
+                            // number of spare pixels in the cell (width of cell - width
+                            // of cell text) divided by the width of a single space char.
+                            int spareSpace = (columnWidths[j] - cellWidth) / spaceWidth;
+                            if (spareSpace >= 2)
+                            {
+                                // The number of spaces to insert will be either the total
+                                // amount we can fit if right-aligning, or half that amount
+                                // if center-aligning.
+                                int numSpaces = alignment == TableColumnAlign.Center ? spareSpace / 2 : spareSpace;
+                                string whitespace = new string(' ', spareSpace / 2);
+                                textView.Buffer.Insert(ref insertPos, whitespace);
+                            }
+                        }
 
                         // Recursively process all markdown blocks inside this cell. In
                         // theory, this supports both blocks and inline content. In practice
