@@ -374,7 +374,7 @@ namespace UserInterface.Views
                             style = italicInline.DelimiterCount == 1 ? "Italic" : "Bold";
                             break;
                     }
-                    ProcessMarkdownInlines(italicInline, ref insertPos, textView, indent, GetTags(style, indent));
+                    ProcessMarkdownInlines(italicInline, ref insertPos, textView, indent, tags.Union(GetTags(style, indent)).ToArray());
                 }
                 else if (inline is LinkInline link)
                 {
@@ -382,12 +382,12 @@ namespace UserInterface.Views
                     if (link.IsImage)
                         DisplayImage(link.Url, link.Label, ref insertPos);
                     else
-                        ProcessMarkdownInlines(link, ref insertPos, textView, indent, GetTags("Link", indent, link.Url));
+                        ProcessMarkdownInlines(link, ref insertPos, textView, indent, tags.Union(GetTags("Link", indent, link.Url)).ToArray());
                 }
                 //else if (inline is MarkdownLinkInline markdownLinkInline)
                 //    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
                 else if (inline is CodeInline codeInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, GetTags(null, indent + 1));
+                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, tags.Union(GetTags(null, indent + 1)).ToArray());
                 else
                 {
                 }
