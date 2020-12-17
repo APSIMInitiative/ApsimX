@@ -1471,7 +1471,6 @@
             }
             else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || (double.TryParse(enumerator.Current.ToString(), out x) && GetAxis(axisType) == null))
             {
-                Console.WriteLine($"{enumerator.Current} is of type {enumerator.Current.GetType().Name}");
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
                     dataPointValues.Add(Convert.ToDouble(enumerator.Current, 

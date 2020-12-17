@@ -2156,7 +2156,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "ObservedExample.xlsx"
+            "%root%\\Examples\\Optimisation\\ObservedExample.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -2198,7 +2198,6 @@
         "Wheat.Leaf.LAI",
         "Wheat.Grain.Wt"
       ],
-      "OutputPath": "c:\\temp\\croptimiser",
       "RandomSeed": 1,
       "OptimizationMethod": {
         "$type": "Models.Optimisation.Simplex, Models",
@@ -2385,7 +2384,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%\\Prototypes\\CroptimizR\\APS6.met",
+                  "FileName": "%root%\\Examples\\Optimisation\\APS6.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "Children": [],
@@ -3063,7 +3062,7 @@
                       "YFieldName": "Wheat.Grain.Wt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -3159,7 +3158,7 @@
                       "YFieldName": "Wheat.AboveGround.Wt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -3255,7 +3254,7 @@
                       "YFieldName": "Wheat.Leaf.LAI",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -3351,7 +3350,7 @@
                       "YFieldName": "Wheat.AboveGround.N",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,

@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Models.Sensitivity;
+using Models.Core.ApsimFile;
 
 namespace Models.Optimisation
 {
@@ -225,11 +226,11 @@ namespace Models.Optimisation
         /// </summary>
         /// <param name="fileName">File path to which the R code will be saved.</param>
         /// <param name="outputPath">Directory/path to which output results will be saved. This is passed as a parameter to croptimizR.</param>
-        private void GenerateRScript(string fileName, string outputPath)
+        /// <param name="apsimxFileName">Name of the .apsimx file to be run by the optimisation.</param>
+        private void GenerateRScript(string fileName, string outputPath, string apsimxFileName)
         {
             // tbi: package installation. Need to test on a clean VM.
             StringBuilder contents = new StringBuilder();
-            string apsimxFileName = GenerateApsimXFile();
 
             contents.AppendLine($"variable_names <- c({string.Join(", ", VariableNames.Select(x => $"'{x.Trim()}'").ToArray())})");
 
@@ -408,6 +409,7 @@ namespace Models.Optimisation
         public void Run(CancellationTokenSource cancelToken)
         {
             Progress = 0;
+
             Status = "Installing R Packages";
 
             R r = new R(cancelToken.Token);
@@ -421,7 +423,8 @@ namespace Models.Optimisation
             if (!Directory.Exists(outputPath))
                 Directory.CreateDirectory(outputPath);
 
-            GenerateRScript(fileName, outputPath);
+            string apsimxFileName = GenerateApsimXFile();
+            GenerateRScript(fileName, outputPath, apsimxFileName);
 
             // todo - capture stderr as well?
             r.OutputReceived += OnOutputReceivedFromR;
@@ -432,6 +435,8 @@ namespace Models.Optimisation
             WriteMessage(stdout);
 
             // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
+            Status = "Reading Output";
+            DataTable output = null;
             string apsimxFileDir = FindAncestor<Simulations>()?.FileName;
             if (string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = FindAncestor<Simulation>()?.FileName;
@@ -443,12 +448,76 @@ namespace Models.Optimisation
                 {
                     IDataStore storage = FindInScope<IDataStore>();
                     if (storage != null && storage.Writer != null)
-                        storage.Writer.WriteTable(ReadRData(file));
+                    {
+                        output = ReadRData(file);
+                        storage.Writer.WriteTable(output);
+                    }
                 }
                 if (!string.IsNullOrEmpty(apsimxFileDir))
                     File.Copy(file, Path.Combine(apsimxFileDir, Path.Combine($"{Name}-{Path.GetFileName(file)}")), true);
             }
             Directory.Delete(outputPath, true);
+
+            // Now, we run the simulations with the optimal values, and store
+            // the results in a checkpoint called 'After'.
+            Status = "Running simulations with optimised parameters";
+            IEnumerable<CompositeFactor> optimalValues = GetOptimalValues(output);
+            RunSimsWithOptimalValues(apsimxFileName, "Optimal", optimalValues);
+
+            // Now run sims without optimal values, to populate the 'Current' checkpoint.
+            Status = "Running simulations";
+            Runner runner = new Runner(Children);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+        }
+
+        /// <summary>
+        /// Run all child simulations with the given optimal values,
+        /// and store the results in the given checkpoint name.
+        /// </summary>
+        /// <param name="checkpointName">Name of the checkpoint.</param>
+        /// <param name="optimalValues">Changes to be applied to the models.</param>
+        /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
+        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<CompositeFactor> optimalValues)
+        {
+            IDataStore storage = FindInScope<IDataStore>();
+
+            // First, clone the simulations (we don't want to change the values
+            // of the parameters in the original file).
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            
+            // Apply the optimal values to the cloned simulations.
+            clonedSims = EditFile.ApplyChanges(clonedSims, optimalValues);
+
+            DataStore clonedStorage = clonedSims.FindChild<DataStore>();
+            clonedStorage.Close();
+            clonedStorage.CustomFileName = storage.FileName;
+            clonedStorage.Open();
+
+            // Run the child models of the cloned CroptimizR.
+            Runner runner = new Runner(clonedSims);
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            storage.Writer.AddCheckpoint(checkpointName);
+            storage.Writer.SetCheckpointShowGraphs(checkpointName, true);
+        }
+
+        /// <summary>
+        /// Get the a set of changes (represented by composite factors)
+        /// which could be applied to a file, which will apply the optimal
+        /// parameter values returned by the optimiser.
+        /// </summary>
+        /// <param name="data">Datatable.</param>
+        private IEnumerable<CompositeFactor> GetOptimalValues(DataTable data)
+        {
+            DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
+            foreach (Parameter param in Parameters)
+                yield return new CompositeFactor("factor", param.Path, optimal[$"{param.Name} Final"]);
         }
 
         /// <summary>
