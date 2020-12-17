@@ -126,7 +126,7 @@ namespace UserInterface.Views
         /// If pixels turns out to be a bad idea, this could be
         /// refactored to be in pango units.
         /// </remarks>
-        private const int tableColumnPadding = 10;
+        private const int tableColumnPadding = 25;
 
         /// <summary>
         /// Indent size (for quotes/code blocks/etc) in pixels.
