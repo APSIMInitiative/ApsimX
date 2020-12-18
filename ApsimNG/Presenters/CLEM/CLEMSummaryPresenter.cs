@@ -102,7 +102,7 @@ namespace UserInterface.Presenters
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
 
             string htmlString = "<!DOCTYPE html>\n" +
-                "<html>\n<head>\n" +
+                "<html>\n<head>\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\n" +
                 "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
