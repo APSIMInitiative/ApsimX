@@ -484,7 +484,7 @@ namespace UserInterface.Views
         /// <param name="columnIndex">Index of a column in the table.</param>
         private int GetColumnWidth(Table table, int columnIndex)
         {
-            int width = int.MinValue;
+            int width = 0;
             for (int i = 0; i < table.Count; i++)
             {
                 TableRow row = (TableRow)table[i];
