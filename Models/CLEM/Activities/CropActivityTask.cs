@@ -18,13 +18,22 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
-    public class CropActivityTask: CLEMActivityBase, IValidatableObject
+    public class CropActivityTask: CLEMActivityBase, IValidatableObject, ICategoryActivity
     {
         [Link]
         Clock Clock = null;
 
+        /// <summary>
+        /// Category label to use in ledger
+        /// </summary>
+        [Description("Shortname of task for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
+
+        private string RelatesToResourceName = "";
         private bool timingIssueReported = false;
 
         /// <summary>
@@ -36,28 +45,21 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if(this.Parent.GetType() != typeof(CropActivityManageProduct))
-            {
-                string[] memberNames = new string[] { "Parent model" };
-                results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
-            }
-            return results;
-        }
-
-        /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
@@ -93,7 +95,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             double numberUnits;
@@ -102,8 +104,17 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
-                case LabourUnitType.perHa:
+                case LabourUnitType.perUnitOfLand:
                     CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
+                    numberUnits = cropParent.Area;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHa:
+                    cropParent = FindAncestor<CropActivityManageCrop>();
                     CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
                     numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
@@ -147,7 +158,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, this.Category, RelatesToResourceName);
         }
 
         /// <summary>
@@ -203,6 +214,27 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (this.Parent.GetType() != typeof(CropActivityManageProduct))
+            {
+                string[] memberNames = new string[] { "Parent model" };
+                results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -211,13 +243,25 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+            if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
             {
                 html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
             }
+            else
+            {
+                html += "\n<div class=\"activityentry\">This activity uses a category label ";
+                if (Category != null && Category != "")
+                {
+                    html += "<span class=\"setvalue\">" + Category + "</span> ";
+                }
+                else
+                {
+                    html += "<span class=\"errorlink\">[NOT SET]</span> ";
+                }
+                html += " for all transactions</div>";
+            }
             return html;
-        }
-
-
+        } 
+        #endregion
     }
 }

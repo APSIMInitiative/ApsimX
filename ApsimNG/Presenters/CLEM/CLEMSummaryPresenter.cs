@@ -1,10 +1,14 @@
 ﻿
 namespace UserInterface.Presenters
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Net.NetworkInformation;
     using System.Reflection;
     using System.Text;
+    using APSIM.Shared.Utilities;
+    using ApsimNG.Interfaces;
     using Models.CLEM;
     using Models.Core;
     using Views;
@@ -22,12 +26,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
-        /// <summary>
-        /// The explorer
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private ExplorerPresenter explorer;
 
         /// <summary>
         /// Attach the view
@@ -38,21 +39,72 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
-            this.explorerPresenter = explorerPresenter;
-            RefreshSummary();
+            this.genericView = view as IMarkdownView; 
+            explorer = explorerPresenter;
         }
 
-        public void RefreshSummary()
+        public void Refresh()
         {
-            this.genericView.SetContents(CreateHTML(), false, false);
+            this.genericView.Text = CreateMarkdown(this.model);
+
+            // save summary to disk
+            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CreateHTML(model));
         }
 
-        public string CreateHTML() //void RefreshSummary()
+        public string CreateMarkdown(Model modelToSummarise)
         {
+            // get help uri
+            string helpURL = "";
+            try
+            {
+                HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
+                string modelHelpURL = "";
+                if (helpAtt != null)
+                {
+                    modelHelpURL = helpAtt.ToString();
+                }
+                // does offline help exist
+                var directory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                string offlinePath = Path.Combine(directory, "CLEM/Help");
+                if (File.Exists(Path.Combine(offlinePath, "Default.htm")))
+                {
+                    helpURL = "file:///" + offlinePath.Replace(@"\", "/") + "/" + modelHelpURL.TrimStart('/');
+                }
+                // is this application online for online help
+                if (NetworkInterface.GetIsNetworkAvailable())
+                {
+                    // set to web address
+                    // not currently available during development until web help is launched
+                    helpURL = "https://www.apsim.info/clem/" + modelHelpURL.TrimStart('/');
+                }
+                if (helpURL == "")
+                {
+                    helpURL = "https://www.apsim.info";
+                }
+                // auto update if setting set in system settings for CLEM
+                //System.Diagnostics.Process.Start(helpURL);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            string summaryFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html").Replace(@"\", "/");
+            string markdownString = "";
+            markdownString += $"[View descriptive summary of current settings in browser]({summaryFilePath} \"descriptive summary\")  \n  \n";
+            markdownString += $"View reference details for this component [{modelToSummarise.GetType().Name}]({helpURL} \"{modelToSummarise.GetType().Name} help\")  \n";
+            return markdownString;
+        }
+
+        public string CreateHTML(Model modelToSummarise) //void RefreshSummary()
+        {
+            // currently includes autoupdate script for display of summary information in browser
+            // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
+
             string htmlString = "<!DOCTYPE html>\n" +
-                "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
+                "<html>\n<head>\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
+                "body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
                 "table th {padding:8px; color:[HeaderFontColor];}" +
@@ -113,6 +165,7 @@ namespace UserInterface.Presenters
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
+                ".filterset {float: left; font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 0px 3px; margin: 2px 0px 0px 5px; border-radius:3px; }" +
                 ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
@@ -176,8 +229,8 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ResContBack]", "#281A0E");
                 htmlString = htmlString.Replace("[ResContBackLight]", "#3F2817");
                 htmlString = htmlString.Replace("[ResContBackDark]", "#281A0E");
-                htmlString = htmlString.Replace("[ResFontBanner]", "#ffffff"); //1E1610
-                htmlString = htmlString.Replace("[ResFontContent]", "#ffffff"); // cea178
+                htmlString = htmlString.Replace("[ResFontBanner]", "#ffffff"); 
+                htmlString = htmlString.Replace("[ResFontContent]", "#ffffff"); 
 
                 //activities
                 htmlString = htmlString.Replace("[ActContBack]", "#003F3D");
@@ -203,25 +256,42 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
             }
 
-            if (model is ZoneCLEM)
+            htmlString += "\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />";
+            htmlString += "\n<div class=\"clearfix defaultbanner\">";
+
+            string fullname = model.Name;
+            if(model is CLEMModel)
             {
-                htmlString += (model as ZoneCLEM).GetFullSummary(model, true, htmlString);
+                fullname = (model as CLEMModel).NameWithParent;
             }
-            else if (model is Market)
+            htmlString += $"<div class=\"namediv\">Component {model.GetType().Name} named {fullname}</div>";
+            htmlString += $"<div class=\"typediv\">Details</div>";
+            htmlString += "</div>";
+            htmlString += "\n<div class=\"defaultcontent\">";
+            htmlString += $"\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}<br />";
+            htmlString += "\n</div>";
+            htmlString += "\n</div>";
+
+
+            if (modelToSummarise is ZoneCLEM)
             {
-                htmlString += (model as Market).GetFullSummary(model, true, htmlString);
+                htmlString += (modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, true, htmlString);
+            }
+            else if (modelToSummarise is Market)
+            {
+                htmlString += (modelToSummarise as Market).GetFullSummary(modelToSummarise, true, htmlString);
             }
             else
             {
-                htmlString += (model as CLEMModel).GetFullSummary(model, false, htmlString);
+                htmlString += (modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, false, htmlString);
             }
             htmlString += "\n</body>\n</html>";
 
             if(htmlString.Contains("<canvas"))
             {
-                Assembly _assembly = Assembly.GetExecutingAssembly();
-                StreamReader _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
-                htmlString = htmlString.Replace("<!-- graphscript -->", $"<script>{_textStreamReader.ReadToEnd()}</script>");
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
+                htmlString = htmlString.Replace("<!-- graphscript -->", $"<script>{textStreamReader.ReadToEnd()}</script>");
             }
 
             if (!Utility.Configuration.Settings.DarkTheme)

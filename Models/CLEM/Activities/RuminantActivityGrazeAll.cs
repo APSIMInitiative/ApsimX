@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "").ToList();
 
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Graze", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -244,6 +244,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -253,7 +255,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
-            if(HoursGrazed <= 0)
+            if (HoursGrazed <= 0)
             {
                 html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
             }
@@ -265,7 +267,8 @@ namespace Models.CLEM.Activities
             html += "the maximum 8 hours each day</span>";
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

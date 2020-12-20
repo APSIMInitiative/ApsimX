@@ -78,7 +78,6 @@
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            this.view.TabChanged += OnChangeTab;
 
             Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
@@ -88,7 +87,7 @@
             
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
-            dataStorePresenter = new DataStorePresenter();
+            dataStorePresenter = new DataStorePresenter(new string[] { report.Name });
             Simulation simulation = report.FindAncestor<Simulation>();
             Experiment experiment = report.FindAncestor<Experiment>();
             Zone paddock = report.FindAncestor<Zone>();
@@ -104,17 +103,6 @@
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             this.view.TabIndex = this.report.ActiveTabIndex;
-        }
-
-        /// <summary>
-        /// Invoked when the view's selected tab is changed.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnChangeTab(object sender, EventArgs e)
-        {
-            if (view.TabIndex == 1 && dataStorePresenter.tableDropDown.SelectedValue != report.Name)
-                dataStorePresenter.tableDropDown.SelectedValue = report.Name;
         }
 
         private void OnSplitterChanged(object sender, EventArgs e)
@@ -133,7 +121,6 @@
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
-            this.view.TabChanged -= OnChangeTab;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;

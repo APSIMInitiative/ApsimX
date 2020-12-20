@@ -829,54 +829,49 @@
             if (myZone == null)
                 return null;
 
-            if (myZone.IsWeirdoPresent)
-                return new double[myZone.Physical.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+
+            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
+
+            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            {
+                double[] kl = soilCrop.KL;
+                double[] ll = soilCrop.LL;
+
+                double[] supply = new double[myZone.Physical.Thickness.Length];
+
+                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+                for (int layer = 0; layer <= currentLayer; layer++)
+                {
+                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
+
+                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                        available * myZone.RootProportions[layer]);
+                }
+
+                return supply;
+            }
             else
             {
-                var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+                double[] kl = soilCrop.KL;
+                double[] ll = soilCrop.LL;
 
-                var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-                if (soilCrop == null)
-                    throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
-
-                if (RootFrontCalcSwitch?.Value() >= 1.0)
+                double[] supply = new double[myZone.Physical.Thickness.Length];
+                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
                 {
-                    double[] kl = soilCrop.KL;
-                    double[] ll = soilCrop.LL;
-
-                    double[] supply = new double[myZone.Physical.Thickness.Length];
-
-                    LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                    for (int layer = 0; layer <= currentLayer; layer++)
+                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
                     {
                         double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * myZone.RootProportions[layer]);
+                        available * myZone.RootProportions[layer]);
                     }
-
-                    return supply;
                 }
-                else
-                {
-                    double[] kl = soilCrop.KL;
-                    double[] ll = soilCrop.LL;
-
-                    double[] supply = new double[myZone.Physical.Thickness.Length];
-                    LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                    for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
-                    {
-                        if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
-                        {
-                            double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * myZone.RootProportions[layer]);
-                        }
-                    }
-                    return supply;
-                }
-            }            
+                return supply;
+            }
         }
 
         //------------------------------------------------------------------------------------------------
@@ -1089,7 +1084,7 @@
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (!PlantZone.IsWeirdoPresent && soilCrop == null)
+            if (soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             Zones = new List<ZoneState>();

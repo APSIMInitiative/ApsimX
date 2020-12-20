@@ -91,32 +91,6 @@ namespace Models.CLEM
                 name = quoteName + "." + name;
                 current = current.Parent as IModel;
             }
-
-            // store details needed to create this report in future.
-
-            //hSReport = new Report
-            //{
-            //    Name = this.Name + "Report",
-            //    VariableNames = new string[]
-            //{
-            //    "[Clock].Today as Date",
-            //    name + ".ReportDetails" + ".Breed as Breed",
-            //    name + ".ReportDetails" + ".Herd as Herd",
-            //    name + ".ReportDetails" + ".Age as AgeGroup",
-            //    name + ".ReportDetails" + ".Sex as Sex",
-            //    name + ".ReportDetails" + ".Number as Num",
-            //    name + ".ReportDetails" + ".AverageWeight as AvgWt",
-            //    name + ".ReportDetails" + ".AverageWeightGain as AvgWtGn",
-            //    name + ".ReportDetails" + ".AverageIntake as AvgIntake",
-            //    name + ".ReportDetails" + ".AdultEquivalents as AE",
-            //    name + ".ReportDetails" + ".NumberPregnant as NoPregnant",
-            //    name + ".ReportDetails" + ".NumberOfBirths as Births"
-            //},
-            //    EventNames = new string[]
-            //{
-            //    name+".OnReportItemGenerated"
-            //}
-            //};
         }
 
         /// <summary>

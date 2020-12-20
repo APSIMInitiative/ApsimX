@@ -165,6 +165,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -186,7 +188,7 @@ namespace Models.CLEM.Activities
                 html += "NOT SET";
             }
             html += "</span> months from ";
-            if(MonthDue > 0)
+            if (MonthDue > 0)
             {
                 html += "<span class=\"setvalueextra\">";
                 html += MonthDue.ToString();
@@ -197,7 +199,7 @@ namespace Models.CLEM.Activities
                 html += "NOT SET";
             }
             html += "</span></div>";
-            if(!this.Enabled)
+            if (!this.Enabled)
             {
                 html += " - DISABLED!";
             }
@@ -228,7 +230,8 @@ namespace Models.CLEM.Activities
             html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

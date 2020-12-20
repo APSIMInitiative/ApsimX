@@ -1,5 +1,7 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -17,10 +19,10 @@ namespace Models.PMF.Phen
     public class FinalLeafNumberSet : Model
     {
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
-        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary")]
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp")]
         public double LV { get; set; }
-        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp</summary>
-        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp")]
+        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in 8h Pp</summary>
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in 8h Pp")]
         public double SV { get; set; }
         /// <summary>Final Leaf Number when grown at >20oC in >16h Pp</summary>
         [Description("Final Leaf Number when grown at >20oC in >16h Pp")]
@@ -123,12 +125,13 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class CAMP : Model, IVrn1Expression
     {
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary summary = null;
+
         // Other Model dependencies links
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction tt = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction pp = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction PTQ = null;
@@ -150,6 +153,9 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         FLNParameterEnvironment EnvData = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction PpResponse = null;
+
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         Phenology phenology = null;
@@ -157,19 +163,13 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
         /// </summary>
-        /// <param name="Pp">Photoperiod</param>
         /// <param name="baseUR">dVrn/HS below 8h Pp</param>
         /// <param name="maxUR">dVrn/HS above 16h Pp</param>
         /// <param name="dBP">delta base phyllochron</param>
         /// <returns></returns>
-        private double CalcdPPVrn(double Pp, double baseUR, double maxUR, double dBP)
+        private double CalcdPPVrn(double baseUR, double maxUR, double dBP)
         {
-            if (Pp <= 8.0)
-                return baseUR * dBP;
-            else if ((Pp > 8.0) && (Pp < 16.0))
-                return (baseUR + (maxUR - baseUR) * (Pp - 8) / (16 - 8)) * dBP;
-            else // (Pp >= 16.0)
-                return maxUR * dBP;
+            return (baseUR + (maxUR - baseUR) * PpResponse.Value()) * dBP;
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Models.PMF.Phen
                 { // Crop emerged
                     dBP = CalcdBP(tt.Value(), PTQ.Value());
                     // Calculate delta long photoperiod haunstage
-                    dLPpBP = dBP * CalcdPPVrn(pp.Value(), 0, 1, 1) * PropnOfDay;
+                    dLPpBP = dBP * PpResponse.Value() * PropnOfDay;
                 }
 
                 LPpBP += dLPpBP;
@@ -371,7 +371,7 @@ namespace Models.PMF.Phen
                     ColdVrn1 = Math.Max(0.0, ColdVrn1 + dColdVrn1);
 
                     // Calculate daily methalation
-                    if (ColdVrn1 >= MethalationThreshold) // ColdVrn1 expressed to threshold required for methalation to occur
+                    if ((ColdVrn1 >= MethalationThreshold) && (MethColdVrn1 < Params.MaxMethColdVern1)) // ColdVrn1 expressed to threshold required for methalation to occur
                     { isMethalating = true; }
                     else
                     { isMethalating = false; }
@@ -388,7 +388,7 @@ namespace Models.PMF.Phen
                     {
                         if (MethColdVrn1 == 0.0)  // VrnX expression only occurs if no methalation of Vrn1 has occured
                         {
-                            dVrnX = CalcdPPVrn(pp.Value(), BaseDVrnX, Params.MaxDVrnX, dBP);
+                            dVrnX = CalcdPPVrn(BaseDVrnX, Params.MaxDVrnX, dBP);
                         }
                         pVrn2 = CalcpVrn2(LPpBP, Params.MaxIpVrn2, Params.MaxDpVrn2);
                     }
@@ -414,7 +414,7 @@ namespace Models.PMF.Phen
                     
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isReproductive == false))
-                dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, Params.MaxDVrn3, dBP);
+                dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dBP);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then work out phase progression based on Vrn expression
@@ -451,11 +451,26 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("Sowing")]
-        private void OnSowing(object sender, EventArgs e)
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, EnvData);
+            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar);
+            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString());
+            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString());
+            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString());
+            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString());
+            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated" );
+            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString());
+            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString());
+            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString());
+            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString());
+            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString());
+            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString());
+            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString());
+            summary.WriteMessage(this, "BasePhyllochron  = " + Params.BasePhyllochron.ToString());
+            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString());
         }
 
         /// <summary>

@@ -47,6 +47,8 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -59,7 +61,9 @@ namespace Models.CLEM.Groupings
             results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantGroup]", memberNames));
             return results;
         }
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -98,7 +102,8 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

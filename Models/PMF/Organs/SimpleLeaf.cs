@@ -411,9 +411,7 @@
         [JsonIgnore]
         public Biomass Removed { get; private set; }
 
-        /// <summary>
-        /// The amount of mass lost each day from maintenance respiration.
-        /// </summary>
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
         public double MaintenanceRespiration { get; private set; }
 
@@ -663,7 +661,7 @@
         /// Intercepted radiation value that is passed to the RUE class to calculate DM supply.
         /// </summary>
         [Units("MJ/m^2/day")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {

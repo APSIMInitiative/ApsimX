@@ -94,7 +94,6 @@ namespace Models.CLEM.Activities
             endMonth = (int)EndMonth;
         }
 
-
         private bool IsMonthInRange(DateTime date)
         {
             bool due = false;
@@ -123,6 +122,8 @@ namespace Models.CLEM.Activities
         {
             ActivityPerformed?.Invoke(this, e);
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -185,6 +186,7 @@ namespace Models.CLEM.Activities
             html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
-        }
+        } 
+        #endregion
     }
 }

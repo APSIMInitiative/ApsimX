@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
+    [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -41,6 +42,7 @@ namespace Models.CLEM.Activities
         public int OffsetMonthHarvestStop { get; set; }
     
         private CropActivityManageProduct ManageProductActivity;
+        private List<ActivityTimerSequence> sequenceTimerList;
 
         /// <summary>
         /// Notify CLEM that this activity was performed.
@@ -55,35 +57,15 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            var results = new List<ValidationResult>();
-            // check that this activity has a parent of type CropActivityManageProduct
-
-            Model current = this;
-            while (current.GetType() != typeof(ZoneCLEM))
-            {
-                if(current.GetType() == typeof(CropActivityManageProduct))
-                {
-                    ManageProductActivity = current as CropActivityManageProduct;
-                }
-                current = current.Parent as Model;
-            }
-
-            if (ManageProductActivity == null)
-            {
-                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
-                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
-            }
-
-            return results;
+            sequenceTimerList = FindAllChildren<ActivityTimerSequence>().ToList<ActivityTimerSequence>();
         }
-        
+
         /// <summary>
         /// Method to determine whether the activity is due based on harvest details form parent.
         /// </summary>
@@ -116,12 +98,13 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < 2; i++)
                 {
                     DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                    month[i] = (checkDate.Year * 12 + checkDate.Month);
                 }
-                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+
+                int today = Clock.Today.Year * 12 + Clock.Today.Month;
                 if (month[0] <= today && month[1] >= today)
                 {
-                    // report activity performed.
+                    // report activity performed details.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
                         Activity = new BlankActivity()
@@ -130,6 +113,23 @@ namespace Models.CLEM.Activities
                             Name = this.Name,
                         }
                     };
+                    // check if timer sequence ok
+                    if (sequenceTimerList.Count() > 0)
+                    {
+                        // get month index in sequence
+                        int sequenceIndex = today - month[0];
+                        foreach (var sequence in sequenceTimerList)
+                        {
+                            if (!sequence.TimerOK(sequenceIndex))
+                            {
+                                // report activity performed.
+                                activitye.Activity.Status = ActivityStatus.NotNeeded;
+                                activitye.Activity.SetGuID(this.UniqueID);
+                                this.OnActivityPerformed(activitye);
+                                return false;
+                            }
+                        }
+                    }
                     activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                     return true;
@@ -139,7 +139,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine whether the activity has past based on current dateand harvest details form parent.
+        /// Method to determine whether the activity has past based on current date and harvest details form parent.
         /// </summary>
         /// <returns>Whether the activity is past</returns>
         public bool ActivityPast
@@ -170,9 +170,9 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < 2; i++)
                 {
                     DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 100 + checkDate.Month);
+                    month[i] = (checkDate.Year * 12 + checkDate.Month);
                 }
-                int today = Clock.Today.Year * 100 + Clock.Today.Month;
+                int today = Clock.Today.Year * 12 + Clock.Today.Month;
                 return (month[0] < today && month[1] < today);
             }
         }
@@ -194,6 +194,40 @@ namespace Models.CLEM.Activities
         {
             ActivityPerformed?.Invoke(this, e);
         }
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity has a parent of type CropActivityManageProduct
+
+            Model current = this;
+            while (current.GetType() != typeof(ZoneCLEM))
+            {
+                if (current.GetType() == typeof(CropActivityManageProduct))
+                {
+                    ManageProductActivity = current as CropActivityManageProduct;
+                }
+                current = current.Parent as Model;
+            }
+
+            if (ManageProductActivity == null)
+            {
+                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
+                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
+            }
+
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -226,14 +260,14 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"filter\">";
                 html += "Perform <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " "+((OffsetMonthHarvestStop<0)?"before":"after")+" harvest";
+                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before" : "after") + " harvest";
                 html += "</div>";
             }
             else
             {
                 html += "\n<div class=\"filter\">";
                 html += "Start <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month"+(Math.Abs(OffsetMonthHarvestStart)==1?"":"s") +" ";
+                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ";
                 html += (OffsetMonthHarvestStart > 0) ? "after " : "before ";
                 html += " harvest and stop <span class=\"setvalueextra\">";
                 html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ";
@@ -271,6 +305,7 @@ namespace Models.CLEM.Activities
             html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
-        }
+        } 
+        #endregion
     }
 }
