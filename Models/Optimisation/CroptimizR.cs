@@ -459,18 +459,21 @@ namespace Models.Optimisation
             Directory.Delete(outputPath, true);
 
             // Now, we run the simulations with the optimal values, and store
-            // the results in a checkpoint called 'After'.
-            Status = "Running simulations with optimised parameters";
-            IEnumerable<CompositeFactor> optimalValues = GetOptimalValues(output);
-            RunSimsWithOptimalValues(apsimxFileName, "Optimal", optimalValues);
+            // the results in a checkpoint called 'After'. Checkpointing has
+            // not been implemented on the sockets storage implementation.
+            if (FindInScope<IDataStore>().Writer is DataStoreWriter)
+            {
+                Status = "Running simulations with optimised parameters";
+                IEnumerable<CompositeFactor> optimalValues = GetOptimalValues(output);
+                RunSimsWithOptimalValues(apsimxFileName, "Optimal", optimalValues);
 
-            // Now run sims without optimal values, to populate the 'Current' checkpoint.
-            Status = "Running simulations";
-            Runner runner = new Runner(Children);
-            List<Exception> errors = runner.Run();
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
-
+                // Now run sims without optimal values, to populate the 'Current' checkpoint.
+                Status = "Running simulations";
+                Runner runner = new Runner(Children);
+                List<Exception> errors = runner.Run();
+                if (errors != null && errors.Count > 0)
+                    throw errors[0];
+            }
         }
 
         /// <summary>
