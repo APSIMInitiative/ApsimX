@@ -282,11 +282,11 @@ namespace UserInterface.Presenters
             // Start building table
 
             // get CLEM Zone
-            IModel clem = model as IModel;
-            while (!(clem is ZoneCLEM))
-            {
-                clem = clem.Parent;
-            }
+            IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
+            //while (!(clem is ZoneCLEM))
+            //{
+            //    clem = clem.Parent;
+            //}
 
             // Get Labour resources
             labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
@@ -341,7 +341,7 @@ namespace UserInterface.Presenters
             tableSpacer += "| :---";
             foreach (LabourType lt in labour.FindAllChildren<LabourType>())
             {
-                tableHeader += " | " + lt.Name;
+                tableHeader += " | " + lt.Name.Replace("_", " ");
                 tableSpacer += " | :---:";
             }
             tableHeader += " |  \n";
@@ -356,7 +356,7 @@ namespace UserInterface.Presenters
             markdownString += "  \n***  \n";
             markdownString += "Notes  \n";
             markdownString += "-  Only activities capable of including a labour requirement are displayed.  \n";
-            markdownString += "-  Activities with no labour requirement provided are displayed with grey text.  \n";
+            markdownString += "-  Activities with no labour requirement provided are displayed with italic text.  \n";
             markdownString += "-  Multiple rows for a given activity show where more than one individual is required.  \n";
             markdownString += "-  The preferential allocation of labour is identified from 1 (1st) to 5 (5th, max levels displayed)  \n";
 
@@ -382,15 +382,15 @@ namespace UserInterface.Presenters
             {
                 Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
                 string emph = (labourRequirement == null) ? "_" : "";
-                tblstr += $"| {emph}{model.Name}{emph} | ";
-                //tblstr += ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
                 if (!(labourRequirement == null))
                 {
+                    tblstr += $"| {emph}{model.Name.Replace("_"," ")}{emph} |";
                     // for each labour type
                     foreach (LabourType lt in labourList)
                     {
+                        string levelstring = "";
                         // for each filter group
                         foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                         {
@@ -405,15 +405,16 @@ namespace UserInterface.Presenters
                                 List<LabourType> ltlist = new List<LabourType>() { lt };
                                 if (ltlist.Filter(nested).Count() >= 1)
                                 {
-                                    tblstr += ((level < 5) ? level.ToString() : "5") + " | ";
+                                    levelstring = ((level < 5) ? level.ToString() : "5");
                                 }
                             }
                         }
+                    tblstr += $" {levelstring} |";
                     }
                 }
                 else
                 {
-                    tblstr += CreateRowMarkdown("", numberLabourTypes);
+                    tblstr += $"| {emph}{model.Name.Replace("_", " ")}{emph} | " + CreateRowMarkdown("", numberLabourTypes);
                 }
                 tblstr += "  \n";
             }

@@ -41,6 +41,9 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView; 
             explorer = explorerPresenter;
+
+            // save summary to disk when component is first pressed regardless of user slecting summary tab as now goes to html in browser
+            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CreateHTML(this.model));
         }
 
         public void Refresh()
@@ -102,8 +105,12 @@ namespace UserInterface.Presenters
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
 
             string htmlString = "<!DOCTYPE html>\n" +
-                "<html>\n<head>\n" +
-                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
+                "<html>\n<head>\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\n" +
+                "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\n" +
+                "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\n" +
+                "<meta http-equiv = \"Expires\" content = \"0\" />\n" +
+                //"<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" + 
+                "<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
