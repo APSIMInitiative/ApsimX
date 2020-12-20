@@ -215,6 +215,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
+                    if (methodName == null)
+                        throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
                     DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
