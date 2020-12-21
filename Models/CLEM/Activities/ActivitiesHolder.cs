@@ -70,6 +70,7 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -80,13 +81,14 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // ensure all folders are not APSIM folders
-            if(FindAllDescendants<Folder>().Any())
+            if (FindAllDescendants<Folder>().Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
                 results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// Last resource request that was in defecit
@@ -298,6 +300,8 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -324,6 +328,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\n</div>";
-        }
+        } 
+        #endregion
     }
 }

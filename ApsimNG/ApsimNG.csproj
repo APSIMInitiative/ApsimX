@@ -296,6 +296,7 @@
     <Compile Include="Utility\ConfigurationConverter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Utility\WeatherDownloadDialog.cs" />
+    <Compile Include="Utility\SettingsDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
@@ -514,6 +515,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerSequence.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileResource.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityManageExternal.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chloride.png" />
@@ -691,7 +693,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityHerdCost.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityManage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMilking.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMuster.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMove.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStocking.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityPredictiveStockingENSO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivitySellDryBreeders.png" />

@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                         OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
                         {
                             Age = 0,
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                     }
                 }
             }
@@ -189,12 +189,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
             if (breeders == 0)
             {
-                return 0;
+                return new GetDaysLabourRequiredReturnArgs(0, "Breed", SelectedOtherAnimalsType.NameWithParent);
             }
 
             double daysNeeded = 0;
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Breed", SelectedOtherAnimalsType.NameWithParent);
         }
 
         /// <summary>

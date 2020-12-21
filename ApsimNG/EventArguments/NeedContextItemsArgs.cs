@@ -300,6 +300,8 @@
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
+            if (node == null)
+                node = relativeTo.FindByPath(objectName)?.Value;
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
@@ -333,8 +335,13 @@
                 // object name doesn't contain square brackets.
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
-                    textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
+                    if (objectName.StartsWith("."))
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(1, textBeforeFirstDot.Length - 1);
+                    else
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
                 node = relativeTo.FindInScope(textBeforeFirstDot);
+                if (node == null)
+                    node = relativeTo.FindByPath(objectName)?.Value;
             }
             else
             {

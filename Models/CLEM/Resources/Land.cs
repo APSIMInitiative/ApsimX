@@ -170,6 +170,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public event EventHandler AllocationReported;
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -180,7 +182,7 @@ namespace Models.CLEM.Resources
             string html = "";
             html += "\n<div class=\"activityentry\">";
             html += "Reported in ";
-            if(UnitsOfArea == null || UnitsOfArea == "")
+            if (UnitsOfArea == null || UnitsOfArea == "")
             {
                 html += "<span class=\"errorlink\">Unspecified units of area</span>";
             }
@@ -198,7 +200,7 @@ namespace Models.CLEM.Resources
             html += "</div>";
             return html;
         }
+
+        #endregion
     }
-
-
 }

@@ -81,6 +81,7 @@ namespace Models.CLEM
             Value = StartingValue;
         }
 
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -95,6 +96,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
     }
 }

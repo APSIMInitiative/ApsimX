@@ -24,6 +24,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This component specifies a resource input file for the CLEM simulation")]
     [Version(1, 0, 1, "")]
@@ -338,6 +339,8 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -371,8 +374,8 @@ namespace Models.CLEM
                     html += " with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>";
                 }
             }
-
-            html += "\n<div class=\"activityentry\">";
+            html += "</div>";
+            //            html += "\n<div class=\"activityentry\">";
             html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
             html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ";
             if (ResourceNameColumnName is null || ResourceNameColumnName == "")
@@ -416,6 +419,10 @@ namespace Models.CLEM
             return html;
         }
 
+        #endregion
+
+        #region validation
+
         /// <summary>
         /// Validate this component
         /// </summary>
@@ -424,13 +431,14 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
+            if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
                 string[] memberNames = new string[] { "WorksheetName" };
                 results.Add(new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
     }
 
 }

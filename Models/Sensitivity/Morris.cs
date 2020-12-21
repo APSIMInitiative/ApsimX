@@ -327,7 +327,10 @@
                 List<string> variableNames = new List<string>();
                 foreach (string aggregationValue in AggregationValues)
                 {
-                    view.RowFilter = AggregationVariableName + "=" + aggregationValue;
+                    string value = aggregationValue;
+                    if (DateTime.TryParse(value, out DateTime date))
+                        value = date.ToString("yyyy-MM-dd");
+                    view.RowFilter = $"{AggregationVariableName}='{value}'";
 
                     foreach (DataColumn predictedColumn in view.Table.Columns)
                     {
@@ -341,7 +344,7 @@
                             }
                             else
                             {
-                                DataTableUtilities.AddColumn(predictedValues, predictedColumn.ColumnName + "_" + aggregationValue, values);
+                                DataTableUtilities.AddColumn(predictedValues, predictedColumn.ColumnName + "_" + value, values);
                                 if (!variableNames.Contains(predictedColumn.ColumnName))
                                     variableNames.Add(predictedColumn.ColumnName);
                             }
@@ -416,7 +419,7 @@
                     tableKey.Set(variable + ".Sigma", row["sigma"]);
 
                     // Need to bring in the descriptive values.
-                    view.RowFilter = AggregationVariableName + "=" + aggregationValue;
+                    view.RowFilter = $"{AggregationVariableName}='{aggregationValue}'";
                     foreach (var descriptiveColumnName in descriptiveColumnNames)
                     {
                         var values = DataTableUtilities.GetColumnAsStrings(view, descriptiveColumnName);
@@ -470,7 +473,7 @@
             string script = GetMorrisRScript();
             script += string.Format
             ("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
-            "values = read.csv(\"{1}\")" + Environment.NewLine +
+            "values = read.csv(\"{1}\", check.names = F)" + Environment.NewLine +
             "allEE <- data.frame()" + Environment.NewLine +
             "allStats <- data.frame()" + Environment.NewLine +
             "for (columnName in colnames(values))" + Environment.NewLine +

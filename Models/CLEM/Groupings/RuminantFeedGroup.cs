@@ -50,6 +50,7 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -59,7 +60,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
 
-            if(this.Parent.GetType() != typeof(RuminantActivityFeed))
+            if (this.Parent.GetType() != typeof(RuminantActivityFeed))
             {
                 html += "<div class=\"warningbanner\">This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component</div>";
                 return html;
@@ -71,7 +72,7 @@ namespace Models.CLEM.Groupings
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString() + "kg</span>";
+                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "kg</span>";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                 case RuminantFeedActivityTypes.ProportionOfWeight:
@@ -79,7 +80,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     if (Value != 1)
                     {
-                        html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString("0.##%")+"</span>";
+                        html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString("0.##%") + "</span>";
                     }
                     break;
                 default:
@@ -143,7 +144,11 @@ namespace Models.CLEM.Groupings
             if (overfeed)
             {
                 html += "\n<div class=\"activityentry\">";
-                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
+                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding";
+                if(!(this.Parent as RuminantActivityFeed).StopFeedingWhenSatisfied)
+                {
+                    html += ", with excess food still utilised but wasted";
+                }
                 html += "</div>";
 
             }
@@ -179,7 +184,8 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

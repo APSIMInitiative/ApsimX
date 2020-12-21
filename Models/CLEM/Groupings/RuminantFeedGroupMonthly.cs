@@ -52,6 +52,8 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -61,15 +63,19 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            if(MonthlyValues.Count() > 0)
+            if (MonthlyValues.Count() > 0)
             {
-                if(MonthlyValues.Max() == 0)
+                if (MonthlyValues.Max() == 0)
                 {
                     Summary.WriteWarning(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]");
                 }
             }
             return results;
         }
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -93,7 +99,7 @@ namespace Models.CLEM.Groupings
             switch (ft)
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += grps.FirstOrDefault().Key.ToString()+ "kg";
+                    html += grps.FirstOrDefault().Key.ToString() + "kg";
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -116,7 +122,7 @@ namespace Models.CLEM.Groupings
                 switch (ft)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        html += grps.LastOrDefault().Key.ToString()+"kg";
+                        html += grps.LastOrDefault().Key.ToString() + "kg";
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -204,7 +210,8 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

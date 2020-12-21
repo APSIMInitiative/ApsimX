@@ -24,6 +24,8 @@ namespace UserInterface.Classes
         Files,
         Directory,
         //Directories,
+        Font,
+        Numeric
     }
 
     /// <summary>
@@ -58,7 +60,7 @@ namespace UserInterface.Classes
         {
             Name = name;
             Properties = properties;
-            SubModelProperties = subProperties;
+            SubModelProperties = subProperties ?? new PropertyGroup[0];
         }
 
         /// <summary>
@@ -66,7 +68,20 @@ namespace UserInterface.Classes
         /// </summary>
         public int Count()
         {
-            return Properties.Count() + SubModelProperties.Sum(p => p.Count());
+            return Properties.Count() + SubModelProperties?.Sum(p => p.Count()) ?? 0;
+        }
+
+        public Property Find(Guid id)
+        {
+            return GetAllProperties().FirstOrDefault(p => p.ID == id);
+        }
+
+        public IEnumerable<Property> GetAllProperties()
+        {
+            foreach (Property property in Properties)
+                yield return property;
+            foreach (Property property in SubModelProperties.SelectMany(g => g.GetAllProperties()))
+                yield return property;
         }
     }
 
@@ -118,6 +133,20 @@ namespace UserInterface.Classes
         public string[] DropDownOptions { get; private set; }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public Property(string name, string tooltip, object value, PropertyType displayType, IEnumerable<string> dropDownOptions = null, IEnumerable<string> separators = null)
+        {
+            ID = Guid.NewGuid();
+            Name = name;
+            Tooltip = tooltip;
+            Value = value;
+            DisplayMethod = displayType;
+            DropDownOptions = dropDownOptions?.ToArray();
+            Separators = separators?.ToList();
+        }
+
+        /// <summary>
         /// Instantiates a Property object by reading metadata about
         /// the given property.
         /// </summary>
@@ -141,6 +170,8 @@ namespace UserInterface.Classes
             // ?else if property type isn't a struct?
             else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
                 Value = ((IModel)Value).Name;
+            else if (metadata.PropertyType.IsEnum)
+                Value = VariableProperty.GetEnumDescription((Enum)Enum.Parse(metadata.PropertyType, Value?.ToString()));
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
@@ -186,6 +217,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
+                    if (methodName == null)
+                        throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
                     DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
@@ -267,6 +300,20 @@ namespace UserInterface.Classes
                 //case DisplayType.SubModel:
                 default:
                     throw new NotImplementedException($"Unknown display type {displayType}");
+            }
+
+            // If the list of dropdown options doesn't contain the actual value of the
+            // property, add that value to the list of valid options.
+            if (DisplayMethod == PropertyType.DropDown && Value != null)
+            {
+                if (DropDownOptions == null)
+                    DropDownOptions = new string[1] { Value.ToString() };
+                else if (!DropDownOptions.Contains(Value.ToString()))
+                {
+                    List<string> values = DropDownOptions.ToList();
+                    values.Add(Value.ToString());
+                    DropDownOptions = values.ToArray();
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Classes
 {
+    using APSIM.Shared.Utilities;
     using HtmlAgilityPack;
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
@@ -26,13 +27,14 @@
         /// <param name="html">The HTML to parse.</param>
         /// <param name="section">To section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
-        public static void Convert(string html, DocumentObject section, string imagePath)
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
+        public static void Convert(string html, DocumentObject section, string imagePath, string relativePath)
         {
             if (!string.IsNullOrEmpty(html) && section != null)
             {
                 var doc = new HtmlDocument();
                 doc.LoadHtml(html);
-                ConvertNodes(doc.DocumentNode.ChildNodes, section, imagePath);
+                ConvertNodes(doc.DocumentNode.ChildNodes, section, imagePath, relativePath);
                 AddStylesToDoc(section.Document);
             }
         }
@@ -43,13 +45,14 @@
         /// <param name="nodes">The HTML nodes.</param>
         /// <param name="section">The section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
-        private static void ConvertNodes(HtmlNodeCollection nodes, DocumentObject section, string imagePath)
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
+        private static void ConvertNodes(HtmlNodeCollection nodes, DocumentObject section, string imagePath, string relativePath)
         {
             foreach (var node in nodes)
             {
-                DocumentObject result = ParseNode(node, section, imagePath);
+                DocumentObject result = ParseNode(node, section, imagePath, relativePath);
                 if (node.HasChildNodes)
-                    ConvertNodes(node.ChildNodes, result ?? section, imagePath);
+                    ConvertNodes(node.ChildNodes, result ?? section, imagePath, relativePath);
                 if (node.Name == "table" && result is Table table)
                     FixTableSize(table);
             }
@@ -88,8 +91,9 @@
         /// <param name="node">The HTML node to examine.</param>
         /// <param name="section">The section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
         /// <returns>The newly created MigraDoc section. Can be null.</returns>
-        private static DocumentObject ParseNode(HtmlNode node, DocumentObject section, string imagePath)
+        private static DocumentObject ParseNode(HtmlNode node, DocumentObject section, string imagePath, string relativePath)
         {
             switch (node.Name)
             {
@@ -115,7 +119,7 @@
                 case "th": return AddTableHeading(node, section);
                 case "tr": return AddTableRow(node, section);
                 case "td": return AddTableColumn(node, section);
-                case "img": return AddImage(node, section, imagePath);
+                case "img": return AddImage(node, section, imagePath, relativePath);
                 case "pre": foundCode = true; return null;
                 case "code": if (!foundCode) { FormattedText txt = AddFormattedText(section); txt.FontName = "Courier New"; return txt; } else return null;
             }
@@ -141,15 +145,19 @@
         /// <param name="node"></param>
         /// <param name="section"></param>
         /// <param name="imagePath">Path for images.</param>
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
         /// <returns></returns>
-        private static DocumentObject AddImage(HtmlNode node, DocumentObject section, string imagePath)
+        private static DocumentObject AddImage(HtmlNode node, DocumentObject section, string imagePath, string relativePath)
         {
             HtmlAttribute srcAttribute = node.Attributes["src"];
             if (srcAttribute != null)
             {
+                string absolutePath = PathUtilities.GetAbsolutePath(srcAttribute.Value, relativePath);
                 string fullPath;
                 if (String.IsNullOrEmpty(imagePath))
                     fullPath = srcAttribute.Value;
+                else if (File.Exists(absolutePath))
+                    fullPath = absolutePath;
                 else if (File.Exists(srcAttribute.Value))
                     fullPath = srcAttribute.Value;
                 else

@@ -178,15 +178,19 @@ namespace Models.CLEM
         /// <summary>
         /// Fixed price
         /// </summary>
-        Fixed,
+        Fixed = 0,
+        /// <summary>
+        /// Amount per unit of land
+        /// </summary>
+        perUnitOfLand = 3,
         /// <summary>
         /// Amount per hectare
         /// </summary>
-        perHa,
+        perHa = 1,
         /// <summary>
         /// Amount per tree
         /// </summary>
-        perTree,
+        perTree = 2,
     }
 
     /// <summary>
@@ -232,7 +236,11 @@ namespace Models.CLEM
         /// <summary>
         /// Amount per hectare
         /// </summary>
-        perHa
+        perHa,
+        /// <summary>
+        /// Amount per unit of land
+        /// </summary>
+        perUnitOfLand
     }
 
     /// <summary>
@@ -243,31 +251,35 @@ namespace Models.CLEM
         /// <summary>
         /// Fixed price
         /// </summary>
-        Fixed,
+        Fixed = 0,
+        /// <summary>
+        /// Labour per unit of land
+        /// </summary>
+        perUnitOfLand = 7,
         /// <summary>
         /// Labour per hectare
         /// </summary>
-        perHa,
+        perHa = 1,
         /// <summary>
         /// Labour per Tree
         /// </summary>
-        perTree,
+        perTree = 2,
         /// <summary>
         /// Labour per head
         /// </summary>
-        perHead,
+        perHead = 3,
         /// <summary>
         /// Labour per adult equivilant
         /// </summary>
-        perAE,
+        perAE = 4,
         /// <summary>
         /// Labour per kg
         /// </summary>
-        perKg,
+        perKg = 5,
         /// <summary>
         /// Labour per unit
         /// </summary>
-        perUnit,
+        perUnit = 6,
     }
 
     /// <summary>
@@ -489,4 +501,32 @@ namespace Models.CLEM
         /// </summary>
         December = 12
     }
+
+    /// <summary>
+    /// Style selling resource
+    /// </summary>
+    public enum ResourceSellStyle
+    {
+        /// <summary>
+        /// Specified amount
+        /// </summary>
+        SpecifiedAmount,
+        /// <summary>
+        /// Proportion of store
+        /// </summary>
+        ProportionOfStore,
+        /// <summary>
+        /// Proportion of last gain transaction
+        /// </summary>
+        ProportionOfLastGain,
+        /// <summary>
+        /// Reserve amount
+        /// </summary>
+        ReserveAmount,
+        /// <summary>
+        /// Reserve proportion
+        /// </summary>
+        ReserveProportion
+    }
+
 }

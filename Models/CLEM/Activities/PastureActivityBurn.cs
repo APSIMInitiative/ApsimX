@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
                         ActivityModel = this,
                         Required = total,
                         AllowTransmutation = false,
-                        Reason = "Burn",
+                        Category = "Burn",
                         ResourceTypeName = PaddockName,
                     }
                     );
@@ -145,11 +145,11 @@ namespace Models.CLEM.Activities
                     if (methaneStore != null)
                     {
                         //TODO change emissions for green material
-                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, "Burn emissions"); // * 21; // methane emissions from fire (CO2 eq)
                     }
                     if (n2oStore != null)
                     {
-                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName); // * 21; // N20 emissions from fire (CO2 eq)
+                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, "Burn emissions"); // * 21; // N20 emissions from fire (CO2 eq)
                     }
 
                     // TODO: add fertilisation to pasture for given period.
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             double numberUnits;
@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Burn", pasture.NameWithParent);
         }
 
         /// <summary>
@@ -204,6 +204,8 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -249,7 +251,8 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

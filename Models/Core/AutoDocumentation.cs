@@ -116,8 +116,16 @@
                 return GetSummary(fullName, 'P');
             else if (member is FieldInfo)
                 return GetSummary(fullName, 'F');
+            else if (member is EventInfo)
+                return GetSummary(fullName, 'E');
+            else if (member is MethodInfo method)
+            {
+                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+                args = args.Replace("+", ".");
+                return GetSummary($"{fullName}({args})", 'M');
+            }
             else
-                return GetSummary(fullName, 'M');
+                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
         }
 
         /// <summary>
@@ -149,8 +157,16 @@
                 return GetRemarks(fullName, 'P');
             else if (member is FieldInfo)
                 return GetRemarks(fullName, 'F');
+            else if (member is EventInfo)
+                return GetRemarks(fullName, 'E');
+            else if (member is MethodInfo method)
+            {
+                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+                args = args.Replace("+", ".");
+                return GetRemarks($"{fullName}({args})", 'M');
+            }
             else
-                return GetRemarks(fullName, 'M');
+                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
         }
 
         /// <summary>

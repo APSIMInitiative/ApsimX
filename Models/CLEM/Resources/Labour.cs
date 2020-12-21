@@ -111,6 +111,8 @@ namespace Models.CLEM.Resources
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
+        #region validation
+
         /// <summary>
         /// Validation of this resource
         /// </summary>
@@ -132,6 +134,8 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -455,6 +459,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -463,7 +468,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(AllowAging)
+            if (AllowAging)
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "Individuals age with time";
@@ -489,5 +494,6 @@ namespace Models.CLEM.Resources
         }
 
 
+        #endregion
     }
 }

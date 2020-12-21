@@ -27,7 +27,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -48,12 +48,17 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
+            this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
 
+            this.genericView.Text = CreateMarkdown();
+        }
+
+        private string CreateHTML()
+        {
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" +
                 "th,td {padding:5px;}" +
                 "th,td {border: 1px dotted [GridColor]; }" +
                 "table {border: 0px none #009999; border-collapse: collapse;}" +
@@ -103,24 +108,24 @@ namespace UserInterface.Presenters
 
             // get CLEM Zone
             IModel clem = model as IModel;
-            while(!(clem is ZoneCLEM))
+            while (!(clem is ZoneCLEM))
             {
                 clem = clem.Parent;
             }
 
             // Get Labour resources
             labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
-            if(labour == null)
+            if (labour == null)
             {
                 htmlString += "No Labour supplied in resources";
-                EndHTML(htmlString);
+                return htmlString += "\n</body>\n</html>";
             }
 
             numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
             if (numberLabourTypes == 0)
             {
                 htmlString += "No Labour types supplied in Labour resource";
-                EndHTML(htmlString);
+                return htmlString += "\n</body>\n</html>";
             }
 
             // create labour list
@@ -130,7 +135,7 @@ namespace UserInterface.Presenters
                 {
                     Parent = labour,
                     Name = lt.Name,
-                    AgeInMonths = lt.InitialAge*12,
+                    AgeInMonths = lt.InitialAge * 12,
                     Gender = lt.Gender
                 }
                 );
@@ -143,7 +148,7 @@ namespace UserInterface.Presenters
             if (validpAtt.Count() == 0)
             {
                 htmlString += "No components allow Labour Requirements to be added";
-                EndHTML(htmlString);
+                return htmlString += "\n</body>\n</html>";
             }
 
             // walk through all activities
@@ -152,7 +157,7 @@ namespace UserInterface.Presenters
             if (activities == null)
             {
                 htmlString += "Could not find an Activities Holder";
-                EndHTML(htmlString);
+                return htmlString += "\n</body>\n</html>";
             }
 
             string tableHtml = "";
@@ -160,10 +165,10 @@ namespace UserInterface.Presenters
             tableHtml += "<tr><th>Activity</th>";
             foreach (LabourType lt in labour.FindAllChildren<LabourType>())
             {
-                tableHtml += "<th>"+lt.Name+"</th>";
+                tableHtml += "<th>" + lt.Name + "</th>";
             }
             tableHtml += "</tr>";
-            tableHtml += TableRow(activities);
+            tableHtml += TableRowHTML(activities);
             tableHtml += "</table>";
 
             htmlString += tableHtml;
@@ -200,20 +205,20 @@ namespace UserInterface.Presenters
                 htmlString += "\n</div>";
                 htmlString += "\n</div>";
             }
-
-            EndHTML(htmlString);
+            htmlString += "\n</body>\n</html>";
+            return htmlString;
         }
 
-        private string TableRow(IModel model)
+        private string TableRowHTML(IModel model)
         {
             string tblstr = "";
             // create row
 
             // can row be included?
-            if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
+            if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
                 Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>";
+                tblstr += "<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
                 if (!(labourRequirement == null))
@@ -237,7 +242,7 @@ namespace UserInterface.Presenters
                                 List<LabourType> ltlist = new List<LabourType>() { lt };
                                 if (ltlist.Filter(nested).Count() >= 1)
                                 {
-                                    tblstr += "<span class=\"dot dot"+((level<5)?level.ToString():"5")+" \">"+"</span>";
+                                    tblstr += "<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>";
                                 }
                             }
                             tblstr += "</div>";
@@ -247,7 +252,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    tblstr += CreateRow("", numberLabourTypes);
+                    tblstr += CreateRowHTML("", numberLabourTypes);
                 }
                 tblstr += "</tr>";
             }
@@ -255,23 +260,180 @@ namespace UserInterface.Presenters
             // add all rows for children
             foreach (Model child in model.Children)
             {
-                tblstr += TableRow(child);
+                tblstr += TableRowHTML(child);
             }
             return tblstr;
         }
 
-        private void EndHTML(string htmlString)
-        {
-            htmlString += "\n</body>\n</html>";
-            this.genericView.SetContents(htmlString, false, false);
-        }
 
-        private string CreateRow(string text, int columns)
+        private string CreateRowHTML(string text, int columns)
         {
             string row = "";
             for (int i = 0; i < columns; i++)
             {
                 row += "<td>" + text + "</td>";
+            }
+            return row;
+        }
+
+        private string CreateMarkdown()
+        {
+            string markdownString = "";
+            // Start building table
+
+            // get CLEM Zone
+            IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
+            //while (!(clem is ZoneCLEM))
+            //{
+            //    clem = clem.Parent;
+            //}
+
+            // Get Labour resources
+            labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
+            if (labour == null)
+            {
+                markdownString += "No Labour supplied in resources";
+                return markdownString;
+            }
+
+            numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
+            if (numberLabourTypes == 0)
+            {
+                markdownString += "No Labour types supplied in Labour resource";
+                return markdownString;
+            }
+
+            // create labour list
+            foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+            {
+                labourList.Add(new LabourType()
+                {
+                    Parent = labour,
+                    Name = lt.Name,
+                    AgeInMonths = lt.InitialAge * 12,
+                    Gender = lt.Gender
+                }
+                );
+            }
+
+            // get all parents of LabourRequirement
+            validpAtt.AddRange(ReflectionUtilities.GetAttributes(typeof(LabourRequirement), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList());
+            validpAtt.AddRange(ReflectionUtilities.GetAttributes(typeof(LabourRequirementNoUnitSize), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList());
+            validpAtt.AddRange(ReflectionUtilities.GetAttributes(typeof(LabourRequirementSimple), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList());
+            if (validpAtt.Count() == 0)
+            {
+                markdownString += "No components allow Labour Requirements to be added";
+                return markdownString;
+            }
+
+            // walk through all activities
+            // check if LabourRequirement can be added
+            ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+            if (activities == null)
+            {
+                markdownString += "Could not find an Activities Holder";
+                return markdownString;
+            }
+
+            string tableHeader = "";
+            string tableSpacer = "";
+            tableHeader += "| Activity";
+            tableSpacer += "| :---";
+            foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+            {
+                tableHeader += " | " + lt.Name.Replace("_", " ");
+                tableSpacer += " | :---:";
+            }
+            tableHeader += " |  \n";
+            tableSpacer += " |  \n";
+
+            markdownString += tableHeader + tableSpacer;
+
+            tableHeader = TableRowMarkdown(activities);
+            markdownString += tableHeader;
+
+            // add notes
+            markdownString += "  \n***  \n";
+            markdownString += "Notes  \n";
+            markdownString += "-  Only activities capable of including a labour requirement are displayed.  \n";
+            markdownString += "-  Activities with no labour requirement provided are displayed with italic text.  \n";
+            markdownString += "-  Multiple rows for a given activity show where more than one individual is required.  \n";
+            markdownString += "-  The preferential allocation of labour is identified from 1 (1st) to 5 (5th, max levels displayed)  \n";
+
+            // aging note
+            if (labour.AllowAging)
+            {
+                markdownString += "  \n***  \n";
+                markdownString += "Warnings  \n";
+                markdownString += "-  As this simulation allows aging of individuals (see Labour) these allocations may change over the duration of the simulation.";
+            }
+
+            markdownString += "  \n***  \n";
+            return markdownString;
+        }
+
+        private string TableRowMarkdown(IModel model)
+        {
+            string tblstr = "";
+            // create row
+
+            // can row be included?
+            if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
+            {
+                Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                string emph = (labourRequirement == null) ? "_" : "";
+
+                // does activity have a Labour Requirement
+                if (!(labourRequirement == null))
+                {
+                    tblstr += $"| {emph}{model.Name.Replace("_"," ")}{emph} |";
+                    // for each labour type
+                    foreach (LabourType lt in labourList)
+                    {
+                        string levelstring = "";
+                        // for each filter group
+                        foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                        {
+                            int level = 0;
+                            // while nested 
+                            Model nested = labourRequirement as Model;
+
+                            while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
+                            {
+                                level++;
+                                nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
+                                List<LabourType> ltlist = new List<LabourType>() { lt };
+                                if (ltlist.Filter(nested).Count() >= 1)
+                                {
+                                    levelstring = ((level < 5) ? level.ToString() : "5");
+                                }
+                            }
+                        }
+                    tblstr += $" {levelstring} |";
+                    }
+                }
+                else
+                {
+                    tblstr += $"| {emph}{model.Name.Replace("_", " ")}{emph} | " + CreateRowMarkdown("", numberLabourTypes);
+                }
+                tblstr += "  \n";
+            }
+
+            // add all rows for children
+            foreach (Model child in model.Children)
+            {
+                tblstr += TableRowMarkdown(child);
+            }
+            return tblstr;
+        }
+
+
+        private string CreateRowMarkdown(string text, int columns)
+        {
+            string row = "";
+            for (int i = 0; i < columns; i++)
+            {
+                row += $"{text} | ";
             }
             return row;
         }

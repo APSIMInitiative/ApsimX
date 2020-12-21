@@ -66,6 +66,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -82,7 +83,7 @@ namespace Models.CLEM.Activities
             }
             foreach (RuminantTypeCohort item in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
             {
-                if(item.Suckling)
+                if (item.Suckling)
                 {
                     string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
                     results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
@@ -94,7 +95,8 @@ namespace Models.CLEM.Activities
                 }
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -125,7 +127,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
@@ -248,7 +250,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -298,6 +300,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -308,7 +312,7 @@ namespace Models.CLEM.Activities
             string html = "";
             html += "\n<div class=\"activityentry\">Trade individuals are kept for ";
             html += "<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months";
-            if(TradeWeight > 0)
+            if (TradeWeight > 0)
             {
                 html += " or until";
                 html += "<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg";
@@ -342,6 +346,7 @@ namespace Models.CLEM.Activities
                 html += "</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }
