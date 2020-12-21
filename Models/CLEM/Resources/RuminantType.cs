@@ -187,13 +187,55 @@ namespace Models.CLEM.Resources
             return price;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure at least one conception model is associated
+            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
+            }
+
+            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
+            }
+            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
+            {
+                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
+
+                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+                {
+                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
+                }
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region transactions
+
         /// <summary>
         /// Add resource
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -224,40 +266,7 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure at least one conception model is associated
-            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
-            if (conceptionModelCount > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
-            }
-
-            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
-            }
-            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
-            {
-                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
-
-                if (price.FindAllChildren<AnimalPriceGroup>().Count()==0)
-                {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
-                }
-            }
-            return results;
-        }
+        #endregion
 
         /// <summary>
         /// Current number of individuals of this herd.
@@ -833,6 +842,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary 
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -843,9 +854,7 @@ namespace Models.CLEM.Resources
             string html = "";
             return html;
         }
+
+        #endregion
     }
-
-
-
-
 }

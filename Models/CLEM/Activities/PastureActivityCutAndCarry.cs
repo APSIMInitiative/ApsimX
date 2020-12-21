@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Reason = "Cut and carry",
+                        Category = "Cut and carry",
                         Required = AmountHarvested,
                         Resource = pasture,
                     }
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             // TODO add labour multiplier if pasture below given amount and difficult to cut
@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Cut and carry", pasture.NameWithParent);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Models.CLEM.Activities
                 DMD = pasture.EstimateDMD(pasture.Nitrogen)
             };
 
-            foodstore.Add(packet, this, "Cut and carry");
+            foodstore.Add(packet, this,"", "Cut and carry");
         }
 
         private void PutPastureInStore()
@@ -335,13 +335,13 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Reason = "Cut and carry",
+                        Category = "Cut and carry",
                         Required = AmountHarvested,
                         Resource = pasture
                     };
                     pasture.Remove(request);
 
-                    foodstore.Add(packet, this, "Cut and carry");
+                    foodstore.Add(packet, this, "", "Cut and carry");
                 }
                 SetStatusSuccess();
             }
@@ -409,6 +409,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -458,8 +460,8 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
-
+        } 
+        #endregion
 
     }
 }

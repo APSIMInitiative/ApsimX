@@ -52,6 +52,13 @@ namespace Models.CLEM.Activities
         public double Amount { get; set; }
 
         /// <summary>
+        /// Category label to use in ledger
+        /// </summary>
+        [Description("Shortname of fee for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
+
+        /// <summary>
         /// Store finance type to use
         /// </summary>
         public FinanceType BankAccount;
@@ -73,6 +80,8 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -85,7 +94,7 @@ namespace Models.CLEM.Activities
             html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
             html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ";
             html += " from ";
-            if(BankAccountName!=null)
+            if (BankAccountName != null)
             {
                 html += "<span class=\"resourcelink\">" + BankAccountName + "</span> ";
             }
@@ -94,8 +103,19 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ";
             }
             html += "</div>";
+            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            if (Category != null && Category!="")
+            {
+                html += "<span class=\"setvalue\">" + Category + "</span> ";
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">[NOT SET]</span> ";
+            }
+            html += " for all transactions</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

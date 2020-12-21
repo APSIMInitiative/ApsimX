@@ -284,12 +284,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Amount of last gain transaction
+        /// </summary>
+        public double LastGain { get; set; }
+
+        /// <summary>
         /// Add resources from various objects
         /// </summary>
-        /// <param name="resourceAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="resourceAmount">Amount to be applied</param>
+        /// <param name="activity">Activity performing this transaction</param>
+        /// <param name="relatesToResource">Resource this transaction relates to</param>
+        /// <param name="category">Category of this resource transaction</param>
+        public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }

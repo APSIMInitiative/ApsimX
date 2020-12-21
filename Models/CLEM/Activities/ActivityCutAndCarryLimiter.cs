@@ -59,6 +59,8 @@ namespace Models.CLEM.Activities
             amountUsedThisMonth = 0;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -76,7 +78,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
             html += "Limit cut and carry activities to ";
-            if(!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
+            if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
             {
                 html += "<span class=\"setvalueextra\">";
                 html += WeightLimitPerDay.ToString();
@@ -107,7 +109,8 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 }

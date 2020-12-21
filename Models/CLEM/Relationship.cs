@@ -107,14 +107,7 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-        }
-
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -150,7 +143,9 @@ namespace Models.CLEM
             }
             return results;
         }
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -263,5 +258,6 @@ namespace Models.CLEM
             return html;
         }
 
+        #endregion
     }
 }

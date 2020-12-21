@@ -12,7 +12,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Pasture management activity</summary>
     /// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
-    /// <summary>Ruminant mustering activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
+    /// <summary>Ruminant move activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
     /// <version>1.0</version>
     /// <updates>First implementation of this activity using NABSA grazing processes</updates>
     [Serializable]
@@ -124,6 +124,7 @@ namespace Models.CLEM.Activities
         //EcologicalCalculationIntervals worth of data read from pasture database file 
         private List<PastureDataType> PastureDataList;
 
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -150,6 +151,7 @@ namespace Models.CLEM.Activities
             return results;
         }
 
+        #endregion
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -199,7 +201,7 @@ namespace Models.CLEM.Activities
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
                     ActivityModel = this,
-                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    Category = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
                 };
@@ -295,7 +297,7 @@ namespace Models.CLEM.Activities
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, "Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, "", "Growth");
                 }
             }
 
@@ -423,7 +425,7 @@ namespace Models.CLEM.Activities
                 {
                     reason = "Initialise pool " + pool.Age.ToString();
                 }
-                LinkedNativeFoodType.Add(pool, this, reason);
+                LinkedNativeFoodType.Add(pool, this, "", reason);
             }
         }
 
@@ -588,7 +590,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -600,6 +602,8 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -655,6 +659,7 @@ namespace Models.CLEM.Activities
             html += "</div>";
 
             return html;
-        }
+        } 
+        #endregion
     }
 }

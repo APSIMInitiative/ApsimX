@@ -33,8 +33,14 @@ obs_list <- read_apsimx_output(sim_before_optim$db_file_name,
                                observed_variable_names,
                                names(sim_before_optim$sim_list))
 
+simulation_names_old <- simulation_names
+simulation_names <- intersect(names(obs_list), simulation_names)
 obs_list=obs_list[simulation_names]
-names(obs_list) <- simulation_names
+
+dropped_sims <- setdiff(simulation_names_old, simulation_names)
+if (length(dropped_sims) > 0) {
+  print(paste('NOTE: dropping simulation', dropped_sims, 'as there is no data for this simulation'))
+}
 
 # Remove "Observed." from the start of any column.
 # This helps when retrieving observed data from PredictedObserved tables,

@@ -10,7 +10,7 @@ using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant muster activity</summary>
+    /// <summary>Ruminant moving activity</summary>
     /// <summary>This activity moves specified ruminants to a given pasture</summary>
     /// <version>1.0</version>
     [Serializable]
@@ -19,16 +19,16 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
-    [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be mustered")]
+    [Description("This activity moves animals based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
+    [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be moved")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMustering.htm")]
-    public class RuminantActivityMuster: CLEMRuminantActivityBase, IValidatableObject
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
+    public class RuminantActivityMove: CLEMRuminantActivityBase, IValidatableObject
     {
-        /// <summary>F
-        /// Managed pasture to muster to
+        /// <summary>
+        /// Managed pasture to move to
         /// </summary>
-        [Description("Managed pasture to muster to")]
+        [Description("Managed pasture to move to")]
         [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string ManagedPastureName { get; set; }
 
@@ -37,12 +37,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determines whether this must be performed to setup herds at the start of the simulation
         /// </summary>
-        [Description("Perform muster at start of simulation")]
+        [Description("Move at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
 
         /// <summary>
-        /// Determines whether sucklings are automatically mustered with the mother or separated
+        /// Determines whether sucklings are automatically moved with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]
@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(true, true);
 
-            // link to graze food store type pasture to muster to
+            // link to graze food store type pasture to move to
             // "Not specified" is general yards.
             pastureName = "";
             if (!ManagedPastureName.StartsWith("Not specified"))
@@ -77,14 +77,14 @@ namespace Models.CLEM.Activities
 
             if (PerformAtStartOfSimulation)
             {
-                Muster();
+                Move();
             }
         }
 
-        private void Muster()
+        private void Move()
         {
             Status = ActivityStatus.NotNeeded;
-            // allow multiple filter groups for mustering.. 
+            // allow multiple filter groups for moving. 
             var filterGroups = FindAllChildren<RuminantGroup>().ToList();
             if(filterGroups.Count() == 0)
             {
@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             double numberUnits = 0;
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Move", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Models.CLEM.Activities
             {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                 {
-                    Muster();
+                    Move();
                 }
             }
             else
@@ -233,6 +233,8 @@ namespace Models.CLEM.Activities
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -241,7 +243,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Muster the following groups to ";
+            html += "\n<div class=\"activityentry\">Move the following groups to ";
             if (ManagedPastureName == null || ManagedPastureName == "")
             {
                 html += "<span class=\"errorlink\">General yards</span>";
@@ -250,16 +252,17 @@ namespace Models.CLEM.Activities
             {
                 html += "<span class=\"resourcelink\">" + ManagedPastureName + "</span>";
             }
-            if(MoveSucklings)
+            if (MoveSucklings)
             {
                 html += " moving sucklings with mother";
             }
             html += "</div>";
-            if(PerformAtStartOfSimulation)
+            if (PerformAtStartOfSimulation)
             {
-                html += "\n<div class=\"activityentry\">This muster is performed at startup to ensure animals are on pasture</div>";
+                html += "\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

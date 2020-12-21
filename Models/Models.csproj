@@ -32,6 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -129,6 +130,9 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="CommandLineParser">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgPasture\AGPBiomass.cs" />
@@ -150,6 +154,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="CLEM\Activities\ActivityTimerSequence.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTargetPurchase.cs" />
@@ -160,6 +165,7 @@
     <Compile Include="CLEM\Activities\ResourceActivityManageExternal.cs" />
     <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
+    <Compile Include="CLEM\ICategoryActivity.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />
@@ -726,6 +732,7 @@
     <Compile Include="Climate\BestiaPop.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="CLEM\Activities\ActivitiesHolder.cs" />
@@ -802,7 +809,7 @@
     <Compile Include="CLEM\Activities\RuminantActivityFeed.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrow.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityManage.cs" />
-    <Compile Include="CLEM\Activities\RuminantActivityMuster.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityMove.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityPredictiveStocking.cs" />
     <Compile Include="CLEM\Activities\RuminantActivitySellDryBreeders.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityTrade.cs" />
@@ -912,6 +919,7 @@
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %282nd cross%29.json" />
     <EmbeddedResource Include="Resources\RScripts\OptimizR.r" />
     <EmbeddedResource Include="Resources\RScripts\InstallPackageGithub.R" />
+    <EmbeddedResource Include="Resources\RScripts\read_croptimizr_output.r" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

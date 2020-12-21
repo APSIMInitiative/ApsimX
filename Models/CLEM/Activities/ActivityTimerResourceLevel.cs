@@ -160,6 +160,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -170,7 +172,7 @@ namespace Models.CLEM.Activities
             string html = "";
             html += "\n<div class=\"filter\">";
             html += "Perform when ";
-            if(ResourceTypeName is null || ResourceTypeName == "")
+            if (ResourceTypeName is null || ResourceTypeName == "")
             {
                 html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
             }
@@ -203,7 +205,7 @@ namespace Models.CLEM.Activities
                     break;
             }
             html += str;
-            if(Amount == 0)
+            if (Amount == 0)
             {
                 html += " <span class=\"errorlink\">NOT SET</span>";
             }
@@ -245,7 +247,8 @@ namespace Models.CLEM.Activities
             html += $"</div>";
             html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

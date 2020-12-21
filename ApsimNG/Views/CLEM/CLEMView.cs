@@ -222,8 +222,20 @@ namespace UserInterface.Views
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
+                EventBox frame = new EventBox();
+                frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+                HBox hbox = new HBox();
+                uint border = 0;
+                if (tabName != "Properties") border = 10;
+                hbox.BorderWidth = border;
+
                 ViewBase view = (ViewBase)control;
-                tab.Add(view.MainWidget);
+
+                hbox.Add(view.MainWidget);
+                frame.Add(hbox);
+                tab.Add(frame);
+
+                //tab.Add(view.MainWidget);
                 tab.ShowAll();
             }
         }

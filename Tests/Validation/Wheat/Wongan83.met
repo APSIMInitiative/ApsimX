@@ -2,8 +2,8 @@
 !experiment number = 15
 !experiment = Wongan83
 !station name = Wongan                                  
-latitude = -31  (DECIMAL DEGREES)
-longitude = 0  (DECIMAL DEGREES)
+latitude = -30.9  (DECIMAL DEGREES)
+longitude = 116.717  (DECIMAL DEGREES)
 tav =   18.60 (oC)     ! annual average ambient temperature
 amp =   14.00 (oC)     ! annual amplitude in mean monthly temperature
 
