@@ -178,7 +178,7 @@
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
+                    else if (matches.Count >= 2)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
                         field.Value = GetModel(matches[0]);
