@@ -170,6 +170,8 @@ namespace UserInterface.Classes
             // ?else if property type isn't a struct?
             else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
                 Value = ((IModel)Value).Name;
+            else if (metadata.PropertyType.IsEnum)
+                Value = VariableProperty.GetEnumDescription((Enum)Enum.Parse(metadata.PropertyType, Value?.ToString()));
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
