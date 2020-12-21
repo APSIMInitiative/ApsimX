@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// Amount payable
         /// </summary>
         [Description("Amount payable")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double Amount { get; set; }
 
         /// <summary>

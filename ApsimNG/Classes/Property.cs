@@ -170,6 +170,8 @@ namespace UserInterface.Classes
             // ?else if property type isn't a struct?
             else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
                 Value = ((IModel)Value).Name;
+            else if (metadata.PropertyType.IsEnum)
+                Value = VariableProperty.GetEnumDescription((Enum)Enum.Parse(metadata.PropertyType, Value?.ToString()));
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
@@ -215,6 +217,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
+                    if (methodName == null)
+                        throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
                     DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
