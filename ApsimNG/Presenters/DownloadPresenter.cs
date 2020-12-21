@@ -285,8 +285,9 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
 
             return soils;
@@ -319,8 +320,9 @@ namespace UserInterface.Presenters
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                explorerPresenter.MainPresenter.ShowError(error);
             }
             return soils;
         }
@@ -355,8 +357,9 @@ namespace UserInterface.Presenters
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
         }
@@ -780,8 +783,9 @@ namespace UserInterface.Presenters
                     Soil = newSoil
                 });
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
         }
