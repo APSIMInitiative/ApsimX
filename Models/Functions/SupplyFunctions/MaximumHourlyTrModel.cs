@@ -210,13 +210,14 @@ namespace Models.Functions.SupplyFunctions
                 transpEffCoef = TEC.Value() * 1e3;
                 if (!string.Equals(AssimilateType, "net"))
                 {
-                    List<IArbitration> Organs = new List<IArbitration>();
-                    foreach (IOrgan organ in Plant.Organs)
-                        if (organ is IArbitration)
-                            Organs.Add(organ as IArbitration);
+                    double grossAssim = 0;
+                    double respiration = 0;
 
-                    double grossAssim = Organs.Sum(organ => organ.DMSupply.Fixation);
-                    double respiration = Organs.Sum(organ => organ.MaintenanceRespiration);
+                    foreach (IOrgan o in Plant.Organs)
+                        respiration += o.MaintenanceRespiration;
+                    foreach (IArbitration o in Plant.Organs)
+                        grossAssim += o.DMSupply.Fixation;
+
                     double netAssim = Math.Max(0, grossAssim - respiration);
                     TECGrossToNet = MathUtilities.Divide(grossAssim, netAssim, 1);
                     transpEffCoef *= TECGrossToNet * 30 / 12;
