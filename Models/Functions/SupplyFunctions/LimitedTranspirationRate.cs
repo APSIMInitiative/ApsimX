@@ -38,24 +38,24 @@ namespace Models.Functions.SupplyFunctions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
 
-    public class MaximumHourlyTrModel : Model, IFunction
+    public class LimitedTranspirationRate : Model, IFunction
     {
         //[Input]
         /// <summary>The weather data</summary>
         [Link]
-        private IWeather Weather = null;
+        private readonly IWeather Weather = null;
 
         /// <summary>The Clock</summary>
         [Link]
-        private Clock Clock = null;
+        private readonly IClock Clock = null;
 
         /// <summary>The Leaf organ</summary>
         [Link]
-        private Plant Plant = null;
+        private readonly Plant Plant = null;
 
         /// <summary>The Root organ</summary>
         [Link]
-        private Root Root = null;
+        private readonly Root Root = null;
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
