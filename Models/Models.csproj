@@ -289,7 +289,7 @@
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Functions\SoilFunctions\CERESDenitrificationModel.cs" />
-    <Compile Include="Functions\SupplyFunctions\MaximumHourlyTrModel.cs" />
+    <Compile Include="Functions\SupplyFunctions\LimitedTranspirationRate.cs" />
     <Compile Include="Functions\SupplyFunctions\StomatalConductanceCO2Modifier.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
