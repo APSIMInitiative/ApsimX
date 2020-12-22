@@ -294,6 +294,8 @@
                 ICommand command = new AddModelCommand(currentNode, text);
                 explorerPresenter.CommandHistory.Add(command, true);
                 explorerPresenter.Refresh();
+                if (currentNode.Children.Count == 1)
+                    explorerPresenter.ExpandChildren(currentNode.FullPath, true);
             }
             catch (Exception err)
             {

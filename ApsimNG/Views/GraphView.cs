@@ -501,6 +501,9 @@
         {
             if (x != null && y != null)
             {
+                // In a bar chart, we need to ensure that the x-axis is always a category axis.
+                EnsureAxisExists(xAxisType, typeof(string));
+
                 ColumnXYSeries series = new ColumnXYSeries();
                 if (showOnLegend)
                     series.Title = title;
@@ -1466,7 +1469,7 @@
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || (double.TryParse(enumerator.Current.ToString(), out x) && GetAxis(axisType) == null))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
