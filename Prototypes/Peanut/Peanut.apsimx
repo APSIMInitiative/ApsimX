@@ -1956,56 +1956,10 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].BranchingRate",
                               "Name": "BranchingRate",
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "From Hammer Paper\n",
-                                  "Name": "Memo",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    1.0,
-                                    2.0,
-                                    3.0,
-                                    6.0,
-                                    7.0,
-                                    15.0,
-                                    16.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    2.0,
-                                    1.0,
-                                    0.5,
-                                    0.5,
-                                    0.5,
-                                    0.5,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -3232,6 +3186,57 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "BranchingRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "From Hammer Paper\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        15.0,
+                        16.0
+                      ],
+                      "Y": [
+                        0.0,
+                        2.0,
+                        1.0,
+                        0.5,
+                        0.5,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].NodeNumber",
+                      "Name": "XValue",
+                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6760,7 +6765,9 @@
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.66",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
                   ],
                   "Name": "EarlyBunch",
                   "Children": [],
@@ -6847,7 +6854,9 @@
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,0.5,0.5,0"
                   ],
                   "Name": "Florunner",
                   "Children": [],
