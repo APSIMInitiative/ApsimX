@@ -19,7 +19,7 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel : Model, ICLEMUI
+    public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary
     {
         /// <summary>
         /// Link to summary
@@ -358,11 +358,12 @@ namespace Models.CLEM
         /// <summary>
         /// Create the HTML for the descriptive summary display of a supplied component
         /// </summary>
-        /// <param name="modelToSummarise"></param>
-        /// <param name="darkTheme"></param>
-        /// <param name="bodyOnly"></param>
+        /// <param name="modelToSummarise">Model to create summary fpr</param>
+        /// <param name="darkTheme">Boolean representing if in dark mode</param>
+        /// <param name="bodyOnly">Only produve the body html</param>
+        /// <param name="apsimFilename">Create master simulation summary header</param>
         /// <returns></returns>
-        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = true)
+        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "")
         {
             // currently includes autoupdate script for display of summary information in browser
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
@@ -533,7 +534,11 @@ namespace Models.CLEM
                 if (!bodyOnly)
                 {
                     htmlWriter.Write(htmlString);
-                    htmlWriter.Write("\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
+
+                    if (apsimFilename == "")
+                    {
+                        htmlWriter.Write("\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
+                    }
                 }
                 htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
 
@@ -542,28 +547,40 @@ namespace Models.CLEM
                 {
                     fullname = (modelToSummarise as CLEMModel).NameWithParent;
                 }
-                htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
+
+                if (apsimFilename != "")
+                {
+                    htmlWriter.Write($"<div class=\"namediv\">Full simulation settings</div>");
+                }
+                else
+                {
+                    htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
+                }
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\n<div class=\"defaultcontent\">");
-                htmlWriter.Write($"\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}<br />");
-                htmlWriter.Write("\n</div>");
+
+                if(apsimFilename != "")
+                {
+                    htmlWriter.Write($"\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
+                    Model sim = (modelToSummarise as Model).FindAncestor<Simulation>();
+                    htmlWriter.Write($"\n<div class=\"activityentry\">Simulation: {sim.Name}</div>");
+                }
+
+                htmlWriter.Write($"\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}</div>");
                 htmlWriter.Write("\n</div>");
 
-                if (modelToSummarise is CLEMModel)
+                if (modelToSummarise is ZoneCLEM)
                 {
-                    if (modelToSummarise is ZoneCLEM)
-                    {
-                        htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
-                    }
-                    else if (modelToSummarise is Market)
-                    {
-                        htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
-                    }
-                    else
-                    {
-                        htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, false, htmlWriter.ToString()));
-                    }
+                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
+                }
+                else if (modelToSummarise is Market)
+                {
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
+                }
+                else if (modelToSummarise is CLEMModel)
+                {
+                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, false, htmlWriter.ToString()));
                 }
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
                 {

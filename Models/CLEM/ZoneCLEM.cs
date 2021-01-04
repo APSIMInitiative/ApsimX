@@ -29,7 +29,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1,0,1,"")]
     [ScopedModel]
-    public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
+    public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
         ISummary Summary = null;
@@ -70,7 +70,7 @@ namespace Models.CLEM
         /// End of month to calculate ecological indicators
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(7)]
-        [Description("End of month to calculate ecological indicators")]
+        [Description("End of first month to calculate ecological indicators")]
         [Required, Month]
         public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
 
@@ -109,7 +109,20 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
+        /// <summary>
+        /// Summary style to use for this component
+        /// </summary>
+        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
+
         private string wholeSimulationSummaryFile = "";
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ZoneCLEM()
+        {
+            ModelSummaryStyle = HTMLSummaryStyle.Helper;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -137,7 +150,7 @@ namespace Models.CLEM
                 if (!File.Exists(wholeSimulationSummaryFile))
                 {
                     // create file as this is the first ZONE needing to create summary
-                    System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false));
+                    System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
                 }
                 else
                 {
@@ -399,6 +412,18 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
+                // create the summary box with properties of this component
+                if (this is ICLEMDescriptiveSummary)
+                {
+                    bool formatForParentControl = true;
+                    htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
+                    htmlWriter.Write(this.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
+                }
+
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
 
@@ -461,7 +486,134 @@ namespace Models.CLEM
                 }
                 return htmlWriter.ToString(); 
             }
-        } 
+        }
+
+        /// <summary>
+        /// Inner summary html
+        /// </summary>
+        /// <param name="formatForParentControl"></param>
+        /// <returns></returns>
+        public string ModelSummary(bool formatForParentControl)
+        {
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("This farm is identified as region ");
+                htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
+
+                ResourcesHolder resources = this.FindChild<ResourcesHolder>() as ResourcesHolder;
+                if(resources != null)
+                {
+                    if(resources.FoundMarket != null)
+                    {
+                        htmlWriter.Write("\n<div class=\"activityentry\">");
+                        htmlWriter.Write("This farm represents ");
+                        htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
+                    }
+                }
+
+                if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Ecological indicators will be calculated every ");
+                    if (EcologicalIndicatorsCalculationInterval <= 0)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span> months");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval==1)?"":"s")}" );
+                    }
+                    htmlWriter.Write($" starting at the end of {EcologicalIndicatorsCalculationMonth}</div>");
+                }
+
+                if (AutoCreateDescriptiveSummary)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write($"This component will be included in the overall simulation summary decription html file</div>");
+                }
+                return htmlWriter.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Closing tags for model summary html
+        /// </summary>
+        /// <param name="formatForParentControl"></param>
+        /// <returns></returns>
+        public string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "\n</div>\n</div>";
+        }
+
+        /// <summary>
+        /// Opening tags for inner summary html
+        /// </summary>
+        /// <param name="formatForParentControl"></param>
+        /// <returns></returns>
+        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            string overall = "default";
+            string extra = "";
+
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + ((!this.Enabled) ? 0.4 : 1.0).ToString() + ";\">");
+                htmlWriter.Write("\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
+                htmlWriter.Write("\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+
+                return htmlWriter.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Inner closing tags for summary html
+        /// </summary>
+        /// <param name="formatForParentControl"></param>
+        /// <returns></returns>
+        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// inner opening tags for model summary html
+        /// </summary>
+        /// <param name="formatForParentControl"></param>
+        /// <returns></returns>
+        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// inner opening tags before summary
+        /// </summary>
+        /// <returns></returns>
+        public string ModelSummaryInnerOpeningTagsBeforeSummary()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Model summary name type header
+        /// </summary>
+        /// <returns></returns>
+        public string ModelSummaryNameTypeHeader()
+        {
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>");
+                if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
+                {
+                    htmlWriter.Write("<div class=\"partialdiv\"");
+                    htmlWriter.Write(">");
+                    htmlWriter.Write("</div>");
+                }
+                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                return htmlWriter.ToString();
+            }
+        }
         #endregion
 
     }

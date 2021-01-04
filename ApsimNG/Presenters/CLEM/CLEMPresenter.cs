@@ -15,34 +15,16 @@ namespace UserInterface.Presenters
 {
     public class CLEMPresenter : IPresenter
     {
-        private ICLEMView view;
-        private ICLEMUI clemModel;
+        internal ICLEMView view;
+        internal object viewobject;
+        internal ICLEMUI clemModel;
 
         /// <summary>
         /// The explorer
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        internal ExplorerPresenter explorerPresenter;
 
-        /// <summary>
-        /// The HTML summary presenter
-        /// </summary>
-        private IPresenter summaryPresenter;
-
-        /// <summary>
-        /// The message presenter
-        /// </summary>
-        private IPresenter messagePresenter;
-
-        /// <summary>
-        /// The property presenter
-        /// </summary>
-        private IPresenter propertyPresenter;
-
-        /// <summary>
-        /// The version presenter
-        /// </summary>
-        private IPresenter versionPresenter;
-
+        internal Dictionary<string, IPresenter> presenterList = new Dictionary<string, IPresenter> ();
 
         /// <summary>
         /// Attach the view
@@ -50,12 +32,14 @@ namespace UserInterface.Presenters
         /// <param name="model">The model</param>
         /// <param name="view">The view to attach</param>
         /// <param name="explorerPresenter">The explorer</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.clemModel = model as ICLEMUI;
             this.explorerPresenter = explorerPresenter;
 
             this.view = view as ICLEMView;
+            this.viewobject = view;
+
             if (model != null)
             {
                 //Messages
@@ -64,11 +48,12 @@ namespace UserInterface.Presenters
                     if (model is ZoneCLEM)
                     {
                         object newView = new MarkdownView(this.view as ViewBase);
-                        messagePresenter = new MessagePresenter();
+                        IPresenter messagePresenter = new MessagePresenter();
                         if (newView != null && messagePresenter != null)
                         {
                             this.view.AddTabView("Messages", newView);
                             messagePresenter.Attach(model, newView, this.explorerPresenter);
+                            presenterList.Add("Messages", messagePresenter);
                         }
                     }
                 }
@@ -93,11 +78,12 @@ namespace UserInterface.Presenters
                     {
                         ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
+                        IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
                             this.view.AddTabView("Properties", newView);
                             propertyPresenter.Attach(model, newView, this.explorerPresenter);
+                            presenterList.Add("Properties", propertyPresenter);
                         }
                     }
                 }
@@ -109,11 +95,12 @@ namespace UserInterface.Presenters
                 try
                 {
                     object newView = new MarkdownView(this.view as ViewBase);
-                    summaryPresenter = new CLEMSummaryPresenter();
+                    IPresenter summaryPresenter = new CLEMSummaryPresenter();
                     if (newView != null && summaryPresenter != null)
                     {
                         this.view.AddTabView("Summary", newView);
                         summaryPresenter.Attach(model, newView, this.explorerPresenter);
+                        presenterList.Add("Summary", summaryPresenter);
                     }
                 }
                 catch (Exception err)
@@ -127,11 +114,12 @@ namespace UserInterface.Presenters
                     if (versions.Count() > 0)
                     {
                         object newView = new MarkdownView(this.view as ViewBase);
-                        versionPresenter = new VersionsPresenter();
+                        IPresenter versionPresenter = new VersionsPresenter();
                         if (newView != null && versionPresenter != null)
                         {
                             this.view.AddTabView("Version", newView);
                             versionPresenter.Attach(model, newView, this.explorerPresenter);
+                            presenterList.Add("Version", versionPresenter);
                         }
                     }
                 }
@@ -147,7 +135,8 @@ namespace UserInterface.Presenters
                     this.view.SelectTabView(clemModel.SelectedTab);
                     if(clemModel.SelectedTab == "Summary")
                     {
-                        (summaryPresenter as CLEMSummaryPresenter).Refresh();
+                        presenterList.TryGetValue("Summary", out IPresenter selectedPresenter);
+                        (selectedPresenter as CLEMSummaryPresenter).Refresh();
                     }
                 }
             }
@@ -156,7 +145,7 @@ namespace UserInterface.Presenters
         /// <summary>Summary tab selected</summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Close arguments</param>
-        private void OnTabSelected(object sender, EventArgs e)
+        internal void OnTabSelected(object sender, EventArgs e)
         {
             // change tab name
             if (clemModel != null)
@@ -164,19 +153,28 @@ namespace UserInterface.Presenters
                 clemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
             }
 
-            switch ((e as TabChangedEventArgs).TabName)
+            string tabName = (e as TabChangedEventArgs).TabName;
+            presenterList.TryGetValue(tabName, out IPresenter selectedPresenter);
+
+            if (selectedPresenter != null)
             {
-                case "Messages":
-                    (messagePresenter as MessagePresenter).Refresh();
-                    break;
-                case "Summary":
-                    (summaryPresenter as CLEMSummaryPresenter).Refresh();
-                    break;
-                case "Versions":
-                    (versionPresenter as VersionsPresenter).Refresh();
-                    break;
-                default:
-                    break;
+                switch ((e as TabChangedEventArgs).TabName)
+                {
+                    case "Messages":
+                        (selectedPresenter as MessagePresenter).Refresh();
+                        break;
+                    case "Summary":
+                        (selectedPresenter as CLEMSummaryPresenter).Refresh();
+                        break;
+                    case "Version":
+                        (selectedPresenter as VersionsPresenter).Refresh();
+                        break;
+                    case "Display":
+                        (selectedPresenter as ActivityLedgerGridPresenter).Refresh();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -186,23 +184,14 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.view.TabSelected -= OnTabSelected;
-            if(propertyPresenter!=null)
-            {
-                propertyPresenter.Detach();
-            }
-            if (versionPresenter != null)
-            {
-                versionPresenter.Detach();
-            }
-            if (messagePresenter != null)
-            {
-                messagePresenter.Detach();
-            }
-            if (summaryPresenter != null)
-            {
-                summaryPresenter.Detach();
-            }
 
+            foreach (KeyValuePair<string, IPresenter> valuePair in presenterList)
+            {
+                if(valuePair.Value != null)
+                {
+                    valuePair.Value.Detach();
+                }
+            }
         }
 
     }

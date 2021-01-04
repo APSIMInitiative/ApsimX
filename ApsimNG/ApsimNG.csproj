@@ -211,6 +211,7 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\CLEM\ActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\DownloadPresenter.cs" />
     <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -278,7 +279,6 @@
     <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
-    <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
     <Compile Include="Presenters\GraphPanelPresenter.cs" />
     <Compile Include="Presenters\ProfileGridPresenter.cs" />
@@ -303,7 +303,6 @@
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\CLEM\PivotTableView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
-    <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
     <Compile Include="Views\GraphPanelView.cs" />
