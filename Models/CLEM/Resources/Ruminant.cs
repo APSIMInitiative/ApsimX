@@ -206,25 +206,26 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The current health score 
+        /// The current health score -2 to 2 with 0 standard weight
         /// </summary>
-        public double HealthScore
+        public int HealthScore
         {
             get
             {
+                double result = 0;
                 double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
                 double mid = NormalisedAnimalWeight;
                 double max = BreedParams.MaximumSizeOfIndividual;
 
                 if(weight < mid)
                 {
-                    return (Math.Max(min, weight) - min) / (mid - min) * 5;
+                    result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
                 }
-                else
+                else if (weight > mid)
                 {
-                    double result = (weight - mid) / (max - mid) * 5;
-                    return (result == 0) ? 0.01 : result;
+                    result = Math.Round((weight - mid) / ((max - mid) / 2.5));
                 }
+                return Convert.ToInt32(result);
             }
         }
 
