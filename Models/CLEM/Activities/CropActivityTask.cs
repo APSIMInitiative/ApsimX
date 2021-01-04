@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -242,25 +243,27 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">This activity uses a category label ";
-                if (Category != null && Category != "")
+                if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
                 {
-                    html += "<span class=\"setvalue\">" + Category + "</span> ";
+                    htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
                 }
                 else
                 {
-                    html += "<span class=\"errorlink\">[NOT SET]</span> ";
+                    htmlWriter.Write("\n<div class=\"activityentry\">This activity uses a category label ");
+                    if (Category != null && Category != "")
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
+                    }
+                    htmlWriter.Write(" for all transactions</div>");
                 }
-                html += " for all transactions</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
     }

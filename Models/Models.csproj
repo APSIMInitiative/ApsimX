@@ -32,7 +32,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-       <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -166,6 +166,7 @@
     <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
     <Compile Include="CLEM\ICategoryActivity.cs" />
+    <Compile Include="CLEM\ICLEMDescriptiveSummary.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />

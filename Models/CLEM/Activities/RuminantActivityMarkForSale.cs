@@ -202,10 +202,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Mark individuals in the following groups for sale";
-            html += "</div>";
-            return html;
+            return "\n<div class=\"activityentry\">Mark individuals in the following groups for sale</div>";
         } 
         #endregion
     }

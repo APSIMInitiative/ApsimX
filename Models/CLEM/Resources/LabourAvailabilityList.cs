@@ -54,9 +54,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "</table>";
-            return html;
+            return "</table>";
         }
 
         /// <summary>

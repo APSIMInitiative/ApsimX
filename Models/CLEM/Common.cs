@@ -70,7 +70,7 @@ namespace Models.CLEM
         /// <summary>
         /// Excess heifer sold
         /// </summary>
-        ExcessHeiferSale,
+        ExcessPreBreederSale,
         /// <summary>
         /// Excess sire sold
         /// </summary>

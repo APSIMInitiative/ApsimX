@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -658,32 +659,34 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (UseAI)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "Using Artificial insemination";
-                html += "</div>";
+                if (UseAI)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Using Artificial insemination");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating");
+                    htmlWriter.Write("</div>");
+                }
+                if (InferStartupPregnancy)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Pregnancy status of breeders from matings prior to simulation start will be predicted");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "This simulation uses natural (uncontrolled) mating";
-                html += "</div>";
-            }
-            if (InferStartupPregnancy)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Pregnancy status of breeders from matings prior to simulation start will be predicted";
-                html += "</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "No pregnancy of breeders from matings prior to simulation start is inferred";
-                html += "</div>";
-            }
-            return html;
         } 
         #endregion
     }

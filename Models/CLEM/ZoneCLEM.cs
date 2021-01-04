@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -74,6 +75,13 @@ namespace Models.CLEM
         public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
 
         /// <summary>
+        /// Include in overall Descriptive Summary (HTML)
+        /// </summary>
+        [Description("Include in simulation descriptive summary (HTML)")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool AutoCreateDescriptiveSummary { get; set; }
+
+        /// <summary>
         /// Month this overhead is next due.
         /// </summary>
         [JsonIgnore]
@@ -101,6 +109,8 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
+        private string wholeSimulationSummaryFile = "";
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -108,7 +118,46 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             EcologicalIndicatorsCalculationInterval = 12;
+
+            // remove the overall summary description file if present
+            string[] filebits = (sender as Simulation).FileName.Split('.');
+            wholeSimulationSummaryFile = filebits.First() + "." + "html";
+            if (File.Exists(wholeSimulationSummaryFile))
+            {
+                File.Delete(wholeSimulationSummaryFile);
+            }
         }
+
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            // if auto create
+            if (AutoCreateDescriptiveSummary)
+            {
+                if (!File.Exists(wholeSimulationSummaryFile))
+                {
+                    // create file as this is the first ZONE needing to create summary
+                    System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false));
+                }
+                else
+                {
+                    // append new body to file
+                    string html = File.ReadAllText(wholeSimulationSummaryFile);
+                    using (StringWriter htmlWriter = new StringWriter())
+                    {
+                        int index = html.IndexOf("<!-- CLEMZoneBody -->");
+                        if (index > 0)
+                        {
+                            htmlWriter.Write(html.Substring(0, index-1));
+                            htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
+                            htmlWriter.Write(html.Substring(index));
+                            System.IO.File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
+                        }
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Method to determine if this is the month to calculate ecological indicators
@@ -346,70 +395,72 @@ namespace Models.CLEM
         /// <returns></returns>
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
-            string html = "";
-            html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-
-            // get clock
-            IModel parentSim = FindAncestor<Simulation>();
-
-            // find random number generator
-            RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
-            if (rnd != null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"clearfix defaultbanner\">";
-                html += "<div class=\"namediv\">" + rnd.Name + "</div>";
-                html += "<div class=\"typediv\">RandomNumberGenerator</div>";
-                html += "</div>";
-                html += "\n<div class=\"defaultcontent\">";
-                html += "\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />";
-                if (rnd.Seed == 0)
-                {
-                    html += "Every run of this simulation will be different.";
-                }
-                else
-                {
-                    html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>";
-                }
-                html += "\n</div>";
-                html += "\n</div>";
-            }
+                htmlWriter.Write("\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
-            Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
-            if (clk != null)
-            {
-                html += "\n<div class=\"clearfix defaultbanner\">";
-                html += "<div class=\"namediv\">" + clk.Name + "</div>";
-                html += "<div class=\"typediv\">Clock</div>";
-                html += "</div>";
-                html += "\n<div class=\"defaultcontent\">";
-                html += "\n<div class=\"activityentry\">This simulation runs from ";
-                if (clk.StartDate == null)
-                {
-                    html += "<span class=\"errorlink\">[START DATE NOT SET]</span>";
-                }
-                else
-                {
-                    html += "<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>";
-                }
-                html += " to ";
-                if (clk.EndDate == null)
-                {
-                    html += "<span class=\"errorlink\">[END DATE NOT SET]</span>";
-                }
-                else
-                {
-                    html += "<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>";
-                }
-                html += "\n</div>";
-                html += "\n</div>";
-                html += "\n</div>";
-            }
+                // get clock
+                IModel parentSim = FindAncestor<Simulation>();
 
-            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
-            {
-                html += cm.GetFullSummary(cm, true, "");
+                // find random number generator
+                RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
+                if (rnd != null)
+                {
+                    htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
+                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div>");
+                    htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("\n<div class=\"defaultcontent\">");
+                    htmlWriter.Write("\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
+                    if (rnd.Seed == 0)
+                    {
+                        htmlWriter.Write("Every run of this simulation will be different.");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
+                    }
+                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\n</div>");
+                }
+
+                Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
+                if (clk != null)
+                {
+                    htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
+                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div>");
+                    htmlWriter.Write("<div class=\"typediv\">Clock</div>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("\n<div class=\"defaultcontent\">");
+                    htmlWriter.Write("\n<div class=\"activityentry\">This simulation runs from ");
+                    if (clk.StartDate == null)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
+                    }
+                    htmlWriter.Write(" to ");
+                    if (clk.EndDate == null)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
+                    }
+                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\n</div>");
+                }
+
+                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
+                {
+                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -236,49 +237,51 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"filter\">At harvest";
-                html += "\n</div>";
+                if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
+                {
+                    htmlWriter.Write("\n<div class=\"filter\">At harvest");
+                    htmlWriter.Write("\n</div>");
+                }
+                else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
+                {
+                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("All <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest");
+                    htmlWriter.Write("</div>");
+                }
+                else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
+                {
+                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("All <span class=\"setvalueextra\">");
+                    htmlWriter.Write(OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest");
+                    htmlWriter.Write("</div>");
+                }
+                else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
+                {
+                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("Perform <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before" : "after") + " harvest");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("Start <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
+                    htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after " : "before ");
+                    htmlWriter.Write(" harvest and stop <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
+                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after " : "before ");
+                    htmlWriter.Write("</div>");
+                }
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
-            {
-                html += "\n<div class=\"filter\">";
-                html += "All <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest";
-                html += "</div>";
-            }
-            else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
-            {
-                html += "\n<div class=\"filter\">";
-                html += "All <span class=\"setvalueextra\">";
-                html += OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest";
-                html += "</div>";
-            }
-            else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
-            {
-                html += "\n<div class=\"filter\">";
-                html += "Perform <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before" : "after") + " harvest";
-                html += "</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"filter\">";
-                html += "Start <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ";
-                html += (OffsetMonthHarvestStart > 0) ? "after " : "before ";
-                html += " harvest and stop <span class=\"setvalueextra\">";
-                html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ";
-                html += (OffsetMonthHarvestStop > 0) ? "after " : "before ";
-                html += "</div>";
-            }
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
         /// <summary>
@@ -296,15 +299,17 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
     }

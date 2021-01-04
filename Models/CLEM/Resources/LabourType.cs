@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -401,30 +402,32 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl == false)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html = "<div class=\"activityentry\">";
-                if (this.Individuals == 0)
+                if (formatForParentControl == false)
                 {
-                    html += "No individuals are provided for this labour type";
-                }
-                else
-                {
-                    if (this.Individuals > 1)
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    if (this.Individuals == 0)
                     {
-                        html += "<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ";
+                        htmlWriter.Write("No individuals are provided for this labour type");
                     }
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ";
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>";
-                    if (Hired)
+                    else
                     {
-                        html += " as hired labour";
+                        if (this.Individuals > 1)
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ");
+                        }
+                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ");
+                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>");
+                        if (Hired)
+                        {
+                            htmlWriter.Write(" as hired labour");
+                        }
                     }
+                    htmlWriter.Write("</div>");
                 }
-                html += "</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
