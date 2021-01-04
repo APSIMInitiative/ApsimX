@@ -73,6 +73,11 @@ namespace Models.CLEM.Resources
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
 
         /// <summary>
+        /// Marked as a replacement breeder
+        /// </summary>
+        public bool ReplacementBreeder { get; set; }
+
+        /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
@@ -170,7 +175,7 @@ namespace Models.CLEM.Resources
         /// The adult equivalent of this individual
         /// </summary>
         public double AdultEquivalent { get { return adultEquivalent; } }
-        // Needs to include ind.Number*weight if ever added to this model
+        // TODO: Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
         /// Highest previous weight
@@ -199,6 +204,28 @@ namespace Models.CLEM.Resources
                 return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
             }
         }
+
+        /// <summary>
+        /// The current health score 
+        /// </summary>
+        public double HealthScore
+        {
+            get
+            {
+                // min is 
+                double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
+                double mid = NormalisedAnimalWeight;
+                double max = BreedParams.MaximumSizeOfIndividual;
+
+
+
+
+                return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+            }
+        }
+
+
+
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
@@ -231,9 +258,9 @@ namespace Models.CLEM.Resources
                 {
                     if(this is RuminantFemale)
                     {
-                        if ((this as RuminantFemale).IsHeifer)
+                        if ((this as RuminantFemale).IsPreBreeder)
                         {
-                            return "Heifer";
+                            return "PreBreeder";
                         }
                         else
                         {
@@ -388,7 +415,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
                     case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessHeiferSale:
+                    case HerdChangeReason.ExcessPreBreederSale:
                     case HerdChangeReason.Consumed:
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
