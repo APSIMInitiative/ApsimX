@@ -212,20 +212,21 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                // min is 
                 double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
                 double mid = NormalisedAnimalWeight;
                 double max = BreedParams.MaximumSizeOfIndividual;
 
-
-
-
-                return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+                if(weight < mid)
+                {
+                    return (Math.Max(min, weight) - min) / (mid - min) * 5;
+                }
+                else
+                {
+                    double result = (weight - mid) / (max - mid) * 5;
+                    return (result == 0) ? 0.01 : result;
+                }
             }
         }
-
-
-
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
