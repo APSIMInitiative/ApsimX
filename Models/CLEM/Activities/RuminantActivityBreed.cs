@@ -26,6 +26,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 7, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
     [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\nThis change requires all simulations to be performed again.")]
     [Version(1, 0, 4, "Implemented conception status reporting.")]
@@ -413,6 +414,18 @@ namespace Models.CLEM.Activities
                         female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(status, female, Clock.Today));
                     }
                 }
+
+                // report a natural mating locations for transparency via a message
+                if (this.Status == ActivityStatus.Success && !UseAI)
+                {
+                    string warning = "Natural (uncontrolled) mating ocurred in [r=" + location.Key + "]";
+                    if (!Warnings.Exists(warning))
+                    {
+                        Warnings.Add(warning);
+                        Summary.WriteMessage(this, warning);
+                    }
+                }
+
 
             }
         }
