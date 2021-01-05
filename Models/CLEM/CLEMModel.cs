@@ -599,7 +599,7 @@ namespace Models.CLEM
                 if (htmlWriter.ToString().Contains("<canvas"))
                 {
                     Assembly assembly = Assembly.GetExecutingAssembly();
-                    StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
+                    StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
                     string graphString = textStreamReader.ReadToEnd();
                     if (!darkTheme)
                     {

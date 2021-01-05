@@ -855,7 +855,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
-    <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
     <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Genotype.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Animals.png" />
