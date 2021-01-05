@@ -8,14 +8,16 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using System.Text;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Interfaces;
     using Models.CLEM;
+    using Models.CLEM.Interfaces;
     using Models.Core;
     using Views;
 
     /// <summary>
     /// Presenter to provide HTML description summary for CLEM models
     /// </summary>
-    public class CLEMSummaryPresenter : IPresenter
+    public class CLEMSummaryPresenter : IPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model
@@ -47,16 +49,10 @@ namespace UserInterface.Presenters
 
             htmlFilePath = "CurrentDescriptiveSummary.html";
             targetFilePath = "CurrentDescriptiveSummary.html";
-            switch (model.GetType().ToString())
+
+            if (typeof(ISpecificOutputFilename).IsAssignableFrom(model.GetType()))
             {
-                case "Models.CLEM.Reporting.ReportActivitiesPerformed":
-                    targetFilePath = "ActivitiesPerformedSummary.html";
-                    break;
-                case "Models.CLEM.Reporting.ReportLabourRequirements":
-                    targetFilePath = "LabourAllocationSummary.html";
-                    break;
-                default:
-                    break;
+                targetFilePath = (model as ISpecificOutputFilename).HtmlOutputFilename;
             }
 
             htmlFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), htmlFilePath);

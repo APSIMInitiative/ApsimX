@@ -13,6 +13,7 @@ using Models.Core.Attributes;
 using Models.Core.Run;
 using Models.Storage;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Reporting
 {
@@ -21,7 +22,7 @@ namespace Models.CLEM.Reporting
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.CLEMView")]
-    [PresenterName("UserInterface.Presenters.ActivityLedgerPresenter")]
+    [PresenterName("UserInterface.Presenters.ActivityLedgerGridPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
@@ -33,7 +34,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "HTML version created")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ActivitiesPerformed.htm")]
-    public class ReportActivitiesPerformed : Models.Report, ICLEMDescriptiveSummary, ICLEMUI
+    public class ReportActivitiesPerformed : Models.Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
     {
         /// <summary>
         /// Create html version of summary
@@ -83,6 +84,11 @@ namespace Models.CLEM.Reporting
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
+
+        /// <summary>
+        /// Name of filename to save labour report
+        /// </summary>
+        public string HtmlOutputFilename { get { return "ActivitiesPerformedSummary.html"; } }
 
         /// <summary>
         /// Constructor
@@ -584,7 +590,7 @@ namespace Models.CLEM.Reporting
                     }
                     htmlString.WriteLine($"</table>");
                 }
-                System.IO.File.WriteAllText(Path.Combine(directoryPath, "ActivitiesPerformedSummary.html"), htmlString.ToString());
+                System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
             }
         }
 
@@ -608,7 +614,7 @@ namespace Models.CLEM.Reporting
                 htmlWriter.Write("\n<div class=\"activityentry\">");
                 if (CreateHTML)
                 {
-                    htmlWriter.Write($"<div>A HTML version of this report is available from <a href=\"file://{  "Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), \"ActivitiesPerformedSummary.html\")"} \">here</a>");
+                    htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
                     if(RotateReport)
                     {
                         htmlWriter.Write($" with months as columns and activities as rows.</div>");

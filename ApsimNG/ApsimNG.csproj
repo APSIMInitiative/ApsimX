@@ -211,7 +211,8 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
-    <Compile Include="Presenters\CLEM\ActivityLedgerPresenter.cs" />
+    <Compile Include="Interfaces\CLEM\ICLEMPresenter.cs" />
+    <Compile Include="Interfaces\CLEM\IRefreshPresenter.cs" />
     <Compile Include="Presenters\DownloadPresenter.cs" />
     <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

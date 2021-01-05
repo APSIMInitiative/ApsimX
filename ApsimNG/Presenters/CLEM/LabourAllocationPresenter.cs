@@ -2,6 +2,7 @@
 using Models.CLEM;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Presenters;
 using UserInterface.Views;
 
@@ -18,7 +20,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presenter to display HTML report of labour allocation to activities
     /// </summary>
-    public class LabourAllocationPresenter : IPresenter
+    public class LabourAllocationPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model
@@ -41,6 +43,29 @@ namespace UserInterface.Presenters
         private List<LabourType> labourList = new List<LabourType>();
 
         /// <summary>
+        /// Attach inherited class additional presenters is needed
+        /// </summary>
+        public void AttachExtraPresenters(CLEMPresenter clemPresenter)
+        {
+            //Display
+            try
+            {
+                object newView = new MarkdownView(clemPresenter.view as ViewBase);
+                IPresenter labourPresenter = new LabourAllocationPresenter();
+                if (newView != null && labourPresenter != null)
+                {
+                    clemPresenter.view.AddTabView("Display", newView);
+                    labourPresenter.Attach(clemPresenter.model, newView, clemPresenter.explorerPresenter);
+                    clemPresenter.presenterList.Add("Display", labourPresenter);
+                }
+            }
+            catch (Exception err)
+            {
+                this.explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Attach the view
         /// </summary>
         /// <param name="model">The model</param>
@@ -52,9 +77,16 @@ namespace UserInterface.Presenters
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
 
-            this.genericView.Text = CreateMarkdown();
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "LabourAllocationSummary.html"), CreateHTML());
+            //this.genericView.Text = CreateMarkdown();
+            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
         }
+
+        public void Refresh()
+        {
+            this.genericView.Text = CreateMarkdown();
+            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+        }
+
 
         private string CreateHTML()
         {
@@ -129,8 +161,7 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[TableBackground]", "background-color: rgba(50, 50, 50, 0.5);");
                 htmlString = htmlString.Replace("[ContDefaultBack]", "#282828");
                 htmlString = htmlString.Replace("[ContDefaultBanner]", "#686868");
-                htmlString = htmlString.Replace("[HeaderFontColor]", "black");
-
+                htmlString = htmlString.Replace("[HeaderFontColor]", "#333333");
             }
 
             // get CLEM Zone
@@ -331,12 +362,7 @@ namespace UserInterface.Presenters
             using (StringWriter markdownString = new StringWriter())
             {
                 // Start building table
-                // get CLEM Zone
                 IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
-                //while (!(clem is ZoneCLEM))
-                //{
-                //    clem = clem.Parent;
-                //}
 
                 // Get Labour resources
                 labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;

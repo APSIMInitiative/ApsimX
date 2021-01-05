@@ -168,6 +168,7 @@
     <Compile Include="CLEM\ICategoryActivity.cs" />
     <Compile Include="CLEM\ICLEMDescriptiveSummary.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
+    <Compile Include="CLEM\Interfaces\ISpecificOutputFilename.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />
     <Compile Include="CLEM\RandomNumberGenerator.cs" />
@@ -980,6 +981,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\CLEM\Chart.min.js" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

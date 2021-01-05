@@ -8,11 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class VersionsPresenter : IPresenter
+    public class VersionsPresenter : IPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model

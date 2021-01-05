@@ -144,7 +144,7 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            // if auto create
+            // if auto create summary 
             if (AutoCreateDescriptiveSummary)
             {
                 if (!File.Exists(wholeSimulationSummaryFile))

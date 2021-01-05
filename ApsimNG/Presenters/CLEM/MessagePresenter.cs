@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -17,7 +18,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presenter for displaying simulation html formatted messages
     /// </summary>
-    public class MessagePresenter : IPresenter
+    public class MessagePresenter : IPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model
@@ -28,7 +29,6 @@ namespace UserInterface.Presenters
         /// The view to use
         /// </summary>
         private IMarkdownView genericView;
-        //private IHTMLView genericView;
 
         /// <summary>
         /// The explorer

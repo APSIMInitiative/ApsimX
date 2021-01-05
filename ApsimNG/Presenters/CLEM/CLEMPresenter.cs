@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Presenters;
 using UserInterface.Views;
 
@@ -18,6 +19,7 @@ namespace UserInterface.Presenters
         internal ICLEMView view;
         internal object viewobject;
         internal ICLEMUI clemModel;
+        internal object model;
 
         /// <summary>
         /// The explorer
@@ -34,11 +36,14 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer</param>
         public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            this.model = model;
             this.clemModel = model as ICLEMUI;
             this.explorerPresenter = explorerPresenter;
 
             this.view = view as ICLEMView;
             this.viewobject = view;
+
+            PresenterNameAttribute presenterName = null;
 
             if (model != null)
             {
@@ -64,9 +69,21 @@ namespace UserInterface.Presenters
                 //Properties
                 try
                 {
-                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    string propPresenterName = presenterName.ToString();
+                    if (!presenterName.ToString().Contains("Property"))
+                    {
+                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
+                    }
+                    ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    string viewName = viewAttribute.ToString();
+                    if (!viewName.ToString().Contains(".GridView"))
+                    {
+                        viewName = "UserInterface.Views.GridView";
+                    }
+
                     string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
-                    bool isTablePresenter = childDisplayInParentPresenters.Contains(presenterName.ToString().Split('.').Last());
+                    bool isTablePresenter = childDisplayInParentPresenters.Contains(propPresenterName.Split('.').Last());
 
                     // check if it has properties
                     if (isTablePresenter ||
@@ -76,9 +93,8 @@ namespace UserInterface.Presenters
                           BindingFlags.Instance
                           ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
-                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                        IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                        IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
                             this.view.AddTabView("Properties", newView);
@@ -91,6 +107,13 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
+
+                // if presenter is ICLEMPresenter then add the extra presenters if specified
+                if (presenterName != null && typeof(ICLEMPresenter).IsAssignableFrom(Assembly.GetExecutingAssembly().GetType(presenterName.ToString())))
+                {
+                    (Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as ICLEMPresenter).AttachExtraPresenters(this);
+                }
+
                 //HTML Summary
                 try
                 {
@@ -158,22 +181,9 @@ namespace UserInterface.Presenters
 
             if (selectedPresenter != null)
             {
-                switch ((e as TabChangedEventArgs).TabName)
+                if (selectedPresenter is IRefreshPresenter)
                 {
-                    case "Messages":
-                        (selectedPresenter as MessagePresenter).Refresh();
-                        break;
-                    case "Summary":
-                        (selectedPresenter as CLEMSummaryPresenter).Refresh();
-                        break;
-                    case "Version":
-                        (selectedPresenter as VersionsPresenter).Refresh();
-                        break;
-                    case "Display":
-                        (selectedPresenter as ActivityLedgerGridPresenter).Refresh();
-                        break;
-                    default:
-                        break;
+                    (selectedPresenter as IRefreshPresenter).Refresh();
                 }
             }
         }
