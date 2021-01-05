@@ -74,9 +74,6 @@
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
-                else if (options.EditFilePath != null)
-                    foreach (string file in files)
-                        EditFile.Do(file, options.EditFilePath);
                 else if (options.MergeDBFiles)
                 {
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();

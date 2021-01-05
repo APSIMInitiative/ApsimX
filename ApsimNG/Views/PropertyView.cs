@@ -62,7 +62,9 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view.</param>
         public PropertyView(ViewBase owner) : base(owner)
         {
-            propertyTable = new Table(0, 0, true);
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table(0, 0, false);
             box = new Frame("Properties");
             box.Add(propertyTable);
             mainWidget = box;
@@ -99,7 +101,11 @@ namespace UserInterface.Views
             }
             box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
-            propertyTable = new Table((uint)properties.Count(), 2, true);
+
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table((uint)properties.Count(), 2, false);
+
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 

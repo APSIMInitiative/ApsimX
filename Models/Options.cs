@@ -10,7 +10,7 @@ namespace Models
     public class Options
     {
         /// <summary>Files to be run.</summary>
-        [Value(0, HelpText = ".apsimx file(s) to be run.", MetaName = "ApsimXFileSpec")]
+        [Value(0, HelpText = ".apsimx file(s) to be run.", MetaName = "ApsimXFileSpec", Required = true)]
         public IEnumerable<string> Files { get; set; }
 
         /// <summary>
