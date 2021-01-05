@@ -199,6 +199,8 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
+    <Compile Include="Classes\SubSuperscriptExtension.cs" />
+    <Compile Include="Classes\SubSuperscriptParser.cs" />
     <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
     <Compile Include="Cloud\Azure\AzureExtensions.cs" />
     <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">

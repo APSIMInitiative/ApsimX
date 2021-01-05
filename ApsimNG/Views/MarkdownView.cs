@@ -22,6 +22,7 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Models.Core;
 using Pango;
+using UserInterface.Classes;
 using Utility;
 using Table = Markdig.Extensions.Tables.Table;
 
@@ -38,82 +39,6 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets the visibility of the widget.</summary>
         bool Visible { get; set; }
-    }
-
-    public class SubSuperScriptExtensions : IMarkdownExtension
-    {
-        public void Setup(MarkdownPipelineBuilder pipeline)
-        {
-            if (!pipeline.InlineParsers.Contains<SubSuperScriptParser>())
-                pipeline.InlineParsers.Insert(0, new SubSuperScriptParser());
-        }
-
-        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class SubSuperScriptParser : InlineParser
-    {
-        public override bool Match(InlineProcessor processor, ref StringSlice slice)
-        {
-            var startPosition = processor.GetSourcePosition(slice.Start, out int line, out int column);
-
-            // Slightly faster to perform our own search for opening characters
-            var nextStart = processor.Parsers.IndexOfOpeningCharacter(slice.Text, slice.Start + 1, slice.End);
-            //var nextStart = str.IndexOfAny(processor.SpecialCharacters, slice.Start + 1, slice.Length - 1);
-            string text = slice.Text.Substring(slice.Start, slice.End - slice.Start + 1);
-
-            if (slice.PeekCharExtra(-1) != '>')
-                return false;
-
-            string openSuperscript = "<sup>";
-            string closeSuperscript = "</sup>";
-            string openSubscript = "<sub>";
-            string closeSubscript = "</sub>";
-            
-            if (TryMatch(slice, openSuperscript))
-            {
-                int indexCloseSuper = text.IndexOf(closeSuperscript);
-                if (indexCloseSuper > 0)
-                {
-                    slice = new StringSlice(text.Substring(0, indexCloseSuper));
-                    processor.Inline = new EmphasisInline()
-                    {
-                        DelimiterChar = '^',
-                        DelimiterCount = 1,
-                    };
-                    return true;
-                }
-            }
-            else if (TryMatch(slice, openSubscript))
-            {
-                int indexCloseSub = text.IndexOf(closeSubscript);
-                if (indexCloseSub > 0)
-                {
-                    slice = new StringSlice(text.Substring(0, indexCloseSub));
-                    processor.Inline = new EmphasisInline()
-                    {
-                        DelimiterChar = '~',
-                        DelimiterCount = 1,
-                    };
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool TryMatch(StringSlice slice, string text)
-        {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-
-            for (int i = 0; i < text.Length; i++)
-                if (slice.PeekCharExtra(-1 * text.Length + i) != text[i])
-                    return false;
-            return true;
-        }
     }
 
     /// <summary>A rich text view.</summary>
