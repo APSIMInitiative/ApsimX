@@ -41,6 +41,11 @@
         /// </summary>
         public string ZoneName { get; set; }
 
+        private bool CreateHtml = false;
+
+
+
+
         /// <summary>
         /// Attach inherited class additional presenters is needed
         /// </summary>
@@ -83,6 +88,7 @@
                 }
 
                 dataStorePresenter.Attach(dataStore, reportView, clemPresenter.explorerPresenter);
+                activityGridPresenter.CreateHtml = (clemPresenter.model as ReportActivitiesPerformed).CreateHTML;
                 activityGridPresenter.ModelReport = report as Report;
                 activityGridPresenter.ModelName = report.Name;
                 activityGridPresenter.SimulationName = simulation.Name;
@@ -115,7 +121,10 @@
 
             // save the html version as soon as this report is selected
             // do not create the UI grid version until the user selectes the Display tab
-            (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);
+            if (CreateHtml)
+            {
+                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);
+            }
         }
 
         public void Refresh()

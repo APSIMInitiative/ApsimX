@@ -531,11 +531,9 @@ namespace Models.CLEM.Reporting
                 htmlString.WriteLine("\n</div>");
                 htmlString.WriteLine("\n</div>");
 
-                bool rotate = false;
-
                 if (data != null)
                 {
-                    if (rotate)
+                    if (RotateReport)
                     {
                         data = Transpose(data);
                     }
@@ -544,8 +542,8 @@ namespace Models.CLEM.Reporting
                     bool first = true;
                     foreach (DataColumn col in data.Columns)
                     {
-                        string splitter = (rotate) ? "\\" : "<br />";
-                        htmlString.Write($"<th>{((rotate & !first) ? "<span>" : "")}{col.ColumnName.Replace("\n", splitter)}{((rotate & !first) ? "</span>" : "")}</th>");
+                        string splitter = (RotateReport) ? "\\" : "<br />";
+                        htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
                         first = false;
                     }
                     htmlString.WriteLine($"</tr>");
@@ -590,7 +588,11 @@ namespace Models.CLEM.Reporting
                     }
                     htmlString.WriteLine($"</table>");
                 }
-                System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+
+                if (CreateHTML | AutoCreateHTML)
+                {
+                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                }
             }
         }
 
