@@ -110,10 +110,15 @@ namespace UserInterface.Presenters
                 "table.main {[TableBackground] }" +
                 "table.main tr td.disabled {color: [DisabledColour]; }" +
                 ".dot { margin:auto; display:block; height:20px; width:20px; line-height:20px; background-color:black; -moz-border-radius: 10px; border-radius: 10px; }" +
-                ".dot1 { background-color:lightgreen; }" +
-                ".dot2 { background-color:lightskyblue; }" +
-                ".dot4 { background-color:coral; }" +
-                ".dot3 { background-color:lightpink; }" +
+                //".dot1 { background-color:lightgreen; }" +
+                //".dot2 { background-color:lightskyblue; }" +
+                //".dot4 { background-color:coral; }" +
+                //".dot3 { background-color:lightpink; }" +
+                // color blind corrected
+                ".dot1 { background-color:#62BB35; }" +
+                ".dot2 { background-color:#208EA3; }" +
+                ".dot4 { background-color:#E8384F; }" +
+                ".dot3 { background-color:#FD817D; }" +
                 ".warningbanner {background-color:orange; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".warningcontent {background-color:[WarningBackground]; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
