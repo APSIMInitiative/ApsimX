@@ -43,9 +43,6 @@
 
         private bool CreateHtml = false;
 
-
-
-
         /// <summary>
         /// Attach inherited class additional presenters is needed
         /// </summary>
