@@ -155,6 +155,9 @@
             /// <summary>Gets or sets the name of the event.</summary>
             public string Name { get; private set; }
 
+            /// <summary>Name of the target method.</summary>
+            public string MethodName { get => methodInfo.Name; }
+
             public Subscriber(string name, IModel model, MethodInfo method)
             {
                 Name = name;
@@ -291,8 +294,15 @@
             internal void ConnectSubscriber(Subscriber subscriber)
             {
                 // connect subscriber to the event.
-                Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
-                EventInfo.AddEventHandler(Model, eventDelegate);
+                try
+                {
+                    Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
+                    EventInfo.AddEventHandler(Model, eventDelegate);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Unable to connect event handler function {subscriber.MethodName} in model {subscriber.Model.FullPath} to event {subscriber.Name}", err);
+                }
             }
 
             internal void DisconnectAll()
