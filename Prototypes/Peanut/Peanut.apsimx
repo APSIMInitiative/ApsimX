@@ -85,6 +85,7 @@
             "[Weather].Radn",
             "[Weather].MaxT",
             "[Weather].MinT",
+            "[Weather].Rain",
             "[Peanut].Arbitrator.DM.TotalFixationSupply",
             "sum([Peanut].Arbitrator.N.Fixation) as NFixed",
             "[Peanut].Arbitrator.DM.TotalPlantDemand",
@@ -118,6 +119,7 @@
             "[Peanut].Leaf.Wt",
             "[Peanut].Leaf.Nconc",
             "[Peanut].Leaf.Senesced.Wt",
+            "[Peanut].Leaf.Transpiration",
             "[Peanut].Stem.Wt",
             "[Peanut].Stem.Live.Wt",
             "[Peanut].Stem.Total.StructuralWt",
@@ -141,6 +143,7 @@
             "[Peanut].Pod.NConc",
             "[Peanut].Nodule.NFixed",
             "[Peanut].Root.Wt",
+            "[Soil].SoilWater.Eo",
             "sum([Soil].SoilWater.SWmm) as TotalSW",
             "[Soil].SoilWater.SW[1:3]",
             "[Peanut].Leaf.Height",
@@ -1336,7 +1339,7 @@
                     },
                     {
                       "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                      "MaximumTemperatureWeighting": 0.0,
+                      "MaximumTemperatureWeighting": 0.75,
                       "Name": "FT",
                       "Children": [
                         {
@@ -1351,7 +1354,7 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            9.0,
+                            10.0,
                             21.0,
                             35.0,
                             40.0
@@ -6761,8 +6764,8 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 420",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1720",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.66",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1600",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
@@ -6780,11 +6783,13 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 450",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
                   ],
                   "Name": "VirginiaBunch",
                   "Children": [],
@@ -6797,11 +6802,13 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
                   ],
                   "Name": "TMV2",
                   "Children": [],
@@ -6814,11 +6821,13 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 390",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
                   ],
                   "Name": "Tapir",
                   "Children": [],
@@ -6837,7 +6846,9 @@
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
                   ],
                   "Name": "VB97",
                   "Children": [],
@@ -6850,15 +6861,53 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 400",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.50",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.70",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
+                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.20",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
                     "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
                     "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,0.5,0.5,0"
                   ],
                   "Name": "Florunner",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 420",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 160",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 900",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
+                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
+                    "[Grain].MaximumNConc.FixedValue = 0.067",
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
+                  ],
+                  "Name": "Redvale",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 420",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 160",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 900",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
+                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
+                    "[Grain].MaximumNConc.FixedValue = 0.067",
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
+                  ],
+                  "Name": "Taabinga",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -13503,8 +13552,16 @@
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "06/10/2001 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "EarlyBunch"
+                                },
+                                {
+                                  "Key": "SowingRate",
+                                  "Value": "30"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -13513,14 +13570,6 @@
                                 {
                                   "Key": "SowingDepth",
                                   "Value": "50"
-                                },
-                                {
-                                  "Key": "SowingRate",
-                                  "Value": "30"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "06/10/2001 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -17659,7 +17708,18 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Predicted",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -17755,7 +17815,18 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Predicted",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -18291,6 +18362,102 @@
               "Name": "Loxton9697",
               "Children": [
                 {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Growing Season Mean Air Temperature",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Weather.MeanT",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16747854,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Weather.MinT",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
                   "Name": "Loxton9697",
@@ -18715,20 +18882,20 @@
                                   "Value": "12/12/1989 00:00:00"
                                 },
                                 {
-                                  "Key": "RowSpacing",
-                                  "Value": "600"
-                                },
-                                {
-                                  "Key": "SowingDepth",
-                                  "Value": "50"
+                                  "Key": "CultivarName",
+                                  "Value": "VB97"
                                 },
                                 {
                                   "Key": "SowingRate",
                                   "Value": "8.8"
                                 },
                                 {
-                                  "Key": "CultivarName",
-                                  "Value": "VB97"
+                                  "Key": "RowSpacing",
+                                  "Value": "600"
+                                },
+                                {
+                                  "Key": "SowingDepth",
+                                  "Value": "50"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -19243,7 +19410,7 @@
                               "YFieldName": "Peanut.AboveGround.Wt",
                               "X2FieldName": "",
                               "Y2FieldName": "",
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -19463,6 +19630,884 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "TimeSeries",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "NodeNumber",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.NodeNumber",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.NodeNumber",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LeafNumber",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Number",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Number",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LAI",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.LAI",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.LAI",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LeafMass",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 5,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "SpecificLeafArea",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.SpecificArea",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.SpecificAreaCanopy",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Biomass",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.AboveGround.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Pop",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.AboveGround.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Pod",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Pod.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Pod.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "StemMass",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Stem.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Stem.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": 0.0,
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "BranchNumber",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.BranchNumber",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -21766,6 +22811,1738 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Kingaroy1819",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Experiment, Models",
+                  "DisabledSimNames": null,
+                  "Name": "Kingaroy1819",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.Factors, Models",
+                      "Name": "Factors",
+                      "Children": [
+                        {
+                          "$type": "Models.Factorial.Permutation, Models",
+                          "Name": "Permutation",
+                          "Children": [
+                            {
+                              "$type": "Models.Factorial.Factor, Models",
+                              "Specification": "[SowingRule].Script.CultivarName=Redvale, Taabinga",
+                              "Name": "Cv",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Factorial.Factor, Models",
+                              "Specification": "[Operations]",
+                              "Name": "Irrigation",
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-01-11",
+                                      "Action": "[Irrigation].Apply(amount:20);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-01-25",
+                                      "Action": "[Irrigation].Apply(amount:25);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-02-12",
+                                      "Action": "[Irrigation].Apply(amount:40);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-03-01",
+                                      "Action": "[Irrigation].Apply(amount:40);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-05-01",
+                                      "Action": "[Irrigation].Apply(amount:40);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Wet",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-01-11",
+                                      "Action": "[Irrigation].Apply(amount:20);",
+                                      "Enabled": true
+                                    },
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "2019-01-25",
+                                      "Action": "[Irrigation].Apply(amount:25);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Dry",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
+                      "Descriptors": null,
+                      "Name": "Kingaroy1819Base",
+                      "Children": [
+                        {
+                          "$type": "Models.Clock, Models",
+                          "Start": "2019-01-10T00:00:00",
+                          "End": "2019-06-15T00:00:00",
+                          "Name": "clock",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Summary, Models",
+                          "CaptureErrors": true,
+                          "CaptureWarnings": true,
+                          "CaptureSummaryText": true,
+                          "Name": "summaryfile",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
+                          "FileName": "Kingaroy1819.met",
+                          "ExcelWorkSheetName": "",
+                          "Name": "Weather",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                          "Name": "Soil Arbitrator",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.MicroClimate, Models",
+                          "a_interception": 0.0,
+                          "b_interception": 1.0,
+                          "c_interception": 0.0,
+                          "d_interception": 0.0,
+                          "soil_albedo": 0.23,
+                          "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
+                          "NightInterceptionFraction": 0.5,
+                          "ReferenceHeight": 2.0,
+                          "Name": "MicroClimate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Zone, Models",
+                          "Area": 1.0,
+                          "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
+                          "Name": "paddock",
+                          "Children": [
+                            {
+                              "$type": "Models.Irrigation, Models",
+                              "Name": "Irrigation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Fertiliser, Models",
+                              "Name": "fertiliser",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "InitialResidueName": "maize",
+                              "InitialResidueType": "maize",
+                              "InitialResidueMass": 4500.0,
+                              "InitialStandingFraction": 0.0,
+                              "InitialCPR": 0.0,
+                              "InitialCNR": 55.0,
+                              "ResourceName": "SurfaceOrganicMatter",
+                              "Name": "SurfaceOrganicMatter",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "[DiagnosticsVariables].Script.AccumPlantN",
+                                "[DiagnosticsVariables].Script.AccumMineralisation",
+                                "[DiagnosticsVariables].Script.AccumDenit",
+                                "[DiagnosticsVariables].Script.AccumFert",
+                                "[DiagnosticsVariables].Script.AccumLeach",
+                                "[DiagnosticsVariables].Script.AccumDetach",
+                                "[DiagnosticsVariables].Script.DeltaSoilOMN",
+                                "[DiagnosticsVariables].Script.DeltaSurfaceOMN",
+                                "[DiagnosticsVariables].Script.DeltaSoilMineralN",
+                                "[Peanut].Root.NSupply",
+                                "[Soil].SoilWater.Eo",
+                                "[Soil].SoilWater.Es",
+                                "[DiagnosticsVariables].Script.SWC",
+                                "[DiagnosticsVariables].Script.DUL",
+                                "[Soil].SoilWater.Drainage",
+                                "[Soil].SoilWater.Runoff",
+                                "[DiagnosticsVariables].Script.OutFlowLat",
+                                "[Soil].SoilWater.pond",
+                                "[DiagnosticsVariables].Script.AccumEO",
+                                "[DiagnosticsVariables].Script.AccumEP",
+                                "[DiagnosticsVariables].Script.AccumES",
+                                "[DiagnosticsVariables].Script.AccumDrainage",
+                                "[DiagnosticsVariables].Script.AccumRunoff",
+                                "[DiagnosticsVariables].Script.AccumRainfall",
+                                "[DiagnosticsVariables].Script.AccumIrrigation",
+                                "[DiagnosticsVariables].Script.AccumOutflowLat",
+                                "[DiagnosticsVariables].Script.SoilWaterDeficit",
+                                "[Peanut].Grain.Live.Wt",
+                                "[Peanut].Shell.Live.Wt",
+                                "[Peanut].Stem.Live.Wt",
+                                "[Peanut].Stem.Live.Wt",
+                                "[Peanut].Grain.Live.N",
+                                "[Peanut].Shell.Live.N",
+                                "[Peanut].Leaf.Live.Wt",
+                                "[Peanut].Root.Live.Wt",
+                                "[Peanut].Leaf.Live.N",
+                                "[Peanut].Root.Live.N",
+                                "[Peanut].Leaf.Live.NConc",
+                                "[Peanut].Root.Live.NConc",
+                                "[Peanut].Root.WaterSupply",
+                                "[Peanut].Root.WaterUptake",
+                                "[Peanut].Leaf.Transpiration",
+                                "[Peanut].Leaf.WaterDemand",
+                                "[Peanut].Root.Depth",
+                                "[Peanut].Leaf.CoverTotal",
+                                "[Peanut].Leaf.CoverDead",
+                                "[Peanut].Leaf.LAI",
+                                "[Peanut].Leaf.Height",
+                                "[Peanut].Leaf.PotentialBiomass",
+                                "[Soil].SoilWater.SWmm",
+                                "[Soil].Nutrient.NO3.kgha",
+                                "[DiagnosticsVariables].Script.SoilNitrogenContent",
+                                "[Peanut].Arbitrator.N.TotalPlantDemand",
+                                "[MicroClimate].net_radn",
+                                "[MicroClimate].peta",
+                                "[MicroClimate].petr",
+                                "[DiagnosticsVariables].Script.FomN",
+                                "[DiagnosticsVariables].Script.HumN",
+                                "[DiagnosticsVariables].Script.BiomN",
+                                "[DiagnosticsVariables].Script.DltNMinRes",
+                                "[DiagnosticsVariables].Script.DltNMinTot",
+                                "[Peanut].Leaf.Fw",
+                                "[Peanut].Leaf.Fn",
+                                "[Peanut].Phenology.CurrentPhase.Name",
+                                "[Peanut].Phenology.Stage",
+                                "[Peanut].Pod.Wt",
+                                "[Peanut].Pod.N",
+                                "[Peanut].Structure.LeafTipsAppeared",
+                                "[Peanut].Structure.MainStemPrimordiaNo",
+                                "[Peanut].Leaf.CohortArea[1]",
+                                "[Peanut].Leaf.CohortArea[2]",
+                                "[Peanut].Leaf.CohortArea[3]",
+                                "[Peanut].Leaf.CohortArea[4]",
+                                "[Peanut].Leaf.CohortArea[5]",
+                                "[Peanut].Leaf.CohortArea[6]",
+                                "[Peanut].Leaf.CohortArea[7]",
+                                "[Peanut].Leaf.CohortArea[8]",
+                                "[Peanut].Leaf.CohortArea[9]",
+                                "[Peanut].Leaf.CohortArea[10]",
+                                "[Peanut].Leaf.CohortArea[11]",
+                                "[Peanut].Leaf.CohortArea[12]",
+                                "[Peanut].Leaf.CohortArea[13]",
+                                "[Peanut].Leaf.CohortArea[14]",
+                                "[Peanut].Leaf.CohortArea[15]",
+                                "[Peanut].Leaf.AppearedCohortNo",
+                                "[Peanut].Leaf.DeadCohortNo",
+                                "[Peanut].AboveGround.Wt",
+                                "[Peanut].Phenology.Stage",
+                                "[Peanut].Structure.MainStemPrimordiaNo",
+                                "[Peanut].Phenology.NFF",
+                                "[PeanutHarvestRule].Script.FinalTag",
+                                "[Peanut].Grain.NumberFunction",
+                                "[Peanut].Shell.PodNumber",
+                                "[Peanut].Phenology.FN",
+                                "[Peanut].Phenology.FN.TotalNodes",
+                                "[Peanut].Phenology.FN.VegetativeNodes"
+                              ],
+                              "EventNames": [
+                                "[Clock].DoReport"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "DailyReport",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
+                              "Parameters": [
+                                {
+                                  "Key": "SowingDate",
+                                  "Value": "01/10/2019 00:00:00"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "EarlyBunch"
+                                },
+                                {
+                                  "Key": "SowingRate",
+                                  "Value": "15"
+                                },
+                                {
+                                  "Key": "RowSpacing",
+                                  "Value": "900"
+                                },
+                                {
+                                  "Key": "SowingDepth",
+                                  "Value": "50"
+                                }
+                              ],
+                              "Name": "SowingRule",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "[Peanut].Structure.MainStemPrimordiaNo",
+                                "[Peanut].Phenology.NFF",
+                                "[Peanut].Script.FinalTag"
+                              ],
+                              "EventNames": [
+                                "[Peanut].Harvesting"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "HarvestReport",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Plant, Models",
+                              "ResourceName": "Peanut",
+                              "Name": "Peanut",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Soil, Models",
+                              "RecordNumber": 0,
+                              "ASCOrder": null,
+                              "ASCSubOrder": null,
+                              "SoilType": null,
+                              "LocalName": null,
+                              "Site": null,
+                              "NearestTown": null,
+                              "Region": null,
+                              "State": null,
+                              "Country": null,
+                              "NaturalVegetation": null,
+                              "ApsoilNumber": null,
+                              "Latitude": 0.0,
+                              "Longitude": 0.0,
+                              "LocationAccuracy": null,
+                              "YearOfSampling": null,
+                              "DataSource": null,
+                              "Comments": null,
+                              "Name": "Soil",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.InitialWater, Models",
+                                  "PercentMethod": 1,
+                                  "FractionFull": 1.0,
+                                  "DepthWetSoil": "NaN",
+                                  "RelativeTo": null,
+                                  "Name": "Initial water",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Physical, Models",
+                                  "Depth": [
+                                    "0-10",
+                                    "10-20",
+                                    "20-50",
+                                    "50-80",
+                                    "80-120",
+                                    "120-180"
+                                  ],
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    300.0,
+                                    300.0,
+                                    400.0,
+                                    600.0
+                                  ],
+                                  "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
+                                  "Rocks": null,
+                                  "Texture": null,
+                                  "BD": [
+                                    1.2,
+                                    1.23,
+                                    1.28,
+                                    1.34,
+                                    1.4,
+                                    1.45
+                                  ],
+                                  "AirDry": [
+                                    0.1,
+                                    0.15,
+                                    0.2,
+                                    0.287,
+                                    0.34,
+                                    0.34
+                                  ],
+                                  "LL15": [
+                                    0.2,
+                                    0.234,
+                                    0.256,
+                                    0.287,
+                                    0.34,
+                                    0.37
+                                  ],
+                                  "DUL": [
+                                    0.3,
+                                    0.34,
+                                    0.36,
+                                    0.365,
+                                    0.38,
+                                    0.398
+                                  ],
+                                  "SAT": [
+                                    0.525,
+                                    0.514,
+                                    0.5,
+                                    0.481,
+                                    0.455,
+                                    0.435
+                                  ],
+                                  "KS": null,
+                                  "BDMetadata": null,
+                                  "AirDryMetadata": null,
+                                  "LL15Metadata": null,
+                                  "DULMetadata": null,
+                                  "SATMetadata": null,
+                                  "KSMetadata": null,
+                                  "RocksMetadata": null,
+                                  "TextureMetadata": null,
+                                  "ParticleSizeSandMetadata": null,
+                                  "ParticleSizeSiltMetadata": null,
+                                  "ParticleSizeClayMetadata": null,
+                                  "Name": "Physical",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.2,
+                                        0.234,
+                                        0.256,
+                                        0.287,
+                                        0.34,
+                                        0.37
+                                      ],
+                                      "KL": [
+                                        0.1,
+                                        0.09,
+                                        0.07,
+                                        0.05,
+                                        0.04,
+                                        0.03
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        0.2
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "PeanutSoil",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.WaterModel.WaterBalance, Models",
+                                  "SummerDate": "1-Nov",
+                                  "SummerU": 6.0,
+                                  "SummerCona": 3.5,
+                                  "WinterDate": "1-Apr",
+                                  "WinterU": 6.0,
+                                  "WinterCona": 3.5,
+                                  "DiffusConst": 40.0,
+                                  "DiffusSlope": 16.0,
+                                  "Salb": 0.2,
+                                  "CN2Bare": 75.0,
+                                  "CNRed": 20.0,
+                                  "CNCov": 0.8,
+                                  "DischargeWidth": 5.0,
+                                  "CatchmentArea": 10.0,
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    300.0,
+                                    300.0,
+                                    400.0,
+                                    600.0
+                                  ],
+                                  "SWCON": [
+                                    0.5,
+                                    0.5,
+                                    0.5,
+                                    0.5,
+                                    0.5,
+                                    0.5
+                                  ],
+                                  "KLAT": null,
+                                  "ResourceName": "WaterBalance",
+                                  "Name": "SoilWater",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Organic, Models",
+                                  "Depth": [
+                                    "0-10",
+                                    "10-20",
+                                    "20-50",
+                                    "50-80",
+                                    "80-120",
+                                    "120-180"
+                                  ],
+                                  "FOMCNRatio": 33.0,
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    300.0,
+                                    300.0,
+                                    400.0,
+                                    600.0
+                                  ],
+                                  "Carbon": [
+                                    1.6,
+                                    1.1,
+                                    0.9,
+                                    0.7,
+                                    0.5,
+                                    0.2
+                                  ],
+                                  "SoilCNRatio": [
+                                    12.0,
+                                    12.0,
+                                    12.0,
+                                    12.0,
+                                    12.0,
+                                    12.0
+                                  ],
+                                  "FBiom": [
+                                    0.045,
+                                    0.02,
+                                    0.01,
+                                    0.01,
+                                    0.01,
+                                    0.01
+                                  ],
+                                  "FInert": [
+                                    0.4,
+                                    0.4,
+                                    0.6,
+                                    0.8,
+                                    0.96,
+                                    0.96
+                                  ],
+                                  "FOM": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "CarbonMetadata": null,
+                                  "FOMMetadata": null,
+                                  "Name": "Organic",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Chemical, Models",
+                                  "Depth": [
+                                    "0-10",
+                                    "10-20",
+                                    "20-50",
+                                    "50-80",
+                                    "80-120",
+                                    "120-180"
+                                  ],
+                                  "Thickness": [
+                                    100.0,
+                                    100.0,
+                                    300.0,
+                                    300.0,
+                                    400.0,
+                                    600.0
+                                  ],
+                                  "NO3N": [
+                                    2.0,
+                                    2.0,
+                                    2.0,
+                                    2.0,
+                                    2.0,
+                                    2.0
+                                  ],
+                                  "NH4N": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "PH": [
+                                    6.5,
+                                    6.6,
+                                    7.0,
+                                    7.0,
+                                    6.5,
+                                    6.1
+                                  ],
+                                  "CL": null,
+                                  "EC": null,
+                                  "ESP": null,
+                                  "ECMetadata": null,
+                                  "CLMetadata": null,
+                                  "ESPMetadata": null,
+                                  "PHMetadata": null,
+                                  "Name": "Chemical",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "Temperature",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "ResourceName": "Nutrient",
+                                  "Name": "Nutrient",
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Parameters": [],
+                              "Name": "Harvest",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": null,
+                              "Name": "Operations",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "Biomass",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Biomass",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irrigation",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.AboveGround.Wt",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Irrigation",
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.AboveGround.Wt",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "PodWt",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irrigation",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Pod.Wt",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Irrigation",
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Pod.Wt",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "SoilWater",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "TotalSoilWater",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Cv",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "TotalESW",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "ET",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irrigation",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Transpiration",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -11094807,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.Eo",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted1",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "SW Stress",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Cv",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.Fw",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Rainfall",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Cv",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.Rain",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": true,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Radn",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Cv",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.Radn",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "Canopy",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LAI",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irrigation",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.LAI",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Irrigation",
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.LAI",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LightInterception",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irrigation",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.CoverGreen",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Irrigation",
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Leaf.CoverGreen",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Photosynthesis",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Arbitrator.DM.TotalFixationSupply",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "[SimulationName] LIKE 'Kingaroy1819CvRedvaleIrrigationWet'",
+                              "Name": "Supply",
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Peanut.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 1,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Peanut.Arbitrator.DM.TotalPlantDemand",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "[SimulationName] LIKE 'Kingaroy1819CvRedvaleIrrigationWet'",
+                              "Name": "Demand",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -21780,7 +24557,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "Headland",
+              "Name": "Headland Florunner",
               "Children": [
                 {
                   "$type": "Models.Graph, Models",
@@ -22119,8 +24896,16 @@
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "04/28/1988 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "EarlyBunch"
+                                },
+                                {
+                                  "Key": "SowingRate",
+                                  "Value": "30"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -22129,14 +24914,6 @@
                                 {
                                   "Key": "SowingDepth",
                                   "Value": "50"
-                                },
-                                {
-                                  "Key": "SowingRate",
-                                  "Value": "30"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "04/28/1988 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -24353,7 +27130,18 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Peanut.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
